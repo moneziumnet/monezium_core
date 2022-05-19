@@ -46,13 +46,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
-use Markury\MarkuryPost;
 
 class FrontendController extends Controller
 {
     public function __construct()
     {
-        $this->auth_guests();
+        // $this->auth_guests();
     }
     
     public function index(Request $request){
@@ -86,6 +85,7 @@ class FrontendController extends Controller
         $data['fdrplans'] = FdrPlan::orderBy('id','desc')->whereStatus(1)->limit(3)->get();
         
         return view('frontend.index',$data);
+        
     }
 
     public function about(){
@@ -329,23 +329,6 @@ class FrontendController extends Controller
         $dir = $actual_path.'install';
         $this->deleteDir($dir);
         return redirect('/');
-    }
-
-    function auth_guests(){
-        $chk = MarkuryPost::marcuryBase();
-        $chkData = MarkuryPost::marcurryBase();
-        $actual_path = str_replace('project','',base_path());
-        if ($chk != MarkuryPost::maarcuryBase()) {
-            if ($chkData < MarkuryPost::marrcuryBase()) {
-                if (is_dir($actual_path . '/install')) {
-                    header("Location: " . url('/install'));
-                    die();
-                } else {
-                    echo MarkuryPost::marcuryBasee();
-                    die();
-                }
-            }
-        }
     }
 
     public function subscription(Request $request)
