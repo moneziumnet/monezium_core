@@ -1,8 +1,8 @@
-  <li class="nav-item">
+  <!-- <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.gs.menubuilder') }}">
       <i class="fas fa-compass"></i>
       <span>{{ __('Menu Builder') }}</span></a>
-  </li>
+  </li> -->
 
 
   <li class="nav-item">
@@ -72,12 +72,12 @@
     </div>
   </li>
 
-  <li class="nav-item">
+  <!-- <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.other.banks.index') }}">
       <i class="fas fa-landmark"></i>
       <span>{{ __('Other Banks') }}</span>
     </a>
-  </li>
+  </li> -->
 
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#moneytransfer" aria-expanded="true" aria-controls="collapseTable">
@@ -132,7 +132,7 @@
     </a>
   </li>
 
-  <li class="nav-item">
+  <!-- <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#blog" aria-expanded="true"
       aria-controls="collapseTable">
       <i class="fas fa-fw fa-newspaper"></i>
@@ -144,7 +144,9 @@
         <a class="collapse-item" href="{{ route('admin.blog.index') }}">{{ __('Posts') }}</a>
       </div>
     </div>
-  </li>
+  </li> -->
+
+  <!-- <li class="nav-item">{{  __(' Settings') }}</li> -->
 
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTable1" aria-expanded="true"
@@ -204,11 +206,11 @@
   </li>
 
 
-  <li class="nav-item">
+  <!-- <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.user.message') }}">
       <i class="fas fa-vote-yea"></i>
       <span>{{ __('Messages') }}</span></a>
-  </li>
+  </li> -->
 
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#payment_gateways" aria-expanded="true"
@@ -257,13 +259,13 @@
     </div>
   </li>
   
-  <li class="nav-item">
+  <!-- <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.font.index') }}">
       <i class="fas fa-font"></i>
       <span>{{ __('Fonts') }}</span></a>
-  </li>
+  </li> -->
 
-  <li class="nav-item">
+  <!-- <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#menu" aria-expanded="true"
       aria-controls="collapseTable">
       <i class="fas fa-fw fa-edit"></i>
@@ -276,10 +278,10 @@
         <a class="collapse-item" href="{{ route('admin.faq.index') }}">{{ __('FAQ Page') }}</a>
       </div>
     </div>
-  </li>
+  </li> -->
 
 
-  <li class="nav-item">
+  <!-- <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#seoTools" aria-expanded="true"
       aria-controls="collapseTable">
       <i class="fas fa-wrench"></i>
@@ -292,13 +294,13 @@
         <a class="collapse-item" href="{{route('admin.social.index')}}">{{ __('Social Links') }}</a>
       </div>
     </div>
-  </li>
+  </li> -->
 
-  <li class="nav-item">
+  <!-- <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.sitemap.index') }}">
       <i class="fa fa-sitemap"></i>
       <span>{{ __('Sitemaps') }}</span></a>
-  </li>
+  </li> -->
 
   <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.subs.index') }}">
@@ -306,13 +308,13 @@
       <span>{{ __('Subscribers') }}</span></a>
   </li>
 
-  <li class="nav-item">
+  <!-- <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.cache.clear') }}">
       <i class="fas fa-sync"></i>
       <span>{{ __('Clear Cache') }}</span></a>
-  </li>
+  </li> -->
 
-  <li class="nav-item">
+  <!-- <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#sactive" aria-expanded="true"
       aria-controls="collapseTable">
       <i class="fas fa-fw fa-at"></i>
@@ -324,6 +326,6 @@
         <a class="collapse-item" href="{{route('admin-generate-backup')}}">{{ __('Generate Backup') }}</a>
       </div>
     </div>
-  </li>
+  </li> -->
 
 
