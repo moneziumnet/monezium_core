@@ -5,11 +5,11 @@
 
     <div class="card">
         <div class="d-sm-flex align-items-center justify-content-between py-3">
-        <h5 class=" mb-0 text-gray-800 pl-3">{{ __('User List') }}</h5>
+        <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Institution List') }}</h5>
         <ol class="breadcrumb py-0 m-0">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
 
-            <li class="breadcrumb-item"><a href="{{ route('admin.user.index') }}">{{ __('User List') }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('admin.user.index') }}">{{ __('Institution List') }}</a></li>
         </ol>
         </div>
     </div>
@@ -27,8 +27,8 @@
             <table id="geniustable" class="table table-hover dt-responsive" cellspacing="0" width="100%">
               <thead class="thead-light">
                 <tr>
-                    <th>{{ __("Name") }}</th>
-                    <th>{{ __("Email") }}</th>
+                    <th>{{ __("Company Name") }}</th>
+                    <th>{{ __("Email of Institution") }}</th>
                     <th>{{__('status')}}</th>
                     <th>{{ __("Options") }}</th>
                 </tr>

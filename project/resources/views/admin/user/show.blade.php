@@ -37,33 +37,42 @@
             <div class="col-md-5 mt-5">
                 <div class="table-responsive show-table">
                     <table class="table">
-                    <tr>
+                    <!-- <tr>
                       <th>{{__('ID#')}}</th>
                       <td>{{$data->id}}</td>
-                    </tr>
+                    </tr> -->
                     <tr>
-                      <th>{{__('Username')}}</th>
+                      <th>{{__('Company name')}}</th>
                       <td>{{$data->name}}</td>
                     </tr>
                     <tr>
-                      <th>{{__('Email')}}</th>
-                      <td>{{$data->email}}</td>
+                      <th>{{__('Registration Number')}}</th>
+                      <td>{{$data->account_number}}</td>
+                    </tr>
+                    <tr>
+                      <th>{{__('VAT Number')}}</th>
+                      <td>{{$data->vat}}</td>
                     </tr>
                     <tr>
                       <th>{{__('Address')}}</th>
                       <td>{{$data->address}}</td>
                     </tr>
-
                     <tr>
                       <th>{{__('City')}}</th>
                       <td>{{$data->city}}</td>
                     </tr>
-
                     <tr>
                       <th>{{__('Zip Code')}}</th>
                       <td>{{$data->zip}}</td>
                     </tr>
-
+                    <tr>
+                      <th>{{__('Email of Institution')}}</th>
+                      <td>{{$data->email}}</td>
+                    </tr>
+                    <tr>
+                      <th>{{__('Phone of Institution')}}</th>
+                      <td>{{$data->phone}}</td>
+                    </tr>
                     <tr>
                       <th>{{__('Joined')}}</th>
                       <td>{{$data->created_at->diffForHumans()}}</td>

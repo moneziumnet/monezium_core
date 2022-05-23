@@ -13,8 +13,8 @@
     </a>
     <div id="customer" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
-        <a class="collapse-item" href="{{ route('admin.user.index') }}">{{ __('User List') }}</a>
-        <a class="collapse-item" href="{{ route('admin.bank.plan.index') }}">{{ __('Bank Plans') }}</a>
+        <a class="collapse-item" href="{{ route('admin.user.index') }}">{{ __('Institution List') }}</a>
+        <!-- <a class="collapse-item" href="{{ route('admin.bank.plan.index') }}">{{ __('Bank Plans') }}</a> -->
         <a class="collapse-item" href="{{route('admin.kyc.info','user')}}">{{ __('User KYC Info') }}</a>
         <a class="collapse-item" href="{{route('admin.manage.module')}}">{{ __('User KYC Modules') }}</a>
         <a class="collapse-item" href="{{ route('admin.withdraw.index') }}">{{ __('Withdraw Request') }} @if( DB::table('withdraws')->where('status','pending')->count() > 0)
@@ -23,6 +23,12 @@
         <a class="collapse-item" href="{{ route('admin.user.bonus') }}">{{ __('Refferel Bonus') }}</a>
       </div>
     </div>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{{ route('admin.bank.plan.index') }}">
+      <i class="fas fa-chart-line"></i>
+      <span>{{ __('Pricing Plan') }}</span>
+    </a>
   </li>
 
   <li class="nav-item">

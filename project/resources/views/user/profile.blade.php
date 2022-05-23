@@ -46,27 +46,27 @@
                         <div class="row g-3">
                           <div class="col-md-6">
                             <div class="form-group">
-                              <label class="form-label required">{{__('User Name')}}</label>
+                              <label class="form-label required">{{__('Company Name')}}</label>
                               <input name="name" class="form-control form--control" autocomplete="off" placeholder="{{__('User Name')}}" type="text" value="{{ $user->name }}" required readonly>
                             </div>
                           </div>
 
                           <div class="col-md-6">
                             <div class="form-group">
-                              <label class="form-label required">{{__('Email Address')}}</label>
+                              <label class="form-label required">{{__('Email of Institution')}}</label>
                               <input name="email" class="form-control form--control" autocomplete="off" placeholder="{{__('Email Address')}}" type="email" value="{{ $user->email }}" required readonly>
                             </div>
                           </div>
                           <div class="col-md-6">
                             <div class="form-group">
-                              <label class="form-label required">{{__('Phone Number')}}</label>
+                              <label class="form-label required">{{__('Phone of Institution')}}</label>
                               <input name="phone" class="form-control form--control" autocomplete="off" placeholder="{{__('Phone Number')}}" type="tel" value="{{ $user->phone }}" required>
                             </div>
                           </div>
 
                           <div class="col-md-6">
                             <div class="form-group">
-                              <label class="form-label required">{{__('Zip')}}</label>
+                              <label class="form-label required">{{__('Zip Code')}}</label>
                               <input name="zip" class="form-control form--control" autocomplete="off" placeholder="{{__('Zip')}}" type="text" value="{{ $user->zip }}" required>
                             </div>
                           </div>
@@ -79,8 +79,8 @@
 
                           <div class="col-md-6">
                             <div class="form-group">
-                              <label class="form-label required">{{__('Fax')}}</label>
-                              <input name="fax" class="form-control form--control" autocomplete="off" placeholder="{{__('Fax')}}" type="text" value="{{ $user->fax }}" required>
+                              <label class="form-label required">{{__('VAT Number')}}</label>
+                              <input name="vat" class="form-control form--control" autocomplete="off" placeholder="{{__('VAT')}}" type="text" value="{{ $user->vat }}" required>
                             </div>
                           </div>
                           <div class="col-md-12">
@@ -90,9 +90,6 @@
                             </div>
                           </div>
                         </div>
-
-
-
 
                         <div class="form-footer">
                           <button type="submit" class="btn btn-primary submit-btn">{{__('Submit')}}</button>
