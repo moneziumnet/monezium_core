@@ -6,7 +6,7 @@
   <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Edit Plan') }} <a class="btn btn-primary btn-rounded btn-sm" href="{{route('admin.bank.plan.index')}}"><i class="fas fa-arrow-left"></i> {{ __('Back') }}</a></h5>
   <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
-      <li class="breadcrumb-item"><a href="javascript:;">{{ __('Bank Plan') }}</a></li>
+      <li class="breadcrumb-item"><a href="javascript:;">{{ __('Pricing Plan') }}</a></li>
   </ol>
   </div>
 </div>
