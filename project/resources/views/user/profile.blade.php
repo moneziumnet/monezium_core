@@ -46,20 +46,20 @@
                         <div class="row g-3">
                           <div class="col-md-6">
                             <div class="form-group">
-                              <label class="form-label required">{{__('Company Name')}}</label>
+                              <label class="form-label required">{{__('Name')}}</label>
                               <input name="name" class="form-control form--control" autocomplete="off" placeholder="{{__('User Name')}}" type="text" value="{{ $user->name }}" required readonly>
                             </div>
                           </div>
 
                           <div class="col-md-6">
                             <div class="form-group">
-                              <label class="form-label required">{{__('Email of Institution')}}</label>
+                              <label class="form-label required">{{__('Email')}}</label>
                               <input name="email" class="form-control form--control" autocomplete="off" placeholder="{{__('Email Address')}}" type="email" value="{{ $user->email }}" required readonly>
                             </div>
                           </div>
                           <div class="col-md-6">
                             <div class="form-group">
-                              <label class="form-label required">{{__('Phone of Institution')}}</label>
+                              <label class="form-label required">{{__('Phone')}}</label>
                               <input name="phone" class="form-control form--control" autocomplete="off" placeholder="{{__('Phone Number')}}" type="tel" value="{{ $user->phone }}" required>
                             </div>
                           </div>

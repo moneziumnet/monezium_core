@@ -13,8 +13,8 @@
     </a>
     <div id="customer" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
-        <a class="collapse-item" href="{{ route('admin.user.index') }}">{{ __('Institution List') }}</a>
-        <!-- <a class="collapse-item" href="{{ route('admin.bank.plan.index') }}">{{ __('Pricing Plan') }}</a> -->
+        <a class="collapse-item" href="{{ route('admin.user.index') }}">{{ __('User List') }}</a>
+        <a class="collapse-item" href="{{ route('admin.bank.plan.index') }}">{{ __('Pricing Plan') }}</a>
         <a class="collapse-item" href="{{route('admin.kyc.info','user')}}">{{ __('User KYC Info') }}</a>
         <a class="collapse-item" href="{{route('admin.manage.module')}}">{{ __('User KYC Modules') }}</a>
         <a class="collapse-item" href="{{ route('admin.withdraw.index') }}">{{ __('Withdraw Request') }} @if( DB::table('withdraws')->where('status','pending')->count() > 0)
@@ -24,11 +24,19 @@
       </div>
     </div>
   </li>
+
   <li class="nav-item">
-    <a class="nav-link" href="{{ route('admin.bank.plan.index') }}">
-      <i class="fas fa-chart-line"></i>
-      <span>{{ __('Pricing Plan') }}</span>
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#institution" aria-expanded="true"
+      aria-controls="collapseTable">
+      <i class="fas fa-fw fa-users"></i>
+      <span>{{  __('Manage Institution') }}</span>
     </a>
+    <div id="institution" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+        <a class="collapse-item" href="{{ route('admin.staff.index') }}">{{ __('Institution') }}</a>
+        <a class="collapse-item" href="{{ route('admin.role.index') }}">{{ __('Roles') }}</a>
+      </div>
+    </div>
   </li>
 
   <li class="nav-item">
@@ -230,18 +238,6 @@
         <a class="collapse-item" href="{{ route('admin.payment.index') }}">{{  __('Payment Gateways')  }}</a>
       </div>
     </div>
-  </li>
-
-  <li class="nav-item">
-    <a class="nav-link" href="{{ route('admin.role.index') }}">
-      <i class="fa fa-crop"></i>
-      <span>{{ __('Manage Roles') }}</span></a>
-  </li>
-
-  <li class="nav-item">
-    <a class="nav-link" href="{{ route('admin.staff.index') }}">
-      <i class="fas fa-fw fa-users"></i>
-      <span>{{ __('Manage Staff') }}</span></a>
   </li>
 
   <li class="nav-item">

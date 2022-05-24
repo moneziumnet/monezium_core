@@ -37,12 +37,12 @@
             <div class="col-md-5 mt-5">
                 <div class="table-responsive show-table">
                     <table class="table">
-                    <!-- <tr>
+                    <tr>
                       <th>{{__('ID#')}}</th>
                       <td>{{$data->id}}</td>
-                    </tr> -->
+                    </tr>
                     <tr>
-                      <th>{{__('Company name')}}</th>
+                      <th>{{__('Name')}}</th>
                       <td>{{$data->name}}</td>
                     </tr>
                     <tr>
@@ -66,11 +66,11 @@
                       <td>{{$data->zip}}</td>
                     </tr>
                     <tr>
-                      <th>{{__('Email of Institution')}}</th>
+                      <th>{{__('Email')}}</th>
                       <td>{{$data->email}}</td>
                     </tr>
                     <tr>
-                      <th>{{__('Phone of Institution')}}</th>
+                      <th>{{__('Phone')}}</th>
                       <td>{{$data->phone}}</td>
                     </tr>
                     <tr>
