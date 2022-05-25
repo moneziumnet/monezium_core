@@ -402,7 +402,7 @@ Route::prefix('admin')->group(function(){
         Route::get('/role/delete/{id}', [RoleController::class,'destroy'])->name('admin.role.delete');
       });
     
-      Route::group(['middleware'=>'permissions:Manage Staff'],function(){
+      Route::group(['middleware'=>'permissions:Manage Institution'],function(){
         Route::get('/staff/datatables', [StaffController::class,'datatables'])->name('admin.staff.datatables');
         Route::get('/staff', [StaffController::class,'index'])->name('admin.staff.index');
         Route::get('/staff/create', [StaffController::class,'create'])->name('admin.staff.create');

@@ -11,30 +11,30 @@
                                     <div class="table-responsive show-table">
                                         <table class="table">
                                             <tr>
-                                                <th>{{ __("Staff ID#") }}</th>
+                                                <th>{{ __("Institution ID#") }}</th>
                                                 <td>{{$data->id}}</td>
                                             </tr>
                                             <tr>
-                                                <th>{{ __("Staff Photo") }}</th>
+                                                <th>{{ __("Institution Photo") }}</th>
                                                 <td>
                                               <img src="{{ $data->photo ? asset('assets/images/admins/'.$data->photo):asset('assets/images/noimage.png')}}" alt="{{ __("No Image") }}">
 
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <th>{{ __("Staff Name") }}</th>
+                                                <th>{{ __("Institution Name") }}</th>
                                                 <td>{{$data->name}}</td>
                                             </tr>
                                             <tr>
-                                                <th>{{ __("Staff Role") }}</th>
+                                                <th>{{ __("Institution Role") }}</th>
                                                 <td>{{ $data->role_id == 0 ? 'No Role' : $data->role->name }}</td>
                                             </tr>
                                             <tr>
-                                                <th>{{ __("Staff Email") }}</th>
+                                                <th>{{ __("Institution Email") }}</th>
                                                 <td>{{$data->email}}</td>
                                             </tr>
                                             <tr>
-                                                <th>{{ __("Staff Phone") }}</th>
+                                                <th>{{ __("Institution Phone") }}</th>
                                                 <td>{{$data->phone}}</td>
                                             </tr>
                                             <tr>

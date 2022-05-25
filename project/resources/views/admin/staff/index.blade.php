@@ -3,10 +3,10 @@
 @section('content')
     <div class="card">
         <div class="d-sm-flex align-items-center justify-content-between py-3">
-            <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Manage Staff') }}</h5>
+            <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Manage Institution') }}</h5>
             <ol class="breadcrumb m-0 py-0">
                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('admin.staff.index') }}">{{ __('Manage Staff') }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('admin.staff.index') }}">{{ __('Manage Institution') }}</a></li>
             </ol>
         </div>
     </div>
@@ -65,7 +65,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p class="text-center">{{__('You are about to delete this Staff')}}.</p>
+                    <p class="text-center">{{__('You are about to delete this Institution')}}.</p>
                     <p class="text-center">{{__('Do you want to proceed')}}?</p>
                 </div>
                 <div class="modal-footer">
@@ -107,7 +107,7 @@ var table = $('#geniustable').DataTable({
         $(function() {
             $(".btn-area").append('<div class="col-sm-12 col-md-4 pr-3 text-right">'+
                 '<a class="btn btn-primary" href="{{route('admin.staff.create')}}">'+
-            '<i class="fas fa-plus"></i> Add New Staff'+
+            '<i class="fas fa-plus"></i> Add New Institution'+
             '</a>'+
             '</div>');
         });
