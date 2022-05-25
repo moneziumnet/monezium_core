@@ -28,6 +28,7 @@ use App\Http\Controllers\User\UserFdrController;
 use App\Http\Controllers\User\UserLoanController;
 use App\Http\Controllers\User\WireTransferController;
 use App\Http\Controllers\User\WithdrawController;
+use App\Http\Controllers\User\VoucherController;
 use App\Http\Middleware\KYC;
 use App\Http\Middleware\Otp;
 use App\Models\Childcategory;
@@ -113,6 +114,12 @@ Route::prefix('user')->group(function() {
         Route::post('/request/money/send/{id}', [MoneyRequestController::class,'send'])->name('user.request.money.send');
         Route::get('/money-request/details/{id}', [MoneyRequestController::class,'details'])->name('user.money.request.details');
       });
+      
+      //Reedem voucher
+      Route::get('vouchers',  [VoucherController::class,'vouchers'])->name('vouchers');
+      Route::get('reedem-voucher',  [VoucherController::class,'reedemForm'])->name('reedem.voucher');
+      Route::post('reedem-voucher',  [VoucherController::class,'reedemSubmit']);
+      Route::get('reedemed-history',  [VoucherController::class,'reedemHistory'])->name('reedem.history');
   
       Route::group(['middleware'=>'kyc:Wire Transfer'],function(){
         Route::get('wire-transfer',[WireTransferController::class,'index'])->name('user.wire.transfer.index');
