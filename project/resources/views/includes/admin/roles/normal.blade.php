@@ -30,6 +30,22 @@
   </li>
   @endif
 
+  @if(Auth::guard('admin')->user()->sectionCheck('Manage Staff'))
+  <li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#institution" aria-expanded="true"
+      aria-controls="collapseTable">
+      <i class="fas fa-fw fa-users"></i>
+      <span>{{  __('Manage Institution') }}</span>
+    </a>
+    <div id="institution" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+        <a class="collapse-item" href="{{ route('admin.staff.index') }}">{{ __('Institution') }}</a>
+        <a class="collapse-item" href="{{ route('admin.role.index') }}">{{ __('Roles') }}</a>
+      </div>
+    </div>
+  </li>
+  @endif
+
   @if(Auth::guard('admin')->user()->sectionCheck('Loan Management'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#loan" aria-expanded="true" aria-controls="collapseTable">
@@ -259,21 +275,6 @@
   </li>
   @endif
 
-  @if(Auth::guard('admin')->user()->sectionCheck('Manage Roles'))
-  <li class="nav-item">
-    <a class="nav-link" href="{{ route('admin.role.index') }}">
-      <i class="fa fa-crop"></i>
-      <span>{{ __('Manage Roles') }}</span></a>
-  </li>
-  @endif
-
-  @if(Auth::guard('admin')->user()->sectionCheck('Manage Staff'))
-  <li class="nav-item">
-    <a class="nav-link" href="{{ route('admin.staff.index') }}">
-      <i class="fas fa-fw fa-users"></i>
-      <span>{{ __('Manage Staff') }}</span></a>
-  </li>
-  @endif
 
   @if(Auth::guard('admin')->user()->sectionCheck('Manage KYC Form'))
   <li class="nav-item">

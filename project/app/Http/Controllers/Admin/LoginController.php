@@ -49,7 +49,7 @@ class LoginController extends Controller
         // if unsuccessful, then redirect back to the login with the form data
         $msg = array(
             'type' => 'warn',
-            'message' => "Credentials Doesn\'t Match !"
+            'message' => "Credentials Doesn't Match !"
         );
         return response()->json(array('errors' => $msg));
     }
