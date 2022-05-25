@@ -138,7 +138,34 @@
                 </div>
               </li>
             @endif
+            
+            @if (!in_array('Voucher',$modules))
+              <li class="nav-item dropdown {{ request()->routeIs('user.vouchers', 'user.reedem.voucher','user.reedem.history') ? 'active' : '' }}">
+                <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false" >
+                  <span class="nav-link-icon d-md-none d-lg-inline-block">
+                    <i class="fas fa-file-signature"></i>
+                  </span>
+                  <span class="nav-link-title">
+                    {{__('Vouchers')}}
+                  </span>
+                </a>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="{{route('user.vouchers')}}" >
+                    {{__('My Vouchers')}}
+                  </a>
 
+                  <a class="dropdown-item" href="{{route('user.reedem.voucher')}}" >
+                    {{__('Redeem Voucher')}}
+                  </a>
+
+                  <a class="dropdown-item" href="{{route('user.reedem.history')}}" >
+                    {{__('Redeemed History')}}
+                  </a>
+                </div>
+              </li>
+            @endif
+
+            
             @if (!in_array('Deposit',$modules))
               <li class="nav-item {{ request()->routeIs('user.deposit.index') ? 'active' : '' }}">
                   <a class="nav-link" href="{{route('user.deposit.index')}}" >

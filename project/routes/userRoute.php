@@ -116,10 +116,10 @@ Route::prefix('user')->group(function() {
       });
       
       //Reedem voucher
-      Route::get('vouchers',  [VoucherController::class,'vouchers'])->name('vouchers');
-      Route::get('reedem-voucher',  [VoucherController::class,'reedemForm'])->name('reedem.voucher');
-      Route::post('reedem-voucher',  [VoucherController::class,'reedemSubmit']);
-      Route::get('reedemed-history',  [VoucherController::class,'reedemHistory'])->name('reedem.history');
+      Route::get('vouchers',  [VoucherController::class,'vouchers'])->name('user.vouchers');
+      Route::get('reedem-voucher',  [VoucherController::class,'reedemForm'])->name('user.reedem.voucher');
+      Route::post('reedem-voucher',  [VoucherController::class,'user.reedemSubmit']);
+      Route::get('reedemed-history',  [VoucherController::class,'reedemHistory'])->name('user.reedem.history');
   
       Route::group(['middleware'=>'kyc:Wire Transfer'],function(){
         Route::get('wire-transfer',[WireTransferController::class,'index'])->name('user.wire.transfer.index');
