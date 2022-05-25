@@ -63,7 +63,7 @@ class LoginController extends Controller
             }
         }
 
-        return response()->json(array('errors' => [ 0 => 'Credentials Doesn\'t Match !' ]));     
+        return response()->json(array('errors' => [ 0 => "Credentials Doesn't Match !" ]));
     }
 
     public function logout()
