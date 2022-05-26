@@ -1,14 +1,10 @@
 @extends('layouts.user')
 
-@section('title')
-    @lang('Reedem Voucher')
-@endsection
+@push('css')
+    
+@endpush
 
-@section('breadcrumb')
-   @lang('Reedem Voucher')
-@endsection
-
-@section('content')
+@section('contents')
 <div class="container-xl">
     <div class="row row-deck row-cards">
         <div class="col-12">
@@ -108,7 +104,7 @@
        
         $('.create').on('click',function () { 
             if($('#code').val() == ''){
-              toast('error','@lang('Please provide the voucher code first')')
+              toast('error','@lang("Please provide the voucher code first")')
               return false
             } 
             $('#modal-success').modal('show')

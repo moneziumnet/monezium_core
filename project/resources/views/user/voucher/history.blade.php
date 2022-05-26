@@ -1,51 +1,80 @@
 @extends('layouts.user')
 
-@section('title')
-   @lang('Reedemed History')
-@endsection
+@push('css')
+    
+@endpush
 
-@section('breadcrumb')
-@lang('Reedemed History')
-@endsection
-
-@section('content')
-  <div class="container-xl">
-        
-    <div class="row row-deck row-cards">
-       
-        <div class="col-12">
-            <div class="card">
-                <div class="table-responsive">
-                  <table class="table table-vcenter card-table table-striped">
-                    <thead>
-                      <tr>
-                        <th>@lang('Voucher Code')</th>
-                        <th>@lang('Amount')</th>
-                        <th>@lang('Reedemed at')</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      @forelse ($history as $item)
-                        <tr>
-                          <td data-label="@lang('Voucher Code')">{{$item->code}}</td>
-                          <td data-label="@lang('Amount')">{{numFormat($item->amount)}} {{$item->currency->code}}</td>
-                        
-                          <td data-label="@lang('Reedemed at')">{{dateFormat($item->updated_at)}}</td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td class="text-center" colspan="12">@lang('No data found!')</td>
-                        </tr>
-                      @endforelse
-                    </tbody>
-                  </table>
-                </div>
-                <div class="mt-2 text-right">
-                    {{$history->links()}}
-                </div>
-            </div>
-            
+@section('contents')
+<div class="container-xl">
+  <div class="page-header d-print-none">
+    <div class="row align-items-center">
+      <div class="col">
+        <div class="page-pretitle">
+          {{__('Overview')}}
         </div>
+        <h2 class="page-title">
+          {{__('Redeemed Voucher History')}}
+        </h2>
+      </div>
     </div>
   </div>
+</div>
+
+
+<div class="page-body">
+  <div class="container-xl">
+      <div class="row row-cards">
+          <div class="col-12">
+              <div class="card">
+                  @if (count($history) == 0)
+                      <h3 class="text-center py-5">{{__('No Redeemed Voucher Data Found')}}</h3>
+                  @else 
+                      <div class="table-responsive">
+                          <table class="table table-vcenter table-mobile-lg card-table">
+                              <thead>
+                              <tr>
+                                  <th>{{ __('Voucher Code') }}</th>
+                                  <th>{{ __('Amount') }}</th>
+                                  <th>{{ __('Reedemed at') }}</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                                @foreach($history as $item)
+                                    <tr>
+                                        <td data-label="{{ __('Voucher Code') }}">
+                                            <div>
+                                              {{$item->code}}
+                                            </div>
+                                        </td>
+
+                                        <td data-label="{{ __('Amount') }}">
+                                          <div>
+                                            {{numFormat($item->amount)}} {{$item->currency->code}}
+                                          </div>
+                                        </td>
+
+                                        <td data-label="{{ __('Reedemed at') }}">
+                                            <div>
+                                              {{dateFormat($item->updated_at)}}
+                                            </div>
+                                        </td>
+
+                                        
+                                    </tr>
+                                @endforeach
+                              </tbody>
+                          </table>
+                      </div>
+                      {{ $history->links() }}
+                  @endif
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
 @endsection
+
+@push('js')
+
+@endpush

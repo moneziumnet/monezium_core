@@ -100,8 +100,8 @@ class VoucherController extends Controller
 
     public function reedemForm()
     {
-        $recentReedemed = Voucher::where('status',1)->where('reedemed_by',auth()->id())->take(7)->get();
-        return view('user.voucher.reedem',compact('recentReedemed'));
+        $data['recentReedemed'] = Voucher::where('status',1)->where('reedemed_by',auth()->id())->take(7)->get();
+        return view('user.voucher.reedem',$data);
     }
 
     public function reedemSubmit(Request $request)
@@ -152,7 +152,7 @@ class VoucherController extends Controller
 
     public function reedemHistory()
     { 
-        $history = Voucher::where('status',1)->where('reedemed_by',auth()->id())->paginate(20);
-        return view('user.voucher.history',compact('history'));
+        $data['history'] = Voucher::where('status',1)->where('reedemed_by',auth()->id())->paginate(20);
+        return view('user.voucher.history',$data);
     }
 }
