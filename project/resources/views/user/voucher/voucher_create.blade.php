@@ -1,14 +1,10 @@
 @extends('layouts.user')
 
-@section('title')
-    @lang('Create Voucher')
-@endsection
+@push('css')
+    
+@endpush
 
-@section('breadcrumb')
-   @lang('Create Voucher')
-@endsection
-
-@section('content')
+@section('contents')
 <div class="container-xl">
     <div class="row row-deck row-cards">
         <div class="col-12">

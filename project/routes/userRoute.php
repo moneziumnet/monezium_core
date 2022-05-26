@@ -115,6 +115,11 @@ Route::prefix('user')->group(function() {
         Route::get('/money-request/details/{id}', [MoneyRequestController::class,'details'])->name('user.money.request.details');
       });
       
+      Route::group(['middleware'=>'kyc:Voucher'],function(){
+        Route::get('create-voucher',   [VoucherController::class,'create'])->name('user.create.voucher');
+        Route::post('create-voucher',   [VoucherController::class,'submit']);
+      });
+      
       //Reedem voucher
       Route::get('vouchers',  [VoucherController::class,'vouchers'])->name('user.vouchers');
       Route::get('reedem-voucher',  [VoucherController::class,'reedemForm'])->name('user.reedem.voucher');
