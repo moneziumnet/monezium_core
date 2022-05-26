@@ -50,5 +50,22 @@ use App\Models\Charge;
     }
   }
 
+  if(!function_exists('numFormat')){
+    
+    function numFormat($amount, $length = 0)
+    {
+        if(0 < $length)return number_format( $amount + 0, $length);
+        return $amount + 0;
+    }
+  }
+  
+  if(!function_exists('amount')){
+    
+    function amount($amount,$type = 1,$length = 0){
+        if($type == 2) return numFormat($amount,8);
+        else return numFormat($amount,$length);  
+    }
+  }
+
 
 ?>

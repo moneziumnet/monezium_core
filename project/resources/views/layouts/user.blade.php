@@ -23,6 +23,7 @@
       @includeIf('includes.user.header')
 
       @includeIf('includes.user.nav')
+	  {{-- @dd($gs) --}}
       <div class="page-wrapper">
 
         @yield('contents')

@@ -27,9 +27,10 @@ class VoucherController extends Controller
 
     public function create()
     {
-        $data['wallets'] = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('balance', '>', 0)->get();
+       
+        $data['wallets'] = Wallet::with('currency')->where('user_id',auth()->id())->where('user_type',1)->where('balance', '>', 0)->get();
         $data['charge'] = charge('create-voucher');
-        $date['recentVouchers'] = Voucher::where('user_id',auth()->id())->latest()->take(7)->get();
+        $data['recentVouchers'] = Voucher::where('user_id',auth()->id())->latest()->take(7)->get();
         return view('user.voucher.voucher_create',$data);
     }
 

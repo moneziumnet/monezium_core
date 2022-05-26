@@ -106,6 +106,15 @@
                     </div>
                 </div>
             </div>
+            
+            <div class="col-md-6">
+                <div class="form-group">
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox" name="user_module[]" value="Voucher" {{ $data->moduleCheck('Voucher') ? 'checked' : '' }} class="custom-control-input" id="voucher">
+                    <label class="custom-control-label" for="voucher">{{__('Voucher')}}</label>
+                    </div>
+                </div>
+            </div>
 
             <div class="col-md-6">
                 <div class="form-group">
