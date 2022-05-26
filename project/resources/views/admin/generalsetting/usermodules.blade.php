@@ -115,6 +115,33 @@
                     </div>
                 </div>
             </div>
+            
+            <div class="col-md-6">
+                <div class="form-group">
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox" name="user_module[]" value="Invoice" {{ $data->moduleCheck('Invoice') ? 'checked' : '' }} class="custom-control-input" id="invoice">
+                    <label class="custom-control-label" for="invoice">{{__('Invoice')}}</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="form-group">
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox" name="user_module[]" value="Escrow" {{ $data->moduleCheck('Escrow') ? 'checked' : '' }} class="custom-control-input" id="escrow">
+                    <label class="custom-control-label" for="escrow">{{__('Escrow')}}</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="form-group">
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox" name="user_module[]" value="Exchange Money" {{ $data->moduleCheck('Exchange Money') ? 'checked' : '' }} class="custom-control-input" id="exchange-money">
+                    <label class="custom-control-label" for="exchange-money">{{__('Exchange Money')}}</label>
+                    </div>
+                </div>
+            </div>
 
             <div class="col-md-6">
                 <div class="form-group">

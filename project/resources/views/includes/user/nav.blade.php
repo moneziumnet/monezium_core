@@ -117,6 +117,19 @@
               </li>
             @endif
 
+            @if (!in_array('Exchange Money',$modules))
+              <li class="nav-item {{ request()->routeIs('user.deposit.index') ? 'active' : '' }}">
+                  <a class="nav-link" href="{{route('user.deposit.index')}}" >
+                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                      <i class="fas fa-exchange-alt"></i>
+                    </span>
+                    <span class="nav-link-title">
+                      {{__('Exchange')}}
+                    </span>
+                  </a>
+              </li>
+            @endif
+
             @if (!in_array('Request Money',$modules))
               <li class="nav-item dropdown {{ request()->routeIs('user.money.request.index') || request()->routeIs('user.request.money.receive') ? 'active' : '' }}">
                 <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false" >
@@ -225,8 +238,31 @@
                 </div>
               </li>
             @endif
+            
+            @if (!in_array('Invoice',$modules))
+              <li class="nav-item dropdown {{ request()->routeIs('send.money.create') || request()->routeIs('user.beneficiaries.index') || request()->routeIs('user.other.bank') || request()->routeIs('tranfer.logs.index') ? 'active' : '' }}">
+                <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false" >
+                  <span class="nav-link-icon d-md-none d-lg-inline-block">
+                    <i class="fas fa-exchange-alt"></i>
+                  </span>
+                  <span class="nav-link-title">
+                    {{__('Invoice')}}
+                  </span>
+                </a>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="{{route('user.beneficiaries.index')}}" >
+                    {{__('Invoices')}}
+                  </a>
+                  <a class="dropdown-item" href="{{route('send.money.create')}}" >
+                    {{__('Create Invoice')}}
+                  </a>
 
-            @if ($gs->withdraw_status == 1)
+                  
+                </div>
+              </li>
+            @endif
+
+            {{-- @if ($gs->withdraw_status == 1)
               @if (!in_array('Withdraw',$modules))
                 <li class="nav-item {{ request()->routeIs('user.withdraw.index') ? 'active' : '' }}">
                   <a class="nav-link" href="{{route('user.withdraw.index')}}" >
@@ -239,21 +275,9 @@
                   </a>
                 </li>
               @endif
-            @endif
+            @endif --}}
 
-            @if (!in_array('Pricing Plan',$modules))
-              <li class="nav-item {{ request()->routeIs('user.package.index') ? 'active' : '' }}">
-                <a class="nav-link" href="{{route('user.package.index')}}" >
-                  <span class="nav-link-icon d-md-none d-lg-inline-block">
-                    <i class="fab fa-affiliatetheme"></i>
-                  </span>
-                  <span class="nav-link-title">
-                    {{__('Pricing Plan')}}
-                  </span>
-                </a>
-              </li>
-            @endif
-
+            
             @if (!in_array('More',$modules))
               <li class="nav-item dropdown {{ request()->routeIs('user.show2faForm') || request()->routeIs('user.referral.index') || request()->routeIs('user.referral.commissions') || request()->routeIs('user.message.index') || request()->routeIs('user.other.bank') ? 'active' : '' }}">
                 <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false" >
@@ -265,6 +289,20 @@
                   </span>
                 </a>
                 <div class="dropdown-menu">
+                  @if ($gs->withdraw_status == 1)
+                    @if (!in_array('Withdraw',$modules))
+                      <a class="dropdown-item" href="{{route('user.withdraw.index')}}" >
+                        {{__('Withdraw')}}
+                      </a>
+                    @endif
+                  @endif
+                  
+                  @if (!in_array('Pricing Plan',$modules))
+                    <a class="dropdown-item" href="{{route('user.package.index')}}" >
+                      {{__('Pricing Plan')}}
+                    </a>
+                  @endif
+                  
                   <a class="dropdown-item" href="{{route('user.show2faForm')}}" >
                     {{__('2FA Security')}}
                   </a>

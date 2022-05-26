@@ -79,6 +79,33 @@
                   </div>
               </div>
             </div>
+            
+            <div class="col-md-6">
+              <div class="form-group">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" name="module_section[]" value="Invoice" {{ $data->sectionCheck('Invoice') ? 'checked' : '' }} class="custom-control-input" id="Invoice">
+                  <label class="custom-control-label" for="Invoice">{{__('Invoice')}}</label>
+                  </div>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="form-group">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" name="module_section[]" value="Escrow" {{ $data->sectionCheck('Escrow') ? 'checked' : '' }} class="custom-control-input" id="Escrow">
+                  <label class="custom-control-label" for="Escrow">{{__('Escrow')}}</label>
+                  </div>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="form-group">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" name="module_section[]" value="Exchange Money" {{ $data->sectionCheck('Exchange Money') ? 'checked' : '' }} class="custom-control-input" id="Exchange Money">
+                  <label class="custom-control-label" for="Exchange Money">{{__('Exchange Money')}}</label>
+                  </div>
+              </div>
+            </div>
 
           </div>
             
