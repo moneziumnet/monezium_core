@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use App\Models\Currency;
 use App\Models\Generalsetting;
 use App\Models\Charge;
@@ -64,6 +65,13 @@ use App\Models\Charge;
     function amount($amount,$type = 1,$length = 0){
         if($type == 2) return numFormat($amount,8);
         else return numFormat($amount,$length);  
+    }
+  }
+  
+  if(!function_exists('dateFormat')){
+    
+    function dateFormat($date,$format = 'd M Y -- h:i a'){
+      return Carbon::parse($date)->format($format);
     }
   }
 

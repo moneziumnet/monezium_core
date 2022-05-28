@@ -19,7 +19,7 @@ class ManageInvoiceController extends Controller
      */
     public function index()
     {
-        $date['invoices'] = Invoice::where('user_id',auth()->id())->latest()->paginate(15);
+        $data['invoices'] = Invoice::where('user_id',auth()->id())->latest()->paginate(15);
         return view('user.invoice.index',$data);
     }
 
@@ -235,8 +235,8 @@ class ManageInvoiceController extends Controller
     }
     public function view($number)
     {
-        $invoice = Invoice::where('number',$number)->firstOrFail();
-        return view('user.invoice.invoice',compact('invoice'));
+        $data['invoice'] = Invoice::where('number',$number)->firstOrFail();
+        return view('user.invoice.invoice',$data);
     }
 
     public function sendToMail($id)

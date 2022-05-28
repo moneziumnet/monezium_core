@@ -240,20 +240,20 @@
             @endif
             
             @if (!in_array('Invoice',$modules))
-              <li class="nav-item dropdown {{ request()->routeIs('send.money.create') || request()->routeIs('user.beneficiaries.index') || request()->routeIs('user.other.bank') || request()->routeIs('tranfer.logs.index') ? 'active' : '' }}">
+              <li class="nav-item dropdown {{ request()->routeIs('user.invoice.create') || request()->routeIs('user.invoice.index') || request()->routeIs('user.other.bank') || request()->routeIs('tranfer.logs.index') ? 'active' : '' }}">
                 <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false" >
                   <span class="nav-link-icon d-md-none d-lg-inline-block">
-                    <i class="fas fa-exchange-alt"></i>
+                    <i class="fas fa-file-invoice"></i>
                   </span>
                   <span class="nav-link-title">
                     {{__('Invoice')}}
                   </span>
                 </a>
                 <div class="dropdown-menu">
-                  <a class="dropdown-item" href="{{route('user.beneficiaries.index')}}" >
+                  <a class="dropdown-item" href="{{route('user.invoice.index')}}" >
                     {{__('Invoices')}}
                   </a>
-                  <a class="dropdown-item" href="{{route('send.money.create')}}" >
+                  <a class="dropdown-item" href="{{route('user.invoice.create')}}" >
                     {{__('Create Invoice')}}
                   </a>
 
