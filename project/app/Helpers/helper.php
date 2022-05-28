@@ -11,12 +11,12 @@ use App\Models\Charge;
       function showPrice($price,$currency){
         $gs = Generalsetting::first();
         
-        $price = round(($price) * $currency->value,2);
+        $price = round(($price) * $currency->rate,2);
         if($gs->currency_format == 0){
-            return $currency->sign. $price;
+            return $currency->symbol. $price;
         }
         else{
-            return $price. $currency->sign;
+            return $price. $currency->symbol;
         }
     }
   }
@@ -24,7 +24,7 @@ use App\Models\Charge;
 
   if(!function_exists('convertedPrice')){
     function convertedPrice($price,$currency){
-      return $price = $price * $currency->value;
+      return $price = $price * $currency->rate;
     }
   }
 

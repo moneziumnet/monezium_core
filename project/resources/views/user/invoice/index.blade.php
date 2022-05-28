@@ -23,7 +23,7 @@
 
           <a href="{{ route('user.invoice.create') }}" class="btn btn-primary d-none d-sm-inline-block">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
-            {{__('Create new Invoice')}}
+            {{__('Create Invoice')}}
           </a>
         </div>
       </div>
@@ -87,7 +87,7 @@
                                             <small class="form-check-label pay-status-{{$item->id}} badge {{$item->payment_status == 1 ? 'bg-success':'bg-secondary'}}">{{$item->payment_status == 1 ? 'Paid':'Unpaid'}}</small>
                                           </label>
                                           @else
-                                            @lang('N/A')
+                                            {{__('N/A')}}
                                           @endif
                                         </div>
                                       </td>
@@ -100,9 +100,9 @@
                                             <small class="form-check-label status-text-{{$item->id}} badge {{$item->status == 1 ? 'bg-success':'bg-secondary'}}">{{$item->status == 1 ? 'Published':'Un-Published'}}</small>
                                           </label>
                                           @elseif($item->status == 2)
-                                            <span class="badge bg-danger">@lang('cancelled')</span>
+                                            <span class="badge bg-danger">{{__('cancelled')}}</span>
                                             @else
-                                            <span class="badge bg-success">@lang('Published')</span>
+                                            <span class="badge bg-success">{{__('Published')}}</span>
                                           @endif
                                         </div>
                                       </td>
@@ -123,7 +123,7 @@
                                           <a href="javascript:void(0)" class="btn btn-primary btn-sm disabled"><i class="fas fa-edit"></i></a>
                                           @endif
 
-                                          <a href="javascript:void(0)" class="btn btn-secondary btn-sm copy" data-clipboard-text="{{route('user.invoice.view',encrypt($item->number))}}" title="@lang('Copy Invoice URL')"><i class="fas fa-copy"></i></a>
+                                          <a href="javascript:void(0)" class="btn btn-secondary btn-sm copy" data-clipboard-text="{{route('invoice.view',encrypt($item->number))}}" title="{{__('Copy Invoice URL')}}"><i class="fas fa-copy"></i></a>
                                         </div>
                                       </td>
                                   </tr>
@@ -141,26 +141,29 @@
 
 @endsection
 
-@push('script')
+@push('js')
+
+
    <script src="{{asset('assets/user/js/clipboard.min.js')}}"></script>
     <script>
         'use strict';
         $('.pay_status').on('change',function () { 
+         
             var url = "{{route('user.invoice.pay.status')}}"
             var id = $(this).data('id')
             $.post(url,{id:id,_token:'{{csrf_token()}}'},function (res) { 
                 if(res.paid){
-                    toast('success',res.paid)
+                  //  toast('success',res.paid)
                     $('.pay-status-'+id).addClass('bg-success').text('Paid')
                     return false
                 }
                 if(res.unpaid){
-                    toast('success',res.unpaid)
+                   // toast('success',res.unpaid)
                     $('.pay-status-'+id).removeClass('bg-success').addClass('bg-secondary').text('Unpaid')
                     return false
                 }
                 if(res.error){
-                    toast('error',res.error)
+                    //toast('error',res.error)
                     return false
                 }
             })
@@ -170,19 +173,19 @@
             var id = $(this).data('id')
             $.post(url,{id:id,_token:'{{csrf_token()}}'},function (res) { 
                 if(res.unpublish){
-                    toast('success',res.unpublish)
+                  //  toast('success',res.unpublish)
                     $('.status-text-'+id).removeClass('bg-success').addClass('bg-secondary').text('Un-published')
                     $('.edit-'+id).removeClass('disabled')
                     return false
                 }
                 if(res.publish){
-                    toast('success',res.publish)
+                  //  toast('success',res.publish)
                     $('.status-text-'+id).addClass('bg-success').text('Published')
                     $('.edit-'+id).addClass('disabled')
                     return false
                 }
                 if(res.error){
-                    toast('error',res.error)
+                   // toast('error',res.error)
                     return false
                 }
             })

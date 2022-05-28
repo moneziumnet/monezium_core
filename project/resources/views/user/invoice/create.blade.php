@@ -1,18 +1,30 @@
 @extends('layouts.user')
 
-@section('title')
-   @lang('Create Invoice')
-@endsection
+@section('contents')
 
-@section('breadcrumb')
-    @lang('Create Invoice')
-@endsection
+<div class="container-xl">
+    <div class="page-header d-print-none">
+      <div class="row align-items-center">
+        <div class="col">
+          <div class="page-pretitle">
+            {{__('Overview')}}
+          </div>
+          <h2 class="page-title">
+            {{__('Create Invoice')}}
+          </h2>
+        </div>
+        <div class="col-auto ms-auto d-print-none">
+          <div class="btn-list">
+  
+            <a href="{{ route('user.invoice.index') }}" class="btn btn-primary d-none d-sm-inline-block">
+                <i class="fas fa-backward me-1"></i> {{__('Invoice List')}}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-@push('extra')
-   <a href="{{route('user.invoice.index')}}" class="btn btn-primary"><i class="fas fa-backward me-1"></i> @lang(' Invoice List')</a>
-@endpush
-
-@section('content')
 <div class="container-xl">
     <div class="row row-deck row-cards">
         <div class="col-12">

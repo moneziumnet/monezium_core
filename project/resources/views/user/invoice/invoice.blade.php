@@ -1,24 +1,33 @@
 @extends('layouts.user')
 
-@section('title')
-   @lang('Invoice')
-@endsection
+@section('contents')
+<div class="container-xl">
+  <div class="page-header d-print-none">
+    <div class="row align-items-center">
+      <div class="col">
+        <div class="page-pretitle">
+          {{__('Overview')}}
+        </div>
+        <h2 class="page-title">
+          {{__('Invoice:')}} {{$invoice->number}}
+        </h2>
+      </div>
+      <div class="col-auto ms-auto d-print-none">
+        <div class="btn-list">
 
-@section('breadcrumb')
-      @lang('Invoice : '.$invoice->number)
-@endsection
-@push('extra')
-  <a href="{{route('user.invoice.index')}}" class="btn btn-primary"><i class="fas fa-backward me-1"></i> @lang(' Back')</a>
-@endpush
+          <a href="{{route('user.invoice.index')}}" class="btn btn-primary"><i class="fas fa-backward me-1"></i> {{__(' Back')}}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-
-@section('content')
 <div class="container-xl">
     <div class="card card-lg">
       <div class="card-body">
         <div class="row">
           <div class="col-6">
-            <p class="h3">@lang('From')</p>
+            <p class="h3">{{__('From')}}</p>
             <address>
               {{@$contact->content->address}}<br>
               {{@$contact->content->email}}<br>
@@ -26,22 +35,22 @@
             </address>
           </div>
           <div class="col-6 text-end">
-            <p class="h3">@lang('To')</p>
+            <p class="h3">{{__('To')}}</p>
             <address>
                 {{$invoice->address}}<br>
                 {{$invoice->email}} 
             </address>
           </div>
           <div class="col-12 my-5">
-            <h1>@lang('Invoice : ') {{$invoice->number}}</h1>
+            <h1>{{__('Invoice : ')}} {{$invoice->number}}</h1>
           </div>
         </div>
         <table class="table table-transparent table-responsive">
           <thead>
             <tr>
-              <th class="text-center" style="width: 1%">@lang('SL')</th>
-              <th>@lang('Item')</th>
-              <th class="text-end" style="width: 1%">@lang('Amount')</th>
+              <th class="text-center" style="width: 1%">{{__('SL')}}</th>
+              <th>{{__('Item')}}</th>
+              <th class="text-end" style="width: 1%">{{__('Amount')}}</th>
             </tr>
           </thead>
           @foreach ($invoice->items as $k => $value)
@@ -55,11 +64,11 @@
           @endforeach
          <tr>
              
-             <td colspan="12" class="text-end fw-bold">@lang('Total : '.$invoice->currency->symbol.numFormat($invoice->final_amount))</td>
+             <td colspan="12" class="text-end fw-bold">{{__('Total : '.$invoice->currency->symbol.numFormat($invoice->final_amount))}}</td>
          </tr>
         </table>
-        <p class="text-muted text-center mt-5">@lang('Thank you very much for doing business with us. We look forward to working with
-            you again!') <br> <small class="mt-5">@lang('All right reserved ') <a href="{{url('/')}}">{{$gs->title}}</a></small></p>
+        <p class="text-muted text-center mt-5">{{__('Thank you very much for doing business with us. We look forward to working with
+            you again!')}} <br> <small class="mt-5">{{__('All right reserved ')}} <a href="{{url('/')}}">{{$gs->title}}</a></small></p>
             
       </div>
     </div>

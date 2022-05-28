@@ -23,7 +23,7 @@
             <select name="currency" class="currency selectors nice language-bar">
                 @foreach(DB::table('currencies')->get() as $currency)
                     <option value="{{route('front.currency',$currency->id)}}" {{ Session::has('currency') ? ( Session::get('currency') == $currency->id ? 'selected' : '' ) : (DB::table('currencies')->where('is_default','=',1)->first()->id == $currency->id ? 'selected' : '') }}>
-                        {{$currency->name}}
+                        {{$currency->curr_name}}
                     </option>
                 @endforeach
             </select>

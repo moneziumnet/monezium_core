@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
     <title>{{__($gs->title)}} - @lang('Invoice : '.$invoice->number) </title>
     <!-- CSS files -->
-    <link rel="shortcut icon" href="{{getPhoto($gs->favicon)}}">
+    {{-- <link rel="shortcut icon" href="{{getPhoto($gs->favicon)}}"> --}}
     <link rel="stylesheet" href="{{asset('assets/admin/css/font-awsome.min.css')}}">
 
     <link href="{{asset('assets/user/')}}/css/tabler.min.css" rel="stylesheet"/>
@@ -101,7 +101,7 @@
       <script src="{{asset('assets/user/')}}/js/tabler.min.js"></script>
       <script src="{{asset('assets/user/')}}/js/demo.min.js"></script>
  
-      @include('notify.alert')
+      {{-- @include('notify.alert') --}}
       @stack('script')
 
 </body>

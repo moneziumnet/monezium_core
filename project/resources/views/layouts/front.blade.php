@@ -103,7 +103,7 @@
                             <div class="input-group input--group">
                                 <input type="number" name="amount" class="form-group-input form-control form--control"
                                     placeholder="0.00" id="amount">
-                                <button type="button" class="input-group-text">{{$currency->name}}</button>
+                                <button type="button" class="input-group-text">{{$currency->curr_name}}</button>
                             </div>
                             <input type="hidden" name="planId" id="planId" value="">
                         </div>
@@ -134,7 +134,7 @@
                             <div class="input-group input--group">
                                 <input type="number" name="amount" class="form-group-input form-control form--control"
                                     placeholder="0.00" id="amount">
-                                <button type="button" class="input-group-text">{{$currency->name}}</button>
+                                <button type="button" class="input-group-text">{{$currency->curr_name}}</button>
                             </div>
                             <input type="hidden" name="planId" id="fdrplan" value="">
                         </div>

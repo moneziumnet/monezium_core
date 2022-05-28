@@ -2,6 +2,8 @@
 use App\Http\Controllers;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\User\ManageInvoiceController;
+
   Route::redirect('admin', 'admin/login');
   Route::post('the/genius/ocean/2441139', 'Frontend\FrontendController@subscription');
   Route::get('finalize', 'Frontend\FrontendController@finalize');
@@ -23,7 +25,7 @@ use Illuminate\Support\Facades\Route;
   Route::get('/faq', 'Frontend\FrontendController@faq')->name('front.faq');
   Route::get('/{slug}','Frontend\FrontendController@page')->name('front.page');
   Route::post('/subscriber', 'Frontend\FrontendController@subscriber')->name('front.subscriber');
-
+  Route::get('view-invoice/{number}',   [ManageInvoiceController::class,'invoiceView'])->name('invoice.view');
   Route::get('/currency/{id}', 'Frontend\FrontendController@currency')->name('front.currency');
   Route::get('/language/{id}', 'Frontend\FrontendController@language')->name('front.language');
 
