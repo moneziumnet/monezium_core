@@ -34,21 +34,21 @@
                   @csrf
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <div class="form-label">@lang('Inoice To')</div>
+                            <div class="form-label">{{__('Inoice To')}}</div>
                             <input type="text" name="invoice_to" class="form-control shadow-none" value="{{old('invoice_to')}}" required>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <div class="form-label">@lang('Recipient Email')</div>
+                            <div class="form-label">{{__('Recipient Email')}}</div>
                             <input type="email" name="email" class="form-control shadow-none" value="{{old('email')}}" required>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <div class="form-label">@lang('Address')</div>
+                            <div class="form-label">{{__('Address')}}</div>
                             <input type="text" name="address" class="form-control shadow-none" value="{{old('address')}}" required>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <div class="form-label">@lang('Select Currency')</div>
+                            <div class="form-label">{{__('Select Currency')}}</div>
                             <select class="form-select currency shadow-none" name="currency">
-                                <option value="" selected>@lang('Select')</option>
+                                <option value="" selected>{{__('Select')}}</option>
                                 @foreach ($currencies as $curr)
                                   <option value="{{$curr->id}}" data-code="{{$curr->code}}">{{$curr->code}}</option>
                                 @endforeach
@@ -58,11 +58,11 @@
                     <hr>
                     <div class="row">
                         <div class="col-md-8 mb-3">
-                            <div class="form-label">@lang('Item name')</div>
+                            <div class="form-label">{{__('Item name')}}</div>
                             <input type="text" name="item[]" class="form-control shadow-none itemname" required disabled>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <div class="form-label">@lang('Amount')</div>
+                            <div class="form-label">{{__('Amount')}}</div>
                             <input type="text" name="amount[]" class="form-control shadow-none amount" required disabled>
                         </div>
                         <div class="col-md-1 mb-3">
@@ -75,7 +75,7 @@
                         <hr>
                         <div class="row">
                             <div class="col-md-8 text-end">
-                                <div class="form-label">@lang('Total Amount :')</div>
+                                <div class="form-label">{{__('Total Amount :')}}</div>
                             </div>
                             <div class="col-md-3  text-end">
                                 <div class="form-label"><span class="totalAmount">0</span> <span class="code"></span></div>
@@ -86,7 +86,7 @@
                        <div class="col-md-12 mb-3">
                             <div class="form-label">&nbsp;</div>
                             <button type="submit" class="btn btn-primary w-100">
-                                @lang('Create')
+                                {{__('Create')}}
                             </button>
                         </div>
                 </form>
@@ -98,7 +98,7 @@
 
 @endsection
 
-@push('script')
+@push('js')
     <script>
         'use strict';
         $('.add').on('click',function(){

@@ -122,11 +122,13 @@ class ManageInvoiceController extends Controller
     public function edit($id)
     {
         $invoice = Invoice::findOrFail($id);
+        $data['invoice'] = $invoice;
+        
         if($invoice->status == 1){
             return back()->with('error','Sorry! can\'t edit published invoice.');
         }
-        $currencies = Currency::where('status', 1)->get();
-        return view('user.invoice.edit',compact('invoice','currencies'));
+        $data['currencies'] = Currency::where('status', 1)->get();
+        return view('user.invoice.edit',$data);
     }
 
     /**
