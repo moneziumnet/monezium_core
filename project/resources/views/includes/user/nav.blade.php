@@ -261,6 +261,34 @@
                 </div>
               </li>
             @endif
+            
+            @if (!in_array('Escrow',$modules))
+              <li class="nav-item dropdown {{ request()->routeIs('user.invoice.create') || request()->routeIs('user.invoice.index') || request()->routeIs('user.other.bank') || request()->routeIs('tranfer.logs.index') ? 'active' : '' }}">
+                <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false" >
+                  <span class="nav-link-icon d-md-none d-lg-inline-block">
+                    <i class="fas fa-hands-helping"></i>
+                  </span>
+                  <span class="nav-link-title">
+                    {{__('Escrow')}}
+                  </span>
+                </a>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="{{route('user.invoice.create')}}" >
+                    {{__('Make Escrow')}}
+                  </a>
+                  <a class="dropdown-item" href="{{route('user.invoice.index')}}" >
+                    {{__('My Escrow')}}
+                  </a>
+                  
+                  <a class="dropdown-item" href="{{route('user.invoice.index')}}" >
+                    {{__('Pending Escrows')}}
+                  </a>
+                 
+
+                  
+                </div>
+              </li>
+            @endif
 
             {{-- @if ($gs->withdraw_status == 1)
               @if (!in_array('Withdraw',$modules))
