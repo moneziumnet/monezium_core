@@ -45,7 +45,7 @@ use App\Http\Controllers\Subscription\SubscriptionController;
 use App\Http\Controllers\User\DashboardController as AppDashboardController;
 use App\Http\Controllers\User\OtherBankController as UserOtherBankController;
 use App\Http\Controllers\User\LoginController as UserLoginController;
-
+use App\Http\Controllers\User\ManageInvoiceController;
 
 Route::prefix('user')->group(function() {
 
@@ -125,6 +125,29 @@ Route::prefix('user')->group(function() {
       Route::get('reedem-voucher',  [VoucherController::class,'reedemForm'])->name('user.reedem.voucher');
       Route::post('reedem-voucher',  [VoucherController::class,'user.reedemSubmit']);
       Route::get('reedemed-history',  [VoucherController::class,'reedemHistory'])->name('user.reedem.history');
+
+      //invoice
+      Route::group(['middleware'=>'kyc:Invoice'],function(){
+          Route::get('create-invoice',   [ManageInvoiceController::class,'create'])->name('invoice.create');
+          Route::post('create-invoice',   [ManageInvoiceController::class,'store']);
+      });
+      
+
+      //invoice
+      Route::get('invoices',   [ManageInvoiceController::class,'index'])->name('invoice.index');
+      Route::post('invoice/pay-status',   [ManageInvoiceController::class,'payStatus'])->name('invoice.pay.status');
+      Route::post('invoice/publish-status',   [ManageInvoiceController::class,'publishStatus'])->name('invoice.publish.status');
+
+      Route::get('invoices-edit/{id}',   [ManageInvoiceController::class,'edit'])->name('invoice.edit');
+      Route::post('invoices-update/{id}',   [ManageInvoiceController::class,'update'])->name('invoice.update');
+      Route::get('invoice-cancel/{id}',   [ManageInvoiceController::class,'cancel'])->name('invoice.cancel');
+      Route::get('invoice/send-mail/{id}',   [ManageInvoiceController::class,'sendToMail'])->name('invoice.send.mail');
+      Route::get('invoice/view/{number}',   [ManageInvoiceController::class,'view'])->name('invoice.view');
+
+      Route::get('invoices-payment/{number}',   [ManageInvoiceController::class,'invoicePayment'])->name('invoice.payment');
+      Route::post('invoices-payment/{number}',   [ManageInvoiceController::class,'invoicePaymentSubmit']);
+      Route::get('pay-invoice',   [DepositController::class,'invoicePayment'])->name('pay.invoice');
+      
   
       Route::group(['middleware'=>'kyc:Wire Transfer'],function(){
         Route::get('wire-transfer',[WireTransferController::class,'index'])->name('user.wire.transfer.index');
