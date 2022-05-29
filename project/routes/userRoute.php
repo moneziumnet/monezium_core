@@ -115,9 +115,22 @@ Route::prefix('user')->group(function() {
         Route::get('/money-request/details/{id}', [MoneyRequestController::class,'details'])->name('user.money.request.details');
       });
       
+       //invoice
+       Route::group(['middleware'=>'kyc:Invoice'],function(){
+          Route::get('create-invoice',   [ManageInvoiceController::class,'create'])->name('user.invoice.create');
+          Route::post('create-invoice',   [ManageInvoiceController::class,'store']);
+      });
+
+      //Voucher
       Route::group(['middleware'=>'kyc:Voucher'],function(){
         Route::get('create-voucher',   [VoucherController::class,'create'])->name('user.create.voucher');
         Route::post('create-voucher',   [VoucherController::class,'submit']);
+      });
+      
+       //escrow
+      Route::group(['middleware'=>'kyc:Escrow'],function(){
+        Route::get('make-escrow',   [EscrowController::class,'create'])->name('user.escrow.create');
+        Route::post('make-escrow',   [EscrowController::class,'store']);
       });
       
       //Reedem voucher
@@ -125,13 +138,6 @@ Route::prefix('user')->group(function() {
       Route::get('reedem-voucher',  [VoucherController::class,'reedemForm'])->name('user.reedem.voucher');
       Route::post('reedem-voucher',  [VoucherController::class,'user.reedemSubmit']);
       Route::get('reedemed-history',  [VoucherController::class,'reedemHistory'])->name('user.reedem.history');
-
-      //invoice
-      Route::group(['middleware'=>'kyc:Invoice'],function(){
-          Route::get('create-invoice',   [ManageInvoiceController::class,'create'])->name('user.invoice.create');
-          Route::post('create-invoice',   [ManageInvoiceController::class,'store']);
-      });
-      
 
       //invoice
       Route::get('invoices',   [ManageInvoiceController::class,'index'])->name('user.invoice.index');
@@ -148,6 +154,13 @@ Route::prefix('user')->group(function() {
       Route::post('invoices-payment/{number}',   [ManageInvoiceController::class,'invoicePaymentSubmit']);
       Route::get('pay-invoice',   [DepositController::class,'invoicePayment'])->name('user.pay.invoice');
 
+      //escrow
+      Route::get('my-escrow',   [EscrowController::class,'index'])->name('user.escrow.index');
+      Route::get('escrow-pending',   [EscrowController::class,'pending'])->name('user.escrow.pending');
+      Route::get('escrow-dispute/{id}',   [EscrowController::class,'disputeForm'])->name('user.escrow.dispute');
+      Route::post('escrow-dispute/{id}',   [EscrowController::class,'disputeStore']);
+      Route::get('release-escrow/{id}',   [EscrowController::class,'release'])->name('user.escrow.release');
+      Route::get('file-download/{id}',   [EscrowController::class,'fileDownload'])->name('user.escrow.file.download');
   
       Route::group(['middleware'=>'kyc:Wire Transfer'],function(){
         Route::get('wire-transfer',[WireTransferController::class,'index'])->name('user.wire.transfer.index');
