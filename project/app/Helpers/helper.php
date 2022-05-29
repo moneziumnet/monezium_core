@@ -137,6 +137,13 @@ use PHPMailer\PHPMailer\PHPMailer;
     }
   }
 
+  if(!function_exists('diffTime')){
+    function diffTime($time)
+    {
+        return Carbon::parse($time)->diffForHumans();
+    }
+  }
+
 
 
 ?>

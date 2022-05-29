@@ -8,7 +8,7 @@
    @lang('Make Escrow')
 @endsection
 
-@section('content')
+@section('contents')
 <div class="container-xl">
     <div class="row row-deck row-cards">
         <div class="col-12">
@@ -99,7 +99,7 @@
 
 @endsection
 
-@push('script')
+@push('js')
     <script>
         'use strict';
         $('.receiver').on('focusout',function () { 

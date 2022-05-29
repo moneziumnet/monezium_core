@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Helpers\MediaHelper;
 use App\Models\User;
 use App\Models\Wallet;
 use App\Models\Currency;
@@ -157,7 +158,7 @@ class EscrowController extends Controller
     public function release($id)
     {
 
-        $escrow = Escrow::where('id',1)->where('user_id',auth()->id())->whereIn('status',[0,3])->first();
+        $escrow = Escrow::where('id',$id)->where('user_id',auth()->id())->whereIn('status',[0,3])->first();
         $recipient = User::findOrFail($escrow->recipient_id);
         $recipientWallet = Wallet::where('user_id',$recipient->id)
                             ->where('user_type',1)

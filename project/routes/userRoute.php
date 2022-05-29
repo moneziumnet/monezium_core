@@ -46,6 +46,8 @@ use App\Http\Controllers\User\DashboardController as AppDashboardController;
 use App\Http\Controllers\User\OtherBankController as UserOtherBankController;
 use App\Http\Controllers\User\LoginController as UserLoginController;
 use App\Http\Controllers\User\ManageInvoiceController;
+use App\Http\Controllers\User\EscrowController;
+use App\Http\Controllers\User\TransferController;
 
 Route::prefix('user')->group(function() {
 
@@ -69,6 +71,8 @@ Route::prefix('user')->group(function() {
       Route::get('/two-factor', [UserController::class,'showTwoFactorForm'])->name('user.show2faForm');
       Route::post('/createTwoFactor', [UserController::class,'createTwoFactor'])->name('user.createTwoFactor');
       Route::post('/disableTwoFactor', [UserController::class,'disableTwoFactor'])->name('user.disableTwoFactor');
+
+      Route::post('check-receiver', [TransferController::class,'checkReceiver'])->name('user.check.receiver');
   
       Route::get('/profile', [UserController::class,'profile'])->name('user.profile.index'); 
       Route::post('/profile', [UserController::class,'profileupdate'])->name('user.profile.update'); 

@@ -1,38 +1,54 @@
 @extends('layouts.user')
 
-@section('title')
+{{-- @section('title')
    @lang('Dispute Messages')
 @endsection
 
 @section('breadcrumb')
  @lang('Dispute Messages') 
-@endsection
+@endsection --}}
 
 @push('extra')
     <a href="{{session('route') ?? route('user.escrow.index')}}" class="btn btn-primary"><i class="fas fa-backward me-2"></i> @lang('Back')</a>
 @endpush
-@section('content')
-  
+@section('contents')
+
+<div class="container-xl">
+    <div class="page-header d-print-none">
+      <div class="row align-items-center">
+        <div class="col">
+          <div class="page-pretitle">
+            {{__('Overview')}}
+          </div>
+          <h2 class="page-title">
+            {{__('Dispute Messages')}}
+          </h2>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="page-body">
     <div class="container-xl">
         <div class="row justify-content-center pb-5">
             <div class="col-xl-4 col-lg-5 mb-4">
-               <div class="card">
-                   <div class="card-body">
+                <div class="card">
+                    <div class="card-body">
                         <ul class="list-group">
                             <li class="list-group-item d-flex flex-wrap justify-content-between font-weight-bold">
-                                @lang('Invited To : ')
+                                {{__('Invited To : ')}}
                                 <span>{{$escrow->recipient->email}}</span>
                             </li>
                             <li class="list-group-item d-flex flex-wrap justify-content-between font-weight-bold">
-                                @lang('Amount : ')
+                                {{__('Amount : ')}}
                                 <span>{{numFormat($escrow->amount)}} {{$escrow->currency->code}}</span>
                             </li>
                             <li class="list-group-item d-flex flex-wrap justify-content-between font-weight-bold">
-                                @lang('Charge : ')
+                                {{__('Charge : ')}}
                                 <span>{{numFormat($escrow->charge)}} {{$escrow->currency->code}}</span>
                             </li>
                             <li class="list-group-item d-flex flex-wrap justify-content-between font-weight-bold">
-                                @lang('Charge Bearer : ')
+                                {{__('Charge Bearer : ')}}
                                 <span>
                                     @if ($escrow->pay_charge == 1)
                                     {{ $escrow->user->email}}
@@ -42,7 +58,7 @@
                                 </span>
                             </li>
                             <li class="list-group-item font-weight-bold">
-                                @lang('Description : ')
+                                {{__('Description : ')}}
                                 <textarea rows="5" class="form-control" disabled>{{$escrow->description}}</textarea>
                             </li>
                            
@@ -50,8 +66,9 @@
                     
                    </div>
                   
-               </div>
+                </div>
             </div>
+
             <div class="col-xl-8 col-lg-7">
                 <div class="card">
                     <div class="card-body">
@@ -171,6 +188,9 @@
             </div>
         </div>
     </div>
+</div>
+
+  
     
 @endsection
 
