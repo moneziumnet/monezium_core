@@ -144,6 +144,66 @@ use PHPMailer\PHPMailer\PHPMailer;
     }
   }
 
+  if(!function_exists('mailSend')){
+    function mailSend($key, array $data, $user)
+    {
+
+        $gs = GeneralSetting::first();
+        $template =  EmailTemplate::where('email_type', $key)->first();
+
+        if($gs->email_notify){
+            $message = str_replace('{name}', $user->name, $template->email_body);
+        
+            foreach ($data as $key => $value) {
+                $message = str_replace("{" . $key . "}", $value, $message);
+            }
+        
+            if ($gs->mail_type == 'php_mail') {
+                $headers = "From: $gs->sitename <$gs->email_from> \r\n";
+                $headers .= "Reply-To: $gs->sitename <$gs->email_from> \r\n";
+                $headers .= "MIME-Version: 1.0\r\n";
+                $headers .= "Content-Type: text/html; charset=utf-8\r\n";
+                @mail($user->email, $template->email_subject, $message, $headers);
+            } else {
+                $mail = new PHPMailer(true);
+        
+                try {
+                    $mail->isSMTP();
+                    $mail->Host       = $gs->smtp_host;
+                    $mail->SMTPAuth   = true;
+                    $mail->Username   = $gs->smtp_user;
+                    $mail->Password   = $gs->smtp_pass;
+                    if ($gs->mail_encryption == 'ssl') {
+                        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+                    } else {
+                        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                    }
+                    $mail->Port       = $gs->smtp_port;
+                    $mail->CharSet = 'UTF-8';
+                    $mail->setFrom($gs->from_email, $gs->from_name);
+                    $mail->addAddress($user->email, $user->name);
+                    $mail->addReplyTo($gs->from_email, $gs->from_name);
+                    $mail->isHTML(true);
+                    $mail->Subject = $template->email_subject;
+                    $mail->Body    = $message;
+                    $mail->send();
+                } catch (Exception $e) {
+                  // throw new Exception($e);
+                }
+            }
+        }
+
+        if($gs->sms_notify){
+            $message = str_replace('{name}', $user->name, $template->sms);
+            foreach ($data as $key => $value) {
+                $message = str_replace("{" . $key . "}", $value, $message);
+            }
+            sendSMS($user->phone,$message,$gs->contact_no);
+        }
+        
+    }
+  }  
+
 
 
 ?>

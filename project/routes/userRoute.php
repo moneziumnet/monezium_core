@@ -48,6 +48,7 @@ use App\Http\Controllers\User\LoginController as UserLoginController;
 use App\Http\Controllers\User\ManageInvoiceController;
 use App\Http\Controllers\User\EscrowController;
 use App\Http\Controllers\User\TransferController;
+use App\Http\Controllers\User\ExchangeMoneyController;
 
 Route::prefix('user')->group(function() {
 
@@ -73,7 +74,7 @@ Route::prefix('user')->group(function() {
       Route::post('/disableTwoFactor', [UserController::class,'disableTwoFactor'])->name('user.disableTwoFactor');
 
       Route::post('check-receiver', [TransferController::class,'checkReceiver'])->name('user.check.receiver');
-  
+      
       Route::get('/profile', [UserController::class,'profile'])->name('user.profile.index'); 
       Route::post('/profile', [UserController::class,'profileupdate'])->name('user.profile.update'); 
   
@@ -118,6 +119,13 @@ Route::prefix('user')->group(function() {
         Route::post('/request/money/send/{id}', [MoneyRequestController::class,'send'])->name('user.request.money.send');
         Route::get('/money-request/details/{id}', [MoneyRequestController::class,'details'])->name('user.money.request.details');
       });
+      
+       //exchange money
+      Route::group(['middleware'=>'kyc:Exchange'],function(){
+        Route::get('exchange-money',   [ExchangeMoneyController::class,'exchangeForm'])->name('user.exchange.money');
+        Route::post('exchange-money',  [ExchangeMoneyController::class,'submitExchange']);
+      });
+      Route::get('exchange-money/history',  [ExchangeMoneyController::class,'exchangeHistory'])->name('user.exchange.history');
       
        //invoice
        Route::group(['middleware'=>'kyc:Invoice'],function(){

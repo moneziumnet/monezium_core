@@ -118,8 +118,8 @@
             @endif
 
             @if (!in_array('Exchange Money',$modules))
-              <li class="nav-item {{ request()->routeIs('user.deposit.index') ? 'active' : '' }}">
-                  <a class="nav-link" href="{{route('user.deposit.index')}}" >
+              <li class="nav-item {{ request()->routeIs('user.exchange.money') ? 'active' : '' }}">
+                  <a class="nav-link" href="{{route('user.exchange.money')}}" >
                     <span class="nav-link-icon d-md-none d-lg-inline-block">
                       <i class="fas fa-exchange-alt"></i>
                     </span>
