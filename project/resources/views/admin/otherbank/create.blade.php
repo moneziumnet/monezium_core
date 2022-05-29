@@ -46,14 +46,14 @@
           <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
-                    <label for="min_limit">{{ __('Minimum Amount') }} ({{$currency->name}})</label>
+                    <label for="min_limit">{{ __('Minimum Amount') }} ({{$currency->code}})</label>
                     <input type="number" class="form-control" id="min_limit" name="min_limit" placeholder="{{ __('0') }}" min="1" value="" required>
                   </div>
               </div>
 
               <div class="col-md-6">
                 <div class="form-group">
-                    <label for="max_limit">{{ __('Maximum Amount') }} ({{$currency->name}})</label>
+                    <label for="max_limit">{{ __('Maximum Amount') }} ({{$currency->code}})</label>
                     <input type="number" class="form-control" id="max_limit" name="max_limit" placeholder="{{ __('0') }}" min="1" value="" required>
                   </div>
               </div>
@@ -63,7 +63,7 @@
           <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
-                    <label for="daily_maximum_limit">{{ __('Daily Maximum Amount') }} ({{$currency->name}})</label>
+                    <label for="daily_maximum_limit">{{ __('Daily Maximum Amount') }} ({{$currency->code}})</label>
                     <input type="number" class="form-control" id="daily_maximum_limit" name="daily_maximum_limit" placeholder="{{ __('0') }}" min="1" value="" required>
                   </div>
               </div>
@@ -79,7 +79,7 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                  <label for="monthly_maximum_limit">{{ __('Monthly Maximum Amount') }} ({{$currency->name}})</label>
+                  <label for="monthly_maximum_limit">{{ __('Monthly Maximum Amount') }} ({{$currency->code}})</label>
                   <input type="number" class="form-control" id="monthly_maximum_limit" name="monthly_maximum_limit" placeholder="{{ __('0') }}" min="1" value="" required>
                 </div>
             </div>

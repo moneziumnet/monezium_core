@@ -3,15 +3,15 @@
 @section('content')
 
 <div class="card">
-    <div class="d-sm-flex align-items-center justify-content-between">
+  <div class="d-sm-flex align-items-center justify-content-between">
     <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Edit Currency') }} <a class="btn btn-primary btn-rounded btn-sm" href="{{route('admin.currency.index')}}"><i class="fas fa-arrow-left"></i> {{ __('Back') }}</a></h5>
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
-        <li class="breadcrumb-item"><a href="javascript:;">{{ __('Payment Settings') }}</a></li>
-        <li class="breadcrumb-item"><a href="{{ route('admin.currency.index') }}">{{ __('Currencies') }}</a></li>
-        <li class="breadcrumb-item"><a href="{{route('admin.currency.edit',$data->id)}}">{{ __('Edit Category') }}</a></li>
+      <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
+      <li class="breadcrumb-item"><a href="javascript:;">{{ __('Payment Settings') }}</a></li>
+      <li class="breadcrumb-item"><a href="{{ route('admin.currency.index') }}">{{ __('Currencies') }}</a></li>
+      <li class="breadcrumb-item"><a href="{{route('admin.currency.edit',$data->id)}}">{{ __('Edit Category') }}</a></li>
     </ol>
-    </div>
+  </div>
 </div>
 
 <div class="row justify-content-center mt-3">
@@ -22,27 +22,51 @@
       </div>
 
       <div class="card-body">
-       
+
         <form class="geniusform" action="{{route('admin.currency.update',$data->id)}}" method="POST" enctype="multipart/form-data">
 
-            @include('includes.admin.form-both')
+          @include('includes.admin.form-both')
 
-            {{ csrf_field() }}
-
-            <div class="form-group">
-              <label for="c-name">{{ __('Currency Name') }}</label>
-              <input type="text" class="form-control" name="name" placeholder="{{ __('Enter Currency Name') }}" required="" value="{{ $data->name }}">
-            </div>
+          {{ csrf_field() }}
 
           <div class="form-group">
-            <label for="inp-sign">{{ __('Currency sign') }}</label>
-            <input type="text" class="form-control"  id="inp-sign" name="sign" placeholder="{{ __('Enter Currency Sign') }}" required="" value="{{ $data->sign }}">
+            <label for="c-name">{{ __('Currency Name') }}</label>
+            <input type="text" class="form-control" name="curr_name" placeholder="{{ __('Enter Currency Name') }}" required="" value="{{ $data->curr_name }}">
           </div>
 
           <div class="form-group">
-            <label for="inp-value">{{ __('Value') }}</label>
-            <input type="text" class="form-control" id="inp-value" name="value" placeholder="{{ __('Enter Currency Value') }}" required="" value="{{ $data->value }}">
+            <label for="inp-code">{{ __('Currency Code') }}</label>
+            <input type="text" class="form-control" id="inp-code" name="code" placeholder="{{ __('Enter Currency Code') }}" required="" value="{{ $data->code }}">
           </div>
+
+          <div class="form-group">
+            <label for="inp-symbol">{{ __('Symbol') }}</label>
+            <input type="text" class="form-control" id="inp-symbol" name="symbol" placeholder="{{ __('Enter Currency Symbol') }}" required="" value="{{ $data->symbol }}">
+          </div>
+
+          <div class="form-group">
+            <label for="inp-rate">{{ __('Rate') }}</label>
+            <input type="text" class="form-control" id="inp-rate" name="rate" placeholder="{{ __('Enter Currency Rate 0') }}" required="" value="{{ numFormat($currency->rate,8) }}">
+          </div>
+
+          <div class="form-group">
+            <label>@lang('Currency Type')</label>
+            <select class="form-control" name="type" required>
+              <option value="">--@lang('Select Type')--</option>
+              <option value="1" {{$currency->type == 1 ? 'selected':''}}>@lang('FIAT')</option>
+              <option value="2" {{$currency->type == 2 ? 'selected':''}}>@lang('CRYPTO')</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>@lang('Status') </label>
+            <select class="form-control" name="status" required>
+              <option value="">--@lang('Select')--</option>
+              <option value="1" {{$currency->status == 1 ? 'selected':''}}>@lang('Active')</option>
+              <option value="0" {{$currency->status == 0 ? 'selected':''}}>@lang('Inactive')</option>
+            </select>
+          </div>
+
 
           <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Submit') }}</button>
 

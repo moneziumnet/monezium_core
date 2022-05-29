@@ -33,12 +33,12 @@
           </div>
 
           <div class="form-group">
-            <label for="min_amount">{{ __('Minimum Price in') }} ({{$currency->name}})</label>
+            <label for="min_amount">{{ __('Minimum Price in') }} ({{$currency->code}})</label>
             <input type="number" class="form-control" id="min_amount" name="min_amount" placeholder="{{ __('Enter Minimum Price') }}" min="1" step="0.01" value="" required>
           </div>
 
           <div class="form-group">
-            <label for="max_amount">{{ __('Maximum Price in') }} ({{$currency->name}})</label>
+            <label for="max_amount">{{ __('Maximum Price in') }} ({{$currency->code}})</label>
             <input type="number" class="form-control" id="max_amount" name="max_amount" placeholder="{{ __('Enter Maximum Price') }}" min="1" step="0.01" value="" required>
           </div>
 

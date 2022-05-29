@@ -87,12 +87,12 @@
     </div>
   </li>
 
-  <!-- <li class="nav-item">
+  <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.other.banks.index') }}">
       <i class="fas fa-landmark"></i>
       <span>{{ __('Other Banks') }}</span>
     </a>
-  </li> -->
+  </li>
 
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#moneytransfer" aria-expanded="true" aria-controls="collapseTable">

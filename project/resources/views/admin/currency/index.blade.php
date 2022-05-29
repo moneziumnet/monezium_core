@@ -22,9 +22,10 @@
                 <table id="geniustable" class="table table-hover dt-responsive" cellspacing="0" width="100%">
 				<thead class="thead-light">
 				  <tr>
+					<th>{{ __('Name') }}</th>
 					<th>{{ __('Code') }}</th>
-					<th>{{ __('Sign') }}</th>
-					<th>{{ __('Value') }}</th>
+					<th>{{ __('Symbol') }}</th>
+					<th>{{ __('Rate') }}</th>
 					<th>{{ __('Options') }}</th>
 				  </tr>
 				</thead>
@@ -72,9 +73,10 @@
                searching: true,
                ajax: '{{ route('admin.currency.datatables') }}',
                columns: [
-                        { data: 'name', name: 'name' },
-                        { data: 'sign', name: 'sign' },
-                        { data: 'value', name: 'value' },
+                        { data: 'curr_name', name: 'curr_name' },
+						{ data: 'code', name: 'code' },
+                        { data: 'symbol', name: 'symbol' },
+                        { data: 'rate', name: 'rate' },
             			{ data: 'action', searchable: false, orderable: false }
 
                      ],

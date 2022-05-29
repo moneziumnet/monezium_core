@@ -28,7 +28,7 @@ class WireTransferBankController extends Controller
                                 </div>';
                             }) 
                             ->editColumn('currency_id', function(WireTransferBank $data){
-                                return $data->currency->name;
+                                return $data->currency->code;
                             })
 
                             ->editColumn('status', function(WireTransferBank $data) {

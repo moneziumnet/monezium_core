@@ -117,7 +117,7 @@ class WithdrawController extends Controller
         $trans->user_id = $user->id;
         $trans->save();
 
-        return redirect()->back()->with('success','Withdraw Request Amount : '.$request->amount.' Fee : '.$messagefee.' = '.$messagefinal.' ('.$currency->name.') Sent Successfully.');
+        return redirect()->back()->with('success','Withdraw Request Amount : '.$request->amount.' Fee : '.$messagefee.' = '.$messagefinal.' ('.$currency->code.') Sent Successfully.');
 
     }
 

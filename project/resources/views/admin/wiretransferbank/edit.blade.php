@@ -45,14 +45,14 @@
           <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
-                    <label for="min_amount">{{ __('Minimum Price in') }} ({{$currency->name}})</label>
+                    <label for="min_amount">{{ __('Minimum Price in') }} ({{$currency->code}})</label>
                     <input type="number" class="form-control" id="min_amount" name="min_amount" placeholder="{{ __('Enter Minimum Price') }}" min="1" step="0.01" value="{{ $data->min_amount }}" required>
                 </div>
               </div>
 
               <div class="col-md-6">
                 <div class="form-group">
-                    <label for="max_amount">{{ __('Maximum Price in') }} ({{$currency->name}})</label>
+                    <label for="max_amount">{{ __('Maximum Price in') }} ({{$currency->code}})</label>
                     <input type="number" class="form-control" id="max_amount" name="max_amount" placeholder="{{ __('Enter Maximum Price') }}" min="1" step="0.01" value="{{ $data->max_amount }}" required>
                 </div>
               </div>
@@ -65,7 +65,7 @@
                     <select class="form-control js-example-basic-single mb-3" name="currency_id">
                       <option value="" selected>{{__('Select Currency')}}</option>
                         @foreach ($currencies as $key=>$currency)
-                        <option value="{{$currency->id}}" {{ $currency->id == $data->currency_id ? 'selected' : '' }}>{{ $currency->name }}</option>
+                        <option value="{{$currency->id}}" {{ $currency->id == $data->currency_id ? 'selected' : '' }}>{{ $currency->code }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -87,7 +87,7 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                  <label for="fixed">{{ __('Fixed Charge') }} ({{$currency->name}})</label>
+                  <label for="fixed">{{ __('Fixed Charge') }} ({{$currency->code}})</label>
                   <input type="number" class="form-control" id="fixed" name="fixed_charge" placeholder="{{ __('Enter Fixed Charge') }}" min="1" step="0.01" value="{{ $data->fixed_charge }}" required>
               </div>
             </div>

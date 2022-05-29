@@ -82,7 +82,7 @@
                 </div>
             </div>
             <div class="col-md-4 mx-auto mt-5">
-              <h3 class="card-title text-center"> <strong>@lang('Available Balance') : {{ $data->balance.$currency->name }}</strong></h3>
+              <h3 class="card-title text-center"> <strong>@lang('Available Balance') : {{ $data->balance.$currency->code }}</strong></h3>
               <form action="{{ route('admin.user.balance.add.deduct') }}" method="post">
                 @csrf
                 <div class="form-group">

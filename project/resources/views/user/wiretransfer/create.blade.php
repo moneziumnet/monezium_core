@@ -33,7 +33,7 @@
                             <select name="wire_transfer_bank_id" id="bankmethod" class="form-select" required>
                                 <option value="">{{ __('Select Bank') }}</option>
                                 @foreach ($banks as $key=>$bank)
-                                    <option value="{{$bank->id}}" data-swift={{ $bank->swift_code }} data-currency="{{ $bank->currency->name }}" data-country="{{ $bank->country->name }}" data-routing={{ $bank->routing_number }}>{{$bank->title}}</option>
+                                    <option value="{{$bank->id}}" data-swift={{ $bank->swift_code }} data-currency="{{ $bank->currency->code }}" data-country="{{ $bank->country->name }}" data-routing={{ $bank->routing_number }}>{{$bank->title}}</option>
                                 @endforeach                    
                             </select>
                         </div>

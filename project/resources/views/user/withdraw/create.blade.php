@@ -42,7 +42,7 @@
                                 </div>
 
                                 <input type="hidden" name="currency_sign" value="{{ $currency->sign }}">
-                                <input type="hidden" id="currencyCode" name="currency_code" value="{{ $currency->name }}">
+                                <input type="hidden" id="currencyCode" name="currency_code" value="{{ $currency->code }}">
                                 <input type="hidden" name="currency_id" value="{{ $currency->id }}">
 
                                 <div class="form-group mb-3 mt-3">
