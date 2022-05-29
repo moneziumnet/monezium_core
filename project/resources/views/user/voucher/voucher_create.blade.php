@@ -11,7 +11,7 @@
       <div class="row align-items-center">
         <div class="col">
           <h2 class="page-title">
-            {{__('Create Voucher Now')}}
+            {{__('Create Voucher')}}
           </h2>
         </div>
       </div>
@@ -36,8 +36,7 @@
                             <select class="form-select wallet shadow-none" name="wallet_id">
                                 <option value="" selected>@lang('Select')</option>
                                 @foreach ($wallets as $wallet)
-                                  <option value="{{$wallet->id}}"> -- ({{amount($wallet->balance,'USD',2)}})</option>
-                                  {{-- $wallet->currency->type data-rate="{{$wallet->currency->rate}}" data-code="{{$wallet->currency->code}}">{{$wallet->currency->code}}  --}}
+                                    <option value="{{$wallet->id}}" data-rate="{{$wallet->currency->rate}}" data-code="{{$wallet->currency->code}}">{{$wallet->currency->code}} -- ({{amount($wallet->balance,$wallet->currency->type,2)}})</option>
                                 @endforeach
                             </select>
                         </div>
@@ -48,6 +47,47 @@
 
                         
                     </form>
+                </div>
+            </div>
+        </div>
+        <div class="row row-deck row-cards mt-3">
+            <div class="col-md-12">
+                <h2> @lang('Recent Vouchers')</h2>
+            </div>
+            <div class="col-12">
+                <div class="card">
+                    <div class="table-responsive">
+                      <table class="table table-vcenter card-table table-striped">
+                        <thead>
+                          <tr>
+                            <th>@lang('Voucher Code')</th>
+                            <th>@lang('Amount')</th>
+                            <th>@lang('Status')</th>
+                            <th>@lang('Date')</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          @forelse ($recentVouchers as $item)
+                            <tr>
+                              <td data-label="@lang('Voucher Code')">{{$item->code}}</td>
+                              <td data-label="@lang('Amount')">{{numFormat($item->amount)}} {{$item->currency->code}}</td>
+                              <td data-label="@lang('Status')">
+                                @if ($item->status == 0)
+                                   <span class="badge bg-secondary">@lang('unused')</span>
+                                @elseif ($item->status == 1)
+                                    <span class="badge bg-success">@lang('used')</span>
+                                @endif
+                              </td>
+                              <td data-label="@lang('Date')">{{dateFormat($item->created_at)}}</td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td class="text-center" colspan="12">@lang('No data found!')</td>
+                            </tr>
+                          @endforelse
+                        </tbody>
+                      </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -177,7 +217,7 @@
 
 @endsection
 
-@push('script')
+@push('js')
     <script>
         'use strict';
         function limit() { 

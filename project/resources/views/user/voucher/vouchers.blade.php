@@ -76,7 +76,7 @@
                               </tbody>
                           </table>
                       </div>
-                      {{ $dps->links() }}
+                      {{ $vouchers->links() }}
                   @endif
               </div>
           </div>
