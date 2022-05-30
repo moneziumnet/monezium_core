@@ -9,7 +9,7 @@
             {{__('Transaction')}}
           </h2>
         </div>
-		<div class="col-auto ms-auto d-print-none">
+		<!-- <div class="col-auto ms-auto d-print-none">
 			<div class="btn-list">
   
 			  <a href="{{ route('user.export.pdf') }}" class="btn btn-primary d-none d-sm-inline-block">
@@ -17,7 +17,7 @@
 				{{__('Export pdf')}}
 			  </a>
 			</div>
-		  </div>
+		  </div> -->
       </div>
     </div>
 </div>
