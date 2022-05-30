@@ -142,7 +142,7 @@
                         <input type="hidden" name="days" value="{{ $data->days }}">
                         <input type="hidden" name="user_id" value="{{ auth()->id() }}">
                         <input type="hidden" name="bank_plan_id" value="{{ $data->id }}">
-                        <input type="hidden" name="currency_sign" value="{{ $currency->sign }}">
+                        <input type="hidden" name="currency_sign" value="{{ $currency->symbol }}">
                         <input type="hidden" id="currencyCode" name="currency_code" value="{{ $currency->code }}">
                         <input type="hidden" name="currency_id" value="{{ $currency->id }}">
 

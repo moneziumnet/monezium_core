@@ -53,7 +53,7 @@
                                         </td>
                                         <td data-label="{{ __('Amount') }}">
                                           <div>
-                                            {{ $currency->sign }} {{ $data->amount }}
+                                            {{ $currency->symbol }} {{ $data->amount }}
                                           </div>
                                         </td>
                                     </tr>

@@ -41,7 +41,7 @@
                                     </select>
                                 </div>
 
-                                <input type="hidden" name="currency_sign" value="{{ $currency->sign }}">
+                                <input type="hidden" name="currency_sign" value="{{ $currency->symbol }}">
                                 <input type="hidden" id="currencyCode" name="currency_code" value="{{ $currency->code }}">
                                 <input type="hidden" name="currency_id" value="{{ $currency->id }}">
 
