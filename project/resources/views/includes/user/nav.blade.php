@@ -18,7 +18,7 @@
               $modules = explode(" , ", $gs->user_module);
             @endphp
 
-            @if (!in_array('Loan',$modules))
+            @if (in_array('Loan',$modules))
               <li class="nav-item dropdown {{ request()->routeIs('user.loans.plan') || request()->routeIs('user.loans.index') || request()->routeIs('user.loans.pending') || request()->routeIs('user.loans.paid') || request()->routeIs('user.loans.rejected') ? 'active' : '' }}">
                 <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false" >
                   <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -56,7 +56,7 @@
               </li>
             @endif
 
-            @if (!in_array('DPS',$modules))
+            @if (in_array('DPS',$modules))
               <li class="nav-item dropdown {{ request()->routeIs('user.dps.plan') || request()->routeIs('user.dps.index') || request()->routeIs('user.dps.running') || request()->routeIs('user.dps.matured') ? 'active' : '' }}">
                 <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false" >
                   <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -87,7 +87,7 @@
               </li>
             @endif
 
-            @if (!in_array('FDR',$modules))
+            @if (in_array('FDR',$modules))
               <li class="nav-item dropdown {{ request()->routeIs('user.fdr.plan') || request()->routeIs('user.fdr.index') || request()->routeIs('user.fdr.running') || request()->routeIs('user.fdr.closed') ? 'active' : '' }}">
                 <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false" >
                   <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -117,7 +117,7 @@
               </li>
             @endif
 
-            @if (!in_array('Exchange Money',$modules))
+            @if (in_array('Exchange Money',$modules))
               <li class="nav-item {{ request()->routeIs('user.exchange.money') ? 'active' : '' }}">
                   <a class="nav-link" href="{{route('user.exchange.money')}}" >
                     <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -130,7 +130,7 @@
               </li>
             @endif
 
-            @if (!in_array('Request Money',$modules))
+            @if (in_array('Request Money',$modules))
               <li class="nav-item dropdown {{ request()->routeIs('user.money.request.index') || request()->routeIs('user.request.money.receive') ? 'active' : '' }}">
                 <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false" >
                   <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -152,7 +152,7 @@
               </li>
             @endif
             
-            @if (!in_array('Voucher',$modules))
+            @if (in_array('Voucher',$modules))
               <li class="nav-item dropdown {{ request()->routeIs('user.vouchers', 'user.reedem.voucher','user.reedem.history') ? 'active' : '' }}">
                 <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false" >
                   <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -183,7 +183,7 @@
             @endif
 
             
-            @if (!in_array('Deposit',$modules))
+            @if (in_array('Deposit',$modules))
               <li class="nav-item {{ request()->routeIs('user.deposit.index') ? 'active' : '' }}">
                   <a class="nav-link" href="{{route('user.deposit.index')}}" >
                     <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -196,7 +196,7 @@
               </li>
             @endif
 
-            @if (!in_array('Wire Transfer',$modules))
+            @if (in_array('Wire Transfer',$modules))
               <li class="nav-item {{ request()->routeIs('user.wire.transfer.index') ? 'active' : '' }}">
                 <a class="nav-link" href="{{route('user.wire.transfer.index')}}" >
                   <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -209,7 +209,7 @@
               </li>
             @endif
 
-            @if (!in_array('Transfer',$modules))
+            @if (in_array('Transfer',$modules))
               <li class="nav-item dropdown {{ request()->routeIs('send.money.create') || request()->routeIs('user.beneficiaries.index') || request()->routeIs('user.other.bank') || request()->routeIs('tranfer.logs.index') ? 'active' : '' }}">
                 <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false" >
                   <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -239,7 +239,7 @@
               </li>
             @endif
             
-            @if (!in_array('Invoice',$modules))
+            @if (in_array('Invoice',$modules))
               <li class="nav-item dropdown {{ request()->routeIs('user.invoice.create') || request()->routeIs('user.invoice.index') ? 'active' : '' }}">
                 <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false" >
                   <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -262,7 +262,7 @@
               </li>
             @endif
             
-            @if (!in_array('Escrow',$modules))
+            @if (in_array('Escrow',$modules))
               <li class="nav-item dropdown {{ request()->routeIs('user.escrow.create') || request()->routeIs('user.escrow.index') || request()->routeIs('user.escrow.pending') ? 'active' : '' }}">
                 <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false" >
                   <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -291,7 +291,7 @@
             @endif
 
             {{-- @if ($gs->withdraw_status == 1)
-              @if (!in_array('Withdraw',$modules))
+              @if (in_array('Withdraw',$modules))
                 <li class="nav-item {{ request()->routeIs('user.withdraw.index') ? 'active' : '' }}">
                   <a class="nav-link" href="{{route('user.withdraw.index')}}" >
                     <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -306,7 +306,7 @@
             @endif --}}
 
             
-            @if (!in_array('More',$modules))
+            @if (in_array('More',$modules))
               <li class="nav-item dropdown {{ request()->routeIs('user.show2faForm') || request()->routeIs('user.referral.index') || request()->routeIs('user.referral.commissions') || request()->routeIs('user.message.index') || request()->routeIs('user.other.bank') ? 'active' : '' }}">
                 <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false" >
                   <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -318,14 +318,14 @@
                 </a>
                 <div class="dropdown-menu">
                   @if ($gs->withdraw_status == 1)
-                    @if (!in_array('Withdraw',$modules))
+                    @if (in_array('Withdraw',$modules))
                       <a class="dropdown-item" href="{{route('user.withdraw.index')}}" >
                         {{__('Withdraw')}}
                       </a>
                     @endif
                   @endif
                   
-                  @if (!in_array('Pricing Plan',$modules))
+                  @if (in_array('Pricing Plan',$modules))
                     <a class="dropdown-item" href="{{route('user.package.index')}}" >
                       {{__('Pricing Plan')}}
                     </a>
