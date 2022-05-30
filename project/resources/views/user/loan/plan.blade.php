@@ -26,7 +26,7 @@
             @else 
 
             @foreach ($plans as $key=>$data)
-                <div class="col-sm-6 col-lg-4 col-xl-3">
+                <div class="col-sm-6 col-lg-4 col-xl-4">
                     <div class="plan__item position-relative">
                         <div class="ribbon ribbon-top ribbon-bookmark bg-green">
                         </div>
