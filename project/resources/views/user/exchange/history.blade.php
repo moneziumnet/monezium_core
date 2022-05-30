@@ -14,6 +14,7 @@
           {{__('Exchange History')}}
         </h2>
       </div>
+
       <div class="col-auto ms-auto d-print-none">
         <div class="btn-list">
 
@@ -40,7 +41,7 @@
                     <table class="table table-vcenter card-table table-striped">
                       <thead>
                         <tr>
-                          <th>@lang('Transaction Id')</th>
+                          <th>{{_('Transaction Id')}}</th>
                           <th>@lang('From Currency')</th>
                           <th>@lang('From Amount')</th>
                           <th>@lang('To Currency')</th>
