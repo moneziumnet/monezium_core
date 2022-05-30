@@ -324,29 +324,6 @@
                       </a>
                     @endif
                   @endif
-                  
-                  @if (in_array('Pricing Plan',$modules))
-                    <a class="dropdown-item" href="{{route('user.package.index')}}" >
-                      {{__('Pricing Plan')}}
-                    </a>
-                  @endif
-                  
-                  <a class="dropdown-item" href="{{route('user.show2faForm')}}" >
-                    {{__('2FA Security')}}
-                  </a>
-
-                  <a class="dropdown-item" href="{{route('user.referral.index')}}" >
-                    @lang('Referred Users')
-                  </a>
-
-                  <a class="dropdown-item" href="{{ route('user.referral.commissions') }}" >
-                    @lang('Referral Commissions')
-                  </a>
-
-                  <a class="dropdown-item" href="{{route('user.message.index')}}" >
-                    {{__('Support Tickets')}}
-                  </a>
-
                   <a class="dropdown-item" href="{{route('user.transaction')}}" >
                     {{__('Transactions')}}
                   </a>

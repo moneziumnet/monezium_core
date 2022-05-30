@@ -34,7 +34,25 @@
           <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
             <a href="{{ route('user.profile.index') }}" class="dropdown-item">{{__('Edit Profile')}}</a>
             <a href="{{ route('user.change.password.form') }}" class="dropdown-item">{{__('Change Password')}}</a>
-            <a href="{{ route('user.logout') }}" class="dropdown-item">{{__('Logout')}}</a>
+            <a class="dropdown-item" href="{{route('user.package.index')}}" >
+                      {{__('Pricing Plan')}}
+            </a>
+             <a class="dropdown-item" href="{{route('user.show2faForm')}}" >
+                    {{__('2FA Security')}}
+                  </a>
+
+                  <a class="dropdown-item" href="{{route('user.referral.index')}}" >
+                    @lang('Referred Users')
+                  </a>
+
+                  <a class="dropdown-item" href="{{ route('user.referral.commissions') }}" >
+                    @lang('Referral Commissions')
+                  </a>
+
+                  <a class="dropdown-item" href="{{route('user.message.index')}}" >
+                    {{__('Support Tickets')}}
+                  </a>
+              <a href="{{ route('user.logout') }}" class="dropdown-item">{{__('Logout')}}</a>
           </div>
         </div>
       </div>
