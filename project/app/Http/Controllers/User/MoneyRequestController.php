@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Classes\GeniusMailer;
-use App\Http\Controllers\Controller;
-use App\Models\BankPlan;
-use App\Models\Generalsetting;
-use App\Models\MoneyRequest;
-use App\Models\Transaction;
 use App\Models\User;
-use Illuminate\Http\Request;
+use App\Models\BankPlan;
+use App\Models\Currency;
+use App\Models\Transaction;
 use Illuminate\Support\Str;
+use App\Models\MoneyRequest;
+use Illuminate\Http\Request;
+use App\Classes\GeniusMailer;
+use App\Models\Generalsetting;
+use App\Http\Controllers\Controller;
 
 class MoneyRequestController extends Controller
 {
@@ -92,12 +93,22 @@ class MoneyRequestController extends Controller
         $data->save();
 
         $trans = new Transaction();
-        $trans->email = $user->email;
-        $trans->amount = $finalAmount;
-        $trans->type = "Request Money";
-        $trans->profit = "plus";
-        $trans->txnid = $txnid;
-        $trans->user_id = $user->id;
+        $trans->trnx = $txnid;
+        $trans->user_id     = $user->id;
+        $trans->user_type   = 1;
+        $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
+        $trans->amount      = $finalAmount;
+        $trans->charge      = 0;
+        $trans->type        = '+';
+        $trans->remark      = 'Request_Money';
+        $trans->details     = trans('Request Money');
+        
+        // $trans->email = $user->email;
+        // $trans->amount = $finalAmount;
+        // $trans->type = "Request Money";
+        // $trans->profit = "plus";
+        // $trans->txnid = $txnid;
+        // $trans->user_id = $user->id;
         $trans->save();
 
         return redirect()->back()->with('success','Request Money Send Successfully.');
@@ -124,21 +135,41 @@ class MoneyRequestController extends Controller
         $data->update(['status'=>1]);
 
         $trans = new Transaction();
-        $trans->email = auth()->user()->email;
-        $trans->amount = $data->amount;
-        $trans->type = "Request Money";
-        $trans->profit = "minus";
-        $trans->txnid = $data->transaction_no;
-        $trans->user_id = auth()->id();
+        $trans->trnx = $data->transaction_no;
+        $trans->user_id     = auth()->id();
+        $trans->user_type   = 1;
+        $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
+        $trans->amount      = $data->amount;
+        $trans->charge      = 0;
+        $trans->type        = '-';
+        $trans->remark      = 'Request_Money';
+        $trans->details     = trans('Request Money');
+
+        // $trans->email = auth()->user()->email;
+        // $trans->amount = $data->amount;
+        // $trans->type = "Request Money";
+        // $trans->profit = "minus";
+        // $trans->txnid = $data->transaction_no;
+        // $trans->user_id = auth()->id();
         $trans->save();
 
         $trans = new Transaction();
-        $trans->email = $receiver->email;
-        $trans->amount = $data->amount;
-        $trans->type = "Request Money";
-        $trans->profit = "plus";
-        $trans->txnid = $data->transaction_no;
-        $trans->user_id = $receiver->id;
+        $trans->trnx = $data->transaction_no;
+        $trans->user_id     = $receiver->id;
+        $trans->user_type   = 1;
+        $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
+        $trans->amount      = $data->amount;
+        $trans->charge      = 0;
+        $trans->type        = '+';
+        $trans->remark      = 'Request_Money';
+        $trans->details     = trans('Request Money');
+
+        // $trans->email = $receiver->email;
+        // $trans->amount = $data->amount;
+        // $trans->type = "Request Money";
+        // $trans->profit = "plus";
+        // $trans->txnid = $data->transaction_no;
+        // $trans->user_id = $receiver->id;
         $trans->save();
 
         if($gs->is_smtp == 1)

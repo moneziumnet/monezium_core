@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Classes\GeniusMailer;
-use App\Http\Controllers\Controller;
-use App\Models\BalanceTransfer;
-use App\Models\BankPlan;
-use App\Models\Generalsetting;
-use App\Models\SaveAccount;
-use App\Models\Transaction;
-use Illuminate\Http\Request;
 use Validator;
 use App\Models\User;
+use App\Models\BankPlan;
+use App\Models\Currency;
+use App\Models\SaveAccount;
+use App\Models\Transaction;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Classes\GeniusMailer;
+use App\Models\Generalsetting;
+use App\Models\BalanceTransfer;
+use App\Http\Controllers\Controller;
 
 class SendController extends Controller
 {
@@ -122,12 +123,22 @@ class SendController extends Controller
             session(['sendstatus'=>1, 'saveData'=>$data]);
 
             $trans = new Transaction();
-            $trans->email = $user->email;
-            $trans->amount = $request->amount;
-            $trans->type = "Send Money";
-            $trans->profit = "minus";
-            $trans->txnid = $txnid;
-            $trans->user_id = $user->id;
+            $trans->trnx = $txnid;
+            $trans->user_id     = $user->id;
+            $trans->user_type   = 1;
+            $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
+            $trans->amount      = $request->amount;
+            $trans->charge      = 0;
+            $trans->type        = '-';
+            $trans->remark      = 'Send_Money';
+            $trans->details     = trans('Send Money');
+
+            // $trans->email = $user->email;
+            // $trans->amount = $request->amount;
+            // $trans->type = "Send Money";
+            // $trans->profit = "minus";
+            // $trans->txnid = $txnid;
+            // $trans->user_id = $user->id;
             $trans->save();
 
             if($gs->is_smtp == 1)

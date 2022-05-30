@@ -78,12 +78,22 @@ class UserFdrController extends Controller
             $user->decrement('balance',$request->fdr_amount);
 
             $trans = new Transaction();
-            $trans->email = auth()->user()->email;
-            $trans->amount = $request->fdr_amount;
-            $trans->type = "Fdr";
-            $trans->profit = "minus";
-            $trans->txnid = $data->transaction_no;
-            $trans->user_id = auth()->id();
+            $trans->trnx = $data->transaction_no;
+            $trans->user_id     = auth()->id();
+            $trans->user_type   = 1;
+            $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
+            $trans->amount      = $request->fdr_amount;
+            $trans->charge      = 0;
+            $trans->type        = '-';
+            $trans->remark      = 'Fdr_create';
+            $trans->details     = trans('Fdr created');
+
+            // $trans->email = auth()->user()->email;
+            // $trans->amount = $request->fdr_amount;
+            // $trans->type = "Fdr";
+            // $trans->profit = "minus";
+            // $trans->txnid = $data->transaction_no;
+            // $trans->user_id = auth()->id();
             $trans->save();
 
             return redirect()->route('user.fdr.index')->with('success','Loan Requesting Successfully');

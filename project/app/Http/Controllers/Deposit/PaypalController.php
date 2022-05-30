@@ -192,12 +192,22 @@ class PaypalController extends Controller
                 $user->save();
 
                 $trans = new AppTransaction();
-                $trans->email = $user->email;
-                $trans->amount = $deposit->amount;
-                $trans->type = "Deposit";
-                $trans->profit = "plus";
-                $trans->txnid = $deposit->deposit_number;
-                $trans->user_id = $user->id;
+                $trans->trnx = $deposit->deposit_number;
+                $trans->user_id     = $user->id;
+                $trans->user_type   = 1;
+                $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
+                $trans->amount      = $deposit->amount;
+                $trans->charge      = 0;
+                $trans->type        = '+';
+                $trans->remark      = 'Deposit_create';
+                $trans->details     = trans('Deposit Paypal complete');
+
+                // $trans->email = $user->email;
+                // $trans->amount = $deposit->amount;
+                // $trans->type = "Deposit";
+                // $trans->profit = "plus";
+                // $trans->txnid = $deposit->deposit_number;
+                // $trans->user_id = $user->id;
                 $trans->save();
 
                 Session::forget('deposit_data');

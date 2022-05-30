@@ -130,12 +130,15 @@ class UserLoanController extends Controller
         $data->fill($input)->save();
 
         $trans = new Transaction();
-        $trans->email = $user->email;
-        $trans->amount = $request->loan_amount;
-        $trans->type = "Loan";
-        $trans->profit = "plus";
-        $trans->txnid = $txnid;
-        $trans->user_id = $user->id;
+        $trans->trnx = $txnid;
+        $trans->user_id     = $user->id;
+        $trans->user_type   = 1;
+        $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
+        $trans->amount      = $request->loan_amount;
+        $trans->charge      = 0;
+        $trans->type        = '+';
+        $trans->remark      = 'loan_create';
+        $trans->details     = trans('loan requesting');
         $trans->save();
 
         return redirect()->route('user.loans.index')->with('message','Loan Requesting Successfully');

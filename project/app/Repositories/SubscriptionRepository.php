@@ -110,12 +110,22 @@ class SubscriptionRepository{
     public function createTransaction($subscription){
         $user = User::findOrFail($subscription->user_id);
         $trans = new Transaction();
-        $trans->email = $user->email;
-        $trans->amount = $subscription->price;
-        $trans->type = "Subscription";
-        $trans->profit = "plus";
-        $trans->txnid = $subscription->subscription_number;
-        $trans->user_id = $user->id;
+        $trans->trnx = $subscription->subscription_number;
+        $trans->user_id     = $user->id;
+        $trans->user_type   = 1;
+        $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
+        $trans->amount      = $subscription->price;
+        $trans->charge      = 0;
+        $trans->type        = '+';
+        $trans->remark      = 'Subscription';
+        $trans->details     = trans('Subscription created');
+
+        // $trans->email = $user->email;
+        // $trans->amount = $subscription->price;
+        // $trans->type = "Subscription";
+        // $trans->profit = "plus";
+        // $trans->txnid = $subscription->subscription_number;
+        // $trans->user_id = $user->id;
         $trans->save();
     }
 

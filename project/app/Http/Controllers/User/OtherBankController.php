@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Http\Controllers\Controller;
-use App\Models\BalanceTransfer;
 use App\Models\BankPlan;
-use App\Models\Beneficiary;
-use App\Models\Generalsetting;
+use App\Models\Currency;
 use App\Models\OtherBank;
+use App\Models\Beneficiary;
 use App\Models\Transaction;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Models\Generalsetting;
+use App\Models\BalanceTransfer;
+use App\Http\Controllers\Controller;
 
 class OtherBankController extends Controller
 {
@@ -116,12 +117,22 @@ class OtherBankController extends Controller
             $data->save();
 
             $trans = new Transaction();
-            $trans->email = $user->email;
-            $trans->amount = $finalAmount;
-            $trans->type = "Send Money";
-            $trans->profit = "minus";
-            $trans->txnid = $txnid;
-            $trans->user_id = $user->id;
+            $trans->trnx = $txnid;
+            $trans->user_id     = $user->id;
+            $trans->user_type   = 1;
+            $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
+            $trans->amount      = $finalAmount;
+            $trans->charge      = 0;
+            $trans->type        = '+';
+            $trans->remark      = 'Send_Money';
+            $trans->details     = trans('Send Money');
+
+            // $trans->email = $user->email;
+            // $trans->amount = $finalAmount;
+            // $trans->type = "Send Money";
+            // $trans->profit = "minus";
+            // $trans->txnid = $txnid;
+            // $trans->user_id = $user->id;
             $trans->save();
     
             $user->decrement('balance',$finalAmount);

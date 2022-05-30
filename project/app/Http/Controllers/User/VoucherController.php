@@ -139,6 +139,7 @@ class VoucherController extends Controller
        $trnx->currency_id = $wallet->currency->id;
        $trnx->amount      = $voucher->amount;
        $trnx->charge      = 0;
+       $trnx->type        = '+';
        $trnx->remark      = 'reedem_voucher';
        $trnx->details     = trans('Voucher reedemed');
        $trnx->save();

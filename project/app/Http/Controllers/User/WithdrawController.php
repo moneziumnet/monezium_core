@@ -109,12 +109,22 @@ class WithdrawController extends Controller
         $total_amount = $newwithdraw->amount + $newwithdraw->fee;
 
         $trans = new Transaction();
-        $trans->email = $user->email;
-        $trans->amount = $finalamount;
-        $trans->type = "Payout";
-        $trans->profit = "minus";
-        $trans->txnid = $txnid;
-        $trans->user_id = $user->id;
+        $trans->trnx = $txnid;
+        $trans->user_id     = $user->id;
+        $trans->user_type   = 1;
+        $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
+        $trans->amount      = $finalamount;
+        $trans->charge      = 0;
+        $trans->type        = '-';
+        $trans->remark      = 'Payout';
+        $trans->details     = trans('Payout created');
+
+        // $trans->email = $user->email;
+        // $trans->amount = $finalamount;
+        // $trans->type = "Payout";
+        // $trans->profit = "minus";
+        // $trans->txnid = $txnid;
+        // $trans->user_id = $user->id;
         $trans->save();
 
         return redirect()->back()->with('success','Withdraw Request Amount : '.$request->amount.' Fee : '.$messagefee.' = '.$messagefinal.' ('.$currency->code.') Sent Successfully.');

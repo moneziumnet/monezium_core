@@ -106,12 +106,16 @@ class InstamojoController extends Controller
             $user->save();
 
             $trans = new Transaction();
-            $trans->email = $user->email;
-            $trans->amount = $amountToAdd;
-            $trans->type = "Deposit";
-            $trans->profit = "plus";
-            $trans->txnid = $order_data['item_number'];
-            $trans->user_id = $user->id;
+            $trans->trnx = $order_data['item_number'];
+            $trans->user_id     = $user->id;
+            $trans->user_type   = 1;
+            $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
+            $trans->amount      = $amountToAdd;
+            $trans->charge      = 0;
+            $trans->type        = '+';
+            $trans->remark      = 'Deposit_create';
+            $trans->details     = trans('Deposit Instamojo complete');
+
             $trans->save();
 
 

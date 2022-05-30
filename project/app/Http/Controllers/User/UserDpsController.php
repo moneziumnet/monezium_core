@@ -75,12 +75,22 @@ class UserDpsController extends Controller
             $log->save();
 
             $trans = new Transaction();
-            $trans->email = auth()->user()->email;
-            $trans->amount = $request->per_installment;
-            $trans->type = "Dps";
-            $trans->profit = "minus";
-            $trans->txnid = $data->transaction_no;
-            $trans->user_id = auth()->id();
+            $trans->trnx = $data->transaction_no;
+            $trans->user_id     = auth()->id();
+            $trans->user_type   = 1;
+            $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
+            $trans->amount      = $request->per_installment;
+            $trans->charge      = 0;
+            $trans->type        = '-';
+            $trans->remark      = 'Dps_create';
+            $trans->details     = trans('Dps created');
+
+            // $trans->email = auth()->user()->email;
+            // $trans->amount = $request->per_installment;
+            // $trans->type = "Dps";
+            // $trans->profit = "minus";
+            // $trans->txnid = $data->transaction_no;
+            // $trans->user_id = auth()->id();
             $trans->save();
             
             return redirect()->route('user.dps.index')->with('success','DPS application submitted');
