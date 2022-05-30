@@ -46,15 +46,15 @@
 
           <div class="form-group">
             <label for="inp-rate">{{ __('Rate') }}</label>
-            <input type="text" class="form-control" id="inp-rate" name="rate" placeholder="{{ __('Enter Currency Rate 0') }}" required="" value="{{ numFormat($currency->rate,8) }}">
+            <input type="text" class="form-control" id="inp-rate" name="rate" placeholder="{{ __('Enter Currency Rate 0') }}" required="" value="{{ numFormat($data->rate,8) }}">
           </div>
 
           <div class="form-group">
             <label>@lang('Currency Type')</label>
             <select class="form-control" name="type" required>
               <option value="">--@lang('Select Type')--</option>
-              <option value="1" {{$currency->type == 1 ? 'selected':''}}>@lang('FIAT')</option>
-              <option value="2" {{$currency->type == 2 ? 'selected':''}}>@lang('CRYPTO')</option>
+              <option value="1" {{$data->type == 1 ? 'selected':''}}>@lang('FIAT')</option>
+              <option value="2" {{$data->type == 2 ? 'selected':''}}>@lang('CRYPTO')</option>
             </select>
           </div>
 
@@ -62,8 +62,8 @@
             <label>@lang('Status') </label>
             <select class="form-control" name="status" required>
               <option value="">--@lang('Select')--</option>
-              <option value="1" {{$currency->status == 1 ? 'selected':''}}>@lang('Active')</option>
-              <option value="0" {{$currency->status == 0 ? 'selected':''}}>@lang('Inactive')</option>
+              <option value="1" {{$data->status == 1 ? 'selected':''}}>@lang('Active')</option>
+              <option value="0" {{$data->status == 0 ? 'selected':''}}>@lang('Inactive')</option>
             </select>
           </div>
 
