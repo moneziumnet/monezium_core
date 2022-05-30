@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Classes\GoogleAuthenticator;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\Generalsetting;
-use App\Models\Order;
-use App\Models\Transaction;
-use App\Models\User;
-use App\Traits\Payout;
-use Auth;
-use Brian2694\Toastr\Facades\Toastr;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Input;
-use Validator;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use PDF;
+use Auth;
+use Validator;
+use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Order;
+use App\Models\Wallet;
+use App\Traits\Payout;
+use App\Models\Currency;
+use App\Models\Transaction;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Models\Generalsetting;
+use App\Classes\GoogleAuthenticator;
+use App\Http\Controllers\Controller;
+use Brian2694\Toastr\Facades\Toastr;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Input;
 
 class UserController extends Controller
 {
@@ -29,15 +31,34 @@ class UserController extends Controller
     public function index()
     {
         $data['user'] = Auth::user();  
+        $data['wallets'] = Wallet::where('user_id',auth()->id())->where('user_type',1)->with('currency')->get();
         $data['transactions'] = Transaction::whereUserId(auth()->id())->orderBy('id','desc')->limit(5)->get();
+        foreach ($data['transactions'] as $key => $transaction) {
+            $transaction->currency = Currency::whereId($transaction->currency_id)->first();
+        }
         return view('user.dashboard',$data);
     }
 
     public function transaction()
     {
         $user = Auth::user();
-        $transactions = Transaction::whereUserId(auth()->id())->orderBy('id','desc')->paginate(20);  
+        $transactions = Transaction::whereUserId(auth()->id())->orderBy('id','desc')->paginate(20); 
+        foreach ($transactions as $key => $transaction) {
+            $transaction->currency = Currency::whereId($transaction->currency_id)->first();
+        }
+
         return view('user.transactions',compact('user','transactions'));
+    }
+
+    public function trxDetails($id)
+    {
+        $user = Auth::user();
+        $transaction = Transaction::where('id',$id)->whereUserId(auth()->id())->first();
+        $transaction->currency = Currency::whereId($transaction->currency_id)->first();
+        if(!$transaction){
+            return response('empty');
+        }
+        return view('user.trx_details',compact('user','transaction'));
     }
 
     public function profile()

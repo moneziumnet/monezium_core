@@ -21,13 +21,14 @@
 	  <div class="table-responsive p-3">
 		<table id="geniustable" class="table table-hover dt-responsive" cellspacing="0" width="100%">
 		  <thead class="thead-light">
-			<tr>
-        <th>{{__('Customer Email')}}</th>
-        <th>{{__('Amount')}}</th>
-        <th>{{__('Type')}}</th>
-        <th>{{__('Txnid')}}</th>
+       <tr>
         <th>{{__('Date')}}</th>
-			</tr>
+        <th>{{__('Transaction ID')}}</th>
+        <th>{{__('Description')}}</th>
+        <th>{{__('Remark')}}</th>
+        <th>{{__('Amount')}}</th>
+        <th>{{__('Charge')}}</th>
+       </tr>      
 		  </thead>
 		</table>
 	  </div>
@@ -53,11 +54,12 @@
            searching: true,
            ajax: '{{ route('admin.transactions.datatables') }}',
            columns: [
-                { data: 'email', name: 'email' },
-                { data: 'amount', name: 'amount' },
-                { data: 'type', name: 'type' },
-                { data: 'txnid', name: 'txnid' },
                 { data: 'created_at', name: 'created_at' },
+                { data: 'trnx', name: 'trnx' },
+                { data: 'details', name: 'details' },
+                { data: 'remark', name:'remark' },
+                { data: 'amount', name: 'amount' },
+                { data: 'charge', name: 'charge' },
             ],
             language : {
                 processing: '<img src="{{asset('assets/images/'.$gs->admin_loader)}}">'
