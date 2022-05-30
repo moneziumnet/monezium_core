@@ -93,6 +93,13 @@
       <span>{{ __('Other Banks') }}</span>
     </a>
   </li>
+  
+  <li class="nav-item">
+    <a class="nav-link" href="{{route('admin.currency.index')}}">
+      <i class="fas fa-coins"></i>
+      <span>{{ __('Manage Currency') }}</span>
+    </a>
+  </li>
 
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#moneytransfer" aria-expanded="true" aria-controls="collapseTable">

@@ -198,6 +198,23 @@ Route::prefix('admin')->group(function(){
         Route::get('/other-banks/delete/{id}', [OtherBankController::class,'destroy'])->name('admin.other.banks.delete');
         Route::get('/other-banks/{id1}/status/{status}', [OtherBankController::class,'status'])->name('admin.other.banks.status');
       });
+
+      //==================================== Manage Currency ==============================================//
+
+      Route::get('/manage-currency',[ManageCurrencyController::class,'index'])->name('currency.index')->middleware('permission:manage currency');
+      Route::get('/add-currency',[ManageCurrencyController::class,'addCurrency'])->name('currency.add')->middleware('permission:add currency');
+      Route::post('/add-currency',[ManageCurrencyController::class,'store'])->middleware('permission:add currency');
+      Route::get('/edit-currency/{id}',[ManageCurrencyController::class,'editCurrency'])->name('currency.edit')->middleware('permission:edit currency');
+      Route::post('/update-currency/{id}',[ManageCurrencyController::class,'updateCurrency'])->name('currency.update')->middleware('permission:update currency');
+      Route::post('/update-currency-api',[ManageCurrencyController::class,'updateCurrencyAPI'])->name('currency.api.update')->middleware('permission:update currency api');
+
+      // manage charges
+      // Route::get('/manage-charges',[ManageChargeController::class,'index'])->name('manage.charge')->middleware('permission:manage charges');
+      // Route::get('/edit-charge/{id}',[ManageChargeController::class,'editCharge'])->name('edit.charge')->middleware('permission:edit charge');
+      // Route::post('/update-charge/{id}',[ManageChargeController::class,'updateCharge'])->name('update.charge')->middleware('permission:update charge');
+
+
+
     
       Route::group(['middleware'=>'permissions:Money Transfer'],function(){
         Route::get('/own-banks/transfer/datatables', [OwnBankTransferController::class,'datatables'])->name('admin.own.banks.transfer.datatables');
