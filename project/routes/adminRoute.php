@@ -37,6 +37,8 @@ use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\Admin\OtherBankController;
 use App\Http\Controllers\Admin\OtherBankTransferController;
 use App\Http\Controllers\Admin\OwnBankTransferController;
+use App\Http\Controllers\Admin\ManageChargeController;
+use App\Http\Controllers\Admin\ManageEscrowController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PageSettingController;
 use App\Http\Controllers\Admin\PaymentGatewayController;
@@ -201,17 +203,24 @@ Route::prefix('admin')->group(function(){
 
       //==================================== Manage Currency ==============================================//
 
-      Route::get('/manage-currency',[ManageCurrencyController::class,'index'])->name('currency.index')->middleware('permission:manage currency');
-      Route::get('/add-currency',[ManageCurrencyController::class,'addCurrency'])->name('currency.add')->middleware('permission:add currency');
-      Route::post('/add-currency',[ManageCurrencyController::class,'store'])->middleware('permission:add currency');
-      Route::get('/edit-currency/{id}',[ManageCurrencyController::class,'editCurrency'])->name('currency.edit')->middleware('permission:edit currency');
-      Route::post('/update-currency/{id}',[ManageCurrencyController::class,'updateCurrency'])->name('currency.update')->middleware('permission:update currency');
-      Route::post('/update-currency-api',[ManageCurrencyController::class,'updateCurrencyAPI'])->name('currency.api.update')->middleware('permission:update currency api');
-
       // manage charges
-      // Route::get('/manage-charges',[ManageChargeController::class,'index'])->name('manage.charge')->middleware('permission:manage charges');
-      // Route::get('/edit-charge/{id}',[ManageChargeController::class,'editCharge'])->name('edit.charge')->middleware('permission:edit charge');
-      // Route::post('/update-charge/{id}',[ManageChargeController::class,'updateCharge'])->name('update.charge')->middleware('permission:update charge');
+      Route::group(['middleware'=>'permissions:Manage Charge'],function(){
+        Route::get('/manage-charges',[ManageChargeController::class,'index'])->name('admin.manage.charge');
+        Route::get('/edit-charge/{id}',[ManageChargeController::class,'editCharge'])->name('admin.edit.charge');
+        Route::post('/update-charge/{id}',[ManageChargeController::class,'updateCharge'])->name('admin.update.charge');
+      });
+
+       //manage escrow
+       Route::group(['middleware'=>'permissions:Manage Escrow'],function(){
+        Route::get('manage/escrow',[ManageEscrowController::class,'index'])->name('admin.escrow.manage');
+        Route::get('escrow/on-hold',[ManageEscrowController::class,'onHold'])->name('admin.escrow.onHold');
+        Route::get('escrow-disputed',[ManageEscrowController::class,'disputed'])->name('admin.escrow.disputed');
+        Route::get('escrow-details/{id}',[ManageEscrowController::class,'details'])->name('admin.escrow.details');
+        Route::post('escrow-details/{id}',[ManageEscrowController::class,'disputeStore']);
+        Route::get('file-download/{id}',   [ManageEscrowController::class,'fileDownload'])->name('admin.escrow.file.download');
+        Route::post('return-payment',   [ManageEscrowController::class,'returnPayment'])->name('admin.escrow.return.payment');
+        Route::get('escrow-close/{id}',[ManageEscrowController::class,'close'])->name('admin.escrow.close');
+      });
 
 
 

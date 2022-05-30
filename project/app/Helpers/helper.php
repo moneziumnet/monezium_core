@@ -24,6 +24,13 @@ use PHPMailer\PHPMailer\PHPMailer;
   }
   
 
+  if(!function_exists('admin')){
+    function admin()
+    {
+      return auth()->guard('admin')->user();
+    }
+  }
+  
   if(!function_exists('convertedPrice')){
     function convertedPrice($price,$currency){
       return $price = $price * $currency->rate;
@@ -141,6 +148,12 @@ use PHPMailer\PHPMailer\PHPMailer;
     function diffTime($time)
     {
         return Carbon::parse($time)->diffForHumans();
+    }
+  }
+
+  if(!function_exists('access')){
+    function access($permission){
+        return admin()->can($permission);
     }
   }
 

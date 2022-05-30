@@ -215,6 +215,15 @@
                   </div>
               </div>
             </div>
+            
+            <div class="col-md-6">
+              <div class="form-group">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" name="section[]" value="Manage Charge" class="custom-control-input" id="manage_charge">
+                  <label class="custom-control-label" for="manage_charge">{{__('Manage Charge')}}</label>
+                  </div>
+              </div>
+            </div>
 
             <div class="col-md-6">
               <div class="form-group">

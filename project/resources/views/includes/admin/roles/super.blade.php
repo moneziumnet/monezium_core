@@ -95,11 +95,33 @@
   </li>
   
   <li class="nav-item">
-    <a class="nav-link" href="{{route('admin.currency.index')}}">
-      <i class="fas fa-coins"></i>
-      <span>{{ __('Manage Currency') }}</span>
+    <a class="nav-link" href="{{route('admin.manage.charge')}}">
+      <i class="fas fa-comments-dollar"></i>
+      <span>{{ __('Manage Charges') }}</span>
     </a>
   </li>
+
+  {{-- @if(access('manage escrow') || access('escrow on-hold') || access('escrow disputed')) --}}
+  <li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#escrow" aria-expanded="true" aria-controls="collapseTable">
+      <i class="fas fa-hands-helping"></i>
+    <span>{{ __('Manage Escrow') }} @if (isset($disputed) && $disputed > 0) <small class="badge badge-primary mr-4">!</small> @endif</span>
+    </a>
+    <div id="escrow" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+        {{-- @if (access('manage escrow')) --}}
+        <a class="collapse-item" href="{{ route('admin.escrow.manage') }}">{{ __('All Escrow') }}</a>
+        {{-- @endif
+        @if (access('manage on-hold')) --}}
+        <a class="collapse-item" href="{{ route('admin.escrow.onHold') }}">{{ __('On-hold Escrow') }}</a>
+        {{-- @endif
+        @if (access('manage disputed')) --}}
+        <a class="collapse-item {{isset($disputed) && $disputed > 0 ? 'beep beep-sidebar':''}}" href="{{ route('admin.escrow.disputed') }}">{{ __('Disputed Escrows') }}</a>
+        {{-- @endif --}}
+      </div>
+    </div>
+  </li>
+  {{-- @endif --}}
 
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#moneytransfer" aria-expanded="true" aria-controls="collapseTable">
