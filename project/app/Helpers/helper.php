@@ -236,3 +236,27 @@ use PHPMailer\PHPMailer\PHPMailer;
         
     }
   }
+<<<<<<< Updated upstream
+=======
+  
+  if(!function_exists('userBalance')){
+    function userBalance($user_id){
+      $sql = "SELECT 
+                sum((`w`.`balance`*`c`.`rate`)) as `total_amount` 
+              FROM  `wallets` as `w`,
+                    `currencies` as `c` 
+              WHERE `w`.`user_id`=$user_id AND 
+                    `w`.`user_type`=1 AND 
+                    `w`.`currency_id` = `c`.`id`";
+        $row = DB::selectOne($sql);
+        return $row;
+        //return admin()->can($permission);
+    }
+  }
+
+
+
+
+
+?>
+>>>>>>> Stashed changes

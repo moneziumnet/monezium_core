@@ -31,11 +31,13 @@ class UserController extends Controller
     public function index()
     {
         $data['user'] = Auth::user();  
-        $data['wallets'] = Wallet::where('user_id',auth()->id())->where('user_type',1)->with('currency')->get();
+        $wallets = Wallet::where('user_id',auth()->id())->where('user_type',1)->with('currency')->get();
+        $data['wallets'] = $wallets;
         $data['transactions'] = Transaction::whereUserId(auth()->id())->orderBy('id','desc')->limit(5)->get();
         foreach ($data['transactions'] as $key => $transaction) {
             $transaction->currency = Currency::whereId($transaction->currency_id)->first();
         }
+        $data['userBalance'] = userBalance(auth()->id());
         return view('user.dashboard',$data);
     }
 

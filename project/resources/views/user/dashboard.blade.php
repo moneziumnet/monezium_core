@@ -58,7 +58,7 @@
               </div>
               <div class="content">
                 <div class="subheader">{{__('Available Balance')}}</div>
-                <div class="h1 mb-0 mt-2">{{ showprice($user->balance,$currency) }}</div>
+                <div class="h1 mb-0 mt-2">{{ showprice($userBalance->total_amount,$currency) }}</div>
               </div>
             </div>
           </div>
