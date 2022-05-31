@@ -30,6 +30,26 @@ use PHPMailer\PHPMailer\PHPMailer;
       return auth()->guard('admin')->user();
     }
   }
+  function getPhoto($filename)
+  {
+      if($filename){
+          if(file_exists('assets/images'.'/'.$filename)) return asset('assets/images/'.$filename);
+          else return asset('assets/images/default.png');
+      } else{
+          return asset('assets/images/default.png');
+      }
+  }
+
+  function merchant()
+  {
+    return auth()->guard('merchant')->user();
+  }
+  
+  function loginIp(){
+    $info = unserialize(file_get_contents('http://www.geoplugin.net/php.gp?ip='.$_SERVER['REMOTE_ADDR']));
+    return json_decode(json_encode($info));
+}
+
   
   if(!function_exists('convertedPrice')){
     function convertedPrice($price,$currency){
@@ -215,8 +235,4 @@ use PHPMailer\PHPMailer\PHPMailer;
         }
         
     }
-  }  
-
-
-
-?>
+  }
