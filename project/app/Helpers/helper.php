@@ -236,8 +236,6 @@ use PHPMailer\PHPMailer\PHPMailer;
         
     }
   }
-<<<<<<< Updated upstream
-=======
   
   if(!function_exists('userBalance')){
     function userBalance($user_id){
@@ -259,4 +257,3 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 
 ?>
->>>>>>> Stashed changes
