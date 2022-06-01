@@ -19,8 +19,8 @@ use Illuminate\Support\Facades\Hash;
 class MerchantController extends Controller
 {
     public function dashboard()
-    {
-        dd("asdfasd");
+    {exit;
+        //dd("asdfasd");
         $wallets            = Wallet::where('user_type',2)->where('user_id',merchant()->id)->get();
         $recentWithdraw     = Withdrawals::where('merchant_id',merchant()->id)->take(7)->get();
         $recentTransactions = Transaction::where('user_id',merchant()->id)->where('user_type',2)->take(7)->get();
@@ -28,12 +28,12 @@ class MerchantController extends Controller
     }
 
     public function generateQR()
-    {
+    {exit;
         return view('merchant.qr');
     }
 
     public function apiKeyForm()
-    {
+    {exit;
         $cred = ApiCreds::whereMerchantId(merchant()->id)->first();
         if(!$cred){
             $cred = ApiCreds::create([
@@ -46,7 +46,7 @@ class MerchantController extends Controller
     }
 
     public function apiKeyGenerate()
-    {
+    {exit;
         $cred = ApiCreds::whereMerchantId(merchant()->id)->first();
         if(!$cred){
             ApiCreds::create([
@@ -61,7 +61,7 @@ class MerchantController extends Controller
     }
 
     public function serviceMode()
-    {
+    {exit;
         $cred = ApiCreds::whereMerchantId(merchant()->id)->first();
         if($cred->mode == 0){
             $cred->mode = 1;
@@ -75,13 +75,13 @@ class MerchantController extends Controller
     }
 
     public function profileSetting()
-    {
+    {exit;
         $user = merchant();
         return view('merchant.profile_setting',compact('user'));
     }
 
     public function profileUpdate(Request $request)
-    {
+    {exit;
 
         $request->validate([
             'business_name' => 'required',
@@ -109,12 +109,12 @@ class MerchantController extends Controller
     }
 
     public function changePassword()
-    {
+    {exit;
         return view('merchant.change_password');
     }
 
     public function updatePassword(Request $request)
-    {
+    {exit;
         $request->validate(['old_pass'=>'required','password'=>'required|min:6|confirmed']);
         $user = merchant();
         if (Hash::check($request->old_pass, $user->password)) {
@@ -128,7 +128,7 @@ class MerchantController extends Controller
     }
 
     public function transactions()
-    {
+    {exit;
         $remark = request('remark');
         $search = request('search');
         $transactions = Transaction::where('user_id',merchant()->id)->where('user_type',2)
@@ -145,7 +145,7 @@ class MerchantController extends Controller
     }
 
     public function trxDetails($id)
-    {
+    {exit;
         $transaction = Transaction::find($id);
         if(!$transaction){
             return response('empty');
@@ -154,7 +154,7 @@ class MerchantController extends Controller
     }
 
     public function downloadQR($email)
-    {
+    {exit;
         $file = generateQR($email);
         $file = file_get_contents($file);
         $image = Image::make($file);
@@ -173,12 +173,12 @@ class MerchantController extends Controller
     }
 
     public function twoStep()
-    {
+    {exit;
         return view('merchant.twostep.two_step');
     }
 
     public function twoStepSendCode(Request $request)
-    {
+    {exit;
         $request->validate(['password'=>'required|confirmed']);
         $user = merchant();
         if (Hash::check($request->password, $user->password)) {
@@ -193,12 +193,12 @@ class MerchantController extends Controller
 
     }
     public function twoStepVerifyForm()
-    {
+    {exit;
         return view('merchant.twostep.verify');
     }
 
     public function twoStepVerifySubmit(Request $request)
-    {
+    {exit;
         $request->validate(['code'=>'required']);
         $user = merchant();
         if($request->code != $user->two_fa_code){
@@ -216,7 +216,7 @@ class MerchantController extends Controller
     }
 
     public function kycForm()
-    {
+    {exit;
         if(merchant()->kyc_status == 2) return back()->with('error','You have already submitted the KYC data.');
         if(merchant()->kyc_status == 1) return back()->with('error','Your KYC data is already verified.');
         $kycForm = KycForm::where('user_type',2)->get();
@@ -224,7 +224,7 @@ class MerchantController extends Controller
     }
 
     public function kycFormSubmit(Request $request)
-    {
+    {exit;
         $data = $request->except('_token');
         $kycForm = KycForm::where('user_type',2)->get();
         $rules = [];
@@ -260,7 +260,7 @@ class MerchantController extends Controller
     }
 
     public function moduleOff($module)
-    {
+    {exit;
         $key = str_replace('_','-',$module);
         $mod = Module::where('module',$key)->first();
         if($mod &&  $mod->status == 1){
