@@ -252,6 +252,28 @@ use PHPMailer\PHPMailer\PHPMailer;
     }
   }
 
+  if(!function_exists('menu')){
+    function menu($route)
+    {
+        if(is_array($route)) {
+            foreach ($route as $value) {
+                if (request()->routeIs($value)) {
+                    return 'active';
+                }
+            }
+        } elseif (request()->routeIs($route)) {
+            return 'active';
+        }
+    }
+  }
+
+  if(!function_exists('generateQR')){
+    function generateQR($data)
+    {
+        return "https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=$data&choe=UTF-8";
+    }
+  }
+
 
 
 
