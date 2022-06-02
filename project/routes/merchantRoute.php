@@ -40,6 +40,7 @@ Route::prefix('merchant')->name('merchant.')->group(function () {
     Route::get('/logout',[LoginController::class,'logout'])->name('logout')->middleware('auth:merchant');
 
     Route::middleware(['auth:merchant','merchant_email_verify','twostep'])->group(function(){
+        Route::get('/', [MerchantController::class,'dashboard'])->name('dashboard');
         Route::get('transaction/details/{id}', [MerchantController::class,'trxDetails'])->name('trx.details');
 
         Route::get('/profile-setting', [MerchantController::class,'profileSetting'])->name('profile.setting');
@@ -54,7 +55,7 @@ Route::prefix('merchant')->name('merchant.')->group(function () {
         Route::post('/two-step/authentication', [MerchantController::class,'twoStepSendCode']);
 
 
-        Route::get('/', [MerchantController::class,'dashboard'])->name('dashboard');
+        
         Route::get('/generate-qrcode', [MerchantController::class,'generateQR'])->name('qr');
 
          //withdraw

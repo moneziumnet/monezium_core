@@ -105,8 +105,9 @@ class LoginController extends Controller
           'country' => @loginIp()->geoplugin_countryName,
           'city' => @loginIp()->geoplugin_city,
         ]);
-
-        return redirect(route('merchant.dashboard'));
+        return redirect(route('merchant.profile.setting'));
+exit;
+        return redirect(route('merchant.index'));
       }
       return back()->with('error','Sorry! Credentials Mismatch.');
     }

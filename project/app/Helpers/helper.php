@@ -274,6 +274,28 @@ use PHPMailer\PHPMailer\PHPMailer;
     }
   }
 
+  if(!function_exists('filter')){
+    function filter($key, $value)
+    {
+        $queries = request()->query();
+        if(count($queries) > 0) $delimeter = '&';
+        else  $delimeter = '?';
+        
+        if(request()->has($key)){
+          $url = request()->getRequestUri();
+          $pattern = "\?$key";
+          $match = preg_match("/$pattern/",$url);
+          if($match != 0) return  preg_replace('~(\?|&)'.$key.'[^&]*~', "\?$key=$value", $url);
+          $filteredURL = preg_replace('~(\?|&)'.$key.'[^&]*~', '', $url);
+          return  $filteredURL.$delimeter."$key=$value";
+        }
+        return  request()->getRequestUri().$delimeter."$key=$value";
+        
+
+    }
+  }
+
+
 
 
 
