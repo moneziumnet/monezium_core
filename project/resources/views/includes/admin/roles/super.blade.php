@@ -39,6 +39,12 @@
       </div>
     </div>
   </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{{ route('admin.requestdomain.index') }}">
+      <i class="fas fa-landmark"></i>
+      <span>{{ __('Manage Domain') }}</span>
+    </a>
+  </li>
 
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#loan" aria-expanded="true" aria-controls="collapseTable">

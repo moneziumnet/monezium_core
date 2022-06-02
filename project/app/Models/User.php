@@ -7,7 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
 
-   protected $fillable = ['bank_plan_id','account_number','name', 'photo', 'zip', 'residency', 'city', 'address', 'phone', 'vat', 'email','password','verification_link','affilate_code','is_provider','twofa','go','details','kyc_status','kyc_info','kyc_reject_reason','plan_end_date'];
+   protected $fillable = ['bank_plan_id','account_number','name', 'photo', 'zip', 'residency', 'city', 'address', 'phone', 'vat', 'email','password','verification_link','affilate_code','is_provider','twofa','go','details','kyc_status','kyc_info','kyc_reject_reason','plan_end_date', 'tenant_id'];
 
     protected $hidden = [
         'password', 'remember_token'

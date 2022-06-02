@@ -25,6 +25,7 @@
         "razorpay/razorpay": "^2.5",
         "spatie/laravel-cookie-consent": "^2.12",
         "spatie/laravel-sitemap": "^5.8.0",
+        "stancl/tenancy": "^3.5",
         "twilio/sdk": "^6.34",
         "yajra/laravel-datatables-oracle": "~9.0",
         "zanysoft/laravel-zip": "^1.0"

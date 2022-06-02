@@ -17,6 +17,9 @@ use App\Http\Controllers\Admin\CounterController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\CurrencyController;
 use App\Http\Controllers\Admin\DashboardController;
+
+use App\Http\Controllers\Admin\RequestDomainController;
+
 use App\Http\Controllers\Admin\DepositController as AppDepositController;
 use App\Http\Controllers\Admin\DpsController;
 use App\Http\Controllers\Admin\DpsPlanController;
@@ -91,6 +94,20 @@ Route::prefix('admin')->group(function(){
       Route::get('/password', [DashboardController::class,'passwordreset'])->name('admin.password');
       Route::post('/password/update', [DashboardController::class,'changepass'])->name('admin.password.update');
     
+      Route::get('/request-domain/datatables', [RequestDomainController::class,'datatables'])->name('admin.requestdomain.datatables');
+      Route::get('/request-domain/create', [RequestDomainController::class,'create'])->name('admin.requestdomain.create');
+      Route::post('/request-domain/create', [RequestDomainController::class,'store'])->name('admin.requestdomain.store');
+      Route::get('/request-domain/{id}/edit', [RequestDomainController::class, 'edit'])->name('admin.requestdomain.edit');
+      Route::post('/request-domain/{id}/update', [RequestDomainController::class, 'data_update'])->name('admin.requestdomain.update');
+      Route::get('/request-domain/{id}/delete', [RequestDomainController::class, 'destroy'])->name('admin.requestdomain.delete');
+      Route::post('request-domain/update', [RequestDomainController::class, 'update'])->name('admin.requestdomain.user.update');
+      
+      Route::get('/request-domain', [RequestDomainController::class, 'index'])->name('admin.requestdomain.index');
+      Route::get('/request-domain/approve/{id}', [RequestDomainController::class, 'approveStatus'])->name('admin.requestdomain.approve.status');
+      Route::get('/request-domain/disapprove/{id}', [RequestDomainController::class, 'disapproveStatus'])->name('admin.requestdomain.disapprove.status');
+      Route::post('/request-domain/disapprove-status-update/{id}', [RequestDomainController::class, 'updateStatus'])->name('admin.status.update');
+
+
       Route::group(['middleware'=>'permissions:Menu Builder'],function(){
         Route::get('/menu-builder', [GeneralSettingController::class,'menubuilder'])->name('admin.gs.menubuilder');
       });
