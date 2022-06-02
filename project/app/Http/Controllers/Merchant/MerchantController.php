@@ -20,7 +20,7 @@ class MerchantController extends Controller
 {
     public function dashboard()
     {
-        dd("asdfasd");
+        
         $wallets            = Wallet::where('user_type',2)->where('user_id',merchant()->id)->get();
         $recentWithdraw     = Withdrawals::where('merchant_id',merchant()->id)->take(7)->get();
         $recentTransactions = Transaction::where('user_id',merchant()->id)->where('user_type',2)->take(7)->get();
