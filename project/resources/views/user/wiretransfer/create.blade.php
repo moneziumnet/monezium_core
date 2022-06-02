@@ -115,6 +115,7 @@
                         @error('amount')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
+                        
 
                         <div class="form-group mb-3 ">
                             <label class="form-label">{{__('Note')}}</label>

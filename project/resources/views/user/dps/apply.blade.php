@@ -73,7 +73,9 @@
                     
                     <form action="{{route('user.loan.dpsSubmit')}}" method="POST" enctype="multipart/form-data">
                         @csrf
+
                         <input type="hidden" name="dps_plan_id" value="{{ $data->id }}">
+                        <input type="hidden" name="currency_id" value="{{ $currency->id }}">
                         <input type="hidden" name="per_installment" value="{{ $data->per_installment }}">
                         <input type="hidden" name="deposit_amount" value="{{ $data->final_amount }}">
                         <input type="hidden" name="matured_amount" value="{{ $data->final_amount + $data->user_profit }}">

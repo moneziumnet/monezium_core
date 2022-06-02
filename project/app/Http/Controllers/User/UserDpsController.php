@@ -46,7 +46,8 @@ class UserDpsController extends Controller
 
     public function dpsSubmit(Request $request){
         $user = auth()->user();
-        if($user->balance >= $request->per_installment){
+        
+        if(user_wallet_balance(auth()->id(),$request->input('currency_id')) >= $request->per_installment){
             $data = new UserDps();
 
             $plan = DpsPlan::findOrFail($request->dps_plan_id);
@@ -65,7 +66,8 @@ class UserDpsController extends Controller
             $data->next_installment = Carbon::now()->addDays($plan->installment_interval);
             $data->save();
 
-            $user->decrement('balance',$request->per_installment);
+            user_wallet_decrement(auth()->id(),$request->input('currency_id'),$request->per_installment);
+            //$user->decrement('balance',$request->per_installment);
 
             $log = new InstallmentLog();
             $log->user_id = auth()->id();

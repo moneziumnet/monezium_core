@@ -82,6 +82,7 @@
                     <form action="{{ route('user.fdr.request') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="plan_id" value="{{ $data->id }}">
+                        <input type="hidden" name="currency_id" value="{{ $currency->id }}">
                         <input type="hidden" name="fdr_amount" value="{{ $fdrAmount }}">
                         <input type="hidden" name="profit_amount" value="{{ ($fdrAmount * $data->interest_rate)/100 }}">
     

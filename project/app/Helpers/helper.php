@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use App\Models\Currency;
+use App\Models\Wallet;
 use App\Models\Generalsetting;
 use App\Models\Charge;
 use Illuminate\Support\Str;
@@ -296,6 +297,36 @@ use PHPMailer\PHPMailer\PHPMailer;
   }
 
 
+  if(!function_exists('user_wallet_balance'))
+  {
+      function user_wallet_balance($auth_id, $currency_id)
+      {
+          $balance = Wallet::where('user_id', $auth_id)->where('currency_id',$currency_id)->first();
+          return $balance->balance;
+      }
+  }
+  
+  if(!function_exists('user_wallet_decrement'))
+  {
+      function user_wallet_decrement($auth_id, $currency_id, $amount)
+      {
+          $balance = Wallet::where('user_id', $auth_id)
+                      ->where('currency_id',$currency_id)
+                      ->decrement('balance', $amount);
+          return $balance;
+      }
+  }
+  
+  if(!function_exists('user_wallet_increment'))
+  {
+      function user_wallet_increment($auth_id, $currency_id, $amount)
+      {
+          $balance = Wallet::where('user_id', $auth_id)
+                      ->where('currency_id',$currency_id)
+                      ->increment('balance', $amount);
+          return $balance;
+      }
+  }
 
 
 

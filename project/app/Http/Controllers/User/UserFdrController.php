@@ -55,7 +55,8 @@ class UserFdrController extends Controller
 
     public function fdrRequest(Request $request){
         $user = auth()->user();
-        if($user->balance >= $request->fdr_amount){
+        // if($user->balance >= $request->fdr_amount){
+        if(user_wallet_balance(auth()->id(),$request->input('currency_id'))  >= $request->fdr_amount){
 
             $data = new UserFdr();
             $plan = FdrPlan::findOrFail($request->plan_id);
@@ -75,7 +76,8 @@ class UserFdrController extends Controller
             $data->status = 1;
             $data->save();
 
-            $user->decrement('balance',$request->fdr_amount);
+            //$user->decrement('balance',$request->fdr_amount);
+            user_wallet_decrement(auth()->id(),$request->input('currency_id'),$request->fdr_amount);
 
             $trans = new Transaction();
             $trans->trnx = $data->transaction_no;

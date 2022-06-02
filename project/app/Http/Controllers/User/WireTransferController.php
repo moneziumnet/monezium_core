@@ -5,8 +5,11 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\BalanceTransfer;
 use App\Models\BankPlan;
+use App\Models\Currency;
 use App\Models\WireTransfer;
 use App\Models\WireTransferBank;
+use Illuminate\Support\Carbon;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -28,6 +31,7 @@ class WireTransferController extends Controller
     }
 
     public function store(Request $request){
+        
         $request->validate([
             'wire_transfer_bank_id' => 'required',
             'currency' => 'required',
@@ -59,8 +63,9 @@ class WireTransferController extends Controller
         if($monthlySend > $bank_plan->monthly_send){
             return redirect()->back()->with('unsuccess','Monthly send limit over.');
         }
-        
-        if($request->amount > $user->balance){
+        $currency = defaultCurr();
+        //if($request->amount > $user->balance){
+        if($request->amount > user_wallet_balance(auth()->id(),$currency->id)){
             return redirect()->back()->with('unsuccess','Insufficient Account Balance.');
         }
 
@@ -78,7 +83,9 @@ class WireTransferController extends Controller
         $data->note = $request->note;
         $data->save();
 
-        $user->decrement('balance',$request->amount);
+       // $user->decrement('balance',$request->amount);
+       user_wallet_decrement(auth()->id(),$currency->id,$request->amount); 
+       
        
         return redirect()->back()->with('success','Wire Transfer Request Sent Successfully');
     }
