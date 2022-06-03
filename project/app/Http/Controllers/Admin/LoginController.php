@@ -38,20 +38,53 @@ class LoginController extends Controller
             return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
         }
 
-
-        // Attempt to log the user in
-        if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
-
-
-                return response()->json(route('admin.dashboard'));
-            
+        $current_domain = tenant('domains');
+        if (!empty($current_domain)) {
+            $current_domain = $current_domain->pluck('domain')->toArray()[0];
         }
+
+        $user = Admin::where('email', $request->email)->first();
+
+        if (!empty($user)) {
+            if ($user->role_id == 0 && empty($user->tenant_id)) {
+                if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
+                    return response()->json(route('admin.dashboard'));
+                }
+                else {
+                    $msg = array(
+                        'type' => 'warn',
+                        'message' => "Credentials Doesn't Match !"
+                    );
+                    return response()->json(array('errors' => $msg));
+                }
+            }
+            elseif (!empty($current_domain) && !empty($user->tenant_id)) {
+                if ($user->status == 1) {
+                    if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
+                        return response()->json(route('admin.dashboard'));
+                    }
+                    else {
+                        $msg = array(
+                            'type' => 'warn',
+                            'message' => "Credentials Doesn't Match !"
+                        );
+                        return response()->json(array('errors' => $msg));
+                    }
+                } else {
+                    return response()->json(array('errors' => [ 0 => 'Please Contact to administrator' ]));
+                }
+            } else {
+                return response()->json(array('errors' => [ 0 =>  __('permission denied') ]));
+            }
+        } else {
+            return response()->json(array('errors' => [ 0 => 'admin not found' ]));
+        }
+
+
+
+        
         // if unsuccessful, then redirect back to the login with the form data
-        $msg = array(
-            'type' => 'warn',
-            'message' => "Credentials Doesn't Match !"
-        );
-        return response()->json(array('errors' => $msg));
+        
     }
 
     public function logout()
