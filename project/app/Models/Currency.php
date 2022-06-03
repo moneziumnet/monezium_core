@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Currency extends Model
 {
-    protected $fillable = [ 'curr_name','code','symbol','rate','type','default','status'];
+    protected $fillable = [ 'curr_name','code','symbol','rate','type','is_default','status'];
     public $timestamps = false;
 
     public function wiretransfers(){
