@@ -16,7 +16,7 @@ Route::prefix('merchant')->name('merchant.')->group(function () {
     Route::get('/register',            [LoginController::class,'registerForm'])->name('register');
     Route::post('/register',            [LoginController::class,'register']);
     Route::get('/login',            [LoginController::class,'showLoginForm'])->name('auth.login');
-    Route::post('/login',           [LoginController::class,'login']);
+    Route::post('/login',           [LoginController::class,'login'])->name('auth.login');
     Route::get('/forgot-password',   [LoginController::class,'forgotPasswordForm'])->name('forgot.password');
     Route::post('/forgot-password',   [LoginController::class,'forgotPasswordSubmit']);
 

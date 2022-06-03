@@ -105,11 +105,18 @@ class LoginController extends Controller
           'country' => @loginIp()->geoplugin_countryName,
           'city' => @loginIp()->geoplugin_city,
         ]);
-        return redirect(route('merchant.profile.setting'));
+        return response()->json(route('merchant.dashboard'));
+        //return redirect(route('merchant.dashboard'));
+        
 exit;
-        return redirect(route('merchant.index'));
+        return redirect(route('merchant.auth.login'));
       }
-      return back()->with('error','Sorry! Credentials Mismatch.');
+          $msg = array(
+            'type' => 'warn',
+            'message' => "Credentials Doesn't Match !"
+        );
+        return response()->json(array('errors' => $msg));
+      //return back()->with('error','Sorry! Credentials Mismatch.');
     }
 
     public function forgotPasswordForm()
