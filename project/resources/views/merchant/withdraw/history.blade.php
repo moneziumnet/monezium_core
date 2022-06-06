@@ -1,6 +1,6 @@
 @extends('layouts.merchant')
 
-@section('title')
+{{-- @section('title')
    @lang('Withdraw History')
 @endsection
 
@@ -18,9 +18,28 @@
         </form>
     </div>
 </section>
-@endsection
+@endsection --}}
 
 @section('content')
+<div class="card">
+	<div class="d-sm-flex align-items-center justify-content-between">
+	<h5 class=" mb-0 text-gray-800 pl-3">{{ __('Withdraw History') }}</h5>
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="{{route('merchant.dashboard')}}">{{ __('Dashboard') }}</a></li>
+		<li class="breadcrumb-item"><a href="{{route('merchant.withdraw.history')}}">{{ __('Withdraw History') }}</a></li>
+	</ol>
+    <form action="" method="get">
+        <div class="input-group">
+            <input type="text" name="search" value="{{$search ?? ''}}" class="form-control" placeholder="@lang('Transaction')">
+            <div class="input-group-append">
+                <button class="input-group-text bg-primary text-white" type="submit" ><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </form>
+	</div>
+</div>
+<div class="row mt-3">
+    <div class="col-lg-12">
     <div class="container-xl">
         <div class="row row-deck row-cards">
             <div class="col-12">
@@ -96,6 +115,8 @@
           </div>
         </div>
     </div>
+    </div>
+</div>
 @endsection
 
 @push('script')
