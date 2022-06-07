@@ -1,60 +1,48 @@
 @extends('layouts.merchant')
-
-@section('title')
-   @lang('Profile Setting')
-@endsection
-
-@section('breadcrumb')
- <section class="section">
-    <div class="section-header">
-        <h1>@lang('Profile Setting')</h1>
-    </div>
-</section>
-@endsection
-
 @section('content')
-<form action="" method="POST" enctype="multipart/form-data">
-    @csrf
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <form action="" method="POST">
-                @csrf
-                <div class="card">
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label>@lang('Old Password')</label>
-                            <input class="form-control" name="old_pass" type="password" required>
-                        </div>
-                        <div class="form-group">
-                            <label>@lang('New Password')</label>
-                            <input class="form-control"  type="password" name="password" required>
-                        </div>
-                        <div class="form-group">
-                            <label>@lang('Confirm Password')</label>
-                            <input class="form-control" type="password" name="password_confirmation"  required>
-                        </div>
-                        <div class="form-group mt-3 text-right">
-                            <button type="submit" class="btn btn-primary btn-lg">@lang('Submit')</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
+
+    <div class="card">
+        <div class="d-sm-flex align-items-center justify-content-between py-3">
+        <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Change Password') }}</h5>
+        <ol class="breadcrumb py-0 m-0">
+            <li class="breadcrumb-item"><a href="{{ route('merchant.dashboard') }}">{{ __('Dashboard') }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('merchant.change.password') }}">{{ __('Change Password') }}</a></li>
+        </ol>
         </div>
     </div>
-</form>
-@endsection
 
-@push('script')
-    <script>
-        'use strict';
-        $.uploadPreview({
-                input_field: "#image-upload", // Default: .image-upload
-                preview_box: "#image-preview", // Default: .image-preview
-                label_field: "#image-label", // Default: .image-label
-                label_default: "{{__('Choose File')}}", // Default: Choose File
-                label_selected: "{{__('Update Image')}}", // Default: Change File
-                no_label: false, // Default: false
-                success_callback: null // Default: null
-            });
-    </script>
-@endpush
+    <div class="card mb-4 mt-3">
+      <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">{{ __('Change Password Form') }}</h6>
+      </div>
+
+      <div class="card-body">
+        <div class="gocover" style=""></div>
+        <form class="geniusform" action="{{ route('merchant.change.password') }}" method="POST" >
+            {{ csrf_field() }}
+            @include('includes.merchant.form-both')
+
+            
+
+            <div class="form-group">
+                <label for="inp-cpass">{{ __('Old Password') }}</label>
+                <input type="password" class="form-control" id="inp-cpass" name="old_pass"  placeholder="{{ __('Enter Old Password') }}" value="" required>
+            </div>
+
+            <div class="form-group">
+                <label for="inp-newpass">{{ __('New Password') }}</label>
+                <input type="password" class="form-control" id="inp-newpass" name="password"  placeholder="{{ __('Enter New Password') }}" value="" required>
+            </div>
+
+            <div class="form-group">
+                <label for="inp-renewpass">{{ __('Confirm Password') }}</label>
+                <input type="password" class="form-control" id="inp-renewpass" name="password_confirmation"  placeholder="{{ __('Confirm Password') }}" value="" required>
+            </div>
+
+            <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Submit') }}</button>
+
+        </form>
+      </div>
+    </div>
+
+@endsection

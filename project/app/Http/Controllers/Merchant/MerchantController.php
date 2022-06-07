@@ -117,16 +117,26 @@ class MerchantController extends Controller
 
     public function updatePassword(Request $request)
     {
-        $request->validate(['old_pass'=>'required','password'=>'required|min:6|confirmed']);
-        $user = merchant();
-        if (Hash::check($request->old_pass, $user->password)) {
-            $password = bcrypt($request->password);
-            $user->password = $password;
-            $user->save();
-            return back()->with('success', 'Password has been changed');
-        } else {
-            return back()->with('error', 'The old password doesn\'t match!');
+        //$request->validate(['old_pass'=>'required','password'=>'required|min:6|confirmed']);
+//echo $request->old_pass;exit;
+        $user          = merchant();
+        if ($request->old_pass){
+            if (Hash::check($request->old_pass, $user->password)){
+                if ($request->password == $request->password_confirmation){
+                    $input['password'] = Hash::make($request->password);
+                }else{
+                    //return response()->json(array('errors' => [ 0 => 'Confirm password does not match.' ]));
+                    return response()->json(array('errors' => [ 0 => 'Confirm password does not match.' ]));
+                }
+            }else{
+                //return response()->json(array('errors' => [ 0 => 'Current password Does not match.' ]));
+                return response()->json(array('errors' => [ 0 => 'Current password Does not match.' ]));
+            }
         }
+        //$user->password = $password;
+        $user->save($input);
+        $msg = 'Successfully change your password';
+        return response()->json($msg);
     }
 
     public function transactions()
