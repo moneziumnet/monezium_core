@@ -105,7 +105,9 @@ class MerchantController extends Controller
             $user->photo = MediaHelper::handleMakeImage($request->photo,[300,300]);
         }
         $user->update();
-        return back()->with('success','Profile Updated');
+        $msg = 'Successfully updated your profile';
+        return response()->json($msg);
+        // return back()->with('success','Profile Updated');
     }
 
     public function changePassword()
