@@ -1,6 +1,6 @@
 @extends('layouts.merchant')
 
-@section('title')
+{{-- @section('title')
    @lang('QR Code')
 @endsection
 
@@ -10,9 +10,21 @@
         <h1>@lang('QR Code')</h1>
     </div>
 </section>
-@endsection
+@endsection --}}
 
 @section('content')
+<div class="card">
+	<div class="d-sm-flex align-items-center justify-content-between">
+	<h5 class=" mb-0 text-gray-800 pl-3">{{ __('QR CODE') }}</h5>
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="{{route('merchant.dashboard')}}">{{ __('Dashboard') }}</a></li>
+		<li class="breadcrumb-item"><a href="{{route('merchant.qr')}}">{{ __('QR CODE') }}</a></li>
+	</ol>
+	</div>
+</div>
+
+<div class="row mt-3">
+    <div class="col-lg-12">
         <div class="qr--code">
             <div class="card">
                 <div class="card-body text-center">
@@ -26,4 +38,6 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
 @endsection

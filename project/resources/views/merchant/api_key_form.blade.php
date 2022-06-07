@@ -1,6 +1,6 @@
 @extends('layouts.merchant')
 
-@section('title')
+{{-- @section('title')
    @lang('Api key')
 @endsection
 
@@ -10,11 +10,22 @@
         <h1>@lang('Api key')</h1>
     </div>
 </section>
-@endsection
+@endsection --}}
 
 @section('content')
+<div class="card">
+	<div class="d-sm-flex align-items-center justify-content-between">
+	<h5 class=" mb-0 text-gray-800 pl-3">{{ __('API Access Key') }}</h5>
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="{{route('merchant.dashboard')}}">{{ __('Dashboard') }}</a></li>
+		<li class="breadcrumb-item"><a href="{{route('merchant.api.key.form')}}">{{ __('API Access Key') }}</a></li>
+	</ol>
+	</div>
+</div>
+<div class="row mt-3">
+    <div class="col-lg-12">
     <div class="row justify-content-center">
-        <div class="col-xl-10">
+        <div class="col-xl-12">
             <div class="card">
                 <div class="card-header">
                     <h6>@lang('Business Api Key')</h6>
@@ -63,6 +74,8 @@
             </form>
         </div>
     </div>
+    </div>
+</div>
 
  
 @endsection

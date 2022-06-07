@@ -1,6 +1,6 @@
 @extends('layouts.merchant')
 
-@section('title')
+{{-- @section('title')
    @lang('Transactions')
 @endsection
 
@@ -10,11 +10,22 @@
         <h1>@lang('Transactions')</h1>
     </div>
 </section>
-@endsection
+@endsection --}}
 
 @section('content')
-<div class="row">
-    <div class="col-md-12">
+
+<div class="card">
+	<div class="d-sm-flex align-items-center justify-content-between">
+	<h5 class=" mb-0 text-gray-800 pl-3">{{ __('Transactions') }}</h5>
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="{{route('merchant.dashboard')}}">{{ __('Dashboard') }}</a></li>
+		<li class="breadcrumb-item"><a href="{{route('merchant.transactions')}}">{{ __('Transactions') }}</a></li>
+	</ol>
+	</div>
+</div>
+
+<div class="row mt-3">
+    <div class="col-lg-12">
         <div class="card">
             <div class="card-header">
                 <form action="" class="row justify-content-md-end flex-grow-1">

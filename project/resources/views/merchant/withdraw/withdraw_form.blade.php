@@ -1,6 +1,6 @@
 @extends('layouts.merchant')
 
-@section('title')
+{{-- @section('title')
     @lang('Withdraw Money')
 @endsection
 
@@ -11,10 +11,22 @@
     </div>
 </section>
   
-@endsection
+@endsection --}}
 
 @section('content')
 
+<div class="card">
+	<div class="d-sm-flex align-items-center justify-content-between">
+	<h5 class=" mb-0 text-gray-800 pl-3">{{ __('Withdraw Money') }}</h5>
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="{{route('merchant.dashboard')}}">{{ __('Dashboard') }}</a></li>
+		<li class="breadcrumb-item"><a href="{{route('merchant.withdraw.form')}}">{{ __('Withdraw Money') }}</a></li>
+	</ol>
+	</div>
+</div>
+
+<div class="row mt-3">
+    <div class="col-lg-12">
     <div class="card">
             <div class="card-body">
                 <form action="" id="form" method="post">
@@ -108,7 +120,8 @@
             </div>
             </div>
     
-
+    </div>
+</div>
 
 @endsection
 
