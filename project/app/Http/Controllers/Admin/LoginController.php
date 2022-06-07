@@ -38,7 +38,9 @@ class LoginController extends Controller
             return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
         }
 
+        $central_domain = config('tenancy.central_domains')[0];
         $current_domain = tenant('domains');
+
         if (!empty($current_domain)) {
             $current_domain = $current_domain->pluck('domain')->toArray()[0];
         }
