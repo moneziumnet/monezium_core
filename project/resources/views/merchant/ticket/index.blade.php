@@ -13,20 +13,34 @@
 @endsection
 
 @section('content')
+<div class="card">
+    <div class="d-sm-flex align-items-center justify-content-between py-3">
+    <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Support tickets') }}</h5>
+    <ol class="breadcrumb py-0 m-0">
+        <li class="breadcrumb-item"><a href="{{ route('merchant.dashboard') }}">{{ __('Dashboard') }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('merchant.ticket.index') }}">{{ __('Support tickets') }}</a></li>
+    </ol>
+    </div>
+</div>
 
-
-
-        <div class="row justify-content-center pb-5">
-            <div class="col-xl-4 col-lg-5">
+        <div class="row justify-content-center pb-5 mt-3">
+            <div class="col-xl-8 col-lg-5">
                <div class="card">
                    <div class="card-body">
                     <div class="chatbox__list__wrapper">
                         <div class="d-flex justify-content-between py-4 border-bottom border--dark">
-                            <h5 class=""><a href="javascript:void(0)">@lang('Tickets')<i class="fas fa-arrow-right"></i></a></h5>
+                            <h5 class=""><a href="javascript:void(0)">@lang('Tickets') <i class="fas fa-arrow-right"></i></a></h5>
                             <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modelId"><i class="fas fa-plus"></i> @lang('Opent a Ticket')</button>
+                            <form action="">
+                                <div class="input-group">
+                                    <input class="form-control shadow-none text-dark" autocomplete="off" type="text" placeholder="@lang('Ticket No')" name="search" value="{{$search ?? ''}}">
+                                    <button type="submit" class="input-group-text bg-success text-white border-0"><i class="fas fa-search"></i></button>
+                                </div>
+                            </form>
                         </div>
+                        
          
-                        <ul class="chat__list nav-tab nav border-0">
+                        <ul class="chat__list nav-tab border-0">
                             @forelse ($tickets as $item)
                             <li>
                                 <a class="chat__item {{request('messages') == $item->ticket_num ? 'active':''}}" href="{{filter('messages',$item->ticket_num)}}" data-bs-toggle="tab">
@@ -71,7 +85,7 @@
                    @endif
                </div>
             </div>
-            <div class="col-xl-8 col-lg-7">
+            <div class="col-xl-4 col-lg-7">
                 <div class="card">
                     <div class="card-body">
                         <div class="tab-content">
