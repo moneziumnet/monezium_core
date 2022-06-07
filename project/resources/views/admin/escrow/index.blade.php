@@ -4,7 +4,7 @@
 @section('content')
 <div class="card">
     <div class="d-sm-flex align-items-center justify-content-between">
-      <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Manage Escrow') }}</h5>
+      <h5 class=" mb-0 text-gray-800 pl-3">{{ __($title) }}</h5>
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
         <li class="breadcrumb-item"><a href="{{ route('admin.escrow.manage') }}">{{ __('Manage Escrow') }}</a></li>
