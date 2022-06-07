@@ -4,6 +4,25 @@
       <span>{{ __('Menu Builder') }}</span></a>
   </li> -->
 
+  <li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#institution" aria-expanded="true"
+      aria-controls="collapseTable">
+      <i class="fas fa-fw fa-users"></i>
+      <span>{{  __('Manage Institution') }}</span>
+    </a>
+    <div id="institution" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+        <a class="collapse-item" href="{{ route('admin.staff.index') }}">{{ __('Institution') }}</a>
+        <a class="collapse-item" href="{{ route('admin.role.index') }}">{{ __('Roles') }}</a>
+      </div>
+    </div>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{{ route('admin.requestdomain.index') }}">
+      <i class="fas fa-landmark"></i>
+      <span>{{ __('Manage Domain') }}</span>
+    </a>
+  </li>
 
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#customer" aria-expanded="true"
@@ -24,26 +43,6 @@
         <a class="collapse-item" href="{{ route('admin.user.bonus') }}">{{ __('Refferel Bonus') }}</a>
       </div>
     </div>
-  </li>
-
-  <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#institution" aria-expanded="true"
-      aria-controls="collapseTable">
-      <i class="fas fa-fw fa-users"></i>
-      <span>{{  __('Manage Institution') }}</span>
-    </a>
-    <div id="institution" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
-      <div class="bg-white py-2 collapse-inner rounded">
-        <a class="collapse-item" href="{{ route('admin.staff.index') }}">{{ __('Institution') }}</a>
-        <a class="collapse-item" href="{{ route('admin.role.index') }}">{{ __('Roles') }}</a>
-      </div>
-    </div>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" href="{{ route('admin.requestdomain.index') }}">
-      <i class="fas fa-landmark"></i>
-      <span>{{ __('Manage Domain') }}</span>
-    </a>
   </li>
 
   <li class="nav-item">
@@ -339,17 +338,17 @@
       <span>{{ __('Sitemaps') }}</span></a>
   </li> -->
 
-  <li class="nav-item">
+  <!-- <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.subs.index') }}">
       <i class="fas fa-fw fa-users-cog"></i>
       <span>{{ __('Subscribers') }}</span></a>
-  </li>
+  </li> -->
 
-  <!-- <li class="nav-item">
+  <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.cache.clear') }}">
       <i class="fas fa-sync"></i>
       <span>{{ __('Clear Cache') }}</span></a>
-  </li> -->
+  </li>
 
   <!-- <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#sactive" aria-expanded="true"
