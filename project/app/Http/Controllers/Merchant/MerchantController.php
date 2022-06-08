@@ -21,7 +21,7 @@ class MerchantController extends Controller
     public function dashboard()
     {
         
-        $wallets            = Wallet::where('user_type',2)->where('user_id',merchant()->id)->get();
+        $wallets            = Wallet::with('currency')->where('user_id',123)->get();
         $recentWithdraw     = Withdrawals::where('merchant_id',merchant()->id)->take(7)->get();
         $recentTransactions = Transaction::where('user_id',merchant()->id)->where('user_type',2)->take(7)->get();
         return view('merchant.dashboard',compact('wallets','recentWithdraw','recentTransactions'));
