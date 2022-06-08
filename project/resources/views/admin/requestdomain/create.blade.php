@@ -52,7 +52,7 @@
                 <label for="inp-domains">{{ __('Domain configration') }}</label>
                 <input type="text" class="form-control" id="inp-domains" name="domains"  placeholder="{{ __('Enter domain name') }}" value="" required>
                 <span>{{ __('how to add-on domain in your hosting panel.') }}<a
-                                href="{{ Storage::url('pdf/adddomain.pdf') }}" class="m-2"
+                                href="{{ asset('assets/pdf/adddomain.pdf') }}" class="m-2"
                                 target="_blank">{{ __('Document') }}</a></span>
             </div>
             <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Submit') }}</button>

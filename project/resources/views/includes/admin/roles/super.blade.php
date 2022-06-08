@@ -5,6 +5,13 @@
   </li> -->
 
   <li class="nav-item">
+    <a class="nav-link" href="{{ route('admin.requestdomain.index') }}">
+      <i class="fas fa-landmark"></i>
+      <span>{{ __('Manage Domain') }}</span>
+    </a>
+  </li>
+
+  <!-- <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#institution" aria-expanded="true"
       aria-controls="collapseTable">
       <i class="fas fa-fw fa-users"></i>
@@ -12,19 +19,28 @@
     </a>
     <div id="institution" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
-        <a class="collapse-item" href="{{ route('admin.staff.index') }}">{{ __('Institution') }}</a>
+        <a class="collapse-item" href="{{ route('admin.staff.index') }}">{{ __('Manage Institution') }}</a>
         <a class="collapse-item" href="{{ route('admin.role.index') }}">{{ __('Roles') }}</a>
       </div>
     </div>
-  </li>
+  </li> -->
+
   <li class="nav-item">
-    <a class="nav-link" href="{{ route('admin.requestdomain.index') }}">
-      <i class="fas fa-landmark"></i>
-      <span>{{ __('Manage Domain') }}</span>
+    <a class="nav-link" href="{{ route('admin.staff.index') }}">
+      <i class="fas fa-fw fa-users"></i>
+      <span>{{ __('Manage Institution') }}</span>
     </a>
   </li>
 
   <li class="nav-item">
+    <a class="nav-link" href="{{ route('admin.role.index') }}">
+      <i class="fas fa-landmark"></i>
+      <span>{{ __('Manage Roles') }}</span>
+    </a>
+  </li>
+
+
+  <!-- <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#customer" aria-expanded="true"
       aria-controls="collapseTable">
       <i class="fas fa-user"></i>
@@ -179,7 +195,7 @@
       <i class="fas fa-piggy-bank"></i>
       <span>{{ __('Deposits') }}</span>
     </a>
-  </li>
+  </li> -->
 
   <!-- <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#blog" aria-expanded="true"

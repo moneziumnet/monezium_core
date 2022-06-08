@@ -110,6 +110,25 @@
             <div class="col-md-6">
               <div class="form-group">
                 <div class="custom-control custom-switch">
+                  <input type="checkbox" name="section[]" value="Manage Charges" {{ $data->sectionCheck('Manage Charges') ? 'checked' : '' }} class="custom-control-input" id="manage_charges">
+                  <label class="custom-control-label" for="manage_charges">{{__('Manage Charges')}}</label>
+                  </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" name="section[]" value="Manage Escrow" {{ $data->sectionCheck('Manage Escrow') ? 'checked' : '' }} class="custom-control-input" id="manage_escrow">
+                  <label class="custom-control-label" for="manage_escrow">{{__('Manage Escrow')}}</label>
+                  </div>
+              </div>
+            </div>
+
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <div class="custom-control custom-switch">
                   <input type="checkbox" name="section[]" value="Money Transfer" {{ $data->sectionCheck('Money Transfer') ? 'checked' : '' }} class="custom-control-input" id="money_transfer">
                   <label class="custom-control-label" for="money_transfer">{{__('Money Transfer')}}</label>
                   </div>
@@ -218,15 +237,6 @@
             <div class="col-md-6">
               <div class="form-group">
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" name="section[]" value="Manage Charge" {{ $data->sectionCheck('Manage Charge') ? 'checked' : '' }} class="custom-control-input" id="manage_charge">
-                  <label class="custom-control-label" for="manage_charge">{{__('Manage Charge')}}</label>
-                  </div>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
                   <input type="checkbox" name="section[]" value="Language Manage" {{ $data->sectionCheck('Language Manage') ? 'checked' : '' }} class="custom-control-input" id="language_setting">
                   <label class="custom-control-label" for="language_setting">{{__('Language Manage')}}</label>
                   </div>
@@ -242,14 +252,14 @@
                 </div>
             </div> -->
 
-            <div class="col-md-6">
+            <!-- <div class="col-md-6">
               <div class="form-group">
                 <div class="custom-control custom-switch">
                   <input type="checkbox" name="section[]" value="Menupage Setting" {{ $data->sectionCheck('Menupage Setting') ? 'checked' : '' }} class="custom-control-input" id="menupage_setting">
                   <label class="custom-control-label" for="menupage_setting">{{__('Menupage Setting')}}</label>
                   </div>
               </div>
-            </div>
+            </div> -->
 
             <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Submit') }}</button>
 
