@@ -81,7 +81,7 @@
                     </table>
                 </div>
             </div>
-            <div class="col-md-4 mx-auto mt-5">
+            {{-- <div class="col-md-4 mx-auto mt-5">
               <h3 class="card-title text-center"> <strong>@lang('Available Balance') : {{ $data->balance.$currency->code }}</strong></h3>
               <form action="{{ route('admin.user.balance.add.deduct') }}" method="post">
                 @csrf
@@ -101,7 +101,7 @@
                 </div>
                 <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Submit') }}</button>
               </form>
-            </div>
+            </div> --}}
         </div>
 
 	</div>
