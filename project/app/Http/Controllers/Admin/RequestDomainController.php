@@ -50,14 +50,13 @@ class RequestDomainController extends Controller
                               <div class="dropdown-menu" x-placement="bottom-start">
                                 <a href="' . route('admin.requestdomain.edit', $data->id) . '"  class="dropdown-item">' . __("Edit") . '</a>
                                 <a href="' . route('admin.requestdomain.approve.status', $data->id) . '"  class="dropdown-item">' . __("Approved") . '</a>
-                                <a href="javascript:void(0)" data-action="/request-domain/disapprove/{{ $requestdomain->id }}" class="dropdown-item">' . __("Disapprove") . '</a>
-
                                 <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="' .  route('admin.requestdomain.delete', $data->id) . '">' . __("Delete") . '</a>
                               </div>
                             </div>';
             })
             ->rawColumns(['action', 'status'])
             ->toJson(); //--- Returning Json Data To Client Side
+            // <a href="javascript:void(0)" data-action="/request-domain/disapprove/{{ $requestdomain->id }}" class="dropdown-item">' . __("Disapprove") . '</a>
     }
 
 
