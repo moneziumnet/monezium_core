@@ -29,7 +29,8 @@
                 <tr>
                     <th>{{ __("Name") }}</th>
                     <th>{{ __("Email") }}</th>
-                    <th>{{__('status')}}</th>
+                    <th>{{__('Status')}}</th>
+                    <th>{{__('Verify')}}</th>
                     <th>{{ __("Options") }}</th>
                 </tr>
               </thead>
@@ -175,6 +176,7 @@
                         { data: 'name', name: 'name' },
                         { data: 'email', name: 'email' },
                         { data: 'status',searchable: false, orderable: false},
+                        { data: 'verify',searchable: false, orderable: false},
             			{ data: 'action', searchable: false, orderable: false }
                      ],
                 language : {

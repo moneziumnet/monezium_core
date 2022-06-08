@@ -130,6 +130,7 @@ Route::prefix('admin')->group(function(){
         Route::get('/users/delete/{id}', [UserController::class,'destroy'])->name('admin-user-delete');
         Route::get('/user/{id}/show', [UserController::class,'show'])->name('admin-user-show');
         Route::get('/users/ban/{id1}/{id2}', [UserController::class,'ban'])->name('admin-user-ban');
+        Route::get('/users/verify/{id1}/{id2}', [UserController::class,'verify'])->name('admin-user-verify');
         Route::get('/user/default/image', [UserController::class,'image'])->name('admin-user-image');
         Route::get('/users/deposit/{id}', [UserController::class,'deposit'])->name('admin-user-deposit');
         Route::post('/user/deposit/{id}', [UserController::class,'depositUpdate'])->name('admin-user-deposit-update');

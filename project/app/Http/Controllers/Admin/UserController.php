@@ -58,7 +58,22 @@ class UserController extends Controller
                                         </div>
                                         </div>';
                                 })
-                                ->rawColumns(['action','status'])
+
+                                ->addColumn('verify', function(User $data) {
+                                    $status      = $data->email_verified == 'Yes' ? __('Yes') : __('No');
+                                    $status_sign = $data->email_verified == 'No' ? 'danger'   : 'success';
+
+                                        return '<div class="btn-group mb-1">
+                                        <button type="button" class="btn btn-'.$status_sign.' btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            '.$status .'
+                                        </button>
+                                        <div class="dropdown-menu" x-placement="bottom-start">
+                                            <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="'. route('admin-user-verify',['id1' => $data->id, 'id2' => 'Yes']).'">'.__("Yes").'</a>
+                                            <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="'. route('admin-user-verify',['id1' => $data->id, 'id2' => 'No']).'">'.__("No").'</a>
+                                        </div>
+                                        </div>';
+                                })
+                                ->rawColumns(['action','status', 'verify'])
                                 ->toJson();
         }
 
@@ -138,6 +153,16 @@ class UserController extends Controller
             $msg = 'Data Updated Successfully.';
             return response()->json($msg);
         }
+
+        public function verify($id1,$id2)
+        {
+            $user = User::findOrFail($id1);
+            $user->email_verified = $id2;
+            $user->update();
+            $msg = 'Data Updated Successfully.';
+            return response()->json($msg);
+        }
+
 
 
         public function edit($id)
