@@ -30,6 +30,21 @@ class StaffController extends Controller
                                 $role = $data->role_id == 0 ? 'No Role' : $data->staff_role->name;
                                 return $role;
                             })
+                            ->addColumn('status', function(Admin $data) {
+                                $status      = $data->status == 0 ? __('Block') : __('Unblock');
+                                $status_sign = $data->status == 0 ? 'danger'   : 'success';
+
+                                    return '<div class="btn-group mb-1">
+                                    <button type="button" class="btn btn-'.$status_sign.' btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        '.$status .'
+                                    </button>
+                                    <div class="dropdown-menu" x-placement="bottom-start">
+                                        <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="'. route('admin-staff-block',['id1' => $data->id, 'id2' => 1]).'">'.__("Unblock").'</a>
+                                        <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="'. route('admin-staff-block',['id1' => $data->id, 'id2' => 0]).'">'.__("Block").'</a>
+                                    </div>
+                                    </div>';
+                            })
+
                             ->addColumn('action', function(Admin $data) {
 
                               return '<div class="btn-group mb-1">
@@ -43,7 +58,7 @@ class StaffController extends Controller
                             </div>';
 
                             })
-                            ->rawColumns(['action','role_id'])
+                            ->rawColumns(['action','role_id', 'status'])
                             ->toJson(); //--- Returning Json Data To Client Side
     }
 
@@ -99,7 +114,14 @@ class StaffController extends Controller
         //--- Redirect Section Ends
  }
 
-
+ public function block($id1,$id2)
+ {
+     $user = Admin::findOrFail($id1);
+     $user->status = $id2;
+     $user->update();
+     $msg = 'Data Updated Successfully.';
+     return response()->json($msg);
+ }
 
     public function edit($id)
     {

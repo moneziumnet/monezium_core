@@ -454,6 +454,7 @@ Route::prefix('admin')->group(function(){
         Route::get('/staff/create', [StaffController::class,'create'])->name('admin.staff.create');
         Route::post('/staff/create', [StaffController::class,'store'])->name('admin.staff.store');
         Route::get('/staff/edit/{id}', [StaffController::class,'edit'])->name('admin.staff.edit');
+        Route::get('/staff/block/{id1}/{id2}', [StaffController::class,'block'])->name('admin-staff-block');
         Route::post('/staff/update/{id}', [StaffController::class,'update'])->name('admin.staff.update');
         Route::get('/staff/delete/{id}', [StaffController::class,'destroy'])->name('admin.staff.delete');
       });
