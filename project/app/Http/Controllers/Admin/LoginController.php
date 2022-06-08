@@ -60,7 +60,9 @@ class LoginController extends Controller
                     return response()->json(array('errors' => $msg));
                 }
             }
-            elseif (!empty($current_domain) || !empty($user->tenant_id)) {
+            // elseif (!empty($current_domain) || !empty($user->tenant_id)) 
+            else
+            {
                 if ($user->status == 1) {
                     if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
                         return response()->json(route('admin.dashboard'));
@@ -75,9 +77,10 @@ class LoginController extends Controller
                 } else {
                     return response()->json(array('errors' => [ 0 => 'Please Contact to administrator' ]));
                 }
-            } else {
-                return response()->json(array('errors' => [ 0 =>  __('permission denied') ]));
             }
+            //  else {
+            //     return response()->json(array('errors' => [ 0 =>  __('permission denied') ]));
+            // }
         } else {
             return response()->json(array('errors' => [ 0 => 'admin not found' ]));
         }
