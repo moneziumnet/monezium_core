@@ -32,16 +32,16 @@
 <div class="row mb-3">
 @if(!empty($wallets))
   @foreach($wallets as $wallet)
-  <div class="col-xl-4 col-md-6 mb-4">
+  <div class="col-xl-3 col-md-6 mb-4">
     <div class="card h-100">
       <div class="card-body">
         <div class="row align-items-center">
           <div class="col mr-2">
-            <div class="text-xs font-weight-bold text-uppercase mb-1">{{ __('Wallet Balance') }}</div>
-            <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800"> {{ $currency->code}} </div>
+            <div class="text-xs font-weight-bold text-uppercase mb-1">{{ $wallet->currency->curr_name }}</div>
+            <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800"> {{ $wallet->currency->symbol}} {{ amount($wallet->balance,$wallet->currency->type,2) }}</div>
           </div>
           <div class="col-auto">
-            <i class="fas fa-dollar-sign fa-2x text-success"></i>
+            {{-- <i class="fas fa-{{strtolower($wallet->currency->code)}}-sign fa-2x text-success"></i> --}}
           </div>
         </div>
       </div>
@@ -49,137 +49,10 @@
   </div>
   @endforeach
 @endif
-
-  
-
-  <div class="col-xl-4 col-md-6 mb-4">
-    <div class="card h-100">
-      <div class="card-body">
-        <div class="row align-items-center">
-          <div class="col mr-2">
-            <div class="text-xs font-weight-bold text-uppercase mb-1">{{ __('Total Withdraw Amount') }}</div>
-            <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ $currency->code}}</div>
-          </div>
-          <div class="col-auto">
-            <i class="fas fa-dollar-sign fa-2x text-success"></i>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   
 </div>
 
-<div class="row mb-3">
-  
-  <div class="col-sm-6 col-xl-3 mb-3">
-    <div class="card card-sm">
-      <div class="card-body">
-        <div class="row align-items-center">
-          <div class="col-auto">
-            <span class="bg-danger text-white avatar">
-              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrows-right-left"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"  stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <line x1="21" y1="7" x2="3" y2="7"></line>
-                <path d="M18 10l3 -3l-3 -3"></path>
-                <path d="M6 20l-3 -3l3 -3"></path>
-                <line x1="3" y1="17" x2="21" y2="17"></line>
-             </svg>
-            </span>
-          </div>
-          <div class="col">
-            <div class="font-weight-medium">
-              {{-- {{numFormat($totalTransferMoney,2)}} {{$gs->curr_code}} <sup class="text-danger">*</sup> --}}
-            </div>
-            <div class="text-muted">
-              @lang('Total Money Transfered')
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-6 col-xl-3 mb-3">
-    <div class="card card-sm">
-      <div class="card-body">
-        <div class="row align-items-center">
-          <div class="col-auto">
-            <span class="bg-success text-white avatar">
-              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-currency-dogecoin" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M6 12h6"></path>
-                <path d="M9 6v12"></path>
-                <path d="M6 18h6a6 6 0 1 0 0 -12h-6"></path>
-             </svg>
-            </span>
-          </div>
-          <div class="col">
-            <div class="font-weight-medium">
-              {{-- {{numFormat($totalDeposit,2)}} {{$gs->curr_code}} <sup class="text-danger">*</sup> --}}
-            </div>
-            <div class="text-muted">
-              @lang('Total Deposit')
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-6 col-xl-3 mb-3">
-    <div class="card card-sm">
-      <div class="card-body">
-        <div class="row align-items-center">
-          <div class="col-auto">
-            <span class="bg-warning text-white avatar">
-              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <rect x="8" y="8" width="12" height="12" rx="2"></rect>
-                <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
-             </svg>
-            </span>
-          </div>
-          <div class="col">
-            <div class="font-weight-medium">
-              {{-- {{numFormat($totalWithdraw,2)}} {{$gs->curr_code}} <sup class="text-danger">*</sup> --}}
-            </div>
-            <div class="text-muted">
-              @lang('Total Withdraw')
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-6 col-xl-3 mb-3">
-    <div class="card card-sm">
-      <div class="card-body">
-        <div class="row align-items-center">
-          <div class="col-auto">
-            <span class="bg-info text-white avatar">
-              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrows-right-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <line x1="21" y1="7" x2="3" y2="7"></line>
-                <path d="M18 10l3 -3l-3 -3"></path>
-                <path d="M6 20l-3 -3l3 -3"></path>
-                <line x1="3" y1="17" x2="21" y2="17"></line>
-             </svg>
-            </span>
-          </div>
-          <div class="col">
-            <div class="font-weight-medium">
-              {{-- {{numFormat($totalExchange,2)}} {{$gs->curr_code}} <sup class="text-danger">*</sup> --}}
-            </div>
-            <div class="text-muted">
-              @lang('Total Exchange')
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 
-</div>
 
 <div class="row mb-3">
   <div class="col-xl-12 col-lg-12 mb-4">
