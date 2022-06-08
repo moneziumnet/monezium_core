@@ -67,6 +67,53 @@ class UserController extends Controller
             return view('admin.user.index');
         }
 
+        //*** GET Request
+    public function create()
+    {
+        return view('admin.user.create');
+    }
+
+            //*** POST Request
+    public function store(Request $request)
+    {
+        $rules = [
+            'name'=> 'required',
+            'email' => 'required|unique:users',
+            'photo' => 'required|mimes:jpeg,jpg,png,svg',            
+            'password'=> 'required',
+            'phone'=> 'required',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+        return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
+        }
+       //--- Validation Section Ends
+
+        //--- Logic Section
+        $data = new User();
+        $input = $request->all();
+        if ($file = $request->file('photo'))
+        {
+            $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
+            $file->move('assets/images',$name);
+            $input['photo'] = $name;
+        }
+
+        $input['password'] = bcrypt($request['password']);
+        $data->fill($input)->save();
+        //--- Logic Section Ends
+
+        //--- Redirect Section
+        $msg = __('New Data Added Successfully.').'<a href="'.route('admin.user.index').'">'.__('View Lists.').'</a>';;
+
+        return response()->json($msg);
+        //--- Redirect Section Ends
+ }
+
+
+
         public function image()
         {
             return view('admin.generalsetting.user_image');

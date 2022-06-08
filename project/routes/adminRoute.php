@@ -118,6 +118,8 @@ Route::prefix('admin')->group(function(){
 
         Route::get('/users/datatables', [UserController::class,'datatables'])->name('admin-user-datatables'); //JSON REQUEST
         Route::get('/users', [UserController::class,'index'])->name('admin.user.index');
+        Route::get('/users/create', [UserController::class,'create'])->name('admin.user.create');
+        Route::post('/users/create', [UserController::class,'store'])->name('admin.user.store');
         Route::get('/users/withdraws', [UserController::class,'withdraws'])->name('admin.withdraw.index');
         Route::get('/users/withdraws/datatables', [UserController::class,'withdrawdatatables'])->name('admin.withdraw.datatables');
         Route::get('/users/withdraw/{id}/show', [UserController::class,'withdrawdetails'])->name('admin.withdraw.show');
