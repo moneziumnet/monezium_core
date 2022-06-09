@@ -16,12 +16,14 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('bank_plan_id')->nullable();
+            $table->string('business_name');
             $table->string('account_number')->nullable();
             $table->string('name', 191);
             $table->string('photo', 191)->nullable();
             $table->string('zip', 191)->nullable();
             $table->string('city', 191)->nullable();
             $table->string('address', 191)->nullable();
+            $table->string('country')->nullable();
             $table->string('phone', 191)->nullable();
             $table->string('vat', 191)->nullable();
             $table->string('email', 191);
@@ -36,6 +38,8 @@ class CreateUsersTable extends Migration
             $table->text('affilate_code')->nullable();
             $table->boolean('referral_id')->default(false);
             $table->tinyInteger('twofa')->default(0);
+            $table->boolean('two_fa_status')->default(false);
+            $table->integer('two_fa_code')->nullable();
             $table->string('go')->nullable();
             $table->tinyInteger('verified')->default(0);
             $table->text('details')->nullable();
@@ -44,6 +48,8 @@ class CreateUsersTable extends Migration
 2 == \'rejected\'');
             $table->mediumText('kyc_info')->nullable();
             $table->text('kyc_reject_reason')->nullable();
+            $table->string('access_key')->nullable();
+            $table->string('secret_key')->nullable();
             $table->tinyInteger('is_banned')->default(0)->comment('1 === banned
 0 === active');
             $table->timestamp('plan_end_date')->nullable();
