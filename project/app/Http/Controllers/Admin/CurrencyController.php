@@ -21,8 +21,15 @@ class CurrencyController extends Controller
     {
         $datas = Currency::orderBy('id','desc');
          return Datatables::of($datas)
+                            ->editColumn('type', function(Currency $data){
+                                if($data->type == 1){
+                                  $currency_type = 'FIAT';
+                                }else{
+                                  $currency_type = 'CRYPTO';
+                                }
+                                return $currency_type;
+                            })
                             ->addColumn('action', function(Currency $data) {
-
                                 $delete = $data->is_default == 1 ? '':'<a href="javascript:;" data-href="' . route('admin.currency.delete',$data->id) . '" data-toggle="modal" data-target="#deleteModal" class="dropdown-item">'.__("Delete").'</a>';
                                 $default = $data->is_default == 1 ? '<a href="javascript:;" class="dropdown-item"> '.__("Default").'</a>' : '<a class="status dropdown-item" href="javascript:;" data-href="' . route('admin.currency.status',['id1'=>$data->id,'id2'=>1]) . '">'.__('Set Default').'</a>';
 

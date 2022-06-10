@@ -25,6 +25,7 @@
 					<th>{{ __('Name') }}</th>
 					<th>{{ __('Code') }}</th>
 					<th>{{ __('Symbol') }}</th>
+					<th>{{ __('Currency Type') }}</th>
 					<th>{{ __('Rate') }}</th>
 					<th>{{ __('Options') }}</th>
 				  </tr>
@@ -76,7 +77,8 @@
                         { data: 'curr_name', name: 'curr_name' },
 						{ data: 'code', name: 'code' },
                         { data: 'symbol', name: 'symbol' },
-                        { data: 'rate', name: 'rate' },
+                        { data: 'type', name: 'type' },
+						{ data: 'rate', name: 'rate' },
             			{ data: 'action', searchable: false, orderable: false }
 
                      ],
