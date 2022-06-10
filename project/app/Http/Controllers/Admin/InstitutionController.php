@@ -80,7 +80,6 @@ class InstitutionController extends Controller
         $rules = [
             'email' => 'required|unique:admins',
             'photo' => 'required|mimes:jpeg,jpg,png,svg',
-            'username'=> 'required',
             'password'=> 'required',
             'role_id'=> 'required',
         ];

@@ -23,7 +23,7 @@
 
 	<div class="card mb-4">
         <div class="row">
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <div class="user-image">
                     @if($data->is_provider == 1)
                     <img src="{{ $data->photo ? asset($data->photo):asset('assets/images/noimage.png')}}" alt="No Image">
@@ -34,7 +34,7 @@
 
                 </div>
             </div>
-            <div class="col-md-5 mt-5">
+            <div class="col-md-8 mt-5">
                 <div class="table-responsive show-table">
                     <table class="table">
                     <tr>

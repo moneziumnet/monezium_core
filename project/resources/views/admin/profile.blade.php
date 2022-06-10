@@ -37,21 +37,62 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="inp-name">{{ __('Name') }}</label>
-                <input type="text" class="form-control" id="inp-name" name="name"  placeholder="{{ __('Enter Name') }}" value="{{ $data->name }}" required>
+            <div class="row g-3">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="inp-name">{{ __('Company Name') }}</label>
+                <input type="text" class="form-control" id="inp-name" name="name" placeholder="{{ __('Enter Name') }}" value="{{$data->name}}" required>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="inp-name">{{ __('VAT Number') }}</label>
+                <input type="text" class="form-control" id="vat" name="vat" placeholder="{{ __('Enter VAT Number') }}" value="{{$data->vat}}">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="inp-name">{{ __('Address') }}</label>
+                <input type="text" class="form-control" id="address" name="address" placeholder="{{ __('Enter Address') }}" value="{{$data->address}}">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="inp-name">{{ __('City') }}</label>
+                <input type="text" class="form-control" id="city" name="city" placeholder="{{ __('Enter City') }}" value="{{$data->city}}">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="inp-name">{{ __('Zip Code') }}</label>
+                <input type="text" class="form-control" id="zip" name="zip" placeholder="{{ __('Enter Zip Code') }}" value="{{$data->zip}}">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="inp-name">{{ __('Select Country') }}</label>
+                <select class="form-control mb-3" name="country_id">
+                  <option value="">{{ __('Select Country') }}</option>
+                  @foreach(DB::table('countries')->get() as $dta)
+                  <option value="{{ $dta->id }}" {{ $data->country_id == $dta->id ? 'selected' : '' }}>{{ $dta->name }}</option>
+                  @endforeach
+                </select>
+              </div>
             </div>
 
-            <div class="form-group">
-                <label for="inp-eml">{{ __('Email Address') }}</label>
-                <input type="email" class="form-control" id="inp-eml" name="email"  placeholder="{{ __('Enter Email Address') }}" value="{{ $data->email }}" required>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="inp-email">{{ __('Email of Institution') }}</label>
+                <input type="email" class="form-control" id="inp-email" name="email" placeholder="{{ __('Enter Email') }}" value="{{$data->email}}" required>
+              </div>
             </div>
-
-            <div class="form-group">
-                <label for="inp-phn">{{ __('Phone') }}</label>
-                <input type="text" class="form-control" id="inp-phn" name="phone"  placeholder="{{ __('Phone Number') }}" value="{{ $data->phone }}" required>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="inp-phone">{{ __('Phone of Institution') }}</label>
+                <input type="text" class="form-control" id="inp-phone" name="phone" placeholder="{{ __('Enter Phone') }}" value="{{$data->phone}}" required>
+              </div>
             </div>
-
+          </div>
             
 
             <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Submit') }}</button>
