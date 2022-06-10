@@ -4,11 +4,11 @@
 
 <div class="card">
     <div class="d-sm-flex align-items-center justify-content-between py-3">
-    <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Edit Institution') }} <a class="btn btn-primary btn-rounded btn-sm" href="{{route('admin.staff.index')}}"><i class="fas fa-arrow-left"></i> {{ __('Back') }}</a></h5>
+    <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Edit Institution') }} <a class="btn btn-primary btn-rounded btn-sm" href="{{route('admin.institution.index')}}"><i class="fas fa-arrow-left"></i> {{ __('Back') }}</a></h5>
     <ol class="breadcrumb py-0 m-0">
         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
-        <li class="breadcrumb-item"><a href="{{ route('admin.staff.index') }}">{{ __('Institutions management') }}</a></li>
-        <li class="breadcrumb-item"><a href="{{route('admin.staff.edit',$data->id)}}">{{ __('Edit Institution') }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.institution.index') }}">{{ __('Institutions management') }}</a></li>
+        <li class="breadcrumb-item"><a href="{{route('admin.institution.edit',$data->id)}}">{{ __('Edit Institution') }}</a></li>
     </ol>
     </div>
 </div>
@@ -23,7 +23,7 @@
 
       <div class="card-body">
         
-        <form class="geniusform" action="{{route('admin.staff.update',$data->id)}}" method="POST" enctype="multipart/form-data">
+        <form class="geniusform" action="{{route('admin.institution.update',$data->id)}}" method="POST" enctype="multipart/form-data">
 
             @include('includes.admin.form-both')
 

@@ -40,7 +40,7 @@
     </a>
     <div id="institution" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
-        <a class="collapse-item" href="{{ route('admin.staff.index') }}">{{ __('Institution') }}</a>
+        <a class="collapse-item" href="{{ route('admin.institution.index') }}">{{ __('Institution') }}</a>
         <a class="collapse-item" href="{{ route('admin.role.index') }}">{{ __('Roles') }}</a>
       </div>
     </div>

@@ -50,7 +50,7 @@ use App\Http\Controllers\Admin\ReferralController as AdminReferralController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SeoToolController;
 use App\Http\Controllers\Admin\SocialSettingController;
-use App\Http\Controllers\Admin\StaffController;
+use App\Http\Controllers\Admin\InstitutionController;
 
 use App\Http\Controllers\Admin\RefundController;
 use App\Http\Controllers\Admin\RequestMoneyController;
@@ -449,14 +449,14 @@ Route::prefix('admin')->group(function(){
       });
     
       Route::group(['middleware'=>'permissions:Institutions management'],function(){
-        Route::get('/staff/datatables', [StaffController::class,'datatables'])->name('admin.staff.datatables');
-        Route::get('/staff', [StaffController::class,'index'])->name('admin.staff.index');
-        Route::get('/staff/create', [StaffController::class,'create'])->name('admin.staff.create');
-        Route::post('/staff/create', [StaffController::class,'store'])->name('admin.staff.store');
-        Route::get('/staff/edit/{id}', [StaffController::class,'edit'])->name('admin.staff.edit');
-        Route::get('/staff/block/{id1}/{id2}', [StaffController::class,'block'])->name('admin-staff-block');
-        Route::post('/staff/update/{id}', [StaffController::class,'update'])->name('admin.staff.update');
-        Route::get('/staff/delete/{id}', [StaffController::class,'destroy'])->name('admin.staff.delete');
+        Route::get('/institution/datatables', [InstitutionController::class,'datatables'])->name('admin.institution.datatables');
+        Route::get('/institution', [InstitutionController::class,'index'])->name('admin.institution.index');
+        Route::get('/institution/create', [InstitutionController::class,'create'])->name('admin.institution.create');
+        Route::post('/institution/create', [InstitutionController::class,'store'])->name('admin.institution.store');
+        Route::get('/institution/edit/{id}', [InstitutionController::class,'edit'])->name('admin.institution.edit');
+        Route::get('/institution/block/{id1}/{id2}', [InstitutionController::class,'block'])->name('admin-staff-block');
+        Route::post('/institution/update/{id}', [InstitutionController::class,'update'])->name('admin.institution.update');
+        Route::get('/institution/delete/{id}', [InstitutionController::class,'destroy'])->name('admin.institution.delete');
       });
 
       Route::group(['middleware'=>'permissions:Manage KYC Form'],function(){

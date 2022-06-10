@@ -6,7 +6,7 @@
             <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Institutions management') }}</h5>
             <ol class="breadcrumb m-0 py-0">
                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('admin.staff.index') }}">{{ __('Institutions management') }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('admin.institution.index') }}">{{ __('Institutions management') }}</a></li>
             </ol>
         </div>
     </div>
@@ -90,7 +90,7 @@ var table = $('#geniustable').DataTable({
                processing: true,
                serverSide: true,
                searching: true,
-               ajax: '{{ route('admin.staff.datatables') }}',
+               ajax: '{{ route('admin.institution.datatables') }}',
                columns: [
                         { data: 'name', name: 'name' },
                         { data: 'email', name: 'email' },
@@ -108,7 +108,7 @@ var table = $('#geniustable').DataTable({
 
         $(function() {
             $(".btn-area").append('<div class="col-sm-12 col-md-4 pr-3 text-right">'+
-                '<a class="btn btn-primary" href="{{route('admin.staff.create')}}">'+
+                '<a class="btn btn-primary" href="{{route('admin.institution.create')}}">'+
             '<i class="fas fa-plus"></i> Add New Institution'+
             '</a>'+
             '</div>');

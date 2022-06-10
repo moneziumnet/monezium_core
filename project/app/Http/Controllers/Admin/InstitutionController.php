@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 use Validator;
 
 
-class StaffController extends Controller
+class InstitutionController extends Controller
 {
     public function __construct()
     {
@@ -52,8 +52,8 @@ class StaffController extends Controller
                                 '.'Actions' .'
                               </button>
                               <div class="dropdown-menu" x-placement="bottom-start">
-                                <a href="' . route('admin.staff.edit',$data->id) . '"  class="dropdown-item">'.__("Edit").'</a>
-                                <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.  route('admin.staff.delete',$data->id).'">'.__("Delete").'</a>
+                                <a href="' . route('admin.institution.edit',$data->id) . '"  class="dropdown-item">'.__("Edit").'</a>
+                                <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.  route('admin.institution.delete',$data->id).'">'.__("Delete").'</a>
                               </div>
                             </div>';
 
@@ -65,13 +65,13 @@ class StaffController extends Controller
     //*** GET Request
   	public function index()
     {
-        return view('admin.staff.index');
+        return view('admin.institution.index');
     }
 
     //*** GET Request
     public function create()
     {
-        return view('admin.staff.create');
+        return view('admin.institution.create');
     }
 
     //*** POST Request
@@ -108,7 +108,7 @@ class StaffController extends Controller
         //--- Logic Section Ends
 
         //--- Redirect Section
-        $msg = __('New Data Added Successfully.').'<a href="'.route('admin.staff.index').'">'.__('View Lists.').'</a>';;
+        $msg = __('New Data Added Successfully.').'<a href="'.route('admin.institution.index').'">'.__('View Lists.').'</a>';;
 
         return response()->json($msg);
         //--- Redirect Section Ends
@@ -126,7 +126,7 @@ class StaffController extends Controller
     public function edit($id)
     {
         $data = Admin::findOrFail($id);
-        return view('admin.staff.edit',compact('data'));
+        return view('admin.institution.edit',compact('data'));
     }
 
     public function update(Request $request,$id)
@@ -167,7 +167,7 @@ class StaffController extends Controller
                 $input['password'] = Hash::make($request->password);
             }
             $data->update($input);
-            $msg = 'Data Updated Successfully.'.'<a href="'.route("admin.staff.index").'">View Post Lists</a>';
+            $msg = 'Data Updated Successfully.'.'<a href="'.route("admin.institution.index").'">View Post Lists</a>';
 
             return response()->json($msg);
         }
