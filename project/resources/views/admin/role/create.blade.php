@@ -45,7 +45,7 @@
               </div>
             </div> -->
 
-            <div class="col-md-6">
+            <!-- <div class="col-md-6">
               <div class="form-group">
                 <div class="custom-control custom-switch">
                   <input type="checkbox" name="section[]" value="Manage Institution" class="custom-control-input" id="manage_staff">
@@ -61,7 +61,7 @@
                   <label class="custom-control-label" for="manage_roles">{{__('Manage Roles')}}</label>
                   </div>
               </div>
-            </div>
+            </div> -->
 
             <div class="col-md-6">
               <div class="form-group">
@@ -99,14 +99,14 @@
               </div>
             </div>
 
-            <div class="col-md-6">
+            <!-- <div class="col-md-6">
               <div class="form-group">
                 <div class="custom-control custom-switch">
                   <input type="checkbox" name="section[]" value="Other Banks" class="custom-control-input" id="other_banks">
                   <label class="custom-control-label" for="other_banks">{{__('Other Banks')}}</label>
                   </div>
               </div>
-            </div>
+            </div> -->
 
             <div class="col-md-6">
               <div class="form-group">
@@ -171,6 +171,15 @@
               </div>
             </div>
 
+            <div class="col-md-6">
+              <div class="form-group">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" name="section[]" value="Payment Setting" class="custom-control-input" id="payment_setting">
+                  <label class="custom-control-label" for="payment_setting">{{__('Payment Setting')}}</label>
+                  </div>
+              </div>
+            </div>
+
             <!-- <div class="col-md-6">
               <div class="form-group">
                 <div class="custom-control custom-switch">
@@ -216,23 +225,14 @@
               </div>
             </div> -->
 
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="section[]" value="Payment Setting" class="custom-control-input" id="payment_setting">
-                  <label class="custom-control-label" for="payment_setting">{{__('Payment Setting')}}</label>
-                  </div>
-              </div>
-            </div>
-
-            <div class="col-md-6">
+            <!-- <div class="col-md-6">
               <div class="form-group">
                 <div class="custom-control custom-switch">
                   <input type="checkbox" name="section[]" value="Manage KYC Form" class="custom-control-input" id="manage_kyc">
                   <label class="custom-control-label" for="manage_kyc">{{__('Manage KYC Form')}}</label>
                   </div>
               </div>
-            </div>
+            </div> -->
             
             <div class="col-md-6">
               <div class="form-group">
