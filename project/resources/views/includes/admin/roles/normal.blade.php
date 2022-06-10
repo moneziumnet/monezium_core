@@ -31,12 +31,12 @@
   </li>
   @endif
 
-  @if(Auth::guard('admin')->user()->sectionCheck('Manage Institution'))
+  @if(Auth::guard('admin')->user()->sectionCheck('Institutions management'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#institution" aria-expanded="true"
       aria-controls="collapseTable">
       <i class="fas fa-fw fa-users"></i>
-      <span>{{  __('Manage Institution') }}</span>
+      <span>{{  __('Institutions management') }}</span>
     </a>
     <div id="institution" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">

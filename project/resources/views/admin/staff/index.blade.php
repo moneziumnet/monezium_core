@@ -3,10 +3,10 @@
 @section('content')
     <div class="card">
         <div class="d-sm-flex align-items-center justify-content-between py-3">
-            <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Manage Institution') }}</h5>
+            <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Institutions management') }}</h5>
             <ol class="breadcrumb m-0 py-0">
                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('admin.staff.index') }}">{{ __('Manage Institution') }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('admin.staff.index') }}">{{ __('Institutions management') }}</a></li>
             </ol>
         </div>
     </div>

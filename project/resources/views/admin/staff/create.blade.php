@@ -7,7 +7,7 @@
     <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Add New Institution') }} <a class="btn btn-primary btn-rounded btn-sm" href="{{route('admin.staff.index')}}"><i class="fas fa-arrow-left"></i> {{ __('Back') }}</a></h5>
     <ol class="breadcrumb m-0 py-0">
         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
-        <li class="breadcrumb-item"><a href="{{ route('admin.staff.index') }}">{{ __('Manage Institution') }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.staff.index') }}">{{ __('Institutions management') }}</a></li>
         <li class="breadcrumb-item"><a href="{{route('admin.staff.create')}}">{{ __('Add New Institution') }}</a></li>
     </ol>
     </div>

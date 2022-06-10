@@ -8,7 +8,7 @@
     <ol class="breadcrumb py-0 m-0">
         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
         <li class="breadcrumb-item"><a href="javascript:;">{{ __('Roles') }}</a></li>
-        <li class="breadcrumb-item"><a href="{{ route('admin.role.index') }}">{{ __('Manage Roles') }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.role.index') }}">{{ __('Module management') }}</a></li>
         <li class="breadcrumb-item"><a href="{{route('admin.role.create')}}">{{ __('Add New Role') }}</a></li>
     </ol>
     </div>
@@ -48,8 +48,8 @@
             <!-- <div class="col-md-6">
               <div class="form-group">
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" name="section[]" value="Manage Institution" class="custom-control-input" id="manage_staff">
-                  <label class="custom-control-label" for="manage_staff">{{__('Manage Institution')}}</label>
+                  <input type="checkbox" name="section[]" value="Institutions management" class="custom-control-input" id="manage_staff">
+                  <label class="custom-control-label" for="manage_staff">{{__('Institutions management')}}</label>
                   </div>
               </div>
             </div>
@@ -57,8 +57,8 @@
             <div class="col-md-6">
               <div class="form-group">
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" name="section[]" value="Manage Roles" class="custom-control-input" id="manage_roles">
-                  <label class="custom-control-label" for="manage_roles">{{__('Manage Roles')}}</label>
+                  <input type="checkbox" name="section[]" value="Module management" class="custom-control-input" id="manage_roles">
+                  <label class="custom-control-label" for="manage_roles">{{__('Module management')}}</label>
                   </div>
               </div>
             </div> -->

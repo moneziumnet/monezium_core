@@ -5,10 +5,10 @@
 
     <div class="card">
         <div class="d-sm-flex align-items-center justify-content-between py-3">
-        <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Manage Roles') }}</h5>
+        <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Module management') }}</h5>
         <ol class="breadcrumb m-0 py-0">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('admin.role.index') }}">{{ __('Manage Roles') }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('admin.role.index') }}">{{ __('Module management') }}</a></li>
         </ol>
         </div>
     </div>

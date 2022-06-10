@@ -7,7 +7,7 @@
     <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Edit Domain') }} <a class="btn btn-primary btn-rounded btn-sm" href="{{route('admin.requestdomain.index')}}"><i class="fas fa-arrow-left"></i> {{ __('Back') }}</a></h5>
     <ol class="breadcrumb m-0 py-0">
       <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
-      <li class="breadcrumb-item"><a href="{{ route('admin.requestdomain.index') }}">{{ __('Manage Domain') }}</a></li>
+      <li class="breadcrumb-item"><a href="{{ route('admin.requestdomain.index') }}">{{ __('Domain management') }}</a></li>
       <li class="breadcrumb-item"><a href="{{route('admin.requestdomain.edit',$data->id)}}">{{ __('Edit Domain') }}</a></li>
     </ol>
   </div>

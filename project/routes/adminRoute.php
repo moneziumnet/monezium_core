@@ -438,7 +438,7 @@ Route::prefix('admin')->group(function(){
       });
 
     
-      Route::group(['middleware'=>'permissions:Manage Roles'],function(){
+      Route::group(['middleware'=>'permissions:Module management'],function(){
         Route::get('/role/datatables', [RoleController::class,'datatables'])->name('admin.role.datatables');
         Route::get('/role', [RoleController::class,'index'])->name('admin.role.index');
         Route::get('/role/create', [RoleController::class,'create'])->name('admin.role.create');
@@ -448,7 +448,7 @@ Route::prefix('admin')->group(function(){
         Route::get('/role/delete/{id}', [RoleController::class,'destroy'])->name('admin.role.delete');
       });
     
-      Route::group(['middleware'=>'permissions:Manage Institution'],function(){
+      Route::group(['middleware'=>'permissions:Institutions management'],function(){
         Route::get('/staff/datatables', [StaffController::class,'datatables'])->name('admin.staff.datatables');
         Route::get('/staff', [StaffController::class,'index'])->name('admin.staff.index');
         Route::get('/staff/create', [StaffController::class,'create'])->name('admin.staff.create');

@@ -7,35 +7,21 @@
   <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.requestdomain.index') }}">
       <i class="fas fa-landmark"></i>
-      <span>{{ __('Manage Domain') }}</span>
+      <span>{{ __('Domain management') }}</span>
     </a>
   </li>
-
-  <!-- <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#institution" aria-expanded="true"
-      aria-controls="collapseTable">
-      <i class="fas fa-fw fa-users"></i>
-      <span>{{  __('Manage Institution') }}</span>
-    </a>
-    <div id="institution" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
-      <div class="bg-white py-2 collapse-inner rounded">
-        <a class="collapse-item" href="{{ route('admin.staff.index') }}">{{ __('Manage Institution') }}</a>
-        <a class="collapse-item" href="{{ route('admin.role.index') }}">{{ __('Roles') }}</a>
-      </div>
-    </div>
-  </li> -->
 
   <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.staff.index') }}">
       <i class="fas fa-fw fa-users"></i>
-      <span>{{ __('Manage Institution') }}</span>
+      <span>{{ __('Institutions management') }}</span>
     </a>
   </li>
 
   <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.role.index') }}">
-      <i class="fas fa-landmark"></i>
-      <span>{{ __('Manage Roles') }}</span>
+      <i class="fas fa-cash-register"></i>
+      <span>{{ __('Module management') }}</span>
     </a>
   </li>
 
