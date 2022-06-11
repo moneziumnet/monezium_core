@@ -152,6 +152,15 @@
                   </div>
               </div>
             </div>
+            
+            <div class="col-md-6">
+              <div class="form-group">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" name="section[]" value="Withdraw Management" class="custom-control-input" id="withdraw_management">
+                  <label class="custom-control-label" for="withdraw_management">{{__('Withdraw Management')}}</label>
+                  </div>
+              </div>
+            </div>
 
             <div class="col-md-6">
               <div class="form-group">

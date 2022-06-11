@@ -156,6 +156,15 @@
             <div class="col-md-6">
               <div class="form-group">
                 <div class="custom-control custom-switch">
+                  <input type="checkbox" name="section[]" value="Withdraw Management" {{ $data->sectionCheck('Withdraw Management') ? 'checked' : '' }} class="custom-control-input" id="withdraw_management">
+                  <label class="custom-control-label" for="withdraw_management">{{__('Withdraw Management')}}</label>
+                  </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <div class="custom-control custom-switch">
                   <input type="checkbox" name="section[]" value="Transactions" {{ $data->sectionCheck('Transactions') ? 'checked' : '' }} class="custom-control-input" id="transactions">
                   <label class="custom-control-label" for="transactions">{{__('Transactions')}}</label>
                   </div>
