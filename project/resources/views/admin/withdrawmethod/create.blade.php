@@ -29,7 +29,7 @@
             {{ csrf_field() }}
 
             <div class="form-group">
-                <label for="inp-name">{{ __('WithDraw Method Name') }}</label>
+                <label for="inp-name">{{ __('Withdraw Method Name') }}</label>
                 <input type="text" class="form-control" id="inp-name" name="method" placeholder="{{ __('Enter Name') }}" value="" required>
             </div>
 

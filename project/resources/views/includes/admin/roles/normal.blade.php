@@ -100,18 +100,33 @@
   </li>
   @endif
 
-  @if(Auth::guard('admin')->user()->sectionCheck('Withdraw Management'))
+  @if(Auth::guard('admin')->user()->sectionCheck('Management Deposit'))
+  <li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#management_deposit" aria-expanded="true" aria-controls="collapseTable">
+      <i class="fas fa-money-check-alt"></i>
+    <span>{{ __('Management Deposit') }}</span>
+  </a>
+    <div id="management_deposit" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+        {{-- <a class="collapse-item" href="{{ route('admin.gateway') }}">{{ __('Gateways') }}</a> --}}
+        {{-- <a class="collapse-item" href="{{route('admin.deposit')}}">{{ __('Deposits') }}</a> --}}
+      </div>
+    </div>
+  </li>
+  @endif
+
+  @if(Auth::guard('admin')->user()->sectionCheck('Management Withdraw'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#withdraw" aria-expanded="true" aria-controls="collapseTable">
       <i class="fas fa-user"></i>
-    <span>{{ __('Withdraw Management') }}</span>
+    <span>{{ __('Management Withdraw') }}</span>
   </a>
     <div id="withdraw" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
-        <a class="collapse-item" href="{{ route('admin-withdraw-method-index') }}">{{ __('Withdraw Method') }}</a>
-        <a class="collapse-item" href="{{ route('admin.fdr.index') }}">{{ __('All Fdr') }}</a>
-        <a class="collapse-item" href="{{ route('admin.fdr.running') }}">{{ __('Running Fdr') }}</a>
-        <a class="collapse-item" href="{{ route('admin.fdr.closed') }}">{{ __('Closed Fdr') }}</a>
+        <a class="collapse-item" href="{{ route('admin.withdraw') }}">{{ __('Withdraw Method') }}</a>
+        <a class="collapse-item" href="{{ route('admin.withdraw.pending') }}">{{ __('Pending Withdraws') }}</a>
+        <a class="collapse-item" href="{{ route('admin.withdraw.accepted') }}">{{ __('Accepted Withdraws') }}</a>
+        <a class="collapse-item" href="{{ route('admin.withdraw.rejected') }}">{{ __('Rejected Withdraws') }}</a>
       </div>
     </div>
   </li>

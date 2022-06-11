@@ -156,8 +156,17 @@
             <div class="col-md-6">
               <div class="form-group">
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" name="section[]" value="Withdraw Management" class="custom-control-input" id="withdraw_management">
-                  <label class="custom-control-label" for="withdraw_management">{{__('Withdraw Management')}}</label>
+                  <input type="checkbox" name="section[]" value="Management Withdraw" class="custom-control-input" id="management_withdraw">
+                  <label class="custom-control-label" for="management_withdraw">{{__('Management Withdraw')}}</label>
+                  </div>
+              </div>
+            </div>
+           
+            <div class="col-md-6">
+              <div class="form-group">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" name="section[]" value="Management Deposit" class="custom-control-input" id="management_deposit">
+                  <label class="custom-control-label" for="management_deposit">{{__('Management Deposit')}}</label>
                   </div>
               </div>
             </div>
