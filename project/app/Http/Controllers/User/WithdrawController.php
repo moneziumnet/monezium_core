@@ -31,7 +31,7 @@ class WithdrawController extends Controller
 
     public function create()
     {
-        $data['sign'] = Currency::whereIsDefault(1)->first();
+        $data['currency'] = Currency::whereIsDefault(1)->first();
         $data['methods'] = WithdrawMethod::whereStatus(1)->orderBy('id','desc')->get();
         return view('user.withdraw.create' ,$data);
     }

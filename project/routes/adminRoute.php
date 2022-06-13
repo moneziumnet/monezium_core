@@ -224,7 +224,7 @@ Route::prefix('admin')->group(function(){
       //==================================== Manage Currency ==============================================//
 
       // manage charges
-      Route::group(['middleware'=>'permissions:Manage Charge'],function(){
+      Route::group(['middleware'=>'permissions:Manage Charges'],function(){
         Route::get('/manage-charges',[ManageChargeController::class,'index'])->name('admin.manage.charge');
         Route::get('/edit-charge/{id}',[ManageChargeController::class,'editCharge'])->name('admin.edit.charge');
         Route::post('/update-charge/{id}',[ManageChargeController::class,'updateCharge'])->name('admin.update.charge');
