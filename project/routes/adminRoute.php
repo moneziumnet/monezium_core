@@ -145,14 +145,14 @@ Route::prefix('admin')->group(function(){
         Route::post('/bank-plan/store', [BankPlanController::class,'store'])->name('admin.bank.plan.store');
         Route::post('/bank-plan/update/{id}', [BankPlanController::class,'update'])->name('admin.bank.plan.update');
   
-        Route::get('/withdraw-method/datatables', [WithdrawMethodController::class,'datatables'])->name('admin.withdraw.method.datatables'); //JSON REQUEST
+        // Route::get('/withdraw-method/datatables', [WithdrawMethodController::class,'datatables'])->name('admin.withdraw.method.datatables'); //JSON REQUEST
         // Route::get('/withdraw-method', [WithdrawMethodController::class,'index'])->name('admin-withdraw-method-index');
-        Route::get('/withdraw-method', [WithdrawMethodController::class,'index'])->name('admin.withdraw');
-        Route::get('/withdraw-method/create', [WithdrawMethodController::class,'create'])->name('admin.withdraw.method.create');
-        Route::post('/withdraw-method/store', [WithdrawMethodController::class,'store'])->name('admin.withdraw.method.store');
-        Route::get('/withdraw-method/edit/{id}', [WithdrawMethodController::class,'edit'])->name('admin.withdraw.method.edit');
-        Route::post('/withdraw-method/update/{id}', [WithdrawMethodController::class,'update'])->name('admin.withdraw.method.update');
-        Route::get('/withdraw-method/delete/{id}', [WithdrawMethodController::class,'destroy'])->name('admin.withdraw.method.delete');
+        // Route::get('/withdraw-method', [WithdrawMethodController::class,'index'])->name('admin.withdraw');
+        // Route::get('/withdraw-method/create', [WithdrawMethodController::class,'create'])->name('admin.withdraw.method.create');
+        // Route::post('/withdraw-method/store', [WithdrawMethodController::class,'store'])->name('admin.withdraw.method.store');
+        // Route::get('/withdraw-method/edit/{id}', [WithdrawMethodController::class,'edit'])->name('admin.withdraw.method.edit');
+        // Route::post('/withdraw-method/update/{id}', [WithdrawMethodController::class,'update'])->name('admin.withdraw.method.update');
+        // Route::get('/withdraw-method/delete/{id}', [WithdrawMethodController::class,'destroy'])->name('admin.withdraw.method.delete');
 
 
         /** New withdraw*/
@@ -227,13 +227,14 @@ Route::prefix('admin')->group(function(){
         Route::get('/other-banks/{id1}/status/{status}', [OtherBankController::class,'status'])->name('admin.other.banks.status');
       });
 
-      Route::group(['middleware'=>'permissions:Withdraw Management'],function(){
-        Route::get('withdraw/method',[WithdrawMethodController::class,'index'])->name('withdraw');//->middleware('permission:withdraw method');
-        Route::get('withdraw/method-create',[WithdrawMethodController::class,'create'])->name('withdraw.create');//->middleware('permission:withdraw method create');
+      Route::group(['middleware'=>'permissions:Management Withdraw'],function(){
+        Route::get('withdraw/method/datatables',[WithdrawMethodController::class,'datatables'])->name('admin.withdraw.method.datatables');//->middleware('permission:withdraw method');
+        Route::get('withdraw/method',[WithdrawMethodController::class,'index'])->name('admin.withdraw');//->middleware('permission:withdraw method');
+        Route::get('withdraw/method-create',[WithdrawMethodController::class,'create'])->name('admin.withdraw.create');//->middleware('permission:withdraw method create');
         Route::post('withdraw/method-create',[WithdrawMethodController::class,'store']);//->middleware('permission:withdraw method create');
         Route::get('withdraw/method/search',[WithdrawMethodController::class,'index'])->name('admin.withdraw.search');//->middleware('permission:withdraw method search');
-        Route::get('withdraw/edit/{id}',[WithdrawMethodController::class,'edit'])->name('withdraw.edit');//->middleware('permission:withdraw method edit');
-        Route::post('withdraw/update/{method}',[WithdrawMethodController::class,'update'])->name('withdraw.update');//->middleware('permission:withdraw method update');
+        Route::get('withdraw/method/edit/{id}',[WithdrawMethodController::class,'edit'])->name('admin.withdraw.edit');//->middleware('permission:withdraw method edit');
+        Route::post('withdraw/update/{method}',[WithdrawMethodController::class,'update'])->name('admin.withdraw.update');//->middleware('permission:withdraw method update');
         Route::get('withdraw/pending',[WithdrawalController::class,'pending'])->name('admin.withdraw.pending');//->middleware('permission:pending withdraw');
         Route::get('withdraw/accepted',[WithdrawalController::class,'accepted'])->name('admin.withdraw.accepted');//->middleware('permission:accepted withdraw');
         Route::get('withdraw/rejected',[WithdrawalController::class,'rejected'])->name('admin.withdraw.rejected');//->middleware('permission:rejected withdraw');

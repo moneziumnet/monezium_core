@@ -1,23 +1,44 @@
 @extends('layouts.admin')
 
-@section('title')
-  @lang('Withdraw Methods')
-@endsection
 
-@section('breadcrumb')
- <section class="section">
-    <div class="section-header justify-content-between">
-        <h1>@lang('Withdraw Methods')</h1>
-        @if (access('withdraw method create'))
-        <a href="{{route('admin.withdraw.create')}}" class="btn btn-primary add"><i class="fa fa-plus"></i> @lang('Add new Method')</a>
-            
-        @endif
-    </div>
-</section>
-@endsection
 @section('content')
+<div class="card">
+	<div class="d-sm-flex align-items-center justify-content-between">
+	<h5 class=" mb-0 text-gray-800 pl-3">{{ __('Withdraw Method') }}</h5>
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
+		<li class="breadcrumb-item"><a href="{{ route('admin.withdraw') }}">{{ __('Withdraw Method') }}</a></li>
+	</ol>
 
-    <div class="row">
+	</div>
+</div>
+
+<div class="row mt-3">
+    <div class="col-lg-12">
+  
+      @include('includes.admin.form-success')
+  
+      <div class="card mb-4">
+        <div class="table-responsive p-3">
+          <table id="geniustable" class="table table-hover dt-responsive" cellspacing="0" width="100%">
+            <thead class="thead-light">
+              <tr>
+                  <th>{{__('ID')}}</th>
+                  <th>{{__('Method Name')}}</th>
+                  <th>{{__('Fixed Charge')}}</th>
+                  <th>{{__('Percentage Charge')}}</th>
+                  <th>{{__('Status')}}</th>
+                  <th>{{__('Created Date')}}</th>
+                  <th>{{__('Action')}}</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    {{-- <div class="row mt-3">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header justify-content-end">
@@ -84,7 +105,43 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
+
+@endsection
+@section('scripts')
+
+<script type="text/javascript">
+	"use strict";
+
+    var table = $('#geniustable').DataTable({
+           ordering: false,
+           processing: true,
+           serverSide: true,
+           searching: true,
+           ajax: '{{ route('admin.withdraw.method.datatables',['status' => 'all']) }}',
+           columns: [
+				{ data: 'id', name: 'id' },
+				{ data: 'method', name: 'method' },
+				{ data: 'fixed', name: 'fixed' },
+				{ data: 'percentage', name: 'percentage' },
+				{ data: 'status', name: 'status' },
+				{ data: 'created_at', name: 'created_at' },
+				{ data: 'action', searchable: false, orderable: false }
+            ],
+            language : {
+                processing: '<img src="{{asset('assets/images/'.$gs->admin_loader)}}">'
+            }
+        });
+
+        $(function() {
+        $(".btn-area").append('<div class="col-sm-12 col-md-4 pr-3 text-right">'+
+            '<a class="btn btn-primary" href="{{route('admin.withdraw.create')}}">'+
+        '<i class="fas fa-plus"></i> {{__('Add new Method')}}'+
+        '</a>'+
+        '</div>');
+    });
+
+</script>
 
 @endsection

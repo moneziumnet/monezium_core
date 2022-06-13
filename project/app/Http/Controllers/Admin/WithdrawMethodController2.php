@@ -22,24 +22,24 @@ class WithdrawMethodController extends Controller
          //--- Integrating This Collection Into Datatables
          
          return Datatables::of($datas)
-                            ->editColumn('status', function(WithdrawMethod $data) {
-                                return  $data->status == 1 ? '<span class="badge badge-success">active</span>' : '<span class="badge badge-danger">deactived</span>';
-                            })
+            ->editColumn('status', function(WithdrawMethod $data) {
+                return  $data->status == 1 ? '<span class="badge badge-success">active</span>' : '<span class="badge badge-danger">deactived</span>';
+            })
 
-                            ->addColumn('action', function(WithdrawMethod $data) {
-                                
-                              return '<div class="btn-group mb-1">
-                                <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  '.'Actions' .'
-                                </button>
-                                <div class="dropdown-menu" x-placement="bottom-start">
-                                  <a href="' . route('admin.withdraw.method.edit',$data->id) . '"  class="dropdown-item">'.__("Edit").'</a>
-                                  <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.  route('admin.withdraw.method.delete',$data->id).'">'.__("Delete").'</a>
-                                </div>
-                              </div>';
-                            })
-                            ->rawColumns(['action','status'])
-                            ->toJson();//--- Returning Json Data To Client Side
+            ->addColumn('action', function(WithdrawMethod $data) {
+                
+                return '<div class="btn-group mb-1">
+                <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    '.'Actions' .'
+                </button>
+                <div class="dropdown-menu" x-placement="bottom-start">
+                    <a href="' . route('admin.withdraw.method.edit',$data->id) . '"  class="dropdown-item">'.__("Edit").'</a>
+                    <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.  route('admin.withdraw.method.delete',$data->id).'">'.__("Delete").'</a>
+                </div>
+                </div>';
+            })
+            ->rawColumns(['action','status'])
+            ->toJson();//--- Returning Json Data To Client Side
     }
 
     public function index()
