@@ -86,8 +86,8 @@
                             </div>
                         </div>
 
-                        <input type="hidden" name="currency_sign" value="{{ $defaultCurrency->sign }}">
-                        <input type="hidden" id="currencyCode" name="currency_code" value="{{ $defaultcurrency->code }}">
+                        <input type="hidden" name="currency_sign" value="{{ $defaultCurrency->symbol }}">
+                        <input type="hidden" id="currencyCode" name="currency_code" value="{{ $defaultCurrency->code }}">
                         <input type="hidden" name="currency_id" value="{{ $defaultCurrency->id }}">
 
 
