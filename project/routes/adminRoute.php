@@ -64,6 +64,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\WireTransferBankController;
 use App\Http\Controllers\Admin\WireTransferController as AdminWireTransferController;
 use App\Http\Controllers\Admin\WithdrawMethodController;
+use App\Http\Controllers\Admin\WithdrawalController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -145,12 +146,17 @@ Route::prefix('admin')->group(function(){
         Route::post('/bank-plan/update/{id}', [BankPlanController::class,'update'])->name('admin.bank.plan.update');
   
         Route::get('/withdraw-method/datatables', [WithdrawMethodController::class,'datatables'])->name('admin.withdraw.method.datatables'); //JSON REQUEST
-        Route::get('/withdraw-method', [WithdrawMethodController::class,'index'])->name('admin-withdraw-method-index');
+        // Route::get('/withdraw-method', [WithdrawMethodController::class,'index'])->name('admin-withdraw-method-index');
+        Route::get('/withdraw-method', [WithdrawMethodController::class,'index'])->name('admin.withdraw');
         Route::get('/withdraw-method/create', [WithdrawMethodController::class,'create'])->name('admin.withdraw.method.create');
         Route::post('/withdraw-method/store', [WithdrawMethodController::class,'store'])->name('admin.withdraw.method.store');
         Route::get('/withdraw-method/edit/{id}', [WithdrawMethodController::class,'edit'])->name('admin.withdraw.method.edit');
         Route::post('/withdraw-method/update/{id}', [WithdrawMethodController::class,'update'])->name('admin.withdraw.method.update');
         Route::get('/withdraw-method/delete/{id}', [WithdrawMethodController::class,'destroy'])->name('admin.withdraw.method.delete');
+
+
+        /** New withdraw*/
+        
       });
 
       Route::group(['middleware'=>'permissions:Loan Management'],function(){
@@ -219,6 +225,20 @@ Route::prefix('admin')->group(function(){
         Route::post('/other-banks/update/{id}', [OtherBankController::class,'update'])->name('admin.other.banks.update');
         Route::get('/other-banks/delete/{id}', [OtherBankController::class,'destroy'])->name('admin.other.banks.delete');
         Route::get('/other-banks/{id1}/status/{status}', [OtherBankController::class,'status'])->name('admin.other.banks.status');
+      });
+
+      Route::group(['middleware'=>'permissions:Withdraw Management'],function(){
+        Route::get('withdraw/method',[WithdrawMethodController::class,'index'])->name('withdraw');//->middleware('permission:withdraw method');
+        Route::get('withdraw/method-create',[WithdrawMethodController::class,'create'])->name('withdraw.create');//->middleware('permission:withdraw method create');
+        Route::post('withdraw/method-create',[WithdrawMethodController::class,'store']);//->middleware('permission:withdraw method create');
+        Route::get('withdraw/method/search',[WithdrawMethodController::class,'index'])->name('withdraw.search');//->middleware('permission:withdraw method search');
+        Route::get('withdraw/edit/{id}',[WithdrawMethodController::class,'edit'])->name('withdraw.edit');//->middleware('permission:withdraw method edit');
+        Route::post('withdraw/update/{method}',[WithdrawMethodController::class,'update'])->name('withdraw.update');//->middleware('permission:withdraw method update');
+        Route::get('withdraw/pending',[WithdrawalController::class,'pending'])->name('admin.withdraw.pending');//->middleware('permission:pending withdraw');
+        Route::get('withdraw/accepted',[WithdrawalController::class,'accepted'])->name('admin.withdraw.accepted');//->middleware('permission:accepted withdraw');
+        Route::get('withdraw/rejected',[WithdrawalController::class,'rejected'])->name('admin.withdraw.rejected');//->middleware('permission:rejected withdraw');
+        Route::post('withdraw/accept/{withdraw}',[WithdrawalController::class,'withdrawAccept'])->name('withdraw.accept');//->middleware('permission:withdraw accept');
+        Route::post('withdraw/reject/{withdraw}',[WithdrawalController::class,'withdrawReject'])->name('withdraw.reject');//->middleware('permission:withdraw reject');
       });
 
       //==================================== Manage Currency ==============================================//

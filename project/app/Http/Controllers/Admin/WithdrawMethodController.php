@@ -3,110 +3,87 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\WithdrawMethod;
+use App\Models\Currency;
+use App\Models\GeneralSetting;
+use App\Models\Transaction;
+use App\Models\Withdraw;
+use App\Models\WithdrawLog;
 use Illuminate\Http\Request;
-use Validator;
-use Datatables;
 
 class WithdrawMethodController extends Controller
 {
-    public function __construct()
+    public function index(Request $request)
     {
-        $this->middleware('auth:admin');
+        $search = $request->search;
+        $withdraws = Withdraw::when($search, function($q) use($search){$q->where('name','LIKE','%'.$search.'%');})->latest()->paginate(15);
+     
+        return view('admin.withdraw.index', compact('withdraws'));
     }
 
-    //*** JSON Request
-    public function datatables()
+    public function create()
     {
-         $datas = WithdrawMethod::orderBy('id','desc');
-         //--- Integrating This Collection Into Datatables
-         
-         return Datatables::of($datas)
-                            ->editColumn('status', function(WithdrawMethod $data) {
-                                return  $data->status == 1 ? '<span class="badge badge-success">active</span>' : '<span class="badge badge-danger">deactived</span>';
-                            })
-
-                            ->addColumn('action', function(WithdrawMethod $data) {
-                                
-                              return '<div class="btn-group mb-1">
-                                <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  '.'Actions' .'
-                                </button>
-                                <div class="dropdown-menu" x-placement="bottom-start">
-                                  <a href="' . route('admin.withdraw.method.edit',$data->id) . '"  class="dropdown-item">'.__("Edit").'</a>
-                                  <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.  route('admin.withdraw.method.delete',$data->id).'">'.__("Delete").'</a>
-                                </div>
-                              </div>';
-                            })
-                            ->rawColumns(['action','status'])
-                            ->toJson();//--- Returning Json Data To Client Side
+        $currencies = Currency::get();
+        return view('admin.withdraw.create', compact('currencies'));
     }
 
-    public function index()
+    public function store(Request $request)
     {
-        return view('admin.withdrawmethod.index');
-    }
-
-    public function create(){
-        return view('admin.withdrawmethod.create');
-    }
-
-    public function store(Request $request){
-        $rules = [
-            'method'=> 'required',
-            'fixed'=> 'required|gt:0',
-            'percentage'=> 'required|gt:0',
-            'status'=> 'required',
-        ];
-        $validator = Validator::make($request->all(), $rules);
-
-        if($validator->fails()){
-            return response()->json(['errors'=>$validator->getMessageBag()->toArray()]);
-        }
-
-        WithdrawMethod::create([
-            'method' => $request->method,
-            'fixed' => $request->fixed,
-            'percentage' => $request->percentage,
-            'status' => $request->status
+        $request->validate([
+            'name' => 'required|unique:withdraws,name',
+            'min_amount' => 'required|numeric|gt:0',
+            'max_amount' => 'required|numeric|gt:min_amount',
+            'fixed_charge' => 'required|numeric|min:0',
+            'percent_charge' => 'required|numeric|min:0',
+            'status' => 'required|in:0,1',
+            'currency' => 'required|integer',
+            'withdraw_instruction' => 'required'
         ]);
 
-        return response()->json('Data Added Successfully');
+        Withdraw::create([
+            'name' => $request->name,
+            'min_amount' => $request->min_amount,
+            'max_amount' => $request->max_amount,
+            'fixed_charge' => $request->fixed_charge,
+            'percent_charge' => $request->percent_charge,
+            'status' => $request->status,
+            'currency_id' => $request->currency,
+            'withdraw_instruction' => clean($request->withdraw_instruction)
+        ]);
+
+        return back()->with('success','Withdraw Method Created');
     }
 
-    public function edit($id){
-        $data['data'] = WithdrawMethod::findOrFail($id);
-        return view('admin.withdrawmethod.edit',$data);
+    public function edit($id)
+    {
+        $currencies = Currency::get();
+        $method = Withdraw::findOrFail($id);
+        return view('admin.withdraw.edit', compact('currencies','method'));
     }
 
-    public function update(Request $request,$id){
-        $rules = [
-            'method'=> 'required',
-            'fixed'=> 'required|gt:0',
-            'percentage'=> 'required|gt:0',
-            'status'=> 'required',
-        ];
-        $validator = Validator::make($request->all(), $rules);
+    public function update(Request $request, Withdraw $method)
+    {
+        $request->validate([
+            'name' => 'required|unique:withdraws,name,'.$method->id,
+            'min_amount' => 'required|numeric|gt:0',
+            'max_amount' => 'required|numeric|gt:min_amount',
+            'fixed_charge' => 'required|numeric|min:0',
+            'percent_charge' => 'required|numeric|min:0',
+            'status' => 'required|in:0,1',
+            'currency' => 'required|integer',
+            'withdraw_instruction' => 'required'
+        ]);
 
-        if($validator->fails()){
-            return response()->json(['errors'=>$validator->getMessageBag()->toArray()]);
-        }
-
-        $data = WithdrawMethod::findOrFail($id);
-
-        $data->method = $request->method;
-        $data->fixed = $request->fixed;
-        $data->percentage = $request->percentage;
-        $data->status = $request->status;
-
-        $data->save();
-
-        return response()->json('Data Updated Successfully');
+        $method->update([
+            'name' => $request->name,
+            'min_amount' => $request->min_amount,
+            'max_amount' => $request->max_amount,
+            'fixed_charge' => $request->fixed_charge,
+            'percent_charge' => $request->percent_charge,
+            'status' => $request->status,
+            'currency_id' => $request->currency,
+            'withdraw_instruction' => clean($request->withdraw_instruction)
+        ]);
+        return back()->with('success','Withdraw Method Updated');
     }
 
-    public function destroy($id){
-        $data = WithdrawMethod::findOrFail($id)->delete();
-
-        return response()->json('Data Deleted Successfully');
-    }
 }
