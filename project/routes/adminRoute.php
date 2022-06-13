@@ -231,7 +231,7 @@ Route::prefix('admin')->group(function(){
         Route::get('withdraw/method',[WithdrawMethodController::class,'index'])->name('withdraw');//->middleware('permission:withdraw method');
         Route::get('withdraw/method-create',[WithdrawMethodController::class,'create'])->name('withdraw.create');//->middleware('permission:withdraw method create');
         Route::post('withdraw/method-create',[WithdrawMethodController::class,'store']);//->middleware('permission:withdraw method create');
-        Route::get('withdraw/method/search',[WithdrawMethodController::class,'index'])->name('withdraw.search');//->middleware('permission:withdraw method search');
+        Route::get('withdraw/method/search',[WithdrawMethodController::class,'index'])->name('admin.withdraw.search');//->middleware('permission:withdraw method search');
         Route::get('withdraw/edit/{id}',[WithdrawMethodController::class,'edit'])->name('withdraw.edit');//->middleware('permission:withdraw method edit');
         Route::post('withdraw/update/{method}',[WithdrawMethodController::class,'update'])->name('withdraw.update');//->middleware('permission:withdraw method update');
         Route::get('withdraw/pending',[WithdrawalController::class,'pending'])->name('admin.withdraw.pending');//->middleware('permission:pending withdraw');
