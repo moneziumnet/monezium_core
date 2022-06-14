@@ -121,15 +121,102 @@
               </div>
 
               <div class="tab-pane fade p-3" id="two" role="tabpanel" aria-labelledby="two-tab">
-                <h5 class="card-title">Tab Card Two</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>              
+                <form class="geniusform" action="{{ route('admin.profile.update') }}" method="POST" enctype="multipart/form-data">
+
+                    @include('includes.admin.form-both')
+
+                    {{ csrf_field() }}
+
+
+                    <div class="row g-3">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="full-name">{{ __('Name') }}</label>
+                        <input type="text" class="form-control" id="full-name" name="fullname" placeholder="{{ __('Enter Name') }}" value="{{$data->full_name}}" required>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="dob">{{ __('Date of Birth') }}</label>
+                        <input type="text" class="form-control" id="dob" name="dob" placeholder="{{ __('Date of Birth') }}" value="{{$data->dob}}">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="personal-code">{{ __('Personal Code/Number') }}</label>
+                        <input type="text" class="form-control" id="personal-code" name="personal_code" placeholder="{{ __('Enter Personal Code/Number') }}" value="{{$data->personal_code}}">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="your-email">{{ __('Your Email') }}</label>
+                        <input type="text" class="form-control" id="your-email" name="your_email" placeholder="{{ __('Enter Your Email') }}" value="{{$data->c_email}}">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="your-phone">{{ __('Your Phone') }}</label>
+                        <input type="text" class="form-control" id="your-phone" name="your_phone" placeholder="{{ __('Enter Phone Number') }}" value="{{$data->c_phone}}">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="your-id">{{ __('Your ID Number') }}</label>
+                        <input type="text" class="form-control" id="your-id" name="your_id" placeholder="{{ __('Enter Your ID Number') }}" value="{{$data->id_number}}">
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label for="your-address">{{ __('Address') }}</label>
+                        <input type="text" class="form-control" id="your-address" name="your-address" placeholder="{{ __('Enter Address') }}" value="{{$data->c_address}}">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="c_city">{{ __('Your City') }}</label>
+                        <input type="text" class="form-control" id="c_city" name="c_city" placeholder="{{ __('Enter City') }}" value="{{$data->c_city}}">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="c_zipcode">{{ __('Zip Code') }}</label>
+                        <input type="text" class="form-control" id="c_zipcode" name="c_zipcode" placeholder="{{ __('Enter Zip Code') }}" value="{{$data->c_zip}}">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="inp-name">{{ __('Select Country') }}</label>
+                        <select class="form-control mb-3" name="country_id">
+                          <option value="">{{ __('Select Country') }}</option>
+                          @foreach(DB::table('countries')->get() as $dta)
+                          <option value="{{ $dta->id }}" {{ $data->country_id == $dta->id ? 'selected' : '' }}>{{ $dta->name }}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                    </div>
+
+                    {{-- <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="inp-email">{{ __('Email of Institution') }}</label>
+                        <input type="email" class="form-control" id="inp-email" name="email" placeholder="{{ __('Enter Email') }}" value="{{$data->email}}" required>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="inp-phone">{{ __('Phone of Institution') }}</label>
+                        <input type="text" class="form-control" id="inp-phone" name="phone" placeholder="{{ __('Enter Phone') }}" value="{{$data->phone}}" required>
+                      </div>
+                    </div> --}}
+                  </div>
+                    
+
+                    <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Submit') }}</button>
+
+                </form>             
               </div>
               
               <div class="tab-pane fade p-3" id="three" role="tabpanel" aria-labelledby="three-tab">
-                <h5 class="card-title">Tab Card Three</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>              
+                admin will be here            
               </div>
 
               <div class="tab-pane fade p-3" id="four" role="tabpanel" aria-labelledby="four-tab">
