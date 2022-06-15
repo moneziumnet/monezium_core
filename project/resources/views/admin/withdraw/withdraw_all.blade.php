@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title')
+{{-- @section('title')
     @if (request()->routeIs('admin.withdraw.pending'))
          @lang('Pending Withdraws')
     @elseif (request()->routeIs('admin.withdraw.accepted'))
@@ -20,12 +20,46 @@
             @endif
         </div>
 </section>
-@endsection
+@endsection --}}
 @section('content')
 
-    <div class="row">
+<div class="card">
+	<div class="d-sm-flex align-items-center justify-content-between">
+	<h5 class=" mb-0 text-gray-800 pl-3">
+            @if (request()->routeIs('admin.withdraw.pending'))
+                @lang('Pending Withdraws')
+            @elseif (request()->routeIs('admin.withdraw.accepted'))
+                @lang('Accepted Withdraws')
+            @else
+                @lang('Rejected Withdraws')
+            @endif
+        </h5>
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
+		<li class="breadcrumb-item"><a href="@if (request()->routeIs('admin.withdraw.pending'))
+            {{ route('admin.withdraw.pending') }}
+        @elseif (request()->routeIs('admin.withdraw.accepted'))
+        {{ route('admin.withdraw.accepted') }}
+        @else
+        {{ route('admin.withdraw.rejected') }}
+        @endif">
+            @if (request()->routeIs('admin.withdraw.pending'))
+                @lang('Pending Withdraws')
+            @elseif (request()->routeIs('admin.withdraw.accepted'))
+                @lang('Accepted Withdraws')
+            @else
+                @lang('Rejected Withdraws')
+            @endif
+        </a></li>
+	</ol>
 
-        <div class="col-12 col-md-12 col-lg-12">
+	</div>
+</div>
+
+<div class="row mt-3">
+    <div class="col-lg-12">
+  
+      @include('includes.admin.form-success')
             <div class="card">
                
                 <div class="card-body text-center">
