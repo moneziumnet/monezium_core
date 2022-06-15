@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Blog;
 use App\Models\Currency;
 use App\Models\Deposit;
+use App\Models\Generalsetting;
 use App\Models\Item;
 use App\Models\Order;
 use App\Models\OrderedItem;
@@ -14,6 +15,7 @@ use App\Models\Transaction;
 use App\Models\User;
 use App\Models\UserLoan;
 use App\Models\Withdraw;
+use App\Models\Contact;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -84,7 +86,8 @@ class DashboardController extends Controller
     public function profile()
     {
         $data = Auth::guard('admin')->user();
-        return view('admin.profile',compact('data'));
+        $modules = Generalsetting::first();
+        return view('admin.profile',compact('data','modules'));
     }
     public function profileupdate(Request $request)
     {
@@ -282,5 +285,43 @@ class DashboardController extends Controller
             }
         }
         rmdir($dirPath);
+    }
+
+    public function profileupdatecontact(Request $request)
+    {
+        //--- Validation Section
+
+        $rules = [
+            'fullname'   => 'required',
+            'dob'           => 'required'
+          ];
+
+        $validator = Validator::make($request->all(), $rules);
+      
+        if ($validator->fails()) {
+            return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
+        }
+        //--- Validation Section Ends
+        $input = $request->all();
+        $data = Auth::user();
+
+        $contact = Contact::where('user_id', $data->id)->first();
+            $array = array(
+                'full_name' => $request->input('fullname'),
+                'dob'       => $request->input('dob')?date('Y-m-d', strtotime($request->input('dob'))):'',
+                'personal_code' => $request->input('personal_code'),
+                'c_email' => $request->input('your_email'),
+                'c_phone' => $request->input('your_phone'),
+                'c_address' => $request->input('your_address'),
+                'c_address' => $request->input('your_address'),
+                'c_city' => $request->input('c_city'),
+                'c_zip_code' => $request->input('c_zipcode'),
+            );
+        dd($data);
+
+
+        //$data->update($input);
+        $msg = 'Successfully updated your contact information';
+        return response()->json($msg);
     }
 }

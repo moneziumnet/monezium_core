@@ -19,6 +19,10 @@ class CreateWithdrawMethodsTable extends Migration
             $table->double('fixed')->nullable()->default(0);
             $table->double('percentage')->nullable()->default(0);
             $table->tinyInteger('status')->default(0);
+            $table->double('min_amount')->nullable()->default(0);
+            $table->double('max_amount')->nullable()->default(0);
+            $table->integer('currency_id')->nullable()->default(0);
+            $table->text('withdraw_instruction')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
         });

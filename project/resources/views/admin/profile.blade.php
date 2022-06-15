@@ -121,7 +121,7 @@
               </div>
 
               <div class="tab-pane fade p-3" id="two" role="tabpanel" aria-labelledby="two-tab">
-                <form class="geniusform" action="{{ route('admin.profile.update') }}" method="POST" enctype="multipart/form-data">
+                <form class="geniusform" action="{{ route('admin.profile.update-contact') }}" method="POST" enctype="multipart/form-data">
 
                     @include('includes.admin.form-both')
 
@@ -132,13 +132,13 @@
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="full-name">{{ __('Name') }}</label>
-                        <input type="text" class="form-control" id="full-name" name="fullname" placeholder="{{ __('Enter Name') }}" value="{{$data->full_name}}" required>
+                        <input type="text" class="form-control" id="full_name" name="fullname" placeholder="{{ __('Enter Name') }}" value="{{$data->full_name}}" required>
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="dob">{{ __('Date of Birth') }}</label>
-                        <input type="text" class="form-control" id="dob" name="dob" placeholder="{{ __('Date of Birth') }}" value="{{$data->dob}}">
+                        <input type="text" class="form-control datepicker" id="dob" data-provide="datepicker" readonly data-date-format="dd-mm-yyyy" name="dob" placeholder="{{ __('dd-mm-yyyy') }}"  value="{{$data->dob?date('d-m-Y', strtotime($data->dob)):''}}" required>
                       </div>
                     </div>
                     <div class="col-md-6">
@@ -159,16 +159,11 @@
                         <input type="text" class="form-control" id="your-phone" name="your_phone" placeholder="{{ __('Enter Phone Number') }}" value="{{$data->c_phone}}">
                       </div>
                     </div>
+                    
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label for="your-id">{{ __('Your ID Number') }}</label>
-                        <input type="text" class="form-control" id="your-id" name="your_id" placeholder="{{ __('Enter Your ID Number') }}" value="{{$data->id_number}}">
-                      </div>
-                    </div>
-                    <div class="col-md-12">
-                      <div class="form-group">
                         <label for="your-address">{{ __('Address') }}</label>
-                        <input type="text" class="form-control" id="your-address" name="your-address" placeholder="{{ __('Enter Address') }}" value="{{$data->c_address}}">
+                        <input type="text" class="form-control" id="your-address" name="your_address" placeholder="{{ __('Enter Address') }}" value="{{$data->c_address}}">
                       </div>
                     </div>
                     <div class="col-md-6">
@@ -185,28 +180,33 @@
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label for="inp-name">{{ __('Select Country') }}</label>
-                        <select class="form-control mb-3" name="country_id">
+                        <label for="your-country">{{ __('Select Country') }}</label>
+                        <select class="form-control mb-3" name="c_country_id">
                           <option value="">{{ __('Select Country') }}</option>
                           @foreach(DB::table('countries')->get() as $dta)
-                          <option value="{{ $dta->id }}" {{ $data->country_id == $dta->id ? 'selected' : '' }}>{{ $dta->name }}</option>
+                          <option value="{{ $dta->id }}" {{ $data->c_country == $dta->id ? 'selected' : '' }}>{{ $dta->name }}</option>
                           @endforeach
                         </select>
                       </div>
                     </div>
-
-                    {{-- <div class="col-md-6">
+                    <div class="col-md-6">
                       <div class="form-group">
-                        <label for="inp-email">{{ __('Email of Institution') }}</label>
-                        <input type="email" class="form-control" id="inp-email" name="email" placeholder="{{ __('Enter Email') }}" value="{{$data->email}}" required>
+                        <label for="your-id">{{ __('Your ID Number') }}</label>
+                        <input type="text" class="form-control" id="your-id" name="your_id" placeholder="{{ __('Enter Your ID Number') }}" value="{{$data->id_number}}">
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label for="inp-phone">{{ __('Phone of Institution') }}</label>
-                        <input type="text" class="form-control" id="inp-phone" name="phone" placeholder="{{ __('Enter Phone') }}" value="{{$data->phone}}" required>
+                        <label for="date-of-issue">{{ __('Date of Issue') }}</label>
+                        <input type="text" class="form-control datepicker" id="issue_date" name="issue_date" data-provide="datepicker" readonly data-date-format="dd-mm-yyyy" placeholder="{{ __('dd-mm-yyyy') }}" value="{{$data->date_of_issue?date('d-m-Y', strtotime($data->date_of_issue)):''}}" required>
                       </div>
-                    </div> --}}
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="date-of-expire">{{ __('Date of Expire') }}</label>
+                        <input type="text" class="form-control datepicker" id="expire_date" name="expire_date" data-provide="datepicker" readonly data-date-format="dd-mm-yyyy" placeholder="{{ __('dd-mm-yyyy') }}" value="{{$data->date_of_issue?date('d-m-Y', strtotime($data->date_of_issue)):''}}" required>
+                      </div>
+                    </div>
                   </div>
                     
 
@@ -216,7 +216,145 @@
               </div>
               
               <div class="tab-pane fade p-3" id="three" role="tabpanel" aria-labelledby="three-tab">
-                admin will be here            
+                <form class="geniusform" action="{{route('admin.gs.update')}}" method="POST" enctype="multipart/form-data">
+
+                  @include('includes.admin.form-both')
+      
+                  {{ csrf_field() }}
+      
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <div class="custom-control custom-switch">
+                        <input type="checkbox" name="user_module[]" value="Loan" {{ $modules->moduleCheck('Loan') ? 'checked' : '' }} class="custom-control-input" id="Loan">
+                        <label class="custom-control-label" for="Loan">{{__('Loan')}}</label>
+                        </div>
+                    </div>
+                  </div>
+      
+                  <div class="col-md-6">
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" name="user_module[]" value="DPS" {{ $modules->moduleCheck('DPS') ? 'checked' : '' }} class="custom-control-input" id="DPS">
+                          <label class="custom-control-label" for="DPS">{{__('DPS')}}</label>
+                          </div>
+                      </div>
+                  </div>
+      
+                  <div class="col-md-6">
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" name="user_module[]" value="FDR" {{ $modules->moduleCheck('FDR') ? 'checked' : '' }} class="custom-control-input" id="FDR">
+                          <label class="custom-control-label" for="FDR">{{__('FDR')}}</label>
+                          </div>
+                      </div>
+                  </div>
+      
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <div class="custom-control custom-switch">
+                        <input type="checkbox" name="user_module[]" value="Request Money" {{ $modules->moduleCheck('Request Money') ? 'checked' : '' }} class="custom-control-input" id="Request Money">
+                        <label class="custom-control-label" for="Request Money">{{__('Request Money')}}</label>
+                        </div>
+                    </div>
+                  </div>
+      
+                  <div class="col-md-6">
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" name="user_module[]" value="Deposit" {{ $modules->moduleCheck('Deposit') ? 'checked' : '' }} class="custom-control-input" id="Deposit">
+                          <label class="custom-control-label" for="Deposit">{{__('Deposit')}}</label>
+                          </div>
+                      </div>
+                  </div>
+      
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <div class="custom-control custom-switch">
+                        <input type="checkbox" name="user_module[]" value="Wire Transfer" {{ $modules->moduleCheck('Wire Transfer') ? 'checked' : '' }} class="custom-control-input" id="Wire Transfer">
+                        <label class="custom-control-label" for="Wire Transfer">{{__('Wire Transfer')}}</label>
+                        </div>
+                    </div>
+                  </div>
+      
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <div class="custom-control custom-switch">
+                        <input type="checkbox" name="user_module[]" value="Transfer" {{ $modules->moduleCheck('Transfer') ? 'checked' : '' }} class="custom-control-input" id="Transfer">
+                        <label class="custom-control-label" for="Transfer">{{__('Transfer')}}</label>
+                        </div>
+                    </div>
+                  </div>
+      
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <div class="custom-control custom-switch">
+                        <input type="checkbox" name="user_module[]" value="Withdraw" {{ $modules->moduleCheck('Withdraw') ? 'checked' : '' }} class="custom-control-input" id="Withdraw">
+                        <label class="custom-control-label" for="Withdraw">{{__('Withdraw')}}</label>
+                        </div>
+                    </div>
+                  </div>
+      
+                  <div class="col-md-6">
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" name="user_module[]" value="Pricing Plan" {{ $modules->moduleCheck('Pricing Plan') ? 'checked' : '' }} class="custom-control-input" id="pricing_plan">
+                          <label class="custom-control-label" for="pricing_plan">{{__('Pricing Plan')}}</label>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <div class="col-md-6">
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" name="user_module[]" value="Voucher" {{ $modules->moduleCheck('Voucher') ? 'checked' : '' }} class="custom-control-input" id="voucher">
+                          <label class="custom-control-label" for="voucher">{{__('Voucher')}}</label>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <div class="col-md-6">
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" name="user_module[]" value="Invoice" {{ $modules->moduleCheck('Invoice') ? 'checked' : '' }} class="custom-control-input" id="invoice">
+                          <label class="custom-control-label" for="invoice">{{__('Invoice')}}</label>
+                          </div>
+                      </div>
+                  </div>
+      
+                  <div class="col-md-6">
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" name="user_module[]" value="Escrow" {{ $modules->moduleCheck('Escrow') ? 'checked' : '' }} class="custom-control-input" id="escrow">
+                          <label class="custom-control-label" for="escrow">{{__('Escrow')}}</label>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <div class="col-md-6">
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" name="user_module[]" value="Exchange Money" {{ $modules->moduleCheck('Exchange Money') ? 'checked' : '' }} class="custom-control-input" id="exchange-money">
+                          <label class="custom-control-label" for="exchange-money">{{__('Exchange Money')}}</label>
+                          </div>
+                      </div>
+                  </div>
+      
+                  <div class="col-md-6">
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" name="user_module[]" value="More" {{ $modules->moduleCheck('More') ? 'checked' : '' }} class="custom-control-input" id="more">
+                          <label class="custom-control-label" for="more">{{__('More')}}</label>
+                          </div>
+                      </div>
+                  </div>
+      
+                </div>
+                  
+      
+                  <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Submit') }}</button>
+      
+              </form>           
               </div>
 
               <div class="tab-pane fade p-3" id="four" role="tabpanel" aria-labelledby="four-tab">
@@ -238,26 +376,7 @@
     
             </div>
 
-          
-{{-- 
-            <div class="card-body">
-              <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                <li class="nav-item">
-                  <a class="nav-link active" id="pills-information-tab" data-toggle="pill" href="#pills-information" role="tab" aria-controls="pills-information" aria-selected="true">Information</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Contacts</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Rules</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" id="pills-transaction-tab" data-toggle="pill" href="#pills-transaction" role="tab" aria-controls="pills-transaction" aria-selected="false">Transaction</a>
-                </li>
-              </ul>
-          
-                  
-            </div> --}}
+
           </div>
 
 @endsection
@@ -288,5 +407,10 @@ $('#myTab a').on('click', function (e) {
   e.preventDefault()
   $(this).tab('show')
 })
+
+$('.datepicker').datepicker({
+    format: 'dd-mm-yyyy',
+    autoclose: true
+});
 </script>
 @endsection

@@ -90,6 +90,7 @@ Route::prefix('admin')->group(function(){
     
       Route::get('/profile', [DashboardController::class,'profile'])->name('admin.profile');
       Route::post('/profile/update', [DashboardController::class,'profileupdate'])->name('admin.profile.update');
+      Route::post('/profile/update/contact', [DashboardController::class,'profileupdatecontact'])->name('admin.profile.update-contact');
     
       Route::get('/dashboard',[DashboardController::class,'index'])->name('admin.dashboard');
       Route::get('/password', [DashboardController::class,'passwordreset'])->name('admin.password');
