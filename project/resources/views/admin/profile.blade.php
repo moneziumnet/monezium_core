@@ -69,7 +69,7 @@
                         <input type="text" class="form-control" id="vat" name="vat" placeholder="{{ __('Enter VAT Number') }}" value="{{$data->vat}}">
                       </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                       <div class="form-group">
                         <label for="inp-name">{{ __('Address') }}</label>
                         <input type="text" class="form-control" id="address" name="address" placeholder="{{ __('Enter Address') }}" value="{{$data->address}}">
@@ -109,6 +109,18 @@
                       <div class="form-group">
                         <label for="inp-phone">{{ __('Phone of Institution') }}</label>
                         <input type="text" class="form-control" id="inp-phone" name="phone" placeholder="{{ __('Enter Phone') }}" value="{{$data->phone}}" required>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="inp-payment-gateway">{{ __('Payment Gateway') }}</label>
+                        <select class="form-control mb-3" name="payment_gateway_id" id="payment_gateway_id">
+                          <option value="">{{ __('Select Payment Gateway') }}</option>
+                          @foreach(DB::table('payment_gateways')->where('status',1)->orderBy('name','asc')->get() as $gateway)
+                          <option value="{{ $gateway->id }}" {{ $data->payment_gateway_id == $gateway->id ? 'selected' : '' }}>{{ $gateway->name }}</option>
+                          @endforeach
+                        </select>
                       </div>
                     </div>
                   </div>
