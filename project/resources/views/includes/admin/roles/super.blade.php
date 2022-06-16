@@ -17,6 +17,13 @@
       <span>{{ __('Institutions management') }}</span>
     </a>
   </li>
+  
+  <li class="nav-item">
+    <a class="nav-link" href="{{ route('admin.branch.index') }}">
+      <i class="fas fa-fw fa-home"></i>
+      <span>{{ __('Branch management') }}</span>
+    </a>
+  </li>
 
   <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.role.index') }}">

@@ -51,6 +51,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SeoToolController;
 use App\Http\Controllers\Admin\SocialSettingController;
 use App\Http\Controllers\Admin\InstitutionController;
+use App\Http\Controllers\Admin\BranchController;
 
 use App\Http\Controllers\Admin\RefundController;
 use App\Http\Controllers\Admin\RequestMoneyController;
@@ -479,6 +480,14 @@ Route::prefix('admin')->group(function(){
         Route::get('/institution/block/{id1}/{id2}', [InstitutionController::class,'block'])->name('admin-staff-block');
         Route::post('/institution/update/{id}', [InstitutionController::class,'update'])->name('admin.institution.update');
         Route::get('/institution/delete/{id}', [InstitutionController::class,'destroy'])->name('admin.institution.delete');
+
+        Route::get('/branch/datatables', [BranchController::class,'datatables'])->name('admin.branch.datatables');
+        Route::get('/branch', [BranchController::class,'index'])->name('admin.branch.index');
+        Route::get('/branch/create', [BranchController::class,'create'])->name('admin.branch.create');
+        Route::post('/branch/create', [BranchController::class,'store'])->name('admin.branch.store');
+        Route::get('/branch/edit/{id}', [BranchController::class,'edit'])->name('admin.branch.edit');
+        Route::post('/branch/update/{id}', [BranchController::class,'update'])->name('admin.branch.update');
+        Route::get('/branch/delete/{id}', [BranchController::class,'destroy'])->name('admin.branch.delete');
       });
 
       Route::group(['middleware'=>'permissions:Manage KYC Form'],function(){
