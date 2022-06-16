@@ -4,107 +4,46 @@
 
 <div class="card">
   <div class="d-sm-flex align-items-center justify-content-between py-3">
-    <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Edit Institution') }} <a class="btn btn-primary btn-rounded btn-sm" href="{{route('admin.institution.index')}}"><i class="fas fa-arrow-left"></i> {{ __('Back') }}</a></h5>
+    <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Edit Branch') }} 
+      <a class="btn btn-primary btn-rounded btn-sm" href="{{route('admin.branch.index')}}"><i class="fas fa-arrow-left"></i> {{ __('Back') }}</a></h5>
     <ol class="breadcrumb py-0 m-0">
       <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
-      <li class="breadcrumb-item"><a href="{{ route('admin.institution.index') }}">{{ __('Institutions management') }}</a></li>
-      <li class="breadcrumb-item"><a href="{{route('admin.institution.edit',$data->id)}}">{{ __('Edit Institution') }}</a></li>
+      <li class="breadcrumb-item"><a href="{{ route('admin.branch.index') }}">{{ __('Branch Management') }}</a></li>
+      <li class="breadcrumb-item"><a href="{{route('admin.branch.edit',$data->id)}}">{{ __('Edit Branch') }}</a></li>
     </ol>
   </div>
 </div>
 
 <div class="row justify-content-center mt-3">
-  <div class="col-md-10">
+  <div class="col-md-12">
     <!-- Form Basic -->
     <div class="card mb-4">
       <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold text-primary">{{ __('Edit Institution Form') }}</h6>
+        <h6 class="m-0 font-weight-bold text-primary">{{ __('Edit Branch Form') }}</h6>
       </div>
 
       <div class="card-body">
 
-        <form class="geniusform" action="{{route('admin.institution.update',$data->id)}}" method="POST" enctype="multipart/form-data">
+        <form class="geniusform" action="{{route('admin.branch.update',$data->id)}}" method="POST" enctype="multipart/form-data">
 
           @include('includes.admin.form-both')
 
           {{ csrf_field() }}
+        <div class="row g-3">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="inp-name">{{ __('Branch Name') }}</label>
+                <input type="text" class="form-control" id="inp-branch-name" name="branch_name" placeholder="{{ __('Enter Branch Name') }}" value="{{$data->name}}" required>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="inp-name">{{ __('Institution Name') }}</label>
 
-
-          <div class="form-group" id="set-picture">
-            <label>{{ __('Set Picture') }} </label>
-            <div class="wrapper-image-preview">
-              <div class="box">
-                <div class="back-preview-image" style="background-image: url({{ $data->photo ? asset('assets/images/'.$data->photo) : asset('assets/images/placeholder.jpg') }});"></div>
-                <div class="upload-options">
-                  <label class="img-upload-label" for="img-upload"> <i class="fas fa-camera"></i> {{ __('Upload Picture') }} </label>
-                  <input id="img-upload" type="file" class="image-upload" name="photo" accept="image/*">
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="row g-3">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="inp-name">{{ __('Company Name') }}</label>
-                <input type="text" class="form-control" id="inp-name" name="name" placeholder="{{ __('Enter Name') }}" value="{{$data->name}}" required>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="inp-name">{{ __('VAT Number') }}</label>
-                <input type="text" class="form-control" id="vat" name="vat" placeholder="{{ __('Enter VAT Number') }}" value="{{$data->vat}}">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="inp-name">{{ __('Address') }}</label>
-                <input type="text" class="form-control" id="address" name="address" placeholder="{{ __('Enter Address') }}" value="{{$data->address}}">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="inp-name">{{ __('City') }}</label>
-                <input type="text" class="form-control" id="city" name="city" placeholder="{{ __('Enter City') }}" value="{{$data->city}}">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="inp-name">{{ __('Zip Code') }}</label>
-                <input type="text" class="form-control" id="zip" name="zip" placeholder="{{ __('Enter Zip Code') }}" value="{{$data->zip}}">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="inp-name">{{ __('Select Country') }}</label>
-                <select class="form-control mb-3" name="country_id">
-                  <option value="">{{ __('Select Country') }}</option>
-                  @foreach(DB::table('countries')->get() as $dta)
-                  <option value="{{ $dta->id }}" {{ $data->country_id == $dta->id ? 'selected' : '' }}>{{ $dta->name }}</option>
-                  @endforeach
-                </select>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="inp-email">{{ __('Email of Institution') }}</label>
-                <input type="email" class="form-control" id="inp-email" name="email" placeholder="{{ __('Enter Email') }}" value="{{$data->email}}" required>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="inp-phone">{{ __('Phone of Institution') }}</label>
-                <input type="text" class="form-control" id="inp-phone" name="phone" placeholder="{{ __('Enter Phone') }}" value="{{$data->phone}}" required>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="inp-name">{{ __('Select Role') }}</label>
-                <select class="form-control" name="role_id" required="">
-                  <option value="">{{ __('Select Role') }}</option>
-                  @foreach(DB::table('roles')->get() as $dta)
-                  <option value="{{ $dta->id }}" {{ $data->role_id == $dta->id ? 'selected' : '' }}>{{ $dta->name }}</option>
+                <select class="form-control mb-3" name="ins_id" id="ins_id">
+                  <option value="">{{ __('Select Institution Name') }}</option>
+                  @foreach(DB::table('admins')->where('id','!=',1)->get() as $institute)
+                  <option value="{{ $institute->id }}" @if($institute->id == $data->ins_id) selected @endif>{{ $institute->name }}</option>
                   @endforeach
                 </select>
               </div>
@@ -113,7 +52,7 @@
 
 
 
-          <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Submit') }}</button>
+          <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Update') }}</button>
 
         </form>
       </div>
