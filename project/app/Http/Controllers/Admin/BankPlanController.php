@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\BankPlan;
+use App\Models\Charge;
 use App\Models\Currency;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use Datatables;
 
 class BankPlanController extends Controller
@@ -37,6 +39,7 @@ class BankPlanController extends Controller
                                     '.'Actions' .'
                                   </button>
                                   <div class="dropdown-menu" x-placement="bottom-start">
+                                    <a href="' . route('admin.manage.charge',$data->id) . '"  class="dropdown-item">'.__("Charge").'</a>'.'
                                     <a href="' . route('admin.bank.plan.edit',$data->id) . '"  class="dropdown-item">'.__("Edit").'</a>'.$delete.'
                                   </div>
                                 </div>';
@@ -89,6 +92,56 @@ class BankPlanController extends Controller
         $data->days = $request->days;
         $data->save();
 
+        DB::table('charges')->insert([
+            'name' => 'Transfer Money',
+            'slug' => 'transfer-money-'.$data->id,
+            'data' => '{"percent_charge":"2","fixed_charge":"2","minimum":"10","maximum":"1000","daily_limit":"2000","monthly_limit":"5000"}',
+            'plan_id' => $data->id,
+        ]);
+        DB::table('charges')->insert([
+            'name' => 'Exchange Money',
+            'slug' => 'exchange-money-'.$data->id,
+            'data' => '{"percent_charge":"2","fixed_charge":"2","minimum":"10","maximum":"1000"}',
+            'plan_id' => $data->id,
+        ]);
+        DB::table('charges')->insert([
+            'name' => 'Request Money',
+            'slug' => 'request-money-'.$data->id,
+            'data' => '{"percent_charge":"1","fixed_charge":"2","minimum":"10","maximum":"2000"}',
+            'plan_id' => $data->id,
+        ]);
+
+        DB::table('charges')->insert([
+            'name' => 'Merchant Payment',
+            'slug' => 'merchant-payment-'.$data->id,
+            'data' => '{"percent_charge":"5","fixed_charge":"2"}',
+            'plan_id' => $data->id,
+        ]);
+
+        DB::table('charges')->insert([
+            'name' => 'Create Voucher',
+            'slug' => 'create-voucher-'.$data->id,
+            'data' => '{"percent_charge":"2","fixed_charge":"2","minimum":"10","maximum":"2000","commission":"10"}',
+            'plan_id' => $data->id,
+        ]);
+        DB::table('charges')->insert([
+            'name' => 'Create Invoice',
+            'slug' => 'create-invoice-'.$data->id,
+            'data' => '{"percent_charge":"5","fixed_charge":"2"}',
+            'plan_id' => $data->id,
+        ]);
+        DB::table('charges')->insert([
+            'name' => 'Make Escrow',
+            'slug' => 'make-escrow-'.$data->id,
+            'data' => '{"percent_charge":"5","fixed_charge":"2"}',
+            'plan_id' => $data->id,
+        ]);
+        DB::table('charges')->insert([
+            'name' => 'API Merchant Payment',
+            'slug' => 'api-payment-'.$data->id,
+            'data' => '{"percent_charge":"5","fixed_charge":"2"}',
+            'plan_id' => $data->id,
+        ]);
         $msg = 'New Data Added Successfully.'.'<a href="'.route("admin.bank.plan.index").'">View Plan Lists</a>';
         return response()->json($msg);
     }

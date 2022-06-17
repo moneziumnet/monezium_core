@@ -145,15 +145,6 @@
   </li>
   @endif
 
-  @if(Auth::guard('admin')->user()->sectionCheck('Manage Charges'))
-  <li class="nav-item">
-    <a class="nav-link" href="{{route('admin.manage.charge')}}">
-      <i class="fas fa-comments-dollar"></i>
-      <span>{{ __('Manage Charges') }}</span>
-    </a>
-  </li>
-  @endif
-
   @if(Auth::guard('admin')->user()->sectionCheck('Manage Escrow'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#escrow" aria-expanded="true" aria-controls="collapseTable">

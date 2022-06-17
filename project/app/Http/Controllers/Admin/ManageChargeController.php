@@ -8,14 +8,15 @@ use Illuminate\Http\Request;
 
 class ManageChargeController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, $id)
     {
         $search  = $request->search;
         $charges = Charge::when($search,function($q) use($search){
             return $q->where('name','like',"%$search%");
-        })->get();
+        })->where('plan_id', $id)->get();
         $data['search'] = $search;
         $data['charges'] = $charges;
+        $data['plan_id'] = $id;
         return view('admin.charge.index', $data);
     }
 
