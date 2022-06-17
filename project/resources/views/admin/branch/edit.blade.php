@@ -32,26 +32,23 @@
         <div class="row g-3">
             <div class="col-md-6">
               <div class="form-group">
-                <label for="inp-name">{{ __('Branch Name') }}</label>
-                <input type="text" class="form-control" id="inp-branch-name" name="branch_name" placeholder="{{ __('Enter Branch Name') }}" value="{{$data->name}}" required>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="inp-name">{{ __('Institution Name') }}</label>
+                <label for="inp-name">{{ __('Sub Institution Name') }}</label>
 
                 <select class="form-control mb-3" name="ins_id" id="ins_id">
-                  <option value="">{{ __('Select Institution Name') }}</option>
+                  <option value="">{{ __('Select Sub Institution Name') }}</option>
                   @foreach(DB::table('admins')->where('id','!=',1)->get() as $institute)
                   <option value="{{ $institute->id }}" @if($institute->id == $data->ins_id) selected @endif>{{ $institute->name }}</option>
                   @endforeach
                 </select>
               </div>
             </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="inp-name">{{ __('Branch Name') }}</label>
+                <input type="text" class="form-control" id="inp-branch-name" name="branch_name" placeholder="{{ __('Enter Branch Name') }}" value="{{$data->name}}" required>
+              </div>
+            </div>
           </div>
-
-
-
           <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Update') }}</button>
 
         </form>

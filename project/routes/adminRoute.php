@@ -471,7 +471,7 @@ Route::prefix('admin')->group(function(){
         Route::get('/role/delete/{id}', [RoleController::class,'destroy'])->name('admin.role.delete');
       });
     
-      Route::group(['middleware'=>'permissions:Institutions management'],function(){
+      Route::group(['middleware'=>'permissions:Sub Institutions management'],function(){
         Route::get('/institution/datatables', [InstitutionController::class,'datatables'])->name('admin.institution.datatables');
         Route::get('/institution', [InstitutionController::class,'index'])->name('admin.institution.index');
         Route::get('/institution/create', [InstitutionController::class,'create'])->name('admin.institution.create');

@@ -44,16 +44,16 @@
                   </div>
               </div>
             </div> -->
-            <!-- <div class="col-md-6">
+            <div class="col-md-6">
               <div class="form-group">
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" name="section[]" value="Institutions management" {{ $data->sectionCheck('Institutions management') ? 'checked' : '' }} class="custom-control-input" id="manage_staff">
-                  <label class="custom-control-label" for="manage_staff">{{__('Institutions management')}}</label>
+                  <input type="checkbox" name="section[]" value="Sub Institutions management" {{ $data->sectionCheck('Sub Institutions management') ? 'checked' : '' }} class="custom-control-input" id="manage_ins">
+                  <label class="custom-control-label" for="manage_ins">{{__('Sub Institutions management')}}</label>
                   </div>
               </div>
             </div>
 
-            <div class="col-md-6">
+            <!-- <div class="col-md-6">
               <div class="form-group">
                 <div class="custom-control custom-switch">
                   <input type="checkbox" name="section[]" value="Module management" {{ $data->sectionCheck('Module management') ? 'checked' : '' }} class="custom-control-input" id="manage_roles">
