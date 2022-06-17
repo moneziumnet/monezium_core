@@ -225,19 +225,25 @@
               </div>
               
               <div class="tab-pane fade p-3" id="three" role="tabpanel" aria-labelledby="three-tab">
-                
-      
                 <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <div class="custom-control custom-switch">
-                        <input type="checkbox" name="user_module[]" value="Loan" {{ $modules->moduleCheck('Loan') ? 'checked' : '' }} class="custom-control-input" id="Loan">
-                        <label class="custom-control-label" for="Loan">{{__('Loan')}}</label>
-                        </div>
+                @foreach(DB::table('roles')->where('id', Auth()->user()->role_id)->get() as $role)
+                  @php
+                    $explode = explode(' , ',$role->section);
+                  @endphp
+                    @foreach($explode as $ex)
+                    
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" name="user_module[]" value="{{$ex}}" checked class="custom-control-input" id="{{$ex}}">
+                          <label class="custom-control-label" for="Loan">{{__($ex)}}</label>
+                          </div>
+                      </div>
                     </div>
-                  </div>
-      
-                  <div class="col-md-6">
+                    @endforeach
+                @endforeach
+                </div> 
+                  {{-- <div class="col-md-6">
                       <div class="form-group">
                         <div class="custom-control custom-switch">
                           <input type="checkbox" name="user_module[]" value="DPS" {{ $modules->moduleCheck('DPS') ? 'checked' : '' }} class="custom-control-input" id="DPS">
@@ -352,9 +358,7 @@
                           <label class="custom-control-label" for="more">{{__('More')}}</label>
                           </div>
                       </div>
-                  </div>
-      
-                </div>
+                  </div>--}}
                   
              
               </div>

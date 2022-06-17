@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Datatables;
 use App\Models\PaymentGateway;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Str;
@@ -99,7 +100,8 @@ class PaymentGatewayController extends Controller
     public function edit($id)
     {
         $data = PaymentGateway::findOrFail($id);
-        return view('admin.payment.edit',compact('data'));
+        $users = User::where('id','!=',1)->orderBy('name','asc')->get();
+        return view('admin.payment.edit',compact('data','users'));
     }
 
     public function update(Request $request, $id)
@@ -157,6 +159,7 @@ class PaymentGatewayController extends Controller
                 }
             }
             $input['information'] = json_encode($info_data);
+            
             $data->update($input);
 
 

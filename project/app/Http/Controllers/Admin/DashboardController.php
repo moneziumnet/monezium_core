@@ -89,6 +89,7 @@ class DashboardController extends Controller
        
         $contact = Contact::where('user_id', $data->id)->first();
         $modules = Generalsetting::first();
+       // dd($modules);
         return view('admin.profile',compact('data','modules', 'contact'));
     }
     public function profileupdate(Request $request)
