@@ -21,8 +21,8 @@
         @if(Auth::guard('admin')->user()->sectionCheck('Module management'))
         <a class="collapse-item" href="{{ route('admin.role.index') }}">{{ __('Roles') }}</a>
         @endif
-
         <a class="collapse-item" href="{{ route('admin.branch.index') }}">{{ __('Branches') }}</a>
+        <a class="collapse-item" href="{{ route('admin.payment.index') }}">{{  __('Payment Gateways')  }}</a>
       </div>
     </div>
   </li>
@@ -327,17 +327,16 @@
   </li>
   @endif
 
-  @if(Auth::guard('admin')->user()->sectionCheck('Payment Setting'))
+  @if(Auth::guard('admin')->user()->sectionCheck('Currency Setting'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#payment_gateways" aria-expanded="true"
       aria-controls="collapseTable">
       <i class="fas fa-fw fa-newspaper"></i>
-      <span>{{  __('Payment Settings') }}</span>
+      <span>{{  __('Currency Settings') }}</span>
     </a>
     <div id="payment_gateways" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         <a class="collapse-item" href="{{ route('admin.currency.index') }}">{{ __('Currencies') }}</a>
-        <a class="collapse-item" href="{{ route('admin.payment.index') }}">{{  __('Payment Gateways')  }}</a>
       </div>
     </div>
   </li>

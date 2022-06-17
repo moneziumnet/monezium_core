@@ -436,19 +436,7 @@ Route::prefix('admin')->group(function(){
       });
 
     
-      Route::group(['middleware'=>'permissions:Payment Setting'],function(){
-        Route::post('/general-settings/update/all',[ GeneralSettingController::class,'generalupdate'])->name('admin.gs.update');
-        Route::get('/paymentgateway/datatables', [PaymentGatewayController::class,'datatables'])->name('admin.payment.datatables'); //JSON REQUEST
-        Route::get('/paymentgateway', [PaymentGatewayController::class,'index'])->name('admin.payment.index');
-        Route::get('/paymentgateway/create', [PaymentGatewayController::class,'create'])->name('admin.payment.create');
-        Route::post('/paymentgateway/create', [PaymentGatewayController::class,'store'])->name('admin.payment.store');
-        Route::get('/paymentgateway/edit/{id}', [PaymentGatewayController::class,'edit'])->name('admin.payment.edit');
-        Route::post('/paymentgateway/update/{id}', [PaymentGatewayController::class,'update'])->name('admin.payment.update');
-        Route::get('/paymentgateway/delete/{id}', [PaymentGatewayController::class,'destroy'])->name('admin.payment.delete');
-        Route::get('/paymentgateway/status/{id1}/{id2}', [PaymentGatewayController::class,'status'])->name('admin.payment.status');
-    
-    
-    
+      Route::group(['middleware'=>'permissions:Currency Setting'],function(){
         Route::get('/general-settings/currency/{status}', [GeneralSettingController::class,'currency'])->name('admin.gs.iscurrency');
         Route::get('/currency/datatables', [CurrencyController::class,'datatables'])->name('admin.currency.datatables'); //JSON REQUEST
         Route::get('/currency',[ CurrencyController::class,'index'])->name('admin.currency.index');
@@ -488,6 +476,17 @@ Route::prefix('admin')->group(function(){
         Route::get('/branch/edit/{id}', [BranchController::class,'edit'])->name('admin.branch.edit');
         Route::post('/branch/update/{id}', [BranchController::class,'update'])->name('admin.branch.update');
         Route::get('/branch/delete/{id}', [BranchController::class,'destroy'])->name('admin.branch.delete');
+
+        Route::post('/general-settings/update/all',[ GeneralSettingController::class,'generalupdate'])->name('admin.gs.update');
+        Route::get('/paymentgateway/datatables', [PaymentGatewayController::class,'datatables'])->name('admin.payment.datatables'); //JSON REQUEST
+        Route::get('/paymentgateway', [PaymentGatewayController::class,'index'])->name('admin.payment.index');
+        Route::get('/paymentgateway/create', [PaymentGatewayController::class,'create'])->name('admin.payment.create');
+        Route::post('/paymentgateway/create', [PaymentGatewayController::class,'store'])->name('admin.payment.store');
+        Route::get('/paymentgateway/edit/{id}', [PaymentGatewayController::class,'edit'])->name('admin.payment.edit');
+        Route::post('/paymentgateway/update/{id}', [PaymentGatewayController::class,'update'])->name('admin.payment.update');
+        Route::get('/paymentgateway/delete/{id}', [PaymentGatewayController::class,'destroy'])->name('admin.payment.delete');
+        Route::get('/paymentgateway/status/{id1}/{id2}', [PaymentGatewayController::class,'status'])->name('admin.payment.status');
+    
       });
 
       Route::group(['middleware'=>'permissions:Manage KYC Form'],function(){

@@ -38,7 +38,6 @@ class CreateAdminsTable extends Migration
             $table->rememberToken();
             $table->timestamps();
             $table->string('tenant_id')->nullable();
-            $table->integer('payment_gateway_id',11)->default(0);
         });
     }
 

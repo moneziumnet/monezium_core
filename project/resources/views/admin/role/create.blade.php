@@ -192,8 +192,8 @@
             <div class="col-md-6">
               <div class="form-group">
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" name="section[]" value="Payment Setting" class="custom-control-input" id="payment_setting">
-                  <label class="custom-control-label" for="payment_setting">{{__('Payment Setting')}}</label>
+                  <input type="checkbox" name="section[]" value="Currency Setting" class="custom-control-input" id="currency_setting">
+                  <label class="custom-control-label" for="currency_setting">{{__('Currency Setting')}}</label>
                   </div>
               </div>
             </div>

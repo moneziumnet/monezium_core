@@ -54,6 +54,7 @@ class CreateUsersTable extends Migration
 0 === active');
             $table->timestamp('plan_end_date')->nullable();
             $table->string('tenant_id')->nullable();
+            $table->string('user_type');
         });
     }
 
