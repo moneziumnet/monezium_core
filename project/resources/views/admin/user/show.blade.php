@@ -61,6 +61,25 @@
                       <th>{{__('City')}}</th>
                       <td>{{$data->city}}</td>
                     </tr>
+                    @php
+                        $userType = explode(',', $data->user_type);
+                    @endphp
+                    <tr>
+                      <th>{{__('Type')}}</th>
+                      <td>
+                        @php
+                          $c_type_name = []
+                        @endphp
+                        @foreach(DB::table('customer_types')->orderBy('type_name','asc')->get() as $c_type)
+                          @if(in_array($c_type->id, $userType)) 
+                          @php
+                            $c_type_name[] = $c_type->type_name;
+                          @endphp
+                          @endif
+                        @endforeach
+                        {{implode(', ', $c_type_name);}}
+                      </td>
+                    </tr>
                     <tr>
                       <th>{{__('Zip Code')}}</th>
                       <td>{{$data->zip}}</td>

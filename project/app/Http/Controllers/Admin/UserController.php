@@ -168,6 +168,7 @@ class UserController extends Controller
         public function edit($id)
         {
             $data = User::findOrFail($id);
+            //dd($data);
             return view('admin.user.edit',compact('data'));
         }
 
@@ -186,6 +187,7 @@ class UserController extends Controller
 
             $user = User::findOrFail($id);
             $data = $request->all();
+            
             if ($file = $request->file('photo'))
             {
                 $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
@@ -198,6 +200,8 @@ class UserController extends Controller
                 }
                 $data['photo'] = $name;
             }
+            $data['user_type'] = implode(',',$request->input('user_type'));
+//dd($data);
             $user->update($data);
             $msg = 'Customer Information Updated Successfully.';
             return response()->json($msg);
