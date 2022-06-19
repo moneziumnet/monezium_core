@@ -29,8 +29,8 @@
           @include('includes.admin.form-both')
           {{ csrf_field() }}
 
-          <div class="row g-3">
-            <div class="col-md-6">
+          <!-- <div class="row g-3"> -->
+            <!-- <div class="col-md-6">
               <div class="form-group">
                 <label for="inp-name">{{ __('Sub Institution Name') }}</label>
 
@@ -41,14 +41,14 @@
                   @endforeach
                 </select>
               </div>
-            </div>
-            <div class="col-md-6">
+            </div> -->
+            <!-- <div class="col-md-6"> -->
               <div class="form-group">
                 <label for="inp-branch-name">{{ __('Branch Name') }}</label>
                 <input type="text" class="form-control" id="inp-branch-name" name="branch_name" placeholder="{{ __('Enter Branch Name') }}" value="" autocomplete="off" required>
               </div>
-            </div>
-          </div>
+            <!-- </div> -->
+          <!-- </div> -->
 
 
           <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Submit') }}</button>

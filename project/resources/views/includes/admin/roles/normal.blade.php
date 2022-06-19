@@ -213,14 +213,14 @@
   @endif
 
 
-  @if(Auth::guard('admin')->user()->sectionCheck('Transactions'))
+  <!-- @if(Auth::guard('admin')->user()->sectionCheck('Transactions'))
   <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.transactions.index') }}">
       <i class="fas fa-chart-line"></i>
       <span>{{ __('Transactions') }}</span>
     </a>
   </li>
-  @endif
+  @endif -->
 
   @if(Auth::guard('admin')->user()->sectionCheck('Deposits'))
   <li class="nav-item">

@@ -92,6 +92,7 @@ class DashboardController extends Controller
        // dd($modules);
         return view('admin.profile',compact('data','modules', 'contact'));
     }
+
     public function profileupdate(Request $request)
     {
         //--- Validation Section
@@ -103,7 +104,7 @@ class DashboardController extends Controller
         ];
 
 
-        $validator = Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(), $rules);  
 
         if ($validator->fails()) {
           return response()->json(array('errors' => $validator->getMessageBag()->toArray()));

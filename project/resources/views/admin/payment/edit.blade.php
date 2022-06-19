@@ -66,7 +66,7 @@
 
             @endif
 
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label for="inp-name">{{ __('Sub Institution') }}</label>
 
                 <select class="form-control mb-3" name="ins_id" id="ins_id">
@@ -75,7 +75,7 @@
                     <option value="{{ $user->id }}" @if($user->id == $data->ins_id) selected @endif>{{ $user->name }}</option>
                     @endforeach
                 </select>
-            </div>
+            </div> -->
 
             @else
 
@@ -98,10 +98,6 @@
               </div>
 
               @endif
-
-              
-
-
             @endif
 
             <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Submit') }}</button>

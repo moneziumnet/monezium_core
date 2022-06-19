@@ -21,7 +21,7 @@
               <thead class="thead-light">
 				<tr>
 					<th>{{ __('ID') }}</th>
-					<th>{{ __('Sub Institution Name') }}</th>
+					<!-- <th>{{ __('Sub Institution Name') }}</th> -->
                     <th>{{ __('Branch Name') }}</th>
 					<th>{{ __('Options') }}</th>
 				</tr>
@@ -72,7 +72,7 @@ var table = $('#geniustable').DataTable({
                ajax: '{{ route('admin.branch.datatables') }}',
                columns: [
                         { data: 'id', id: 'id' },
-                        { data: 'ins_name', ins_name: 'ins_name' },
+                        // { data: 'ins_name', ins_name: 'ins_name' },
                         { data: 'name', name: 'name' },
                         { data: 'action', searchable: false, orderable: false }
 
