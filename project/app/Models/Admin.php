@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use phpDocumentor\Reflection\Types\Null_;
 
 class Admin extends Authenticatable
 {
@@ -19,7 +20,7 @@ class Admin extends Authenticatable
 
 
     public function IsSuper(){
-        if ($this->id == 1) {
+        if ($this->id == 1 && $this->role_id == 0 && $this->tenant_id == null) {
            return true;
         }
         return false;
