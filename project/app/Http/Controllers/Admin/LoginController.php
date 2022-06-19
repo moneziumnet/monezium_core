@@ -45,6 +45,8 @@ class LoginController extends Controller
             $current_domain = $current_domain->pluck('domain')->toArray()[0];
         }
 
+        dd($current_domain);
+
         $user = Admin::where('email', $request->email)->first();
 
         if (!empty($user)) {
