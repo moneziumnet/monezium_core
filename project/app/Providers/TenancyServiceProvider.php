@@ -25,7 +25,7 @@ class TenancyServiceProvider extends ServiceProvider
             Events\CreatingTenant::class => [],
             Events\TenantCreated::class => [
                 JobPipeline::make([
-                    Jobs\CreateDatabase::class,
+                    // Jobs\CreateDatabase::class,
                     Jobs\MigrateDatabase::class,
                     Jobs\SeedDatabase::class,
 
@@ -108,7 +108,7 @@ class TenancyServiceProvider extends ServiceProvider
     protected function bootEvents()
     {
         foreach ($this->events() as $event => $listeners) {
-            foreach ($listeners as $listener) {
+            foreach (array_unique($listeners) as $listener) {
                 if ($listener instanceof JobPipeline) {
                     $listener = $listener->toListener();
                 }
