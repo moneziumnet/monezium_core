@@ -44,7 +44,17 @@ class GeneralSettingController extends Controller
         }
         else {
             $input = $request->all();
-            $data = Generalsetting::findOrFail(1);
+            $data = Generalsetting::first();
+
+            if ($data == null)
+            {
+                $gs = tenancy()->central(function ($tenant) {
+                    return Generalsetting::first();
+                });
+                $data = $gs->replicate();
+                $data->push();
+            }
+
             
             if(isset($input['menu'])){
                 $input['menu'] =  $this->setMenu($input);

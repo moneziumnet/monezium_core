@@ -60,6 +60,8 @@ class RouteServiceProvider extends ServiceProvider
         });
         $this->mapWebRoutes();
         $this->mapApiRoutes();
+        $this->mapAdminRoutes();
+        $this->mapUserRoutes();
     }
 
     /**
@@ -76,12 +78,21 @@ class RouteServiceProvider extends ServiceProvider
     
     protected function mapWebRoutes()
     {
-
         foreach ($this->centralDomains() as $domain) {
             Route::middleware('web')
                 ->domain($domain)
                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
+        }
+    }
+
+    protected function mapAdminRoutes()
+    {
+        foreach ($this->centralDomains() as $domain) {
+            Route::middleware('web')
+                ->domain($domain)
+                ->namespace($this->namespace)
+                ->group(base_path('routes/adminRoute.php'));
         }
     }
 
@@ -93,6 +104,16 @@ class RouteServiceProvider extends ServiceProvider
                 ->middleware('api')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/api.php'));
+        }
+    }
+
+    protected function mapUserRoutes()
+    {
+        foreach ($this->centralDomains() as $domain) {
+            Route::prefix('web')
+                ->domain($domain)
+                ->namespace($this->namespace)
+                ->group(base_path('routes/userRoute.php'));
         }
     }
 

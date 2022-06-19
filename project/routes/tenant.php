@@ -23,5 +23,5 @@ Route::middleware([
     InitializeTenancyByDomainOrSubdomain::class,
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
-  require 'adminroute.php';
+  require 'adminRoute.php';
 });
