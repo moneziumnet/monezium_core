@@ -21,9 +21,9 @@
         <h6 class="m-0 font-weight-bold text-primary">{{ __('Edit Form') }}</h6>
       </div>
 
-      <div class="alert alert-warning">
+      <!-- <div class="alert alert-warning">
         {{ __('Your database user must have permission to CREATE DATABASE, because we need to create database when new tenant create.') }}
-      </div>
+      </div> -->
 
       <div class="card-body">
 
