@@ -23,20 +23,21 @@ class BranchController extends Controller
     //*** JSON Request
     public function datatables()
     {
-        $datas = Branch::with('institution')
-                    ->whereHas('institution', function ($query){
-                        $query->where('id','!=',1);
-                    })
-                    ->orderBy('id','desc')
-                    ->get();
+        // $datas = Branch::with('institution')
+        //             ->whereHas('institution', function ($query){
+        //                 $query->where('id','!=',1);
+        //             })
+        //             ->orderBy('id','desc')
+        //             ->get();
        // Admin::where('id','!=',1)->where('id','!=',Auth::guard('admin')->user()->id)->orderBy('id');
+       $datas = Branch::orderBy('id','desc')->get();
 
          //--- Integrating This Collection Into Datatables
          return Datatables::of($datas)
-                            ->addColumn('ins_name', function(Branch $data) {
-                                $ins_name = $data->institution ? $data->institution->name : '';
-                                return $ins_name;
-                            })
+                            // ->addColumn('ins_name', function(Branch $data) {
+                            //     $ins_name = $data->institution ? $data->institution->name : '';
+                            //     return $ins_name;
+                            // })
                             ->addColumn('action', function(Branch $data) {
 
                               return '<div class="btn-group mb-1">
@@ -71,7 +72,7 @@ class BranchController extends Controller
     {
         $rules = [
             'branch_name'   => 'required',
-            'ins_id'        => 'required'
+            // 'ins_id'        => 'required'
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -86,7 +87,7 @@ class BranchController extends Controller
         $input = $request->all();
        
         $input['name'] = $request->branch_name;
-        $input['ins_id'] = $request->ins_id;
+        // $input['ins_id'] = $request->ins_id;
         
         $data->fill($input)->save();
         //--- Logic Section Ends
@@ -112,7 +113,7 @@ class BranchController extends Controller
         // {
             $rules = [
                 'branch_name'   => 'required',
-                'ins_id'        => 'required'
+                // 'ins_id'        => 'required'
             ];
     
             $validator = Validator::make($request->all(), $rules);
@@ -126,7 +127,7 @@ class BranchController extends Controller
             $data = Branch::findOrFail($id);
            
             $input['name']      = $request->branch_name;
-            $input['ins_id']    = $request->ins_id;
+            // $input['ins_id']    = $request->ins_id;
 
             $data->update($input);
             $msg = 'Data Updated Successfully.'.'<a href="'.route("admin.branch.index").'">View List</a>';

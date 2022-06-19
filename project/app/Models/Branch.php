@@ -9,10 +9,10 @@ class Branch extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'ins_id'];
+    protected $fillable = ['name'];
 
     public function institution()
     {
-        return $this->belongsTo(Admin::class, 'ins_id','id');
+        return $this->belongsTo(Admin::class, 'id');
     }
 }

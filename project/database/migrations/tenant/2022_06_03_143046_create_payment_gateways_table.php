@@ -15,7 +15,6 @@ class CreatePaymentGatewaysTable extends Migration
     {
         Schema::create('payment_gateways', function (Blueprint $table) {
             $table->integer('id', true);
-            $table->integer('ins_id',11)->default(0);
             $table->string('subtitle', 191)->nullable();
             $table->string('title', 191)->nullable();
             $table->text('details')->nullable();

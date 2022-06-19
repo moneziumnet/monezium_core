@@ -8,7 +8,7 @@ use Illuminate\{
 
 class PaymentGateway extends Model
 {
-    protected $fillable = ['title', 'details', 'subtitle', 'name', 'type', 'ins_id', 'information','currency_id'];
+    protected $fillable = ['title', 'details', 'subtitle', 'name', 'type', 'information','currency_id'];
     public $timestamps = false;
 
     public function currency()
