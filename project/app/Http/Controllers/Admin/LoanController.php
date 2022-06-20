@@ -167,7 +167,7 @@ class LoanController extends Controller
       if($id2 == 1){
         if($user = User::where('id',$data->user_id)->first()){
           $currency = Currency::whereIsDefault(1)->first()->id;
-          $userBalance = user_wallet_increment($userId, $currency, $data->loan_amount);
+          $userBalance = user_wallet_increment($user->id, $currency, $data->loan_amount);
         }
         $data->next_installment = Carbon::now()->addDays($data->plan->installment_interval);
       }
@@ -221,9 +221,10 @@ class LoanController extends Controller
 
     public function takeLoanAmount($userId,$installment){
       $user = User::whereId($userId)->first();
-      if($user && $user->balance>=$installment){
-        $user->balance -= $installment;
-        $user->update();
+      $currency = Currency::whereIsDefault(1)->first()->id;
+      $userBalance = user_wallet_balance($user->id, $currency);
+      if($user && $userBalance>=$installment){
+        user_wallet_decrement($user->id, $currency, $installment);
       }
     }
 
