@@ -66,7 +66,7 @@
                             <div class="form-group">
                                 <label for="inp-name">{{ __('Type') }}</label>
                 
-                                <select class="form-control mb-3" name="user_type[]" id="user_type" multiple>
+                                <select class="select mb-3" name="user_type[]" id="user_type">
                                     <option value="">{{ __('Select Customer Type') }}</option>
                                     @foreach(DB::table('customer_types')->orderBy('type_name','asc')->get() as $c_type)
                                     <option value="{{ $c_type->id }}" @if(in_array($c_type->id, $userType)) selected @endif>{{ $c_type->type_name }}</option>
