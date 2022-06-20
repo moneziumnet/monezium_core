@@ -17,6 +17,7 @@ use App\Models\LoanPlan;
 use App\Models\Pagesetting;
 use App\Models\CustomerType;
 use App\Models\AdminLanguage;
+use App\Models\Generalsetting;
 use App\Models\Socialsetting;
 use App\Models\PaymentGateway;
 use Illuminate\Database\Seeder;
@@ -41,6 +42,13 @@ class TenantDatabaseSeeder extends Seeder
         }); 
         $new_role = $role->replicate();
         $new_role->push();
+
+        // clone General setting table
+        $gs = tenancy()->central(function ($tenant) {
+            return Generalsetting::first();
+        });
+        $gs = $gs->replicate();
+        $gs->save();
 
         // clone paymentgateway table
         $payments = tenancy()->central(function ($tenant) {

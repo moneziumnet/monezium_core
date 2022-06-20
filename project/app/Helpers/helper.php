@@ -302,7 +302,7 @@ use PHPMailer\PHPMailer\PHPMailer;
       function user_wallet_balance($auth_id, $currency_id)
       {
           $balance = Wallet::where('user_id', $auth_id)->where('currency_id',$currency_id)->first();
-          return $balance->balance;
+          return $balance? $balance->balance: 0;
       }
   }
   

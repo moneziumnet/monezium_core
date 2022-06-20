@@ -49,12 +49,14 @@ class UserFdrController extends Controller
 
             return view('user.fdr.apply',$data);
         }else{
-            return redirect()->back()->with('warning','Request Money should be between minium and maximum amount!');
+            // return redirect()->back()->with('warning','Request Money should be between minium and maximum amount!');
+            return redirect()->route('user.fdr.plan')->with('warning','Request Money should be between minium and maximum amount!');
         }
     }
 
     public function fdrRequest(Request $request){
-        $user = auth()->user();
+        // $user = auth()->user();
+        // dd($request);
         // if($user->balance >= $request->fdr_amount){
         if(user_wallet_balance(auth()->id(),$request->input('currency_id'))  >= $request->fdr_amount){
 
@@ -100,7 +102,8 @@ class UserFdrController extends Controller
 
             return redirect()->route('user.fdr.index')->with('success','Loan Requesting Successfully');
         }else{
-            return redirect()->back()->with('warning','You Don,t have sufficient balance');
+            // return redirect()->back()->with('warning','You Don,t have sufficient balance');
+            return redirect()->route('user.fdr.plan')->with('warning','You Don,t have sufficient balance');
         }
     }
 }
