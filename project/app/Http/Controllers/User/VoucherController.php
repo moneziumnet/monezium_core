@@ -62,11 +62,12 @@ class VoucherController extends Controller
         $voucher->amount = $request->amount;
         $voucher->code = randNum(10).'-'.randNum(10);
         $voucher->save();
+        $userBalance = user_wallet_balance(auth()->id(), $wallet->currency_id);
+        if($finalAmount > $userBalance) return back()->with('error','Wallet has insufficient balance');
         
-        if($finalAmount > $wallet->balance) return back()->with('error','Wallet has insufficient balance');
-        
-        $wallet->balance -=  $finalAmount;
-        $wallet->save();
+        user_wallet_decrement(auth()->id(),$wallet->currency_id,$finalAmount);
+        // $wallet->balance -=  $finalAmount;
+        // $wallet->save();
 
         $trnx              = new Transaction();
         $trnx->trnx        = str_rand();
@@ -80,8 +81,9 @@ class VoucherController extends Controller
         $trnx->details     = trans('Voucher created');
         $trnx->save();
 
-        $wallet->balance +=  $commission;
-        $wallet->save();
+        user_wallet_increment(auth()->id(),$wallet->currency_id,$commission);
+        // $wallet->balance +=  $commission;
+        // $wallet->save();
 
         $commissionTrnx              = new Transaction();
         $commissionTrnx->trnx        = $trnx->trnx;

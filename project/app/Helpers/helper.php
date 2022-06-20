@@ -310,10 +310,33 @@ use PHPMailer\PHPMailer\PHPMailer;
   {
       function user_wallet_decrement($auth_id, $currency_id, $amount)
       {
+        $wallet = Wallet::where('user_id', $auth_id)
+                  ->where('currency_id',$currency_id)->first();
+
+        if(count($wallet)>0)
+        {
           $balance = Wallet::where('user_id', $auth_id)
                       ->where('currency_id',$currency_id)
                       ->decrement('balance', $amount);
           return $balance;
+        }else{
+            $user_wallet = new Wallet();
+
+            $user_wallet->user_id = $auth_id;
+            $user_wallet->user_type = 1;
+            $user_wallet->currency_id = $currency_id;
+            $user_wallet->balance = '-'.$amount;
+            $user_wallet->created_at = date('Y-m-d H:i:s');
+            $user_wallet->updated_at = date('Y-m-d H:i:s');
+
+            if($user_wallet->save())
+            {
+              $wallet = Wallet::where('user_id', $auth_id)
+                  ->where('currency_id',$currency_id)->first();
+              return $wallet->balance;
+            }
+        }
+        
       }
   }
   
@@ -321,10 +344,32 @@ use PHPMailer\PHPMailer\PHPMailer;
   {
       function user_wallet_increment($auth_id, $currency_id, $amount)
       {
+        $wallet = Wallet::where('user_id', $auth_id)
+            ->where('currency_id',$currency_id)->first();
+        
+        if(count($wallet)>0)
+        {
           $balance = Wallet::where('user_id', $auth_id)
                       ->where('currency_id',$currency_id)
                       ->increment('balance', $amount);
           return $balance;
+        }else{
+          $user_wallet = new Wallet();
+
+          $user_wallet->user_id = $auth_id;
+          $user_wallet->user_type = 1;
+          $user_wallet->currency_id = $currency_id;
+          $user_wallet->balance = $amount;
+          $user_wallet->created_at = date('Y-m-d H:i:s');
+          $user_wallet->updated_at = date('Y-m-d H:i:s');
+
+          if($user_wallet->save())
+          {
+            $wallet = Wallet::where('user_id', $auth_id)
+                ->where('currency_id',$currency_id)->first();
+            return $wallet->balance;
+          }
+        }
       }
   }
 

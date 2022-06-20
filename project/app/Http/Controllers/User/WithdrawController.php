@@ -52,6 +52,7 @@ class WithdrawController extends Controller
         if(now()->gt($user->plan_end_date)){
             return redirect()->back()->with('unsuccess','Plan Date Expired.');
         }
+        $userBalance = user_wallet_balance($user->id,$request->currency_id);
 
         $bank_plan = BankPlan::whereId($user->bank_plan_id)->first();
         $dailyWithdraws = Withdraw::whereDate('created_at', '=', date('Y-m-d'))->whereStatus('completed')->sum('amount');
@@ -65,7 +66,7 @@ class WithdrawController extends Controller
             return redirect()->back()->with('unsuccess','Monthly withdraw limit over.');
         }
         
-        if($request->amount > $user->balance){
+        if($request->amount > $userBalance){
             return redirect()->back()->with('unsuccess','Insufficient Account Balance.');
         }
 
@@ -86,14 +87,14 @@ class WithdrawController extends Controller
             return redirect()->back()->with('unsuccess','Request Amount should be greater than this '.$amountToAdd.' (USD)');
         }
 
-        if($finalamount > $user->balance){
+        if($finalamount > $userBalance){
             return redirect()->back()->with('unsuccess','Insufficient Balance.');
         }
 
         $finalamount = number_format((float)$finalamount,2,'.','');
 
-        $user->balance = $user->balance - $amount;
-        $user->update();
+        user_wallet_decrement($user->id, $currency->id, $amount);
+       
 
         $txnid = Str::random(12);
         $newwithdraw = new Withdraw();

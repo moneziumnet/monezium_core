@@ -76,11 +76,11 @@ class TransferController extends Controller
 
         $finalCharge = amount(chargeCalc($charge,$request->amount,$currency->rate),$currency->type);
         $finalAmount =  amount($request->amount + $finalCharge, $currency->type);
- 
-        if($senderWallet->balance < $finalAmount) return back()->with('error','Insufficient balance.');
+        $senderBalance = user_wallet_balance(auth()->id(), $currency->id);
+        if($senderBalance < $finalAmount) return back()->with('error','Insufficient balance.');
         
-        $senderWallet->balance -= $finalAmount;
-        $senderWallet->update();
+        user_wallet_decrement(auth()->id(), $currency->id, $finalAmount);
+        
 
         $trnx              = new Transaction();
         $trnx->trnx        = str_rand();
@@ -95,8 +95,8 @@ class TransferController extends Controller
         $trnx->details     = trans('Transfer money to '). $receiver->email;
         $trnx->save();
 
-        $recieverWallet->balance += $request->amount;
-        $recieverWallet->update();
+        user_wallet_increment($receiver->id, $currency->id, $request->amount);
+        
 
         $receiverTrnx              = new Transaction();
         $receiverTrnx->trnx        = $trnx->trnx;

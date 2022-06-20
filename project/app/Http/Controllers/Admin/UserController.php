@@ -214,8 +214,11 @@ class UserController extends Controller
                     $user->increment('balance',$request->amount);
                     return redirect()->back()->with('message','User balance added');
                 }else{
-                    if($user->balance>=$request->amount){
-                        $user->decrement('balance',$request->amount);
+                    $currency = Currency::whereIsDefault(1)->first()->id;
+                    $userBalance = user_wallet_balance($user->id, $currency);
+                    if($userBalance>=$request->amount){
+                        user_wallet_decrement($user->id, $currency,$request->amount);
+                       // $user->decrement('balance',$request->amount);
                         return redirect()->back()->with('message','User balance deduct!');
                     }else{
                         return redirect()->back()->with('warning','User don,t have sufficient balance!');
@@ -304,9 +307,12 @@ class UserController extends Controller
     public function reject($id)
     {
         $withdraw = Withdraw::findOrFail($id);
+        $currency = Currency::whereIsDefault(1)->first()->id;
         $account = User::findOrFail($withdraw->user->id);
-        $account->balance = $account->balance + $withdraw->amount + $withdraw->fee;
-        $account->update();
+        $amount =  $withdraw->amount + $withdraw->fee;
+        user_wallet_increment($account->id, $currency, $amount);
+        // $account->balance = $account->balance + $withdraw->amount + $withdraw->fee;
+        // $account->update();
         $data['status'] = "rejected";
         $withdraw->update($data);
 
