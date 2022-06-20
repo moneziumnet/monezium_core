@@ -24,4 +24,5 @@ Route::middleware([
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
   require 'adminRoute.php';
+  require 'userRoute.php';
 });

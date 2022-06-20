@@ -240,7 +240,7 @@ class RequestDomainController extends Controller
         
         $req->is_approved = 1;
         $req->save();
-        $msg = 'staff created successfully'.'<a href="'.route("admin.requestdomain.index").'">View Domain Lists</a>';
+        $msg = 'Domain created successfully'.'<a href="'.route("admin.requestdomain.index").'">View Domain Lists</a>';
         return response()->json($msg);
     }
 

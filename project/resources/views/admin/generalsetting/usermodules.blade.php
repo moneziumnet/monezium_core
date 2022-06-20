@@ -128,8 +128,8 @@
             <div class="col-md-6">
                 <div class="form-group">
                   <div class="custom-control custom-switch">
-                    <input type="checkbox" name="user_module[]" value="Escrow" {{ $data->moduleCheck('Escrow') ? 'checked' : '' }} class="custom-control-input" id="escrow">
-                    <label class="custom-control-label" for="escrow">{{__('Escrow')}}</label>
+                    <input type="checkbox" name="user_module[]" value="Escrow" {{ $data->moduleCheck('Escrow') ? 'checked' : '' }} class="custom-control-input" id="escrow1">
+                    <label class="custom-control-label" for="escrow1">{{__('Escrow')}}</label>
                     </div>
                 </div>
             </div>

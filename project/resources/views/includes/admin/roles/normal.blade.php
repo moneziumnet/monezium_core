@@ -1,13 +1,5 @@
 @if(Auth::guard('admin')->user()->role_id != 0)
 
-  @if(Auth::guard('admin')->user()->sectionCheck('Menu Builder'))
-  <li class="nav-item">
-    <a class="nav-link" href="{{ route('admin.gs.menubuilder') }}">
-      <i class="fas fa-compass"></i>
-      <span>{{ __('Menu Builder') }}</span></a>
-  </li>
-  @endif
-
   @if(Auth::guard('admin')->user()->sectionCheck('Sub Institutions management'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#institution" aria-expanded="true"
@@ -18,9 +10,9 @@
     <div id="institution" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         <a class="collapse-item" href="{{ route('admin.institution.index') }}">{{ __('Sub Institution') }}</a>
-        @if(Auth::guard('admin')->user()->sectionCheck('Module management'))
+        
         <a class="collapse-item" href="{{ route('admin.role.index') }}">{{ __('Roles') }}</a>
-        @endif
+        
         <a class="collapse-item" href="{{ route('admin.branch.index') }}">{{ __('Branches') }}</a>
         <a class="collapse-item" href="{{ route('admin.payment.index') }}">{{  __('Payment Gateways')  }}</a>
       </div>

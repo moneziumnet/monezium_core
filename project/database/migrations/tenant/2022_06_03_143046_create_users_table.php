@@ -16,7 +16,7 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('bank_plan_id')->nullable();
-            $table->string('business_name');
+            $table->string('business_name')->nullable();
             $table->string('account_number')->nullable();
             $table->string('name', 191);
             $table->string('photo', 191)->nullable();
@@ -54,7 +54,7 @@ class CreateUsersTable extends Migration
 0 === active');
             $table->timestamp('plan_end_date')->nullable();
             $table->string('tenant_id')->nullable();
-            $table->string('user_type');
+            $table->string('user_type')->nullable();
         });
     }
 

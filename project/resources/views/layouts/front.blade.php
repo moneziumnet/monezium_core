@@ -6,16 +6,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    @if(isset($page->meta_tag) && isset($page->meta_description))
-        <meta name="keywords" content="{{ $page->meta_tag }}">
-        <meta name="description" content="{{ $page->meta_description }}"> 
-    @elseif(isset($blog->meta_tag) && isset($blog->meta_description))
-        <meta name="keywords" content="{{ $blog->meta_tag }}">
-        <meta name="description" content="{{ $blog->meta_description }}"> 
-    @else
-        <meta name="keywords" content="{{ $seo->meta_keys }}">
-        <meta name="author" content="GeniusOcean">
-    @endif
     <title>{{$gs->title}}</title>
 
     <link rel="stylesheet" href="{{asset('assets/front/css/bootstrap.min.css')}}" />

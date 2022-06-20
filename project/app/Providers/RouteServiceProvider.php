@@ -54,6 +54,7 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/userRoute.php'));
+
             Route::middleware('web')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/merchantRoute.php'));
@@ -112,6 +113,7 @@ class RouteServiceProvider extends ServiceProvider
         foreach ($this->centralDomains() as $domain) {
             Route::prefix('web')
                 ->domain($domain)
+                ->middleware('user')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/userRoute.php'));
         }

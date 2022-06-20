@@ -45,7 +45,7 @@ class LoginController extends Controller
             $current_domain = $current_domain->pluck('domain')->toArray()[0];
         }
 
-        dd($current_domain);
+        // dd($current_domain);
 
         $user = Admin::where('email', $request->email)->first();
 
@@ -62,9 +62,11 @@ class LoginController extends Controller
                     return response()->json(array('errors' => $msg));
                 }
             }
-            // elseif (!empty($current_domain) || !empty($user->tenant_id)) 
-            else
+            elseif (!empty($current_domain) || !empty($user->tenant_id)) 
             {
+                $user = tenancy()->central(function ($tenant) {
+                    return Admin::where('tenant_id', $tenant->id)->first();
+                });
                 if ($user->status == 1) {
                     if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
                         return response()->json(route('admin.dashboard'));
@@ -80,9 +82,9 @@ class LoginController extends Controller
                     return response()->json(array('errors' => [ 0 => 'Please Contact to administrator' ]));
                 }
             }
-            //  else {
-            //     return response()->json(array('errors' => [ 0 =>  __('permission denied') ]));
-            // }
+             else {
+                return response()->json(array('errors' => [ 0 =>  __('permission denied') ]));
+            }
         } else {
             return response()->json(array('errors' => [ 0 => 'admin not found' ]));
         }
