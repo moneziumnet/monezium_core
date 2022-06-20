@@ -94,9 +94,8 @@ class AuthorizeController extends Controller
 
                         $gs =  Generalsetting::findOrFail(1);
                         $user = auth()->user();
-
-                        $user->balance += $request->amount;
-                        $user->save();
+                        user_wallet_increment($user->id, $request->currency_id, $request->amount);
+                       
             
                         if($gs->is_smtp == 1)
                         {

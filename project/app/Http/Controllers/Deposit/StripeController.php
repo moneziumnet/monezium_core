@@ -93,8 +93,9 @@ class StripeController extends Controller
                     $gs =  Generalsetting::findOrFail(1);
         
                     $user = auth()->user();
-                    $user->balance += $amountToAdd;
-                    $user->save();
+                    $currency_id = $request->currency_id?$request->currency_id:Currency::whereIsDefault(1)->first()->id;
+                    user_wallet_increment($user->id, $currency_id, $amountToAdd);
+                   
         
                     $trans = new Transaction();
                     $trans->trnx = $deposit->deposit_number;

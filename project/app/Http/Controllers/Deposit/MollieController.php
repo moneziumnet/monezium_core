@@ -98,8 +98,8 @@ class MollieController extends Controller
             $deposit->save();
 
             $user = auth()->user();
-            $user->balance += $amountToAdd;
-            $user->save();
+            user_wallet_increment($user->id, $input['currency_id'], $amountToAdd);
+           
 
             $trans = new Transaction();
             $trans->trnx = $deposit->deposit_number;

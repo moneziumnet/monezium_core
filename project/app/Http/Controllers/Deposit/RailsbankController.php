@@ -139,8 +139,9 @@ class RailsbankController extends Controller
                   $amountToAdd = $deposit_data['amount']/$currency->value;
       
                   $user = auth()->user();
-                  $user->balance += $amountToAdd;
-                  $user->save();
+                  $currency_id = $deposit_data['currency_id']?$deposit_data['currency_id']:Currency::whereIsDefault(1)->first()->id;
+                  user_wallet_increment($user->id, $currency_id, $amountToAdd);
+                
 
                   if($gs->is_smtp == 1)
                   {

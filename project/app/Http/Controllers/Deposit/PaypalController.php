@@ -187,9 +187,9 @@ class PaypalController extends Controller
                     $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
                     mail($to,$subject,$msg,$headers);            
                 }
-
-                $user->balance += $deposit->amount;
-                $user->save();
+                $currency_id = Currency::whereIsDefault(1)->first()->id;
+                user_wallet_increment($user->id, $currency_id, $deposit->amount);
+               
 
                 $trans = new AppTransaction();
                 $trans->trnx = $deposit->deposit_number;

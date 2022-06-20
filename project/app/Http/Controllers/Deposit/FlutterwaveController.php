@@ -139,8 +139,8 @@ class FlutterwaveController extends Controller
                   $amountToAdd = $deposit_data['amount']/$currency->value;
       
                   $user = auth()->user();
-                  $user->balance += $amountToAdd;
-                  $user->save();
+                  user_wallet_increment($user->id, $currency->id, $amountToAdd);
+                 
 
                   if($gs->is_smtp == 1)
                   {

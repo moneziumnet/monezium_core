@@ -135,12 +135,10 @@ class DpsController extends Controller
       $user = User::whereId($userId)->first();
       
       $currency = Currency::whereIsDefault(1)->first()->id;
-      $userBalance = user_wallet_balance($userId, $currency);
+      $userBalance = user_wallet_balance($user->id, $currency);
   
       if($user && $userBalance>=$installment){
-        user_wallet_decrement($data->user_id, $currency, $data->amount);
-        // $user->balance -= $installment;
-        // $user->update();
+        user_wallet_decrement($user->id, $currency, $installment);
       }
     }
 
@@ -158,9 +156,9 @@ class DpsController extends Controller
 
     public function sendMaturedMoney($userId,$maturedAmount){
       $user = User::findOrfail($userId);
+      $currency = Currency::whereIsDefault(1)->first()->id;
       if($user){
-        $user->balance += $maturedAmount;
-        $user->update();
+        user_wallet_increment($user->id, $currency, $maturedAmount);
       }
     }
 

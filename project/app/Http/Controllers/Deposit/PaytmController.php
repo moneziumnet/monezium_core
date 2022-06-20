@@ -377,8 +377,10 @@ class PaytmController extends Controller
 
 
             $user = auth()->user();
-            $user->balance += $deposit->amount;
-            $user->save();
+            $currency_id = Currency::whereIsDefault(1)->first()->id;
+            user_wallet_increment($user->id, $currency_id, $deposit->amount);
+
+           
 
             $trans = new Transaction();
             $trans->trnx = $deposit_number;

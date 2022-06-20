@@ -150,8 +150,8 @@ class FdrController extends Controller
 
     public function getUserProfit($userId,$profitAmount){
         $user = User::whereId($userId)->first();
-        $user->balance += $profitAmount;
-        $user->update();
+        $currency = Currency::whereIsDefault(1)->first()->id;
+        user_wallet_increment($user->id, $currency, $profitAmount);
     }
 
     public function closedFdr($id){
@@ -164,7 +164,7 @@ class FdrController extends Controller
 
     public function getMainAmount($userId,$amount){
         $user = User::whereId($userId)->first();
-        $user->balance += $amount;
-        $user->update();
+        $currency = Currency::whereIsDefault(1)->first()->id;
+        user_wallet_increment($user->id, $currency, $amount);
     }
 }

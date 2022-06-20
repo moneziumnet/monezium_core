@@ -59,10 +59,10 @@ class WithdrawalController extends Controller
 
         if($withdraw->user_id){
             $user = $withdraw->user;
-            $wallet = Wallet::where('user_id',$withdraw->user_id)->where('user_type',1)->where('currency_id',$withdraw->currency_id)->firstOrFail();
-
-            $wallet->balance += $withdraw->total_amount;
-            $wallet->save();
+            //$wallet = Wallet::where('user_id',$withdraw->user_id)->where('user_type',1)->where('currency_id',$withdraw->currency_id)->firstOrFail();
+            user_wallet_increment($withdraw->user_id, $withdraw->currency_id, $withdraw->total_amount);
+            // $wallet->balance += $withdraw->total_amount;
+            // $wallet->save();
 
             $trnx              = new Transaction();
             $trnx->trnx        = str_rand();

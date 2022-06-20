@@ -49,7 +49,7 @@ class WithdrawalController extends Controller
 
         $charge      = chargeCalc($method,$request->amount);
         $finalAmount = numFormat($request->amount + $charge);
-
+        
         if($wallet->balance < $finalAmount){
             return back()->with('error','Insufficient balance');
         }

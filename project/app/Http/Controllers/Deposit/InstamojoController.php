@@ -102,8 +102,8 @@ class InstamojoController extends Controller
             $gs =  Generalsetting::findOrFail(1);
 
             $user = auth()->user();
-            $user->balance += $amountToAdd;
-            $user->save();
+            user_wallet_increment($user->id, $input['currency_id'], $amountToAdd);
+           
 
             $trans = new Transaction();
             $trans->trnx = $order_data['item_number'];
