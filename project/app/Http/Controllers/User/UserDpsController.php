@@ -97,7 +97,7 @@ class UserDpsController extends Controller
             
             return redirect()->route('user.dps.index')->with('success','DPS application submitted');
         }else{
-            return redirect()->back()->with('warning','You Don,t have sufficient balance');
+            return redirect()->route('user.dps.plan')->with('warning','You Don,t have sufficient balance');
         }
     }
 
