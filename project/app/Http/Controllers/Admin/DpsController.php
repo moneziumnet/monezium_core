@@ -133,9 +133,14 @@ class DpsController extends Controller
   
     public function takeLoanAmount($userId,$installment){
       $user = User::whereId($userId)->first();
-      if($user && $user->balance>=$installment){
-        $user->balance -= $installment;
-        $user->update();
+      
+      $currency = Currency::whereIsDefault(1)->first()->id;
+      $userBalance = user_wallet_balance($userId, $currency);
+  
+      if($user && $userBalance>=$installment){
+        user_wallet_decrement($data->user_id, $currency, $data->amount);
+        // $user->balance -= $installment;
+        // $user->update();
       }
     }
 

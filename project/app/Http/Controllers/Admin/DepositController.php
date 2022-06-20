@@ -71,8 +71,10 @@ class DepositController extends Controller
         }
   
         $user = User::findOrFail($data->user_id);
-        $user->balance += $data->amount;
-        $user->save();
+        $currency = Currency::whereIsDefault(1)->first()->id;
+        // $user->balance += $data->amount;
+        // $user->save();
+        user_wallet_increment($data->user_id, $currency, $data->amount);
 
         $trans = new Transaction();
         $trans->trnx = $data->deposit_number;
