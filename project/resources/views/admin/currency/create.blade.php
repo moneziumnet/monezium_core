@@ -59,14 +59,14 @@
             </select>
           </div>
 
-          <div class="form-group">
+          <!-- <div class="form-group">
             <label>@lang('Set As Default') </label>
             <select class="form-control" name="is_default" required>
               <option value="" selected>--@lang('Select')--</option>
               <option value="1">@lang('Yes')</option>
               <option value="0">@lang('No')</option>
             </select>
-          </div>
+          </div> -->
 
           <div class="form-group">
             <label>@lang('Status') </label>
