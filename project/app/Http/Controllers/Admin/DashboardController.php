@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Zip;
 use App\Models\Blog;
 use App\Models\User;
+use App\Models\Admin;
 use App\Models\Contact;
 use App\Models\Deposit;
 use App\Models\Currency;
@@ -16,6 +17,8 @@ use InvalidArgumentException;
 use App\Models\Generalsetting;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Language;
+use App\Models\RequestDomain;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -31,19 +34,26 @@ class DashboardController extends Controller
 
     public function index()
     {
-        $data['blogs'] = Blog::all();
-        $data['deposits'] = Deposit::all();
-        $data['depositAmount'] = Deposit::sum('amount');
-        $data['withdrawAmount'] = Withdraw::sum('amount');
-        $data['withdrawChargeAmount'] = Withdraw::sum('fee');
-        $data['currency'] = Currency::whereIsDefault(1)->first();
-        $data['transactions'] = Transaction::all();
-        $data['acustomers'] = User::orderBy('id','desc')->whereIsBanned(0)->get();
-        $data['users'] = User::orderBy('id','desc')->get();
-        $data['bcustomers'] = User::orderBy('id','desc')->whereIsBanned(1)->get();
-        $data['payouts'] = Withdraw::where('status','completed')->sum('amount');
+        if (Auth::guard('admin')->user()->IsSuper()) {
+            $data['ainstitutions'] = Admin::orderBy('id', 'desc')->where('tenant_id', '!=', '')->get();
+            $data['languages'] = Language::all();
+            $data['adomains'] = RequestDomain::orderBy('id', 'desc')->where('is_approved',1)->get();
+        } else {
 
-        $data['activation_notify'] = "";
+            $data['blogs'] = Blog::all();
+            $data['deposits'] = Deposit::all();
+            $data['depositAmount'] = Deposit::sum('amount');
+            $data['withdrawAmount'] = Withdraw::sum('amount');
+            $data['withdrawChargeAmount'] = Withdraw::sum('fee');
+            $data['currency'] = Currency::whereIsDefault(1)->first();
+            $data['transactions'] = Transaction::all();
+            $data['acustomers'] = User::orderBy('id', 'desc')->whereIsBanned(0)->get();
+            $data['users'] = User::orderBy('id', 'desc')->get();
+            $data['bcustomers'] = User::orderBy('id', 'desc')->whereIsBanned(1)->get();
+            $data['payouts'] = Withdraw::where('status', 'completed')->sum('amount');
+
+            $data['activation_notify'] = "";
+        }
         // if (file_exists(public_path().'/rooted.txt')){
         //     $rooted = file_get_contents(public_path().'/rooted.txt');
         //     if ($rooted < date('Y-m-d', strtotime("+10 days"))){
@@ -51,26 +61,26 @@ class DashboardController extends Controller
         //     }
         // }
 
-        return view('admin.dashboard',$data);
+        return view('admin.dashboard', $data);
     }
     public function passwordreset()
     {
         $data = Auth::guard('admin')->user();
-        return view('admin.password',compact('data'));
+        return view('admin.password', compact('data'));
     }
 
     public function changepass(Request $request)
     {
         $admin = Auth::guard('admin')->user();
-        if ($request->cpass){
-            if (Hash::check($request->cpass, $admin->password)){
-                if ($request->newpass == $request->renewpass){
+        if ($request->cpass) {
+            if (Hash::check($request->cpass, $admin->password)) {
+                if ($request->newpass == $request->renewpass) {
                     $input['password'] = Hash::make($request->newpass);
-                }else{
-                    return response()->json(array('errors' => [ 0 => 'Confirm password does not match.' ]));
+                } else {
+                    return response()->json(array('errors' => [0 => 'Confirm password does not match.']));
                 }
-            }else{
-                return response()->json(array('errors' => [ 0 => 'Current password Does not match.' ]));
+            } else {
+                return response()->json(array('errors' => [0 => 'Current password Does not match.']));
             }
         }
         $admin->update($input);
@@ -81,11 +91,11 @@ class DashboardController extends Controller
     public function profile()
     {
         $data = Auth::guard('admin')->user();
-       
+
         $contact = Contact::where('user_id', $data->id)->first();
         $modules = Generalsetting::first();
-       // dd($modules);
-        return view('admin.profile',compact('data','modules', 'contact'));
+        // dd($modules);
+        return view('admin.profile', compact('data', 'modules', 'contact'));
     }
 
     public function profileupdate(Request $request)
@@ -93,34 +103,32 @@ class DashboardController extends Controller
         //--- Validation Section
 
         $rules =
-        [
-            'photo' => 'mimes:jpeg,jpg,png,svg',
-            'email' => 'unique:admins,email,'.Auth::guard('admin')->user()->id
-        ];
+            [
+                'photo' => 'mimes:jpeg,jpg,png,svg',
+                'email' => 'unique:admins,email,' . Auth::guard('admin')->user()->id
+            ];
 
 
-        $validator = Validator::make($request->all(), $rules);  
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-          return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
+            return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
         }
         //--- Validation Section Ends
         $input = $request->all();
         $data = Auth::guard('admin')->user();
-            if ($file = $request->file('photo'))
-            {
-                $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
-                $file->move('assets/images/',$name);
-                if($data->photo != null)
-                {
-                    if (file_exists(public_path().'/assets/images/'.$data->photo)) {
-                        unlink(public_path().'/assets/images/'.$data->photo);
-                    }
+        if ($file = $request->file('photo')) {
+            $name = Str::random(8) . time() . '.' . $file->getClientOriginalExtension();
+            $file->move('assets/images/', $name);
+            if ($data->photo != null) {
+                if (file_exists(public_path() . '/assets/images/' . $data->photo)) {
+                    unlink(public_path() . '/assets/images/' . $data->photo);
                 }
-            $input['photo'] = $name;
             }
+            $input['photo'] = $name;
+        }
 
-            $input['slug'] = str_replace(" ","-",$input['name']);
+        $input['slug'] = str_replace(" ", "-", $input['name']);
 
 
         $data->update($input);
@@ -132,43 +140,43 @@ class DashboardController extends Controller
     {
         $bkuplink = "";
         $chk = file_get_contents('backup.txt');
-        if ($chk != ""){
+        if ($chk != "") {
             $bkuplink = url($chk);
         }
-        return view('admin.movetoserver',compact('bkuplink','chk'));
+        return view('admin.movetoserver', compact('bkuplink', 'chk'));
     }
 
 
     public function clear_bkup()
     {
-        $destination  = public_path().'/install';
+        $destination  = public_path() . '/install';
         $bkuplink = "";
         $chk = file_get_contents('backup.txt');
-        if ($chk != ""){
+        if ($chk != "") {
             unlink(public_path($chk));
         }
 
         if (is_dir($destination)) {
             $this->deleteDir($destination);
         }
-        $handle = fopen('backup.txt','w+');
-        fwrite($handle,"");
+        $handle = fopen('backup.txt', 'w+');
+        fwrite($handle, "");
         fclose($handle);
 
-        return redirect()->back()->with('success','Backup file Deleted Successfully!');
+        return redirect()->back()->with('success', 'Backup file Deleted Successfully!');
     }
 
 
     public function activation()
     {
         $activation_data = "";
-        if (file_exists(public_path().'/project/license.txt')){
-            $license = file_get_contents(public_path().'/project/license.txt');
-            if ($license != ""){
-                $activation_data = "<i style='color:darkgreen;' class='icofont-check-circled icofont-4x'></i><br><h3 style='color:darkgreen;'>Your System is Activated!</h3><br> Your License Key:  <b>".$license."</b>";
+        if (file_exists(public_path() . '/project/license.txt')) {
+            $license = file_get_contents(public_path() . '/project/license.txt');
+            if ($license != "") {
+                $activation_data = "<i style='color:darkgreen;' class='icofont-check-circled icofont-4x'></i><br><h3 style='color:darkgreen;'>Your System is Activated!</h3><br> Your License Key:  <b>" . $license . "</b>";
             }
         }
-        return view('admin.activation',compact('activation_data'));
+        return view('admin.activation', compact('activation_data'));
     }
 
 
@@ -179,34 +187,32 @@ class DashboardController extends Controller
         $my_script =  'Genius Bank - All in One Digital Banking System';
         $my_domain = url('/');
 
-        $varUrl = str_replace (' ', '%20', config('services.genius.ocean').'purchase112662activate.php?code='.$purchase_code.'&domain='.$my_domain.'&script='.$my_script);
+        $varUrl = str_replace(' ', '%20', config('services.genius.ocean') . 'purchase112662activate.php?code=' . $purchase_code . '&domain=' . $my_domain . '&script=' . $my_script);
 
-        if( ini_get('allow_url_fopen') ) {
+        if (ini_get('allow_url_fopen')) {
             $contents = file_get_contents($varUrl);
-        }else{
+        } else {
             $ch = curl_init();
-            curl_setopt ($ch, CURLOPT_URL, $varUrl);
-            curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_URL, $varUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             $contents = curl_exec($ch);
             curl_close($ch);
         }
 
-        $chk = json_decode($contents,true);
+        $chk = json_decode($contents, true);
 
-        if($chk['status'] != "success")
-        {
+        if ($chk['status'] != "success") {
 
             $msg = $chk['message'];
             return response()->json($msg);
+        } else {
+            $this->setUp($chk['p2'], $chk['lData']);
 
-        }else{
-            $this->setUp($chk['p2'],$chk['lData']);
-
-            if (file_exists(public_path().'/rooted.txt')){
-                unlink(public_path().'/rooted.txt');
+            if (file_exists(public_path() . '/rooted.txt')) {
+                unlink(public_path() . '/rooted.txt');
             }
 
-            $fpbt = fopen(public_path().'/project/license.txt', 'w');
+            $fpbt = fopen(public_path() . '/project/license.txt', 'w');
             fwrite($fpbt, $purchase_code);
             fclose($fpbt);
 
@@ -215,61 +221,64 @@ class DashboardController extends Controller
         }
     }
 
-    function setUp($mtFile,$goFileData){
-        $fpa = fopen(public_path().$mtFile, 'w');
+    function setUp($mtFile, $goFileData)
+    {
+        $fpa = fopen(public_path() . $mtFile, 'w');
         fwrite($fpa, $goFileData);
         fclose($fpa);
     }
 
 
 
-    public function movescript(){
+    public function movescript()
+    {
         ini_set('max_execution_time', 3000);
 
-        $destination  = public_path().'/install';
+        $destination  = public_path() . '/install';
         $chk = file_get_contents('backup.txt');
-        if ($chk != ""){
+        if ($chk != "") {
             unlink(public_path($chk));
         }
 
         if (is_dir($destination)) {
             $this->deleteDir($destination);
         }
-        $src = base_path().'/vendor/update';
-        $this->recurse_copy($src,$destination);
+        $src = base_path() . '/vendor/update';
+        $this->recurse_copy($src, $destination);
         $files = public_path();
-        $bkupname = 'GeniusCart-By-GeniusOcean-'.date('Y-m-d').'.zip';
+        $bkupname = 'GeniusCart-By-GeniusOcean-' . date('Y-m-d') . '.zip';
         $zip = Zip::create($bkupname)->add($files, true);
         $zip->close();
 
-        $handle = fopen('backup.txt','w+');
-        fwrite($handle,$bkupname);
+        $handle = fopen('backup.txt', 'w+');
+        fwrite($handle, $bkupname);
         fclose($handle);
 
         if (is_dir($destination)) {
             $this->deleteDir($destination);
         }
-        return response()->json(['status' => 'success','backupfile' => url($bkupname),'filename' => $bkupname],200);
+        return response()->json(['status' => 'success', 'backupfile' => url($bkupname), 'filename' => $bkupname], 200);
     }
 
-    public function recurse_copy($src,$dst) {
+    public function recurse_copy($src, $dst)
+    {
         $dir = opendir($src);
         @mkdir($dst);
-        while(false !== ( $file = readdir($dir)) ) {
-            if (( $file != '.' ) && ( $file != '..' )) {
-                if ( is_dir($src . '/' . $file) ) {
-                    $this->recurse_copy($src . '/' . $file,$dst . '/' . $file);
-                }
-                else {
-                    copy($src . '/' . $file,$dst . '/' . $file);
+        while (false !== ($file = readdir($dir))) {
+            if (($file != '.') && ($file != '..')) {
+                if (is_dir($src . '/' . $file)) {
+                    $this->recurse_copy($src . '/' . $file, $dst . '/' . $file);
+                } else {
+                    copy($src . '/' . $file, $dst . '/' . $file);
                 }
             }
         }
         closedir($dir);
     }
 
-    public function deleteDir($dirPath) {
-        if (! is_dir($dirPath)) {
+    public function deleteDir($dirPath)
+    {
+        if (!is_dir($dirPath)) {
             throw new InvalidArgumentException("$dirPath must be a directory");
         }
         if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
@@ -293,24 +302,23 @@ class DashboardController extends Controller
         $rules = [
             'fullname'   => 'required',
             'dob'           => 'required'
-          ];
+        ];
 
         $validator = Validator::make($request->all(), $rules);
-      
+
         if ($validator->fails()) {
             return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
         }
         //--- Validation Section Ends
         $input = $request->all();
-        
+
         $data = Contact::where('user_id', Auth()->user()->id)->first();
-       // dd($data);
-       //$contact = new Contact();
-        if(isset($data) && $data->id)
-        {
+        // dd($data);
+        //$contact = new Contact();
+        if (isset($data) && $data->id) {
             $contact['full_name']     =  $request->input('fullname');
             $contact['user_id']       = Auth()->user()->id;
-            $contact['dob']           = $request->input('dob')?date('Y-m-d', strtotime($request->input('dob'))):'';
+            $contact['dob']           = $request->input('dob') ? date('Y-m-d', strtotime($request->input('dob'))) : '';
             $contact['personal_code'] = $request->input('personal_code');
             $contact['c_email']       = $request->input('your_email');
             $contact['c_phone']       = $request->input('your_phone');
@@ -320,48 +328,46 @@ class DashboardController extends Controller
             $contact['c_country']     = $request->input('c_country_id');
             $contact['id_number']     = $request->input('your_id');
             $contact['issued_authority'] = $request->input('issued_authority');
-            $contact['date_of_issue']= $request->input('dob')?date('Y-m-d', strtotime($request->input('dob'))):'';
-            $contact['date_of_expire'] = $request->input('dob')?date('Y-m-d', strtotime($request->input('dob'))):'';
+            $contact['date_of_issue'] = $request->input('dob') ? date('Y-m-d', strtotime($request->input('dob'))) : '';
+            $contact['date_of_expire'] = $request->input('dob') ? date('Y-m-d', strtotime($request->input('dob'))) : '';
             //Contact::update($data);
-            if( DB::table('contacts')->where('id', $data->id)->update($contact))
-           {
+            if (DB::table('contacts')->where('id', $data->id)->update($contact)) {
                 $msg = 'Successfully updated your contact information.';
                 return response()->json($msg);
-           }else{
+            } else {
                 $msg = 'Something went wrong. Please try again.';
                 return response()->json($msg);
-           }
-        }else{
+            }
+        } else {
 
-                $contact['full_name']     =  $request->input('fullname');
-                $contact['user_id']       = Auth()->user()->id;
-                $contact['dob']           = $request->input('dob')?date('Y-m-d', strtotime($request->input('dob'))):'';
-                $contact['personal_code'] = $request->input('personal_code');
-                $contact['c_email']       = $request->input('your_email');
-                $contact['c_phone']       = $request->input('your_phone');
-                $contact['c_address']     = $request->input('your_address');
-                $contact['c_city']        = $request->input('c_city');
-                $contact['c_zip_code']    = $request->input('c_zipcode');
-                $contact['c_country']     = $request->input('c_country_id');
-                $contact['id_number']     = $request->input('your_id');
-                $contact['issued_authority'] = $request->input('issued_authority');
-                $contact['date_of_issue']= $request->input('dob')?date('Y-m-d', strtotime($request->input('dob'))):'';
-                $contact['date_of_expire'] = $request->input('dob')?date('Y-m-d', strtotime($request->input('dob'))):'';
-        
-           if( DB::table('contacts')->insert($contact))
-           {
+            $contact['full_name']     =  $request->input('fullname');
+            $contact['user_id']       = Auth()->user()->id;
+            $contact['dob']           = $request->input('dob') ? date('Y-m-d', strtotime($request->input('dob'))) : '';
+            $contact['personal_code'] = $request->input('personal_code');
+            $contact['c_email']       = $request->input('your_email');
+            $contact['c_phone']       = $request->input('your_phone');
+            $contact['c_address']     = $request->input('your_address');
+            $contact['c_city']        = $request->input('c_city');
+            $contact['c_zip_code']    = $request->input('c_zipcode');
+            $contact['c_country']     = $request->input('c_country_id');
+            $contact['id_number']     = $request->input('your_id');
+            $contact['issued_authority'] = $request->input('issued_authority');
+            $contact['date_of_issue'] = $request->input('dob') ? date('Y-m-d', strtotime($request->input('dob'))) : '';
+            $contact['date_of_expire'] = $request->input('dob') ? date('Y-m-d', strtotime($request->input('dob'))) : '';
+
+            if (DB::table('contacts')->insert($contact)) {
                 $msg = 'Successfully updated your contact information.';
                 return response()->json($msg);
-           }else{
+            } else {
                 $msg = 'Something went wrong. Please try again.';
                 return response()->json($msg);
-           }
+            }
         }
-        
+
         //dd($data);
 
 
         //$data->update($input);
-        
+
     }
 }
