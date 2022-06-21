@@ -113,11 +113,14 @@ class RegisterController extends Controller
                 if (Session::has('affilate')) {
 
                     $mainUser = User::findOrFail(Session::get('affilate'));
-                    $mainUser->balance += $gs->affilate_user;
-                    $mainUser->update();
+                    $currency = Currency::whereIsDefault(1)->first()->id;
+                    user_wallet_increment($mainUser->id, $currency, $gs->affilate_user);
+                    // $mainUser->balance += $gs->affilate_user;
+                    // $mainUser->update();
 
-                    $user->balance += $gs->affilate_new_user;
-                    $user->update();
+                    // $user->balance += $gs->affilate_new_user;
+                    // $user->update();
+                    user_wallet_increment($user->id, $currency, $gs->affilate_new_user);
 
                     $bonus = new ReferralBonus();
                     $bonus->from_user_id = $user->id;

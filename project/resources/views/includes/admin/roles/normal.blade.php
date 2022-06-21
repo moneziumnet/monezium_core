@@ -37,7 +37,7 @@
         <a class="collapse-item" href="{{ route('admin.withdraw.index') }}">{{ __('Withdraw Request') }} @if( DB::table('withdraws')->where('status','pending')->count() > 0)
         <span class="badge badge-sm badge-danger badge-counter">{{ DB::table('withdraws')->where('status','pending')->count() }}</span>@endif</a>
         {{-- <a class="collapse-item" href="{{ route('admin-withdraw-method-index') }}">{{ __('Withdraw Method') }}</a> --}}
-        <!-- <a class="collapse-item" href="{{ route('admin.user.bonus') }}">{{ __('Refferel Bonus') }}</a> -->
+        <a class="collapse-item" href="{{ route('admin.user.bonus') }}">{{ __('Refferel Bonus') }}</a>
       </div>
     </div>
   </li>
@@ -96,20 +96,6 @@
   </li>
   @endif
 
-  @if(Auth::guard('admin')->user()->sectionCheck('Management Deposit'))
-  <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#management_deposit" aria-expanded="true" aria-controls="collapseTable">
-      <i class="fas fa-money-check-alt"></i>
-    <span>{{ __('Management Deposit') }}</span>
-  </a>
-    <div id="management_deposit" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
-      <div class="bg-white py-2 collapse-inner rounded">
-        {{-- <a class="collapse-item" href="{{ route('admin.gateway') }}">{{ __('Gateways') }}</a> --}}
-        {{-- <a class="collapse-item" href="{{route('admin.deposit')}}">{{ __('Deposits') }}</a> --}}
-      </div>
-    </div>
-  </li>
-  @endif
 
   @if(Auth::guard('admin')->user()->sectionCheck('Management Withdraw'))
   <li class="nav-item">
