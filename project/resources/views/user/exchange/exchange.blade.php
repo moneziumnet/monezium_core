@@ -28,7 +28,7 @@
 <div class="page-body">
     <div class="container-xl">
         <div class="row row-deck row-cards">
-            <div class="col-12">
+            <!-- <div class="col-12"> -->
                 @includeIf('includes.flash')
                 <div class="card">
                 <div class="card-body">
@@ -113,7 +113,7 @@
                     </form>
                 </div>
                 </div>
-            </div>
+            <!-- </div> -->
         </div>
 
         <div class="row row-deck row-cards mt-3">

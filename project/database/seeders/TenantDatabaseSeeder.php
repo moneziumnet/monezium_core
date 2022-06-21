@@ -17,6 +17,7 @@ use App\Models\LoanPlan;
 use App\Models\Pagesetting;
 use App\Models\CustomerType;
 use App\Models\AdminLanguage;
+use App\Models\EmailTemplate;
 use App\Models\Generalsetting;
 use App\Models\Socialsetting;
 use App\Models\PaymentGateway;
@@ -148,6 +149,14 @@ class TenantDatabaseSeeder extends Seeder
             $c_type->save();
         }
 
+        // clone EmailTemplate table
+        $temps = tenancy()->central(function ($tenant) {
+            return EmailTemplate::all();
+        });
+        foreach ($temps as $temp) {
+            $temp = $temp->replicate();
+            $temp->save();
+        }
 
         Admin::create([
             'name' => $centralUser->name,
