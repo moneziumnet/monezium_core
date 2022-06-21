@@ -119,18 +119,21 @@ class MoneyRequestController extends Controller
         $data = MoneyRequest::findOrFail($id);
         $gs = Generalsetting::first();
     
+        $currency_id = Currency::whereIsDefault(1)->first()->id;
         $sender = User::whereId($data->receiver_id)->first();
         $receiver = User::whereId($data->user_id)->first();
 
-
-        if($data->amount > $sender->balance){
+        if($data->amount > user_wallet_balance($sender->id, $currency_id)){
             return back()->with('warning','You don,t have sufficient balance!');
         }
 
         $finalAmount = $data->amount - $data->cost;
 
-        $sender->decrement('balance',$data->amount);
-        $receiver->increment('balance',$finalAmount);
+        user_wallet_decrement($sender->id, $currency_id, $data->amount);
+        user_wallet_increment($receiver->id, $currency_id, $finalAmount);
+
+        // $sender->decrement('balance',$data->amount);
+        // $receiver->increment('balance',$finalAmount);        
 
         $data->update(['status'=>1]);
 
