@@ -135,7 +135,9 @@ class OtherBankController extends Controller
             // $trans->user_id = $user->id;
             $trans->save();
     
-            $user->decrement('balance',$finalAmount);
+            // $user->decrement('balance',$finalAmount);
+            $currency = defaultCurr();
+            user_wallet_decrement(auth()->id(),$currency->id,$finalAmount); 
             
             return redirect()->back()->with('success','Money Send successfully.');
 

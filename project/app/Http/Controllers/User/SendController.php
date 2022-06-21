@@ -69,6 +69,7 @@ class SendController extends Controller
             return redirect()->back()->with('unsuccess','Plan Date Expired.');
         }
 
+        $currency_id = Currency::whereIsDefault(1)->first()->id;
         $bank_plan = BankPlan::whereId($user->bank_plan_id)->first();
         $dailySend = BalanceTransfer::whereUserId(auth()->id())->whereDate('created_at', '=', date('Y-m-d'))->whereStatus(1)->sum('amount');
         $monthlySend = BalanceTransfer::whereUserId(auth()->id())->whereMonth('created_at', '=', date('m'))->whereStatus(1)->sum('amount');
@@ -81,11 +82,6 @@ class SendController extends Controller
             return redirect()->back()->with('unsuccess','Monthly send limit over.');
         }
         
-        if($request->amount > $user->balance){
-            return redirect()->back()->with('unsuccess','Insufficient Account Balance.');
-        }
-
-
         $gs = Generalsetting::first();
 
         if($request->account_number == $user->account_number){
@@ -96,11 +92,10 @@ class SendController extends Controller
             return redirect()->back()->with('unsuccess','Request Amount should be greater than this!');
         }
 
-        if($request->amount > $user->balance){
+        if($request->amount > user_wallet_balance(auth()->id(), $currency_id)){
             return redirect()->back()->with('unsuccess','Insufficient Balance.');
         }
         
-
         if($receiver = User::where('account_number',$request->account_number)->first()){
             $txnid = Str::random(4).time();
             $data = new BalanceTransfer();
@@ -113,8 +108,11 @@ class SendController extends Controller
             $data->status = 1;
             $data->save();
     
-            $receiver->increment('balance',$request->amount);
-            $user->decrement('balance',$request->amount);
+            // $receiver->increment('balance',$request->amount);
+            // $user->decrement('balance',$request->amount);
+
+            user_wallet_decrement($user->id, $currency_id, $request->amount);
+            user_wallet_increment($receiver->id, $currency_id, $request->amount);
             
             if(SaveAccount::whereUserId(auth()->id())->where('receiver_id',$data->receiver_id)->exists()){
                 return redirect()->route('send.money.create')->with('success','Money Send Successfully');

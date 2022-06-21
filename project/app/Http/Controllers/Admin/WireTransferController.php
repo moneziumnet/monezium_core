@@ -114,7 +114,10 @@ class WireTransferController extends Controller
         if($id2 == 2){
           $user = User::whereId($data->user_id)->first();
           if($user){
-            $user->increment('balance',$data->amount);
+            // $user->increment('balance',$data->amount);
+            $currency_id = Currency::whereIsDefault(1)->first()->id;
+            user_wallet_increment($user->id, $currency_id, $data->amount);
+
           }
         }
   

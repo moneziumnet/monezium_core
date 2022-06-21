@@ -3,20 +3,21 @@
 namespace App\Http\Controllers\Admin;
 
 use Datatables;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\Follow;
-use App\Models\Order;
-use App\Models\OrderedItem;
-use App\Models\Rating;
 use App\Models\User;
+use App\Models\Order;
+use App\Models\Follow;
+use App\Models\Rating;
 use App\Models\UserDps;
 use App\Models\UserFdr;
+use App\Models\Currency;
 use App\Models\UserLoan;
 use App\Models\Wishlist;
 use App\Models\Withdraw;
-use Illuminate\Support\Facades\Validator;
+use App\Models\OrderedItem;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -211,7 +212,9 @@ class UserController extends Controller
             $user = User::whereId($request->user_id)->first();
             if($user){
                 if($request->type == 'add'){
-                    $user->increment('balance',$request->amount);
+                    // $user->increment('balance',$request->amount);
+                    $currency_id = Currency::whereIsDefault(1)->first()->id;
+                    user_wallet_increment($user->id, $currency_id, $request->amount);
                     return redirect()->back()->with('message','User balance added');
                 }else{
                     $currency = Currency::whereIsDefault(1)->first()->id;
