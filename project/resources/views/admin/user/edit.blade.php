@@ -1,5 +1,110 @@
 @extends('layouts.admin')
+@section('styles')
+    <style type="text/css">
+        .ms-options-wrap,
+        .ms-options-wrap * {
+            box-sizing: border-box;
+        }
+.ms-options ul li{
+    list-style: none;
+    margin-left: -40px;
+}
 
+.ms-options-wrap > button:focus,
+.ms-options-wrap > button {
+    position: relative;
+    width: 100%;
+    text-align: left;
+    border: 1px solid #d1d3e2;
+    background-color: #fff;
+    padding: 5px 20px 5px 5px;
+    margin-top: 1px;
+    font-size: 13px;
+    color: #6e707e;
+    outline: none;
+    white-space: nowrap;
+}
+
+.ms-options-wrap > button:after {
+    content: ' ';
+    height: 0;
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    width: 0;
+    border: 6px solid rgba(0, 0, 0, 0);
+    border-top-color: #999;
+    margin-top: -3px;
+}
+
+.ms-options-wrap > .ms-options {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    margin-top: 1px;
+    margin-bottom: 20px;
+    background: white;
+    z-index: 2000;
+    border: 1px solid #d1d3e2;
+    text-align:left;
+}
+
+.ms-options-wrap > .ms-options > .ms-search input {
+    width: 100%;
+    padding: 4px 5px;
+    border: none;
+    border-bottom: 1px groove;
+    outline: none;
+}
+
+.ms-options-wrap > .ms-options .ms-selectall {
+    display: inline-block;
+    font-size: .9em;
+    text-transform: lowercase;
+    text-decoration: none;
+}
+.ms-options-wrap > .ms-options .ms-selectall:hover {
+    text-decoration: underline;
+}
+
+.ms-options-wrap > .ms-options > .ms-selectall.global {
+    margin: 4px 5px;
+}
+
+.ms-options-wrap > .ms-options > ul > li.optgroup {
+    padding: 5px;
+}
+.ms-options-wrap > .ms-options > ul > li.optgroup + li.optgroup {
+    border-top: 1px solid #aaa;
+}
+
+.ms-options-wrap > .ms-options > ul > li.optgroup .label {
+    display: block;
+    padding: 5px 0 0 0;
+    font-weight: bold;
+}
+
+.ms-options-wrap > .ms-options > ul label {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    padding: 2px 3px;
+    margin: 1px 0;
+}
+
+.ms-options-wrap > .ms-options > ul li.selected label,
+.ms-options-wrap > .ms-options > ul label:hover {
+    background-color: #efefef;
+}
+
+.ms-options-wrap > .ms-options > ul input[type="checkbox"] {
+    margin-right: 5px;
+    position: absolute;
+    left: 4px;
+    top: 7px;
+}
+    </style>
+@endsection
 @section('content')
 
 <div class="card">
@@ -66,8 +171,8 @@
                             <div class="form-group">
                                 <label for="inp-name">{{ __('Type') }}</label>
                 
-                                <select class="select mb-3" name="user_type[]" id="user_type">
-                                    <option value="">{{ __('Select Customer Type') }}</option>
+                                <select class="select mb-3" name="user_type[]" multiple  id="user_type">
+                                    {{-- <option value="">{{ __('Select Customer Type') }}</option> --}}
                                     @foreach(DB::table('customer_types')->orderBy('type_name','asc')->get() as $c_type)
                                     <option value="{{ $c_type->id }}" @if(in_array($c_type->id, $userType)) selected @endif>{{ $c_type->type_name }}</option>
                                     @endforeach
@@ -117,3 +222,15 @@
 <!--Row-->
 
 @endsection
+
+@section('scripts')
+<script src="{{ asset('assets/admin/js/multiselect.js') }}"></script>
+
+<script type="text/javascript">
+    $('#user_type').multiselect({
+        columns: 1,
+        placeholder: 'Select User Type'
+    });
+</script>
+@endsection
+
