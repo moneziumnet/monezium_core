@@ -111,9 +111,8 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapUserRoutes()
     {
         foreach ($this->centralDomains() as $domain) {
-            Route::prefix('web')
+            Route::middleware('web')
                 ->domain($domain)
-                ->middleware('user')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/userRoute.php'));
         }
