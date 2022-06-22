@@ -27,6 +27,6 @@ Route::post('/contact', [FrontendController::class, 'contactemail'])->name('fron
 Route::get('/faq', [FrontendController::class, 'faq'])->name('front.faq');
 Route::get('/{slug}', [FrontendController::class, 'page'])->name('front.page');
 Route::post('/subscriber', [FrontendController::class, 'subscriber'])->name('front.subscriber');
-// Route::get('view-invoice/{number}',   [ManageInvoiceController::class,'invoiceView'])->name('invoice.view');
+Route::get('view-invoice/{number}',   [ManageInvoiceController::class,'invoiceView'])->name('invoice.view');
 Route::get('/currency/{id}', [FrontendController::class, 'currency'])->name('front.currency');
 Route::get('/language/{id}', [FrontendController::class, 'language'])->name('front.language');
