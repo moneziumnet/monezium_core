@@ -63,7 +63,8 @@ Route::prefix('user')->group(function() {
 
     Route::get('/domain-register', [RegisterController::class,'showDomainRegisterForm'])->name('user.domain.register');
     Route::post('/domain-register', [RegisterController::class,'domainRegister'])->name('user.domain.register.submit');
-    Route::get('/institution-profile', [RegisterController::class,'institutionProfile'])->name('user.institution.profile');
+    Route::get('/institution-profile/{id}', [RegisterController::class,'institutionProfile'])->name('user.institution.profile');
+    Route::post('/institution-profile/{id}/update', [RegisterController::class,'institutionProfileStore'])->name('user.institution.profile.submit');
 
     Route::get('/register/verify/{token}', [RegisterController::class,'token'])->name('user.register.token');  
   

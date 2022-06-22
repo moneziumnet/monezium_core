@@ -19,6 +19,7 @@ use Illuminate\Support\Carbon;
 use App\Models\UserSubscription;
 use PHPMailer\PHPMailer\PHPMailer;
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Input;
 
@@ -39,9 +40,10 @@ class RegisterController extends Controller
         return view('user.domainregister');
     }
 
-    public function institutionProfile()
+    public function institutionProfile($id)
     {
-        return view('user.profileinstitution');
+        $data = Admin::findOrFail($id);
+        return view('user.profileinstitution', compact('data'));
     }
 
     public function domainRegister(Request $request)
@@ -66,8 +68,36 @@ class RegisterController extends Controller
         $domain->domain_name = $request->domains;
         $domain->type = 'Admin';
         $domain->save();
-        return response()->json(route('user.institution.profile'));
-        // return response()->json(1);
+
+        $insAdmin = new Admin();
+        $insAdmin->name = $request->name;
+        $insAdmin->email = $request->email;
+        $insAdmin->phone = $request->phone;
+        $insAdmin->password = Hash::make($request->password);
+        $insAdmin->save();
+
+        $msg = 'Registed Successfully.'.'<a href="'.route("user.institution.profile", $insAdmin->id).'">Go Inside Profile</a>';
+        return response()->json($msg);
+    }
+
+    public function institutionProfileStore(Request $request, $id)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name' => 'required',
+                'email' => 'required|email',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
+        }
+        $insAdmin = Admin::findOrFail($id);
+        $input = $request->all();
+        $insAdmin->update($input);
+        // $msg = __('Information Updated Successfully.');
+        // return response()->json($msg);
+        return redirect()->back()->with('success', __('Information Updated Successfully.'));
     }
 
     public function register(Request $request)

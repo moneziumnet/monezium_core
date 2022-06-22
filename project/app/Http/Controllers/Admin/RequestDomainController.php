@@ -204,7 +204,7 @@ class RequestDomainController extends Controller
             $request->all(),
             [
                 'name' => 'required',
-                'email' => 'required|email|unique:admins,email,',
+                'email' => 'required|email',
                 'role_id'=> 'required',
                 'domains' => 'required|unique:domains,domain',
             ]
@@ -215,9 +215,17 @@ class RequestDomainController extends Controller
         $input['name'] = $request->name;
         $input['email'] = $request->email;
         $input['password'] = $request->password;
-        $input['phone'] = '';
         $input['role_id'] = $request->role_id;
-        $admin = Admin::create($input);
+
+        $admin = Admin::where('email', $request->email)->first();
+        
+        if ($admin){
+            $admin->update($input);
+        }
+        else {
+            $input['phone'] = '';
+            $admin = Admin::create($input);
+        }
 
         if (tenant('id') == null) {
             try {
