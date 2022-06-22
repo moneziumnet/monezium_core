@@ -31,9 +31,9 @@
                 <li class="nav-item">
                     <a class="nav-link" id="four-tab" data-toggle="tab" href="#four" role="tab" aria-controls="Four" aria-selected="false">Transaction</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="five-tab" data-toggle="tab" href="#contact_form" role="tab" aria-controls="Four" aria-selected="false">Transaction</a>
-                </li>
+                {{-- <li class="nav-item">
+                    <a class="nav-link" id="five-tab" data-toggle="tab" href="#five" role="tab" aria-controls="Five" aria-selected="false">Transaction</a>
+                </li> --}}
               </ul>
             </div>
     
@@ -281,8 +281,8 @@
                     </table>
                   </div>             
               </div>
-              <div class="tab-pane fade p-3" id="contact_form" role="tabpanel" aria-labelledby="five-tab">
-                <form class="geniusform" action="{{ route('admin.profile.update-contact') }}" method="POST" enctype="multipart/form-data">
+              <div class="tab-pane fade p-3" id="five" role="tabpanel" aria-labelledby="five-tab">
+                <form class="geniusform" action="{{ route('admin.profile.update-contact')}}" method="POST" enctype="multipart/form-data">
 
                   @include('includes.admin.form-both')
 
@@ -290,6 +290,12 @@
 
 
                   <div class="row g-3">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="full-name">{{ __('Contact') }}</label>
+                      <input type="text" class="form-control" id="contact" name="contact" placeholder="{{ __('Contact') }}" value="{{isset($contact)?$contact->contact:''}}" required>
+                    </div>
+                  </div>
                   <div class="col-md-6">
                     <div class="form-group">
                       <label for="full-name">{{ __('Name') }}</label>
@@ -433,7 +439,7 @@
     });
     $(function() {
         $(".btn-area").append('<div class="col-sm-12 col-md-4 pr-3 text-right">'+
-            '<a class="btn btn-primary" id="five-tab" href="#contact_form" role="tab" aria-controls="Five" aria-selected="false">'+
+          '<a class="btn btn-primary nav-link" id="five-tab" data-toggle="tab" href="#five" role="tab" aria-controls="Five" aria-selected="false">'+
         '<i class="fas fa-plus"></i> {{__('Add New Contact')}}'+
         '</a>'+
         '</div>');
