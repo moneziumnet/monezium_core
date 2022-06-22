@@ -31,6 +31,9 @@
                 <li class="nav-item">
                     <a class="nav-link" id="four-tab" data-toggle="tab" href="#four" role="tab" aria-controls="Four" aria-selected="false">Transaction</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="five-tab" data-toggle="tab" href="#contact_form" role="tab" aria-controls="Four" aria-selected="false">Transaction</a>
+                </li>
               </ul>
             </div>
     
@@ -123,7 +126,22 @@
               </div>
 
               <div class="tab-pane fade p-3" id="two" role="tabpanel" aria-labelledby="two-tab">
-                <form class="geniusform" action="{{ route('admin.profile.update-contact') }}" method="POST" enctype="multipart/form-data">
+                    <div class="table-responsive p-2">
+                      <table id="geniustablelist" class="table table-hover dt-responsive" cellspacing="0" width="100%">
+                        <thead class="thead-light">
+                        <tr>
+                            <th>{{__('Contact')}}</th>
+                            <th>{{__('Name')}}</th>
+                            <th>{{__('Email')}}</th>
+                            <th>{{__('Address')}}</th>
+                            <th>{{__('Phone')}}</th>
+                            <th>{{__('Options')}}</th>
+                        </tr>      
+                        </thead>
+                      </table>
+                    </div>
+
+                {{-- <form class="geniusform" action="{{ route('admin.profile.update-contact') }}" method="POST" enctype="multipart/form-data">
 
                     @include('includes.admin.form-both')
 
@@ -221,7 +239,7 @@
 
                     <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Submit') }}</button>
 
-                </form>             
+                </form>              --}}
               </div>
               
               <div class="tab-pane fade p-3" id="three" role="tabpanel" aria-labelledby="three-tab">
@@ -243,122 +261,6 @@
                     @endforeach
                 @endforeach
                 </div> 
-                  {{-- <div class="col-md-6">
-                      <div class="form-group">
-                        <div class="custom-control custom-switch">
-                          <input type="checkbox" name="user_module[]" value="DPS" {{ $modules->moduleCheck('DPS') ? 'checked' : '' }} class="custom-control-input" id="DPS">
-                          <label class="custom-control-label" for="DPS">{{__('DPS')}}</label>
-                          </div>
-                      </div>
-                  </div>
-      
-                  <div class="col-md-6">
-                      <div class="form-group">
-                        <div class="custom-control custom-switch">
-                          <input type="checkbox" name="user_module[]" value="FDR" {{ $modules->moduleCheck('FDR') ? 'checked' : '' }} class="custom-control-input" id="FDR">
-                          <label class="custom-control-label" for="FDR">{{__('FDR')}}</label>
-                          </div>
-                      </div>
-                  </div>
-      
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <div class="custom-control custom-switch">
-                        <input type="checkbox" name="user_module[]" value="Request Money" {{ $modules->moduleCheck('Request Money') ? 'checked' : '' }} class="custom-control-input" id="Request Money">
-                        <label class="custom-control-label" for="Request Money">{{__('Request Money')}}</label>
-                        </div>
-                    </div>
-                  </div>
-      
-                  <div class="col-md-6">
-                      <div class="form-group">
-                        <div class="custom-control custom-switch">
-                          <input type="checkbox" name="user_module[]" value="Deposit" {{ $modules->moduleCheck('Deposit') ? 'checked' : '' }} class="custom-control-input" id="Deposit">
-                          <label class="custom-control-label" for="Deposit">{{__('Deposit')}}</label>
-                          </div>
-                      </div>
-                  </div>
-      
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <div class="custom-control custom-switch">
-                        <input type="checkbox" name="user_module[]" value="Wire Transfer" {{ $modules->moduleCheck('Wire Transfer') ? 'checked' : '' }} class="custom-control-input" id="Wire Transfer">
-                        <label class="custom-control-label" for="Wire Transfer">{{__('Wire Transfer')}}</label>
-                        </div>
-                    </div>
-                  </div>
-      
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <div class="custom-control custom-switch">
-                        <input type="checkbox" name="user_module[]" value="Transfer" {{ $modules->moduleCheck('Transfer') ? 'checked' : '' }} class="custom-control-input" id="Transfer">
-                        <label class="custom-control-label" for="Transfer">{{__('Transfer')}}</label>
-                        </div>
-                    </div>
-                  </div>
-      
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <div class="custom-control custom-switch">
-                        <input type="checkbox" name="user_module[]" value="Withdraw" {{ $modules->moduleCheck('Withdraw') ? 'checked' : '' }} class="custom-control-input" id="Withdraw">
-                        <label class="custom-control-label" for="Withdraw">{{__('Withdraw')}}</label>
-                        </div>
-                    </div>
-                  </div>
-      
-                  <div class="col-md-6">
-                      <div class="form-group">
-                        <div class="custom-control custom-switch">
-                          <input type="checkbox" name="user_module[]" value="Pricing Plan" {{ $modules->moduleCheck('Pricing Plan') ? 'checked' : '' }} class="custom-control-input" id="pricing_plan">
-                          <label class="custom-control-label" for="pricing_plan">{{__('Pricing Plan')}}</label>
-                          </div>
-                      </div>
-                  </div>
-                  
-                  <div class="col-md-6">
-                      <div class="form-group">
-                        <div class="custom-control custom-switch">
-                          <input type="checkbox" name="user_module[]" value="Voucher" {{ $modules->moduleCheck('Voucher') ? 'checked' : '' }} class="custom-control-input" id="voucher">
-                          <label class="custom-control-label" for="voucher">{{__('Voucher')}}</label>
-                          </div>
-                      </div>
-                  </div>
-                  
-                  <div class="col-md-6">
-                      <div class="form-group">
-                        <div class="custom-control custom-switch">
-                          <input type="checkbox" name="user_module[]" value="Invoice" {{ $modules->moduleCheck('Invoice') ? 'checked' : '' }} class="custom-control-input" id="invoice">
-                          <label class="custom-control-label" for="invoice">{{__('Invoice')}}</label>
-                          </div>
-                      </div>
-                  </div>
-      
-                  <div class="col-md-6">
-                      <div class="form-group">
-                        <div class="custom-control custom-switch">
-                          <input type="checkbox" name="user_module[]" value="Escrow" {{ $modules->moduleCheck('Escrow') ? 'checked' : '' }} class="custom-control-input" id="escrow">
-                          <label class="custom-control-label" for="escrow">{{__('Escrow')}}</label>
-                          </div>
-                      </div>
-                  </div>
-                  
-                  <div class="col-md-6">
-                      <div class="form-group">
-                        <div class="custom-control custom-switch">
-                          <input type="checkbox" name="user_module[]" value="Exchange Money" {{ $modules->moduleCheck('Exchange Money') ? 'checked' : '' }} class="custom-control-input" id="exchange-money">
-                          <label class="custom-control-label" for="exchange-money">{{__('Exchange Money')}}</label>
-                          </div>
-                      </div>
-                  </div>
-      
-                  <div class="col-md-6">
-                      <div class="form-group">
-                        <div class="custom-control custom-switch">
-                          <input type="checkbox" name="user_module[]" value="More" {{ $modules->moduleCheck('More') ? 'checked' : '' }} class="custom-control-input" id="more">
-                          <label class="custom-control-label" for="more">{{__('More')}}</label>
-                          </div>
-                      </div>
-                  </div>--}}
                   
              
               </div>
@@ -379,7 +281,107 @@
                     </table>
                   </div>             
               </div>
-    
+              <div class="tab-pane fade p-3" id="contact_form" role="tabpanel" aria-labelledby="five-tab">
+                <form class="geniusform" action="{{ route('admin.profile.update-contact') }}" method="POST" enctype="multipart/form-data">
+
+                  @include('includes.admin.form-both')
+
+                  {{ csrf_field() }}
+
+
+                  <div class="row g-3">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="full-name">{{ __('Name') }}</label>
+                      <input type="text" class="form-control" id="full_name" name="fullname" placeholder="{{ __('Enter Name') }}" value="{{isset($contact)?$contact->full_name:''}}" required>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="dob">{{ __('Date of Birth') }}</label>
+                      <input type="text" class="form-control datepicker" id="dob" data-provide="datepicker" readonly data-date-format="dd-mm-yyyy" name="dob" placeholder="{{ __('dd-mm-yyyy') }}"  value="{{isset($contact)?$contact->dob?date('d-m-Y', strtotime($contact->dob)):'':''}}" required>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="personal-code">{{ __('Personal Code/Number') }}</label>
+                      <input type="text" class="form-control" id="personal-code" name="personal_code" placeholder="{{ __('Enter Personal Code/Number') }}" value="{{isset($contact)?$contact->personal_code:''}}">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="your-email">{{ __('Your Email') }}</label>
+                      <input type="text" class="form-control" id="your-email" name="your_email" placeholder="{{ __('Enter Your Email') }}" value="{{isset($contact)?$contact->c_email:''}}">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="your-phone">{{ __('Your Phone') }}</label>
+                      <input type="text" class="form-control" id="your-phone" name="your_phone" placeholder="{{ __('Enter Phone Number') }}" value="{{isset($contact)?$contact->c_phone:''}}">
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="your-address">{{ __('Address') }}</label>
+                      <input type="text" class="form-control" id="your-address" name="your_address" placeholder="{{ __('Enter Address') }}" value="{{isset($contact)?$contact->c_address:''}}">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="c_city">{{ __('Your City') }}</label>
+                      <input type="text" class="form-control" id="c_city" name="c_city" placeholder="{{ __('Enter City') }}" value="{{isset($contact)?$contact->c_city:''}}">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="c_zipcode">{{ __('Zip Code') }}</label>
+                      <input type="text" class="form-control" id="c_zipcode" name="c_zipcode" placeholder="{{ __('Enter Zip Code') }}" value="{{isset($contact)?$contact->c_zip_code:''}}">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="your-country">{{ __('Select Country') }}</label>
+                      <select class="form-control mb-3" name="c_country_id">
+                        <option value="">{{ __('Select Country') }}</option>
+                        @foreach(DB::table('countries')->get() as $country)
+                        <option value="{{ $country->id }}" {{ isset($contact) && ($contact->c_country == $country->id) ? 'selected' : '' }}>{{ $country->name }}</option>
+                        @endforeach
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="your-id">{{ __('Your ID Number') }}</label>
+                      <input type="text" class="form-control" id="your-id" name="your_id" placeholder="{{ __('Enter Your ID Number') }}" value="{{isset($contact)?$contact->id_number:''}}">
+                    </div>
+                  </div>
+                 
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="your-id" required>{{ __('Provider Authority Name') }}</label>
+                      <input type="text" class="form-control" id="issued_authority" name="issued_authority" placeholder="{{ __('Enter Provider Authority Name') }}" value="{{isset($contact)?$contact->issued_authority:''}}">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="date-of-issue">{{ __('Date of Issue') }}</label>
+                      <input type="text" class="form-control datepicker" id="issue_date" name="issue_date" data-provide="datepicker" readonly data-date-format="dd-mm-yyyy" placeholder="{{ __('dd-mm-yyyy') }}" value="{{isset($contact)?$contact->date_of_issue?date('d-m-Y', strtotime($contact->date_of_issue)):'':''}}" required>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="date-of-expire">{{ __('Date of Expire') }}</label>
+                      <input type="text" class="form-control datepicker" id="expire_date" name="expire_date" data-provide="datepicker" readonly data-date-format="dd-mm-yyyy" placeholder="{{ __('dd-mm-yyyy') }}" value="{{isset($contact)?$contact->date_of_expire?date('d-m-Y', strtotime($contact->date_of_expire)):'':''}}" required>
+                    </div>
+                  </div>
+                </div>
+                  
+
+                  <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Submit') }}</button>
+
+              </form>
+              </div>
             </div>
 
 
@@ -409,6 +411,33 @@
             processing: '<img src="{{asset('assets/images/'.$gs->admin_loader)}}">'
         }
     });
+  
+  
+    var table1 = $('#geniustablelist').DataTable({
+       ordering: false,
+       processing: true,
+       serverSide: true,
+       searching: true,
+       ajax: '{{ route('admin.contacts.datatables') }}',
+       columns: [
+            { data: 'contact', name: 'contact' },
+            { data: 'fname', name: 'fname' },
+            { data: 'email_add', name: 'email_add' },
+            { data: 'address', name:'address' },
+            { data: 'phone', name: 'phone' },
+            { data: 'action', name: 'action' },
+        ],
+        language : {
+            processing: '<img src="{{asset('assets/images/'.$gs->admin_loader)}}">'
+        }
+    });
+    $(function() {
+        $(".btn-area").append('<div class="col-sm-12 col-md-4 pr-3 text-right">'+
+            '<a class="btn btn-primary" id="five-tab" href="#contact_form" role="tab" aria-controls="Five" aria-selected="false">'+
+        '<i class="fas fa-plus"></i> {{__('Add New Contact')}}'+
+        '</a>'+
+        '</div>');
+    });
 $('#myTab a').on('click', function (e) {
   e.preventDefault()
   $(this).tab('show')
@@ -418,5 +447,6 @@ $('.datepicker').datepicker({
     format: 'dd-mm-yyyy',
     autoclose: true
 });
+// href="{{route('admin.bank.plan.create')}}"
 </script>
 @endsection

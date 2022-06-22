@@ -301,7 +301,10 @@ class DashboardController extends Controller
 
         $rules = [
             'fullname'   => 'required',
-            'dob'           => 'required'
+            'contact'   => 'required',
+            'your_email'   => 'required',
+            'your_phone'   => 'required',
+            'your_address'   => 'required'
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -317,6 +320,7 @@ class DashboardController extends Controller
         //$contact = new Contact();
         if (isset($data) && $data->id) {
             $contact['full_name']     =  $request->input('fullname');
+            $contact['contact']     =  $request->input('contact');
             $contact['user_id']       = Auth()->user()->id;
             $contact['dob']           = $request->input('dob') ? date('Y-m-d', strtotime($request->input('dob'))) : '';
             $contact['personal_code'] = $request->input('personal_code');

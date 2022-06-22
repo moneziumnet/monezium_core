@@ -38,6 +38,7 @@ use App\Http\Controllers\Admin\InstitutionController;
 use App\Http\Controllers\Admin\PageSettingController;
 
 use App\Http\Controllers\Admin\TransactionController;
+use App\Http\Controllers\Admin\ContactsController;
 use App\Http\Controllers\Admin\BlogCategoryController;
 use App\Http\Controllers\Admin\ManageChargeController;
 use App\Http\Controllers\Admin\ManageEscrowController;
@@ -292,6 +293,10 @@ Route::prefix('admin')->group(function () {
   Route::group(['middleware' => 'permissions:Transactions'], function () {
     Route::get('/transactions/datatables', [TransactionController::class, 'datatables'])->name('admin.transactions.datatables');
     Route::get('/transactions', [TransactionController::class, 'index'])->name('admin.transactions.index');
+
+    Route::get('/contacts/datatables', [ContactsController::class, 'datatables'])->name('admin.contacts.datatables');
+    Route::get('/contacts/edit/{id}', [ContactsController::class, 'edit'])->name('admin.contact.contact-edit');
+    Route::get('/contacts/delete/{id}', [ContactsController::class, 'destroy'])->name('admin.contact.contact-delete');
   });
 
   Route::group(['middleware' => 'permissions:Deposits'], function () {
