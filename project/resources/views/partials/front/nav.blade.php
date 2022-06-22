@@ -37,6 +37,7 @@
                 <div class="btn__grp ms-lg-3">
                     @if (!auth()->user())
                         <a href="{{ route('user.login') }}" class="cmn--btn">@lang('Login Now')</a>
+                        <a href="{{ route('user.domain.register') }}" class="cmn--btn">@lang('Signup Now')</a>
                     @else 
                         <a href="{{ route('user.dashboard') }}" class="cmn--btn">@lang('Dashboard')</a>
                     @endif

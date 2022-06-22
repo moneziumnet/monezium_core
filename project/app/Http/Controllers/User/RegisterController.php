@@ -2,23 +2,25 @@
 
 namespace App\Http\Controllers\User;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\Generalsetting;
-use App\Models\User;
-use App\Classes\GeniusMailer;
-use App\Models\BankPlan;
-use App\Models\Notification;
-use App\Models\ReferralBonus;
-use App\Models\Transaction;
-use App\Models\UserSubscription;
 use Auth;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Str;
-use PHPMailer\PHPMailer\PHPMailer;
-use Validator;
 use Session;
+use Validator;
+use App\Models\User;
+use App\Models\BankPlan;
+use App\Models\Transaction;
+use Illuminate\Support\Str;
+use App\Models\Notification;
+use Illuminate\Http\Request;
+use App\Classes\GeniusMailer;
+use App\Models\ReferralBonus;
+use App\Models\RequestDomain;
+use App\Models\Generalsetting;
+use Illuminate\Support\Carbon;
+use App\Models\UserSubscription;
+use PHPMailer\PHPMailer\PHPMailer;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Input;
 
 class RegisterController extends Controller
 {
@@ -30,6 +32,42 @@ class RegisterController extends Controller
     public function showRegisterForm()
     {
         return view('user.register');
+    }
+
+    public function showDomainRegisterForm()
+    {
+        return view('user.domainregister');
+    }
+
+    public function institutionProfile()
+    {
+        return view('user.profileinstitution');
+    }
+
+    public function domainRegister(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name' => 'required',
+                'email' => 'required|email|unique:admins,email,',
+                'domains' => 'required|unique:domains,domain',
+                'password' => 'same:password_confirmation',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
+        }
+
+        $domain = new RequestDomain();
+        $domain->name = $request->name;
+        $domain->email = $request->email;
+        $domain->password = Hash::make($request->password);
+        $domain->domain_name = $request->domains;
+        $domain->type = 'Admin';
+        $domain->save();
+        return response()->json(route('user.institution.profile'));
+        // return response()->json(1);
     }
 
     public function register(Request $request)

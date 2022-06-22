@@ -60,6 +60,11 @@ Route::prefix('user')->group(function() {
   
     Route::get('/register', [RegisterController::class,'showRegisterForm'])->name('user.register');
     Route::post('/register', [RegisterController::class,'register'])->name('user.register.submit');
+
+    Route::get('/domain-register', [RegisterController::class,'showDomainRegisterForm'])->name('user.domain.register');
+    Route::post('/domain-register', [RegisterController::class,'domainRegister'])->name('user.domain.register.submit');
+    Route::get('/institution-profile', [RegisterController::class,'institutionProfile'])->name('user.institution.profile');
+
     Route::get('/register/verify/{token}', [RegisterController::class,'token'])->name('user.register.token');  
   
     Route::group(['middleware' => ['otp','banuser']],function () {

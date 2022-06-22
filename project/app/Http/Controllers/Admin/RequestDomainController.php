@@ -78,7 +78,7 @@ class RequestDomainController extends Controller
             $request->all(),
             [
                 'name' => 'required',
-                'email' => 'required|email|unique:users,email,',
+                'email' => 'required|email|unique:admins,email,',
                 'domains' => 'required|unique:domains,domain',
                 'password' => 'same:password_confirmation',
 
@@ -159,7 +159,7 @@ class RequestDomainController extends Controller
             $request->all(),
             [
                 'name' => 'required',
-                'email' => 'required|email|unique:users,email,',
+                'email' => 'required|email|unique:admins,email,',
                 'domains' => 'required|unique:domains,domain',
             ]
         );
@@ -204,7 +204,7 @@ class RequestDomainController extends Controller
             $request->all(),
             [
                 'name' => 'required',
-                'email' => 'required|email|unique:users,email,',
+                'email' => 'required|email|unique:admins,email,',
                 'role_id'=> 'required',
                 'domains' => 'required|unique:domains,domain',
             ]
