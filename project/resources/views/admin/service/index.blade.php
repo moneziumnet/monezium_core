@@ -88,7 +88,7 @@
 			   ordering: false,
                processing: true,
                serverSide: true,
-               searching: trur,
+               searching: true,
                ajax: '{{ route('admin.service.datatables') }}',
                columns: [
                         { data: 'photo', name: 'photo' , searchable: false, orderable: false},

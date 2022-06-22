@@ -45,21 +45,6 @@
   </li>
 
   <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#langs" aria-expanded="true"
-      aria-controls="collapseTable">
-      <i class="fas fa-language"></i>
-      <span>{{  __('Language Manage') }}</span>
-    </a>
-    <div id="langs" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
-      <div class="bg-white py-2 collapse-inner rounded">
-        <a class="collapse-item" href="{{route('admin.lang.index')}}">{{ __('Website Language') }}</a>
-        <a class="collapse-item" href="{{route('admin.tlang.index')}}">{{ __('Admin Panel Language') }}</a>
-      </div>
-    </div>
-  </li>
-  
-
-  <!-- <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#homepage" aria-expanded="true"
     aria-controls="collapseTable">
     <i class="fas fa-igloo"></i>
@@ -80,7 +65,22 @@
         <a class="collapse-item" href="{{ route('admin.ps.heading') }}">{{ __('Section Heading') }}</a>
       </div>
     </div>
-  </li> -->
+  </li>
+
+  <li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#langs" aria-expanded="true"
+      aria-controls="collapseTable">
+      <i class="fas fa-language"></i>
+      <span>{{  __('Language Manage') }}</span>
+    </a>
+    <div id="langs" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+        <a class="collapse-item" href="{{route('admin.lang.index')}}">{{ __('Website Language') }}</a>
+        <a class="collapse-item" href="{{route('admin.tlang.index')}}">{{ __('Admin Panel Language') }}</a>
+      </div>
+    </div>
+  </li>
+  
 
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#email_settings" aria-expanded="true"
