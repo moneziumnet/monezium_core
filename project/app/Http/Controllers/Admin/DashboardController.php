@@ -314,37 +314,60 @@ class DashboardController extends Controller
         }
         //--- Validation Section Ends
         $input = $request->all();
+        // if($request->input('contact_id'))
+        // {
 
+        // }else{
+
+        // }
         // $data = Contact::where('user_id', Auth()->user()->id)->first();
         // dd($data);
-        //$contact = new Contact();
-        // if (isset($data) && $data->id) {
-        //     $contact['full_name']     =  $request->input('fullname');
-        //     $contact['contact']     =  $request->input('contact');
-        //     $contact['user_id']       = Auth()->user()->id;
-        //     $contact['dob']           = $request->input('dob') ? date('Y-m-d', strtotime($request->input('dob'))) : '';
-        //     $contact['personal_code'] = $request->input('personal_code');
-        //     $contact['c_email']       = $request->input('your_email');
-        //     $contact['c_phone']       = $request->input('your_phone');
-        //     $contact['c_address']     = $request->input('your_address');
-        //     $contact['c_city']        = $request->input('c_city');
-        //     $contact['c_zip_code']    = $request->input('c_zipcode');
-        //     $contact['c_country']     = $request->input('c_country_id');
-        //     $contact['id_number']     = $request->input('your_id');
-        //     $contact['issued_authority'] = $request->input('issued_authority');
-        //     $contact['date_of_issue'] = $request->input('dob') ? date('Y-m-d', strtotime($request->input('dob'))) : '';
-        //     $contact['date_of_expire'] = $request->input('dob') ? date('Y-m-d', strtotime($request->input('dob'))) : '';
-            
-        //     if (DB::table('contacts')->where('id', $data->id)->update($contact)) {
-        //         $msg = 'Successfully updated your contact information.';
-        //         return response()->json($msg);
-        //     } else {
-        //         $msg = 'Something went wrong. Please try again.';
-        //         return response()->json($msg);
-        //     }
-        // } else {
+        $contact = new Contact();
+        if ($request->input('contact_id')>0) {
+            $contact['full_name']     =  $request->input('fullname');
+            $contact['contact']     =  $request->input('contact');
+            // $contact['user_id']       = Auth()->user()->id;
+            $contact['dob']           = $request->input('dob') ? date('Y-m-d', strtotime($request->input('dob'))) : '';
+            $contact['personal_code'] = $request->input('personal_code');
+            $contact['c_email']       = $request->input('your_email');
+            $contact['c_phone']       = $request->input('your_phone');
+            $contact['c_address']     = $request->input('your_address');
+            $contact['c_city']        = $request->input('c_city');
+            $contact['c_zip_code']    = $request->input('c_zipcode');
+            $contact['c_country']     = $request->input('c_country_id');
+            $contact['id_number']     = $request->input('your_id');
+            $contact['issued_authority'] = $request->input('issued_authority');
+            $contact['date_of_issue'] = $request->input('issue_date') ? date('Y-m-d', strtotime($request->input('issue_date'))) : '';
+            $contact['date_of_expire'] = $request->input('expire_date') ? date('Y-m-d', strtotime($request->input('expire_date'))) : '';
+            //echo $request->input('contact_id');
+            if (Contact::where('id', $request->input('contact_id'))->update(
+                [
+                    'full_name' => $request->input('fullname'),
+                    'contact' => $request->input('contact'),
+                    'dob' => $request->input('dob') ? date('Y-m-d', strtotime($request->input('dob'))) : '',
+                    'personal_code' => $request->input('personal_code'),
+                    'c_email' => $request->input('your_email'),
+                    'c_phone' => $request->input('your_phone'),
+                    'c_address' => $request->input('your_address'),
+                    'c_city' => $request->input('c_city'),
+                    'c_zip_code' => $request->input('c_zipcode'),
+                    'c_country' => $request->input('c_country_id'),
+                    'id_number' => $request->input('your_id'),
+                    'issued_authority' => $request->input('issued_authority'),
+                    'date_of_issue' => $request->input('issue_date') ? date('Y-m-d', strtotime($request->input('issue_date'))) : '',
+                    'date_of_issue' => $request->input('expire_date') ? date('Y-m-d', strtotime($request->input('expire_date'))) : ''
+                ]
+            )) {
+                $msg = 'Successfully updated your contact information.';
+                return response()->json($msg);
+            } else {
+                $msg = 'Something went wrong. Please try again.';
+                return response()->json($msg);
+            }
+        } else {
 
             $contact['full_name']     =  $request->input('fullname');
+            $contact['contact']     =  $request->input('contact');
             $contact['user_id']       = Auth()->user()->id;
             $contact['dob']           = $request->input('dob') ? date('Y-m-d', strtotime($request->input('dob'))) : '';
             $contact['personal_code'] = $request->input('personal_code');
@@ -356,8 +379,8 @@ class DashboardController extends Controller
             $contact['c_country']     = $request->input('c_country_id');
             $contact['id_number']     = $request->input('your_id');
             $contact['issued_authority'] = $request->input('issued_authority');
-            $contact['date_of_issue'] = $request->input('dob') ? date('Y-m-d', strtotime($request->input('dob'))) : '';
-            $contact['date_of_expire'] = $request->input('dob') ? date('Y-m-d', strtotime($request->input('dob'))) : '';
+            $contact['date_of_issue'] = $request->input('issue_date') ? date('Y-m-d', strtotime($request->input('issue_date'))) : '';
+            $contact['date_of_expire'] = $request->input('expire_date') ? date('Y-m-d', strtotime($request->input('expire_date'))) : '';
 
             if (DB::table('contacts')->insert($contact)) {
                 $msg = 'Successfully updated your contact information.';
@@ -366,7 +389,7 @@ class DashboardController extends Controller
                 $msg = 'Something went wrong. Please try again.';
                 return response()->json($msg);
             }
-        // }
+         }
 
         //dd($data);
 

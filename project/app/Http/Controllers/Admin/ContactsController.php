@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Currency;
 use App\Models\Contact;
+use App\Models\Generalsetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Datatables;
@@ -64,8 +65,14 @@ class ContactsController extends Controller
         return view('admin.create-contact', compact('data', 'modules', 'contact'));
     }
 
-    public function edit()
+    public function edit($id)
     {
+        $data = Auth::guard('admin')->user();
 
+        $contact = Contact::where('id', $id)->first();
+        $modules = Generalsetting::first();
+        
+        // dd($modules);
+        return view('admin.create-contact', compact('data', 'modules', 'contact', 'id'));
     }
 }
