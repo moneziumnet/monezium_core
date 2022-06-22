@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Currency;
 use App\Models\Contact;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Datatables;
 
 class ContactsController extends Controller
@@ -13,6 +14,7 @@ class ContactsController extends Controller
 
     public function datatables()
     {
+        $users= Auth()->user();
         $datas = Contact::orderBy('id','asc')->get();  
         
         return Datatables::of($datas)
@@ -53,8 +55,13 @@ class ContactsController extends Controller
     }
 
     public function create(Request $request)
-    {
+    {   
+        $data = Auth::guard('admin')->user();
 
+        $contact = Contact::where('user_id', $data->id)->first();
+        $modules = Generalsetting::first();
+        // dd($modules);
+        return view('admin.create-contact', compact('data', 'modules', 'contact'));
     }
 
     public function edit()

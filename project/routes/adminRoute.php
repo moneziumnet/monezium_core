@@ -295,6 +295,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/transactions', [TransactionController::class, 'index'])->name('admin.transactions.index');
 
     Route::get('/contacts/datatables', [ContactsController::class, 'datatables'])->name('admin.contacts.datatables');
+    Route::get('/contacts/contact-create', [ContactsController::class, 'create'])->name('admin.contact.contact-create');
     Route::get('/contacts/edit/{id}', [ContactsController::class, 'edit'])->name('admin.contact.contact-edit');
     Route::get('/contacts/delete/{id}', [ContactsController::class, 'destroy'])->name('admin.contact.contact-delete');
   });
