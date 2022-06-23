@@ -89,13 +89,13 @@ class DocumentsController extends Controller
                    $save->name = $request->input('document_name');
                    $save->file = $file;
                    $save->save();
-                   return response()->json(array('success' => 'Document Saved Successfully.'));
+                   return response()->json('Document Saved Successfully.');
                 } else {
-                    return response()->json(array('errors' => 'Please check your file extention and document name.'));
+                    return response()->json('Please check your file extention and document name.');
                 }
             }
         }else{
-            return response()->json(array('errors' => 'Please check your file extention and document name.'));
+            return response()->json('Please check your file extention and document name.');
         }
         
 
@@ -115,9 +115,9 @@ class DocumentsController extends Controller
         if(file_exists(public_path("assets/documents/".$document->file)))
         {
             @unlink(public_path("assets/documents/".$document->file));
-            $document->delete();
+           
         }
-        
+        $document->delete();
         //--- Redirect Section
         $msg = 'Document Has Been Deleted Successfully.';
         return response()->json($msg);
