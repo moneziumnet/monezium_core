@@ -125,7 +125,7 @@
 
               <div class="tab-pane fade p-3" id="two" role="tabpanel" aria-labelledby="two-tab">
                     <div class="table-responsive p-2">
-                        <div class="col-sm-12 col-md-4 pr-3 text-right">
+                        <div class="col-sm-12 text-right">
                           <a class="btn btn-primary" id="five-tab" data-toggle="tab" href="#five" role="tab" aria-controls="Five" aria-selected="false">
                               <i class="fas fa-plus"></i> {{__('Add New Contact')}}
                           </a>
@@ -171,7 +171,7 @@
               <div class="tab-pane fade p-3" id="four" role="tabpanel" aria-labelledby="four-tab">
                   <div class="table-responsive p-2">
                     @include('includes.admin.form-flash')
-                      <div class="col-sm-12 col-md-4 pr-3 text-right">
+                      <div class="col-sm-12 text-right">
                         <a class="btn btn-primary" id="six-tab" data-toggle="tab" href="#six" role="tab" aria-controls="Six" aria-selected="false">
                           <i class="fas fa-plus"></i> {{__('Add Documents')}}
                         </a>
@@ -299,7 +299,7 @@
                 <form class="geniusformd" action="{{ route('admin.document.add-document')}}" method="POST" enctype="multipart/form-data">
                   {{ csrf_field() }}
 
-                  
+                  @include('includes.admin.form-both')
                   <div class="row g-3">
                       <div class="col-md-6">
                         <div class="form-group">

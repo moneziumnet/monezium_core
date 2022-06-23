@@ -8,6 +8,7 @@ use App\Models\Generalsetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Validator;
 use Datatables;
 
 class DocumentsController extends Controller
@@ -49,12 +50,56 @@ class DocumentsController extends Controller
 
     public function create(Request $request)
     {   
-        // $data = Auth::guard('admin')->user();
 
-        // $contact = Contact::where('user_id', $data->id)->first();
-        // $modules = Generalsetting::first();
-        // // dd($modules);
-        // return view('admin.create-contact', compact('data', 'modules', 'contact'));
+        if($request->isMethod('post'))
+        {
+            $rules = [
+                'document_name'   => 'required',
+                'document_file'   => 'required'
+            ];
+    
+            $validator = Validator::make($request->all(), $rules);
+    
+            if ($validator->fails()) {
+                return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
+            }
+    
+            if(!$request->hasFile('document_file')) {
+                return response()->json(array('errors' => 'Select your file'));
+            }else{
+                
+                $allowedfileExtension = ['jpg','png','gif','pdf','jpeg','doc','docx','xls','xlsx'];
+                $files = $request->file('document_file');
+                
+                $extension = $files->getClientOriginalExtension();
+     
+                $check = in_array($extension,$allowedfileExtension);
+                
+                if($check) {
+                    $path = public_path() . '/assets/documents';
+                    $files->move($path, $files->getClientOriginalName());
+                    // $path = $request->image->store('public/uploads/app_sliders');
+                    $file = $request->document_file->getClientOriginalName();
+                            //  exit;
+                    $user = auth()->guard('admin')->user();
+                            //store image file into directory and db
+                    $save = new Document();
+                    // $save->title = $name;
+                   $save->ins_id = $user->id;
+                   $save->name = $request->input('document_name');
+                   $save->file = $file;
+                   $save->save();
+                   return response()->json(array('success' => 'Document Saved Successfully.'));
+                } else {
+                    return response()->json(array('errors' => 'Please check your file extention and document name.'));
+                }
+            }
+        }else{
+            return response()->json(array('errors' => 'Please check your file extention and document name.'));
+        }
+        
+
+       
     }
 
     public function getDownload($id){
