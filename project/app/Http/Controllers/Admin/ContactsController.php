@@ -15,8 +15,8 @@ class ContactsController extends Controller
 
     public function datatables()
     {
-        $users= Auth()->user();
-        $datas = Contact::orderBy('id','asc')->get();  
+        $user = Auth()->user();
+        $datas = Contact::where('user_id', $user->id)->orderBy('id','asc')->get();  
         
         return Datatables::of($datas)
                         ->addColumn('contact',function(Contact $data){
