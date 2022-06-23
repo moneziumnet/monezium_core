@@ -52,6 +52,7 @@ class InstitutionController extends Controller
                                 '.'Actions' .'
                               </button>
                               <div class="dropdown-menu" x-placement="bottom-start">
+                                <a href="' . route('admin.institution.profile',$data->id) . '"  class="dropdown-item">'.__("Profile").'</a>
                                 <a href="' . route('admin.institution.edit',$data->id) . '"  class="dropdown-item">'.__("Edit").'</a>
                                 <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.  route('admin.institution.delete',$data->id).'">'.__("Delete").'</a>
                               </div>
@@ -126,6 +127,12 @@ class InstitutionController extends Controller
     {
         $data = Admin::findOrFail($id);
         return view('admin.institution.edit',compact('data'));
+    }
+    
+    public function profile($id)
+    {
+        $data = Admin::findOrFail($id);
+        return view('admin.institution.profile',compact('data'));
     }
 
     public function update(Request $request,$id)
