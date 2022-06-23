@@ -467,6 +467,10 @@ Route::prefix('admin')->group(function () {
     Route::post('/institution/create', [InstitutionController::class, 'store'])->name('admin.institution.store');
     Route::get('/institution/edit/{id}', [InstitutionController::class, 'edit'])->name('admin.institution.edit');
     Route::get('/institution/profile/{id}', [InstitutionController::class, 'profile'])->name('admin.institution.profile');
+    Route::get('/institution/contact/datatables/{id}', [InstitutionController::class, 'contactsDatatables'])->name('admin.institution.contactsdatatables');
+    Route::post('/institution/create-contact/{id}', [InstitutionController::class, 'createContact'])->name('admin.institution.create-contact');
+    Route::get('/institution/document/datatables/{id}', [InstitutionController::class, 'documentsDatatables'])->name('admin.institution.documentsdatatables');
+    Route::post('/institution/add-document/{id}', [InstitutionController::class, 'createDocument'])->name('admin.institution.add-document');
     Route::get('/institution/block/{id1}/{id2}', [InstitutionController::class, 'block'])->name('admin-staff-block');
     Route::post('/institution/update/{id}', [InstitutionController::class, 'update'])->name('admin.institution.update');
     Route::get('/institution/delete/{id}', [InstitutionController::class, 'destroy'])->name('admin.institution.delete');

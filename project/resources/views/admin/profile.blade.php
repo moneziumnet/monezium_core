@@ -201,8 +201,8 @@
                   <div class="row g-3">
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label for="full-name">{{ __('Contact') }}</label>
-                      <input type="text" class="form-control" id="contact" name="contact" placeholder="{{ __('Contact') }}" value="" required>
+                      <label for="full-name">{{ __('Contact Type') }}</label>
+                      <input type="text" class="form-control" id="contact" name="contact" placeholder="{{ __('Contact Type') }}" value="" required>
                     </div>
                   </div>
                   <div class="col-md-6">

@@ -37,14 +37,14 @@
             <div class="tab-content" id="myTabContent">
               <div class="tab-pane fade show active p-3" id="one" role="tabpanel" aria-labelledby="one-tab">
                 {{-- <div class="gocover" style="background: url({{asset('assets/images/'.$gs->admin_loader)}}) no-repeat scroll center center rgba(45, 45, 45, 0.5);"></div> --}}
-                <form class="geniusform" action="{{ route('admin.profile.update') }}" method="POST" enctype="multipart/form-data">
+                <form class="geniusform" action="{{route('admin.institution.update',$data->id)}}" method="POST" enctype="multipart/form-data">
 
-                    @include('includes.admin.form-both')
+                      @include('includes.admin.form-both')
 
-                    {{ csrf_field() }}
+                      {{ csrf_field() }}
 
                     <div class="form-group">
-                        <label>{{ __('Profile Picture') }} <small class="small-font">({{ __('Preferred Size 600 X 600') }})</small></label>
+                        <label>{{ __('Set Picture') }} <small class="small-font">({{ __('Preferred Size 600 X 600') }})</small></label>
                         <div class="wrapper-image-preview">
                             <div class="box">
                                 <div class="back-preview-image" style="background-image: url({{ $data->photo ? asset('assets/images/'.$data->photo):asset('assets/images/placeholder.jpg') }});"></div>
@@ -146,7 +146,7 @@
               
               <div class="tab-pane fade p-3" id="three" role="tabpanel" aria-labelledby="three-tab">
                 <div class="row">
-                @foreach(DB::table('roles')->where('id', Auth()->user()->role_id)->get() as $role)
+                @foreach(DB::table('roles')->where('id', $data->role_id)->get() as $role)
                   @php
                     $explode = explode(' , ',$role->section);
                   @endphp
@@ -191,7 +191,7 @@
                   </div>             
               </div>
               <div class="tab-pane fade p-3" id="five" role="tabpanel" aria-labelledby="five-tab">
-                <form class="geniusform" action="{{ route('admin.profile.update-contact')}}" method="POST" enctype="multipart/form-data">
+                <form class="geniusform" action="{{ route('admin.institution.create-contact', $data->id)}}" method="POST" enctype="multipart/form-data">
                   @include('includes.admin.form-both')
 
                   {{ csrf_field() }}
@@ -200,8 +200,8 @@
                   <div class="row g-3">
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label for="full-name">{{ __('Contact') }}</label>
-                      <input type="text" class="form-control" id="contact" name="contact" placeholder="{{ __('Contact') }}" value="" required>
+                      <label for="full-name">{{ __('Contact Type') }}</label>
+                      <input type="text" class="form-control" id="contact" name="contact" placeholder="{{ __('Contact Type') }}" value="" required>
                     </div>
                   </div>
                   <div class="col-md-6">
@@ -213,7 +213,7 @@
                   <div class="col-md-6">
                     <div class="form-group">
                       <label for="dob">{{ __('Date of Birth') }}</label>
-                      <input type="text" class="form-control datepicker" id="dob" data-provide="datepicker" readonly data-date-format="dd-mm-yyyy" name="dob" placeholder="{{ __('dd-mm-yyyy') }}"  value="" required>
+                      <input type="text" class="form-control datepicker" id="dob" data-provide="datepicker" readonly data-date-format="yyyy-mm-dd" name="dob" placeholder="{{ __('yyyy-mm-dd') }}"  value="" required>
                     </div>
                   </div>
                   <div class="col-md-6">
@@ -280,13 +280,13 @@
                   <div class="col-md-6">
                     <div class="form-group">
                       <label for="date-of-issue">{{ __('Date of Issue') }}</label>
-                      <input type="text" class="form-control datepicker" id="issue_date" name="issue_date" data-provide="datepicker" readonly data-date-format="dd-mm-yyyy" placeholder="{{ __('dd-mm-yyyy') }}" value="" required>
+                      <input type="text" class="form-control datepicker" id="date_of_issue" name="date_of_issue" data-provide="datepicker" readonly data-date-format="yyyy-mm-dd" placeholder="{{ __('yyyy-mm-dd') }}" value="" required>
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
                       <label for="date-of-expire">{{ __('Date of Expire') }}</label>
-                      <input type="text" class="form-control datepicker" id="expire_date" name="expire_date" data-provide="datepicker" readonly data-date-format="dd-mm-yyyy" placeholder="{{ __('dd-mm-yyyy') }}" value="" required>
+                      <input type="text" class="form-control datepicker" id="date_of_expire" name="date_of_expire" data-provide="datepicker" readonly data-date-format="yyyy-mm-dd" placeholder="{{ __('yyyy-mm-dd') }}" value="" required>
                     </div>
                   </div>
                 </div>
@@ -295,7 +295,7 @@
 
               </div>
               <div class="tab-pane fade p-3" id="six" role="tabpanel" aria-labelledby="six-tab">
-                <form class="geniusformd" action="{{ route('admin.document.add-document')}}" method="POST" enctype="multipart/form-data">
+                <form class="geniusformd" action="{{ route('admin.institution.add-document', $data->id)}}" method="POST" enctype="multipart/form-data">
                   {{ csrf_field() }}
 
                   @include('includes.admin.form-both')
@@ -375,7 +375,7 @@
        processing: true,
        serverSide: true,
        searching: true,
-       ajax: '{{ route('admin.documents.datatables') }}',
+       ajax: '{{ route('admin.institution.documentsdatatables',$data->id) }}',
        columns: [
             
             { data: 'name', name: 'name' },
@@ -395,7 +395,7 @@
        processing: true,
        serverSide: true,
        searching: true,
-       ajax: '{{ route('admin.contacts.datatables') }}',
+       ajax: '{{ route('admin.institution.contactsdatatables',$data->id) }}',
        columns: [
             { data: 'contact', name: 'contact' },
             { data: 'fname', name: 'fname' },
@@ -415,13 +415,10 @@
     //     '</a>'+
     //     '</div>');
     // });
-$('#myTab a').on('click', function (e) {
-  e.preventDefault()
-  $(this).tab('show')
-})
+
 
 $('.datepicker').datepicker({
-    format: 'dd-mm-yyyy',
+    format: 'yyyy-mm-dd',
     autoclose: true
 });
 // href="{{route('admin.bank.plan.create')}}"
