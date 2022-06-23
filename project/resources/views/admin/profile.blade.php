@@ -125,10 +125,10 @@
 
               <div class="tab-pane fade p-3" id="two" role="tabpanel" aria-labelledby="two-tab">
                     <div class="table-responsive p-2">
+                      @include('includes.admin.form-flash')
                       <table id="geniustablelist" class="table table-hover dt-responsive" cellspacing="0" width="100%">
                         <thead class="thead-light">
                         <tr>
-                            <th>{{__('ID')}}</th>
                             <th>{{__('Contact')}}</th>
                             <th>{{__('Name')}}</th>
                             <th>{{__('Email')}}</th>
@@ -166,10 +166,11 @@
 
               <div class="tab-pane fade p-3" id="four" role="tabpanel" aria-labelledby="four-tab">
                   <div class="table-responsive p-2">
+                    @include('includes.admin.form-flash')
                     <table id="geniustable" class="table table-hover dt-responsive" cellspacing="0" width="100%">
                       <thead class="thead-light">
                       <tr>
-                        <th>{{__('ID')}}</th>
+                        
                         <th>{{__('Name')}}</th>
                         <th>{{__('Download')}}</th>
                         <th>{{__('Action')}}</th>
@@ -287,6 +288,27 @@
 
           </div>
 
+          <div class="modal fade confirm-modal" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">{{ __("Confirm Delete") }}</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <p class="text-center">{{ __("Do you want to proceed?") }}</p>
+                </div>
+                <div class="modal-footer">
+                  <a href="javascript:;" class="btn btn-secondary" data-dismiss="modal">{{ __("Cancel") }}</a>
+                  <a href="javascript:;" class="btn btn-danger btn-ok">{{ __("Delete") }}</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+
 @endsection
 @section('scripts')
 <script type="text/javascript">
@@ -320,7 +342,7 @@
        searching: true,
        ajax: '{{ route('admin.documents.datatables') }}',
        columns: [
-            { data: 'id', name: 'id' },
+            
             { data: 'name', name: 'name' },
             { data: 'download', name: 'download' },
             { data: 'action', name: 'action' },
@@ -340,7 +362,6 @@
        searching: true,
        ajax: '{{ route('admin.contacts.datatables') }}',
        columns: [
-            { data: 'id', name: 'id' },
             { data: 'contact', name: 'contact' },
             { data: 'fname', name: 'fname' },
             { data: 'email_add', name: 'email_add' },

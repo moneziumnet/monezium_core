@@ -7,6 +7,7 @@ use App\Models\Document;
 use App\Models\Generalsetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
 use Datatables;
 
 class DocumentsController extends Controller
@@ -14,23 +15,26 @@ class DocumentsController extends Controller
 
     public function datatables()
     {
-        $user = Auth()->user();
+        $user = auth()->guard('admin')->user();
         $datas = Document::where('ins_id', $user->id)->orderBy('name','asc')->get();  
+        //$datas = Document::orderBy('name','asc')->get();  
         
         return Datatables::of($datas)
                         ->addColumn('name',function(Document $data){
                             return $data->name;
                         })
                         ->addColumn('download',function(Document $data){
-                            return $data->file;
+                            return '<a href="'.route('admin.documents.download',$data->id).'">
+                            <button type="button" class="btn btn-primary btn-sm btn-rounded">'.__("Download").' </button></a>';
+                            
                         })
-                        ->addColumn('action', function(Contact $data) {
+                        ->addColumn('action', function(Document $data) {
                             return '<div class="btn-group mb-1">
                                         <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         '.'Actions' .'
                                         </button>
                                         <div class="dropdown-menu" x-placement="bottom-start">
-                                        <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.  route('admin.contact.contact-delete',$data->id).'">'.__("Delete").'</a>
+                                        <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.  route('admin.documents.document-delete',$data->id).'">'.__("Delete").'</a>
                                         </div>
                                     </div>';
                         })
@@ -53,14 +57,25 @@ class DocumentsController extends Controller
         // return view('admin.create-contact', compact('data', 'modules', 'contact'));
     }
 
-    public function edit($id)
-    {
-        // $data = Auth::guard('admin')->user();
+    public function getDownload($id){
+        //PDF file is stored under project/public/download/info.pdf
+        $document = Document::find($id);
+        $file= public_path("assets/documents/".$document->file);
+        return Response::download($file);
+    }
 
-        // $contact = Contact::where('id', $id)->first();
-        // $modules = Generalsetting::first();
+    public function destroy($id)
+    {   
+        $document = Document::findOrFail($id);
+        if(file_exists(public_path("assets/documents/".$document->file)))
+        {
+            @unlink(public_path("assets/documents/".$document->file));
+            $document->delete();
+        }
         
-        // // dd($modules);
-        // return view('admin.create-contact', compact('data', 'modules', 'contact', 'id'));
+        //--- Redirect Section
+        $msg = 'Document Has Been Deleted Successfully.';
+        return response()->json($msg);
+        
     }
 }

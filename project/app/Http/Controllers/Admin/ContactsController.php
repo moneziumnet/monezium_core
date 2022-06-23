@@ -15,8 +15,9 @@ class ContactsController extends Controller
 
     public function datatables()
     {
-        $user = Auth()->user();
+        $user = auth()->guard('admin')->user();
         $datas = Contact::where('user_id', $user->id)->orderBy('id','asc')->get();  
+        // $datas = Contact::orderBy('id','asc')->get();  
         
         return Datatables::of($datas)
                         ->addColumn('contact',function(Contact $data){
@@ -74,5 +75,15 @@ class ContactsController extends Controller
         
         // dd($modules);
         return view('admin.create-contact', compact('data', 'modules', 'contact', 'id'));
+    }
+
+    public function destroy($id)
+    {
+        $data = Contact::findOrFail($id);
+        $data->delete();
+       
+        //--- Redirect Section
+        $msg = 'Contact Has Been Deleted Successfully.';
+        return response()->json(['succes'=> $msg]);
     }
 }
