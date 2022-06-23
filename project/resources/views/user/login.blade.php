@@ -48,8 +48,6 @@
                         </button>
                         <div class="d-flex flex-wrap justify-content-between align-items-center mt-2">
                             <a href="{{ route('user.forgot') }}" class="text--base mt-1">@lang('Forget Password')</a>
-                            <a href="{{route('user.register')}}" class="text--base mt-1">@lang("Don't have
-                                an account ?")</a>
                         </div>
                     </div>
                 </form>

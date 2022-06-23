@@ -30,9 +30,10 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
-    public function showRegisterForm()
+    public function showRegisterForm($id)
     {
-        return view('user.register');
+        $data = BankPlan::findOrFail($id);
+        return view('user.register', compact('data'));
     }
 
     public function showDomainRegisterForm()
@@ -100,7 +101,7 @@ class RegisterController extends Controller
         return redirect()->back()->with('success', __('Information Updated Successfully.'));
     }
 
-    public function register(Request $request)
+    public function register(Request $request, $id)
     {
         $value = session('captcha_string');
         if ($request->codes != $value) {
@@ -119,7 +120,7 @@ class RegisterController extends Controller
         }
 
         $gs = Generalsetting::first();
-        $subscription = BankPlan::first();
+        $subscription = BankPlan::findOrFail($id);
 
         $user = new User;
         $input = $request->all();

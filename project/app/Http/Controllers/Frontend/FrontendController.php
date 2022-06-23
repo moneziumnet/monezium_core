@@ -8,6 +8,7 @@ use App\Models\AccountProcess;
 use App\Models\Admin;
 use App\Models\AuthorBadge;
 use App\Models\AuthorLevel;
+use App\Models\BankPlan;
 use App\Models\Blog;
 use App\Models\Blog_Category;
 use App\Models\BlogCategory;
@@ -56,6 +57,11 @@ class FrontendController extends Controller
     
     public function index(Request $request){
 
+        $current_domain = tenant('domains');
+        if (!empty($current_domain)) {
+            $current_domain = $current_domain->pluck('domain')->toArray()[0];
+        }
+
         if(!empty($request->reff))
         {
            $affilate_user = User::where('affilate_code','=',$request->reff)->first();
@@ -83,9 +89,12 @@ class FrontendController extends Controller
         $data['loanplans'] = LoanPlan::orderBy('id','desc')->whereStatus(1)->limit(3)->get();
         $data['depositsplans'] = DpsPlan::orderBy('id','desc')->whereStatus(1)->limit(3)->get();
         $data['fdrplans'] = FdrPlan::orderBy('id','desc')->whereStatus(1)->limit(3)->get();
+        $data['bankplans'] = BankPlan::orderBy('amount','asc')->limit(3)->get();
         
-        return view('frontend.index',$data);
-        
+        if (!$current_domain)
+            return view('frontend.superindex',$data);
+
+        return view('frontend.index',$data);        
     }
 
     public function about(){

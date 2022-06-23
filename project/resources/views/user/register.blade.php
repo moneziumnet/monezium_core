@@ -31,7 +31,7 @@
                     <h6 class="subtitle text--base">@lang('Sign Up')</h6>
                     <h3 class="title">@lang('Create Account Now')</h3>
                 </div>
-                <form id="registerform" class="account-form row gy-3 gx-4 align-items-center" action="{{ route('user.register.submit') }}" method="POST">
+                <form id="registerform" class="account-form row gy-3 gx-4 align-items-center" action="{{ route('user.register.submit',$data->id) }}" method="POST">
                     @includeIf('includes.user.form-both')
                     @csrf
                     <div class="col-sm-6">

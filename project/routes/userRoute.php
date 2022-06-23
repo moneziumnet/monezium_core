@@ -58,8 +58,8 @@ Route::prefix('user')->group(function() {
     Route::get('/otp', [OTPController::class,'showotpForm'])->name('user.otp');
     Route::post('/otp', [OTPController::class,'otp'])->name('user.otp.submit');
   
-    Route::get('/register', [RegisterController::class,'showRegisterForm'])->name('user.register');
-    Route::post('/register', [RegisterController::class,'register'])->name('user.register.submit');
+    Route::get('/register/{id}', [RegisterController::class,'showRegisterForm'])->name('user.register');
+    Route::post('/register/{id}', [RegisterController::class,'register'])->name('user.register.submit');
 
     Route::get('/domain-register', [RegisterController::class,'showDomainRegisterForm'])->name('user.domain.register');
     Route::post('/domain-register', [RegisterController::class,'domainRegister'])->name('user.domain.register.submit');
