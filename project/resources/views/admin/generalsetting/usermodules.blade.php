@@ -26,6 +26,7 @@
             {{ csrf_field() }}
 
           <div class="row">
+          @if(Auth::guard('admin')->user()->sectionCheck('Loan Management'))
             <div class="col-md-6">
               <div class="form-group">
                 <div class="custom-control custom-switch">
@@ -34,7 +35,8 @@
                   </div>
               </div>
             </div>
-
+            @endif
+            @if(Auth::guard('admin')->user()->sectionCheck('DPS Management'))
             <div class="col-md-6">
                 <div class="form-group">
                   <div class="custom-control custom-switch">
@@ -43,7 +45,8 @@
                     </div>
                 </div>
             </div>
-
+            @endif
+            @if(Auth::guard('admin')->user()->sectionCheck('FDR Management'))
             <div class="col-md-6">
                 <div class="form-group">
                   <div class="custom-control custom-switch">
@@ -52,7 +55,8 @@
                     </div>
                 </div>
             </div>
-
+            @endif
+            @if(Auth::guard('admin')->user()->sectionCheck('Request Money'))
             <div class="col-md-6">
               <div class="form-group">
                 <div class="custom-control custom-switch">
@@ -61,7 +65,8 @@
                   </div>
               </div>
             </div>
-
+            @endif
+            @if(Auth::guard('admin')->user()->sectionCheck('Deposit'))
             <div class="col-md-6">
                 <div class="form-group">
                   <div class="custom-control custom-switch">
@@ -70,7 +75,8 @@
                     </div>
                 </div>
             </div>
-
+            @endif
+            @if(Auth::guard('admin')->user()->sectionCheck('Wire Transfer'))
             <div class="col-md-6">
               <div class="form-group">
                 <div class="custom-control custom-switch">
@@ -79,7 +85,8 @@
                   </div>
               </div>
             </div>
-
+            @endif
+            @if(Auth::guard('admin')->user()->sectionCheck('Money Transfer'))
             <div class="col-md-6">
               <div class="form-group">
                 <div class="custom-control custom-switch">
@@ -88,7 +95,8 @@
                   </div>
               </div>
             </div>
-
+            @endif
+            @if(Auth::guard('admin')->user()->sectionCheck('Management Withdraw'))
             <div class="col-md-6">
               <div class="form-group">
                 <div class="custom-control custom-switch">
@@ -97,7 +105,8 @@
                   </div>
               </div>
             </div>
-
+            @endif
+            
             <div class="col-md-6">
                 <div class="form-group">
                   <div class="custom-control custom-switch">
@@ -133,7 +142,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-md-6">
                 <div class="form-group">
                   <div class="custom-control custom-switch">
@@ -142,7 +151,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="col-md-6">
                 <div class="form-group">
                   <div class="custom-control custom-switch">
@@ -151,7 +159,6 @@
                     </div>
                 </div>
             </div>
-
           </div>
             
 
