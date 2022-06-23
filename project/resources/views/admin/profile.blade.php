@@ -125,7 +125,11 @@
 
               <div class="tab-pane fade p-3" id="two" role="tabpanel" aria-labelledby="two-tab">
                     <div class="table-responsive p-2">
-                      @include('includes.admin.form-flash')
+                        <div class="col-sm-12 col-md-4 pr-3 text-right">
+                          <a class="btn btn-primary" id="five-tab" data-toggle="tab" href="#five" role="tab" aria-controls="Five" aria-selected="false">
+                              <i class="fas fa-plus"></i> {{__('Add New Contact')}}
+                          </a>
+                        </div>
                       <table id="geniustablelist" class="table table-hover dt-responsive" cellspacing="0" width="100%">
                         <thead class="thead-light">
                         <tr>
@@ -167,7 +171,15 @@
               <div class="tab-pane fade p-3" id="four" role="tabpanel" aria-labelledby="four-tab">
                   <div class="table-responsive p-2">
                     @include('includes.admin.form-flash')
+                      <div class="col-sm-12 col-md-4 pr-3 text-right">
+                        <a class="btn btn-primary" id="six-tab" data-toggle="tab" href="#six" role="tab" aria-controls="Six" aria-selected="false">
+                          <i class="fas fa-plus"></i> {{__('Add Documents')}}
+                        </a>
+                      </div>
                     <table id="geniustable" class="table table-hover dt-responsive" cellspacing="0" width="100%">
+                      {{-- <div class="col-sm-12 col-md-4 pr-3 text-right">
+                        <a class="btn btn-primary" data-toggle="tab" ><i class="fas fa-plus"></i> {{__('Add Documents')}}</a>
+                      </div> --}}
                       <thead class="thead-light">
                       <tr>
                         
@@ -283,6 +295,30 @@
                 </form>
 
               </div>
+              <div class="tab-pane fade p-3" id="six" role="tabpanel" aria-labelledby="six-tab">
+                <form class="geniusformd" action="{{ route('admin.document.add-document')}}" method="POST" enctype="multipart/form-data">
+                  {{ csrf_field() }}
+
+                  
+                  <div class="row g-3">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="full-name">{{ __('Document Name') }}</label>
+                          <input type="text" class="form-control" id="document_name" name="document_name" placeholder="{{ __('Document Name') }}" value="" required>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="full-name">{{ __('Choose File') }}</label>
+                          <input type="file" class="form-control" id="document_file" name="document_file" required>
+                        </div>
+                      </div>
+                  </div>
+
+                  <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Submit') }}</button>
+                </form>
+              </div>
             </div>
 
 
@@ -373,13 +409,13 @@
             processing: '<img src="{{asset('assets/images/'.$gs->admin_loader)}}">'
         }
     });
-    $(function() {
-        $(".btn-area").append('<div class="col-sm-12 col-md-4 pr-3 text-right">'+
-          '<a class="btn btn-primary" id="five-tab" data-toggle="tab" href="#five" role="tab" aria-controls="Five" aria-selected="false">'+
-        '<i class="fas fa-plus"></i> {{__('Add New Contact')}}'+
-        '</a>'+
-        '</div>');
-    });
+    // $(function() {
+    //     $(".btn-area").append('<div class="col-sm-12 col-md-4 pr-3 text-right">'+
+    //       '<a class="btn btn-primary" id="five-tab" data-toggle="tab" href="#five" role="tab" aria-controls="Five" aria-selected="false">'+
+    //     '<i class="fas fa-plus"></i> {{__('Add New Contact')}}'+
+    //     '</a>'+
+    //     '</div>');
+    // });
 $('#myTab a').on('click', function (e) {
   e.preventDefault()
   $(this).tab('show')

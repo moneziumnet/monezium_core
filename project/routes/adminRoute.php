@@ -302,6 +302,7 @@ Route::prefix('admin')->group(function () {
   Route::get('/contacts/delete/{id}', [ContactsController::class, 'destroy'])->name('admin.contact.contact-delete');
 
   Route::get('/documents/datatables', [DocumentsController::class, 'datatables'])->name('admin.documents.datatables');
+  Route::post('/documents/create-document', [DocumentsController::class, 'getDownload'])->name('admin.document.add-document');//'DownloadsController@download');
   Route::get('/documents/download/{id}', [DocumentsController::class, 'getDownload'])->name('admin.documents.download');//'DownloadsController@download');
   Route::get('/documents/delete/{id}', [DocumentsController::class, 'destroy'])->name('admin.documents.document-delete');
 
