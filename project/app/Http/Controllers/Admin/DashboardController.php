@@ -91,11 +91,8 @@ class DashboardController extends Controller
     public function profile()
     {
         $data = Auth::guard('admin')->user();
-
-        $contact = Contact::where('user_id', $data->id)->first();
         $modules = Generalsetting::first();
-        // dd($modules);
-        return view('admin.profile', compact('data', 'modules', 'contact'));
+        return view('admin.profile', compact('data', 'modules'));
     }
 
     public function profileupdate(Request $request)

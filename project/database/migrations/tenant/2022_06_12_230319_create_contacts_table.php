@@ -28,7 +28,7 @@ class CreateContactsTable extends Migration
             $table->string('id_number')->nullable();
             $table->date('date_of_issue')->nullable();
             $table->date('date_of_expire')->nullable();
-            $table->date('issued_authority')->nullable();
+            $table->string('issued_authority')->nullable();
             $table->timestamps();
         });
     }

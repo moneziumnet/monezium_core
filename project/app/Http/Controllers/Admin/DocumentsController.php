@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use Datatables;
+use App\Models\Admin;
 use App\Models\Document;
-use App\Models\Generalsetting;
 use Illuminate\Http\Request;
+use App\Models\Generalsetting;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
-use Datatables;
 
 class DocumentsController extends Controller
 {
@@ -17,9 +18,12 @@ class DocumentsController extends Controller
     public function datatables()
     {
         $user = auth()->guard('admin')->user();
-        $datas = Document::where('ins_id', $user->id)->orderBy('name','asc')->get();  
-        //$datas = Document::orderBy('name','asc')->get();  
-        
+
+        $datas = tenancy()->central(function ($tenant) use ($user) {
+            $admin = Admin::where('email', $user->email)->first();
+            return Document::where('ins_id', $admin->id)->orderBy('name','asc')->get();  
+        });
+
         return Datatables::of($datas)
                         ->addColumn('name',function(Document $data){
                             return $data->name;
@@ -49,8 +53,7 @@ class DocumentsController extends Controller
     }
 
     public function create(Request $request)
-    {   
-
+    {
         if($request->isMethod('post'))
         {
             $rules = [
@@ -97,9 +100,6 @@ class DocumentsController extends Controller
         }else{
             return response()->json('Please check your file extention and document name.');
         }
-        
-
-       
     }
 
     public function getDownload($id){

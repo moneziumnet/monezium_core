@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use App\Models\Currency;
 use App\Models\Contact;
 use App\Models\Generalsetting;
@@ -16,9 +17,13 @@ class ContactsController extends Controller
     public function datatables()
     {
         $user = auth()->guard('admin')->user();
-        $datas = Contact::where('user_id', $user->id)->orderBy('id','asc')->get();  
-        // $datas = Contact::orderBy('id','asc')->get();  
-        
+        $datas = tenancy()->central(function ($tenant) use ($user) {
+            $admin = Admin::where('email', $user->email)->first();
+            return Contact::where('user_id', $admin->id)->orderBy('id','asc')->get();  
+        });
+
+        // dd($datas);
+
         return Datatables::of($datas)
                         ->addColumn('contact',function(Contact $data){
                             return $data->contact;
