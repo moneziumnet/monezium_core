@@ -45,9 +45,9 @@ class LoanController extends Controller
                             ->editColumn('loan_amount', function(UserLoan $data){
                               $curr = Currency::where('is_default','=',1)->first();
                               return  '<div>
-                                          '.$curr->sign.$data->loan_amount.'
+                                          '.$curr->symbol.$data->loan_amount.'
                                           <br>
-                                          <span class="text-info">Per Installment '.$curr->sign.$data->per_installment_amount.'</span>
+                                          <span class="text-info">Per Installment '.$curr->symbol.$data->per_installment_amount.'</span>
                                       </div>';
                             })
 
@@ -62,9 +62,9 @@ class LoanController extends Controller
                             ->editColumn('total_amount', function(UserLoan $data) {
                               $curr = Currency::where('is_default','=',1)->first();
                               return  '<div>
-                                          '.$curr->sign.round($data->total_installment * $data->per_installment_amount,2).'
+                                          '.$curr->symbol.round($data->total_installment * $data->per_installment_amount,2).'
                                           <br>
-                                          <span class="text-info">Paid Amount '.$curr->sign.$data->paid_amount.'</span>
+                                          <span class="text-info">Paid Amount '.$curr->symbol.$data->paid_amount.'</span>
                                       </div>';
                             })
 

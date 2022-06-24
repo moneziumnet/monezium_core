@@ -38,7 +38,7 @@ class FdrController extends Controller
                             ->editColumn('amount', function(UserFdr $data){
                                 $curr = Currency::where('is_default','=',1)->first();
                                 return  '<div>
-                                            '.$curr->sign.$data->amount.'
+                                            '.$curr->symbol.$data->amount.'
                                             <br>
                                             <span class="text-info">Profit Rate '.$data->interest_rate.' (%)</span>
                                         </div>';
@@ -60,18 +60,18 @@ class FdrController extends Controller
                                 $nextProfitTime = $data->next_profit_time != NULL ? $data->next_profit_time->toDateString() : 'Closed FDR';
                                 if($data->profit_type == 'partial'){
                                     return '<div>
-                                            '.$curr->sign.$data->profit_amount.'
+                                            '.$curr->symbol.$data->profit_amount.'
                                             <br>
                                             <span class="text-info"> '.__('Next Frofit Days').' ('.$nextProfitTime.')</span>
                                         </div>';
                                 }else{
                                     if($data->status == 2){
                                         return '<div>
-                                                <span class="text-success">'.$curr->sign.$data->profit_amount.'</span>
+                                                <span class="text-success">'.$curr->symbol.$data->profit_amount.'</span>
                                             </div>';
                                     }
                                     return '<div>
-                                                '.$curr->sign.$data->profit_amount.'
+                                                '.$curr->symbol.$data->profit_amount.'
                                                 <br>
                                                 <span class="text-info"> '.__('Profit will get after locked period').' </span>
                                             </div>';

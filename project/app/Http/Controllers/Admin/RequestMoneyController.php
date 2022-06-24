@@ -47,12 +47,12 @@ class RequestMoneyController extends Controller
                             })
                             ->editColumn('amount', function(MoneyRequest $data) {
                                 $curr = Currency::where('is_default','=',1)->first();
-                                return $curr->sign.$data->amount;
+                                return $curr->symbol.$data->amount;
                             })
 
                             ->editColumn('cost', function(MoneyRequest $data) {
                                 $curr = Currency::where('is_default','=',1)->first();
-                                return $curr->sign.$data->cost;
+                                return $curr->symbol.$data->cost;
                             })
 
                             ->editColumn('status', function(MoneyRequest $data) {

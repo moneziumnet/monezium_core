@@ -38,14 +38,14 @@ class WithdrawMethodController extends Controller
             ->editColumn('fixed', function(WithdrawMethod $data){
                 $curr = Currency::where('is_default','=',1)->first();
                 return  '<div>
-                            '.$curr->sign.$data->fixed.'
+                            '.$curr->symbol.$data->fixed.'
                            
                         </div>';
             })
             ->editColumn('percentage', function(WithdrawMethod $data){
                 $curr = Currency::where('is_default','=',1)->first();
               return '<div>
-                            '.$curr->sign.$data->percentage.'
+                            '.$curr->symbol.$data->percentage.'
                       </div>';
             })
             ->editColumn('status', function(WithdrawMethod $data) {

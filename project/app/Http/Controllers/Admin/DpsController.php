@@ -38,9 +38,9 @@ class DpsController extends Controller
                             ->editColumn('deposit_amount', function(UserDps $data){
                                 $curr = Currency::where('is_default','=',1)->first();
                                 return  '<div>
-                                            '.$curr->sign.$data->deposit_amount.'
+                                            '.$curr->symbol.$data->deposit_amount.'
                                             <br>
-                                            <span class="text-info">Per Installment '.$curr->sign.$data->per_installment.'</span>
+                                            <span class="text-info">Per Installment '.$curr->symbol.$data->per_installment.'</span>
                                         </div>';
                             })
                             ->editColumn('user_id', function(UserDps $data){
@@ -54,13 +54,13 @@ class DpsController extends Controller
                                 return '<div>
                                         '.$data->total_installment.'
                                         <br>
-                                        <span class="text-info">'.$data->given_installment.' Given ('.$curr->sign.$data->paid_amount.')</span>
+                                        <span class="text-info">'.$data->given_installment.' Given ('.$curr->symbol.$data->paid_amount.')</span>
                                 </div>';
                             })
                             ->editColumn('matured_amount', function(UserDps $data) {
                                 $curr = Currency::where('is_default','=',1)->first();
                                 return '<div>
-                                        '.$curr->sign.$data->matured_amount.'
+                                        '.$curr->symbol.$data->matured_amount.'
                                         <br>
                                         <span class="text-info">Interest Rate'.$data->interest_rate.' (%)</span>
                                 </div>';

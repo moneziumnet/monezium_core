@@ -45,7 +45,7 @@ class WireTransferController extends Controller
                             })
                             ->editColumn('amount', function(WireTransfer $data) {
                                 $curr = Currency::where('is_default','=',1)->first();
-                                return $curr->sign.$data->amount;
+                                return $curr->symbol.$data->amount;
                             })
 
 

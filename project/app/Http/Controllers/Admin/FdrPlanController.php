@@ -37,8 +37,8 @@ class FdrPlanController extends Controller
                             ->editColumn('min_amount', function(FdrPlan $data){
                                 $curr = Currency::where('is_default','=',1)->first();
                                 return  '<div>
-                                            Min: '.$curr->sign.$data->min_amount.'
-                                            <p>Max: '.$curr->sign.$data->max_amount.'</p>
+                                            Min: '.$curr->symbol.$data->min_amount.'
+                                            <p>Max: '.$curr->symbol.$data->max_amount.'</p>
                                         </div>';
                             })
                             ->editColumn('status', function(FdrPlan $data) {

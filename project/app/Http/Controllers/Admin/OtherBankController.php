@@ -31,15 +31,15 @@ class OtherBankController extends Controller
                             ->editColumn('min_limit', function(OtherBank $data){
                                 $curr = Currency::where('is_default','=',1)->first();
                                 return '<div>
-                                            Min : <span class="text-primary">'.$curr->sign.round($data->min_limit,2).'</span>
+                                            Min : <span class="text-primary">'.$curr->symbol.round($data->min_limit,2).'</span>
                                             <br>
-                                            Max : <span class="text-primary">'.$curr->sign.round($data->max_limit,2).'</span>
+                                            Max : <span class="text-primary">'.$curr->symbol.round($data->max_limit,2).'</span>
                                         </div>';
                             })
                             ->editColumn('fixed_charge', function(OtherBank $data){
                                 $curr = Currency::where('is_default','=',1)->first();
                                 return '<div>
-                                            Fixed : <span class="text-primary">'.$curr->sign.round($data->fixed_charge,2).'</span>
+                                            Fixed : <span class="text-primary">'.$curr->symbol.round($data->fixed_charge,2).'</span>
                                             <br>
                                             Percent : <span class="text-primary">'.round($data->percent_charge,2).'%</span>
                                         </div>';

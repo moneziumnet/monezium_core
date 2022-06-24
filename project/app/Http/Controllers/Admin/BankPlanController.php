@@ -29,7 +29,7 @@ class BankPlanController extends Controller
                             ->editColumn('amount', function(BankPlan $data) {
                                 $curr = Currency::where('is_default','=',1)->first();
                                 return  '<div>
-                                            '.$curr->sign.$data->amount.'
+                                            '.$curr->symbol.$data->amount.'
                                         </div>';
                             }) 
                             ->addColumn('action', function(BankPlan $data) {
