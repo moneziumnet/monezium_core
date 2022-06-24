@@ -124,7 +124,7 @@ class PlanController extends Controller
         }
         $data->update();
 
-        $msg = 'Data Updated Successfully.' . '<a href="' . route("admin.bank.plan.index") . '">View Plan Lists</a>';
+        $msg = 'Data Updated Successfully.' . '<a href="' . route("admin.plan.index") . '">View Plan Lists</a>';
         return response()->json($msg);
     }
 
