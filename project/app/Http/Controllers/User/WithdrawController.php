@@ -77,7 +77,7 @@ class WithdrawController extends Controller
         $messagefinal = $request->amount - $messagefee;
 
         $currency = Currency::whereId($request->currency_id)->first();
-        $amountToAdd = $request->amount/$currency->value;
+        $amountToAdd = $request->amount/$currency->rate;
 
         $amount = $amountToAdd;
         $fee = (($withdrawcharge->percentage / 100) * $amount) + $charge;

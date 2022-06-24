@@ -85,7 +85,7 @@ class MollieController extends Controller
       
         if($payment->status == 'paid'){
             $currency = Currency::where('id',$input['currency_id'])->first();
-            $amountToAdd = $input['amount']/$currency->value;
+            $amountToAdd = $input['amount']/$currency->rate;
 
             $deposit = new Deposit();
             $deposit['deposit_number'] = Str::random(12);

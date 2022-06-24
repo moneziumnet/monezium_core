@@ -15,7 +15,7 @@ class ManualController extends Controller
     public function store(Request $request){
 
         $currency = Currency::where('id',$request->currency_id)->first();
-        $amountToAdd = $request->amount/$currency->value;
+        $amountToAdd = $request->amount/$currency->rate;
 
         $deposit = new Deposit();
         $deposit['deposit_number'] = Str::random(12);

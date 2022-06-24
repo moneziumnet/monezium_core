@@ -136,7 +136,7 @@ class FlutterwaveController extends Controller
                   $gs =  Generalsetting::findOrFail(1);
 
                   $currency = Currency::where('id',$deposit_data['currency_id'])->first();
-                  $amountToAdd = $deposit_data['amount']/$currency->value;
+                  $amountToAdd = $deposit_data['amount']/$currency->rate;
       
                   $user = auth()->user();
                   user_wallet_increment($user->id, $currency->id, $amountToAdd);
