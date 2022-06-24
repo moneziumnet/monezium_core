@@ -159,7 +159,7 @@ class RequestDomainController extends Controller
             $request->all(),
             [
                 'name' => 'required',
-                'email' => 'required|email|unique:admins,email,',
+                'email' => 'required|email',
                 'domains' => 'required|unique:domains,domain',
             ]
         );
@@ -240,6 +240,7 @@ class RequestDomainController extends Controller
                     'tenant_id' => $tenant->id,
                 ]);
                 $admin->tenant_id = $tenant->id;
+                $admin->status = 1;
                 $admin->save();
             } catch (\Exception $e) {
                 return response()->json(array('errors' => $e->getMessage()));

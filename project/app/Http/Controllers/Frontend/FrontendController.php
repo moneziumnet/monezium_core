@@ -88,11 +88,11 @@ class FrontendController extends Controller
         $data['depositsplans'] = DpsPlan::orderBy('id', 'desc')->whereStatus(1)->limit(3)->get();
         $data['fdrplans'] = FdrPlan::orderBy('id', 'desc')->whereStatus(1)->limit(3)->get();
         $data['bankplans'] = BankPlan::orderBy('amount', 'asc')->limit(3)->get();
-
+        
+        $data['subscripplans'] = tenancy()->central(function ($tenant) {
+            return Plan::orderBy('price', 'asc')->limit(3)->get();
+        });
         if (!$current_domain) {
-            $$data['subscripplans'] = tenancy()->central(function ($tenant) {
-                return Plan::orderBy('price', 'asc')->limit(3)->get();
-            });
             return view('frontend.superindex', $data);
         }
 
