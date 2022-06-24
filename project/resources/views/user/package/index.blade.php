@@ -44,6 +44,72 @@
                         </div>
                         <div class="plan__item-body">
                             <ul>
+                            <li>
+                                        <div class="name">
+                                            @lang('Maximum Send Money (Daily)')
+                                        </div>
+                                        <div class="info">
+                                            {{ showprice($data->daily_send,$currency) }}
+                                        </div>
+                                    </li>
+
+                                    <li>
+                                        <div class="name">
+                                            @lang('Maximum Send Money (Monthly)')
+                                        </div>
+
+                                        <div class="info">
+                                            {{ showprice($data->monthly_send,$currency) }}
+                                        </div>
+                                    </li>
+
+                                    <li>
+                                        <div class="name">
+                                            @lang('Maximum Request Money (Daily)')
+                                        </div>
+
+                                        <div class="info">
+                                            {{ showprice($data->daily_receive,$currency) }}
+                                        </div>
+                                    </li>
+
+                                    <li>
+                                        <div class="name">
+                                            @lang('Maximum Request Money (Monthly)')
+                                        </div>
+
+                                        <div class="info">
+                                            {{ showprice($data->monthly_receive,$currency) }}
+                                        </div>
+                                    </li>
+
+                                    <li>
+                                        <div class="name">
+                                            @lang('Maximum Withdraw Amount (Daily)')
+                                        </div>
+
+                                        <div class="info">
+                                            {{ showprice($data->daily_withdraw,$currency) }}
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="name">
+                                            @lang('Maximum Withdraw Amount (Monthly)')
+                                        </div>
+
+                                        <div class="info">
+                                            {{ showprice($data->monthly_withdraw,$currency) }}
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="name">
+                                            @lang('Maximum Loan Amount (Monthly)')
+                                        </div>
+                                        <div class="info">
+                                            {{ showprice($data->loan_amount,$currency) }}
+                                        </div>
+                                    </li>
+                                    
                                 @if ($data->attribute)
                                     @foreach (json_decode($data->attribute,true) as $key=>$attribute)
                                         <li>
