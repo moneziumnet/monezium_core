@@ -16,14 +16,9 @@ class ContactsController extends Controller
 
     public function datatables()
     {
-        $user = auth()->guard('admin')->user();
-        $datas = tenancy()->central(function ($tenant) use ($user) {
-            $admin = Admin::where('email', $user->email)->first();
-            return Contact::where('user_id', $admin->id)->orderBy('id','asc')->get();  
+        $datas = tenancy()->central(function ($tenant){
+            return Contact::where('user_id', $tenant->id)->orderBy('id','asc')->get();  
         });
-
-        // dd($datas);
-
         return Datatables::of($datas)
                         ->addColumn('contact',function(Contact $data){
                             return $data->contact;
@@ -63,29 +58,26 @@ class ContactsController extends Controller
 
     public function create(Request $request)
     {   
-        $data = Auth::guard('admin')->user();
-
-        $contact = Contact::where('user_id', $data->id)->first();
-        $modules = Generalsetting::first();
-        // dd($modules);
-        return view('admin.create-contact', compact('data', 'modules', 'contact'));
+        return view('admin.create-contact', compact('data'));
     }
 
     public function edit($id)
     {
         $data = Auth::guard('admin')->user();
 
-        $contact = Contact::where('id', $id)->first();
+        $contact = tenancy()->central(function ($tenant) use($id){
+            return Contact::findOrFail($id);
+        });
         $modules = Generalsetting::first();
-        
-        // dd($modules);
         return view('admin.create-contact', compact('data', 'modules', 'contact', 'id'));
     }
 
     public function destroy($id)
     {
-        $data = Contact::findOrFail($id);
-        $data->delete();
+        $contact = tenancy()->central(function ($tenant) use($id){
+            return Contact::findOrFail($id);
+        });
+        $contact->delete();
        
         //--- Redirect Section
         $msg = 'Contact Has Been Deleted Successfully.';
