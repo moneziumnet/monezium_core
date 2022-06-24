@@ -3,7 +3,7 @@
 
     <div class="card">
         <div class="d-sm-flex align-items-center justify-content-between py-3">
-        <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Edit Profile') }}</h5>
+        <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Edit Profile') }}<a class="btn btn-primary btn-rounded btn-sm" href="{{route('admin.profile')}}"><i class="fas fa-arrow-left"></i> {{ __('Back') }}</a></h5>
         <ol class="breadcrumb m-0 py-0">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
             <li class="breadcrumb-item"><a href="{{ route('admin.profile') }}">{{ __('Edit Profile') }}</a></li>
