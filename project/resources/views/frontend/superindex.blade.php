@@ -182,7 +182,7 @@
 <section class="plan-section bg--section pt-50 pb-100">
     <div class="container">
         <div class="section-title text-center">
-            <h6 class="subtitle text--base">@lang('Pricing Plan')</h6>
+            <h6 class="subtitle text--base">@lang('Subscription Plan for Institution')</h6>
             
         </div>
 

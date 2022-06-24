@@ -21,6 +21,7 @@ use Illuminate\Support\Carbon;
 use App\Models\UserSubscription;
 use PHPMailer\PHPMailer\PHPMailer;
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Input;
 
@@ -41,12 +42,6 @@ class RegisterController extends Controller
     {
         $data = Plan::findOrFail($id);
         return view('user.domainregister', compact('data'));
-    }
-
-    public function institutionProfile($id)
-    {
-        $data = Admin::findOrFail($id);
-        return view('user.profileinstitution', compact('data'));
     }
 
     public function domainRegister(Request $request, $id)
@@ -74,37 +69,23 @@ class RegisterController extends Controller
         $domain->save();
 
         $insAdmin = new Admin();
-        $insAdmin->name = $request->name;
-        $insAdmin->email = $request->email;
-        $insAdmin->phone = $request->phone;
+        $insAdmin->name = $request->iname;
+        $insAdmin->email = $request->iemail;
+        $insAdmin->phone = $request->iphone;
+        $insAdmin->vat = $request->vat;
+        $insAdmin->address = $request->address;
+        $insAdmin->city = $request->city;
+        $insAdmin->zip = $request->zip;
+        $insAdmin->country_id = $request->country_id;
+        $insAdmin->role_id = $request->role_id;
         $insAdmin->password = Hash::make($request->password);
-        
-        $insAdmin->plan_id =$subscription->id;
 
+        $insAdmin->plan_id =$subscription->id;
+        $insAdmin->status = 0;
         $insAdmin->save();
 
-        $msg = 'Registed Successfully.'.'<a href="'.route("user.institution.profile", $insAdmin->id).'">Go Inside Profile</a>';
+        $msg = 'Registed Successfully.'.'<a href="'.route("admin.login", $insAdmin->id).'">Go admin site</a>';
         return response()->json($msg);
-    }
-
-    public function institutionProfileStore(Request $request, $id)
-    {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'name' => 'required',
-                'email' => 'required|email',
-            ]
-        );
-        if ($validator->fails()) {
-            return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
-        }
-        $insAdmin = Admin::findOrFail($id);
-        $input = $request->all();
-        $insAdmin->update($input);
-        // $msg = __('Information Updated Successfully.');
-        // return response()->json($msg);
-        return redirect()->back()->with('success', __('Information Updated Successfully.'));
     }
 
     public function register(Request $request, $id)
