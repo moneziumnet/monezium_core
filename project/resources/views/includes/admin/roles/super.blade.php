@@ -25,6 +25,12 @@
     </a>
   </li>
 
+  <li class="nav-item">
+    <a class="nav-link" href="{{ route('admin.plan.index') }}">
+      <i class="fas fa-user"></i>
+      <span>{{ __('Subscription Plan') }}</span>
+    </a>
+  </li>
 
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTable1" aria-expanded="true"

@@ -9,13 +9,14 @@ use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\FontController;
 use App\Http\Controllers\Admin\LoanController;
 use App\Http\Controllers\Admin\PageController;
+use App\Http\Controllers\Admin\PlanController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\BonusController;
 use App\Http\Controllers\Admin\EmailController;
 use App\Http\Controllers\Admin\LoginController;
-use App\Http\Controllers\Admin\BranchController;
 
+use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\CounterController;
 use App\Http\Controllers\Admin\DpsPlanController;
@@ -26,31 +27,31 @@ use App\Http\Controllers\Admin\SeoToolController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\SitemapController;
 use App\Http\Controllers\Admin\BankPlanController;
+use App\Http\Controllers\Admin\ContactsController;
 use App\Http\Controllers\Admin\CurrencyController;
 use App\Http\Controllers\Admin\LanguageController;
 use App\Http\Controllers\Admin\LoanPlanController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DocumentsController;
 use App\Http\Controllers\Admin\KycManageController;
 use App\Http\Controllers\Admin\OtherBankController;
 use App\Http\Controllers\Admin\SubscriberController;
+
 use App\Http\Controllers\Admin\WithdrawalController;
 use App\Http\Controllers\Admin\InstitutionController;
 use App\Http\Controllers\Admin\PageSettingController;
-
 use App\Http\Controllers\Admin\TransactionController;
-use App\Http\Controllers\Admin\ContactsController;
-use App\Http\Controllers\Admin\DocumentsController;
 use App\Http\Controllers\Admin\BlogCategoryController;
 use App\Http\Controllers\Admin\ManageChargeController;
 use App\Http\Controllers\Admin\ManageEscrowController;
+
 use App\Http\Controllers\Admin\RequestMoneyController;
 
 use App\Http\Controllers\Admin\AdminLanguageController;
-
 use App\Http\Controllers\Admin\RequestDomainController;
 use App\Http\Controllers\Admin\SocialSettingController;
-use App\Http\Controllers\Admin\AccountProcessController;
 
+use App\Http\Controllers\Admin\AccountProcessController;
 use App\Http\Controllers\Admin\GeneralSettingController;
 use App\Http\Controllers\Admin\PaymentGatewayController;
 use App\Http\Controllers\Admin\WithdrawMethodController;
@@ -139,6 +140,14 @@ Route::prefix('admin')->group(function () {
     Route::get('/bank-plan/delete/{id}', [BankPlanController::class, 'destroy'])->name('admin.bank.plan.delete');
     Route::post('/bank-plan/store', [BankPlanController::class, 'store'])->name('admin.bank.plan.store');
     Route::post('/bank-plan/update/{id}', [BankPlanController::class, 'update'])->name('admin.bank.plan.update');
+
+    Route::get('/plan/datatables', [PlanController::class, 'datatables'])->name('admin.plan.datatables');
+    Route::get('/plans', [PlanController::class, 'index'])->name('admin.plan.index');
+    Route::get('/plan/create', [PlanController::class, 'create'])->name('admin.plan.create');
+    Route::get('/plan/edit/{id}', [PlanController::class, 'edit'])->name('admin.plan.edit');
+    Route::get('/plan/delete/{id}', [PlanController::class, 'destroy'])->name('admin.plan.delete');
+    Route::post('/plan/store', [PlanController::class, 'store'])->name('admin.plan.store');
+    Route::post('/plan/update/{id}', [PlanController::class, 'update'])->name('admin.plan.update');
 
     // Route::get('/withdraw-method/datatables', [WithdrawMethodController::class,'datatables'])->name('admin.withdraw.method.datatables'); //JSON REQUEST
     // Route::get('/withdraw-method', [WithdrawMethodController::class,'index'])->name('admin-withdraw-method-index');
