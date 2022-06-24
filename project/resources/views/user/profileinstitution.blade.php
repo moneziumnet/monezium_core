@@ -9,25 +9,25 @@
   <div class="container">
     <div class="account-wrapper bg--body">
       <div class="section-title mb-3">
-        <h3 class="title">@lang('Register Institution Now')</h3>
+        <h3 class="title">@lang('Institution Full Information')</h3>
       </div>
       <div class="card mt-3 tab-card">
-        <div class="card-header tab-card-header">
-          <ul class="nav nav-pills card-header-tabs" id="pills-tab" role="tablist">
-            <li class="nav-item">
-              <a class="nav-link" id="one-tab" data-toggle="tab" href="#one" role="tab" aria-controls="One" aria-selected="true">Information</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" id="two-tab" data-toggle="tab" href="#two" role="tab" aria-controls="Two" aria-selected="false">Documents</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" id="three-tab" data-toggle="tab" href="#three" role="tab" aria-controls="Three" aria-selected="false">Modules</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" id="four-tab" data-toggle="tab" href="#four" role="tab" aria-controls="Four" aria-selected="false">Contacts</a>
-            </li>
-          </ul>
-        </div>
+      <div class="card-header tab-card-header">
+              <ul class="nav nav-pills card-header-tabs" id="pills-tab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="one-tab" data-toggle="tab" href="#one" role="tab" aria-controls="One" aria-selected="true">Information</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="two-tab" data-toggle="tab" href="#two" role="tab" aria-controls="Two" aria-selected="false">Contacts</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="three-tab" data-toggle="tab" href="#three" role="tab" aria-controls="Three" aria-selected="false">Modules</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="four-tab" data-toggle="tab" href="#four" role="tab" aria-controls="Four" aria-selected="false">Documents</a>
+                </li>
+              </ul>
+            </div>
 
         <div class="tab-content" id="myTabContent">
           <div class="tab-pane fade show active p-3" id="one" role="tabpanel" aria-labelledby="one-tab">
@@ -97,8 +97,26 @@
           </div>
 
           <div class="tab-pane fade p-3" id="two" role="tabpanel" aria-labelledby="two-tab">
-
-          </div>
+                    <div class="table-responsive p-2">
+                        <div class="col-sm-12 text-right">
+                          <a class="btn btn-primary" id="five-tab" data-toggle="tab" href="#five" role="tab" aria-controls="Five" aria-selected="false">
+                              <i class="fas fa-plus"></i> {{__('Add New Contact')}}
+                          </a>
+                        </div>
+                      <table id="geniustablelist" class="table table-hover dt-responsive" cellspacing="0" width="100%">
+                        <thead class="thead-light">
+                        <tr>
+                            <th>{{__('Contact')}}</th>
+                            <th>{{__('Name')}}</th>
+                            <th>{{__('Email')}}</th>
+                            <th>{{__('Address')}}</th>
+                            <th>{{__('Phone')}}</th>
+                            <th>{{__('Options')}}</th>
+                        </tr>      
+                        </thead>
+                      </table>
+                    </div>
+              </div>
 
           <div class="tab-pane fade p-3" id="three" role="tabpanel" aria-labelledby="three-tab">
 

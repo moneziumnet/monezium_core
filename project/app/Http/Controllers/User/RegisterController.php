@@ -5,7 +5,9 @@ namespace App\Http\Controllers\User;
 use Auth;
 use Session;
 use Validator;
+use App\Models\Plan;
 use App\Models\User;
+use App\Models\Admin;
 use App\Models\BankPlan;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
@@ -19,7 +21,6 @@ use Illuminate\Support\Carbon;
 use App\Models\UserSubscription;
 use PHPMailer\PHPMailer\PHPMailer;
 use App\Http\Controllers\Controller;
-use App\Models\Admin;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Input;
 
@@ -36,9 +37,10 @@ class RegisterController extends Controller
         return view('user.register', compact('data'));
     }
 
-    public function showDomainRegisterForm()
+    public function showDomainRegisterForm($id)
     {
-        return view('user.domainregister');
+        $data = Plan::findOrFail($id);
+        return view('user.domainregister', compact('data'));
     }
 
     public function institutionProfile($id)
@@ -47,7 +49,7 @@ class RegisterController extends Controller
         return view('user.profileinstitution', compact('data'));
     }
 
-    public function domainRegister(Request $request)
+    public function domainRegister(Request $request, $id)
     {
         $validator = Validator::make(
             $request->all(),
@@ -61,6 +63,7 @@ class RegisterController extends Controller
         if ($validator->fails()) {
             return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
         }
+        $subscription = Plan::findOrFail($id);
 
         $domain = new RequestDomain();
         $domain->name = $request->name;
@@ -75,6 +78,9 @@ class RegisterController extends Controller
         $insAdmin->email = $request->email;
         $insAdmin->phone = $request->phone;
         $insAdmin->password = Hash::make($request->password);
+        
+        $insAdmin->plan_id =$subscription->id;
+
         $insAdmin->save();
 
         $msg = 'Registed Successfully.'.'<a href="'.route("user.institution.profile", $insAdmin->id).'">Go Inside Profile</a>';

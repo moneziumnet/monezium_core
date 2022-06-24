@@ -12,7 +12,7 @@
             <div class="section-title mb-3">
                 <h3 class="title">@lang('Register Institution Now')</h3>
             </div>
-            <form id="registerform" class="account-form row gy-3 gx-4 align-items-center" action="{{ route('user.domain.register.submit') }}" method="POST">
+            <form id="registerform" class="account-form row gy-3 gx-4 align-items-center" action="{{ route('user.domain.register.submit',$data->id) }}" method="POST">
                 @includeIf('includes.user.form-both')
                 @csrf
                 <div class="col-sm-6">

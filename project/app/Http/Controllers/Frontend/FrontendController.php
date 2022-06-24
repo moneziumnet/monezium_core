@@ -2,51 +2,52 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Classes\GeniusMailer;
-use App\Http\Controllers\Controller;
-use App\Models\AccountProcess;
-use App\Models\Admin;
-use App\Models\AuthorBadge;
-use App\Models\AuthorLevel;
-use App\Models\BankPlan;
-use App\Models\Blog;
-use App\Models\Blog_Category;
-use App\Models\BlogCategory;
-use App\Models\Category;
-use App\Models\Counter;
-use App\Models\Currency;
-use App\Models\DpsPlan;
+use Carbon\Carbon;
 use App\Models\Faq;
+use App\Models\Blog;
+use App\Models\Item;
+use App\Models\Page;
+use App\Models\Plan;
+use App\Models\User;
+use App\Models\Admin;
+use App\Models\Follow;
+use App\Models\Review;
+use App\Models\Slider;
+use App\Models\Counter;
+use App\Models\DpsPlan;
 use App\Models\FdrPlan;
 use App\Models\Feature;
-use App\Models\Follow;
-use App\Models\Generalsetting;
-use App\Models\HomepageSetting;
-use App\Models\Item;
-use App\Models\LoanPlan;
-use App\Models\OrderedItem;
-use App\Models\Page;
-use App\Models\Pagesetting;
 use App\Models\Partner;
 use App\Models\Product;
-use App\Models\Review;
 use App\Models\Service;
-use App\Models\Slider;
-use App\Models\Socialsetting;
-use App\Models\Subscriber;
-use App\Models\Trending;
-use App\Models\User;
 use App\Models\UserDps;
-use Brian2694\Toastr\Facades\Toastr;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
+use App\Models\BankPlan;
+use App\Models\Category;
+use App\Models\Currency;
+use App\Models\LoanPlan;
+use App\Models\Trending;
+use App\Models\Subscriber;
+use App\Models\AuthorBadge;
+use App\Models\AuthorLevel;
+use App\Models\OrderedItem;
+use App\Models\Pagesetting;
 use Illuminate\Support\Str;
+use App\Models\BlogCategory;
+use Illuminate\Http\Request;
+use App\Classes\GeniusMailer;
+use App\Models\Blog_Category;
+use App\Models\Socialsetting;
 use InvalidArgumentException;
+use App\Models\AccountProcess;
+use App\Models\Generalsetting;
+use App\Models\HomepageSetting;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\App;
+use App\Http\Controllers\Controller;
+use Brian2694\Toastr\Facades\Toastr;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 
 class FrontendController extends Controller
 {
@@ -90,6 +91,7 @@ class FrontendController extends Controller
         $data['depositsplans'] = DpsPlan::orderBy('id','desc')->whereStatus(1)->limit(3)->get();
         $data['fdrplans'] = FdrPlan::orderBy('id','desc')->whereStatus(1)->limit(3)->get();
         $data['bankplans'] = BankPlan::orderBy('amount','asc')->limit(3)->get();
+        $data['subscripplans'] = Plan::orderBy('price','asc')->limit(3)->get();
         
         if (!$current_domain)
             return view('frontend.superindex',$data);

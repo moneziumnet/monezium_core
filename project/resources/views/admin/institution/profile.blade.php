@@ -19,7 +19,7 @@
             <div class="card-header tab-card-header">
               <ul class="nav nav-pills card-header-tabs" id="pills-tab" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link" id="one-tab" data-toggle="tab" href="#one" role="tab" aria-controls="One" aria-selected="true">Information</a>
+                    <a class="nav-link active" id="one-tab" data-toggle="tab" href="#one" role="tab" aria-controls="One" aria-selected="true">Information</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="two-tab" data-toggle="tab" href="#two" role="tab" aria-controls="Two" aria-selected="false">Contacts</a>

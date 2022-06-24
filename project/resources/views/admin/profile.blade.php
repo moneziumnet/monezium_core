@@ -20,7 +20,7 @@
             <div class="card-header tab-card-header">
               <ul class="nav nav-pills card-header-tabs" id="pills-tab" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link" id="one-tab" data-toggle="tab" href="#one" role="tab" aria-controls="One" aria-selected="true">Information</a>
+                    <a class="nav-link active" id="one-tab" data-toggle="tab" href="#one" role="tab" aria-controls="One" aria-selected="true">Information</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="two-tab" data-toggle="tab" href="#two" role="tab" aria-controls="Two" aria-selected="false">Contacts</a>
@@ -31,7 +31,6 @@
                 <li class="nav-item">
                     <a class="nav-link" id="four-tab" data-toggle="tab" href="#four" role="tab" aria-controls="Four" aria-selected="false">Documents</a>
                 </li>
-                
               </ul>
             </div>
     
@@ -351,26 +350,6 @@
 
 "use strict";
 
-  // var table = $('#geniustable').DataTable({
-  //      ordering: false,
-  //      processing: true,
-  //      serverSide: true,
-  //      searching: true,
-  //      ajax: '{{ route('admin.transactions.datatables') }}',
-  //      columns: [
-  //           { data: 'created_at', name: 'created_at' },
-  //           { data: 'trnx', name: 'trnx' },
-  //           { data: 'details', name: 'details' },
-  //           { data: 'remark', name:'remark' },
-  //           { data: 'amount', name: 'amount' },
-  //           { data: 'charge', name: 'charge' },
-  //       ],
-  //       language : {
-  //           processing: '<img src="{{asset('assets/images/'.$gs->admin_loader)}}">'
-  //       }
-  //   });
-  
-    
   var documentstable = $('#geniustable').DataTable({
        ordering: false,
        processing: true,
