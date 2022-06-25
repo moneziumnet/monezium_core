@@ -209,7 +209,7 @@
   </li>
   @endif
 
-  @if(Auth::guard('admin')->user()->sectionCheck('Manage Blog'))
+  <!-- @if(Auth::guard('admin')->user()->sectionCheck('Manage Blog'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#blog" aria-expanded="true"
       aria-controls="collapseTable">
@@ -223,7 +223,7 @@
       </div>
     </div>
   </li>
-  @endif
+  @endif -->
 
   @if(Auth::guard('admin')->user()->sectionCheck('General Setting'))
   <li class="nav-item">
