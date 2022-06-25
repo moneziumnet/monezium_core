@@ -353,6 +353,15 @@ use PHPMailer\PHPMailer\PHPMailer;
   }
 
 
+  if(!function_exists('check_user_type'))
+  {
+      function check_user_type()
+      {
+        
+      }
+  }
+
+
 
 
 ?>
