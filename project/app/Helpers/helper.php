@@ -355,9 +355,16 @@ use PHPMailer\PHPMailer\PHPMailer;
 
   if(!function_exists('check_user_type'))
   {
-      function check_user_type()
+      function check_user_type($type_id)
       {
-        
+          $explode = explode(',',auth()->user()->user_type);
+
+          if(in_array($type_id,$explode))
+          {
+              return true;
+          }else{
+              return false;
+          }
       }
   }
 

@@ -17,9 +17,10 @@ class DocumentsController extends Controller
 
     public function datatables()
     {
-        $datas = tenancy()->central(function ($tenant) {
-            return Document::where('ins_id', $tenant->id)->orderBy('name', 'asc')->get();
-        });
+        // $datas = tenancy()->central(function ($tenant) {
+        //     return Document::where('ins_id', $tenant->id)->orderBy('name', 'asc')->get();
+        // });
+        $datas = Document::where('ins_id', $tenant->id)->orderBy('name', 'asc')->get();
 
         return Datatables::of($datas)
             ->addColumn('name', function (Document $data) {
@@ -82,14 +83,14 @@ class DocumentsController extends Controller
                     $user = auth()->guard('admin')->user();
                     //store image file into directory and db
 
-                    $save = tenancy()->central(function ($tenant) use($request, $file) {
+                    // $save = tenancy()->central(function ($tenant) use($request, $file) {
                         $save = new Document();
-                        $save->ins_id = $tenant->id;
+                        $save->ins_id = $user->id;
                         $save->name = $request->input('document_name');
                         $save->file = $file;
                         $save->save();
                         return  $save;
-                    });
+                    // });
                     // dd($save);
 
                     return response()->json('Document Saved Successfully.');
@@ -105,9 +106,10 @@ class DocumentsController extends Controller
     public function getDownload($id)
     {
         //PDF file is stored under project/public/download/info.pdf
-        $document = tenancy()->central(function ($tenant) use ($id) {
-            return  Document::findOrFail($id);
-        });
+        // $document = tenancy()->central(function ($tenant) use ($id) {
+        //     return  Document::findOrFail($id);
+        // });
+        $document = Document::findOrFail($id);
 
         $file = public_path("assets/documents/" . $document->file);
         return Response::download($file);
@@ -115,9 +117,10 @@ class DocumentsController extends Controller
 
     public function destroy($id)
     {
-        $document = tenancy()->central(function ($tenant) use ($id) {
-            return  Document::findOrFail($id);
-        });
+        // $document = tenancy()->central(function ($tenant) use ($id) {
+        //     return  Document::findOrFail($id);
+        // });
+        $document = Document::findOrFail($id);
 
         if (file_exists(public_path("assets/documents/" . $document->file))) {
             @unlink(public_path("assets/documents/" . $document->file));

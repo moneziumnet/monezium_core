@@ -41,6 +41,10 @@
                     {{__('2FA Security')}}
                   </a>
 
+                  @if(check_user_type(3))
+                  <a class="dropdown-item" href="{{route('user.referral.index')}}" >
+                    @lang('Invite Users')
+                  </a>
                   <a class="dropdown-item" href="{{route('user.referral.index')}}" >
                     @lang('Referred Users')
                   </a>
@@ -48,7 +52,7 @@
                   <a class="dropdown-item" href="{{ route('user.referral.commissions') }}" >
                     @lang('Referral Commissions')
                   </a>
-
+                  @endif
                   <a class="dropdown-item" href="{{route('user.message.index')}}" >
                     {{__('Support Tickets')}}
                   </a>
