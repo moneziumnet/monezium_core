@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Admin;
 use Carbon\Carbon;
 use App\Models\Charge;
 use App\Models\Wallet;
@@ -9,6 +10,21 @@ use App\Models\EmailTemplate;
 use App\Models\Generalsetting;
 use PHPMailer\PHPMailer\PHPMailer;
 
+if(!function_exists('getModule')){
+  function getModule($value)
+  {
+      $admin = tenancy()->central(function ($tenant){
+          return Admin::where('tenant_id', $tenant->id)->first();
+      });
+
+      $sections = explode(" , ", $admin->section);
+        if (in_array($value, $sections)){
+            return true;
+        }else{
+            return false;
+        }
+  }
+}
 
   if(!function_exists('showPrice')){
       
@@ -32,6 +48,7 @@ use PHPMailer\PHPMailer\PHPMailer;
       return auth()->guard('admin')->user();
     }
   }
+
   function getPhoto($filename)
   {
       if($filename){

@@ -19,13 +19,6 @@
   </li>
 
   <li class="nav-item">
-    <a class="nav-link" href="{{ route('admin.role.index') }}">
-      <i class="fas fa-cash-register"></i>
-      <span>{{ __('Module management') }}</span>
-    </a>
-  </li>
-
-  <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.plan.index') }}">
       <i class="fas fa-user"></i>
       <span>{{ __('Subscription Plan') }}</span>

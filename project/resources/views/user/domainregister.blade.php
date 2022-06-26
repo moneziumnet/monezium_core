@@ -97,17 +97,6 @@
                             <input type="text" class="form-control form--control" id="inp-phone" name="iphone" placeholder="{{ __('Enter Phone') }}" value="" required>
                         </div>
                     </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="inp-name" class="form-label">{{ __('Select Role') }}</label>
-                            <select class="form-control form--control mb-3" name="role_id" required="">
-                                <option value="">{{ __('Select Role') }}</option>
-                                @foreach(DB::table('roles')->get() as $dta)
-                                <option value="{{ $dta->id }}">{{ $dta->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
                     <div class="mt-2">
                         <div class="form-check mt-3 mb-0">
                             <input type="checkbox" id="accept" class="form-check-input" checked>

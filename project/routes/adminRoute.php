@@ -10,7 +10,6 @@ use App\Http\Controllers\Admin\FontController;
 use App\Http\Controllers\Admin\LoanController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PlanController;
-use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\BonusController;
 use App\Http\Controllers\Admin\EmailController;
@@ -459,16 +458,6 @@ Route::prefix('admin')->group(function () {
   });
 
 
-  Route::group(['middleware' => 'permissions:Module management'], function () {
-    Route::get('/role/datatables', [RoleController::class, 'datatables'])->name('admin.role.datatables');
-    Route::get('/role', [RoleController::class, 'index'])->name('admin.role.index');
-    Route::get('/role/create', [RoleController::class, 'create'])->name('admin.role.create');
-    Route::post('/role/create', [RoleController::class, 'store'])->name('admin.role.store');
-    Route::get('/role/edit/{id}', [RoleController::class, 'edit'])->name('admin.role.edit');
-    Route::post('/role/edit/{id}', [RoleController::class, 'update'])->name('admin.role.update');
-    Route::get('/role/delete/{id}', [RoleController::class, 'destroy'])->name('admin.role.delete');
-  });
-
   Route::group(['middleware' => 'permissions:Sub Institutions management'], function () {
     Route::get('/institution/datatables', [InstitutionController::class, 'datatables'])->name('admin.institution.datatables');
     Route::get('/institution', [InstitutionController::class, 'index'])->name('admin.institution.index');
@@ -482,6 +471,7 @@ Route::prefix('admin')->group(function () {
     Route::post('/institution/add-document/{id}', [InstitutionController::class, 'createDocument'])->name('admin.institution.add-document');
     Route::get('/institution/block/{id1}/{id2}', [InstitutionController::class, 'block'])->name('admin-staff-block');
     Route::post('/institution/update/{id}', [InstitutionController::class, 'update'])->name('admin.institution.update');
+    Route::post('/institution/moduleupdate/{id}', [InstitutionController::class, 'moduleupdate'])->name('admin.institution.moduleupdate');
     Route::get('/institution/delete/{id}', [InstitutionController::class, 'destroy'])->name('admin.institution.delete');
 
     Route::get('/branch/datatables', [BranchController::class, 'datatables'])->name('admin.branch.datatables');

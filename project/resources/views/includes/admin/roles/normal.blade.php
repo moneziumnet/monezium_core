@@ -1,6 +1,6 @@
-@if(Auth::guard('admin')->user()->role_id != 0)
+@if(Auth::guard('admin')->user()->tenant_id)
 
-  @if(Auth::guard('admin')->user()->sectionCheck('Sub Institutions management'))
+  @if(getModule('Sub Institutions management'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#institution" aria-expanded="true"
       aria-controls="collapseTable">
@@ -10,9 +10,6 @@
     <div id="institution" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         <a class="collapse-item" href="{{ route('admin.institution.index') }}">{{ __('Sub Institution') }}</a>
-        
-        <a class="collapse-item" href="{{ route('admin.role.index') }}">{{ __('Roles') }}</a>
-        
         <a class="collapse-item" href="{{ route('admin.branch.index') }}">{{ __('Branches') }}</a>
         <a class="collapse-item" href="{{ route('admin.payment.index') }}">{{  __('Payment Gateways')  }}</a>
       </div>
@@ -20,7 +17,7 @@
   </li>
   @endif
 
-  @if(Auth::guard('admin')->user()->sectionCheck('Manage Customers'))
+  @if(getModule('Manage Customers'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#customer" aria-expanded="true"
       aria-controls="collapseTable">
@@ -43,7 +40,7 @@
   </li>
   @endif
   
-  @if(Auth::guard('admin')->user()->sectionCheck('Loan Management'))
+  @if(getModule('Loan Management'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#loan" aria-expanded="true" aria-controls="collapseTable">
       <i class="fas fa-cash-register"></i>
@@ -62,7 +59,7 @@
   </li>
   @endif
 
-  @if(Auth::guard('admin')->user()->sectionCheck('DPS Management'))
+  @if(getModule('DPS Management'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#dps" aria-expanded="true" aria-controls="collapseTable">
       <i class="fas fa-warehouse"></i>
@@ -79,7 +76,7 @@
   </li>
   @endif
 
-  @if(Auth::guard('admin')->user()->sectionCheck('FDR Management'))
+  @if(getModule('FDR Management'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#fdr" aria-expanded="true" aria-controls="collapseTable">
       <i class="fas fa-user-shield"></i>
@@ -97,7 +94,7 @@
   @endif
 
 
-  @if(Auth::guard('admin')->user()->sectionCheck('Management Withdraw'))
+  @if(getModule('Management Withdraw'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#withdraw" aria-expanded="true" aria-controls="collapseTable">
       <i class="fas fa-user"></i>
@@ -114,7 +111,7 @@
   </li>
   @endif
 
-  @if(Auth::guard('admin')->user()->sectionCheck('Other Banks'))
+  @if(getModule('Other Banks'))
   <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.other.banks.index') }}">
       <i class="fas fa-landmark"></i>
@@ -123,7 +120,7 @@
   </li>
   @endif
 
-  @if(Auth::guard('admin')->user()->sectionCheck('Manage Escrow'))
+  @if(getModule('Manage Escrow'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#escrow" aria-expanded="true" aria-controls="collapseTable">
       <i class="fas fa-hands-helping"></i>
@@ -145,7 +142,7 @@
   </li>
   @endif
 
-  @if(Auth::guard('admin')->user()->sectionCheck('Money Transfer'))
+  @if(getModule('Money Transfer'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#moneytransfer" aria-expanded="true" aria-controls="collapseTable">
       <i class="fas fa-exchange-alt"></i>
@@ -160,7 +157,7 @@
   </li>
   @endif
 
-  @if(Auth::guard('admin')->user()->sectionCheck('Wire Transfer'))
+  @if(getModule('Wire Transfer'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#wiretransfer" aria-expanded="true" aria-controls="collapseTable">
       <i class="fas fa-wallet"></i>
@@ -175,7 +172,7 @@
   </li>
   @endif
 
-  @if(Auth::guard('admin')->user()->sectionCheck('Request Money'))
+  @if(getModule('Request Money'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#requestmoney" aria-expanded="true" aria-controls="collapseTable">
       <i class="fas fa-donate"></i>
@@ -191,7 +188,7 @@
   @endif
 
 
-  <!-- @if(Auth::guard('admin')->user()->sectionCheck('Transactions'))
+  <!-- @if(getModule('Transactions'))
   <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.transactions.index') }}">
       <i class="fas fa-chart-line"></i>
@@ -200,7 +197,7 @@
   </li>
   @endif -->
 
-  @if(Auth::guard('admin')->user()->sectionCheck('Deposits'))
+  @if(getModule('Deposits'))
   <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.deposits.index') }}">
       <i class="fas fa-piggy-bank"></i>
@@ -209,7 +206,7 @@
   </li>
   @endif
 
-  <!-- @if(Auth::guard('admin')->user()->sectionCheck('Manage Blog'))
+  <!-- @if(getModule('Manage Blog'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#blog" aria-expanded="true"
       aria-controls="collapseTable">
@@ -225,7 +222,7 @@
   </li>
   @endif -->
 
-  @if(Auth::guard('admin')->user()->sectionCheck('General Setting'))
+  @if(getModule('General Setting'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTable1" aria-expanded="true"
       aria-controls="collapseTable">
@@ -246,7 +243,7 @@
   </li>
   @endif
 
-  @if(Auth::guard('admin')->user()->sectionCheck('Homepage Manage'))
+  @if(getModule('Homepage Manage'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#homepage" aria-expanded="true"
     aria-controls="collapseTable">
@@ -271,7 +268,7 @@
   </li>
   @endif
 
-  @if(Auth::guard('admin')->user()->sectionCheck('Email Setting'))
+  @if(getModule('Email Setting'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#email_settings" aria-expanded="true"
       aria-controls="collapseTable">
@@ -288,7 +285,7 @@
   </li>
   @endif
 
-  @if(Auth::guard('admin')->user()->sectionCheck('Message'))
+  @if(getModule('Message'))
   <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.user.message') }}">
       <i class="fas fa-comment-alt"></i>
@@ -296,7 +293,7 @@
   </li>
   @endif
 
-  @if(Auth::guard('admin')->user()->sectionCheck('Currency Setting'))
+  @if(getModule('Currency Setting'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#payment_gateways" aria-expanded="true"
       aria-controls="collapseTable">
@@ -312,7 +309,7 @@
   @endif
 
 
-  @if(Auth::guard('admin')->user()->sectionCheck('Manage KYC Form'))
+  @if(getModule('Manage KYC Form'))
   <li class="nav-item">
     <a class="nav-link" href="{{route('admin.manage.kyc.user','user')}}">
       <i class="fas fa-child"></i>
@@ -320,7 +317,7 @@
   </li>
   @endif
 
-  @if(Auth::guard('admin')->user()->sectionCheck('Language Manage'))
+  @if(getModule('Language Manage'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#langs" aria-expanded="true"
       aria-controls="collapseTable">
@@ -336,7 +333,7 @@
   </li>
   @endif
 
-  @if(Auth::guard('admin')->user()->sectionCheck('Fonts'))
+  @if(getModule('Fonts'))
   <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.font.index') }}">
       <i class="fas fa-font"></i>
@@ -344,7 +341,7 @@
   </li>
   @endif
 
-  @if(Auth::guard('admin')->user()->sectionCheck('Menupage Setting'))
+  @if(getModule('Menupage Setting'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#menu" aria-expanded="true"
       aria-controls="collapseTable">
@@ -361,7 +358,7 @@
   </li>
   @endif
 
-  @if(Auth::guard('admin')->user()->sectionCheck('Seo Tools'))
+  @if(getModule('Seo Tools'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#seoTools" aria-expanded="true"
       aria-controls="collapseTable">
@@ -378,7 +375,7 @@
   </li>
   @endif
 
-  @if(Auth::guard('admin')->user()->sectionCheck('Sitemaps'))
+  @if(getModule('Sitemaps'))
   <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.sitemap.index') }}">
       <i class="fa fa-sitemap"></i>
@@ -386,7 +383,7 @@
   </li>
   @endif
 
-  @if(Auth::guard('admin')->user()->sectionCheck('Subscribers'))
+  @if(getModule('Subscribers'))
   <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.subs.index') }}">
       <i class="fas fa-fw fa-users-cog"></i>

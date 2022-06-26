@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Font;
 use App\Models\Page;
-use App\Models\Role;
 use App\Models\Admin;
 use App\Models\Charge;
 use App\Models\Country;
@@ -36,13 +35,6 @@ class TenantDatabaseSeeder extends Seeder
         $centralUser = tenancy()->central(function ($tenant) {
             return Admin::find($tenant->id);
         });
-
-        // clone role table
-        $role = tenancy()->central(function ($tenant) use ($centralUser){
-            return Role::find($centralUser->role_id);
-        }); 
-        $new_role = $role->replicate();
-        $new_role->push();
 
         // clone General setting table
         $gs = tenancy()->central(function ($tenant) {
@@ -163,7 +155,6 @@ class TenantDatabaseSeeder extends Seeder
             'email' =>  $centralUser->email,
             'password' =>  $centralUser->password,
             'phone' => $centralUser->phone,
-            'role_id' => $new_role->id,
             'tenant_id' => $centralUser->id,
             'photo' => 'avatar/avatar.png',
         ]);

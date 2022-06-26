@@ -36,14 +36,6 @@
           </div>
 
           <div class="row">
-            <!-- <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="section[]" value="Menu Builder" {{ $data->sectionCheck('Menu Builder') ? 'checked' : '' }} class="custom-control-input" id="menu_builder">
-                  <label class="custom-control-label" for="menu_builder">{{__('Menu Builder')}}</label>
-                  </div>
-              </div>
-            </div> -->
             <div class="col-md-6">
               <div class="form-group">
                 <div class="custom-control custom-switch">
@@ -52,16 +44,6 @@
                   </div>
               </div>
             </div>
-
-            <!-- <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="section[]" value="Module management" {{ $data->sectionCheck('Module management') ? 'checked' : '' }} class="custom-control-input" id="manage_roles">
-                  <label class="custom-control-label" for="manage_roles">{{__('Module management')}}</label>
-                  </div>
-              </div>
-            </div> -->
-
             <div class="col-md-6">
               <div class="form-group">
                 <div class="custom-control custom-switch">
@@ -251,25 +233,6 @@
                   </div>
               </div>
             </div>
-
-            <!-- <div class="col-md-6">
-                <div class="form-group">
-                  <div class="custom-control custom-switch">
-                    <input type="checkbox" name="section[]" value="Fonts" {{ $data->sectionCheck('Institutions management') ? 'checked' : '' }} class="custom-control-input" id="font">
-                    <label class="custom-control-label" for="font">{{__('Fonts')}}</label>
-                    </div>
-                </div>
-            </div> -->
-
-            <!-- <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="section[]" value="Menupage Setting" {{ $data->sectionCheck('Menupage Setting') ? 'checked' : '' }} class="custom-control-input" id="menupage_setting">
-                  <label class="custom-control-label" for="menupage_setting">{{__('Menupage Setting')}}</label>
-                  </div>
-              </div>
-            </div> -->
-
             <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Submit') }}</button>
 
         </form>

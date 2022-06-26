@@ -23,7 +23,6 @@
 					<th>{{ __('Name') }}</th>
 					<th>{{ __('Email') }}</th>
 					<th>{{ __('Phone') }}</th>
-					<th>{{ __('Role') }}</th>
                     <th>{{__('Status')}}</th>
 					<th>{{ __('Options') }}</th>
 				</tr>
@@ -95,7 +94,6 @@ var table = $('#geniustable').DataTable({
                         { data: 'name', name: 'name' },
                         { data: 'email', name: 'email' },
                         { data: 'phone', name: 'phone' },
-                        { data: 'role_id', name: 'role_id' },
                         { data: 'status',searchable: false, orderable: false},
             			{ data: 'action', searchable: false, orderable: false }
 

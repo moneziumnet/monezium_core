@@ -98,17 +98,6 @@
                 <input type="text" class="form-control" id="inp-phone" name="phone" placeholder="{{ __('Enter Phone') }}" value="{{$data->phone}}" required>
               </div>
             </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="inp-name">{{ __('Select Role') }}</label>
-                <select class="form-control" name="role_id" required="">
-                  <option value="">{{ __('Select Role') }}</option>
-                  @foreach(DB::table('roles')->get() as $dta)
-                  <option value="{{ $dta->id }}" {{ $data->role_id == $dta->id ? 'selected' : '' }}>{{ $dta->name }}</option>
-                  @endforeach
-                </select>
-              </div>
-            </div>
           </div>
 
 

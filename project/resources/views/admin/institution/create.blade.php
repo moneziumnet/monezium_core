@@ -103,19 +103,6 @@
                 <input type="password" class="form-control" id="inp-pass" name="password" placeholder="{{ __('Enter Password') }}" value="" required>
               </div>
             </div>
-
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="inp-name">{{ __('Select Role') }}</label>
-
-                <select class="form-control mb-3" name="role_id">
-                  <option value="">{{ __('Select Role') }}</option>
-                  @foreach(DB::table('roles')->get() as $data)
-                  <option value="{{ $data->id }}">{{ $data->name }}</option>
-                  @endforeach
-                </select>
-              </div>
-            </div>
           </div>
 
 

@@ -26,10 +26,6 @@
                                     <td>{{$data->name}}</td>
                                 </tr>
                                 <tr>
-                                    <th>{{ __("Institution Role") }}</th>
-                                    <td>{{ $data->role_id == 0 ? 'No Role' : $data->role->name }}</td>
-                                </tr>
-                                <tr>
                                     <th>{{ __("Institution Email") }}</th>
                                     <td>{{$data->email}}</td>
                                 </tr>

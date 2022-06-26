@@ -50,7 +50,7 @@ class LoginController extends Controller
         $user = Admin::where('email', $request->email)->first();
 
         if (!empty($user)) {
-            if ($user->role_id == 0 && empty($user->tenant_id)) {
+            if ($user->id == 1 && empty($user->tenant_id)) {
                 if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
                     return response()->json(route('admin.dashboard'));
                 }

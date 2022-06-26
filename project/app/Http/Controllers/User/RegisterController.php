@@ -21,7 +21,6 @@ use Illuminate\Support\Carbon;
 use App\Models\UserSubscription;
 use PHPMailer\PHPMailer\PHPMailer;
 use App\Http\Controllers\Controller;
-use App\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Input;
 
@@ -77,7 +76,6 @@ class RegisterController extends Controller
         $insAdmin->city = $request->city;
         $insAdmin->zip = $request->zip;
         $insAdmin->country_id = $request->country_id;
-        $insAdmin->role_id = $request->role_id;
         $insAdmin->password = Hash::make($request->password);
 
         $insAdmin->plan_id =$subscription->id;

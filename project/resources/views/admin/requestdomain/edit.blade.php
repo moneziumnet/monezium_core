@@ -42,16 +42,6 @@
             <input type="email" class="form-control" id="inp-email" name="email" placeholder="{{ __('Enter Email Address') }}" value="{{$data->email}}" required>
           </div>
           <div class="form-group">
-            <label for="inp-name">{{ __('Select Role') }}</label>
-            <select class="form-control" name="role_id" required="">
-              <option value="">{{ __('Select Role') }}</option>
-              @foreach(DB::table('roles')->get() as $dta)
-              <option value="{{ $dta->id }}" {{ $data->role_id == $dta->id ? 'selected' : '' }}>{{ $dta->name }}</option>
-              @endforeach
-            </select>
-          </div>
-
-          <div class="form-group">
             <label for="inp-domains">{{ __('Domain configration') }}</label>
             <input type="text" class="form-control" id="inp-domains" name="domains" placeholder="{{ __('Enter domain name') }}" value="{{$data->domain_name}}" required>
             <span>{{ __('how to add-on domain in your hosting panel.') }}<a href="{{ asset('assets/pdf/adddomain.pdf') }}" class="m-2" target="_blank">{{ __('Document') }}</a></span>

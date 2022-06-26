@@ -205,7 +205,6 @@ class RequestDomainController extends Controller
             [
                 'name' => 'required',
                 'email' => 'required|email',
-                'role_id'=> 'required',
                 'domains' => 'required|unique:domains,domain',
             ]
         );
@@ -215,7 +214,6 @@ class RequestDomainController extends Controller
         $input['name'] = $request->name;
         $input['email'] = $request->email;
         $input['password'] = $request->password;
-        $input['role_id'] = $request->role_id;
 
         $admin = Admin::where('email', $request->email)->first();
         
