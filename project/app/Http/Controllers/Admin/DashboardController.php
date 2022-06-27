@@ -132,11 +132,13 @@ class DashboardController extends Controller
             }
             $input['photo'] = $name;
         }
-
         $input['slug'] = str_replace(" ", "-", $input['name']);
 
-
         $data->update($input);
+        
+        $data = Auth::guard('admin')->user();
+        $data->update($input);
+
         $msg = 'Successfully updated your profile';
         return response()->json($msg);
     }
