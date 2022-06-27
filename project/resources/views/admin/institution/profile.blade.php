@@ -153,14 +153,14 @@
       <form class="geniusform" action="{{route('admin.institution.moduleupdate',$data->id)}}" method="POST" enctype="multipart/form-data">
         {{ csrf_field() }}
         <div class="row">
-          <div class="col-md-6">
+          <!-- <div class="col-md-6">
             <div class="form-group">
               <div class="custom-control custom-switch">
                 <input type="checkbox" name="section[]" value="Sub Institutions management" {{ $data->sectionCheck('Sub Institutions management') ? 'checked' : '' }} class="custom-control-input" id="manage_ins">
                 <label class="custom-control-label" for="manage_ins">{{__('Sub Institutions management')}}</label>
               </div>
             </div>
-          </div>
+          </div> -->
           <div class="col-md-6">
             <div class="form-group">
               <div class="custom-control custom-switch">
