@@ -64,6 +64,11 @@ class LoginController extends Controller
             }
             elseif (!empty($current_domain) || !empty($user->tenant_id)) 
             {
+                if (empty($current_domain) && !empty($user->tenant_id))
+                {
+                    return response()->json(array('errors' => [ 0 =>  __('Permission denied, Please use your domain after approve') ]));
+                }
+
                 $user = tenancy()->central(function ($tenant) {
                     return Admin::where('tenant_id', $tenant->id)->first();
                 });
