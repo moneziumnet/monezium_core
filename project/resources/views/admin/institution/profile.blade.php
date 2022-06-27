@@ -35,13 +35,11 @@
     </div>
 
     <div class="tab-content" id="myTabContent">
-      <div class="tab-pane fade show active p-3" id="one" role="tabpanel" aria-labelledby="one-tab">
+      <div class="tab-pane fade show p-3 active" id="one" role="tabpanel" aria-labelledby="one-tab">
         {{-- <div class="gocover" style="background: url({{asset('assets/images/'.$gs->admin_loader)}}) no-repeat scroll center center rgba(45, 45, 45, 0.5);">
       </div> --}}
       <form class="geniusform" action="{{route('admin.institution.update',$data->id)}}" method="POST" enctype="multipart/form-data">
-
         @include('includes.admin.form-both')
-
         {{ csrf_field() }}
 
         <div class="form-group">
@@ -124,31 +122,35 @@
     </div>
 
     <div class="tab-pane fade p-3" id="two" role="tabpanel" aria-labelledby="two-tab">
-      <div class="table-responsive p-2">
-        <div class="col-sm-12 text-right">
-          <a class="btn btn-primary" id="five-tab" data-toggle="tab" href="#five" role="tab" aria-controls="Five" aria-selected="false">
-            <i class="fas fa-plus"></i> {{__('Add New Contact')}}
-          </a>
+      <div class="row mt-3">
+        <div class="col-lg-12">
+          <div class="card mb-4">
+            <div class="table-responsive p-3">
+              <div class="col-sm-12 text-right">
+                <a class="btn btn-primary" id="five-tab" data-toggle="tab" href="#five" role="tab" aria-controls="Five" aria-selected="false">
+                  <i class="fas fa-plus"></i> {{__('Add New Contact')}}
+                </a>
+              </div>
+              <table id="geniustablelist" class="table table-hover dt-responsive" cellspacing="0" width="100%">
+                <thead class="thead-light">
+                  <tr>
+                    <th>{{__('Contact')}}</th>
+                    <th>{{__('Name')}}</th>
+                    <th>{{__('Email')}}</th>
+                    <th>{{__('Address')}}</th>
+                    <th>{{__('Phone')}}</th>
+                    <th>{{__('Options')}}</th>
+                  </tr>
+                </thead>
+              </table>
+            </div>
+          </div>
         </div>
-        <table id="geniustablelist" class="table table-hover dt-responsive" cellspacing="0" width="100%">
-          <thead class="thead-light">
-            <tr>
-              <th>{{__('Contact')}}</th>
-              <th>{{__('Name')}}</th>
-              <th>{{__('Email')}}</th>
-              <th>{{__('Address')}}</th>
-              <th>{{__('Phone')}}</th>
-              <th>{{__('Options')}}</th>
-            </tr>
-          </thead>
-        </table>
       </div>
     </div>
 
     <div class="tab-pane fade p-3" id="three" role="tabpanel" aria-labelledby="three-tab">
       <form class="geniusform" action="{{route('admin.institution.moduleupdate',$data->id)}}" method="POST" enctype="multipart/form-data">
-        @include('includes.admin.form-both')
-
         {{ csrf_field() }}
         <div class="row">
           <div class="col-md-6">
@@ -354,8 +356,9 @@
     </div>
 
     <div class="tab-pane fade p-3" id="four" role="tabpanel" aria-labelledby="four-tab">
+      @include('includes.admin.form-flash')
+      {{ csrf_field() }}
       <div class="table-responsive p-2">
-        @include('includes.admin.form-flash')
         <div class="col-sm-12 text-right">
           <a class="btn btn-primary" id="six-tab" data-toggle="tab" href="#six" role="tab" aria-controls="Six" aria-selected="false">
             <i class="fas fa-plus"></i> {{__('Add Documents')}}
@@ -379,7 +382,6 @@
   <div class="tab-pane fade p-3" id="five" role="tabpanel" aria-labelledby="five-tab">
     <form class="geniusform" action="{{ route('admin.institution.create-contact', $data->id)}}" method="POST" enctype="multipart/form-data">
       @include('includes.admin.form-both')
-
       {{ csrf_field() }}
 
       <input type="hidden" name="contact_id" value="">
@@ -483,8 +485,6 @@
   <div class="tab-pane fade p-3" id="six" role="tabpanel" aria-labelledby="six-tab">
     <form class="geniusformd" action="{{ route('admin.institution.add-document', $data->id)}}" method="POST" enctype="multipart/form-data">
       {{ csrf_field() }}
-
-      @include('includes.admin.form-both')
       <div class="row g-3">
         <div class="col-md-6">
           <div class="form-group">
@@ -529,12 +529,63 @@
   </div>
 </div>
 
+<div class="modal fade confirm1-modal" id="deleteModal1" tabindex="-1" role="dialog" aria-labelledby="deleteModalTitle1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ __("Confirm Delete") }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="text-center">{{ __("Do you want to proceed?") }}</p>
+      </div>
+      <div class="modal-footer">
+        <a href="javascript:;" class="btn btn-secondary" data-dismiss="modal">{{ __("Cancel") }}</a>
+        <a href="javascript:;" class="btn btn-danger btn-ok">{{ __("Delete") }}</a>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 @endsection
 @section('scripts')
 <script type="text/javascript">
   "use strict";
-  var documentstable = $('#geniustable').DataTable({
+  $('.confirm1-modal').on('show.bs.modal', function(e) {
+    $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+  });
+
+  $('.confirm1-modal .btn-ok').on('click', function(e) {
+    if(admin_loader == 1)
+    {
+      $('.Loader').show();
+    }
+
+      $.ajax({
+      type:"GET",
+      url:$(this).attr('href'),
+      success:function(data)
+      {
+            $('.confirm1-modal').modal('hide');
+            table1.ajax.reload();
+            $('.alert-danger').hide();
+            $('.alert-success').show();
+            $('.alert-success p').html(data);
+
+            if(admin_loader == 1)
+            {
+              $('.Loader').hide();
+            }
+
+      }
+      });
+      return false;
+  });
+
+  var table1 = $('#geniustable').DataTable({
     ordering: false,
     processing: true,
     serverSide: true,
@@ -551,12 +602,12 @@
     }
   });
 
-  var table1 = $('#geniustablelist').DataTable({
+  var table = $('#geniustablelist').DataTable({
     ordering: false,
     processing: true,
     serverSide: true,
     searching: true,
-      ajax: '{{ route('admin.institution.contactsdatatables',$data->id) }}',
+    ajax: '{{ route('admin.institution.contactsdatatables',$data->id) }}',
        columns: [
             { data: 'contact', name: 'contact' },
             { data: 'fname', name: 'fname' },

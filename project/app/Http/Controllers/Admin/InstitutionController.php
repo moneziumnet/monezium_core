@@ -255,7 +255,7 @@ class InstitutionController extends Controller
                                         ' . 'Actions' . '
                                         </button>
                                         <div class="dropdown-menu" x-placement="bottom-start">
-                                        <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="' .  route('admin.documents.document-delete', $data->id) . '">' . __("Delete") . '</a>
+                                        <a href="javascript:;" data-toggle="modal" data-target="#deleteModal1" class="dropdown-item" data-href="' .  route('admin.documents.document-delete', $data->id) . '">' . __("Delete") . '</a>
                                         </div>
                                     </div>';
             })
@@ -320,11 +320,10 @@ class InstitutionController extends Controller
             //dd($contact);
             if ($contact->save()) {
                 $msg = 'Successfully save contact information.';
-                return response()->json($msg);
             } else {
                 $msg = 'Something went wrong. Please try again.';
-                return response()->json($msg);
             }
+            return response()->json($msg);
         }
     }
 
@@ -366,13 +365,13 @@ class InstitutionController extends Controller
                     $save->name = $request->input('document_name');
                     $save->file = $file;
                     $save->save();
-                    return response()->json('Document Saved Successfully.');
+                    return redirect()->back()->with('Document Saved Successfully.');
                 } else {
-                    return response()->json('Please check your file extention and document name.');
+                    return redirect()->back()->with('Please check your file extention and document name.');
                 }
             }
         } else {
-            return response()->json('Please check your file extention and document name.');
+            return redirect()->back()->with('Please check your file extention and document name.');
         }
     }
 
