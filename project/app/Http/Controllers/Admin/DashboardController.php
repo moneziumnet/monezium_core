@@ -90,7 +90,10 @@ class DashboardController extends Controller
 
     public function profile()
     {
-        $data = Auth::guard('admin')->user();
+        $data = tenancy()->central(function ($tenant){
+            return Admin::findOrFail($tenant->id);
+        });
+        // $data = Auth::guard('admin')->user();
         $modules = Generalsetting::first();
         return view('admin.profile', compact('data', 'modules'));
     }
@@ -113,7 +116,12 @@ class DashboardController extends Controller
         }
         //--- Validation Section Ends
         $input = $request->all();
-        $data = Auth::guard('admin')->user();
+
+        $data = tenancy()->central(function ($tenant){
+            return Admin::findOrFail($tenant->id);
+        });
+        // $data = Auth::guard('admin')->user();
+
         if ($file = $request->file('photo')) {
             $name = Str::random(8) . time() . '.' . $file->getClientOriginalExtension();
             $file->move('assets/images/', $name);
@@ -292,6 +300,26 @@ class DashboardController extends Controller
         rmdir($dirPath);
     }
 
+    public function moduleupdate(Request $request)
+    {
+            $input = $request->all();
+
+            $data = tenancy()->central(function ($tenant){
+                return Admin::findOrFail($tenant->id);
+            });
+
+            if (!empty($request->section)) {
+                $input['section'] = implode(" , ", $request->section);
+            } else {
+                $input['section'] = '';
+            }
+            $data->section = $input['section'];
+            $data->update();
+            $msg = 'Data Updated Successfully.';
+
+            return response()->json($msg);
+    }
+
     public function profileupdatecontact(Request $request)
     {
         //--- Validation Section
@@ -357,8 +385,8 @@ class DashboardController extends Controller
                 $contact->c_country     = $request->input('c_country_id');
                 $contact->id_number             = $request->input('your_id');
                 $contact->issued_authority      = $request->input('issued_authority');
-                $contact->date_of_issue         = $request->input('issue_date') != "" ? date('Y-m-d', strtotime($request->input('issue_date'))) : '';
-                $contact->date_of_expire        = $request->input('expire_date') != "" ? date('Y-m-d', strtotime($request->input('expire_date'))) : '';
+                $contact->date_of_issue         = $request->input('date_of_issue') != "" ? date('Y-m-d', strtotime($request->input('date_of_issue'))) : '';
+                $contact->date_of_expire        = $request->input('date_of_expire') != "" ? date('Y-m-d', strtotime($request->input('date_of_expire'))) : '';
                 $contact->save();
                 return $contact;
             });
