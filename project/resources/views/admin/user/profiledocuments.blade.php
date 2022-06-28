@@ -22,104 +22,59 @@
         $currency = defaultCurr();
         @endphp
         @include('includes.admin.form-success')
-        <div class="tab-pane fade show p-3 active" id="modules" role="tabpanel" aria-labelledby="modules-tab">
+        <div class="tab-pane fade show p-1 active" id="modules" role="tabpanel" aria-labelledby="modules-tab">
         <div class="card-body">
-        <div class="gocover" style="background: url({{asset('assets/images/'.$gs->admin_loader)}}) no-repeat scroll center center rgba(45, 45, 45, 0.5);"></div>
-        <form class="geniusform" action="{{route('admin.gs.update')}}" method="POST" enctype="multipart/form-data">
-
-            @include('includes.admin.form-both')
-
-            {{ csrf_field() }}
-
+        
+           
           <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="module_section[]" value="Loan" {{ $data->sectionCheck('Loan') ? 'checked' : '' }} class="custom-control-input" id="Loan">
-                  <label class="custom-control-label" for="Loan">{{__('Loan')}}</label>
-                  </div>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="module_section[]" value="Request Money" {{ $data->sectionCheck('Request Money') ? 'checked' : '' }} class="custom-control-input" id="Request Money">
-                  <label class="custom-control-label" for="Request Money">{{__('Request Money')}}</label>
-                  </div>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="module_section[]" value="Wire Transfer" {{ $data->sectionCheck('Wire Transfer') ? 'checked' : '' }} class="custom-control-input" id="Wire Transfer">
-                  <label class="custom-control-label" for="Wire Transfer">{{__('Wire Transfer')}}</label>
-                  </div>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="module_section[]" value="Transfer" {{ $data->sectionCheck('Transfer') ? 'checked' : '' }} class="custom-control-input" id="Transfer">
-                  <label class="custom-control-label" for="Transfer">{{__('Transfer')}}</label>
-                  </div>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="module_section[]" value="Withdraw" {{ $data->sectionCheck('Withdraw') ? 'checked' : '' }} class="custom-control-input" id="Withdraw">
-                  <label class="custom-control-label" for="Withdraw">{{__('Withdraw')}}</label>
-                  </div>
-              </div>
-            </div>
             
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="module_section[]" value="Voucher" {{ $data->sectionCheck('Voucher') ? 'checked' : '' }} class="custom-control-input" id="Voucher">
-                  <label class="custom-control-label" for="Voucher">{{__('Voucher')}}</label>
-                  </div>
+            <div class="table-responsive">
+              <div class="col-sm-12 text-right">
+                <a class="btn btn-primary" href="{{route('admin-user.createfile', $data->id)}}">
+                  <i class="fas fa-plus"></i> {{__('Add Documents')}}
+                </a>
               </div>
-            </div>
-            
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="module_section[]" value="Invoice" {{ $data->sectionCheck('Invoice') ? 'checked' : '' }} class="custom-control-input" id="Invoice">
-                  <label class="custom-control-label" for="Invoice">{{__('Invoice')}}</label>
-                  </div>
-              </div>
-            </div>
-            
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="module_section[]" value="Escrow" {{ $data->sectionCheck('Escrow') ? 'checked' : '' }} class="custom-control-input" id="Escrow">
-                  <label class="custom-control-label" for="Escrow">{{__('Escrow')}}</label>
-                  </div>
-              </div>
-            </div>
-            
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="module_section[]" value="Exchange Money" {{ $data->sectionCheck('Exchange Money') ? 'checked' : '' }} class="custom-control-input" id="Exchange Money">
-                  <label class="custom-control-label" for="Exchange Money">{{__('Exchange Money')}}</label>
-                  </div>
-              </div>
-            </div>
+              <table id="geniustable" class="table table-hover dt-responsive" cellspacing="0" width="100%">
+                <thead class="thead-light">
+                  <tr>
+      
+                    <th>{{__('Name')}}</th>
+                    <th>{{__('Download')}}</th>
+                    <th>{{__('Action')}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @if(!empty($documents))
+                    @foreach($documents as $document)
+                      <tr>
+                        <td>
+                            {{$document->name}}
+                        </td>
+                        <td>
+                          <a href="{{route('admin-user.download', $document->id)}}">
+                            <button type="button" class="btn btn-primary btn-sm btn-rounded">{{__("Download")}} </button></a>
+                        </td>
+                        <td>
+                          <div class="btn-group mb-1">
+                            <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Actions
+                            </button>
+                            <div class="dropdown-menu" x-placement="bottom-start">
+                            <a href="javascript:;" data-toggle="modal" data-target="#deleteModal1" class="dropdown-item" data-href="{{route('admin-user.document-delete', $document->id)}}">{{__("Delete")}}</a>
+                            </div>
+                        </div>
+                        </td>
 
+                      </tr>
+                    @endforeach
+                  @endif
+                </tbody>
+              </table>
+            </div>
           </div>
             
 
-
-            <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Submit') }}</button>
-
-        </form>
+        
       </div>
         </div>
       </div>
@@ -128,4 +83,59 @@
 </div>
 </div>
 <!--Row-->
+
+<div class="modal fade confirm-modal" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ __("Confirm Delete") }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="text-center">{{ __("Do you want to proceed?") }}</p>
+      </div>
+      <div class="modal-footer">
+        <a href="javascript:;" class="btn btn-secondary" data-dismiss="modal">{{ __("Cancel") }}</a>
+        <a href="javascript:;" class="btn btn-danger btn-ok">{{ __("Delete") }}</a>
+      </div>
+    </div>
+  </div>
+</div>
+@endsection
+@section('scripts')
+<script type="text/javascript">
+  "use strict";
+  $('.confirm1-modal').on('show.bs.modal', function(e) {
+    $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+  });
+
+  $('.confirm1-modal .btn-ok').on('click', function(e) {
+    if(admin_loader == 1)
+    {
+      $('.Loader').show();
+    }
+
+      $.ajax({
+      type:"GET",
+      url:$(this).attr('href'),
+      success:function(data)
+      {
+            $('.confirm1-modal').modal('hide');
+            table1.ajax.reload();
+            $('.alert-danger').hide();
+            $('.alert-success').show();
+            $('.alert-success p').html(data);
+
+            if(admin_loader == 1)
+            {
+              $('.Loader').hide();
+            }
+
+      }
+      });
+      return false;
+  });
+</script>
 @endsection

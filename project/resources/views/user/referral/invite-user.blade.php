@@ -62,5 +62,15 @@
 @endsection
 
 @push('js')
-
+<script>
+    'use strict';
+  
+    function myFunction() {
+      var copyText = document.getElementById("cronjobURL");
+      copyText.select();
+      copyText.setSelectionRange(0, 99999);
+      document.execCommand("copy");
+      alert('copied');
+    }
+  </script>
 @endpush

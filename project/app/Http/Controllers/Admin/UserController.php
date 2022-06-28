@@ -18,8 +18,10 @@ use App\Models\OrderedItem;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
+use App\Models\UserDocument;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Response;
 
 class UserController extends Controller
 {
@@ -160,10 +162,91 @@ class UserController extends Controller
 
         public function profileDocuments($id)
         {
-            $data = Generalsetting::first();
-            //$data = User::findOrFail($id);
-            $data['data'] = $data;
+            //$data = Generalsetting::first();
+            $user = User::findOrFail($id);
+            $documents = UserDocument::where('user_id',$user->id)->get();
+            $data['documents'] = $documents;
+            $data['data'] = $user;
             return view('admin.user.profiledocuments',$data);
+        }
+
+        public function createfile($id)
+        {
+            $user = User::findOrFail($id);
+           // dd($user);
+            $data['data'] = $user;
+            return view('admin.user.addprofiledocuments',$data);
+        }
+
+        public function storefile(Request $request,$id)
+        {
+            if ($request->isMethod('post')) {
+                $rules = [
+                    'document_name'   => 'required',
+                    'document_file'   => 'required'
+                ];
+    
+                $validator = Validator::make($request->all(), $rules);
+    
+                if ($validator->fails()) {
+                    return redirect()->back()->with('unsuccess','Select Valid file for upload'); 
+                }
+    
+                if (!$request->hasFile('document_file')) {
+                    return redirect()->back()->with('unsuccess','Select Valid file for upload'); 
+                } else {
+    
+                    $allowedfileExtension = ['jpg', 'png', 'gif', 'pdf', 'jpeg', 'doc', 'docx', 'xls', 'xlsx'];
+                    $files = $request->file('document_file');
+    
+                    $extension = $files->getClientOriginalExtension();
+    
+                    $check = in_array($extension, $allowedfileExtension);
+    
+                    if ($check) {
+                        $path = public_path() . '/assets/user_documents';
+                        $files->move($path, $files->getClientOriginalName());
+                        // $path = $request->image->store('public/uploads/app_sliders');
+                        $file = $request->document_file->getClientOriginalName();
+                        //  exit;
+                        $user = User::findOrFail($id);
+                        //store image file into directory and db
+                        
+                        $save = new UserDocument();
+                        $save->user_id = $user->id;
+                        $save->name = $request->input('document_name');
+                        $save->file = $file;
+                        $save->save();
+                        return redirect()->back()->with('success','Document Saved Successfully.'); 
+                    } else {
+                        return redirect()->back()->with('unsuccess','Please check your file extention and document name.'); 
+                    }
+                }
+            } else {
+                return redirect()->back()->with('unsuccess','Please check your file extention and document name.'); 
+            }
+        }
+
+        public function fileDownload($id)
+        {
+            $document = UserDocument::findOrFail($id);
+    
+            $file = public_path("assets/user_documents/" . $document->file);
+            return Response::download($file);
+        }
+
+        public function fileDestroy($id)
+        {
+            $document = UserDocument::findOrFail($id);
+    
+            if (file_exists(public_path("assets/user_documents/" . $document->file))) {
+                @unlink(public_path("assets/user_documents/" . $document->file));
+            }
+            $document->delete();
+            //--- Redirect Section
+            $msg = 'Document Has Been Deleted Successfully.';
+            return redirect()->back()->with('success',$msg); 
+            
         }
 
         public function profileSettings($id)
