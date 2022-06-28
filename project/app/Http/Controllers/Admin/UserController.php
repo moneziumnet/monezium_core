@@ -16,6 +16,7 @@ use App\Models\Withdraw;
 use App\Models\OrderedItem;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\Generalsetting;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
@@ -37,7 +38,7 @@ class UserController extends Controller
                                         '.'Actions' .'
                                         </button>
                                         <div class="dropdown-menu" x-placement="bottom-start">
-                                        <a href="' . route('admin-user-show',$data->id) . '"  class="dropdown-item">'.__("Details").'</a>
+                                        <a href="' . route('admin-user-profile',$data->id) . '"  class="dropdown-item">'.__("Profile").'</a>
                                         <a href="' . route('admin-user-edit',$data->id) . '" class="dropdown-item" >'.__("Edit").'</a>
                                         <a href="javascript:;" class="dropdown-item send" data-email="'. $data->email .'" data-toggle="modal" data-target="#vendorform">'.__("Send").'</a>
                                         <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.  route('admin-user-delete',$data->id).'">'.__("Delete").'</a>
@@ -135,7 +136,7 @@ class UserController extends Controller
             return view('admin.generalsetting.user_image');
         }
 
-        public function show($id)
+        public function profileInfo($id)
         {
             $data = User::findOrFail($id);
             $data['loans'] = UserLoan::whereUserId($data->id)->get();
@@ -143,7 +144,64 @@ class UserController extends Controller
             $data['fdr'] = UserFdr::whereUserId($data->id)->get();
             $data['withdraws'] = Withdraw::whereUserId($data->id)->get();
             $data['data'] = $data;
-            return view('admin.user.show',$data);
+            return view('admin.user.profile',$data);
+        }
+
+        public function profileAccounts($id)
+        {
+            $data = Generalsetting::first();
+            //$data = User::findOrFail($id);
+            $data['data'] = $data;
+            return view('admin.user.profileaccounts',$data);
+        }
+ 
+
+        public function profileDocuments($id)
+        {
+            $data = Generalsetting::first();
+            //$data = User::findOrFail($id);
+            $data['data'] = $data;
+            return view('admin.user.profiledocuments',$data);
+        }
+
+        public function profileSettings($id)
+        {
+            $data = Generalsetting::first();
+            //$data = User::findOrFail($id);
+            $data['data'] = $data;
+            return view('admin.user.profilesettings',$data);
+        }
+
+        public function profilePricingplan($id)
+        {
+            $data = Generalsetting::first();
+            //$data = User::findOrFail($id);
+            $data['data'] = $data;
+            return view('admin.user.profilepricingplan',$data);
+        }
+
+        public function profileTransctions($id)
+        {
+            $data = Generalsetting::first();
+            //$data = User::findOrFail($id);
+            $data['data'] = $data;
+            return view('admin.user.profiletransactions',$data);
+        }
+
+        public function profileBanks($id)
+        {
+            $data = Generalsetting::first();
+            //$data = User::findOrFail($id);
+            $data['data'] = $data;
+            return view('admin.user.profilebanks',$data);
+        }
+
+        public function profileModules($id)
+        {
+            $data = Generalsetting::first();
+            //$data = User::findOrFail($id);
+            $data['data'] = $data;
+            return view('admin.user.profilemodules',$data);
         }
 
         public function ban($id1,$id2)

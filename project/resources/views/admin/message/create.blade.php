@@ -45,7 +45,7 @@
                                         <img class="img-circle" src="{{Auth::guard('admin')->user()->photo != null ? asset('assets/images/'.Auth::guard('admin')->user()->photo) : asset('assets/images/noimage.png')}}" alt="">
         
                                         @endif
-                                                <a target="_blank" class="d-block profile-btn mt-1" href="{{ route('admin-user-show',$message->conversation->user->id) }}" class="d-block">{{ __('View Profile') }}</a>
+                                                <a target="_blank" class="d-block profile-btn mt-1" href="{{ route('admin-user-profile',$message->conversation->user->id) }}" class="d-block">{{ __('View Profile') }}</a>
                                                 <p class="ticket-date">{{ $message->created_at->diffForHumans() }}</p>
                                             </div>
                                         </div>

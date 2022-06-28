@@ -125,7 +125,17 @@ Route::prefix('admin')->group(function () {
     Route::get('/users/edit/{id}', [UserController::class, 'edit'])->name('admin-user-edit');
     Route::post('/users/edit/{id}', [UserController::class, 'update'])->name('admin-user-update');
     Route::get('/users/delete/{id}', [UserController::class, 'destroy'])->name('admin-user-delete');
-    Route::get('/user/{id}/show', [UserController::class, 'show'])->name('admin-user-show');
+    Route::get('/user/{id}/profile', [UserController::class, 'profileInfo'])->name('admin-user-profile');
+    
+    Route::get('/user/{id}/accounts', [UserController::class, 'profileAccounts'])->name('admin-user-accounts');
+    Route::get('/user/{id}/documents', [UserController::class, 'profileDocuments'])->name('admin-user-documents');
+    Route::get('/user/{id}/settings', [UserController::class, 'profileSettings'])->name('admin-user-settings');
+    Route::get('/user/{id}/pricingplan', [UserController::class, 'profilePricingplan'])->name('admin-user-pricingplan');
+    Route::get('/user/{id}/transactions', [UserController::class, 'profileTransctions'])->name('admin-user-transactions');
+    Route::get('/user/{id}/banks', [UserController::class, 'profileBanks'])->name('admin-user-banks');
+    Route::get('/user/{id}/modules', [UserController::class, 'profileModules'])->name('admin-user-modules');
+
+    
     Route::get('/users/ban/{id1}/{id2}', [UserController::class, 'ban'])->name('admin-user-ban');
     Route::get('/users/verify/{id1}/{id2}', [UserController::class, 'verify'])->name('admin-user-verify');
     Route::get('/user/default/image', [UserController::class, 'image'])->name('admin-user-image');

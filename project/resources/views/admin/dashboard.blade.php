@@ -91,7 +91,7 @@
               <td data-label="@lang('Name')">{{ $data->name }}</td>
               <td data-label="@lang('Email')">{{ $data->email }}</td>
               <td data-label="@lang('Status')"><span class="badge badge-{{ $data->status == 1 ? 'success' : 'danger'}}">{{ $data->status == 1 ? 'activated' : 'deactivated'}}</span></td>
-              <!-- <td data-label="@lang('Action')"><a href="{{ route('admin-user-show',$data->id) }}" class="btn btn-sm btn-primary">@lang('Detail')</a></td> -->
+              <!-- <td data-label="@lang('Action')"><a href="{{ route('admin-user-profile',$data->id) }}" class="btn btn-sm btn-primary">@lang('Detail')</a></td> -->
             </tr>
             @endforeach
           </tbody>
@@ -440,7 +440,7 @@
               <td data-label="@lang('Name')">{{ $data->name }}</td>
               <td data-label="@lang('Email')">{{ $data->email }}</td>
               <td data-label="@lang('Status')"><span class="badge badge-{{ $data->is_banned == 0 ? 'success' : 'danger'}}">{{ $data->is_banned == 0 ? 'activated' : 'deactivated'}}</span></td>
-              <td data-label="@lang('Action')"><a href="{{ route('admin-user-show',$data->id) }}" class="btn btn-sm btn-primary">@lang('Detail')</a></td>
+              <td data-label="@lang('Action')"><a href="{{ route('admin-user-profile',$data->id) }}" class="btn btn-sm btn-primary">@lang('Detail')</a></td>
             </tr>
             @endforeach
           </tbody>

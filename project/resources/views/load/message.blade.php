@@ -9,7 +9,7 @@
                                                 </div>
                                                 <div class="right">
                                                     <img class="img-circle" src="{{$message->conversation->user->photo != null ? asset('assets/images/'.$message->conversation->user->photo) : asset('assets/images/noimage.png')}}" alt="">
-                                                    <a class="d-block profile-btn" href="{{ route('admin-user-show',$message->conversation->user->id) }}" class="d-block">View Profile</a>
+                                                    <a class="d-block profile-btn" href="{{ route('admin-user-profile',$message->conversation->user->id) }}" class="d-block">View Profile</a>
                                                     <p class="ticket-date">{{ $message->created_at->diffForHumans() }}</p>
                                                 </div>
                                             </div>
