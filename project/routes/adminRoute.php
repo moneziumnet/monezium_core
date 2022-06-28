@@ -130,6 +130,7 @@ Route::prefix('admin')->group(function () {
     Route::post('/user/document/create/{user_id}', [UserController::class,'storefile'])->name('admin-user.createfile');
     Route::get('/user/document/download/{id}', [UserController::class,'fileDownload'])->name('admin-user.download');
     Route::get('/user/document/delete/{id}', [UserController::class,'fileDestroy'])->name('admin-user.document-delete');
+    Route::get('/user/transactions/datatables/{id}', [UserController::class, 'trandatatables'])->name('admin-user.transactions-datatables');
     
     Route::get('/user/{id}/accounts', [UserController::class, 'profileAccounts'])->name('admin-user-accounts');
     Route::get('/user/{id}/documents', [UserController::class, 'profileDocuments'])->name('admin-user-documents');

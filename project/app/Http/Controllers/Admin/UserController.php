@@ -280,6 +280,11 @@ class UserController extends Controller
             return view('admin.user.profilebanks',$data);
         }
 
+        public function trandatatables($id)
+        {
+
+        }
+
         public function profileModules($id)
         {
             // $data = Generalsetting::first();
