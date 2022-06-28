@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Order;
 use App\Models\Follow;
 use App\Models\Rating;
+use App\Models\Wallet;
 use App\Models\UserDps;
 use App\Models\UserFdr;
 use App\Models\Currency;
@@ -149,8 +150,9 @@ class UserController extends Controller
 
         public function profileAccounts($id)
         {
-            $data = Generalsetting::first();
-            //$data = User::findOrFail($id);
+            $data = User::findOrFail($id);
+            $wallets = Wallet::where('user_id',$id)->with('currency')->get();
+            $data['wallets'] = $wallets;
             $data['data'] = $data;
             return view('admin.user.profileaccounts',$data);
         }
