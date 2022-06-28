@@ -139,6 +139,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/user/{id}/banks', [UserController::class, 'profileBanks'])->name('admin-user-banks');
     Route::get('/user/{id}/modules', [UserController::class, 'profileModules'])->name('admin-user-modules');
     Route::post('/users/{id}/changepassword', [UserController::class, 'changePassword'])->name('admin-user-changepassword');
+    Route::post('/users/{id}/updatemodules', [UserController::class, 'updateModules'])->name('admin-user-updatemodules');
     
     Route::get('/users/ban/{id1}/{id2}', [UserController::class, 'ban'])->name('admin-user-ban');
     Route::get('/users/verify/{id1}/{id2}', [UserController::class, 'verify'])->name('admin-user-verify');

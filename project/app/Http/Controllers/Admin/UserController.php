@@ -282,8 +282,8 @@ class UserController extends Controller
 
         public function profileModules($id)
         {
-            $data = Generalsetting::first();
-            //$data = User::findOrFail($id);
+            // $data = Generalsetting::first();
+            $data = User::findOrFail($id);
             $data['data'] = $data;
             return view('admin.user.profilemodules',$data);
         }
@@ -318,6 +318,21 @@ class UserController extends Controller
 
             $user->update($input);
             return redirect()->back()->with('success','Password Successfully Changed.'); 
+        }
+
+        public function updateModules(Request $request, $id)
+        {
+            $user = User::findOrFail($id);
+            if (!empty($request->section)) {
+                $input['section'] = implode(" , ", $request->section);
+            } else {
+                $input['section'] = '';
+            }
+            
+            $user->update($input);
+
+            $msg = __('Password Successfully Changed.');
+            return response()->json($msg);
         }
 
         public function edit($id)
