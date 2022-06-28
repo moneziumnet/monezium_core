@@ -274,6 +274,8 @@ Route::prefix('user')->group(function() {
   
       Route::get('/referrals',[ReferralController::class,'referred'])->name('user.referral.index');
       Route::get('/referral-commissions',[ReferralController::class,'commissions'])->name('user.referral.commissions');
+      Route::get('/invite-user',[ReferralController::class,'invite_user'])->name('user.referral.invite-user');
+      Route::post('/invite-user',[ReferralController::class,'invite_send'])->name('user.referral.invite-user');
   
       Route::get('/affilate/code', [UserController::class,'affilate_code'])->name('user-affilate-code');
   

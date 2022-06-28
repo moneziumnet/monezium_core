@@ -42,8 +42,8 @@
                   </a>
 
                   @if(check_user_type(3))
-                  <a class="dropdown-item" href="{{route('user.referral.index')}}" >
-                    @lang('Invite Users')
+                  <a class="dropdown-item" href="{{route('user.referral.invite-user')}}" >
+                    @lang('Invite User')
                   </a>
                   <a class="dropdown-item" href="{{route('user.referral.index')}}" >
                     @lang('Referred Users')
