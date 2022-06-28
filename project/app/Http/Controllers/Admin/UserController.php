@@ -168,8 +168,7 @@ class UserController extends Controller
 
         public function profileSettings($id)
         {
-            $data = Generalsetting::first();
-            //$data = User::findOrFail($id);
+            $data = User::findOrFail($id);
             $data['data'] = $data;
             return view('admin.user.profilesettings',$data);
         }
@@ -225,6 +224,18 @@ class UserController extends Controller
         }
 
 
+        public function changePassword(Request $request, $id)
+        {
+            $user = User::findOrFail($id);
+            if ($request->newpass == $request->renewpass){
+                $input['password'] = bcrypt($request['password']);
+            }else{
+                return redirect()->back()->with('unsuccess','Confirm password does not match.');
+            }
+
+            $user->update($input);
+            return redirect()->back()->with('success','Password Successfully Changed.'); 
+        }
 
         public function edit($id)
         {

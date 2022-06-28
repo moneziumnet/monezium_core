@@ -18,114 +18,188 @@
       @include('admin.user.profiletab')
 
       <div class="tab-content" id="myTabContent">
-        @php
-        $currency = defaultCurr();
-        @endphp
-        @include('includes.admin.form-success')
-        <div class="tab-pane fade show p-3 active" id="modules" role="tabpanel" aria-labelledby="modules-tab">
-        <div class="card-body">
-        <div class="gocover" style="background: url({{asset('assets/images/'.$gs->admin_loader)}}) no-repeat scroll center center rgba(45, 45, 45, 0.5);"></div>
-        <form class="geniusform" action="{{route('admin.gs.update')}}" method="POST" enctype="multipart/form-data">
-
-            @include('includes.admin.form-both')
-
-            {{ csrf_field() }}
-
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="module_section[]" value="Loan" {{ $data->sectionCheck('Loan') ? 'checked' : '' }} class="custom-control-input" id="Loan">
-                  <label class="custom-control-label" for="Loan">{{__('Loan')}}</label>
-                  </div>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="module_section[]" value="Request Money" {{ $data->sectionCheck('Request Money') ? 'checked' : '' }} class="custom-control-input" id="Request Money">
-                  <label class="custom-control-label" for="Request Money">{{__('Request Money')}}</label>
-                  </div>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="module_section[]" value="Wire Transfer" {{ $data->sectionCheck('Wire Transfer') ? 'checked' : '' }} class="custom-control-input" id="Wire Transfer">
-                  <label class="custom-control-label" for="Wire Transfer">{{__('Wire Transfer')}}</label>
-                  </div>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="module_section[]" value="Transfer" {{ $data->sectionCheck('Transfer') ? 'checked' : '' }} class="custom-control-input" id="Transfer">
-                  <label class="custom-control-label" for="Transfer">{{__('Transfer')}}</label>
-                  </div>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="module_section[]" value="Withdraw" {{ $data->sectionCheck('Withdraw') ? 'checked' : '' }} class="custom-control-input" id="Withdraw">
-                  <label class="custom-control-label" for="Withdraw">{{__('Withdraw')}}</label>
-                  </div>
-              </div>
-            </div>
-            
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="module_section[]" value="Voucher" {{ $data->sectionCheck('Voucher') ? 'checked' : '' }} class="custom-control-input" id="Voucher">
-                  <label class="custom-control-label" for="Voucher">{{__('Voucher')}}</label>
-                  </div>
-              </div>
-            </div>
-            
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="module_section[]" value="Invoice" {{ $data->sectionCheck('Invoice') ? 'checked' : '' }} class="custom-control-input" id="Invoice">
-                  <label class="custom-control-label" for="Invoice">{{__('Invoice')}}</label>
-                  </div>
-              </div>
-            </div>
-            
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="module_section[]" value="Escrow" {{ $data->sectionCheck('Escrow') ? 'checked' : '' }} class="custom-control-input" id="Escrow">
-                  <label class="custom-control-label" for="Escrow">{{__('Escrow')}}</label>
-                  </div>
-              </div>
-            </div>
-            
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="module_section[]" value="Exchange Money" {{ $data->sectionCheck('Exchange Money') ? 'checked' : '' }} class="custom-control-input" id="Exchange Money">
-                  <label class="custom-control-label" for="Exchange Money">{{__('Exchange Money')}}</label>
-                  </div>
-              </div>
-            </div>
-
+        <div class="tab-pane fade show p-3 active" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+          <div class="col">
+            <h3 class="page-title">
+              {{__('Changed Password')}}
+              </h2>
           </div>
-            
+
+          <div class="card-body">
+            <form id="request-form" action="{{ route('admin-user-changepassword',$data->id) }}" method="POST" enctype="multipart/form-data">
+              @include('includes.admin.form-both')
+              {{ csrf_field() }}
+              <div class="form-group">
+                <label for="inp-name">{{ __('New Password') }}</label>
+                <input name="newpass" class="form-control" autocomplete="off" placeholder="{{__('New Password')}}" type="password" required>
+              </div>
+              <div class="form-group">
+                <label for="inp-name">{{ __('Re-Type New Password') }}</label>
+                <input name="renewpass" class="form-control" autocomplete="off" placeholder="{{__('Re-Type New Password')}}" type="password" required>
+              </div>
+              <div class="form-group">
+                <button type="submit" class="btn btn-primary w-100">{{__('Submit')}}</button>
+              </div>
+            </form>
+          </div>
 
 
-            <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Submit') }}</button>
+          <div class="col">
+            <h3 class="page-title">
+              {{__('Other Settings')}}
+              </h2>
+          </div>
+          <div class="card-body">
+            <form class="geniusform" action="{{ route('admin-user-edit',$data->id) }}" method="POST" enctype="multipart/form-data">
+              @include('includes.admin.form-both')
+              {{ csrf_field() }}
+              <div class="form-group">
+                <label for="inp-phone">{{ __('Phone Number') }}</label>
+                <input type="text" class="form-control" id="inp-phone" name="phone" placeholder="{{ __('Enter Phone') }}" value="{{ $data->phone }}" required>
+              </div>
+              @php
+              $userType = explode(',', $data->user_type);
+              @endphp
 
-        </form>
-      </div>
+              <div class="form-group">
+                <label for="inp-name">{{ __('Type') }}</label>
+
+                <select class="select mb-3" name="user_type[]" multiple id="user_type">
+                  {{-- <option value="">{{ __('Select Customer Type') }}</option> --}}
+                  @foreach(DB::table('customer_types')->orderBy('type_name','asc')->get() as $c_type)
+                  <option value="{{ $c_type->id }}" @if(in_array($c_type->id, $userType)) selected @endif>{{ $c_type->type_name }}</option>
+                  @endforeach
+                </select>
+              </div>
+              <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Submit') }}</button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
 </div>
+</div>
 <!--Row-->
+@endsection
+@section('scripts')
+<script src="{{ asset('assets/admin/js/multiselect.js') }}"></script>
+
+<script type="text/javascript">
+  $('#user_type').multiselect({
+    columns: 1,
+    placeholder: 'Select User Type'
+  });
+</script>
+@endsection
+
+@section('styles')
+<style type="text/css">
+  .ms-options-wrap,
+  .ms-options-wrap * {
+    box-sizing: border-box;
+  }
+
+  .ms-options ul li {
+    list-style: none;
+    margin-left: -40px;
+  }
+
+  .ms-options-wrap>button:focus,
+  .ms-options-wrap>button {
+    position: relative;
+    width: 100%;
+    text-align: left;
+    border: 1px solid #d1d3e2;
+    background-color: #fff;
+    padding: 5px 20px 5px 5px;
+    margin-top: 1px;
+    font-size: 13px;
+    color: #6e707e;
+    outline: none;
+    white-space: nowrap;
+  }
+
+  .ms-options-wrap>button:after {
+    content: ' ';
+    height: 0;
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    width: 0;
+    border: 6px solid rgba(0, 0, 0, 0);
+    border-top-color: #999;
+    margin-top: -3px;
+  }
+
+  .ms-options-wrap>.ms-options {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    margin-top: 1px;
+    margin-bottom: 20px;
+    background: white;
+    z-index: 2000;
+    border: 1px solid #d1d3e2;
+    text-align: left;
+  }
+
+  .ms-options-wrap>.ms-options>.ms-search input {
+    width: 100%;
+    padding: 4px 5px;
+    border: none;
+    border-bottom: 1px groove;
+    outline: none;
+  }
+
+  .ms-options-wrap>.ms-options .ms-selectall {
+    display: inline-block;
+    font-size: .9em;
+    text-transform: lowercase;
+    text-decoration: none;
+  }
+
+  .ms-options-wrap>.ms-options .ms-selectall:hover {
+    text-decoration: underline;
+  }
+
+  .ms-options-wrap>.ms-options>.ms-selectall.global {
+    margin: 4px 5px;
+  }
+
+  .ms-options-wrap>.ms-options>ul>li.optgroup {
+    padding: 5px;
+  }
+
+  .ms-options-wrap>.ms-options>ul>li.optgroup+li.optgroup {
+    border-top: 1px solid #aaa;
+  }
+
+  .ms-options-wrap>.ms-options>ul>li.optgroup .label {
+    display: block;
+    padding: 5px 0 0 0;
+    font-weight: bold;
+  }
+
+  .ms-options-wrap>.ms-options>ul label {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    padding: 2px 3px;
+    margin: 1px 0;
+  }
+
+  .ms-options-wrap>.ms-options>ul li.selected label,
+  .ms-options-wrap>.ms-options>ul label:hover {
+    background-color: #efefef;
+  }
+
+  .ms-options-wrap>.ms-options>ul input[type="checkbox"] {
+    margin-right: 5px;
+    position: absolute;
+    left: 4px;
+    top: 7px;
+  }
+</style>
 @endsection
