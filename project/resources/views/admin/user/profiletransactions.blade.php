@@ -57,7 +57,7 @@
            processing: true,
            serverSide: true,
            searching: true,
-           ajax: '{{ route('admin.transactions.datatables') }}',
+           ajax: '{{ route('admin-user.transactions-datatables',$data->id) }}',
            columns: [
                 { data: 'created_at', name: 'created_at' },
                 { data: 'trnx', name: 'trnx' },

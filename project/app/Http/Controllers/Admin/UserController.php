@@ -22,6 +22,7 @@ use App\Models\UserDocument;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Response;
+use App\Models\Transaction;
 
 class UserController extends Controller
 {
@@ -266,9 +267,9 @@ class UserController extends Controller
 
         public function profileTransctions($id)
         {
-            $data = Generalsetting::first();
-            //$data = User::findOrFail($id);
-            $data['data'] = $data;
+            
+            $user = User::findOrFail($id);
+            $data['data'] = $user;
             return view('admin.user.profiletransactions',$data);
         }
 
@@ -282,7 +283,27 @@ class UserController extends Controller
 
         public function trandatatables($id)
         {
-
+            $datas = Transaction::where('user_id',$id)->orderBy('id','desc')->get();  
+        
+            return Datatables::of($datas)
+                            ->editColumn('amount', function(Transaction $data) {
+                                $currency = Currency::whereId($data->currency_id)->first();
+                                return $data->type.amount($data->amount,$currency->type,2).$currency->code;
+                            })
+                            ->editColumn('created_at', function(Transaction $data) {
+                                $date = date('d-m-Y',strtotime($data->created_at));
+                                return $date;
+                            })
+                            ->editColumn('remark', function(Transaction $data) {
+                                return ucwords(str_replace('_',' ',$data->remark));
+                            })
+                            ->editColumn('charge', function(Transaction $data) {
+                                $currency = Currency::whereId($data->currency_id)->first();
+                                return $data->type.amount($data->charge,$currency->type,2).$currency->code;
+                            })
+                            
+                            ->rawColumns([''])
+                            ->toJson();
         }
 
         public function profileModules($id)
