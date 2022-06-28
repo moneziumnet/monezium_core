@@ -15,7 +15,7 @@
             </li>
 
             @php
-              $modules = explode(" , ", $gs->user_module);
+              $modules = explode(" , ", auth()->user()->section);
             @endphp
 
             @if (in_array('Loan',$modules))

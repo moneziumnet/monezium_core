@@ -173,25 +173,8 @@
                           <label for="inp-email">{{ __('Email') }}</label>
                           <input type="text" class="form-control" id="inp-email" name="email" placeholder="{{ __('Enter Email') }}" value="{{ $data->email }}" disabled="">
                         </div>
-                        <div class="form-group">
-                          <label for="inp-phone">{{ __('Phone') }}</label>
-                          <input type="text" class="form-control" id="inp-phone" name="phone" placeholder="{{ __('Enter Phone') }}" value="{{ $data->phone }}" required>
-                        </div>
-                        @php
-                        $userType = explode(',', $data->user_type);
-                        @endphp
-
-                        <div class="form-group">
-                          <label for="inp-name">{{ __('Type') }}</label>
-
-                          <select class="select mb-3" name="user_type[]" multiple id="user_type">
-                            {{-- <option value="">{{ __('Select Customer Type') }}</option> --}}
-                            @foreach(DB::table('customer_types')->orderBy('type_name','asc')->get() as $c_type)
-                            <option value="{{ $c_type->id }}" @if(in_array($c_type->id, $userType)) selected @endif>{{ $c_type->type_name }}</option>
-                            @endforeach
-                          </select>
-                        </div>
-
+                        
+                        
                       </div>
                       <div class="col-md-6">
                         <div class="form-group">

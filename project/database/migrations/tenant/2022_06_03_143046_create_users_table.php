@@ -34,7 +34,6 @@ class CreateUsersTable extends Migration
             $table->tinyInteger('status')->default(0);
             $table->text('verification_link')->nullable();
             $table->enum('email_verified', ['Yes', 'No'])->default('No');
-            $table->double('balance')->default(0);
             $table->text('affilate_code')->nullable();
             $table->boolean('referral_id')->default(false);
             $table->tinyInteger('twofa')->default(0);
@@ -55,6 +54,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('plan_end_date')->nullable();
             $table->string('tenant_id')->nullable();
             $table->string('user_type')->nullable();
+            $table->text('section')->nullable();
         });
     }
 

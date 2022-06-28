@@ -7,7 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
 
-   protected $fillable = ['bank_plan_id','account_number','name', 'photo', 'zip', 'residency', 'city', 'address', 'phone', 'vat', 'email','password','user_type','verification_link','affilate_code','is_provider','twofa','go','details','kyc_status','kyc_info','kyc_reject_reason','plan_end_date', 'tenant_id'];
+   protected $fillable = ['bank_plan_id','account_number','name', 'photo', 'zip', 'residency', 'city', 'address', 'phone', 'vat', 'email','password','user_type','verification_link','affilate_code','is_provider','twofa','go','details','kyc_status','kyc_info','kyc_reject_reason','plan_end_date', 'tenant_id', 'section'];
 
     protected $hidden = [
         'password', 'remember_token'
@@ -16,6 +16,15 @@ class User extends Authenticatable
     protected $dates = [
         'plan_end_date',
     ];
+
+    public function sectionCheck($value){
+        $sections = explode(" , ", $this->section);
+        if (in_array($value, $sections)){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     public function subscriptions(){
         return $this->hasMany(UserSubscription::class);
