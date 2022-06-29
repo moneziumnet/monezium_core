@@ -287,7 +287,9 @@ class UserController extends Controller
                 }
                 $data['photo'] = $name;
             }
-            $data['user_type'] = implode(',',$request->input('user_type'));
+            if (!empty($request->input('user_type'))) {
+                $data['user_type'] = implode(',',$request->input('user_type'));
+            }
 //dd($data);
             $user->update($data);
             $msg = 'Customer Information Updated Successfully.';
