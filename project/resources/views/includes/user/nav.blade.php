@@ -210,7 +210,7 @@
             @endif
 
             @if(check_user_type(4))
-              <li class="nav-item dropdown {{ request()->routeIs('user.merchant.create') || request()->routeIs('user.beneficiaries.index') || request()->routeIs('user.other.bank') || request()->routeIs('tranfer.logs.index') ? 'active' : '' }}">
+              <li class="nav-item dropdown {{ request()->routeIs('user.merchant.qr') || request()->routeIs('user.merchant.api.key.form') ? 'active' : '' }}">
                 <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false" >
                   <span class="nav-link-icon d-md-none d-lg-inline-block">
                     <i class="fas fa-users"></i>
@@ -220,21 +220,41 @@
                   </span>
                 </a>
                 <div class="dropdown-menu">
-                  <a class="dropdown-item" href="{{route('send.money.create')}}" >
-                    {{__('Send Money')}}
+                  <a class="dropdown-item" href="{{route('user.merchant.qr')}}" >
+                    {{__('QR Code')}}
                   </a>
 
-                  <a class="dropdown-item" href="{{route('user.beneficiaries.index')}}" >
-                    {{__('Beneficiary Manage')}}
+                  <a class="dropdown-item" href="{{route('user.merchant.api.key.form')}}" >
+                    {{__('API Access Key')}}
                   </a>
 
-                  <a class="dropdown-item" href="{{route('user.other.bank')}}" >
-                    {{__('Other Bank Transfer')}}
+                </div>
+              </li>
+            @endif
+            
+            @if(check_user_type(3))
+              <li class="nav-item dropdown {{ request()->routeIs('user.referral.invite-user') || request()->routeIs('user.referral.index') || request()->routeIs('user.referral.commissions') ? 'active' : '' }}">
+                <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false" >
+                  <span class="nav-link-icon d-md-none d-lg-inline-block">
+                    <i class="fas fa-box"></i>
+                  </span>
+                  <span class="nav-link-title">
+                    {{__('Supervisor')}}
+                  </span>
+                </a>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="{{route('user.referral.invite-user')}}" >
+                    {{__('Invite User')}}
                   </a>
 
-                  <a class="dropdown-item" href="{{ route('tranfer.logs.index') }}" >
-                    {{__('Transfer History')}}
+                  <a class="dropdown-item" href="{{route('user.referral.index')}}" >
+                    {{__('Referred Users')}}
                   </a>
+
+                  <a class="dropdown-item" href="{{route('user.referral.commissions')}}" >
+                    {{__('Referral Commissions')}}
+                  </a>
+
                 </div>
               </li>
             @endif

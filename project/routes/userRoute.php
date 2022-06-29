@@ -117,7 +117,12 @@ Route::prefix('user')->group(function() {
       Route::get('/fdr-plan', [UserFdrController::class,'fdrPlan'])->name('user.fdr.plan');
       Route::post('/fdr-amount', [UserFdrController::class,'fdrAmount'])->name('user.fdr.amount');
       Route::post('/fdr-request', [UserFdrController::class,'fdrRequest'])->name('user.fdr.request');
-  
+      
+      Route::get('/merchant/generate-qrcode', [MerchantController::class,'generateQR'])->name('user.merchant.qr');
+      Route::get('/merchant/download-qr/{email}',  [MerchantController::class,'downloadQR'])->name('user.merchant.download.qr');
+      Route::get('/merchant/api-key',  [MerchantController::class,'apiKeyForm'])->name('user.merchant.api.key.form');
+      
+
       Route::group(['middleware'=>'kyc:Request Money'],function(){
         Route::get('/money-request', [MoneyRequestController::class,'index'])->name('user.money.request.index');
         Route::get('/request-money/receive',[MoneyRequestController::class,'receive'])->name('user.request.money.receive');
@@ -278,8 +283,7 @@ Route::prefix('user')->group(function() {
       Route::get('/invite-user',[ReferralController::class,'invite_user'])->name('user.referral.invite-user');
       Route::post('/invite-user',[ReferralController::class,'invite_send'])->name('user.referral.invite-user');
 
-      Route::get('/generate-qrcode', [MerchantController::class,'generateQR'])->name('qr');
-  
+      
       Route::get('/affilate/code', [UserController::class,'affilate_code'])->name('user-affilate-code');
   
   
