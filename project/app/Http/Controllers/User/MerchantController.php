@@ -15,12 +15,21 @@ class MerchantController extends Controller
 {
     public function generateQR()
     {
+        if(!check_user_type(4))
+        {
+            return redirect()->route('user.dashboard');
+        }
         $user = Auth::user();
         return view('user.merchant.qr',compact('user'));
+
     }
 
     public function apiKeyForm()
     {
+        if(!check_user_type(4))
+        {
+            return redirect()->route('user.dashboard');
+        }
         $user = Auth::user();
         
         $cred = UserApiCred::where('user_id',$user->id)->first();
@@ -38,6 +47,10 @@ class MerchantController extends Controller
 
     public function apiKeyGenerate()
     {
+        if(!check_user_type(4))
+        {
+            return redirect()->route('user.dashboard');
+        }
         $user = Auth::user();
         $cred = UserApiCred::whereUserId($user->id)->first();
         if(!$cred){
@@ -54,6 +67,10 @@ class MerchantController extends Controller
 
     public function downloadQR($email)
     {
+        if(!check_user_type(4))
+        {
+            return redirect()->route('user.dashboard');
+        }
         $file = generateQR($email);
         $file = file_get_contents($file);
         $image = Image::make($file);

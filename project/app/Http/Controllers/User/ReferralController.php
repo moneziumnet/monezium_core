@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\ReferralBonus;
 use App\Models\InviteUser;
 use App\Models\User;
+use App\Classes\GeniusMailer;
 use Illuminate\Support\Facades\Validator;
 
 class ReferralController extends Controller
@@ -15,20 +16,33 @@ class ReferralController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        
     }
 
     public function referred(){
+        if(!check_user_type(3))
+        {
+            return redirect()->route('user.dashboard');
+        }
         $data['referreds'] = User::where('referral_id',auth()->id())->orderBy('id','desc')->paginate(20);
         return view('user.referral.index',$data);
     }
     
     public function commissions(){
+        if(!check_user_type(3))
+        {
+            return redirect()->route('user.dashboard');
+        }
         $data['commissions'] = ReferralBonus::where('to_user_id',auth()->id())->orderBy('id','desc')->paginate(20);
         return view('user.referral.commission',$data);
     }
 
     public function invite_user()
     {
+        if(!check_user_type(3))
+        {
+            return redirect()->route('user.dashboard');
+        }
         $data['user'] = Auth::user();  
         return view('user.referral.invite-user', $data);
     }
@@ -36,7 +50,10 @@ class ReferralController extends Controller
     
     public function invite_send(Request $request)
     {
-
+        if(!check_user_type(3))
+        {
+            return redirect()->route('user.dashboard');
+        }
         $rules = [
             'invite_email'  => 'required|email'
         ];
@@ -67,32 +84,25 @@ class ReferralController extends Controller
         $inviteUser->status = 'Not Send';
         $inviteUser->created_at = date('Y-m-d H:i:s');
 
-        if($inviteUser->save())
-        {
-            
-            // if($gs->is_smtp == 1)
-            // {
-            //     $data = [
-            //         'to' => $receiver->email,
-            //         'type' => "request money",
-            //         'cname' => $receiver->name,
-            //         'oamount' => $finalAmount,
-            //         'aname' => "",
-            //         'aemail' => "",
-            //         'wtitle' => "",
-            //     ];
 
-            //     $mailer = new GeniusMailer();
-            //     $mailer->sendAutoMail($data);            
-            // }
-            // else
-            // {
-            //     $to = $receiver->email;
-            //     $subject = " Money send successfully.";
-            //     $msg = "Hello ".$receiver->name."!\nMoney send successfully.\nThank you.";
-            //     $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-            //     mail($to,$subject,$msg,$headers);            
-            // }
+        
+        $data = [
+            'to' => $request->input('invite_email'),
+            'type' => "invite email",
+            'cname' => $user->name,
+            'oamount' => '',
+            'aname' => "",
+            'aemail' =>  $user->email,
+            'wtitle' => "",
+        ];
+
+        $mailer = new GeniusMailer();
+        $mailer->sendAutoMail($data); 
+
+        if($mailer->sendAutoMail($data))
+        {
+            $inviteUser->save();
+            
             return redirect()->back()->with('success', 'Invite sent successfully.');
         }else{
             return redirect()->back()->with('unsuccess', 'Email not send this time. Please check email address');
