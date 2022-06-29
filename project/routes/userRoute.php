@@ -49,6 +49,7 @@ use App\Http\Controllers\User\ManageInvoiceController;
 use App\Http\Controllers\User\EscrowController;
 use App\Http\Controllers\User\TransferController;
 use App\Http\Controllers\User\ExchangeMoneyController;
+use App\Http\Controllers\User\MerchantController;
 
 Route::prefix('user')->group(function() {
 
@@ -276,6 +277,8 @@ Route::prefix('user')->group(function() {
       Route::get('/referral-commissions',[ReferralController::class,'commissions'])->name('user.referral.commissions');
       Route::get('/invite-user',[ReferralController::class,'invite_user'])->name('user.referral.invite-user');
       Route::post('/invite-user',[ReferralController::class,'invite_send'])->name('user.referral.invite-user');
+
+      Route::get('/generate-qrcode', [MerchantController::class,'generateQR'])->name('qr');
   
       Route::get('/affilate/code', [UserController::class,'affilate_code'])->name('user-affilate-code');
   
@@ -290,6 +293,7 @@ Route::prefix('user')->group(function() {
       Route::get('admin/message/{id}/delete', [MessageController::class,'adminmessagedelete'])->name('user.message.delete1');   
       Route::post('admin/user/send/message', [MessageController::class,'adminusercontact'])->name('user.send.message');
       Route::get('admin/message/load/{id}', [MessageController::class,'messageload'])->name('user.message.load');
+      
   
       Route::get('/change-password', [UserController::class,'changePasswordForm'])->name('user.change.password.form');
       Route::post('/change-password', [UserController::class,'changePassword'])->name('user.change.password');

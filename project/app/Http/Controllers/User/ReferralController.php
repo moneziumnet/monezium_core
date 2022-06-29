@@ -59,7 +59,7 @@ class ReferralController extends Controller
         {
             return redirect()->back()->with('unsuccess', 'This user already invited or registered.');
         }
-
+        //echo $gs->from_name;exit;
         $inviteUser = new InviteUser();
         $inviteUser->user_id = $user->id;
         $inviteUser->invited_to = $request->input('invite_email');
@@ -69,6 +69,30 @@ class ReferralController extends Controller
 
         if($inviteUser->save())
         {
+            
+            // if($gs->is_smtp == 1)
+            // {
+            //     $data = [
+            //         'to' => $receiver->email,
+            //         'type' => "request money",
+            //         'cname' => $receiver->name,
+            //         'oamount' => $finalAmount,
+            //         'aname' => "",
+            //         'aemail' => "",
+            //         'wtitle' => "",
+            //     ];
+
+            //     $mailer = new GeniusMailer();
+            //     $mailer->sendAutoMail($data);            
+            // }
+            // else
+            // {
+            //     $to = $receiver->email;
+            //     $subject = " Money send successfully.";
+            //     $msg = "Hello ".$receiver->name."!\nMoney send successfully.\nThank you.";
+            //     $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
+            //     mail($to,$subject,$msg,$headers);            
+            // }
             return redirect()->back()->with('success', 'Invite sent successfully.');
         }else{
             return redirect()->back()->with('unsuccess', 'Email not send this time. Please check email address');

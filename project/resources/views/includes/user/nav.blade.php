@@ -130,7 +130,7 @@
               </li>
             @endif
 
-            @if (in_array('Request Money',$modules))
+            {{-- @if (in_array('Request Money',$modules))
               <li class="nav-item dropdown {{ request()->routeIs('user.money.request.index') || request()->routeIs('user.request.money.receive') ? 'active' : '' }}">
                 <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false" >
                   <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -150,7 +150,7 @@
                   </a>
                 </div>
               </li>
-            @endif
+            @endif --}}
             
             @if (in_array('Voucher',$modules))
               <li class="nav-item dropdown {{ request()->routeIs('user.vouchers', 'user.reedem.voucher','user.reedem.history') ? 'active' : '' }}">
@@ -206,6 +206,36 @@
                     {{__('Wire Transfer')}}
                   </span>
                 </a>
+              </li>
+            @endif
+
+            @if(check_user_type(4))
+              <li class="nav-item dropdown {{ request()->routeIs('user.merchant.create') || request()->routeIs('user.beneficiaries.index') || request()->routeIs('user.other.bank') || request()->routeIs('tranfer.logs.index') ? 'active' : '' }}">
+                <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false" >
+                  <span class="nav-link-icon d-md-none d-lg-inline-block">
+                    <i class="fas fa-users"></i>
+                  </span>
+                  <span class="nav-link-title">
+                    {{__('Merchant')}}
+                  </span>
+                </a>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="{{route('send.money.create')}}" >
+                    {{__('Send Money')}}
+                  </a>
+
+                  <a class="dropdown-item" href="{{route('user.beneficiaries.index')}}" >
+                    {{__('Beneficiary Manage')}}
+                  </a>
+
+                  <a class="dropdown-item" href="{{route('user.other.bank')}}" >
+                    {{__('Other Bank Transfer')}}
+                  </a>
+
+                  <a class="dropdown-item" href="{{ route('tranfer.logs.index') }}" >
+                    {{__('Transfer History')}}
+                  </a>
+                </div>
               </li>
             @endif
 

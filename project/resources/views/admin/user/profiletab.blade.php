@@ -7,7 +7,7 @@
             <a class="nav-link {{menu('admin-user-accounts')}}" id="accounts" href="{{route('admin-user-accounts',$data->id) }}" role="button">Accounts</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{menu('admin-user-documents')}}" id="documents" href="{{route('admin-user-documents',$data->id) }}" role="button" >Documents</a>
+            <a class="nav-link {{menu('admin-user-documents')}} {{menu('admin-user.createfile')}}" id="documents" href="{{route('admin-user-documents',$data->id) }}" role="button" >Documents</a>
         </li>
         <li class="nav-item">
             <a class="nav-link {{menu('admin-user-settings')}}" id="settings" href="{{route('admin-user-settings',$data->id) }}" role="button" >Settings</a>

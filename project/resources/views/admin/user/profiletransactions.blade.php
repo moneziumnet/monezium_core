@@ -14,7 +14,7 @@
 
 <div class="row mt-3">
   <div class="col-lg-12">
-    <div class="card mt-1 tab-card">
+    <div class="card tab-card">
       @include('admin.user.profiletab')
 
       <div class="tab-content" id="myTabContent">
@@ -22,104 +22,22 @@
         $currency = defaultCurr();
         @endphp
         @include('includes.admin.form-success')
-        <div class="tab-pane fade show p-3 active" id="modules" role="tabpanel" aria-labelledby="modules-tab">
+        <div class="tab-pane fade show active" id="modules" role="tabpanel" aria-labelledby="modules-tab">
         <div class="card-body">
-        <div class="gocover" style="background: url({{asset('assets/images/'.$gs->admin_loader)}}) no-repeat scroll center center rgba(45, 45, 45, 0.5);"></div>
-        <form class="geniusform" action="{{route('admin.gs.update')}}" method="POST" enctype="multipart/form-data">
-
-            @include('includes.admin.form-both')
-
-            {{ csrf_field() }}
-
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="module_section[]" value="Loan" {{ $data->sectionCheck('Loan') ? 'checked' : '' }} class="custom-control-input" id="Loan">
-                  <label class="custom-control-label" for="Loan">{{__('Loan')}}</label>
-                  </div>
-              </div>
+          <div class="table-responsive">
+            <table id="geniustable" class="table table-hover dt-responsive" cellspacing="0" width="100%">
+              <thead class="thead-light">
+               <tr>
+                <th>{{__('Date')}}</th>
+                <th>{{__('Transaction ID')}}</th>
+                <th>{{__('Description')}}</th>
+                <th>{{__('Remark')}}</th>
+                <th>{{__('Amount')}}</th>
+                <th>{{__('Charge')}}</th>
+               </tr>      
+              </thead>
+            </table>
             </div>
-
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="module_section[]" value="Request Money" {{ $data->sectionCheck('Request Money') ? 'checked' : '' }} class="custom-control-input" id="Request Money">
-                  <label class="custom-control-label" for="Request Money">{{__('Request Money')}}</label>
-                  </div>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="module_section[]" value="Wire Transfer" {{ $data->sectionCheck('Wire Transfer') ? 'checked' : '' }} class="custom-control-input" id="Wire Transfer">
-                  <label class="custom-control-label" for="Wire Transfer">{{__('Wire Transfer')}}</label>
-                  </div>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="module_section[]" value="Transfer" {{ $data->sectionCheck('Transfer') ? 'checked' : '' }} class="custom-control-input" id="Transfer">
-                  <label class="custom-control-label" for="Transfer">{{__('Transfer')}}</label>
-                  </div>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="module_section[]" value="Withdraw" {{ $data->sectionCheck('Withdraw') ? 'checked' : '' }} class="custom-control-input" id="Withdraw">
-                  <label class="custom-control-label" for="Withdraw">{{__('Withdraw')}}</label>
-                  </div>
-              </div>
-            </div>
-            
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="module_section[]" value="Voucher" {{ $data->sectionCheck('Voucher') ? 'checked' : '' }} class="custom-control-input" id="Voucher">
-                  <label class="custom-control-label" for="Voucher">{{__('Voucher')}}</label>
-                  </div>
-              </div>
-            </div>
-            
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="module_section[]" value="Invoice" {{ $data->sectionCheck('Invoice') ? 'checked' : '' }} class="custom-control-input" id="Invoice">
-                  <label class="custom-control-label" for="Invoice">{{__('Invoice')}}</label>
-                  </div>
-              </div>
-            </div>
-            
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="module_section[]" value="Escrow" {{ $data->sectionCheck('Escrow') ? 'checked' : '' }} class="custom-control-input" id="Escrow">
-                  <label class="custom-control-label" for="Escrow">{{__('Escrow')}}</label>
-                  </div>
-              </div>
-            </div>
-            
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="module_section[]" value="Exchange Money" {{ $data->sectionCheck('Exchange Money') ? 'checked' : '' }} class="custom-control-input" id="Exchange Money">
-                  <label class="custom-control-label" for="Exchange Money">{{__('Exchange Money')}}</label>
-                  </div>
-              </div>
-            </div>
-
-          </div>
-            
-
-
-            <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Submit') }}</button>
-
-        </form>
       </div>
         </div>
       </div>
@@ -128,4 +46,31 @@
 </div>
 </div>
 <!--Row-->
+@endsection
+@section('scripts')
+
+<script type="text/javascript">
+	"use strict";
+
+    var table = $('#geniustable').DataTable({
+           ordering: false,
+           processing: true,
+           serverSide: true,
+           searching: true,
+           ajax: '{{ route('admin-user.transactions-datatables',$data->id) }}',
+           columns: [
+                { data: 'created_at', name: 'created_at' },
+                { data: 'trnx', name: 'trnx' },
+                { data: 'details', name: 'details' },
+                { data: 'remark', name:'remark' },
+                { data: 'amount', name: 'amount' },
+                { data: 'charge', name: 'charge' },
+            ],
+            language : {
+                processing: '<img src="{{asset('assets/images/'.$gs->admin_loader)}}">'
+            }
+        });
+
+</script>
+
 @endsection
