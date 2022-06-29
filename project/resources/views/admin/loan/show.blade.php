@@ -26,7 +26,7 @@
                     <div class="table-responsive-sm">
                         <table class="table">
                             <tbody>
-
+                            @if ($required_information)
                                 @foreach ($requiredInformations as $key=>$value)
                                     @if ($value[1] == 'file')
                                     <tr>
@@ -42,8 +42,7 @@
                                         </tr>
                                     @endif
                                 @endforeach
-
-
+                            @endif
                             </tbody>
                         </table>
                     </div>
