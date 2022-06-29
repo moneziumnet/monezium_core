@@ -6,7 +6,7 @@ use Image;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use App\Models\ApiCreds;
+use App\Models\UserApiCred;
 use Auth;
 
 class MerchantController extends Controller
@@ -19,10 +19,12 @@ class MerchantController extends Controller
 
     public function apiKeyForm()
     {
-        $cred = ApiCreds::whereMerchantId(merchant()->id)->first();
+        $user = Auth::user();
+        //echo $user->id;exit;
+        $cred = UserApiCred::whereUserId($user->id)->first();
         if(!$cred){
-            $cred = ApiCreds::create([
-                'merchant_id' => merchant()->id,
+            $cred = UserApiCred::create([
+                'user_id' => $user->id?$user->id:0,
                 'access_key'  => (string) Str::uuid(),
                 'mode'        => 0
             ]); 
@@ -32,10 +34,11 @@ class MerchantController extends Controller
 
     public function apiKeyGenerate()
     {
-        $cred = ApiCreds::whereMerchantId(merchant()->id)->first();
+        $user = Auth::user();
+        $cred = UserApiCred::whereUserId(merchant()->id)->first();
         if(!$cred){
-            ApiCreds::create([
-                'merchant_id' => merchant()->id,
+            UserApiCred::create([
+                'merchant_id' => $user->id,
                 'access_key'  => (string) Str::uuid(),
                 'mode'        => 0
             ]); 

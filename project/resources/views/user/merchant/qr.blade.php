@@ -26,7 +26,7 @@
                 <div class="card">
                     <div class="card-body text-center">
                         <div >
-                            <img src="{{generateQR($user->email)}}" class="w-100" alt="">
+                            <img src="{{generateQR($user->email)}}" class="" alt="">
                         </div>
                         <h6 class="mt-4">{{$user->email}}</h6>
                         <div class="mt-3">
