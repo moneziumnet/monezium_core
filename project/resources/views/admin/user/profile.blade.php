@@ -173,7 +173,11 @@
                           <label for="inp-email">{{ __('Email') }}</label>
                           <input type="text" class="form-control" id="inp-email" name="email" placeholder="{{ __('Enter Email') }}" value="{{ $data->email }}" disabled="">
                         </div>
-                        
+
+                        <div class="form-group">
+                          <label for="inp-email">{{ __('Account Number') }}</label>
+                          <input type="text" class="form-control" id="inp-acc" name="account_number" value="{{ $data->account_number }}" disabled="">
+                        </div>
                         
                       </div>
                       <div class="col-md-6">
@@ -188,6 +192,14 @@
                           <input type="text" class="form-control" id="inp-city" name="city" placeholder="{{ __('Enter City') }}" value="{{ $data->city }}" required>
                         </div>
                       </div>
+
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="inp-city">{{ __('Zip Code') }}</label>
+                          <input type="text" class="form-control" id="inp-zip" name="zip" placeholder="{{ __('Enter Zip Code') }}" value="{{ $data->zip }}" required>
+                        </div>
+                      </div>
+
                       <div class="col-md-6">
                         <div class="form-group">
                           <label for="inp-vat">{{ __('VAT Number') }}</label>
