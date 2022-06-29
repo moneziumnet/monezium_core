@@ -259,15 +259,13 @@ class UserController extends Controller
 
         public function profilePricingplan($id)
         {
-            $data = Generalsetting::first();
-            //$data = User::findOrFail($id);
+            $data = User::findOrFail($id);
             $data['data'] = $data;
             return view('admin.user.profilepricingplan',$data);
         }
 
         public function profileTransctions($id)
         {
-            
             $user = User::findOrFail($id);
             $data['data'] = $user;
             return view('admin.user.profiletransactions',$data);
@@ -275,8 +273,7 @@ class UserController extends Controller
 
         public function profileBanks($id)
         {
-            $data = Generalsetting::first();
-            //$data = User::findOrFail($id);
+            $data = User::findOrFail($id);
             $data['data'] = $data;
             return view('admin.user.profilebanks',$data);
         }
@@ -308,7 +305,6 @@ class UserController extends Controller
 
         public function profileModules($id)
         {
-            // $data = Generalsetting::first();
             $data = User::findOrFail($id);
             $data['data'] = $data;
             return view('admin.user.profilemodules',$data);
