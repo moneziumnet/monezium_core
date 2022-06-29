@@ -14,10 +14,10 @@ class CreateUserApiCredsTable extends Migration
     public function up()
     {
         Schema::create('user_api_creds', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->integer('user_id', 11)->nullable();
+            $table->increments('id',21);
+            $table->bigInteger('user_id')->unsigned();
             $table->string('access_key', 255)->nullable();
-            $table->tinyInteger('mode');
+            $table->tinyInteger('mode')->default(0);
             $table->timestamps();
         });
     }

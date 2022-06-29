@@ -20,7 +20,7 @@
 <div class="page-body">
     <div class="container-xl">
         
-        <div class="row row-cards mt-2">
+        <div class="row row-cards">
             <div class="col-12">
               <div class="qr--code">
                 <div class="card">
