@@ -33,8 +33,9 @@
         <a class="collapse-item" href="{{route('admin.manage.module')}}">{{ __('User KYC Modules') }}</a> -->
         <a class="collapse-item" href="{{ route('admin.withdraw.index') }}">{{ __('Withdraw Request') }} @if( DB::table('withdraws')->where('status','pending')->count() > 0)
         <span class="badge badge-sm badge-danger badge-counter">{{ DB::table('withdraws')->where('status','pending')->count() }}</span>@endif</a>
-        {{-- <a class="collapse-item" href="{{ route('admin-withdraw-method-index') }}">{{ __('Withdraw Method') }}</a> --}}
-        <a class="collapse-item" href="{{ route('admin.user.bonus') }}">{{ __('Refferel Bonus') }}</a>
+        <a class="collapse-item" href="{{ route('admin.withdraw') }}">{{ __('Withdraw Method') }}</a>
+        <a class="collapse-item" href="{{ route('admin.other.banks.index') }}">{{ __('Other Banks') }}</a>
+        <a class="collapse-item" href="{{ route('admin.user.bonus') }}">{{ __('Supervisor Fee') }}</a>
       </div>
     </div>
   </li>
@@ -108,15 +109,6 @@
         <a class="collapse-item" href="{{ route('admin.withdraw.rejected') }}">{{ __('Rejected Withdraws') }}</a>
       </div>
     </div>
-  </li>
-  @endif
-
-  @if(getModule('Other Banks'))
-  <li class="nav-item">
-    <a class="nav-link" href="{{ route('admin.other.banks.index') }}">
-      <i class="fas fa-landmark"></i>
-      <span>{{ __('Other Banks') }}</span>
-    </a>
   </li>
   @endif
 

@@ -9,7 +9,7 @@
 	<ol class="breadcrumb m-0 py-0">
         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
         <li class="breadcrumb-item"><a href="javascript:;">{{ __('Customers') }}</a></li>
-		<li class="breadcrumb-item"><a href="{{ route('admin-withdraw-method-index') }}">{{ __('WithDraw Method') }}</a></li>
+		<li class="breadcrumb-item"><a href="{{ route('admin.withdraw') }}">{{ __('WithDraw Method') }}</a></li>
 	</ol>
 	</div>
 </div>
