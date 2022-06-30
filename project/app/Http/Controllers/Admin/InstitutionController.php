@@ -166,8 +166,32 @@ class InstitutionController extends Controller
     public function profile($id)
     {
         $data = Admin::findOrFail($id);
-        return view('admin.institution.profile', compact('data'));
+        return view('admin.institution.profile.info', compact('data'));
     }
+    public function contacts($id)
+    {
+        $data = Admin::findOrFail($id);
+        return view('admin.institution.profile.contacts', compact('data'));
+    }
+
+    public function createContacts($id)
+    {
+        $data = Admin::findOrFail($id);
+        return view('admin.institution.profile.contacts.create', compact('data'));
+    }
+    
+
+    public function modules($id)
+    {
+        $data = Admin::findOrFail($id);
+        return view('admin.institution.profile.modules', compact('data'));
+    }
+    public function documents($id)
+    {
+        $data = Admin::findOrFail($id);
+        return view('admin.institution.profile.documents', compact('data'));
+    }
+
 
     public function subProfile($id)
     {
@@ -296,9 +320,7 @@ class InstitutionController extends Controller
 
     public function documentsDatatables($id)
     {
-        $datas = Document::where('ins_id', $id)->orderBy('name', 'asc')->get();
-        //$datas = Document::orderBy('name','asc')->get();  
-
+        $datas = Document::where('ins_id', $id)->get();
         return Datatables::of($datas)
             ->addColumn('name', function (Document $data) {
                 return $data->name;
@@ -313,7 +335,7 @@ class InstitutionController extends Controller
                                         ' . 'Actions' . '
                                         </button>
                                         <div class="dropdown-menu" x-placement="bottom-start">
-                                        <a href="javascript:;" data-toggle="modal" data-target="#deleteModal1" class="dropdown-item" data-href="' .  route('admin.documents.document-delete', $data->id) . '">' . __("Delete") . '</a>
+                                        <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="' .  route('admin.documents.document-delete', $data->id) . '">' . __("Delete") . '</a>
                                         </div>
                                     </div>';
             })

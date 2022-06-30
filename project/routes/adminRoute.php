@@ -326,7 +326,7 @@ Route::prefix('admin')->group(function () {
   Route::get('/contacts/delete/{id}', [ContactsController::class, 'destroy'])->name('admin.contact.contact-delete');
 
   Route::get('/documents/datatables', [DocumentsController::class, 'datatables'])->name('admin.documents.datatables');
-  Route::post('/documents/create-document', [DocumentsController::class, 'create'])->name('admin.document.add-document');//'DownloadsController@download');
+  Route::post('/documents/create-document', [DocumentsController::class, 'store'])->name('admin.document.add-document');//'DownloadsController@download');
   Route::get('/documents/download/{id}', [DocumentsController::class, 'getDownload'])->name('admin.documents.download');//'DownloadsController@download');
   Route::get('/documents/delete/{id}', [DocumentsController::class, 'destroy'])->name('admin.documents.document-delete');
 
@@ -480,7 +480,6 @@ Route::prefix('admin')->group(function () {
     Route::get('/institution/create', [InstitutionController::class, 'create'])->name('admin.institution.create');
     Route::post('/institution/create', [InstitutionController::class, 'store'])->name('admin.institution.store');
     Route::get('/institution/edit/{id}', [InstitutionController::class, 'edit'])->name('admin.institution.edit');
-    Route::get('/institution/profile/{id}', [InstitutionController::class, 'profile'])->name('admin.institution.profile');
     Route::get('/institution/contact/datatables/{id}', [InstitutionController::class, 'contactsDatatables'])->name('admin.institution.contactsdatatables');
     Route::post('/institution/create-contact/{id}', [InstitutionController::class, 'createContact'])->name('admin.institution.create-contact');
     Route::get('/institution/document/datatables/{id}', [InstitutionController::class, 'documentsDatatables'])->name('admin.institution.documentsdatatables');
@@ -489,6 +488,13 @@ Route::prefix('admin')->group(function () {
     Route::post('/institution/update/{id}', [InstitutionController::class, 'update'])->name('admin.institution.update');
     Route::post('/institution/moduleupdate/{id}', [InstitutionController::class, 'moduleupdate'])->name('admin.institution.moduleupdate');
     Route::get('/institution/delete/{id}', [InstitutionController::class, 'destroy'])->name('admin.institution.delete');
+    // for profile of Institution
+    Route::get('/institution/{id}/profile', [InstitutionController::class, 'profile'])->name('admin.institution.profile');
+    Route::get('/institution/{id}/contacts', [InstitutionController::class, 'contacts'])->name('admin.institution.contacts');
+    Route::get('/institution/{id}/contacts/create', [InstitutionController::class, 'createContacts'])->name('admin.institution.contacts.create');    
+
+    Route::get('/institution/{id}/modules', [InstitutionController::class, 'modules'])->name('admin.institution.modules');
+    Route::get('/institution/{id}/documents', [InstitutionController::class, 'documents'])->name('admin.institution.documents');
     
     // for Sub Institution
     Route::get('/subinstitution', [InstitutionController::class, 'indexSub'])->name('admin.subinstitution.index');
