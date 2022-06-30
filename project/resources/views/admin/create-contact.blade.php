@@ -3,10 +3,11 @@
 
 <div class="card">
   <div class="d-sm-flex align-items-center justify-content-between py-3">
-    <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Edit Contact') }}</h5>
+  <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Edit Contact') }} <a class="btn btn-primary btn-rounded btn-sm" href="{{route('admin.institution.contacts',$contact->user_id) }}"><i class="fas fa-arrow-left"></i> {{ __('Back') }}</a></h5>
     <ol class="breadcrumb m-0 py-0">
-      <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
-      <li class="breadcrumb-item"><a href="{{ route('admin.contact.contact-edit',$id) }}">{{ __('Edit Contact') }}</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('admin.institution.index') }}">{{ __('Institutions List') }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('admin.institution.contacts',$contact->user_id) }}">{{ __('Contacts List') }}</a></li>
     </ol>
   </div>
 </div>

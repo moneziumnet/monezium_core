@@ -58,11 +58,52 @@ class InstitutionController extends Controller
             ->rawColumns(['action', 'status'])
             ->toJson(); //--- Returning Json Data To Client Side
     }
+    public function subDatatables()
+    {
+        $datas = Admin::where('id', '!=', 1)->where('id', '!=', Auth::guard('admin')->user()->id)->orderBy('id');
+
+        //--- Integrating This Collection Into Datatables
+        return Datatables::of($datas)
+            ->addColumn('status', function (Admin $data) {
+                $status      = $data->status == 0 ? __('Block') : __('Unblock');
+                $status_sign = $data->status == 0 ? 'danger'   : 'success';
+
+                return '<div class="btn-group mb-1">
+                                    <button type="button" class="btn btn-' . $status_sign . ' btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        ' . $status . '
+                                    </button>
+                                    <div class="dropdown-menu" x-placement="bottom-start">
+                                        <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="' . route('admin-staff-block', ['id1' => $data->id, 'id2' => 1]) . '">' . __("Unblock") . '</a>
+                                        <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="' . route('admin-staff-block', ['id1' => $data->id, 'id2' => 0]) . '">' . __("Block") . '</a>
+                                    </div>
+                                    </div>';
+            })
+
+            ->addColumn('action', function (Admin $data) {
+
+                return '<div class="btn-group mb-1">
+                              <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                ' . 'Actions' . '
+                              </button>
+                              <div class="dropdown-menu" x-placement="bottom-start">
+                                <a href="' . route('admin.subinstitution.profile', $data->id) . '"  class="dropdown-item">' . __("Profile") . '</a>
+                                <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="' .  route('admin.institution.delete', $data->id) . '">' . __("Delete") . '</a>
+                              </div>
+                            </div>';
+            })
+            ->rawColumns(['action', 'status'])
+            ->toJson(); //--- Returning Json Data To Client Side
+    }
 
     //*** GET Request
     public function index()
     {
         return view('admin.institution.index');
+    }
+
+    public function indexSub()
+    {
+        return view('admin.institution.indexsub');
     }
 
     //*** GET Request
@@ -125,8 +166,49 @@ class InstitutionController extends Controller
     public function profile($id)
     {
         $data = Admin::findOrFail($id);
-        //$contact = Contact::where('user_id', $data->id)->first();
-        return view('admin.institution.profile', compact('data'));
+        return view('admin.institution.profile.info', compact('data'));
+    }
+    public function contacts($id)
+    {
+        $data = Admin::findOrFail($id);
+        return view('admin.institution.profile.contacts', compact('data'));
+    }
+
+    public function createContacts($id)
+    {
+        $data = Admin::findOrFail($id);
+        return view('admin.institution.profile.contacts.create', compact('data'));
+    }
+    
+
+    public function modules($id)
+    {
+        $data = Admin::findOrFail($id);
+        return view('admin.institution.profile.modules', compact('data'));
+    }
+    public function documents($id)
+    {
+        $data = Admin::findOrFail($id);
+        return view('admin.institution.profile.documents', compact('data'));
+    }
+
+
+    public function subProfile($id)
+    {
+        $data = Admin::findOrFail($id);
+        return view('admin.institution.subprofile.info', compact('data'));
+    }
+
+    public function branches($id)
+    {
+        $data = Admin::findOrFail($id);
+        return view('admin.institution.subprofile.branches', compact('data'));
+    }
+
+    public function banks($id)
+    {
+        $data = Admin::findOrFail($id);
+        return view('admin.institution.subprofile.banks', compact('data'));
     }
 
     public function moduleupdate(Request $request, $id)
@@ -238,9 +320,7 @@ class InstitutionController extends Controller
 
     public function documentsDatatables($id)
     {
-        $datas = Document::where('ins_id', $id)->orderBy('name', 'asc')->get();
-        //$datas = Document::orderBy('name','asc')->get();  
-
+        $datas = Document::where('ins_id', $id)->get();
         return Datatables::of($datas)
             ->addColumn('name', function (Document $data) {
                 return $data->name;
@@ -255,7 +335,7 @@ class InstitutionController extends Controller
                                         ' . 'Actions' . '
                                         </button>
                                         <div class="dropdown-menu" x-placement="bottom-start">
-                                        <a href="javascript:;" data-toggle="modal" data-target="#deleteModal1" class="dropdown-item" data-href="' .  route('admin.documents.document-delete', $data->id) . '">' . __("Delete") . '</a>
+                                        <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="' .  route('admin.documents.document-delete', $data->id) . '">' . __("Delete") . '</a>
                                         </div>
                                     </div>';
             })
