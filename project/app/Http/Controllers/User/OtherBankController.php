@@ -74,7 +74,10 @@ class OtherBankController extends Controller
                 return redirect()->back()->with('unsuccess','Request Amount should be less than this');
             }
 
-            if($user->balance<0 && $finalAmount > $user->balance){
+            $currency = defaultCurr();
+            $balance = user_wallet_balance(auth()->id(), $currency->id);
+
+            if($balance<0 && $finalAmount > $balance){
                 return redirect()->back()->with('unsuccess','Insufficient Balance!');
             }
 
@@ -98,7 +101,7 @@ class OtherBankController extends Controller
                 return redirect()->back()->with('unsuccess','Your monthly number of transaction is over!');
             }
 
-            if($request->amount > $user->balance){
+            if($request->amount > $balance){
                 return redirect()->back()->with('unsuccess','Insufficient Account Balance.');
             }
 
@@ -123,7 +126,7 @@ class OtherBankController extends Controller
             $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
             $trans->amount      = $finalAmount;
             $trans->charge      = 0;
-            $trans->type        = '+';
+            $trans->type        = '-';
             $trans->remark      = 'Send_Money';
             $trans->details     = trans('Send Money');
 
@@ -136,7 +139,7 @@ class OtherBankController extends Controller
             $trans->save();
     
             // $user->decrement('balance',$finalAmount);
-            $currency = defaultCurr();
+            // $currency = defaultCurr();
             user_wallet_decrement(auth()->id(),$currency->id,$finalAmount); 
             
             return redirect()->back()->with('success','Money Send successfully.');
