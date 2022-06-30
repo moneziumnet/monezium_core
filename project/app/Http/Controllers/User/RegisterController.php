@@ -7,6 +7,7 @@ use Session;
 use Validator;
 use App\Models\Plan;
 use App\Models\User;
+use App\Models\Currency;
 use App\Models\Admin;
 use App\Models\BankPlan;
 use App\Models\Transaction;
@@ -31,10 +32,11 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
-    public function showRegisterForm($id)
+    public function showRegisterForm(Request $request)
     {
-        $data = BankPlan::findOrFail($id);
-        return view('user.register', compact('data'));
+        //$data = BankPlan::findOrFail($id);
+        //return view('user.register', compact('data'));
+        return view('user.register');
     }
 
     public function showDomainRegisterForm($id)
@@ -86,7 +88,7 @@ class RegisterController extends Controller
         return response()->json($msg);
     }
 
-    public function register(Request $request, $id)
+    public function register(Request $request)
     {
         $value = session('captcha_string');
         if ($request->codes != $value) {
@@ -105,16 +107,17 @@ class RegisterController extends Controller
         }
 
         $gs = Generalsetting::first();
-        $subscription = BankPlan::findOrFail($id);
+        //$subscription = BankPlan::findOrFail($id);
 
         $user = new User;
         $input = $request->all();
-        $input['bank_plan_id'] = $subscription->id;
-        $input['plan_end_date'] = Carbon::now()->addDays($subscription->days);
+        $input['bank_plan_id'] = 0; //$subscription->id;
+        $input['plan_end_date'] = Carbon::now()->addDays(365); //Carbon::now()->addDays($subscription->days);
         $input['password'] = bcrypt($request['password']);
         $input['account_number'] = $gs->account_no_prefix . date('ydis') . random_int(100000, 999999);
         $token = md5(time() . $request->name . $request->email);
         $input['verification_link'] = $token;
+        $input['referral_id'] = $request->input('reff')?$request->input('reff'):'';
         $input['affilate_code'] = md5($request->name . $request->email);
         $user->fill($input)->save();
 
@@ -187,7 +190,9 @@ class RegisterController extends Controller
                     $mainUserTrans->email = $mainUser->email;
                     $mainUserTrans->amount = $gs->affilate_user;
                     $mainUserTrans->type = "Referral Bonus";
-                    $mainUserTrans->profit = "plus";
+                    $mainUserTrans->user_type = 1;
+                    $mainUserTrans->currency_id = $currency;
+                    $mainUserTrans->profit = 0;//"plus";
                     $mainUserTrans->txnid = Str::random(12);
                     $mainUserTrans->user_id = $mainUser->id;
                     $mainUserTrans->save();
@@ -196,7 +201,9 @@ class RegisterController extends Controller
                     $newUserTrans->email = $user->email;
                     $newUserTrans->amount = $gs->affilate_user;
                     $newUserTrans->type = "Referral Bonus";
-                    $newUserTrans->profit = "plus";
+                    $newUserTrans->user_type = 1;
+                    $newUserTrans->currency_id = $currency;
+                    $newUserTrans->profit = 0;//"plus";
                     $newUserTrans->txnid = Str::random(12);
                     $newUserTrans->user_id = $user->id;
                     $newUserTrans->save();

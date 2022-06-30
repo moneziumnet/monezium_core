@@ -31,9 +31,10 @@
                 <h6 class="subtitle text--base">@lang('Sign Up')</h6>
                 <h3 class="title">@lang('Create Account Now')</h3>
             </div>
-            <form id="registerform" class="account-form row gy-3 gx-4 align-items-center" action="{{ route('user.register.submit',$data->id) }}" method="POST">
+            <form id="registerform" class="account-form row gy-3 gx-4 align-items-center" action="{{ route('user.register.submit') }}" method="POST">
                 @includeIf('includes.user.form-both')
                 @csrf
+                <input type="hidden" name="reff" id="reff" value="{{Session::get('affilate')}}">
                 <div class="col-sm-6">
                     <label for="name" class="form-label">@lang('Your Name')</label>
                     <input type="text" id="name" name="name" class="form-control form--control">
@@ -50,7 +51,7 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="inp-name" class="form-label">{{ __('VAT Number') }}</label>
-                        <input type="text" class="form-control form--control" id="vat" name="vat" placeholder="{{ __('Enter VAT Number') }}" value="{{$data->vat}}" required>
+                        <input type="text" class="form-control form--control" id="vat" name="vat" placeholder="{{ __('Enter VAT Number') }}" value="" required>
                     </div>
                 </div>
                 <div class="col-sm-6">
