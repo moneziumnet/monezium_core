@@ -489,6 +489,14 @@ Route::prefix('admin')->group(function () {
     Route::post('/institution/update/{id}', [InstitutionController::class, 'update'])->name('admin.institution.update');
     Route::post('/institution/moduleupdate/{id}', [InstitutionController::class, 'moduleupdate'])->name('admin.institution.moduleupdate');
     Route::get('/institution/delete/{id}', [InstitutionController::class, 'destroy'])->name('admin.institution.delete');
+    
+    // for Sub Institution
+    Route::get('/subinstitution', [InstitutionController::class, 'indexSub'])->name('admin.subinstitution.index');
+    Route::get('/subinstitution/datatables', [InstitutionController::class, 'subDatatables'])->name('admin.subinstitution.datatables');
+    Route::get('/subinstitution/{id}/profile', [InstitutionController::class, 'subProfile'])->name('admin.subinstitution.profile');
+    Route::get('/subinstitution/{id}/branches', [InstitutionController::class, 'branches'])->name('admin.subinstitution.branches');
+    Route::get('/subinstitution/{id}/banks', [InstitutionController::class, 'banks'])->name('admin.subinstitution.banks');
+    
 
     Route::get('/branch/datatables', [BranchController::class, 'datatables'])->name('admin.branch.datatables');
     Route::get('/branch', [BranchController::class, 'index'])->name('admin.branch.index');

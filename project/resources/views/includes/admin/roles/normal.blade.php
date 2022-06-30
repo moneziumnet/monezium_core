@@ -9,8 +9,7 @@
     </a>
     <div id="institution" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
-        <a class="collapse-item" href="{{ route('admin.institution.index') }}">{{ __('Sub Institution') }}</a>
-        <a class="collapse-item" href="{{ route('admin.branch.index') }}">{{ __('Branches') }}</a>
+        <a class="collapse-item" href="{{ route('admin.subinstitution.index') }}">{{ __('Sub Institution') }}</a>
         <a class="collapse-item" href="{{ route('admin.payment.index') }}">{{  __('Payment Gateways')  }}</a>
       </div>
     </div>
