@@ -39,12 +39,34 @@
                                     <td width="10%">:</td>
                                     <td width="45%">{{$data->beneficiary->account_name}}</td>
                                 </tr>
-    
+
                                 <tr>
                                     <th width="45%">{{__('Account Number')}}</th>
                                     <td width="10%">:</td>
                                     <td width="45%">{{$data->beneficiary->account_number}}</td>
                                 </tr>
+    
+                                <tr>
+                                    <th width="45%">{{__('Beneficiary Address')}}</th>
+                                    <td width="10%">:</td>
+                                    <td width="45%">{{$data->beneficiary->address}}</td>
+                                </tr>
+                                <tr>
+                                    <th width="45%">{{__('Bank Address')}}</th>
+                                    <td width="10%">:</td>
+                                    <td width="45%">{{$data->beneficiary->bank_address}}</td>
+                                </tr>
+                                <tr>
+                                    <th width="45%">{{__('Account IBAN')}}</th>
+                                    <td width="10%">:</td>
+                                    <td width="45%">{{$data->beneficiary->account_iban}}</td>
+                                </tr>
+                                <tr>
+                                    <th width="45%">{{__('SWIFT/BIC')}}</th>
+                                    <td width="10%">:</td>
+                                    <td width="45%">{{$data->beneficiary->swift_bic}}</td>
+                                </tr>
+
     
                                 @foreach (json_decode($data->beneficiary->details,true) as $key=>$value)
                                     @if ($value[1] == 'file')
