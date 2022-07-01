@@ -106,7 +106,7 @@ var table = $('#geniustable').DataTable({
 
         $(function() {
             $(".btn-area").append('<div class="col-sm-12 col-md-4 pr-3 text-right">'+
-                '<a class="btn btn-primary" href="{{route('admin.institution.create')}}">'+
+                '<a class="btn btn-primary" href="{{route('admin.institution.createsub')}}">'+
             '<i class="fas fa-plus"></i> Add New Sub Institution'+
             '</a>'+
             '</div>');

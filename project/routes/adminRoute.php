@@ -498,6 +498,7 @@ Route::prefix('admin')->group(function () {
     
     // for Sub Institution
     Route::get('/subinstitution', [InstitutionController::class, 'indexSub'])->name('admin.subinstitution.index');
+    Route::get('/subinstitution/create', [InstitutionController::class, 'createSub'])->name('admin.institution.createsub');
     Route::get('/subinstitution/datatables', [InstitutionController::class, 'subDatatables'])->name('admin.subinstitution.datatables');
     Route::get('/subinstitution/{id}/profile', [InstitutionController::class, 'subProfile'])->name('admin.subinstitution.profile');
     Route::get('/subinstitution/{id}/branches', [InstitutionController::class, 'branches'])->name('admin.subinstitution.branches');
