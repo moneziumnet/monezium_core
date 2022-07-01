@@ -27,9 +27,15 @@ class SubInsBankController extends Controller
                             ->editColumn('name', function(SubInsBank $data) {
                                 return  '<div>
                                             <h6 class="text-primary">'.$data->name.'</h6>
-                                            Processing Time : '.$data->address.'
+                                            '.$data->address.'
                                         </div>';
                             }) 
+                            ->editColumn('account', function(SubInsBank $data) {
+                                return  '<div>
+                                            <h6 class="text-primary">'.'SWIFT:'.$data->swift.'</h6>
+                                            IBAN: '.$data->iban.'
+                                        </div>';
+                            })
                             ->editColumn('min_limit', function(SubInsBank $data){
                                 $curr = Currency::where('is_default','=',1)->first();
                                 return '<div>
@@ -73,7 +79,7 @@ class SubInsBankController extends Controller
                                 </div>';
   
                               })
-                            ->rawColumns(['name','min_limit','fixed_charge','status','action'])
+                            ->rawColumns(['name','account','min_limit','fixed_charge','status','action'])
                             ->toJson();
     }
 
