@@ -125,7 +125,7 @@ class OtherBankController extends Controller
             $trans->user_type   = 1;
             $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
             $trans->amount      = $finalAmount;
-            $trans->charge      = 0;
+            $trans->charge      = $cost;
             $trans->type        = '-';
             $trans->remark      = 'Send_Money';
             $trans->details     = trans('Send Money');

@@ -61,7 +61,6 @@ class BeneficiaryController extends Controller
         }
 
         $input['details'] = json_encode($details,true);
-
         $input['user_id'] = auth()->user()->id;
         $data->fill($input)->save();
 
