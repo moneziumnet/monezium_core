@@ -108,11 +108,12 @@ class RegisterController extends Controller
 
         $gs = Generalsetting::first();
         //$subscription = BankPlan::findOrFail($id);
+        $subscription = BankPlan::findOrFail(1);
 
         $user = new User;
         $input = $request->all();
-        $input['bank_plan_id'] = 0; //$subscription->id;
-        $input['plan_end_date'] = Carbon::now()->addDays(365); //Carbon::now()->addDays($subscription->days);
+        $input['bank_plan_id'] = $subscription->id;
+        $input['plan_end_date'] = Carbon::now()->addDays($subscription->days);//Carbon::now()->addDays(365);
         $input['password'] = bcrypt($request['password']);
         $input['account_number'] = $gs->account_no_prefix . date('ydis') . random_int(100000, 999999);
         $token = md5(time() . $request->name . $request->email);
