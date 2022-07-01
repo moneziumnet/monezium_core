@@ -34,22 +34,23 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DocumentsController;
 use App\Http\Controllers\Admin\KycManageController;
 use App\Http\Controllers\Admin\OtherBankController;
-use App\Http\Controllers\Admin\SubscriberController;
+use App\Http\Controllers\Admin\SubInsBankController;
 
+use App\Http\Controllers\Admin\SubscriberController;
 use App\Http\Controllers\Admin\WithdrawalController;
 use App\Http\Controllers\Admin\InstitutionController;
 use App\Http\Controllers\Admin\PageSettingController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\BlogCategoryController;
 use App\Http\Controllers\Admin\ManageChargeController;
+
 use App\Http\Controllers\Admin\ManageEscrowController;
 
 use App\Http\Controllers\Admin\RequestMoneyController;
-
 use App\Http\Controllers\Admin\AdminLanguageController;
 use App\Http\Controllers\Admin\RequestDomainController;
-use App\Http\Controllers\Admin\SocialSettingController;
 
+use App\Http\Controllers\Admin\SocialSettingController;
 use App\Http\Controllers\Admin\AccountProcessController;
 use App\Http\Controllers\Admin\GeneralSettingController;
 use App\Http\Controllers\Admin\PaymentGatewayController;
@@ -107,6 +108,75 @@ Route::prefix('admin')->group(function () {
 
   Route::group(['middleware' => 'permissions:Menu Builder'], function () {
     Route::get('/menu-builder', [GeneralSettingController::class, 'menubuilder'])->name('admin.gs.menubuilder');
+  });
+
+  
+  Route::group(['middleware' => 'permissions:Sub Institutions management'], function () {
+    Route::get('/institution/datatables', [InstitutionController::class, 'datatables'])->name('admin.institution.datatables');
+    Route::get('/institution', [InstitutionController::class, 'index'])->name('admin.institution.index');
+    Route::get('/institution/create', [InstitutionController::class, 'create'])->name('admin.institution.create');
+    Route::post('/institution/create', [InstitutionController::class, 'store'])->name('admin.institution.store');
+    Route::get('/institution/edit/{id}', [InstitutionController::class, 'edit'])->name('admin.institution.edit');
+    Route::get('/institution/contact/datatables/{id}', [InstitutionController::class, 'contactsDatatables'])->name('admin.institution.contactsdatatables');
+    Route::post('/institution/create-contact/{id}', [InstitutionController::class, 'createContact'])->name('admin.institution.create-contact');
+    Route::get('/institution/document/datatables/{id}', [InstitutionController::class, 'documentsDatatables'])->name('admin.institution.documentsdatatables');
+    Route::post('/institution/add-document/{id}', [InstitutionController::class, 'createDocument'])->name('admin.institution.add-document');
+    Route::get('/institution/block/{id1}/{id2}', [InstitutionController::class, 'block'])->name('admin-staff-block');
+    Route::post('/institution/update/{id}', [InstitutionController::class, 'update'])->name('admin.institution.update');
+    Route::post('/institution/moduleupdate/{id}', [InstitutionController::class, 'moduleupdate'])->name('admin.institution.moduleupdate');
+    Route::get('/institution/delete/{id}', [InstitutionController::class, 'destroy'])->name('admin.institution.delete');
+    // for profile of Institution
+    Route::get('/institution/{id}/profile', [InstitutionController::class, 'profile'])->name('admin.institution.profile');
+    Route::get('/institution/{id}/contacts', [InstitutionController::class, 'contacts'])->name('admin.institution.contacts');
+    Route::get('/institution/{id}/contacts/create', [InstitutionController::class, 'createContacts'])->name('admin.institution.contacts.create');    
+
+    Route::get('/institution/{id}/modules', [InstitutionController::class, 'modules'])->name('admin.institution.modules');
+    Route::get('/institution/{id}/documents', [InstitutionController::class, 'documents'])->name('admin.institution.documents');
+    
+    // for Sub Institution
+    Route::get('/subinstitution', [InstitutionController::class, 'indexSub'])->name('admin.subinstitution.index');
+    Route::get('/subinstitution/create', [InstitutionController::class, 'createSub'])->name('admin.institution.createsub');
+    Route::get('/subinstitution/datatables', [InstitutionController::class, 'subDatatables'])->name('admin.subinstitution.datatables');
+    Route::get('/subinstitution/{id}/profile', [InstitutionController::class, 'subProfile'])->name('admin.subinstitution.profile');
+    Route::get('/subinstitution/{id}/branches', [InstitutionController::class, 'branches'])->name('admin.subinstitution.branches');
+    Route::get('/subinstitution/{id}/banks', [InstitutionController::class, 'banks'])->name('admin.subinstitution.banks');    
+
+    Route::get('/branch/datatables', [BranchController::class, 'datatables'])->name('admin.branch.datatables');
+    Route::get('/branch', [BranchController::class, 'index'])->name('admin.branch.index');
+    Route::get('/branch/create', [BranchController::class, 'create'])->name('admin.branch.create');
+    Route::post('/branch/create', [BranchController::class, 'store'])->name('admin.branch.store');
+    Route::get('/branch/edit/{id}', [BranchController::class, 'edit'])->name('admin.branch.edit');
+    Route::post('/branch/update/{id}', [BranchController::class, 'update'])->name('admin.branch.update');
+    Route::get('/branch/delete/{id}', [BranchController::class, 'destroy'])->name('admin.branch.delete');
+
+    Route::post('/general-settings/update/all', [GeneralSettingController::class, 'generalupdate'])->name('admin.gs.update');
+    Route::get('/paymentgateway/datatables', [PaymentGatewayController::class, 'datatables'])->name('admin.payment.datatables'); //JSON REQUEST
+    Route::get('/paymentgateway', [PaymentGatewayController::class, 'index'])->name('admin.payment.index');
+    Route::get('/paymentgateway/create', [PaymentGatewayController::class, 'create'])->name('admin.payment.create');
+    Route::post('/paymentgateway/create', [PaymentGatewayController::class, 'store'])->name('admin.payment.store');
+    Route::get('/paymentgateway/edit/{id}', [PaymentGatewayController::class, 'edit'])->name('admin.payment.edit');
+    Route::post('/paymentgateway/update/{id}', [PaymentGatewayController::class, 'update'])->name('admin.payment.update');
+    Route::get('/paymentgateway/delete/{id}', [PaymentGatewayController::class, 'destroy'])->name('admin.payment.delete');
+    Route::get('/paymentgateway/status/{id1}/{id2}', [PaymentGatewayController::class, 'status'])->name('admin.payment.status');
+
+    Route::get('/banks/datatables', [SubInsBankController::class, 'datatables'])->name('admin.subinstitution.banks.datatables');
+    Route::get('/banks', [SubInsBankController::class, 'index'])->name('admin.subinstitution.banks.index');
+    Route::get('/banks/create', [SubInsBankController::class, 'create'])->name('admin.subinstitution.banks.create');
+    Route::post('/banks/store', [SubInsBankController::class, 'store'])->name('admin.subinstitution.banks.store');
+    Route::get('/banks/edit/{id}', [SubInsBankController::class, 'edit'])->name('admin.subinstitution.banks.edit');
+    Route::post('/banks/update/{id}', [SubInsBankController::class, 'update'])->name('admin.subinstitution.banks.update');
+    Route::get('/banks/delete/{id}', [SubInsBankController::class, 'destroy'])->name('admin.subinstitution.banks.delete');
+    Route::get('/banks/{id1}/status/{status}', [SubInsBankController::class, 'status'])->name('admin.subinstitution.banks.status');
+
+    Route::get('/contacts/datatables', [ContactsController::class, 'datatables'])->name('admin.contacts.datatables');
+    Route::get('/contacts/contact-create', [ContactsController::class, 'create'])->name('admin.contact.contact-create');
+    Route::get('/contacts/edit/{id}', [ContactsController::class, 'edit'])->name('admin.contact.contact-edit');
+    Route::get('/contacts/delete/{id}', [ContactsController::class, 'destroy'])->name('admin.contact.contact-delete');
+  
+    Route::get('/documents/datatables', [DocumentsController::class, 'datatables'])->name('admin.documents.datatables');
+    Route::post('/documents/create-document', [DocumentsController::class, 'store'])->name('admin.document.add-document');
+    Route::get('/documents/download/{id}', [DocumentsController::class, 'getDownload'])->name('admin.documents.download');
+    Route::get('/documents/delete/{id}', [DocumentsController::class, 'destroy'])->name('admin.documents.document-delete');
   });
 
   Route::group(['middleware' => 'permissions:Manage Customers'], function () {
@@ -281,9 +351,6 @@ Route::prefix('admin')->group(function () {
     Route::get('escrow-close/{id}', [ManageEscrowController::class, 'close'])->name('admin.escrow.close');
   });
 
-
-
-
   Route::group(['middleware' => 'permissions:Money Transfer'], function () {
     Route::get('/own-banks/transfer/datatables', [OwnBankTransferController::class, 'datatables'])->name('admin.own.banks.transfer.datatables');
     Route::get('/own-banks/transfer', [OwnBankTransferController::class, 'index'])->name('admin.own.banks.transfer.index');
@@ -320,16 +387,6 @@ Route::prefix('admin')->group(function () {
     Route::get('/transactions', [TransactionController::class, 'index'])->name('admin.transactions.index');
   });
     
-  Route::get('/contacts/datatables', [ContactsController::class, 'datatables'])->name('admin.contacts.datatables');
-  Route::get('/contacts/contact-create', [ContactsController::class, 'create'])->name('admin.contact.contact-create');
-  Route::get('/contacts/edit/{id}', [ContactsController::class, 'edit'])->name('admin.contact.contact-edit');
-  Route::get('/contacts/delete/{id}', [ContactsController::class, 'destroy'])->name('admin.contact.contact-delete');
-
-  Route::get('/documents/datatables', [DocumentsController::class, 'datatables'])->name('admin.documents.datatables');
-  Route::post('/documents/create-document', [DocumentsController::class, 'store'])->name('admin.document.add-document');//'DownloadsController@download');
-  Route::get('/documents/download/{id}', [DocumentsController::class, 'getDownload'])->name('admin.documents.download');//'DownloadsController@download');
-  Route::get('/documents/delete/{id}', [DocumentsController::class, 'destroy'])->name('admin.documents.document-delete');
-
   Route::group(['middleware' => 'permissions:Deposits'], function () {
     Route::get('/deposits/datatables', [AppDepositController::class, 'datatables'])->name('admin.deposits.datatables');
     Route::get('/deposits', [AppDepositController::class, 'index'])->name('admin.deposits.index');
@@ -377,10 +434,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/nexmo-sms-settings', [GeneralSettingController::class, 'nexmo'])->name('admin.gs.nexmo');
   });
 
-
-
   Route::group(['middleware' => 'permissions:Homepage Manage'], function () {
-
     //------------ ADMIN FEATURE SECTION ------------
     Route::get('/feature/datatables', [FeatureController::class, 'datatables'])->name('admin.feature.datatables'); //JSON REQUEST
     Route::get('/feature', [FeatureController::class, 'index'])->name('admin.feature.index');
@@ -449,7 +503,6 @@ Route::prefix('admin')->group(function () {
     Route::post('/groupemailpost', [EmailController::class, 'groupemailpost'])->name('admin.group.submit');
   });
 
-
   Route::group(['middleware' => 'permissions:Message'], function () {
     Route::post('/send/message', [MessageController::class, 'usercontact'])->name('admin.send.message');
     Route::get('/user/ticket', [MessageController::class, 'index'])->name('admin.user.message');
@@ -459,7 +512,6 @@ Route::prefix('admin')->group(function () {
     Route::post('/message/post', [MessageController::class, 'postmessage'])->name('admin.message.store');
     Route::get('/message/load/{id}', [MessageController::class, 'messageshow'])->name('admin-message-load');
   });
-
 
   Route::group(['middleware' => 'permissions:Currency Setting'], function () {
     Route::get('/general-settings/currency/{status}', [GeneralSettingController::class, 'currency'])->name('admin.gs.iscurrency');
@@ -471,56 +523,6 @@ Route::prefix('admin')->group(function () {
     Route::post('/currency/update/{id}', [CurrencyController::class, 'update'])->name('admin.currency.update');
     Route::get('/currency/delete/{id}', [CurrencyController::class, 'destroy'])->name('admin.currency.delete');
     Route::get('/currency/status/{id1}/{id2}', [CurrencyController::class, 'status'])->name('admin.currency.status');
-  });
-
-
-  Route::group(['middleware' => 'permissions:Sub Institutions management'], function () {
-    Route::get('/institution/datatables', [InstitutionController::class, 'datatables'])->name('admin.institution.datatables');
-    Route::get('/institution', [InstitutionController::class, 'index'])->name('admin.institution.index');
-    Route::get('/institution/create', [InstitutionController::class, 'create'])->name('admin.institution.create');
-    Route::post('/institution/create', [InstitutionController::class, 'store'])->name('admin.institution.store');
-    Route::get('/institution/edit/{id}', [InstitutionController::class, 'edit'])->name('admin.institution.edit');
-    Route::get('/institution/contact/datatables/{id}', [InstitutionController::class, 'contactsDatatables'])->name('admin.institution.contactsdatatables');
-    Route::post('/institution/create-contact/{id}', [InstitutionController::class, 'createContact'])->name('admin.institution.create-contact');
-    Route::get('/institution/document/datatables/{id}', [InstitutionController::class, 'documentsDatatables'])->name('admin.institution.documentsdatatables');
-    Route::post('/institution/add-document/{id}', [InstitutionController::class, 'createDocument'])->name('admin.institution.add-document');
-    Route::get('/institution/block/{id1}/{id2}', [InstitutionController::class, 'block'])->name('admin-staff-block');
-    Route::post('/institution/update/{id}', [InstitutionController::class, 'update'])->name('admin.institution.update');
-    Route::post('/institution/moduleupdate/{id}', [InstitutionController::class, 'moduleupdate'])->name('admin.institution.moduleupdate');
-    Route::get('/institution/delete/{id}', [InstitutionController::class, 'destroy'])->name('admin.institution.delete');
-    // for profile of Institution
-    Route::get('/institution/{id}/profile', [InstitutionController::class, 'profile'])->name('admin.institution.profile');
-    Route::get('/institution/{id}/contacts', [InstitutionController::class, 'contacts'])->name('admin.institution.contacts');
-    Route::get('/institution/{id}/contacts/create', [InstitutionController::class, 'createContacts'])->name('admin.institution.contacts.create');    
-
-    Route::get('/institution/{id}/modules', [InstitutionController::class, 'modules'])->name('admin.institution.modules');
-    Route::get('/institution/{id}/documents', [InstitutionController::class, 'documents'])->name('admin.institution.documents');
-    
-    // for Sub Institution
-    Route::get('/subinstitution', [InstitutionController::class, 'indexSub'])->name('admin.subinstitution.index');
-    Route::get('/subinstitution/datatables', [InstitutionController::class, 'subDatatables'])->name('admin.subinstitution.datatables');
-    Route::get('/subinstitution/{id}/profile', [InstitutionController::class, 'subProfile'])->name('admin.subinstitution.profile');
-    Route::get('/subinstitution/{id}/branches', [InstitutionController::class, 'branches'])->name('admin.subinstitution.branches');
-    Route::get('/subinstitution/{id}/banks', [InstitutionController::class, 'banks'])->name('admin.subinstitution.banks');
-    
-
-    Route::get('/branch/datatables', [BranchController::class, 'datatables'])->name('admin.branch.datatables');
-    Route::get('/branch', [BranchController::class, 'index'])->name('admin.branch.index');
-    Route::get('/branch/create', [BranchController::class, 'create'])->name('admin.branch.create');
-    Route::post('/branch/create', [BranchController::class, 'store'])->name('admin.branch.store');
-    Route::get('/branch/edit/{id}', [BranchController::class, 'edit'])->name('admin.branch.edit');
-    Route::post('/branch/update/{id}', [BranchController::class, 'update'])->name('admin.branch.update');
-    Route::get('/branch/delete/{id}', [BranchController::class, 'destroy'])->name('admin.branch.delete');
-
-    Route::post('/general-settings/update/all', [GeneralSettingController::class, 'generalupdate'])->name('admin.gs.update');
-    Route::get('/paymentgateway/datatables', [PaymentGatewayController::class, 'datatables'])->name('admin.payment.datatables'); //JSON REQUEST
-    Route::get('/paymentgateway', [PaymentGatewayController::class, 'index'])->name('admin.payment.index');
-    Route::get('/paymentgateway/create', [PaymentGatewayController::class, 'create'])->name('admin.payment.create');
-    Route::post('/paymentgateway/create', [PaymentGatewayController::class, 'store'])->name('admin.payment.store');
-    Route::get('/paymentgateway/edit/{id}', [PaymentGatewayController::class, 'edit'])->name('admin.payment.edit');
-    Route::post('/paymentgateway/update/{id}', [PaymentGatewayController::class, 'update'])->name('admin.payment.update');
-    Route::get('/paymentgateway/delete/{id}', [PaymentGatewayController::class, 'destroy'])->name('admin.payment.delete');
-    Route::get('/paymentgateway/status/{id1}/{id2}', [PaymentGatewayController::class, 'status'])->name('admin.payment.status');
   });
 
   Route::group(['middleware' => 'permissions:Manage KYC Form'], function () {
@@ -537,7 +539,6 @@ Route::prefix('admin')->group(function () {
   });
 
   Route::group(['middleware' => 'permissions:Language Manage'], function () {
-
     Route::get('/general-settings/language/{status}', [GeneralSettingController::class, 'language'])->name('admin.gs.islanguage');
     Route::get('/languages/datatables', [LanguageController::class, 'datatables'])->name('admin.lang.datatables');
     Route::get('/languages', [LanguageController::class, 'index'])->name('admin.lang.index');

@@ -94,6 +94,31 @@
                             <input name="account_name" id="account_name" class="form-control" autocomplete="off" placeholder="{{__('Jhon Doe')}}" type="text" value="{{ $data->account_name }}" min="1" required readonly>
                         </div>
 
+                        <div class="form-group mb-3 mt-3">
+                            <label class="form-label required">{{__('Account Number')}}</label>
+                            <input name="account_number" id="account_number" class="form-control" autocomplete="off" placeholder="{{__('Account Number')}}" type="text" value="{{ $data->account_number }}" min="1" required readonly>
+                        </div>
+
+                        <div class="form-group mb-3 mt-3">
+                            <label class="form-label required">{{__('Address')}}</label>
+                            <input name="address" id="address" class="form-control" autocomplete="off" placeholder="{{__('Beneficiary Address')}}" type="text" value="{{ $data->address }}" min="1" required readonly>
+                        </div>
+
+                        <div class="form-group mb-3 mt-3">
+                            <label class="form-label required">{{__('Bank Address')}}</label>
+                            <input name="bank_address" id="bank_address" class="form-control" autocomplete="off" placeholder="{{__('Bank Address')}}" type="text" value="{{ $data->bank_address }}" min="1" required readonly>
+                        </div>
+
+                        <div class="form-group mb-3 mt-3">
+                            <label class="form-label required">{{__('SWIFT/BIC')}}</label>
+                            <input name="swift_bic" id="swift_bic" class="form-control" autocomplete="off" placeholder="{{__('SWIFT/BIC')}}" type="text" value="{{ $data->swift_bic }}" min="1" required readonly>
+                        </div>
+
+                        <div class="form-group mb-3 mt-3">
+                            <label class="form-label required">{{__('Account/IBAN')}}</label>
+                            <input name="account_iban" id="account_iban" class="form-control" autocomplete="off" placeholder="{{__('Jhon Doe')}}" type="text" value="{{ $data->account_iban }}" min="1" required readonly>
+                        </div>
+
                         <div class="form-group mt-3">
                             <label class="form-label required">{{__('Amount')}}</label>
                             <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" value="{{ old('amount') }}" min="1" required>

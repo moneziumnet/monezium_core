@@ -24,7 +24,8 @@
           $count = count($modules);
           @endphp
 
-          @if ($count < 8) @if (in_array('Loan',$modules)) <li class="nav-item dropdown {{ request()->routeIs('user.loans.plan') || request()->routeIs('user.loans.index') || request()->routeIs('user.loans.pending') || request()->routeIs('user.loans.paid') || request()->routeIs('user.loans.rejected') ? 'active' : '' }}">
+          @if ($count < 8) 
+          @if (in_array('Loan',$modules)) <li class="nav-item dropdown {{ request()->routeIs('user.loans.plan') || request()->routeIs('user.loans.index') || request()->routeIs('user.loans.pending') || request()->routeIs('user.loans.paid') || request()->routeIs('user.loans.rejected') ? 'active' : '' }}">
             <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
               <span class="nav-link-icon d-md-none d-lg-inline-block">
                 <i class="fas fa-cash-register"></i>
@@ -123,7 +124,7 @@
             @endif
 
             @if (in_array('External Payment',$modules))
-            <li class="nav-item dropdown {{ request()->routeIs('user.deposit.index', 'user.wire.transfer.index', 'user.other.bank', 'user.beneficiaries.index', 'tranfer.logs.index') ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ request()->routeIs('user.deposit.index', 'user.wire.transfer.index', 'user.other.bank', 'user.beneficiaries.index', 'tranfer.logs.index','user.withdraw.index') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                   <i class="fas fa-hand-holding-usd"></i>
@@ -133,12 +134,22 @@
                 </span>
               </a>
               <div class="dropdown-menu">
+                @if (in_array('Withdraw',$modules))
+                <a class="dropdown-item" href="{{route('user.withdraw.index')}}">
+                  {{__('Withdraw')}}
+                </a>
+                @endif
+                @if (in_array('Deposit',$modules))
                 <a class="dropdown-item" href="{{route('user.deposit.index')}}">
                   {{__('Deposit')}}
                 </a>
+                @endif
+                @if (in_array('Wire Transfer',$modules))
                 <a class="dropdown-item" href="{{route('user.wire.transfer.index')}}">
                   {{__('Wire Transfer')}}
                 </a>
+                @endif
+                @if (in_array('Bank Transfer',$modules))
                 <a class="dropdown-item" href="{{route('user.other.bank')}}">
                   {{__('Other Bank Transfer')}}
                 </a>
@@ -148,6 +159,7 @@
                 <a class="dropdown-item" href="{{ route('tranfer.logs.index') }}">
                   {{__('Transfer History')}}
                 </a>
+                @endif
               </div>
             </li>
             @endif
@@ -163,9 +175,9 @@
                 </span>
               </a>
               <div class="dropdown-menu">
-                <!-- <a class="dropdown-item" href="{{route('send.money.create')}}">
-                {{__('Send Money')}}
-              </a> -->
+                <a class="dropdown-item" href="{{route('send.money.create')}}">
+                  {{__('Send Money')}}
+                </a>
                 <a class="dropdown-item" href="{{route('user.money.request.index')}}">
                   {{__('Send Request Money')}}
                 </a>
@@ -317,7 +329,7 @@
               </div>
             </li>
             @endif
-            <li class="nav-item dropdown {{ request()->routeIs('user.transaction','user.withdraw.index') ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ request()->routeIs('user.transaction') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                   <i class="fas fa-suitcase"></i>
@@ -329,9 +341,6 @@
               <div class="dropdown-menu">
                 <a class="dropdown-item" href="{{route('user.transaction')}}">
                   {{__('Transactions')}}
-                </a>
-                <a class="dropdown-item" href="{{route('user.withdraw.index')}}">
-                  {{__('Withdraw')}}
                 </a>
               </div>
             </li>
@@ -436,7 +445,7 @@
             @endif
 
             @if (in_array('External Payment',$modules))
-            <li class="nav-item dropdown {{ request()->routeIs('user.deposit.index', 'user.wire.transfer.index', 'user.other.bank', 'user.beneficiaries.index', 'tranfer.logs.index') ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ request()->routeIs('user.deposit.index', 'user.wire.transfer.index', 'user.other.bank', 'user.beneficiaries.index', 'tranfer.logs.index','user.withdraw.index') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                   <i class="fas fa-hand-holding-usd"></i>
@@ -446,12 +455,22 @@
                 </span>
               </a>
               <div class="dropdown-menu">
+                @if (in_array('Withdraw',$modules))
+                <a class="dropdown-item" href="{{route('user.withdraw.index')}}">
+                  {{__('Withdraw')}}
+                </a>
+                @endif
+                @if (in_array('Deposit',$modules))
                 <a class="dropdown-item" href="{{route('user.deposit.index')}}">
                   {{__('Deposit')}}
                 </a>
+                @endif
+                @if (in_array('Wire Transfer',$modules))
                 <a class="dropdown-item" href="{{route('user.wire.transfer.index')}}">
                   {{__('Wire Transfer')}}
                 </a>
+                @endif
+                @if (in_array('Bank Transfer',$modules))
                 <a class="dropdown-item" href="{{route('user.other.bank')}}">
                   {{__('Other Bank Transfer')}}
                 </a>
@@ -461,6 +480,7 @@
                 <a class="dropdown-item" href="{{ route('tranfer.logs.index') }}">
                   {{__('Transfer History')}}
                 </a>
+                @endif
               </div>
             </li>
             @endif
@@ -476,9 +496,9 @@
                 </span>
               </a>
               <div class="dropdown-menu">
-                <!-- <a class="dropdown-item" href="{{route('send.money.create')}}">
-                {{__('Send Money')}}
-              </a> -->
+                <a class="dropdown-item" href="{{route('send.money.create')}}">
+                  {{__('Send Money')}}
+                </a>
                 <a class="dropdown-item" href="{{route('user.money.request.index')}}">
                   {{__('Send Request Money')}}
                 </a>
@@ -617,7 +637,7 @@
             </li>
             @endif
 
-            <li class="nav-item dropdown {{ request()->routeIs('user.exchange.money','user.transaction','user.withdraw.index') ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ request()->routeIs('user.exchange.money','user.transaction') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                   <i class="fas fa-suitcase"></i>
@@ -632,9 +652,6 @@
                 </a>
                 <a class="dropdown-item" href="{{route('user.transaction')}}">
                   {{__('Transactions')}}
-                </a>
-                <a class="dropdown-item" href="{{route('user.withdraw.index')}}">
-                  {{__('Withdraw')}}
                 </a>
               </div>
             </li>

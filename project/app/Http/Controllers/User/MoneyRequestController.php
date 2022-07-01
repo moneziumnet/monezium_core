@@ -60,8 +60,8 @@ class MoneyRequestController extends Controller
             return redirect()->back()->with('unsuccess','You can not send money yourself!');
         }
 
-        $user = User::where('account_number',$request->account_number)->first();
-        if($user === null){
+        $receiver = User::where('account_number',$request->account_number)->first();
+        if($receiver === null){
             return redirect()->back()->with('unsuccess','No register user with this email!');
         }
 
@@ -76,9 +76,6 @@ class MoneyRequestController extends Controller
         $cost = $gs->fixed_request_charge + ($request->amount/100) * $gs->percentage_request_charge;
         $finalAmount = $request->amount + $cost;
 
-
-        $receiver = User::where('account_number',$request->account_number)->first();
-
         $txnid = Str::random(4).time();
 
         $data = new MoneyRequest();
@@ -92,16 +89,16 @@ class MoneyRequestController extends Controller
         $data->details = $request->details;
         $data->save();
 
-        $trans = new Transaction();
-        $trans->trnx = $txnid;
-        $trans->user_id     = $user->id;
-        $trans->user_type   = 1;
-        $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
-        $trans->amount      = $finalAmount;
-        $trans->charge      = 0;
-        $trans->type        = '+';
-        $trans->remark      = 'Request_Money';
-        $trans->details     = trans('Request Money');
+        // $trans = new Transaction();
+        // $trans->trnx = $txnid;
+        // $trans->user_id     = $user->id;
+        // $trans->user_type   = 1;
+        // $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
+        // $trans->amount      = $finalAmount;
+        // $trans->charge      = 0;
+        // $trans->type        = '+';
+        // $trans->remark      = 'Request_Money';
+        // $trans->details     = trans('Request Money');
         
         // $trans->email = $user->email;
         // $trans->amount = $finalAmount;
@@ -109,7 +106,7 @@ class MoneyRequestController extends Controller
         // $trans->profit = "plus";
         // $trans->txnid = $txnid;
         // $trans->user_id = $user->id;
-        $trans->save();
+        // $trans->save();
 
         return redirect()->back()->with('success','Request Money Send Successfully.');
         

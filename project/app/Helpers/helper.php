@@ -259,7 +259,7 @@ if(!function_exists('getModule')){
   if(!function_exists('userBalance')){
     function userBalance($user_id){
       $sql = "SELECT 
-                sum((`w`.`balance`*`c`.`rate`)) as `total_amount` 
+                sum((`w`.`balance`/`c`.`rate`)) as `total_amount` 
               FROM  `wallets` as `w`,
                     `currencies` as `c` 
               WHERE `w`.`user_id`=$user_id AND 

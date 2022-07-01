@@ -112,6 +112,11 @@ class InstitutionController extends Controller
         return view('admin.institution.create');
     }
 
+    public function createSub()
+    {
+        return view('admin.institution.createsub');
+    }
+
     //*** POST Request
     public function store(Request $request)
     {
@@ -142,7 +147,7 @@ class InstitutionController extends Controller
         //--- Logic Section Ends
 
         //--- Redirect Section
-        $msg = __('New Data Added Successfully.') . '<a href="' . route('admin.institution.index') . '">' . __('View Lists.') . '</a>';;
+        $msg = __('New Data Added Successfully.') . '</a>';;
 
         return response()->json($msg);
         //--- Redirect Section Ends

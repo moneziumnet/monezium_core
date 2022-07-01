@@ -64,7 +64,7 @@ class WireTransferController extends Controller
             return redirect()->back()->with('unsuccess','Monthly send limit over.');
         }
         $currency = defaultCurr();
-        //if($request->amount > $user->balance){
+
         if($request->amount > user_wallet_balance(auth()->id(),$currency->id)){
             return redirect()->back()->with('unsuccess','Insufficient Account Balance.');
         }

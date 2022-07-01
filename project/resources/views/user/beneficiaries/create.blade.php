@@ -52,6 +52,26 @@
                                 <input name="nick_name" id="nick_name" class="form-control" autocomplete="off" placeholder="{{__('Doe')}}" type="text" value="{{ old('nick_name') }}" min="1" required>
                             </div>
 
+                            <div class="form-group mb-3 mt-3">
+                                <label class="form-label required">{{__('Address')}}</label>
+                                <input name="address" id="address" class="form-control" autocomplete="off" placeholder="{{__('Enter Beneficiary Address')}}" type="text" value="{{ old('address') }}" min="1" required>
+                            </div>
+
+                            <div class="form-group mb-3 mt-3">
+                                <label class="form-label required">{{__('Bank Address')}}</label>
+                                <input name="bank_address" id="bank_address" class="form-control" autocomplete="off" placeholder="{{__('Enter Bank Address')}}" type="text" value="{{ old('bank_address') }}" min="1" required>
+                            </div>
+
+                            <div class="form-group mb-3 mt-3">
+                                <label class="form-label required">{{__('SWIFT/BIC')}}</label>
+                                <input name="swift_bic" id="swift_bic" class="form-control" autocomplete="off" placeholder="{{__('MEINATWW')}}" type="text" value="{{ old('swift_bic') }}" min="1" required>
+                            </div>
+
+                            <div class="form-group mb-3 mt-3">
+                                <label class="form-label required">{{__('Account/IBAN')}}</label>
+                                <input name="account_iban" id="account_iban" class="form-control" autocomplete="off" placeholder="{{__('Enter Account/IBAN')}}" type="text" value="{{ old('account_iban') }}" min="1" required>
+                            </div>
+
                             <div id="required-form-element">
 
                             </div>
