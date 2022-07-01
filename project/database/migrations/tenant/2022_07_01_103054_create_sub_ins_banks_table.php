@@ -16,8 +16,8 @@ class CreateSubInsBanksTable extends Migration
         Schema::create('sub_ins_banks', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('ins_id');
-            $table->string('name', 100);
-            $table->string('address', 100);
+            $table->string('name', 255);
+            $table->string('address', 255);
             $table->string('swift', 100);
             $table->string('iban', 100);
             $table->decimal('min_limit', 18, 8);
@@ -28,7 +28,6 @@ class CreateSubInsBanksTable extends Migration
             $table->integer('daily_total_transaction')->default(0)->comment('Count');
             $table->decimal('fixed_charge', 18, 8)->default(0);
             $table->decimal('percent_charge', 18)->default(0);
-            $table->string('processing_time', 100);
             $table->text('instruction')->nullable();
             $table->mediumText('required_information')->nullable();
             $table->boolean('status')->default(true)->comment('0 == \'pending\'
