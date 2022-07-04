@@ -164,7 +164,7 @@
             </li>
             @endif
 
-            @if (in_array('Request Money',$modules))
+            {{-- @if (in_array('Request Money',$modules)) --}}
             <li class="nav-item dropdown {{ request()->routeIs('user.money.request.index','user.request.money.receive', 'send.money.create') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -186,7 +186,7 @@
                 </a>
               </div>
             </li>
-            @endif
+            {{-- @endif --}}
 
 
             @if (in_array('Exchange Money',$modules))

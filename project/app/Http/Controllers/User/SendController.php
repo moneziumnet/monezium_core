@@ -33,6 +33,8 @@ class SendController extends Controller
     }
 
     public function savedUser($no){
+        $wallets = Wallet::where('user_id',auth()->id())->with('currency')->get();
+        $data['wallets'] = $wallets;
         $data['savedUser'] = User::whereAccountNumber($no)->first();
         $data['saveAccounts'] = SaveAccount::whereUserId(auth()->id())->orderBy('id','desc')->get();
 
@@ -126,7 +128,7 @@ class SendController extends Controller
             session(['sendstatus'=>1, 'saveData'=>$data]);
 
             $trans = new Transaction();
-            $trans->trnx = $txnid;
+            $trans->txnid = $txnid;
             $trans->user_id     = $user->id;
             $trans->user_type   = 1;
             $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
