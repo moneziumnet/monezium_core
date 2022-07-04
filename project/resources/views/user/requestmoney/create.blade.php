@@ -32,6 +32,19 @@
                         </div>
 
                         <div class="form-group mb-3 mt-3">
+                          <label class="form-label required">{{__('Select Wallet')}}</label>
+                          <select name="wallet_id" id="wallet_id" class="form-control" required>
+                            <option value="">Select</option>
+                            @if(!empty($wallets))
+                              @foreach($wallets as $wallet)
+                                <option value="{{$wallet->id}}">{{$wallet->currency->code}}</option>
+                              @endforeach
+                            @endif
+                          </select>
+                          
+                      </div>
+
+                        <div class="form-group mb-3 mt-3">
                             <label class="form-label required">{{__('Account Name')}}</label>
                             <input name="account_name" id="account_name" class="form-control" autocomplete="off" placeholder="{{__('Jhon Doe')}}" type="text" value="{{ old('account_name') }}" min="1" required readonly>
                         </div>

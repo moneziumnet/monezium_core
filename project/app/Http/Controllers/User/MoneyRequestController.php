@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Models\User;
 use App\Models\BankPlan;
 use App\Models\Currency;
+use App\Models\Wallet;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
 use App\Models\MoneyRequest;
@@ -31,12 +32,15 @@ class MoneyRequestController extends Controller
     }
 
     public function create(){
-        return view('user.requestmoney.create');
+        $wallets = Wallet::where('user_id',auth()->id())->with('currency')->get();
+        $data['wallets'] = $wallets;
+        return view('user.requestmoney.create', $data);
     }
 
     public function store(Request $request){
         $request->validate([
             'account_name' => 'required',
+            'wallet_id' => 'required',
             'amount' => 'required|gt:0',
         ]);
 
@@ -83,6 +87,7 @@ class MoneyRequestController extends Controller
         $data->receiver_id = $receiver->id;
         $data->receiver_name = $receiver->name;
         $data->transaction_no = $txnid;
+        $data->wallet_id = $request->wallet_id;
         $data->cost = $cost;
         $data->amount = $request->amount;
         $data->status = 0;

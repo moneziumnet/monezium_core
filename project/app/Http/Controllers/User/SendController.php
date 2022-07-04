@@ -6,6 +6,7 @@ use Validator;
 use App\Models\User;
 use App\Models\BankPlan;
 use App\Models\Currency;
+use App\Models\Wallet;
 use App\Models\SaveAccount;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
@@ -23,6 +24,8 @@ class SendController extends Controller
     }
 
     public function create(){
+        $wallets = Wallet::where('user_id',auth()->id())->with('currency')->get();
+        $data['wallets'] = $wallets;
         $data['saveAccounts'] = SaveAccount::whereUserId(auth()->id())->orderBy('id','desc')->get();
         $data['savedUser'] = NULL;
 
@@ -54,9 +57,10 @@ class SendController extends Controller
     public function store(Request $request){
 
         $request->validate([
-            'account_number' => 'required',
-            'account_name' => 'required',
-            'amount' => 'required|numeric|min:0'
+            'account_number'    => 'required',
+            'wallet_id'         => 'required',
+            'account_name'      => 'required',
+            'amount'            => 'required|numeric|min:0'
         ]);
 
         $user = auth()->user();
@@ -102,6 +106,7 @@ class SendController extends Controller
             $data->user_id = auth()->user()->id;
             $data->receiver_id = $receiver->id;
             $data->transaction_no = $txnid;
+            $data->wallet_id = $request->wallet_id;
             $data->type = 'own';
             $data->cost = 0;
             $data->amount = $request->amount;
