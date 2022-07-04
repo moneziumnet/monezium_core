@@ -106,7 +106,7 @@ class SendController extends Controller
             $data->user_id = auth()->user()->id;
             $data->receiver_id = $receiver->id;
             $data->transaction_no = $txnid;
-            $data->wallet_id = $request->wallet_id;
+            $data->currency_id = $request->wallet_id;
             $data->type = 'own';
             $data->cost = 0;
             $data->amount = $request->amount;

@@ -87,7 +87,7 @@ class MoneyRequestController extends Controller
         $data->receiver_id = $receiver->id;
         $data->receiver_name = $receiver->name;
         $data->transaction_no = $txnid;
-        $data->wallet_id = $request->wallet_id;
+        $data->currency_id = $request->wallet_id;
         $data->cost = $cost;
         $data->amount = $request->amount;
         $data->status = 0;

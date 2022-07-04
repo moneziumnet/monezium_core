@@ -20,7 +20,7 @@ class CreateBalanceTransfersTable extends Migration
             $table->integer('other_bank_id')->nullable();
             $table->integer('beneficiary_id')->nullable();
             $table->string('transaction_no')->nullable();
-            $table->integer('wallet_id')->nullable();
+            $table->integer('currency_id')->nullable();
             $table->double('cost')->nullable();
             $table->integer('amount')->nullable();
             $table->double('final_amount')->nullable();
