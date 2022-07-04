@@ -188,25 +188,45 @@ class RegisterController extends Controller
                     $bonus->save();
 
                     $mainUserTrans = new Transaction();
-                    $mainUserTrans->email = $mainUser->email;
-                    $mainUserTrans->amount = $gs->affilate_user;
-                    $mainUserTrans->type = "Referral Bonus";
-                    $mainUserTrans->user_type = 1;
+                    $mainUserTrans->trnx        = str_rand();
+                    $mainUserTrans->user_id     = $mainUser->id;
+                    $mainUserTrans->user_type   = 1;
                     $mainUserTrans->currency_id = $currency;
-                    $mainUserTrans->profit = 0;//"plus";
-                    $mainUserTrans->txnid = Str::random(12);
-                    $mainUserTrans->user_id = $mainUser->id;
+                    $mainUserTrans->amount      = $gs->affilate_user;
+                    $mainUserTrans->charge      = 0;
+                    $mainUserTrans->type        = '+';
+                    $mainUserTrans->remark      = 'Referral Bonus';
+                    $mainUserTrans->details     = trans('Referral Bonus');
+
+                    // $mainUserTrans->email = $mainUser->email;
+                    // $mainUserTrans->amount = $gs->affilate_user;
+                    // $mainUserTrans->type = "Referral Bonus";
+                    // $mainUserTrans->user_type = 1;
+                    // $mainUserTrans->currency_id = $currency;
+                    // $mainUserTrans->profit = 0;//"plus";
+                    // $mainUserTrans->txnid = Str::random(12);
+                    // $mainUserTrans->user_id = $mainUser->id;
                     $mainUserTrans->save();
 
                     $newUserTrans = new Transaction();
-                    $newUserTrans->email = $user->email;
-                    $newUserTrans->amount = $gs->affilate_user;
-                    $newUserTrans->type = "Referral Bonus";
-                    $newUserTrans->user_type = 1;
+                    $newUserTrans->trnx        = str_rand();
+                    $newUserTrans->user_id     = $user->id;
+                    $newUserTrans->user_type   = 1;
                     $newUserTrans->currency_id = $currency;
-                    $newUserTrans->profit = 0;//"plus";
-                    $newUserTrans->txnid = Str::random(12);
-                    $newUserTrans->user_id = $user->id;
+                    $newUserTrans->amount      = $gs->affilate_new_user;
+                    $newUserTrans->charge      = 0;
+                    $newUserTrans->type        = '+';
+                    $newUserTrans->remark      = 'Referral Bonus';
+                    $newUserTrans->details     = trans('Referral Bonus');
+
+                    // $newUserTrans->email = $user->email;
+                    // $newUserTrans->amount = $gs->affilate_user;
+                    // $newUserTrans->type = "Referral Bonus";
+                    // $newUserTrans->user_type = 1;
+                    // $newUserTrans->currency_id = $currency;
+                    // $newUserTrans->profit = 0;//"plus";
+                    // $newUserTrans->txnid = Str::random(12);
+                    // $newUserTrans->user_id = $user->id;
                     $newUserTrans->save();
                 }
             }
