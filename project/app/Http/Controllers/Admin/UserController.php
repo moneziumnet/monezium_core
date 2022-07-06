@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Response;
 use App\Models\Transaction;
 
+
 class UserController extends Controller
 {
     public function __construct()
@@ -596,4 +597,5 @@ class UserController extends Controller
                 return response()->json($msg);       
         }
 
+       
 }

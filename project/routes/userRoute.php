@@ -72,6 +72,7 @@ Route::prefix('user')->group(function() {
       Route::get('/dashboard', [UserController::class,'index'])->name('user.dashboard');
       Route::get('/username/{number}', [UserController::class,'username'])->name('user.username');
       Route::get('/transactions', [UserController::class,'transaction'])->name('user.transaction');
+      Route::get('/transactions-export', [UserController::class,'transactionExport'])->name('user.transaction-export');
       Route::get('/transaction/details/{id}', [UserController::class,'trxDetails'])->name('user.trxDetails');
       
       Route::get('/export-pdf', [UserController::class,'generatePDF'])->name('user.export.pdf'); 

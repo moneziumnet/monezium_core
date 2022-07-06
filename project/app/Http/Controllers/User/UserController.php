@@ -20,6 +20,8 @@ use App\Http\Controllers\Controller;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Input;
+use App\Exports\ExportTransaction;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
 {
@@ -50,6 +52,17 @@ class UserController extends Controller
         }
 
         return view('user.transactions',compact('user','transactions'));
+    }
+    
+    public function transactionExport()
+    {
+        
+        return Excel::download( new ExportTransaction, 'transaction.xlsx');
+        // foreach ($transactions as $key => $transaction) {
+        //     $transaction->currency = Currency::whereId($transaction->currency_id)->first();
+        // }
+
+        // return view('user.transactions',compact('user','transactions'));
     }
 
     public function trxDetails($id)

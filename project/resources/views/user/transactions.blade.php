@@ -27,7 +27,13 @@
         <div class="row row-cards">
             <div class="col-12">
                 <div class="card">
+                  
 					<div class="table-responsive">
+              <div class="col-sm-12 text-right" style="text-align: right">
+                <a  href="{{route('user.transaction-export')}}">
+                  <i class="fas fa-file-excel" aria-hidden="true"></i> {{__('Export')}}
+                </a>
+              </div>
 						<table class="table card-table table-vcenter text-nowrap datatable">
 						  <thead>
 							<tr>
@@ -57,7 +63,7 @@
 								<td data-label="@lang('Remark')">
 								<span class="badge badge-dark">{{ucwords(str_replace('_',' ',$data->remark))}}</span>
 								</td>
-								<td data-label="@lang('Amount')">
+								<td data-label="@lang('Amoun6t')">
 									<span class="{{$data->type == '+' ? 'text-success':'text-danger'}}">{{$data->type}} {{amount($data->amount,$data->currency->type,2)}} {{$data->currency->code}}</span> 
 								</td>
 								<td data-label="@lang('Details')" class="text-end">
