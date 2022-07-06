@@ -430,7 +430,8 @@ class InstitutionController extends Controller
                 return response()->json(array('errors' => 'Select your file'));
             } else {
 
-                $allowedfileExtension = ['jpg', 'png', 'gif', 'pdf', 'jpeg', 'doc', 'docx', 'xls', 'xlsx'];
+                //$allowedfileExtension = ['jpg', 'png', 'gif', 'pdf', 'jpeg', 'doc', 'docx', 'xls', 'xlsx'];
+                $allowedfileExtension = ['pdf']; //['jpg', 'png', 'gif', 'pdf', 'jpeg', 'doc', 'docx', 'xls', 'xlsx'];
                 $files = $request->file('document_file');
 
                 $extension = $files->getClientOriginalExtension();

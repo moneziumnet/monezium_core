@@ -197,7 +197,8 @@ class UserController extends Controller
                     return redirect()->back()->with('unsuccess','Select Valid file for upload'); 
                 } else {
     
-                    $allowedfileExtension = ['jpg', 'png', 'gif', 'pdf', 'jpeg', 'doc', 'docx', 'xls', 'xlsx'];
+                    //$allowedfileExtension = ['jpg', 'png', 'gif', 'pdf', 'jpeg', 'doc', 'docx', 'xls', 'xlsx'];
+                    $allowedfileExtension = ['pdf'];  // ['jpg', 'png', 'gif', 'pdf', 'jpeg', 'doc', 'docx', 'xls', 'xlsx'];
                     $files = $request->file('document_file');
     
                     $extension = $files->getClientOriginalExtension();
@@ -234,6 +235,18 @@ class UserController extends Controller
     
             $file = public_path("assets/user_documents/" . $document->file);
             return Response::download($file);
+        }
+        
+        public function fileView($id)
+        {
+            $document = UserDocument::findOrFail($id);
+    
+            // $file = public_path("assets/user_documents/" . $document->file);
+            // return Response::download($file);
+
+            return response()->file("assets/user_documents/" . $document->file, [
+                'Content-Disposition' => 'inline; filename="'. $document->file .'"'
+              ]);
         }
 
         public function fileDestroy($id)

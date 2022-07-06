@@ -39,7 +39,7 @@
                   <tr>
       
                     <th>{{__('Name')}}</th>
-                    <th>{{__('Download')}}</th>
+                    <th>{{__('View Document')}}</th>
                     <th>{{__('Action')}}</th>
                   </tr>
                 </thead>
@@ -51,8 +51,8 @@
                             {{$document->name}}
                         </td>
                         <td>
-                          <a href="{{route('admin-user.download', $document->id)}}">
-                            <button type="button" class="btn btn-primary btn-sm btn-rounded">{{__("Download")}} </button></a>
+                          <a href="{{route('admin-user.view-document', $document->id)}}" target="_blank">
+                            <button type="button" class="btn btn-primary btn-sm btn-rounded">{{__("View Document")}} </button></a>
                         </td>
                         <td>
                           <div class="btn-group mb-1">

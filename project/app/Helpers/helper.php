@@ -14,7 +14,13 @@ if(!function_exists('getModule')){
   function getModule($value)
   {
       $admin = tenancy()->central(function ($tenant){
+        if($tenant)
+        {
           return Admin::where('tenant_id', $tenant->id)->first();
+        }else{
+            return auth()->guard('admin')->user();
+        }
+          
       });
 
       $sections = explode(" , ", $admin->section);
