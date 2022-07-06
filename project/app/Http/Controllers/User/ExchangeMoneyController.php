@@ -10,6 +10,11 @@ use App\Models\ExchangeMoney;
 
 class ExchangeMoneyController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function exchangeForm()
     {
         $wallets = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('balance', '>', 0)->get();

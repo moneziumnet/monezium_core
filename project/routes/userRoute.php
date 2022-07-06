@@ -160,7 +160,7 @@ Route::prefix('user')->group(function() {
       //Reedem voucher
       Route::get('vouchers',  [VoucherController::class,'vouchers'])->name('user.vouchers');
       Route::get('reedem-voucher',  [VoucherController::class,'reedemForm'])->name('user.reedem.voucher');
-      Route::post('reedem-voucher',  [VoucherController::class,'user.reedemSubmit']);
+      Route::post('reedem-voucher',  [VoucherController::class,'reedemSubmit'])->name('user.reedemSubmit');
       Route::get('reedemed-history',  [VoucherController::class,'reedemHistory'])->name('user.reedem.history');
 
       //invoice
