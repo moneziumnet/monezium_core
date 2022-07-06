@@ -13,6 +13,11 @@ use Auth;
 
 class MerchantController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function generateQR()
     {
         if(!check_user_type(4))
