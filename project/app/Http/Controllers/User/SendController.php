@@ -62,7 +62,8 @@ class SendController extends Controller
             'account_number'    => 'required',
             'wallet_id'         => 'required',
             'account_name'      => 'required',
-            'amount'            => 'required|numeric|min:0'
+            'amount'            => 'required|numeric|min:0',
+            'description'       => 'required'
         ]);
 
         $user = auth()->user();
@@ -112,6 +113,7 @@ class SendController extends Controller
             $data->type = 'own';
             $data->cost = 0;
             $data->amount = $request->amount;
+            $data->description = $request->description;
             $data->status = 1;
             $data->save();
     

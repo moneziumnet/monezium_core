@@ -23,6 +23,7 @@ class CreateBalanceTransfersTable extends Migration
             $table->integer('currency_id')->nullable();
             $table->double('cost')->nullable();
             $table->integer('amount')->nullable();
+            $table->text('description')->nullable();
             $table->double('final_amount')->nullable();
             $table->enum('type', ['own', 'other'])->nullable();
             $table->tinyInteger('status')->default(0);

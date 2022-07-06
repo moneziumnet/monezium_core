@@ -65,6 +65,11 @@
                                     <label class="form-label required">{{__('Amount')}}</label>
                                     <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" value="{{ old('amount') }}" min="1" required>
                                 </div>
+                                
+                                <div class="form-group mt-3">
+                                    <label class="form-label required">{{__('Description')}}</label>
+                                    <textarea name="description" id="description" class="form-control" placeholder="{{__('Enter description')}}" rows="5" required></textarea>
+                                </div>
     
                                 <div class="form-footer">
                                     <button type="submit" class="btn btn-primary w-100">{{__('Submit')}}</button>
