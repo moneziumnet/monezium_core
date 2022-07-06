@@ -44,7 +44,7 @@
                                 <select class="form-select from shadow-none" name="from_wallet_id">
                                     <option value="" selected>@lang('Select')</option>
                                     @foreach ($wallets as $wallet)
-                                    <option value="{{$wallet->id}}" data-curr="{{$wallet->currency->id}}" data-rate="{{$wallet->currency->rate}}" data-code="{{$wallet->currency->code}}" data-type="{{$wallet->currency->type}}">{{$wallet->currency->code}}</option>
+                                    <option value="{{$wallet->id}}" data-curr="{{$wallet->currency->id}}" data-rate="{{$wallet->currency->rate}}" data-code="{{$wallet->currency->code}}" data-type="{{$wallet->currency->type}}">{{$wallet->currency->code}} -- ({{amount($wallet->balance,$wallet->currency->type,2)}})</option>
                                     @endforeach
                                 </select>
                             </div>

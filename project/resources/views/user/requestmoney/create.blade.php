@@ -37,7 +37,7 @@
                             <option value="">Select</option>
                             @if(!empty($wallets))
                               @foreach($wallets as $wallet)
-                              <option value="{{$wallet->currency->id}}">{{$wallet->currency->code}} -- {{$wallet->balance}}</option>
+                              <option value="{{$wallet->currency->id}}">{{$wallet->currency->code}} --  ({{amount($wallet->balance,$wallet->currency->type,2)}})</option>
                               @endforeach
                             @endif
                           </select>
