@@ -18,6 +18,7 @@
         "intervention/image": "^2.5",
         "laravel/framework": "^8.40",
         "laravel/tinker": "^2.5",
+        "maatwebsite/excel": "^3.1",
         "mollie/laravel-mollie": "^2.10",
         "nexmo/laravel": "^2.4",
         "paypal/rest-api-sdk-php": "*",

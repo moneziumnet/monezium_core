@@ -164,6 +164,7 @@ return [
         Yajra\DataTables\DataTablesServiceProvider::class,
         ZanySoft\Zip\ZipServiceProvider::class,
         Brian2694\Toastr\ToastrServiceProvider::class,
+        
 
         /*
          * Package Service Providers...
@@ -185,6 +186,7 @@ return [
         Cartalyst\Stripe\Laravel\StripeServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         Nexmo\Laravel\NexmoServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
     ],
 
@@ -246,6 +248,7 @@ return [
         'Zip' => ZanySoft\Zip\ZipFacade::class,
         'Toastr'  => Brian2694\Toastr\Facades\Toastr::class,
         'Nexmo' => Nexmo\Laravel\Facade\Nexmo::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ],
 
 ];
