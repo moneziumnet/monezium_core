@@ -76,7 +76,8 @@ class SendController extends Controller
             return redirect()->back()->with('unsuccess','Plan Date Expired.');
         }
 
-        $currency_id = Currency::whereIsDefault(1)->first()->id;
+        $currency_id = $request->wallet_id; //Currency::whereId($wallet_id)->first()->id;
+
         $bank_plan = BankPlan::whereId($user->bank_plan_id)->first();
         $dailySend = BalanceTransfer::whereUserId(auth()->id())->whereDate('created_at', '=', date('Y-m-d'))->whereStatus(1)->sum('amount');
         $monthlySend = BalanceTransfer::whereUserId(auth()->id())->whereMonth('created_at', '=', date('m'))->whereStatus(1)->sum('amount');
@@ -105,48 +106,53 @@ class SendController extends Controller
         
         if($receiver = User::where('account_number',$request->account_number)->first()){
             $txnid = Str::random(4).time();
-            $data = new BalanceTransfer();
-            $data->user_id = auth()->user()->id;
-            $data->receiver_id = $receiver->id;
-            $data->transaction_no = $txnid;
-            $data->currency_id = $request->wallet_id;
-            $data->type = 'own';
-            $data->cost = 0;
-            $data->amount = $request->amount;
-            $data->description = $request->description;
-            $data->status = 1;
-            $data->save();
+            // $data = new BalanceTransfer();
+            // $data->user_id = auth()->user()->id;
+            // $data->receiver_id = $receiver->id;
+            // $data->transaction_no = $txnid;
+            // $data->currency_id = $request->wallet_id;
+            // $data->type = 'own';
+            // $data->cost = 0;
+            // $data->amount = $request->amount;
+            // $data->description = $request->description;
+            // $data->status = 1;
+            // $data->save();
     
             // $receiver->increment('balance',$request->amount);
             // $user->decrement('balance',$request->amount);
 
-            user_wallet_decrement($user->id, $currency_id, $request->amount);
-            user_wallet_increment($receiver->id, $currency_id, $request->amount);
-            
-            if(SaveAccount::whereUserId(auth()->id())->where('receiver_id',$data->receiver_id)->exists()){
-                return redirect()->route('send.money.create')->with('success','Money Send Successfully');
-            }
-
-            session(['sendstatus'=>1, 'saveData'=>$data]);
-
             $trans = new Transaction();
-            $trans->txnid = $txnid;
+            $trans->trnx = $txnid;
             $trans->user_id     = $user->id;
             $trans->user_type   = 1;
-            $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
+            $trans->currency_id = $currency_id;
             $trans->amount      = $request->amount;
             $trans->charge      = 0;
             $trans->type        = '-';
             $trans->remark      = 'Send_Money';
             $trans->details     = trans('Send Money');
-
-            // $trans->email = $user->email;
-            // $trans->amount = $request->amount;
-            // $trans->type = "Send Money";
-            // $trans->profit = "minus";
-            // $trans->txnid = $txnid;
-            // $trans->user_id = $user->id;
             $trans->save();
+
+            session(['sendstatus'=>1, 'saveData'=>$trans]);
+
+            $trans = new Transaction();
+            $trans->trnx = $txnid;
+            $trans->user_id     = $receiver->id;
+            $trans->user_type   = 1;
+            $trans->currency_id = $currency_id;
+            $trans->amount      = $request->amount;
+            $trans->charge      = 0;
+            $trans->type        = '+';
+            $trans->remark      = 'Recieve_Money';
+            $trans->details     = trans('Send Money');
+            $trans->save();
+
+            user_wallet_decrement($user->id, $currency_id, $request->amount);
+            user_wallet_increment($receiver->id, $currency_id, $request->amount);
+            
+            if(SaveAccount::whereUserId(auth()->id())->where('receiver_id',$receiver->id)->exists()){
+                return redirect()->route('send.money.create')->with('success','Money Send Successfully');
+            }
 
             if($gs->is_smtp == 1)
             {
