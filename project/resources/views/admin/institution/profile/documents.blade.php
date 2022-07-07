@@ -30,7 +30,7 @@
                       <thead class="thead-light">
                       <tr>
                         <th>{{__('Name')}}</th>
-                        <th>{{__('Download')}}</th>
+                        <th>{{__('Document')}}</th>
                         <th>{{__('Action')}}</th>
                       </tr>
                       </thead>
@@ -104,7 +104,7 @@
               columns: [
 
                 { data: 'name', name: 'name' },
-                { data: 'download', name: 'download' },
+                { data: 'viewdocument', name: 'viewdocument' },
                 { data: 'action', name: 'action' },
             ],
             language: {
