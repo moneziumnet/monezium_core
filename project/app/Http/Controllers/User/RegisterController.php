@@ -118,7 +118,7 @@ class RegisterController extends Controller
         $input['account_number'] = $gs->account_no_prefix . date('ydis') . random_int(100000, 999999);
         $token = md5(time() . $request->name . $request->email);
         $input['verification_link'] = $token;
-        $input['referral_id'] = $request->input('reff')?$request->input('reff'):'';
+        $input['referral_id'] = $request->input('reff')? $request->input('reff'):'0';
         $input['affilate_code'] = md5($request->name . $request->email);
         $user->fill($input)->save();
 
