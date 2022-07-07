@@ -11,6 +11,7 @@ use App\Models\Generalsetting;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Withdraw;
+use App\Models\Withdrawals;
 use App\Models\WithdrawMethod;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Str;
@@ -25,13 +26,12 @@ class WithdrawController extends Controller
 
   	public function index()
     {
-        $withdraws = Withdraw::whereUserId(auth()->id())->orderBy('id','desc')->paginate(10);     
+        $withdraws = Withdrawals::whereUserId(auth()->id())->orderBy('id','desc')->paginate(10);     
         return view('user.withdraw.index',compact('withdraws'));
     }
 
     public function create()
     {
-        $data['currency'] = Currency::whereIsDefault(1)->first();
         $data['methods'] = WithdrawMethod::whereStatus(1)->orderBy('id','desc')->get();
         return view('user.withdraw.create' ,$data);
     }
@@ -52,11 +52,13 @@ class WithdrawController extends Controller
         if(now()->gt($user->plan_end_date)){
             return redirect()->back()->with('unsuccess','Plan Date Expired.');
         }
-        $userBalance = user_wallet_balance($user->id,$request->currency_id);
+
+        $withdraw_method = WithdrawMethod::whereId($request->methods)->first();
+        $userBalance = user_wallet_balance($user->id,$withdraw_method->currency_id);
 
         $bank_plan = BankPlan::whereId($user->bank_plan_id)->first();
-        $dailyWithdraws = Withdraw::whereDate('created_at', '=', date('Y-m-d'))->whereStatus('completed')->sum('amount');
-        $monthlyWithdraws = Withdraw::whereMonth('created_at', '=', date('m'))->whereStatus('completed')->sum('amount');
+        $dailyWithdraws = Withdrawals::whereDate('created_at', '=', date('Y-m-d'))->whereStatus('completed')->sum('amount');
+        $monthlyWithdraws = Withdrawals::whereMonth('created_at', '=', date('m'))->whereStatus('completed')->sum('amount');
 
         if($dailyWithdraws > $bank_plan->daily_withdraw){
             return redirect()->back()->with('unsuccess','Daily withdraw limit over.');
@@ -70,17 +72,16 @@ class WithdrawController extends Controller
             return redirect()->back()->with('unsuccess','Insufficient Account Balance.');
         }
 
-        $withdrawcharge = WithdrawMethod::whereMethod($request->methods)->first();
-        $charge = $withdrawcharge->fixed;
+        $charge = $withdraw_method->fixed;
 
-        $messagefee = (($withdrawcharge->percentage / 100) * $request->amount) + $charge;
+        $messagefee = (($withdraw_method->percentage / 100) * $request->amount) + $charge;
         $messagefinal = $request->amount - $messagefee;
 
-        $currency = Currency::whereId($request->currency_id)->first();
-        $amountToAdd = $request->amount/$currency->rate;
+        $currency = Currency::whereId($withdraw_method->currency_id)->first();
+        // $amountToAdd = $request->amount/$currency->rate;
 
-        $amount = $amountToAdd;
-        $fee = (($withdrawcharge->percentage / 100) * $amount) + $charge;
+        $amount = $request->amount; //$amountToAdd;
+        $fee = (($withdraw_method->percentage / 100) * $amount) + $charge;
         $finalamount = $amount - $fee;
         
         if($finalamount < 0){
@@ -97,17 +98,29 @@ class WithdrawController extends Controller
        
 
         $txnid = Str::random(12);
-        $newwithdraw = new Withdraw();
-        $newwithdraw['user_id'] = auth()->id();
-        $newwithdraw['method'] = $request->methods;
-        $newwithdraw['txnid'] = $txnid;
+        $newwithdrawal = new Withdrawals();
+        // $newwithdraw['user_id'] = auth()->id();
+        // $newwithdraw['method'] = $request->methods;
+        // $newwithdraw['txnid'] = $txnid;
 
-        $newwithdraw['amount'] = $finalamount;
-        $newwithdraw['fee'] = $fee;
-        $newwithdraw['details'] = $request->details;
-        $newwithdraw->save();
+        // $newwithdraw['amount'] = $finalamount;
+        // $newwithdraw['fee'] = $fee;
+        // $newwithdraw['details'] = $request->details;
+        // $newwithdraw->save();
 
-        $total_amount = $newwithdraw->amount + $newwithdraw->fee;
+        $newwithdrawal->trx         = Str::random(12);
+        $newwithdrawal->user_id = auth()->id();
+        $newwithdrawal->method_id   = $request->methods;
+        $newwithdrawal->currency_id = $currency->id;
+        $newwithdrawal->amount      = $amount;
+        $newwithdrawal->charge      = $fee;
+        $newwithdrawal->total_amount= $finalamount;
+        $newwithdrawal->user_data   = $request->details;
+        $newwithdrawal->save();
+
+
+
+        $total_amount = $newwithdrawal->amount + $newwithdrawal->fee;
 
         $trans = new Transaction();
         $trans->trnx = $txnid;
@@ -133,9 +146,7 @@ class WithdrawController extends Controller
     }
 
     public function details(Request $request, $id){
-        $data['data'] = Withdraw::findOrFail($id);
-        $data['currency'] = Currency::whereIsDefault(1)->first();
-        
+        $data['data'] = Withdrawals::findOrFail($id);        
         return view('user.withdraw.details',$data);
     }
 }

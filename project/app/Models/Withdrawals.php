@@ -11,7 +11,7 @@ class Withdrawals extends Model
 
     public function method()
     {
-        return $this->belongsTo(Withdraw::class,'method_id')->withDefault();
+        return $this->belongsTo(WithdrawMethod::class,'method_id')->withDefault();
     }
 
     public function currency()

@@ -332,14 +332,14 @@
               </div>
             </div> -->
 
-          <!-- <div class="col-md-6">
+          <div class="col-md-6">
               <div class="form-group">
                 <div class="custom-control custom-switch">
                   <input type="checkbox" name="section[]" value="Manage KYC Form" {{ $data->sectionCheck('Manage KYC Form') ? 'checked' : '' }} class="custom-control-input" id="manage_kyc">
                   <label class="custom-control-label" for="manage_kyc">{{__('Manage KYC Form')}}</label>
                   </div>
               </div>
-            </div> -->
+            </div>
 
           <div class="col-md-6">
             <div class="form-group">

@@ -98,15 +98,13 @@
                                         @endif
                                     </td>
 
-                                    <td data-label="@lang('Action')">
-                                    
+                                    <td data-label="@lang('Action')">                                    
                                         <div class="d-flex flex-wrap align-items-center justify-content-end justify-content-lg-center">
-                                            <button class="btn btn-info details m-1" data-user_data="{{$withdrawlog->user_data}}" data-transaction="{{$withdrawlog->trx}}" data-provider="{{$withdrawlog->user ? $withdrawlog->user->email : $withdrawlog->merchant->email}}" data-method_name="{{$withdrawlog->method->name}}" data-date="{{ __($withdrawlog->created_at->format('d F Y')) }}">@lang('Details')</button>
-
+                                            <button class="btn btn-info details m-2" data-user_data="{{$withdrawlog->user_data}}" data-transaction="{{$withdrawlog->trx}}" data-provider="{{$withdrawlog->user ? $withdrawlog->user->email : $withdrawlog->merchant->email}}" data-method_name="{{$withdrawlog->method->method}}" data-date="{{ __($withdrawlog->created_at->format('d F Y')) }}">@lang('Details')</button>
                                             @if($withdrawlog->status == 0)
-                                                <button class="btn btn-primary accept m-1" data-url="{{route('admin.withdraw.accept', $withdrawlog)}}" >@lang('Accept')</button>
+                                                <button class="btn btn-primary accept ml-1" data-url="{{route('admin.withdraw.accept', $withdrawlog)}}" >@lang('Accept')</button>
                                             
-                                                <button class="btn btn-danger reject m-1" data-url="{{route('admin.withdraw.reject',$withdrawlog)}}">@lang('Reject')</button>
+                                                <button class="btn btn-danger reject ml-3" data-url="{{route('admin.withdraw.reject',$withdrawlog)}}">@lang('Reject')</button>
                                             @endif
                                         </div>
                                     </td>
@@ -224,8 +222,7 @@
 @endsection
 
 
-@push('script')
-
+@section('scripts')
     <script>
     
         $(function(){
@@ -287,5 +284,5 @@
     
     </script>
     
-@endpush
+@endsection
 

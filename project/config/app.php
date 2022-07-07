@@ -187,7 +187,6 @@ return [
         Barryvdh\DomPDF\ServiceProvider::class,
         Nexmo\Laravel\NexmoServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
-
     ],
 
     /*

@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Language;
 use App\Models\RequestDomain;
+use App\Models\Withdrawals;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -43,14 +44,14 @@ class DashboardController extends Controller
             $data['blogs'] = Blog::all();
             $data['deposits'] = Deposit::all();
             $data['depositAmount'] = Deposit::sum('amount');
-            $data['withdrawAmount'] = Withdraw::sum('amount');
-            $data['withdrawChargeAmount'] = Withdraw::sum('fee');
+            $data['withdrawAmount'] = Withdrawals::sum('amount');
+            $data['withdrawChargeAmount'] = Withdrawals::sum('charge');
             $data['currency'] = Currency::whereIsDefault(1)->first();
             $data['transactions'] = Transaction::all();
             $data['acustomers'] = User::orderBy('id', 'desc')->whereIsBanned(0)->get();
             $data['users'] = User::orderBy('id', 'desc')->get();
             $data['bcustomers'] = User::orderBy('id', 'desc')->whereIsBanned(1)->get();
-            $data['payouts'] = Withdraw::where('status', 'completed')->sum('amount');
+            $data['payouts'] = Withdrawals::where('status', 'completed')->sum('amount');
 
             $data['activation_notify'] = "";
         }

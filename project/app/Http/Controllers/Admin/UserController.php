@@ -15,14 +15,15 @@ use App\Models\UserLoan;
 use App\Models\Wishlist;
 use App\Models\Withdraw;
 use App\Models\OrderedItem;
+use App\Models\Transaction;
+use App\Models\Withdrawals;
 use Illuminate\Support\Str;
+use App\Models\UserDocument;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
-use App\Models\UserDocument;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Response;
-use App\Models\Transaction;
+use Illuminate\Support\Facades\Validator;
 
 
 class UserController extends Controller
@@ -147,7 +148,7 @@ class UserController extends Controller
             $data['loans'] = UserLoan::whereUserId($data->id)->get();
             $data['dps'] = UserDps::whereUserId($data->id)->get();
             $data['fdr'] = UserFdr::whereUserId($data->id)->get();
-            $data['withdraws'] = Withdraw::whereUserId($data->id)->get();
+            $data['withdraws'] = Withdrawals::whereUserId($data->id)->get();
             $data['data'] = $data;
             return view('admin.user.profile',$data);
         }
@@ -439,98 +440,7 @@ class UserController extends Controller
             }
         }
 
-        public function withdraws(){
-            return view('admin.user.withdraws');
-        }
-
-          public function withdrawdatatables()
-          {
-               $datas = Withdraw::orderBy('id','desc');
-
-               return Datatables::of($datas)
-                                  ->addColumn('email', function(Withdraw $data) {
-                                      $email = $data->user->email;
-                                      return $email;
-                                  })
-                                  ->addColumn('phone', function(Withdraw $data) {
-                                    $phone = $data->user->phone;
-                                    return $phone;
-                                })
-                                ->editColumn('status', function(Withdraw $data) {
-                                    $status = ucfirst($data->status);
-                                    return $status;
-                                })
-
-                                  ->editColumn('amount', function(Withdraw $data) {
-                                      $amount = $data->amount;
-                                      return '$' . $amount;
-                                  })
-                                  ->editColumn('created_at', function(Withdraw $data) {
-                                    $date = $data->created_at->diffForHumans();
-                                    return $date;
-                                })
-
-
-                               ->addColumn('action', function(Withdraw $data) {
-
-                                if($data->status == "pending") {
-                                    $action = '<a href="javascript:;" data-href="' . route('admin-withdraw-accept',$data->id) . '"  class="dropdown-item" data-toggle="modal"  data-target="#status-modal">'.__("Accept").'</a>
-                                    <a href="javascript:;" data-href="' . route('admin-withdraw-reject',$data->id) . '"  class="dropdown-item" data-toggle="modal" data-target="#confirm-delete">'.__("Reject").'</a>
-                                ';
-                                }else{
-                                    $action = '';
-                                }
-                                return '<div class="btn-group mb-1">
-                                <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  '.'Actions' .'
-                                </button>
-                                <div class="dropdown-menu" x-placement="bottom-start">
-                                  <a href="javascript:;" data-href="' . route('admin.withdraw.show',$data->id) . '"  class="dropdown-item" id="applicationDetails" data-toggle="modal" data-target="#details">'.__("Details").'</a>'.$action.'
-
-                                </div>
-                              </div>';
-                             })
-                            ->rawColumns(['name','email','amount','action'])
-                            ->toJson();
-          }
-
-
-    public function withdrawdetails($id)
-    {
-        $withdraw = Withdraw::findOrFail($id);
-        return view('admin.user.withdraw-details',compact('withdraw'));
-    }
-
-
-    public function accept($id)
-    {
-        $withdraw = Withdraw::findOrFail($id);
-        $data['status'] = "completed";
-        $withdraw->update($data);
-
-        $msg = __('Withdraw Accepted Successfully.');
-        return response()->json($msg);
-
-    }
-
-
-    public function reject($id)
-    {
-        $withdraw = Withdraw::findOrFail($id);
-        $currency = Currency::whereIsDefault(1)->first()->id;
-        $account = User::findOrFail($withdraw->user->id);
-        $amount =  $withdraw->amount + $withdraw->fee;
-        user_wallet_increment($account->id, $currency, $amount);
-        // $account->balance = $account->balance + $withdraw->amount + $withdraw->fee;
-        // $account->update();
-        $data['status'] = "rejected";
-        $withdraw->update($data);
-
-        $msg = __('Withdraw Rejected Successfully.');
-        return response()->json($msg);
-    }
-
-    public function destroy($id)
+        public function destroy($id)
         {
             $user = User::findOrFail($id);
 

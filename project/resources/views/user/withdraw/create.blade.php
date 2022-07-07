@@ -33,17 +33,13 @@
 
                                 <div class="form-group">
                                     <label class="form-label required">{{__('Withdraw Method')}}</label>
-                                    <select name="methods" id="withmethod" class="form-select" required>
+                                    <select name="methods" id="withmethod" class="form-select withmethod" required>
                                         <option value="">{{ __('Select Withdraw Method') }}</option>
                                         @foreach ($methods as $data)
-                                            <option value="{{$data->method}}">{{$data->method}}</option>
+                                            <option value="{{$data->id}}">{{$data->method}}</option>
                                         @endforeach                    
                                     </select>
                                 </div>
-
-                                <input type="hidden" name="currency_sign" value="{{ $currency->symbol }}">
-                                <input type="hidden" id="currencyCode" name="currency_code" value="{{ $currency->code }}">
-                                <input type="hidden" name="currency_id" value="{{ $currency->id }}">
 
                                 <div class="form-group mb-3 mt-3">
                                     <label class="form-label required">{{__('Withdraw Amount')}}</label>
@@ -73,4 +69,12 @@
 
 @push('js')
 
+<script>
+    $(function(){
+        $('.withmethod').on('change',function () { 
+            alert("ddd");
+        });
+    });
+
+</script>
 @endpush

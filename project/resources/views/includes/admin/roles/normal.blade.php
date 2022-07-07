@@ -28,11 +28,8 @@
         <a class="collapse-item" href="{{ route('admin.user.index') }}">{{ __('User List') }}</a>
         <a class="collapse-item" href="{{ route('admin.bank.plan.index') }}">{{ __('Pricing Plan') }}</a>
         <!-- <a class="collapse-item" href="{{ route('admin.gs.user.modules') }}">{{ __('User Modules') }}</a> -->
-        <!-- <a class="collapse-item" href="{{route('admin.kyc.info','user')}}">{{ __('User KYC Info') }}</a>
-        <a class="collapse-item" href="{{route('admin.manage.module')}}">{{ __('User KYC Modules') }}</a> -->
-        <a class="collapse-item" href="{{ route('admin.withdraw.index') }}">{{ __('Withdraw Request') }} @if( DB::table('withdraws')->where('status','pending')->count() > 0)
-        <span class="badge badge-sm badge-danger badge-counter">{{ DB::table('withdraws')->where('status','pending')->count() }}</span>@endif</a>
-        <a class="collapse-item" href="{{ route('admin.withdraw') }}">{{ __('Withdraw Method') }}</a>
+         <a class="collapse-item" href="{{route('admin.kyc.info','user')}}">{{ __('User KYC Info') }}</a>
+        <!--<a class="collapse-item" href="{{route('admin.manage.module')}}">{{ __('User KYC Modules') }}</a> -->
         <a class="collapse-item" href="{{ route('admin.other.banks.index') }}">{{ __('Other Banks') }}</a>
         <a class="collapse-item" href="{{ route('admin.user.bonus') }}">{{ __('Supervisor Fee') }}</a>
       </div>
@@ -103,7 +100,11 @@
     <div id="withdraw" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         <a class="collapse-item" href="{{ route('admin.withdraw') }}">{{ __('Withdraw Method') }}</a>
-        <a class="collapse-item" href="{{ route('admin.withdraw.pending') }}">{{ __('Pending Withdraws') }}</a>
+        <a class="collapse-item" href="{{ route('admin.withdraw.pending') }}">{{ __('Pending Withdraws') }}
+        @if( DB::table('withdrawals')->where('status','pending')->count() > 0)
+          <span class="badge badge-sm badge-danger badge-counter">{{ DB::table('withdrawals')->where('status','pending')->count() }}</span>
+        @endif
+        </a>
         <a class="collapse-item" href="{{ route('admin.withdraw.accepted') }}">{{ __('Accepted Withdraws') }}</a>
         <a class="collapse-item" href="{{ route('admin.withdraw.rejected') }}">{{ __('Rejected Withdraws') }}</a>
       </div>

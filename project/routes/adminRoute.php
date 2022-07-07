@@ -186,12 +186,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/users/datatables', [UserController::class, 'datatables'])->name('admin-user-datatables'); //JSON REQUEST
     Route::get('/users', [UserController::class, 'index'])->name('admin.user.index');
     Route::get('/users/create', [UserController::class, 'create'])->name('admin.user.create');
-    Route::post('/users/create', [UserController::class, 'store'])->name('admin.user.store');
-    Route::get('/users/withdraws', [UserController::class, 'withdraws'])->name('admin.withdraw.index');
-    Route::get('/users/withdraws/datatables', [UserController::class, 'withdrawdatatables'])->name('admin.withdraw.datatables');
-    Route::get('/users/withdraw/{id}/show', [UserController::class, 'withdrawdetails'])->name('admin.withdraw.show');
-    Route::get('/users/withdraws/accept/{id}', [UserController::class, 'accept'])->name('admin-withdraw-accept');
-    Route::get('/users/withdraws/reject/{id}', [UserController::class, 'reject'])->name('admin-withdraw-reject');
+    Route::post('/users/create', [UserController::class, 'store'])->name('admin.user.store');    
     Route::get('/users/edit/{id}', [UserController::class, 'edit'])->name('admin-user-edit');
     Route::post('/users/edit/{id}', [UserController::class, 'update'])->name('admin-user-update');
     Route::get('/users/delete/{id}', [UserController::class, 'destroy'])->name('admin-user-delete');
@@ -235,17 +230,6 @@ Route::prefix('admin')->group(function () {
     Route::get('/plan/delete/{id}', [PlanController::class, 'destroy'])->name('admin.plan.delete');
     Route::post('/plan/store', [PlanController::class, 'store'])->name('admin.plan.store');
     Route::post('/plan/update/{id}', [PlanController::class, 'update'])->name('admin.plan.update');
-
-    Route::get('/withdraw-method/datatables', [WithdrawMethodController::class,'datatables'])->name('admin.withdraw.method.datatables'); //JSON REQUEST
-    Route::get('/withdraw-method', [WithdrawMethodController::class,'index'])->name('admin-withdraw-method-index');
-    Route::get('/withdraw-method', [WithdrawMethodController::class,'index'])->name('admin.withdraw');
-    Route::get('/withdraw-method/create', [WithdrawMethodController::class,'create'])->name('admin.withdraw.method.create');
-    Route::post('/withdraw-method/store', [WithdrawMethodController::class,'store'])->name('admin.withdraw.method.store');
-    Route::get('/withdraw-method/edit/{id}', [WithdrawMethodController::class,'edit'])->name('admin.withdraw.method.edit');
-    Route::post('/withdraw-method/update/{id}', [WithdrawMethodController::class,'update'])->name('admin.withdraw.method.update');
-    Route::get('/withdraw-method/delete/{id}', [WithdrawMethodController::class,'destroy'])->name('admin.withdraw.method.delete');
-
-    /** New withdraw*/
   });
 
   Route::group(['middleware' => 'permissions:Loan Management'], function () {
@@ -327,8 +311,8 @@ Route::prefix('admin')->group(function () {
     Route::get('withdraw/pending', [WithdrawalController::class, 'pending'])->name('admin.withdraw.pending'); //->middleware('permission:pending withdraw');
     Route::get('withdraw/accepted', [WithdrawalController::class, 'accepted'])->name('admin.withdraw.accepted'); //->middleware('permission:accepted withdraw');
     Route::get('withdraw/rejected', [WithdrawalController::class, 'rejected'])->name('admin.withdraw.rejected'); //->middleware('permission:rejected withdraw');
-    Route::post('withdraw/accept/{withdraw}', [WithdrawalController::class, 'withdrawAccept'])->name('withdraw.accept'); //->middleware('permission:withdraw accept');
-    Route::post('withdraw/reject/{withdraw}', [WithdrawalController::class, 'withdrawReject'])->name('withdraw.reject'); //->middleware('permission:withdraw reject');
+    Route::post('withdraw/accept/{withdraw}', [WithdrawalController::class, 'withdrawAccept'])->name('admin.withdraw.accept'); //->middleware('permission:withdraw accept');
+    Route::post('withdraw/reject/{withdraw}', [WithdrawalController::class, 'withdrawReject'])->name('admin.withdraw.reject'); //->middleware('permission:withdraw reject');
   });
 
   //==================================== Manage Currency ==============================================//
