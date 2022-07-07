@@ -94,8 +94,8 @@ class DashboardController extends Controller
             return Admin::findOrFail($tenant->id);
         });
         // $data = Auth::guard('admin')->user();
-        $modules = Generalsetting::first();
-        return view('admin.profile', compact('data', 'modules'));
+        // $modules = Generalsetting::first();
+        // return view('admin.profile', compact('data', 'modules'));
     }
 
     public function profileupdate(Request $request)
