@@ -52,9 +52,15 @@
                                   @foreach($withdraws as $key=>$withdraw)
                                       <tr>
                                           <td data-label="{{ __('Withdraw Date') }}">{{date('d-M-Y',strtotime($withdraw->created_at))}}</td>
-                                          <td data-label="{{ __('Method') }}">{{$withdraw->method}}</td>
+                                          <td data-label="{{ __('Method') }}">{{$withdraw->method->method}}</td>
                                           <td data-label="{{ __('Amount') }}">{{ showprice($withdraw->amount,$currency) }}</td>
-                                          <td data-label="{{ __('Status') }}">{{ucfirst($withdraw->status)}}</td>
+                                          @if ($withdraw->status == '1')
+                                          <td data-label="{{ __('Status') }}">{{ __('Accepted') }}</td>
+                                          @elseif($withdraw->status == 2)
+                                          <td data-label="{{ __('Status') }}">{{ __('Rejected') }}</td>
+                                          @else
+                                          <td data-label="{{ __('Status') }}">{{ __('Pending') }}</td>
+                                          @endif
                                           
                                           <td data-label="{{ __('Details') }}">
                                             <a href="{{route('user.withdraw.details',$withdraw->id)}}" class="btn btn-primary">
@@ -77,7 +83,7 @@
 
 @endsection
 
-@push('js')
+@section('scripts')
 
-@endpush
+@endsection
 

@@ -29,7 +29,7 @@
                             <tr>
                                 <th class="45%" width="45%">{{__('WithDraw Method')}}</th>
                                 <td width="10%">:</td>
-                                <td class="45%" width="45%">{{ $data->method }}</td>
+                                <td class="45%" width="45%">{{ $data->method->method }}</td>
                             </tr>
 
                             <tr>
@@ -41,22 +41,22 @@
                             <tr>
                                 <th class="45%" width="45%">{{__('Amount')}}</th>
                                 <td width="10%">:</td>
-                                <td class="45%" width="45%">{{ $currency->symbol }} {{ $data->amount }}</td>
+                                <td class="45%" width="45%">{{ showprice($data->amount,$data->currency) }}</td>
                             </tr>
 
                             <tr>
-                                <th class="45%" width="45%">{{__('Fees')}}</th>
+                                <th class="45%" width="45%">{{__('Charge')}}</th>
                                 <td width="10%">:</td>
-                                <td class="45%" width="45%">{{ $currency->symbol }} {{ $data->fee }}</td>
+                                <td class="45%" width="45%">{{ showprice($data->charge,$data->currency) }}</td>
                             </tr>
 
                             <tr>
                                 <th class="45%" width="45%">{{__('Status')}}</th>
                                 <td width="10%">:</td>
                                 <td class="45%" width="45%">
-                                  @if ($data->status == 'completed')
+                                  @if ($data->status == '1')
                                     <span class="badge bg-success">{{__('Completed')}}</span>
-                                  @elseif($data->status == 'pending')
+                                  @elseif($data->status == '0')
                                     <span class="badge bg-warning">{{__('Pending')}}</span>
                                   @else 
                                     <span class="badge bg-danger">{{__('Rejected')}}</span>

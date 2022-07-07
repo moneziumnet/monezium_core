@@ -19,7 +19,7 @@ class WithdrawalController extends Controller
 
     public function methods(Request $request)
     {
-        $methods = Withdraw::where('currency_id',$request->currency)->where('status',1)->get();
+        $methods = Withdrawals::where('currency_id',$request->currency)->where('status',1)->get();
         if($methods->isEmpty()) return response('empty');
         return response($methods);
     }
@@ -33,7 +33,7 @@ class WithdrawalController extends Controller
             'user_data' => 'required'
         ]);
 
-        $method = Withdraw::findOrFail($request->method_id);
+        $method = Withdrawals::findOrFail($request->method_id);
         if(!$method){
             return back()->with('error','Withdraw method not found');
         }

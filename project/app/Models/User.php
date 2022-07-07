@@ -56,7 +56,7 @@ class User extends Authenticatable
 
     public function withdraws()
     {
-        return $this->hasMany(Withdraw::class);
+        return $this->hasMany(Withdrawals::class);
     }
 
 	public function orders()

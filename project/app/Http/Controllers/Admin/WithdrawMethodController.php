@@ -77,12 +77,6 @@ class WithdrawMethodController extends Controller
 
     public function index(Request $request)
     {
-
-        // $search = $request->search;
-        // $withdraws = Withdraw::when($search, function($q) use($search){$q->where('name','LIKE','%'.$search.'%');})->latest()->paginate(15);
-     
-        // return view('admin.withdraw.index', compact('withdraws'));
-       // $withdraws = WithdrawMethod::orderBy('id','desc')->paginate(15);
         return view('admin.withdraw.index');
     }
 
@@ -126,7 +120,7 @@ class WithdrawMethodController extends Controller
         return view('admin.withdraw.edit', compact('currencies','method'));
     }
 
-    public function update(Request $request, Withdraw $method)
+    public function update(Request $request, WithdrawMethod $method)
     {
         $request->validate([
             'name' => 'required|unique:withdraw_methods,method,'.$method->id,
@@ -139,12 +133,13 @@ class WithdrawMethodController extends Controller
             'withdraw_instruction' => 'required'
         ]);
 
+
         $method->update([
             'method'                => $request->name,
             'min_amount'            => $request->min_amount,
             'max_amount'            => $request->max_amount,
             'fixed'                 => $request->fixed_charge,
-            'percent'               => $request->percent_charge,
+            'percentage'               => $request->percent_charge,
             'status'                => $request->status,
             'currency_id'           => $request->currency,
             'withdraw_instruction'  => trim($request->withdraw_instruction)
