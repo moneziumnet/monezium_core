@@ -84,18 +84,18 @@ class FrontendController extends Controller
         $data['features'] = Feature::orderBy('id', 'desc')->orderBy('id', 'desc')->limit(4)->get();
         $data['services'] = Service::orderBy('id', 'desc')->orderBy('id', 'desc')->limit(6)->get();
         $data['ps'] = Pagesetting::first();
-        $data['loanplans'] = LoanPlan::orderBy('id', 'desc')->whereStatus(1)->limit(3)->get();
-        $data['depositsplans'] = DpsPlan::orderBy('id', 'desc')->whereStatus(1)->limit(3)->get();
-        $data['fdrplans'] = FdrPlan::orderBy('id', 'desc')->whereStatus(1)->limit(3)->get();
-        $data['bankplans'] = BankPlan::orderBy('amount', 'asc')->limit(3)->get();
-        
         $data['subscripplans'] = tenancy()->central(function ($tenant) {
             return Plan::orderBy('price', 'asc')->limit(3)->get();
         });
+
         if (!$current_domain) {
             return view('frontend.superindex', $data);
         }
 
+        $data['bankplans'] = BankPlan::orderBy('amount', 'asc')->limit(3)->get();
+        $data['loanplans'] = LoanPlan::orderBy('id', 'desc')->whereStatus(1)->limit(3)->get();
+        $data['depositsplans'] = DpsPlan::orderBy('id', 'desc')->whereStatus(1)->limit(3)->get();
+        $data['fdrplans'] = FdrPlan::orderBy('id', 'desc')->whereStatus(1)->limit(3)->get();
         return view('frontend.index', $data);
     }
 
