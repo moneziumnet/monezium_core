@@ -63,8 +63,24 @@
                                             </div>
                                           </td>
                                           <td data-label="{{ __('Status') }}">
+                                            @if($data->status == 1)
+                                              @php
+                                                  $bclass = "success";
+                                                  $bstatus = "completed";
+                                              @endphp
+                                            @elseif($data->status == 2)
+                                              @php
+                                                  $bclass = "danger";
+                                                  $bstatus = "cancelled";
+                                              @endphp
+                                            @else
+                                              @php
+                                                  $bclass = "warning";
+                                                  $bstatus = "pending";
+                                              @endphp
+                                            @endif
                                             <div>
-                                              <span class="badge badge-{{ $data->status == 1 ? 'success' : 'warning'}}">{{ $data->status == 1 ? 'completed' : 'pending'}}</span>
+                                              <span class="badge badge-{{ $bclass }}">{{ $bstatus}}</span>
                                             </div>
                                           </td>
 
@@ -77,6 +93,9 @@
                                                 @if ($data->status == 0)
                                                   <a href="javascript:;" id="sendBtn" data-href="{{ route('user.request.money.send',$data->id) }}" class="btn" data-bs-toggle="modal" data-bs-target="#modal-success">
                                                     {{__('Send')}}
+                                                  </a>
+                                                  <a href="javascript:;" id="cancelBtn" data-href="{{ route('user.request.money.cancel',$data->id) }}" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-cancel">
+                                                    {{__('Cancel')}}
                                                   </a>
                                                 @endif
                                             </div>
@@ -118,6 +137,28 @@
   </div>
 </div>
 
+<div class="modal modal-blur confirm-modal fade" id="modal-cancel" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <form id="cancelRequestMoney" action="" method="post">
+        @csrf
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-status bg-success"></div>
+  
+        <div class="modal-body text-center py-4">
+          <p class="text-center">{{ __("You are want to cancel this request money.") }}</p>
+          <p class="text-center">{{ __("Do you want to proceed?") }}</p>
+        </div>
+  
+        <div class="modal-footer">
+          <a href="javascript:;" class="btn btn-secondary" data-bs-dismiss="modal">{{ __("Cancel") }}</a>
+          <button type="submit" class="btn shadow-none btn--success" data-bs-dismiss="modal">@lang('Proceed')</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 @endsection
 
 @push('js')
@@ -126,6 +167,9 @@
     
     $("#sendBtn").on('click',function(){
       $("#requestMoney").prop("action",$(this).data('href'))
+    })
+    $("#cancelBtn").on('click',function(){
+      $("#cancelRequestMoney").prop("action",$(this).data('href'))
     })
   </script>
 @endpush

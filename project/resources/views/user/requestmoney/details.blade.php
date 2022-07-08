@@ -61,6 +61,27 @@
                                 <td width="10%">:</td>
                                 <td class="45%" width="45%">{{ showprice(($data->amount - $data->cost),$data->currency) }}</td>
                             </tr>
+                                @if($data->status == 1)
+                                    @php
+                                        $bclass = "success";
+                                        $bstatus = "Completed";
+                                    @endphp
+                                @elseif($data->status == 2)
+                                    @php
+                                        $bclass = "danger";
+                                        $bstatus = "Cancelled";
+                                    @endphp
+                                @else
+                                    @php
+                                        $bclass = "warning";
+                                        $bstatus = "Pending";
+                                    @endphp
+                                @endif
+                            <tr>
+                                <th class="45%" width="45%">{{__('Status')}}</th>
+                                <td width="10%">:</td>
+                                <td class="45%" width="45%">{{ $bstatus }}</td>
+                            </tr>
 
                             <tr>
                                 <th width="45%">{{__('Details')}}</th>
@@ -73,6 +94,20 @@
                                 <td width="10%">:</td>
                                 <td width="45%">{{ $data->created_at->diffForHumans() }}</td>
                             </tr>
+                            @if ($data->status == 0)
+                                <tr>
+                                    <td class="text-center" colspan="3">
+                                        
+                                            <a href="javascript:;" id="sendBtn" data-href="{{ route('user.request.money.send',$data->id) }}" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-success">
+                                            {{__('Send')}}
+                                            </a>
+                                            <a href="javascript:;" id="cancelBtn" data-href="{{ route('user.request.money.cancel',$data->id) }}" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-cancel">
+                                            {{__('Cancel')}}
+                                            </a>
+                                        
+                                    </td>
+                                </tr>
+                            @endif
 
                             </tbody>
                         </table>
@@ -84,10 +119,63 @@
     </div>
 </div>
 
+<div class="modal modal-blur confirm-modal fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <form id="requestMoney" action="" method="post">
+          @csrf
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-status bg-success"></div>
+    
+          <div class="modal-body text-center py-4">
+            <p class="text-center">{{ __("You are about to change the status.") }}</p>
+            <p class="text-center">{{ __("Do you want to proceed?") }}</p>
+          </div>
+    
+          <div class="modal-footer">
+            <a href="javascript:;" class="btn btn-secondary" data-bs-dismiss="modal">{{ __("Cancel") }}</a>
+            <button type="submit" class="btn shadow-none btn--success" data-bs-dismiss="modal">@lang('Proceed')</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <div class="modal modal-blur confirm-modal fade" id="modal-cancel" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <form id="cancelRequestMoney" action="" method="post">
+          @csrf
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-status bg-success"></div>
+    
+          <div class="modal-body text-center py-4">
+            <p class="text-center">{{ __("You are want to cancel this request money.") }}</p>
+            <p class="text-center">{{ __("Do you want to proceed?") }}</p>
+          </div>
+    
+          <div class="modal-footer">
+            <a href="javascript:;" class="btn btn-secondary" data-bs-dismiss="modal">{{ __("Cancel") }}</a>
+            <button type="submit" class="btn shadow-none btn--success" data-bs-dismiss="modal">@lang('Proceed')</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
 
 @endsection
 
 @push('js')
-
+  <script>
+    'use strict';
+    
+    $("#sendBtn").on('click',function(){
+      $("#requestMoney").prop("action",$(this).data('href'))
+    })
+    $("#cancelBtn").on('click',function(){
+      $("#cancelRequestMoney").prop("action",$(this).data('href'))
+    })
+  </script>
 @endpush
 

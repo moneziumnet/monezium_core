@@ -204,6 +204,13 @@ class MoneyRequestController extends Controller
         return back()->with('message','Successfully Money Send.');
     }
 
+    public function cancel($id)
+    {
+        $data = MoneyRequest::findOrFail($id);
+        $data->update(['status'=>2]);
+        return back()->with('message','Successfully Money Request Cancelled.');
+    }
+
     public function details($id){
         $data = MoneyRequest::findOrFail($id);
         $from = User::whereId($data->user_id)->first();
