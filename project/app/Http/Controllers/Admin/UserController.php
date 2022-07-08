@@ -24,6 +24,8 @@ use App\Models\Generalsetting;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
+use App\Exports\AdminExportTransaction;
+use Maatwebsite\Excel\Facades\Excel;
 
 
 class UserController extends Controller
@@ -315,9 +317,9 @@ class UserController extends Controller
 
         }
         
-        public function transactionEport($user_id)
+        public function transactionExport($user_id)
         {
-
+            return Excel::download( new AdminExportTransaction($user_id), 'transaction.xlsx');
         }
 
         public function trandatatables($id)

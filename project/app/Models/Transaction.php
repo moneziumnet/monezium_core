@@ -10,4 +10,9 @@ class Transaction extends Model
     {
         return $this->belongsTo('App\Models\User')->withDefault();
     }
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class,'currency_id');
+    }
 }
