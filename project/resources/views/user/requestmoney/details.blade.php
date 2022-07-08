@@ -47,19 +47,19 @@
                             <tr>
                                 <th class="45%" width="45%">{{__('Amount')}}</th>
                                 <td width="10%">:</td>
-                                <td class="45%" width="45%">{{ showprice($data->amount,$currency) }}</td>
+                                <td class="45%" width="45%">{{ showprice($data->amount,$data->currency) }}</td>
                             </tr>
 
                             <tr>
                                 <th class="45%" width="45%">{{__('Cost')}}</th>
                                 <td width="10%">:</td>
-                                <td class="45%" width="45%">{{ showprice($data->cost,$currency) }}</td>
+                                <td class="45%" width="45%">{{ showprice($data->cost,$data->currency) }}</td>
                             </tr>
 
                             <tr>
                                 <th class="45%" width="45%">{{__('Amount To Get')}}</th>
                                 <td width="10%">:</td>
-                                <td class="45%" width="45%">{{ showprice(($data->amount - $data->cost),$currency) }}</td>
+                                <td class="45%" width="45%">{{ showprice(($data->amount - $data->cost),$data->currency) }}</td>
                             </tr>
 
                             <tr>

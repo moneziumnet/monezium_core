@@ -18,4 +18,9 @@ class MoneyRequest extends Model
         'amount',
         'status',
     ];
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class,'currency_id');
+    }
 }

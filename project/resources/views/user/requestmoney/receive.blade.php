@@ -59,7 +59,7 @@
                                           </td>
                                           <td data-label="{{ __('Amount') }}">
                                             <div>
-                                              {{ showprice($data->amount,$currency) }}
+                                              {{ showprice($data->amount,$data->currency) }}
                                             </div>
                                           </td>
                                           <td data-label="{{ __('Status') }}">
