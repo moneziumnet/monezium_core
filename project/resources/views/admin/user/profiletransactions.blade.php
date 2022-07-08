@@ -25,6 +25,14 @@
         <div class="tab-pane fade show active" id="modules" role="tabpanel" aria-labelledby="modules-tab">
         <div class="card-body">
           <div class="table-responsive">
+            <div class="col-sm-12 text-right" style="text-align: right">
+              <a href="{{route('admin-user.transaction-pdf', $data->id)}}" style="text-decoration: none;">
+                <i class="fas fa-file-pdf" aria-hidden="true"></i> {{__('PDF')}}
+              </a> &nbsp;
+              <a href="{{route('admin-user.transaction-export', $data->id)}}" style="text-decoration: none;">
+                <i class="fas fa-file-excel" aria-hidden="true"></i> {{__('Export')}}
+              </a>
+            </div>
             <table id="geniustable" class="table table-hover dt-responsive" cellspacing="0" width="100%">
               <thead class="thead-light">
                <tr>
@@ -34,6 +42,7 @@
                 <th>{{__('Remark')}}</th>
                 <th>{{__('Amount')}}</th>
                 <th>{{__('Charge')}}</th>
+                <th>{{__('Action')}}</th>
                </tr>      
               </thead>
             </table>
@@ -45,13 +54,40 @@
   </div>
 </div>
 </div>
+
+
+<div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+  <div class="modal-content">
+      <div class="modal-status bg-primary"></div>
+      <div class="modal-body text-center py-4">
+      <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+      <h3>@lang('Transaction Details')</h3>
+      <p class="trx_details"></p>
+      <ul class="list-group mt-2">
+         
+      </ul>
+      </div>
+      <div class="modal-footer">
+      <div class="w-100">
+          <div class="row">
+          <div class="col"><a href="javascript:;" class="btn w-100 closed" data-bs-dismiss="modal">
+              @lang('Close')
+              </a>
+            </div>
+          </div>
+      </div>
+      </div>
+  </div>
+  </div>
+</div>
 <!--Row-->
 @endsection
 @section('scripts')
 
 <script type="text/javascript">
 	"use strict";
-
+  
     var table = $('#geniustable').DataTable({
            ordering: false,
            processing: true,
@@ -65,10 +101,29 @@
                 { data: 'remark', name:'remark' },
                 { data: 'amount', name: 'amount' },
                 { data: 'charge', name: 'charge' },
+                { data: 'action', name: 'action' },
             ],
             language : {
                 processing: '<img src="{{asset('assets/images/'.$gs->admin_loader)}}">'
             }
+        });
+
+        function getDetails (id)
+        {
+            var url = "{{url('admin/user/transaction/details/')}}"+'/'+id
+            //alert(url); return false;
+            // $('.trx_details').text($(this).data('data').details)
+            $.get(url,function (res) { 
+              if(res == 'empty'){
+                $('.list-group').html('<p>@lang('No details found!')</p>')
+              }else{
+                $('.list-group').html(res)
+              }
+              $('#modal-success').modal('show')
+            })
+        }
+        $('.closed').click(function() {
+            $('#modal-success').modal('hide');
         });
 
 </script>

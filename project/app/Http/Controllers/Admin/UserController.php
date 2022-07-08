@@ -293,6 +293,33 @@ class UserController extends Controller
             return view('admin.user.profilebanks',$data);
         }
 
+        public function profileTransctionsDetails($id)
+        {
+            $user = User::findOrFail($id);
+            $data['data'] = $user;
+            return view('admin.user.profiletransactions',$data);
+        }
+
+        public function trxDetails($id)
+        {
+            $transaction = Transaction::where('id',$id)->first();
+            $transaction->currency = Currency::whereId($transaction->currency_id)->first();
+            if(!$transaction){
+                return response('empty');
+            }
+            return view('admin.user.trx_details',compact('transaction'));
+        }
+
+        public function transactionPDF($user_id)
+        {
+
+        }
+        
+        public function transactionEport($user_id)
+        {
+
+        }
+
         public function trandatatables($id)
         {
             $datas = Transaction::where('user_id',$id)->orderBy('id','desc')->get();  
@@ -301,6 +328,10 @@ class UserController extends Controller
                             ->editColumn('amount', function(Transaction $data) {
                                 $currency = Currency::whereId($data->currency_id)->first();
                                 return $data->type.amount($data->amount,$currency->type,2).$currency->code;
+                            })
+                            ->editColumn('trnx', function(Transaction $data) {
+                                $trnx = $data->txnid;
+                                return $trnx;
                             })
                             ->editColumn('created_at', function(Transaction $data) {
                                 $date = date('d-m-Y',strtotime($data->created_at));
@@ -313,8 +344,12 @@ class UserController extends Controller
                                 $currency = Currency::whereId($data->currency_id)->first();
                                 return $data->type.amount($data->charge,$currency->type,2).$currency->code;
                             })
+                            ->addColumn('action', function (Transaction $data) {
+                                return ' <a href="javascript:;"  data-href="" onclick="getDetails('.$data->id.')" class="detailsBtn" >
+                                ' . __("Details") . '</a>';
+                            })
                             
-                            ->rawColumns([''])
+                            ->rawColumns(['action'])
                             ->toJson();
         }
 

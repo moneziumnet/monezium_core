@@ -197,6 +197,9 @@ Route::prefix('admin')->group(function () {
     Route::get('/user/document/fileview/{id}', [UserController::class,'fileView'])->name('admin-user.view-document');
     Route::get('/user/document/delete/{id}', [UserController::class,'fileDestroy'])->name('admin-user.document-delete');
     Route::get('/user/transactions/datatables/{id}', [UserController::class, 'trandatatables'])->name('admin-user.transactions-datatables');
+    Route::get('/user/transaction/details/{id}', [UserController::class,'trxDetails'])->name('admin-user.trxDetails');
+    Route::get('/user/transaction/pdf/{id}', [UserController::class,'transactionPDF'])->name('admin-user.transaction-pdf');
+    Route::get('/user/transaction/export/{id}', [UserController::class,'transactionEport'])->name('admin-user.transaction-export');
     
     Route::get('/user/{id}/accounts', [UserController::class, 'profileAccounts'])->name('admin-user-accounts');
     Route::get('/user/{id}/documents', [UserController::class, 'profileDocuments'])->name('admin-user-documents');
