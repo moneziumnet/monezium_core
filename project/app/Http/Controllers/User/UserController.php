@@ -214,6 +214,25 @@ class UserController extends Controller
     
         return $pdf->download('transaction.pdf');
     }
+    
+    public function transactionPDF()
+    {
+        // $user = Auth::user();
+        // $transactions = Transaction::whereUserId(auth()->id())->orderBy('id','desc')->paginate(20); 
+        // foreach ($transactions as $key => $transaction) {
+        //     $transaction->currency = Currency::whereId($transaction->currency_id)->first();
+        // }
+
+
+        $data = [
+            'title' => 'Welcome to geniusbank',
+            'date' => date('m/d/Y')
+        ];
+          
+        $pdf = PDF::loadView('frontend.myPDF', $data);
+    
+        return $pdf->download('transaction.pdf');
+    }
 
     public function affilate_code()
     {

@@ -25,15 +25,19 @@
 <div class="page-body">
     <div class="container-xl">
         <div class="row row-cards">
+          <div class="col-sm-12 text-right" style="text-align: right">
+            <a href="{{route('user.transaction-pdf')}}">
+              <i class="fas fa-file-pdf" aria-hidden="true"></i> {{__('PDF')}}
+            </a> &nbsp;
+            <a href="{{route('user.transaction-export')}}">
+              <i class="fas fa-file-excel" aria-hidden="true"></i> {{__('Export')}}
+            </a>
+          </div>
             <div class="col-12">
                 <div class="card">
                   
 					<div class="table-responsive">
-              <div class="col-sm-12 text-right" style="text-align: right">
-                <a  href="{{route('user.transaction-export')}}">
-                  <i class="fas fa-file-excel" aria-hidden="true"></i> {{__('Export')}}
-                </a>
-              </div>
+              
 						<table class="table card-table table-vcenter text-nowrap datatable">
 						  <thead>
 							<tr>
