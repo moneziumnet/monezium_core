@@ -37,7 +37,8 @@ class ExportTransaction implements FromView,ShouldAutoSize
         $transactions = Transaction::with('currency')->whereUserId(auth()->id())->orderBy('id','asc')->get(); 
 
         return view('user.export.transaction',[
-            'trans' => $transactions
+            'trans' => $transactions,
+            'user'  => $user
         ]);
         
     }

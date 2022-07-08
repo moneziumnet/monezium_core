@@ -1,6 +1,29 @@
 <table>
     <thead>
         <tr>
+            <th colspan="5" style="text-align: center">
+                {{$user->name}}
+       
+            </th>
+        </tr>
+        <tr>
+            <th colspan="5" style="text-align: center">
+                {{$user->address}}<br/>
+                {{$user->city}}, {{$user->zip}}<br/>
+                {{$user->account_number}}
+            </th>
+        </tr>
+        <tr>
+            <th colspan="5" style="text-align: center">
+                {{$user->city}}, {{$user->zip}}
+            </th>
+        </tr>
+        <tr>
+            <th colspan="5" style="text-align: center">
+                Account Number: {{$user->account_number}}
+            </th>
+        </tr>
+        <tr>
             <th>##</th>
             <th>Date</th>
             <th>Transaction ID</th>

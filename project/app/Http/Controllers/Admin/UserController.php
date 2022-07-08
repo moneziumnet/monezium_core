@@ -314,7 +314,8 @@ class UserController extends Controller
 
         public function transactionPDF($user_id)
         {
-
+            //return (new AdminExportTransaction($user_id))->download('transaction.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+            return Excel::download( new AdminExportTransaction($user_id), 'transaction.pdf',\Maatwebsite\Excel\Excel::DOMPDF);
         }
         
         public function transactionExport($user_id)
