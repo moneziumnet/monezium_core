@@ -184,7 +184,7 @@ class InstitutionController extends Controller
         $data = Admin::findOrFail($id);
         return view('admin.institution.profile.contacts.create', compact('data'));
     }
-    
+
 
     public function modules($id)
     {
@@ -214,6 +214,12 @@ class InstitutionController extends Controller
     {
         $data = Admin::findOrFail($id);
         return view('admin.institution.subprofile.banks', compact('data'));
+    }
+
+    public function paymentgateways($id)
+    {
+        $data = Admin::findOrFail($id);
+        return view('admin.institution.subprofile.paymentgateways', compact('data'));
     }
 
     public function moduleupdate(Request $request, $id)

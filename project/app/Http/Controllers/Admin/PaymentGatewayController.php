@@ -26,9 +26,11 @@ class PaymentGatewayController extends Controller
         ));
     }
 
-    public function datatables()
+    public function datatables(Request $request)
     {
-        $datas = PaymentGateway::orderBy('id','desc')->get();
+        $subint_id = $request->id;
+
+        $datas = PaymentGateway::where('subint_id', $subint_id)->orderBy('id','desc')->get();
          return Datatables::of($datas)
                             ->editColumn('title', function(PaymentGateway $data) {
                                 if($data->type == 'automatic'){
@@ -92,9 +94,9 @@ class PaymentGatewayController extends Controller
         $input = $request->all();
         $input['type'] = "manual";
         $data->fill($input)->save();
-     
+
         $msg = __('New Data Added Successfully.').' '.'<a href="'.route("admin.payment.index").'">'.__('View Lists.').'</a>';
-        return response()->json($msg);      
+        return response()->json($msg);
     }
 
     public function edit($id)
@@ -159,7 +161,7 @@ class PaymentGatewayController extends Controller
                 }
             }
             $input['information'] = json_encode($info_data);
-            
+
             $data->update($input);
 
 
@@ -199,9 +201,9 @@ class PaymentGatewayController extends Controller
         if($data->type == 'manual' || $data->keyword != null){
             $data->delete();
         }
-   
+
         $msg = __('Data Deleted Successfully.');
-        return response()->json($msg);      
+        return response()->json($msg);
     }
 
 }

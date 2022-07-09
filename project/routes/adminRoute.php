@@ -110,7 +110,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/menu-builder', [GeneralSettingController::class, 'menubuilder'])->name('admin.gs.menubuilder');
   });
 
-  
+
   Route::group(['middleware' => 'permissions:Sub Institutions management'], function () {
     Route::get('/institution/datatables', [InstitutionController::class, 'datatables'])->name('admin.institution.datatables');
     Route::get('/institution', [InstitutionController::class, 'index'])->name('admin.institution.index');
@@ -128,18 +128,19 @@ Route::prefix('admin')->group(function () {
     // for profile of Institution
     Route::get('/institution/{id}/profile', [InstitutionController::class, 'profile'])->name('admin.institution.profile');
     Route::get('/institution/{id}/contacts', [InstitutionController::class, 'contacts'])->name('admin.institution.contacts');
-    Route::get('/institution/{id}/contacts/create', [InstitutionController::class, 'createContacts'])->name('admin.institution.contacts.create');    
+    Route::get('/institution/{id}/contacts/create', [InstitutionController::class, 'createContacts'])->name('admin.institution.contacts.create');
 
     Route::get('/institution/{id}/modules', [InstitutionController::class, 'modules'])->name('admin.institution.modules');
     Route::get('/institution/{id}/documents', [InstitutionController::class, 'documents'])->name('admin.institution.documents');
-    
+
     // for Sub Institution
     Route::get('/subinstitution', [InstitutionController::class, 'indexSub'])->name('admin.subinstitution.index');
     Route::get('/subinstitution/create', [InstitutionController::class, 'createSub'])->name('admin.institution.createsub');
     Route::get('/subinstitution/datatables', [InstitutionController::class, 'subDatatables'])->name('admin.subinstitution.datatables');
     Route::get('/subinstitution/{id}/profile', [InstitutionController::class, 'subProfile'])->name('admin.subinstitution.profile');
     Route::get('/subinstitution/{id}/branches', [InstitutionController::class, 'branches'])->name('admin.subinstitution.branches');
-    Route::get('/subinstitution/{id}/banks', [InstitutionController::class, 'banks'])->name('admin.subinstitution.banks');    
+    Route::get('/subinstitution/{id}/banks', [InstitutionController::class, 'banks'])->name('admin.subinstitution.banks');
+    Route::get('/subinstitution/{id}/paymentgateways', [InstitutionController::class, 'paymentgateways'])->name('admin.subinstitution.paymentgateways');
 
     Route::get('/branch/datatables', [BranchController::class, 'datatables'])->name('admin.branch.datatables');
     Route::get('/branch', [BranchController::class, 'index'])->name('admin.branch.index');
@@ -172,7 +173,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/contacts/contact-create', [ContactsController::class, 'create'])->name('admin.contact.contact-create');
     Route::get('/contacts/edit/{id}', [ContactsController::class, 'edit'])->name('admin.contact.contact-edit');
     Route::get('/contacts/delete/{id}', [ContactsController::class, 'destroy'])->name('admin.contact.contact-delete');
-  
+
     Route::get('/documents/datatables', [DocumentsController::class, 'datatables'])->name('admin.documents.datatables');
     Route::post('/documents/create-document', [DocumentsController::class, 'store'])->name('admin.document.add-document');
     Route::get('/documents/download/{id}', [DocumentsController::class, 'getDownload'])->name('admin.documents.download');
@@ -186,7 +187,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/users/datatables', [UserController::class, 'datatables'])->name('admin-user-datatables'); //JSON REQUEST
     Route::get('/users', [UserController::class, 'index'])->name('admin.user.index');
     Route::get('/users/create', [UserController::class, 'create'])->name('admin.user.create');
-    Route::post('/users/create', [UserController::class, 'store'])->name('admin.user.store');    
+    Route::post('/users/create', [UserController::class, 'store'])->name('admin.user.store');
     Route::get('/users/edit/{id}', [UserController::class, 'edit'])->name('admin-user-edit');
     Route::post('/users/edit/{id}', [UserController::class, 'update'])->name('admin-user-update');
     Route::get('/users/delete/{id}', [UserController::class, 'destroy'])->name('admin-user-delete');
@@ -200,7 +201,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/user/transaction/details/{id}', [UserController::class,'trxDetails'])->name('admin-user.trxDetails');
     Route::get('/user/transaction/pdf/{id}', [UserController::class,'transactionPDF'])->name('admin-user.transaction-pdf');
     Route::get('/user/transaction/export/{id}', [UserController::class,'transactionExport'])->name('admin-user.transaction-export');
-    
+
     Route::get('/user/{id}/accounts', [UserController::class, 'profileAccounts'])->name('admin-user-accounts');
     Route::get('/user/{id}/documents', [UserController::class, 'profileDocuments'])->name('admin-user-documents');
     Route::get('/user/{id}/settings', [UserController::class, 'profileSettings'])->name('admin-user-settings');
@@ -210,7 +211,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/user/{id}/modules', [UserController::class, 'profileModules'])->name('admin-user-modules');
     Route::post('/users/{id}/changepassword', [UserController::class, 'changePassword'])->name('admin-user-changepassword');
     Route::post('/users/{id}/updatemodules', [UserController::class, 'updateModules'])->name('admin-user-updatemodules');
-    
+
     Route::get('/users/ban/{id1}/{id2}', [UserController::class, 'ban'])->name('admin-user-ban');
     Route::get('/users/verify/{id1}/{id2}', [UserController::class, 'verify'])->name('admin-user-verify');
     Route::get('/user/default/image', [UserController::class, 'image'])->name('admin-user-image');
@@ -374,7 +375,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/transactions/datatables', [TransactionController::class, 'datatables'])->name('admin.transactions.datatables');
     Route::get('/transactions', [TransactionController::class, 'index'])->name('admin.transactions.index');
   });
-    
+
   Route::group(['middleware' => 'permissions:Deposits'], function () {
     Route::get('/deposits/datatables', [AppDepositController::class, 'datatables'])->name('admin.deposits.datatables');
     Route::get('/deposits', [AppDepositController::class, 'index'])->name('admin.deposits.index');
@@ -616,10 +617,11 @@ Route::prefix('admin')->group(function () {
     Route::get('/social/google/{status}', [SocialSettingController::class, 'googleup'])->name('admin.social.googleup');
     //------------ ADMIN SOCIAL SETTINGS SECTION ENDS------------
   });
-  
+
   Route::get('/check/movescript', [DashboardController::class, 'movescript'])->name('admin-move-script');
   Route::get('/generate/backup', [DashboardController::class, 'generate_bkup'])->name('admin-generate-backup');
   Route::get('/activation', [DashboardController::class, 'activation'])->name('admin-activation-form');
   Route::post('/activation', [DashboardController::class, 'activation_submit'])->name('admin-activate-purchase');
   Route::get('/clear/backup', [DashboardController::class, 'clear_bkup'])->name('admin-clear-backup');
 });
+

@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -26,17 +26,29 @@
                     <form id="deposit-form" action="" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
+                            <label class="form-label required">{{__('Institution')}}</label>
+                            <select name="method" id="subinstitude" class="form-select" required>
+                                <option value="">{{ __('Select Institution') }}</option>
+
+                                @foreach ($subinstitude as $ins)
+                                        <option value="{{$ins->id}}">{{ $ins->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group mt-3">
                             <label class="form-label required">{{__('Payment Method')}}</label>
                             <select name="method" id="withmethod" class="form-select" required>
                                 <option value="">{{ __('Select Payment Method') }}</option>
-                                @foreach ($gateways as $gateway)
+
+                                {{-- @foreach (DB::table('payment_gateways')->where('subint_id', 3)->whereStatus(1)->get() as $gateway)
                                     @if ($gateway->type == 'manual')
                                         <option value="Manual" data-details="{{$gateway->details}}">{{ $gateway->title }}</option>
                                     @endif
                                     @if (in_array($gateway->keyword,$availableGatways))
                                         <option value="{{$gateway->keyword}}">{{ $gateway->name }}</option>
                                     @endif
-                                @endforeach                   
+                                @endforeach --}}
                             </select>
                         </div>
 
@@ -44,15 +56,15 @@
                             <div class="card">
                               <div class="card-body">
                                 <div class="row">
-    
+
                                   <div class="col-lg-12 pb-2 manual-payment-details">
                                   </div>
-                                  
+
                                   <div class="col-lg-12">
                                     <label class="form-label required">@lang('Transaction ID')#</label>
                                     <input class="form-control" name="txn_id4" type="text" placeholder="Transaction ID#" id="manual_transaction_id">
                                   </div>
-                                  
+
                                 </div>
                               </div>
                             </div>
@@ -93,7 +105,7 @@
 
                         <div class="form-group mb-3 mt-3">
                             <label class="form-label required">{{__('Deposit Amount')}}</label>
-                            <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" value="{{ old('amount') }}" min="1" required>
+                            <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" step="any" value="{{ old('amount') }}" min="1" required>
                         </div>
 
                         <div class="form-group mb-3 ">
@@ -105,7 +117,7 @@
                             <button type="submit" class="btn btn-primary w-100">{{__('Submit')}}</button>
                         </div>
 
-                        
+
                     </form>
                 </div>
             </div>
@@ -241,11 +253,11 @@ $(document).on('submit','.step1-form',function(){
           }
         });
         handler.openIframe();
-            return false;                    
+            return false;
         }
         else {
           $('#preloader').show();
-            return true;   
+            return true;
         }
 });
 
@@ -273,7 +285,19 @@ $(document).on('submit','.step1-form',function(){
 
   <script type="text/javascript">
   'use strict';
-  
+
+    $("#subinstitude").on('click',function(){
+        let subinstitude = $("#subinstitude").val();
+        $.post("{{ route('user.deposit.gateway') }}",{id:subinstitude,_token:'{{csrf_token()}}'},function (res) {
+            let _optionHtml = '<option value="">Select Payment Method</option>';
+            $.each(res, function(i, item) {
+                _optionHtml += '<option value="' + item.keyword + '">' + item.name + '</option>';
+            });
+            $('select#withmethod').html(_optionHtml);
+        })
+    });
+
+
     var cnstatus = false;
     var dateStatus = false;
     var cvcStatus = false;

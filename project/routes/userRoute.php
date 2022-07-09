@@ -55,44 +55,44 @@ Route::prefix('user')->group(function() {
 
     Route::get('/login', [UserLoginController::class,'showLoginForm'])->name('user.login');
     Route::post('/login', [UserLoginController::class,'login'])->name('user.login.submit');
-  
+
     Route::get('/otp', [OTPController::class,'showotpForm'])->name('user.otp');
     Route::post('/otp', [OTPController::class,'otp'])->name('user.otp.submit');
-  
+
     Route::get('/register', [RegisterController::class,'showRegisterForm'])->name('user.register');
     Route::post('/register', [RegisterController::class,'register'])->name('user.register.submit');
 
     Route::get('/domain-register/{id}', [RegisterController::class,'showDomainRegisterForm'])->name('user.domain.register');
     Route::post('/domain-register/{id}', [RegisterController::class,'domainRegister'])->name('user.domain.register.submit');
 
-    Route::get('/register/verify/{token}', [RegisterController::class,'token'])->name('user.register.token');  
-  
+    Route::get('/register/verify/{token}', [RegisterController::class,'token'])->name('user.register.token');
+
     Route::group(['middleware' => ['otp','banuser']],function () {
-  
+
       Route::get('/dashboard', [UserController::class,'index'])->name('user.dashboard');
       Route::get('/username/{number}', [UserController::class,'username'])->name('user.username');
       Route::get('/transactions', [UserController::class,'transaction'])->name('user.transaction');
       Route::get('/transactions-export', [UserController::class,'transactionExport'])->name('user.transaction-export');
       Route::get('/transactions-pdf', [UserController::class,'transactionPDF'])->name('user.transaction-pdf');
       Route::get('/transaction/details/{id}', [UserController::class,'trxDetails'])->name('user.trxDetails');
-      
-      Route::get('/export-pdf', [UserController::class,'generatePDF'])->name('user.export.pdf'); 
-  
+
+      Route::get('/export-pdf', [UserController::class,'generatePDF'])->name('user.export.pdf');
+
       Route::get('/two-factor', [UserController::class,'showTwoFactorForm'])->name('user.show2faForm');
       Route::post('/createTwoFactor', [UserController::class,'createTwoFactor'])->name('user.createTwoFactor');
       Route::post('/disableTwoFactor', [UserController::class,'disableTwoFactor'])->name('user.disableTwoFactor');
 
       Route::post('check-receiver', [TransferController::class,'checkReceiver'])->name('user.check.receiver');
-      
-      Route::get('/profile', [UserController::class,'profile'])->name('user.profile.index'); 
-      Route::post('/profile', [UserController::class,'profileupdate'])->name('user.profile.update'); 
-  
+
+      Route::get('/profile', [UserController::class,'profile'])->name('user.profile.index');
+      Route::post('/profile', [UserController::class,'profileupdate'])->name('user.profile.update');
+
       Route::get('/forgot', [ForgotController::class,'showforgotform'])->name('user.forgot');
-      Route::post('/forgot', [ForgotController::class,'forgot'])->name('user.forgot.submit');  
-  
+      Route::post('/forgot', [ForgotController::class,'forgot'])->name('user.forgot.submit');
+
       Route::get('/kyc-form', [KYCController::class,'kycform'])->name('user.kyc.form');
       Route::post('/kyc-form', [KYCController::class,'kyc'])->name('user.kyc.submit');
-  
+
       Route::group(['middleware'=>'kyc:Loan'],function(){
         Route::get('/loans', [UserLoanController::class,'index'])->name('user.loans.index');
         Route::get('/pending-loans', [UserLoanController::class,'pending'])->name('user.loans.pending');
@@ -104,7 +104,7 @@ Route::prefix('user')->group(function() {
         Route::post('/loan-request', [UserLoanController::class,'loanRequest'])->name('user.loan.request');
         Route::get('/loan-logs/{id}', [UserLoanController::class,'log'])->name('user.loans.logs');
       });
-  
+
       Route::get('/dps', [UserDpsController::class,'index'])->name('user.dps.index');
       Route::get('/running-dps', [UserDpsController::class,'running'])->name('user.dps.running');
       Route::get('/matured-dps', [UserDpsController::class,'matured'])->name('user.dps.matured');
@@ -112,18 +112,18 @@ Route::prefix('user')->group(function() {
       Route::get('/dps-plan/{id}', [UserDpsController::class,'planDetails'])->name('user.dps.planDetails');
       Route::post('/dps-submit', [UserDpsController::class,'dpsSubmit'])->name('user.loan.dpsSubmit');
       Route::get('/dps-logs/{id}', [UserDpsController::class,'log'])->name('user.dps.logs');
-  
+
       Route::get('/fdr', [UserFdrController::class,'index'])->name('user.fdr.index');
       Route::get('/running-fdr', [UserFdrController::class,'running'])->name('user.fdr.running');
       Route::get('/closed-fdr', [UserFdrController::class,'closed'])->name('user.fdr.closed');
       Route::get('/fdr-plan', [UserFdrController::class,'fdrPlan'])->name('user.fdr.plan');
       Route::post('/fdr-amount', [UserFdrController::class,'fdrAmount'])->name('user.fdr.amount');
       Route::post('/fdr-request', [UserFdrController::class,'fdrRequest'])->name('user.fdr.request');
-      
+
       Route::get('/merchant/generate-qrcode', [MerchantController::class,'generateQR'])->name('user.merchant.qr');
       Route::get('/merchant/download-qr/{email}',  [MerchantController::class,'downloadQR'])->name('user.merchant.download.qr');
       Route::get('/merchant/api-key',  [MerchantController::class,'apiKeyForm'])->name('user.merchant.api.key.form');
-      
+
 
       Route::group(['middleware'=>'kyc:Request Money'],function(){
         Route::get('/money-request', [MoneyRequestController::class,'index'])->name('user.money.request.index');
@@ -134,14 +134,14 @@ Route::prefix('user')->group(function() {
         Route::post('/request/money/cancel/{id}', [MoneyRequestController::class,'cancel'])->name('user.request.money.cancel');
         Route::get('/money-request/details/{id}', [MoneyRequestController::class,'details'])->name('user.money.request.details');
       });
-      
+
        //exchange money
       Route::group(['middleware'=>'kyc:Exchange'],function(){
         Route::get('exchange-money',   [ExchangeMoneyController::class,'exchangeForm'])->name('user.exchange.money');
         Route::post('exchange-money',  [ExchangeMoneyController::class,'submitExchange']);
       });
       Route::get('exchange-money/history',  [ExchangeMoneyController::class,'exchangeHistory'])->name('user.exchange.history');
-      
+
        //invoice
        Route::group(['middleware'=>'kyc:Invoice'],function(){
           Route::get('create-invoice',   [ManageInvoiceController::class,'create'])->name('user.invoice.create');
@@ -153,13 +153,13 @@ Route::prefix('user')->group(function() {
         Route::get('create-voucher',   [VoucherController::class,'create'])->name('user.create.voucher');
         Route::post('create-voucher',   [VoucherController::class,'submit']);
       });
-      
+
        //escrow
       Route::group(['middleware'=>'kyc:Escrow'],function(){
         Route::get('make-escrow',   [EscrowController::class,'create'])->name('user.escrow.create');
         Route::post('make-escrow',   [EscrowController::class,'store']);
       });
-      
+
       //Reedem voucher
       Route::get('vouchers',  [VoucherController::class,'vouchers'])->name('user.vouchers');
       Route::get('reedem-voucher',  [VoucherController::class,'reedemForm'])->name('user.reedem.voucher');
@@ -188,21 +188,21 @@ Route::prefix('user')->group(function() {
       Route::post('escrow-dispute/{id}',   [EscrowController::class,'disputeStore']);
       Route::get('release-escrow/{id}',   [EscrowController::class,'release'])->name('user.escrow.release');
       Route::get('file-download/{id}',   [EscrowController::class,'fileDownload'])->name('user.escrow.file.download');
-  
+
       Route::group(['middleware'=>'kyc:Wire Transfer'],function(){
         Route::get('wire-transfer',[WireTransferController::class,'index'])->name('user.wire.transfer.index');
         Route::get('wire-transfer/create',[WireTransferController::class,'create'])->name('user.wire.transfer.create');
         Route::post('wire-transfer/store',[WireTransferController::class,'store'])->name('user.wire.transfer.store');
         Route::get('/wire-transfers/show/{id}', [WireTransferController::class,'show'])->name('user.wire.transfer.show');
       });
-  
+
       Route::group(['middleware'=>'kyc:Withdraw'],function(){
         Route::get('/withdraw', [WithdrawController::class,'index'])->name('user.withdraw.index');
         Route::get('/withdraw/create', [WithdrawController::class,'create'])->name('user.withdraw.create');
         Route::post('/withdraw/store', [WithdrawController::class,'store'])->name('user.withdraw.store');
         Route::get('/withdraw/{id}', [WithdrawController::class,'details'])->name('user.withdraw.details');
       });
-  
+
       Route::group(['middleware'=>'kyc:Transfer'],function(){
         Route::get('/send-money',[SendController::class,'create'])->name('send.money.create');
         Route::post('/send-money',[SendController::class,'store'])->name('send.money.store');
@@ -210,103 +210,104 @@ Route::prefix('user')->group(function() {
         Route::get('/send/money/cancle',[SendController::class,'cancle'])->name('user.send.money.cancle');
         Route::get('/send-money/{number}',[SendController::class,'savedUser'])->name('send.money.savedUser');
         Route::post('/save-account',[SendController::class,'saveAccount'])->name('user.save.account');
-    
+
         Route::get('tranfer-logs',[TransferLogController::class,'index'])->name('tranfer.logs.index');
-        
+
         Route::get('/other-bank',[UserOtherBankController::class,'index'])->name('user.other.bank');
         Route::get('/other-bank/{id}',[UserOtherBankController::class,'othersend'])->name('user.other.send');
         Route::post('/other-bank/store', [UserOtherBankController::class,'store'])->name('user.other.send.store');
-    
+
         Route::get('/beneficiaries', [BeneficiaryController::class,'index'])->name('user.beneficiaries.index');
         Route::get('/beneficiaries/create', [BeneficiaryController::class,'create'])->name('user.beneficiaries.create');
         Route::post('/beneficiaries/store', [BeneficiaryController::class,'store'])->name('user.beneficiaries.store');
         Route::get('/beneficiaries/show/{id}', [BeneficiaryController::class,'show'])->name('user.beneficiaries.show');
       });
-  
+
       Route::get('/package',[PricingPlanController::class,'index'])->name('user.package.index');
       Route::get('/package/subscription/{id}',[PricingPlanController::class,'subscription'])->name('user.package.subscription');
-  
-  
+
+
       Route::get('/deposits',[DepositController::class,'index'])->name('user.deposit.index');
       Route::get('/deposit/create',[DepositController::class,'create'])->name('user.deposit.create');
-  
+      Route::POST('/deposit/gateway',[DepositController::class,'gateway'])->name('user.deposit.gateway');
+
       Route::post('/deposit/stripe-submit', [StripeController::class,'store'])->name('deposit.stripe.submit');
-  
+
       Route::post('/deposit/paystack/submit', [PaystackController::class,'store'])->name('deposit.paystack.submit');
-  
+
       Route::post('/paypal-submit', [PaypalController::class,'store'])->name('deposit.paypal.submit');
       Route::get('/paypal/deposit/notify', [PaypalController::class,'notify'])->name('deposit.paypal.notify');
       Route::get('/paypal/deposit/cancle', [PaypalController::class,'cancle'])->name('deposit.paypal.cancle');
-  
+
       Route::post('/instamojo-submit',[InstamojoController::class,'store'])->name('deposit.instamojo.submit');
       Route::get('/instamojo-notify',[InstamojoController::class,'notify'])->name('deposit.instamojo.notify');
-  
+
       Route::post('/deposit/paytm-submit', [PaytmController::class,'store'])->name('deposit.paytm.submit');
       Route::post('/deposit/paytm-callback', [PaytmController::class,'paytmCallback'])->name('deposit.paytm.notify');
-  
+
       Route::post('/deposit/razorpay-submit', [RazorpayController::class,'store'])->name('deposit.razorpay.submit');
       Route::post('/deposit/razorpay-notify', [RazorpayController::class,'notify'])->name('deposit.razorpay.notify');
-  
+
       Route::post('/deposit/molly-submit', [MollieController::class,'store'])->name('deposit.molly.submit');
       Route::get('/deposit/molly-notify', [MollieController::class,'notify'])->name('deposit.molly.notify');
-  
+
       Route::post('/deposit/flutter/submit', [FlutterwaveController::class,'store'])->name('deposit.flutter.submit');
       Route::post('/deposit/flutter/notify', [FlutterwaveController::class,'notify'])->name('deposit.flutter.notify');
-  
+
       Route::post('/authorize-submit', [AuthorizeController::class,'store'])->name('deposit.authorize.submit');
       Route::post('/deposit/manual-submit', [ManualController::class,'store'])->name('deposit.manual.submit');
-  
-      
+
+
       Route::post('/subscription/stripe-submit', [SubStripeController::class,'store'])->name('subscription.stripe.submit');
       Route::post('/subscription/free', [SubscriptionController::class,'store'])->name('subscription.free.submit');
-  
+
       Route::post('/subscription/paypal-submit', [SubPaypalController::class,'store'])->name('subscription.paypal.submit');
       Route::get('/subscription/paypal/deposit/notify', [SubPaypalController::class,'notify'])->name('subscription.paypal.notify');
       Route::get('/subscription/paypal/deposit/cancle', [SubPaypalController::class,'cancle'])->name('subscription.paypal.cancle');
-  
+
       Route::post('/subscription/instamojo-submit',[SubInstamojoController::class,'store'])->name('subscription.instamojo.submit');
       Route::get('/subscription/instamojo-notify',[SubInstamojoController::class,'notify'])->name('subscription.instamojo.notify');
-  
+
       Route::post('/subscription/paytm-submit', [SubPaytmController::class,'store'])->name('subscription.paytm.submit');
       Route::post('/subscription/paytm-callback', [SubPaytmController::class,'paytmCallback'])->name('subscription.paytm.notify');
-  
+
       Route::post('/subscription/razorpay-submit', [SubRazorpayController::class,'store'])->name('subscription.razorpay.submit');
       Route::post('/subscription/razorpay-notify', [SubRazorpayController::class,'notify'])->name('subscription.razorpay.notify');
-      
+
       Route::post('/subscription/molly-submit', [SubMollieController::class,'store'])->name('subscription.molly.submit');
       Route::get('/subscription/molly-notify', [SubMollieController::class,'notify'])->name('subscription.molly.notify');
-      
+
       Route::post('/subscription/flutter/submit', [SubFlutterwaveController::class,'store'])->name('subscription.flutter.submit');
       Route::post('/subscription/flutter/notify', [SubFlutterwaveController::class,'notify'])->name('subscription.flutter.notify');
-  
+
       Route::post('/subscription/authorize-submit', [SubAuthorizeController::class,'store'])->name('subscription.authorize.submit');
-  
+
       Route::get('/referrals',[ReferralController::class,'referred'])->name('user.referral.index');
       Route::get('/referral-commissions',[ReferralController::class,'commissions'])->name('user.referral.commissions');
       Route::get('/invite-user',[ReferralController::class,'invite_user'])->name('user.referral.invite-user');
       Route::post('/invite-user',[ReferralController::class,'invite_send'])->name('user.referral.invite-user');
 
-      
+
       Route::get('/affilate/code', [UserController::class,'affilate_code'])->name('user-affilate-code');
-  
-  
+
+
       Route::get('/notf/show', 'User\NotificationController@user_notf_show')->name('customer-notf-show');
       Route::get('/notf/count','User\NotificationController@user_notf_count')->name('customer-notf-count');
       Route::get('/notf/clear','User\NotificationController@user_notf_clear')->name('customer-notf-clear');
-  
+
       Route::get('admin/messages', [MessageController::class,'adminmessages'])->name('user.message.index');
       Route::get('admin/message/{id}', [MessageController::class,'adminmessage'])->name('user.message.show');
       Route::post('admin/message/post', [MessageController::class,'adminpostmessage'])->name('user.message.store');
-      Route::get('admin/message/{id}/delete', [MessageController::class,'adminmessagedelete'])->name('user.message.delete1');   
+      Route::get('admin/message/{id}/delete', [MessageController::class,'adminmessagedelete'])->name('user.message.delete1');
       Route::post('admin/user/send/message', [MessageController::class,'adminusercontact'])->name('user.send.message');
       Route::get('admin/message/load/{id}', [MessageController::class,'messageload'])->name('user.message.load');
-      
-  
+
+
       Route::get('/change-password', [UserController::class,'changePasswordForm'])->name('user.change.password.form');
       Route::post('/change-password', [UserController::class,'changePassword'])->name('user.change.password');
     });
-  
-  
+
+
     Route::get('/logout', [UserLoginController::class,'logout'])->name('user.logout');
-  
+
   });

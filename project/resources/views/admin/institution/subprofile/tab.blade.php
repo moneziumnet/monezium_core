@@ -9,5 +9,8 @@
         <li class="nav-item">
             <a class="nav-link {{menu('admin.subinstitution.banks')}}" id="banks" href="{{route('admin.subinstitution.banks',$data->id) }}" role="button">Banks</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link {{menu('admin.subinstitution.paymentgateways')}}" id="paymentgateways" href="{{route('admin.subinstitution.paymentgateways',$data->id) }}" role="button">Payment Gateways</a>
+        </li>
     </ul>
 </div>
