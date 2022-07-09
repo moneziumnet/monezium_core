@@ -9,6 +9,7 @@ use App\Models\Currency;
 use App\Models\Transaction;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Auth;
 
 class ManageInvoiceController extends Controller
 {
@@ -16,7 +17,7 @@ class ManageInvoiceController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -55,7 +56,7 @@ class ManageInvoiceController extends Controller
             'item'       => 'required',
             'item.*'     => 'required',
             'amount'     => 'required',
-            'amount.*'   => 'required|numeric|gt:0' 
+            'amount.*'   => 'required|numeric|gt:0'
         ]);
 
         $charge = charge('create-invoice');
@@ -85,7 +86,7 @@ class ManageInvoiceController extends Controller
             $invItem->amount	 = $amount;
             $invItem->save();
         }
-     
+
         $route = route('invoice.view',encrypt($invoice->number));
         @email([
 
@@ -94,14 +95,14 @@ class ManageInvoiceController extends Controller
             'message' => trans('Hello')." $invoice->invoice_to,<br/></br>".
 
                 trans('You have pending payment of invoice')." <b>$invoice->number</b>.".trans('Please click the below link to complete your payment') .".<br/></br>".
-                
+
                 trans('Invoice details').": <br/></br>".
-                
+
                 trans('Amount')  .":  $amount $currency->code <br/>".
                 trans('Payment Link')." :  <a href='$route' target='_blank'>".trans('Click To Payment')."</a><br/>".
                 trans('Time')." : $invoice->created_at,
 
-            " 
+            "
         ]);
 
         return back()->with('success','Invoice has been created');
@@ -128,7 +129,7 @@ class ManageInvoiceController extends Controller
     {
         $invoice = Invoice::findOrFail($id);
         $data['invoice'] = $invoice;
-        
+
         if($invoice->status == 1){
             return back()->with('error','Sorry! can\'t edit published invoice.');
         }
@@ -153,7 +154,7 @@ class ManageInvoiceController extends Controller
             'item'       => 'required',
             'item.*'     => 'required',
             'amount'     => 'required',
-            'amount.*'   => 'required|numeric|gt:0' 
+            'amount.*'   => 'required|numeric|gt:0'
         ],['amount.*.gt'=>'Amount must be greater than 0']);
 
         $charge = charge('create-invoice');
@@ -189,7 +190,7 @@ class ManageInvoiceController extends Controller
     {
         $invoice = Invoice::findOrFail($request->id);
         if(!$invoice) return response(['error'=>'Invalid request']);
-        
+
         if($invoice->payment_status == 1){
             $invoice->payment_status = 0;
             $invoice->update();
@@ -199,14 +200,14 @@ class ManageInvoiceController extends Controller
             $invoice->update();
             return response(['paid'=>'Payment status changed to paid']);
         }
-        
-        
+
+
     }
     public function publishStatus(Request $request)
     {
         $invoice = Invoice::findOrFail($request->id);
         if(!$invoice) return response(['error'=>'Invalid request']);
-        
+
         if($invoice->status == 1){
             $invoice->status = 0;
             $invoice->update();
@@ -218,7 +219,7 @@ class ManageInvoiceController extends Controller
         }
 
     }
-       
+
     public function cancel($id)
     {
         $invoice = Invoice::findOrFail($id);
@@ -243,6 +244,7 @@ class ManageInvoiceController extends Controller
     public function view($number)
     {
         $data['invoice'] = Invoice::where('number',$number)->firstOrFail();
+        $data['user'] = Auth::user();
         return view('user.invoice.invoice',$data);
     }
 
@@ -252,7 +254,7 @@ class ManageInvoiceController extends Controller
         $currency = $invoice->currency;
         $amount = amount($invoice->final_amount,$currency->type,3);
         $route = route('invoice.view',encrypt($invoice->number));
-     
+
         @email([
 
             'email'   => $invoice->email,
@@ -260,14 +262,14 @@ class ManageInvoiceController extends Controller
             'message' => trans('Hello')." $invoice->invoice_to,<br/></br>".
 
                 trans('You have pending payment of invoice')." <b>$invoice->number</b>.".trans('Please click the below link to complete your payment') .".<br/></br>".
-                
+
                 trans('Invoice details').": <br/></br>".
-                
+
                 trans('Amount')  .":  $amount $currency->code <br/>".
                 trans('Payment Link')." :  <a href='$route' target='_blank'>".trans('Click To Payment')."</a><br/>".
                 trans('Time')." : $invoice->created_at,
 
-            " 
+            "
         ]);
 
         return back()->with('success','Invoice has been sent to the recipient');
@@ -337,7 +339,7 @@ class ManageInvoiceController extends Controller
             $trnx->save();
 
             $rcvWallet = Wallet::where('user_id',$invoice->user_id)->where('user_type',1)->where('currency_id',$invoice->currency_id)->first();
-        
+
             if(!$rcvWallet){
                 $rcvWallet =  Wallet::create([
                     'user_id'     => $invoice->user_id,
@@ -378,7 +380,7 @@ class ManageInvoiceController extends Controller
                 'charge' => amount($invoice->charge,$invoice->currency->type,2),
                 'date_time' => dateFormat($rcvTrnx->created_at)
             ],$invoice->user);
-            
+
             session()->forget('invoice');
             return redirect(route('user.dashboard'))->with('success','Payment completed');
         }

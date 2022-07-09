@@ -29,16 +29,16 @@
           <div class="col-6">
             <p class="h3">{{__('From')}}</p>
             <address>
-              {{@$contact->content->address}}<br>
-              {{@$contact->content->email}}<br>
-              {{@$contact->content->phone}}<br>
+              {{@$user->address}}<br>
+              {{@$user->email}}<br>
+              {{@$user->phone}}<br>
             </address>
           </div>
           <div class="col-6 text-end">
             <p class="h3">{{__('To')}}</p>
             <address>
                 {{$invoice->address}}<br>
-                {{$invoice->email}} 
+                {{$invoice->email}}
             </address>
           </div>
           <div class="col-12 my-5">
@@ -63,13 +63,13 @@
           </tr>
           @endforeach
          <tr>
-             
+
              <td colspan="12" class="text-end fw-bold">{{__('Total : '.$invoice->currency->symbol.numFormat($invoice->final_amount))}}</td>
          </tr>
         </table>
         <p class="text-muted text-center mt-5">{{__('Thank you very much for doing business with us. We look forward to working with
             you again!')}} <br> <small class="mt-5">{{__('All right reserved ')}} <a href="{{url('/')}}">{{$gs->title}}</a></small></p>
-            
+
       </div>
     </div>
 </div>
