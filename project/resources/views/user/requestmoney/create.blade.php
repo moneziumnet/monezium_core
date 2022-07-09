@@ -35,11 +35,9 @@
                           <label class="form-label required">{{__('Select Wallet')}}</label>
                           <select name="wallet_id" id="wallet_id" class="form-control" required>
                             <option value="">Select</option>
-                            @if(!empty($wallets))
-                              @foreach($wallets as $wallet)
-                              <option value="{{$wallet->currency->id}}">{{$wallet->currency->code}} --  ({{amount($wallet->balance,$wallet->currency->type,2)}})</option>
-                              @endforeach
-                            @endif
+                            @foreach(DB::table('currencies')->get() as $currency)
+                            <option value="{{$currency->id}}">{{$currency->code}}</option>
+                            @endforeach
                           </select>
 
                       </div>
