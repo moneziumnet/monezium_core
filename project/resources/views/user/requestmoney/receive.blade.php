@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -28,7 +28,7 @@
                   @include('includes.user.form-both')
                     @if (count($requests) == 0)
                         <h3 class="text-center py-5">{{__('No Request Money Data Found')}}</h3>
-                    @else 
+                    @else
                         <div class="table-responsive">
                             <table class="table table-vcenter table-mobile-md card-table">
                                 <thead>
@@ -122,15 +122,15 @@
         @csrf
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         <div class="modal-status bg-success"></div>
-  
+
         <div class="modal-body text-center py-4">
           <p class="text-center">{{ __("You are about to change the status.") }}</p>
           <p class="text-center">{{ __("Do you want to proceed?") }}</p>
         </div>
-  
+
         <div class="modal-footer">
           <a href="javascript:;" class="btn btn-secondary" data-bs-dismiss="modal">{{ __("Cancel") }}</a>
-          <button type="submit" class="btn shadow-none btn--success" data-bs-dismiss="modal">@lang('Proceed')</button>
+          <button type="submit" id="sendprocess" class="btn shadow-none btn--success" data-bs-dismiss="modal">@lang('Proceed')</button>
         </div>
       </form>
     </div>
@@ -144,15 +144,15 @@
         @csrf
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         <div class="modal-status bg-success"></div>
-  
+
         <div class="modal-body text-center py-4">
           <p class="text-center">{{ __("You are want to cancel this request money.") }}</p>
           <p class="text-center">{{ __("Do you want to proceed?") }}</p>
         </div>
-  
+
         <div class="modal-footer">
           <a href="javascript:;" class="btn btn-secondary" data-bs-dismiss="modal">{{ __("Cancel") }}</a>
-          <button type="submit" class="btn shadow-none btn--success" data-bs-dismiss="modal">@lang('Proceed')</button>
+          <button type="submit" id="closeprocess" class="btn shadow-none btn--success" data-bs-dismiss="modal">@lang('Proceed')</button>
         </div>
       </form>
     </div>
@@ -164,12 +164,18 @@
 @push('js')
   <script>
     'use strict';
-    
+
     $("#sendBtn").on('click',function(){
       $("#requestMoney").prop("action",$(this).data('href'))
     })
+    $("#sendprocess").on('click',function(){
+      $("#sendBtn").text("Processing ...");
+    })
     $("#cancelBtn").on('click',function(){
       $("#cancelRequestMoney").prop("action",$(this).data('href'))
+    })
+    $("#closeprocess").on('click',function(){
+      $("#cancelBtn").text("Processing ...");
     })
   </script>
 @endpush
