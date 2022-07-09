@@ -55,7 +55,7 @@ class OtherBankController extends Controller
         if($monthlySend > $bank_plan->monthly_send){
             return redirect()->back()->with('unsuccess','Monthly send limit over.');
         }
-        
+
 
         $gs = Generalsetting::first();
         $otherBank = OtherBank::whereId($request->other_bank_id)->first();
@@ -69,7 +69,7 @@ class OtherBankController extends Controller
             if($otherBank->min_limit > $request->amount){
                 return redirect()->back()->with('unsuccess','Request Amount should be greater than this');
             }
-    
+
             if($otherBank->max_limit < $request->amount){
                 return redirect()->back()->with('unsuccess','Request Amount should be less than this');
             }
@@ -96,7 +96,7 @@ class OtherBankController extends Controller
             if($otherBank->monthly_maximum_limit < $monthlyTransactions->sum('final_amount')){
                 return redirect()->back()->with('unsuccess','Your monthly limitation of transaction is over.');
             }
- 
+
             if($otherBank->monthly_total_transaction <= count($monthlyTransactions)){
                 return redirect()->back()->with('unsuccess','Your monthly number of transaction is over!');
             }
@@ -116,6 +116,7 @@ class OtherBankController extends Controller
             $data->cost = $cost;
             $data->amount = $request->amount;
             $data->final_amount = $finalAmount;
+            $data->description = $request->des;
             $data->status = 0;
             $data->save();
 
@@ -137,11 +138,11 @@ class OtherBankController extends Controller
             // $trans->txnid = $txnid;
             // $trans->user_id = $user->id;
             $trans->save();
-    
+
             // $user->decrement('balance',$finalAmount);
             // $currency = defaultCurr();
-            user_wallet_decrement(auth()->id(),$currency->id,$finalAmount); 
-            
+            user_wallet_decrement(auth()->id(),$currency->id,$finalAmount);
+
             return redirect()->back()->with('success','Money Send successfully.');
 
         }

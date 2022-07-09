@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -119,9 +119,14 @@
                             <input name="account_iban" id="account_iban" class="form-control" autocomplete="off" placeholder="{{__('Jhon Doe')}}" type="text" value="{{ $data->account_iban }}" min="1" required readonly>
                         </div>
 
-                        <div class="form-group mt-3">
+                        <div class="form-group mb-3 mt-3">
                             <label class="form-label required">{{__('Amount')}}</label>
-                            <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" value="{{ old('amount') }}" min="1" required>
+                            <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" step="any" value="{{ old('amount') }}" min="1" required>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label class="form-label required">{{__('Description')}}</label>
+                            <textarea name="des" id="des" class="form-control" autocomplete="off" placeholder="{{__('Please input description')}}" type="text" required></textarea>
                         </div>
 
                         <div class="form-footer">

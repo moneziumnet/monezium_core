@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -37,13 +37,13 @@
                                         <option value="">{{ __('Select Withdraw Method') }}</option>
                                         @foreach ($methods as $data)
                                             <option value="{{$data->id}}">{{$data->method}}</option>
-                                        @endforeach                    
+                                        @endforeach
                                     </select>
                                 </div>
 
                                 <div class="form-group mb-3 mt-3">
                                     <label class="form-label required">{{__('Withdraw Amount')}}</label>
-                                    <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" value="{{ old('amount') }}" min="1" required>
+                                    <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" step="any" value="{{ old('amount') }}" min="1" required>
                                 </div>
 
                                 <div class="form-group mb-3 ">
@@ -55,7 +55,7 @@
                                     <button type="submit" class="btn btn-primary w-100">{{__('Submit')}}</button>
                                 </div>
 
-                                
+
                             </form>
                         @endif
                 </div>
@@ -71,7 +71,7 @@
 
 <script>
     $(function(){
-        $('.withmethod').on('change',function () { 
+        $('.withmethod').on('change',function () {
             alert("ddd");
         });
     });

@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -34,7 +34,7 @@
                                 <option value="">{{ __('Select Bank') }}</option>
                                 @foreach ($banks as $key=>$bank)
                                     <option value="{{$bank->id}}" data-swift={{ $bank->swift_code }} data-currency="{{ $bank->currency->code }}" data-country="{{ $bank->country->name }}" data-routing={{ $bank->routing_number }}>{{$bank->title}}</option>
-                                @endforeach                    
+                                @endforeach
                             </select>
                         </div>
 
@@ -110,12 +110,12 @@
 
                         <div class="form-group mb-3 mt-3">
                             <label class="form-label required">{{__('Amount')}}</label>
-                            <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" value="{{ old('amount') }}" min="1" required>
+                            <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" step="any" value="{{ old('amount') }}" min="1" required>
                         </div>
                         @error('amount')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
-                        
+
 
                         <div class="form-group mb-3 ">
                             <label class="form-label">{{__('Note')}}</label>

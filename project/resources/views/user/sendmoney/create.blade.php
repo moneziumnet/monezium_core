@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -37,12 +37,12 @@
                             @includeIf('includes.flash')
                             <form action="{{route('send.money.store')}}" method="POST" enctype="multipart/form-data">
                                 @csrf
-    
+
                                 <div class="form-group mb-3 mt-3">
                                     <label class="form-label required">{{__('Account Number')}}</label>
                                     <input name="account_number" id="account_number" class="form-control" autocomplete="off" placeholder="{{__('000.000.0000')}}" type="text" value="{{ $savedUser ? $savedUser->account_number : '' }}" min="1" required>
                                 </div>
-                               
+
                                 <div class="form-group mb-3 mt-3">
                                     <label class="form-label required">{{__('Select Wallet')}}</label>
                                     <select name="wallet_id" id="wallet_id" class="form-control" required>
@@ -53,24 +53,24 @@
                                         @endforeach
                                       @endif
                                     </select>
-                                    
+
                                 </div>
-    
+
                                 <div class="form-group mb-3 mt-3">
                                     <label class="form-label required">{{__('Account Name')}}</label>
                                     <input name="account_name" id="account_name" class="form-control" autocomplete="off" placeholder="{{__('Jhon Doe')}}" type="text" value="{{ $savedUser ? $savedUser->name : '' }}" min="1" required readonly>
                                 </div>
-    
+
                                 <div class="form-group mt-3">
                                     <label class="form-label required">{{__('Amount')}}</label>
-                                    <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" value="{{ old('amount') }}" min="1" required>
+                                    <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" step="any" value="{{ old('amount') }}" min="1" required>
                                 </div>
-                                
+
                                 <div class="form-group mt-3">
                                     <label class="form-label required">{{__('Description')}}</label>
                                     <textarea name="description" id="description" class="form-control" placeholder="{{__('Enter description')}}" rows="5" required></textarea>
                                 </div>
-    
+
                                 <div class="form-footer">
                                     <button type="submit" class="btn btn-primary w-100">{{__('Submit')}}</button>
                                 </div>
@@ -80,7 +80,7 @@
                           <div class="row g-3">
                             @if (count($saveAccounts) == 0)
                                 <p class="text-center">{{__('NO SAVED ACCOUNT FOUND')}}</p>
-                              @else 
+                              @else
                               @foreach ($saveAccounts as $key=>$data)
                               @php
                                   $reciver = App\Models\User::whereId($data->receiver_id)->first();
@@ -121,10 +121,10 @@
 @push('js')
 <script>
   'use strict';
-  
+
   $("#account_name").on('click',function(){
     let accountNumber = $("#account_number").val();
-    
+
     let url = `${mainurl}/user/username/${accountNumber}`;
 
     $.get(url, function(data){

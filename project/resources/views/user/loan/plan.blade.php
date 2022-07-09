@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -23,7 +23,7 @@
               <div class="card">
                   <h3 class="text-center">{{__('NO LOAN PLAN FOUND')}}</h3>
               </div>
-            @else 
+            @else
 
             @foreach ($plans as $key=>$data)
                 <div class="col-sm-6 col-lg-4 col-xl-4">
@@ -103,12 +103,12 @@
             <div class="modal-body">
               <div class="form-group">
                 <label class="form-label required">{{__('Amount')}}</label>
-                <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" value="{{ old('amount') }}" min="1" required>
+                <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" step="any" value="{{ old('amount') }}" min="1" required>
               </div>
-    
+
               <input type="hidden" name="planId" id="planId" value="">
             </div>
-    
+
             <div class="modal-footer">
                 <button type="submit" id="submit-btn" class="btn btn-primary">{{ __('Submit') }}</button>
             </div>
@@ -122,7 +122,7 @@
 
 <script>
     'use strict';
-    
+
     $('.apply-loan').on('click',function(){
         let id = $(this).data('id');
         $('#planId').val(id);

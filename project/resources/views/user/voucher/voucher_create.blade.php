@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -28,9 +28,9 @@
                         @csrf
                         <div class="form-group">
                             <label class="form-label required">{{__('Amount')}}<code class="limit">{{__('min : '.$charge->minimum.' '.$gs->currency_code)}} -- {{__('max : '.$charge->maximum.' '.$gs->currency_code)}}</code> </label>
-                            <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" value="{{ old('amount') }}" min="1" required>
+                            <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" step="any" value="{{ old('amount') }}" min="1" required>
                         </div>
-                        
+
                         <div class="form-group">
                             <label class="form-label required">{{__('Select Wallet')}}</label>
                             <select class="form-select wallet shadow-none" name="wallet_id">
@@ -40,12 +40,12 @@
                                 @endforeach
                             </select>
                         </div>
-                       
+
                         <div class="form-footer">
                             <button type="submit" class="btn btn-primary w-100">{{__('Submit')}}</button>
                         </div>
 
-                        
+
                     </form>
                 </div>
             </div>
@@ -120,16 +120,16 @@
 
                         <div class="col-md-12 my-3 info d-none">
                             <ul class="list-group mt-2">
-                       
+
                                 <li class="list-group-item d-flex justify-content-between font-weight-bold">@lang('Amount : ')<span class="exAmount"></span></li>
 
 
                                 <li class="list-group-item d-flex justify-content-between font-weight-bold">@lang('Total Charge : ')<span class="exCharge"></span></li>
-                                
+
                                 <li class="list-group-item d-flex justify-content-between font-weight-bold">@lang('Total Amount : ')<span class="total_amount"></span></li>
                             </ul>
                         </div>
-                      
+
                         <div class="col-md-12 mb-3">
                             <div class="form-label">&nbsp;</div>
                             <a href="#" class="btn btn-primary w-100 create">
@@ -146,7 +146,7 @@
                                 <div class="modal-body text-center py-4">
                                 <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
                                 <h3>@lang('Confirm Voucher')</h3>
-                               
+
                                 </div>
                                 <div class="modal-footer">
                                 <div class="w-100">
@@ -220,7 +220,7 @@
 @push('js')
     <script>
         'use strict';
-        function limit() { 
+        function limit() {
             var selected = $('.wallet option:selected')
             var rate = selected.data('rate')
 
@@ -233,7 +233,7 @@
             return {'minLimit': minLimit,'maxLimit': maxLimit};
         }
 
-        function charge() { 
+        function charge() {
             var selected = $('.wallet option:selected')
             var rate = selected.data('rate')
             var amount = $('#amount').val()
@@ -247,8 +247,8 @@
             return {'final':finalCharge,'fixed':fixed,'percent':percentCharge};
         }
 
-        $('.wallet').on('change',function () { 
-           
+        $('.wallet').on('change',function () {
+
             var code = $('.wallet option:selected').data('code')
             var minLimit = limit().minLimit;
             var maxLimit = limit().maxLimit;
@@ -259,7 +259,7 @@
             if($('#amount').val() == ''){
               toast('error','@lang('Please provide the amount first')')
               return false
-            } 
+            }
 
             if(minLimit > $('#amount').val() || maxLimit < $('#amount').val()){
                 toast('error','@lang('Please follow the limit')')
@@ -277,11 +277,11 @@
 
         })
 
-        $('.create').on('click',function () { 
+        $('.create').on('click',function () {
             if($('#amount').val() == ''){
               toast('error','@lang('Please provide the amount first')')
               return false
-            } 
+            }
             if($('.wallet option:selected').val() == ''){
               toast('error','@lang('Please select the wallet.')')
               return false

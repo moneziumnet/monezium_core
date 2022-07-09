@@ -18,6 +18,7 @@ class BalanceTransfer extends Model
         'amount',
         'final_amount',
         'type',
+        'description',
         'status'
     ];
 

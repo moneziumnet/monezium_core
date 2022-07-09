@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -41,7 +41,7 @@
                               @endforeach
                             @endif
                           </select>
-                          
+
                       </div>
 
                         <div class="form-group mb-3 mt-3">
@@ -51,7 +51,7 @@
 
                         <div class="form-group mb-3">
                             <label class="form-label required">{{__('Request Amount')}}</label>
-                            <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" value="{{ old('amount') }}" min="1" required>
+                            <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" step="any" value="{{ old('amount') }}" min="1" required>
                         </div>
 
                         <div class="form-group mb-3 ">
@@ -63,7 +63,7 @@
                             <button type="submit" class="btn btn-primary submit-btn w-100" disabled>{{__('Submit')}}</button>
                         </div>
 
-                        
+
                     </form>
                 </div>
             </div>
@@ -79,9 +79,9 @@
   'use strict';
     $("#account_name").on('click',function(){
       let accountNumber = $("#account_number").val();
-      
+
       let url = `${mainurl}/user/username/${accountNumber}`;
-  
+
       $.get(url, function(data){
         $("#account_name").val(data);
         $(".submit-btn").prop( "disabled", false );
