@@ -36,7 +36,7 @@
     </div>
   </li>
   @endif
-  
+
   @if(getModule('Loan Management'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#loan" aria-expanded="true" aria-controls="collapseTable">
@@ -180,14 +180,14 @@
   @endif
 
 
-  <!-- @if(getModule('Transactions'))
+@if(getModule('Transactions'))
   <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.transactions.index') }}">
       <i class="fas fa-chart-line"></i>
       <span>{{ __('Transactions') }}</span>
     </a>
   </li>
-  @endif -->
+  @endif
 
   @if(getModule('Deposits'))
   <li class="nav-item">
@@ -382,7 +382,7 @@
       <span>{{ __('Subscribers') }}</span></a>
   </li>
   @endif
- 
+
 
 @endif
 

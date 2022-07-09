@@ -11,7 +11,7 @@
         </div>
 		<!-- <div class="col-auto ms-auto d-print-none">
 			<div class="btn-list">
-  
+
 			  <a href="{{ route('user.export.pdf') }}" class="btn btn-primary d-none d-sm-inline-block">
 				<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
 				{{__('Export pdf')}}
@@ -35,20 +35,20 @@
           </div>
             <div class="col-12">
                 <div class="card">
-                  
+
 					<div class="table-responsive">
               
 						<table class="table card-table table-vcenter text-nowrap datatable">
 						  <thead>
 							<tr>
-							  <th class="w-1">@lang('No'). 
+							  <th class="w-1">@lang('No').
 								<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-sm text-dark icon-thick" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="6 15 12 9 18 15" /></svg>
 							  </th>
 								<th>@lang('Date')</th>
 								<th>@lang('Transaction ID')</th>
 								<th>@lang('Remark')</th>
 								<th>@lang('Amount')</th>
-								<th>@lang('Details')</th>
+								<th class="text-end"  style="padding-right: 28px;">@lang('Details')</th>
 							  <th></th>
 							</tr>
 						  </thead>
@@ -68,7 +68,7 @@
 								<span class="badge badge-dark">{{ucwords(str_replace('_',' ',$data->remark))}}</span>
 								</td>
 								<td data-label="@lang('Amoun6t')">
-									<span class="{{$data->type == '+' ? 'text-success':'text-danger'}}">{{$data->type}} {{amount($data->amount,$data->currency->type,2)}} {{$data->currency->code}}</span> 
+									<span class="{{$data->type == '+' ? 'text-success':'text-danger'}}">{{$data->type}} {{amount($data->amount,$data->currency->type,2)}} {{$data->currency->code}}</span>
 								</td>
 								<td data-label="@lang('Details')" class="text-end">
 									<button class="btn btn-primary btn-sm details" data-data="{{$data}}">@lang('Details')</button>
@@ -77,7 +77,7 @@
 							@empty
 							  <p>@lang('NO DATA FOUND')</p>
 							@endforelse
-		  
+
 						  </tbody>
 						</table>
 					  </div>
@@ -97,7 +97,7 @@
             <h3>@lang('Transaction Details')</h3>
             <p class="trx_details"></p>
             <ul class="list-group mt-2">
-               
+
             </ul>
             </div>
             <div class="modal-footer">
@@ -117,11 +117,11 @@
 @push('js')
 <script>
       'use strict';
-   
-      $('.details').on('click',function () { 
+
+      $('.details').on('click',function () {
         var url = "{{url('user/transaction/details/')}}"+'/'+$(this).data('data').id
         $('.trx_details').text($(this).data('data').details)
-        $.get(url,function (res) { 
+        $.get(url,function (res) {
           if(res == 'empty'){
             $('.list-group').html('<p>@lang('No details found!')</p>')
           }else{
