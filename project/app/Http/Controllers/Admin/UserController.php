@@ -320,7 +320,13 @@ class UserController extends Controller
             $trnx->details     = trans('Upgrade Plan');
             $trnx->save();
 
-            User::where('id',$id)->update(['bank_plan_id' => $plan->id]);
+            $user = User::findorFail($id);
+            if ($user) {
+                $user->bank_plan_id = $plan->$id;
+                $user->plan_end_date = $user->plan_end_date->addDays($plan->days);
+                $user->update();
+            }
+
             return response()->json(array('success' => 'Customer\'s Plan Upgrade Successfully.'));
         }
 
