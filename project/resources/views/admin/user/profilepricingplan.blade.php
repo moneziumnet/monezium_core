@@ -35,8 +35,8 @@
                       <div class="row align-items-center">
                         <div class="col mr-2">
                           <div class="text-xs font-weight-bold text-uppercase mb-1"> </div>
-                          <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">Price {{ showprice($plan->price,$currency) }}  </div>
-                          <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">Duration {{$plan->duration}} {{$plan->durationtype}}  </div>
+                          <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">Price {{ showprice($plan->amount,$currency) }}  </div>
+                          <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">Duration {{$plan->days}} days  </div>
                         </div>
                       </div>
                     </div>
@@ -54,14 +54,17 @@
              
               <div class="col-xl-12 col-md-6 mb-4">
                 <form class="geniusform" action="{{ route('admin-user-upgrade-plan',$data->id) }}" method="POST" enctype="multipart/form-data">
-                  @include('includes.admin.form-both')
-                  {{ csrf_field() }}
+                
+                @include('includes.admin.form-both')
+                
+                {{ csrf_field() }}
+
                     <div class="form-group">
                       <label for="inp-name">{{ __('Subscription Type') }}</label>
                         <select class="form-control" name="subscription_type" id="subscription_type">
                           <option value="">{{ __('Select Subscription Type') }}</option>
                           @foreach($plans as $plan)
-                          <option value="{{ $plan->id }}">{{ $plan->name }} {{ showprice($plan->price,$currency) }}</option>
+                          <option value="{{ $plan->id }}">{{ $plan->title }} {{ showprice($plan->amount,$currency)}} for {{$plan->days}} days</option>
                           @endforeach
                         </select>
                     </div>
