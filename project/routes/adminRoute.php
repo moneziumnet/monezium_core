@@ -206,6 +206,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/user/{id}/documents', [UserController::class, 'profileDocuments'])->name('admin-user-documents');
     Route::get('/user/{id}/settings', [UserController::class, 'profileSettings'])->name('admin-user-settings');
     Route::get('/user/{id}/pricingplan', [UserController::class, 'profilePricingplan'])->name('admin-user-pricingplan');
+    Route::post('/user/{id}/admin-user-upgrade-plan', [UserController::class, 'upgradePlan'])->name('admin-user-upgrade-plan');
     Route::get('/user/{id}/transactions', [UserController::class, 'profileTransctions'])->name('admin-user-transactions');
     Route::get('/user/{id}/banks', [UserController::class, 'profileBanks'])->name('admin-user-banks');
     Route::get('/user/{id}/modules', [UserController::class, 'profileModules'])->name('admin-user-modules');

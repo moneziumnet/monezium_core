@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\Follow;
 use App\Models\Rating;
 use App\Models\Wallet;
+use App\Models\Plan;
 use App\Models\UserDps;
 use App\Models\UserFdr;
 use App\Models\Currency;
@@ -277,8 +278,53 @@ class UserController extends Controller
         public function profilePricingplan($id)
         {
             $data = User::findOrFail($id);
+            $plans = Plan::where('id','!=',$data->bank_plan_id)->get();
+            $plan = Plan::findOrFail($data->bank_plan_id);
             $data['data'] = $data;
+            $data['plan'] = $plan;
+            $data['plans'] = $plans;
             return view('admin.user.profilepricingplan',$data);
+        }
+
+        public function upgradePlan(Request $request, $id)
+        {
+            $rules = [
+                'subscription_type' => 'required',
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
+            }
+            $currency_id = Currency::whereIsDefault(1)->first()->id;
+            $userBalance = user_wallet_balance($id,$currency_id);
+            $subscription_type_id = $request->input('subscription_type');
+            $plan = Plan::findOrFail($subscription_type_id);
+
+            if($plan->price>$userBalance)
+            {
+                return response()->json(array('errors' => 'Customer Balance not Available.'));
+            }
+
+            $trnx              = new Transaction();
+            $trnx->txnid        = str_rand();
+            $trnx->user_id     = $id;
+            $trnx->user_type   = 1;
+            $trnx->currency_id = $currency_id;
+            $trnx->amount      = $plan->price;
+            $trnx->charge      = 0;
+            $trnx->remark      = 'upgrade_plan';
+            $trnx->type        = '-';
+            $trnx->details     = trans('Upgrade Plan');
+            
+            if($trnx->save())
+            {
+                User::where('id',$id)->update(['bank_plan_id' => $plan->id]);
+                return response()->json(array('success' => 'Customer\'s Plan Upgrade Successfully.'));
+            }
+
+            //User::where()
         }
 
         public function profileTransctions($id)
