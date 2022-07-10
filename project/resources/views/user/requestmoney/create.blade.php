@@ -32,7 +32,7 @@
                         </div>
 
                         <div class="form-group mb-3 mt-3">
-                          <label class="form-label required">{{__('Select Wallet')}}</label>
+                          <label class="form-label required">{{__('Select Currency')}}</label>
                           <select name="wallet_id" id="wallet_id" class="form-control" required>
                             <option value="">Select</option>
                             @foreach(DB::table('currencies')->get() as $currency)
