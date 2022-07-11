@@ -8,6 +8,7 @@ use App\Models\Currency;
 use App\Models\SubInsBank;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\BankPoolAccount;
 use Illuminate\Support\Facades\Validator;
 
 class SubInsBankController extends Controller
@@ -73,6 +74,7 @@ class SubInsBankController extends Controller
                                     '.'Actions' .'
                                   </button>
                                   <div class="dropdown-menu" x-placement="bottom-start">
+                                    <a href="' . route('admin.subinstitution.banks.balance',$data->id) . '"  class="dropdown-item">'.__("balance").'</a>
                                     <a href="' . route('admin.subinstitution.banks.edit',$data->id) . '"  class="dropdown-item">'.__("Edit").'</a>
                                     <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.  route('admin.subinstitution.banks.delete',$data->id).'">'.__("Delete").'</a>
                                   </div>
@@ -131,6 +133,12 @@ class SubInsBankController extends Controller
         $data['informations'] = json_decode($data['data']->required_information,true);
 
         return view('admin.institution.subprofile.bank.edit',$data);
+    }
+
+    public function balance(Request $request, $id){
+        $data['data'] = SubInsBank::findOrFail($id);
+        $data['bank_balance'] = BankPoolAccount::where('bank_id', $id)->get();
+        return view('admin.institution.subprofile.bank.balance',$data);
     }
 
     public function update(Request $request, $id){
