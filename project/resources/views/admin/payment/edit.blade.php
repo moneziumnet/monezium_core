@@ -65,6 +65,19 @@
               @endforeach
 
             @endif
+            <hr>
+            @php
+                $setCurrency = json_decode($data->currency_id);
+                if($setCurrency == 0){
+                   $setCurrency = [];
+                }
+             @endphp
+             <div class="col-md-12">
+             @foreach(DB::table('currencies')->get() as $dcurr)
+                <input  name="currency_id[]"  {{in_array($dcurr->id,$setCurrency) ? 'checked' : ''}} type="checkbox" id="currency_id{{$dcurr->id}}" value="{{$dcurr->id}}">
+                <label class="mr-4" for="currency_id{{$dcurr->id}}">{{$dcurr->code}}</label>
+                @endforeach
+             </div>
 
             <!-- <div class="form-group">
                 <label for="inp-name">{{ __('Sub Institution') }}</label>

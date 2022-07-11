@@ -230,6 +230,7 @@ Route::prefix('user')->group(function() {
       Route::get('/deposits',[DepositController::class,'index'])->name('user.deposit.index');
       Route::get('/deposit/create',[DepositController::class,'create'])->name('user.deposit.create');
       Route::POST('/deposit/gateway',[DepositController::class,'gateway'])->name('user.deposit.gateway');
+      Route::POST('/deposit/gatewaycurrency',[DepositController::class,'gatewaycurrency'])->name('user.deposit.gatewaycurrency');
 
       Route::post('/deposit/stripe-submit', [StripeController::class,'store'])->name('deposit.stripe.submit');
 

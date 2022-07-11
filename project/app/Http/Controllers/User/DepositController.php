@@ -37,4 +37,14 @@ class DepositController extends Controller
     public function gateway(Request $request) {
         return DB::table('payment_gateways')->where('subins_id', $request->id)->whereStatus(1)->get();
     }
+
+    public function gatewaycurrency(Request $request) {
+        $currency['id'] = DB::table('payment_gateways')->where('subins_id', $request->id)->where('keyword', $request->keyword)->whereStatus(1)->first()->currency_id;
+        $res = [];
+        foreach (json_decode($currency['id']) as $value) {
+            $code =  Currency::where('id',$value)->first();
+            array_push($res,$code);
+        }
+        return $res;
+    }
 }

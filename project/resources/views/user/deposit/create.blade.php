@@ -52,6 +52,13 @@
                             </select>
                         </div>
 
+                        <div class="form-group mt-3">
+                            <label class="form-label required">{{__('Payment Currency')}}</label>
+                            <select name="method" id="withcurrency" class="form-select" required>
+                                <option value="">{{ __('Select Payment Currency') }}</option>
+                            </select>
+                        </div>
+
                         <div class="col-lg-12 mt-4 manual-payment d-none">
                             <div class="card">
                               <div class="card-body">
@@ -294,6 +301,18 @@ $(document).on('submit','.step1-form',function(){
                 _optionHtml += '<option value="' + item.keyword + '">' + item.name + '</option>';
             });
             $('select#withmethod').html(_optionHtml);
+        })
+    });
+
+    $("#withmethod").on('change',function(){
+        let keywordvalue = $("#withmethod").val();
+        let subinstitude = $("#subinstitude").val();
+        $.post("{{ route('user.deposit.gatewaycurrency') }}",{id:subinstitude,keyword:keywordvalue,_token:'{{csrf_token()}}'},function (res) {
+            let _optionHtml = '<option value="">Select Payment Currency</option>';
+            $.each(res, function(i,item) {
+                _optionHtml += '<option value="' + item.id + '">' + item.code + '</option>';
+            });
+            $('select#withcurrency').html(_optionHtml);
         })
     });
 
