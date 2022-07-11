@@ -28,9 +28,9 @@ class PaymentGatewayController extends Controller
 
     public function datatables(Request $request)
     {
-        $subint_id = $request->id;
+        $subins_id = $request->id;
 
-        $datas = PaymentGateway::where('subint_id', $subint_id)->orderBy('id','desc')->get();
+        $datas = PaymentGateway::where('subins_id', $subins_id)->orderBy('id','desc')->get();
          return Datatables::of($datas)
                             ->editColumn('title', function(PaymentGateway $data) {
                                 if($data->type == 'automatic'){

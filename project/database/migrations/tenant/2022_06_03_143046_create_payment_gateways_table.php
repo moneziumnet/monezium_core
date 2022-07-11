@@ -24,7 +24,7 @@ class CreatePaymentGatewaysTable extends Migration
             $table->string('keyword', 191)->nullable();
             $table->string('currency_id', 191)->default('0');
             $table->integer('status')->default(1);
-            $table->integer('subint_id')->nullable();
+            $table->integer('subins_id')->nullable();
         });
     }
 

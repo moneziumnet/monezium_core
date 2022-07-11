@@ -35,6 +35,6 @@ class DepositController extends Controller
     }
 
     public function gateway(Request $request) {
-        return DB::table('payment_gateways')->where('subint_id', $request->id)->whereStatus(1)->get();
+        return DB::table('payment_gateways')->where('subins_id', $request->id)->whereStatus(1)->get();
     }
 }
