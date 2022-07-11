@@ -6,6 +6,7 @@ use Datatables;
 use App\Models\Admin;
 use App\Models\Contact;
 use App\Models\Document;
+use App\Models\PaymentGateway;
 use Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -144,6 +145,117 @@ class InstitutionController extends Controller
 
         $input['password'] = bcrypt($request['password']);
         $data->fill($input)->save();
+        //add default payment gateway details
+        $paymentgateway_data = new PaymentGateway();
+        $paymentgateway_data['name'] = 'Flutter Wave';
+        $paymentgateway_data['type'] = 'automatic';
+        $paymentgateway_data['information'] = '{"public_key":"","secret_key":"","text":"Pay via your Flutter Wave account."}';
+        $paymentgateway_data['keyword'] = 'flutterwave';
+        $paymentgateway_data['currency_id'] = '["1"]';
+        $paymentgateway_data['status'] = '0';
+        $paymentgateway_data['subins_id'] = $data->id;
+        $paymentgateway_data->save();
+
+        $paymentgateway_data = new PaymentGateway();
+        $paymentgateway_data['name'] = 'Authorize.Net';
+        $paymentgateway_data['type'] = 'automatic';
+        $paymentgateway_data['information'] = '{"login_id":"","txn_key":"","sandbox_check":1,"text":"Pay Via Authorize.Net"}';
+        $paymentgateway_data['keyword'] = 'authorize.net';
+        $paymentgateway_data['currency_id'] = '["1"]';
+        $paymentgateway_data['status'] = '0';
+        $paymentgateway_data['subins_id'] = $data->id;
+        $paymentgateway_data->save();
+
+
+        $paymentgateway_data = new PaymentGateway();
+        $paymentgateway_data['name'] = 'Razorpay';
+        $paymentgateway_data['type'] = 'automatic';
+        $paymentgateway_data['information'] = '{"key":"","secret":"","text":"Pay via your Razorpay account."}';
+        $paymentgateway_data['keyword'] = 'razorpay';
+        $paymentgateway_data['currency_id'] = '["8"]';
+        $paymentgateway_data['status'] = '0';
+        $paymentgateway_data['subins_id'] = $data->id;
+        $paymentgateway_data->save();
+
+
+        $paymentgateway_data = new PaymentGateway();
+        $paymentgateway_data['name'] = 'Authorize.Net';
+        $paymentgateway_data['type'] = 'automatic';
+        $paymentgateway_data['information'] = '{"login_id":"","txn_key":"","sandbox_check":1,"text":"Pay Via Authorize.Net"}';
+        $paymentgateway_data['keyword'] = 'authorize.net';
+        $paymentgateway_data['currency_id'] = '["1"]';
+        $paymentgateway_data['status'] = '0';
+        $paymentgateway_data['subins_id'] = $data->id;
+        $paymentgateway_data->save();
+
+
+        $paymentgateway_data = new PaymentGateway();
+        $paymentgateway_data['name'] = 'Mollie Payment';
+        $paymentgateway_data['type'] = 'automatic';
+        $paymentgateway_data['information'] = '{"key":"","text":"Pay with Mollie Payment."}';
+        $paymentgateway_data['keyword'] = 'mollie';
+        $paymentgateway_data['currency_id'] = '["1","6"]';
+        $paymentgateway_data['status'] = '0';
+        $paymentgateway_data['subins_id'] = $data->id;
+        $paymentgateway_data->save();
+
+
+        $paymentgateway_data = new PaymentGateway();
+        $paymentgateway_data['name'] = 'Paytm';
+        $paymentgateway_data['type'] = 'automatic';
+        $paymentgateway_data['information'] = '{"merchant":"","secret":"","website":"WEBSTAGING","industry":"Retail","sandbox_check":1,"text":"Pay via your Paytm account."}';
+        $paymentgateway_data['keyword'] = 'paytm';
+        $paymentgateway_data['currency_id'] = '["8"]';
+        $paymentgateway_data['status'] = '0';
+        $paymentgateway_data['subins_id'] = $data->id;
+        $paymentgateway_data->save();
+
+
+        $paymentgateway_data = new PaymentGateway();
+        $paymentgateway_data['name'] = 'Paystack';
+        $paymentgateway_data['type'] = 'automatic';
+        $paymentgateway_data['information'] = '{"key":"","email":"","text":"Pay via your Paystack account."}';
+        $paymentgateway_data['keyword'] = 'paystack';
+        $paymentgateway_data['currency_id'] = '["9"]';
+        $paymentgateway_data['status'] = '0';
+        $paymentgateway_data['subins_id'] = $data->id;
+        $paymentgateway_data->save();
+
+
+        $paymentgateway_data = new PaymentGateway();
+        $paymentgateway_data['name'] = 'Instamojo';
+        $paymentgateway_data['type'] = 'automatic';
+        $paymentgateway_data['information'] = '{"key":"","token":"","sandbox_check":1,"text":"Pay via your Instamojo account."}';
+        $paymentgateway_data['keyword'] = 'instamojo';
+        $paymentgateway_data['currency_id'] = '["8"]';
+        $paymentgateway_data['status'] = '0';
+        $paymentgateway_data['subins_id'] = $data->id;
+        $paymentgateway_data->save();
+
+
+        $paymentgateway_data = new PaymentGateway();
+        $paymentgateway_data['name'] = 'Stripe';
+        $paymentgateway_data['type'] = 'automatic';
+        $paymentgateway_data['information'] = '{"key":"","secret":"","text":"Pay via your Credit Card."}';
+        $paymentgateway_data['keyword'] = 'stripe';
+        $paymentgateway_data['currency_id'] = '["1"]';
+        $paymentgateway_data['status'] = '0';
+        $paymentgateway_data['subins_id'] = $data->id;
+        $paymentgateway_data->save();
+
+
+        $paymentgateway_data = new PaymentGateway();
+        $paymentgateway_data['name'] = 'Paypal';
+        $paymentgateway_data['type'] = 'automatic';
+        $paymentgateway_data['information'] = '{"client_id":"","client_secret":"","sandbox_check":1,"text":"Pay via your PayPal account."}';
+        $paymentgateway_data['keyword'] = 'paypal';
+        $paymentgateway_data['currency_id'] = '["1"]';
+        $paymentgateway_data['status'] = '0';
+        $paymentgateway_data['subins_id'] = $data->id;
+        $paymentgateway_data->save();
+
+
+        //end
         //--- Logic Section Ends
 
         //--- Redirect Section

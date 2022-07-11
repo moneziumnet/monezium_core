@@ -8,7 +8,7 @@
     <ol class="breadcrumb m-0 py-0">
         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
         <li class="breadcrumb-item"><a href="{{ route('admin.subinstitution.index') }}">{{ __('Sub Institutions List') }}</a></li>
-        <li class="breadcrumb-item"><a href="{{route('admin.payment.edit',$data->id)}}">{{ __('Edit Payment') }}</a></li>
+        <li class="breadcrumb-item"><a href="{{route('admin.subinstitution.paymentgateways',$data->subins_id)}}">{{ __('Edit Payment') }}</a></li>
     </ol>
     </div>
 </div>

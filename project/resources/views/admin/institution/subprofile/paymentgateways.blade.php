@@ -127,13 +127,13 @@ aria-labelledby="deleteModalTitle" aria-hidden="true">
                 }
             });
 
-			$(function() {
-				$(".btn-area").append('<div class="col-sm-12 col-md-4 pr-3 text-right">'+
-					'<a class="btn btn-primary" href="{{route('admin.payment.create',['id' => $data->id])}}">'+
-						'<i class="fas fa-plus"></i> {{__('Add New')}}'+
-					'</a>'+
-				'</div>');
-			});
+			// $(function() {
+			// 	$(".btn-area").append('<div class="col-sm-12 col-md-4 pr-3 text-right">'+
+			// 		'<a class="btn btn-primary" href="{{route('admin.payment.create',['id' => $data->id])}}">'+
+			// 			'<i class="fas fa-plus"></i> {{__('Add New')}}'+
+			// 		'</a>'+
+			// 	'</div>');
+			// });
 
     </script>
 @endsection

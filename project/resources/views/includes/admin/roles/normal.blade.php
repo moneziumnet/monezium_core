@@ -1,19 +1,13 @@
 @if(Auth::guard('admin')->user()->tenant_id)
 
   @if(getModule('Sub Institutions management'))
-  <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#institution" aria-expanded="true"
-      aria-controls="collapseTable">
-      <i class="fas fa-fw fa-users"></i>
-      <span>{{  __('Manage Sub Institutions') }}</span>
+    <li class="nav-item">
+    <a class="nav-link" href="{{ route('admin.subinstitution.index') }}">
+      <i class="fas fa-chart-line"></i>
+      <span>{{ __('Manage Sub Institutions') }}</span>
     </a>
-    <div id="institution" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
-      <div class="bg-white py-2 collapse-inner rounded">
-        <a class="collapse-item" href="{{ route('admin.subinstitution.index') }}">{{ __('Sub Institution') }}</a>
-        <a class="collapse-item" href="{{ route('admin.payment.index') }}">{{  __('Payment Gateways')  }}</a>
-      </div>
-    </div>
   </li>
+
   @endif
 
   @if(getModule('Manage Customers'))

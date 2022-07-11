@@ -185,7 +185,7 @@ class PaymentGatewayController extends Controller
             $data->update($input);
         }
 
-        $msg = __('Data Updated Successfully.').' '.'<a href="'.route("admin.payment.index").'">'.__('View Lists.').'</a>';
+        $msg = __('Data Updated Successfully.').' '.'<a href="'.route("admin.subinstitution.paymentgateways", $data->subins_id).'">'.__('View Lists.').'</a>';
         return response()->json($msg);
     }
 
