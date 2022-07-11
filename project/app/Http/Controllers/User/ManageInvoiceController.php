@@ -7,6 +7,7 @@ use App\Models\InvItem;
 use App\Models\Invoice;
 use App\Models\Currency;
 use App\Models\Transaction;
+use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Auth;
@@ -232,19 +233,21 @@ class ManageInvoiceController extends Controller
     {
         try {
             $invoice = Invoice::where('number',decrypt($number))->firstOrFail();
+            $data['invoice'] = $invoice;
+            $data['user'] = User::where('id',$data['invoice']->user_id)->first();
         } catch (\Throwable $th) {
             return back()->with('error','Something went wrong.');
         }
 
         if($invoice->status == 0) return back()->with('error','Invoice not published yet.');
         if($invoice->status == 2) return back()->with('error','Invoice has been cancelled.');
-        return view('user.invoice.view',compact('invoice'));
+        return view('user.invoice.view',$data);
 
     }
     public function view($number)
     {
         $data['invoice'] = Invoice::where('number',$number)->firstOrFail();
-        $data['user'] = Auth::user();
+        $data['user'] = User::where('id',$data['invoice']->user_id)->first();
         return view('user.invoice.invoice',$data);
     }
 

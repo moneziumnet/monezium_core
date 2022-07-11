@@ -51,3 +51,4 @@ Thumbs.db
 
 *.lock
 *.lock
+project/composer.lock

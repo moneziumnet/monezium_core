@@ -15,7 +15,7 @@
     <link href="{{asset('assets/user/')}}/css/demo.min.css" rel="stylesheet"/>
     @stack('style')
   </head>
-  
+
   <body>
     <div class="wrapper mb-3">
           <div class="page-wrapper">
@@ -50,16 +50,16 @@
                           <div class="col-6">
                             <p class="h3">@lang('From')</p>
                             <address>
-                              {{@$contact->content->address}}<br>
-                              {{@$contact->content->email}}<br>
-                              {{@$contact->content->phone}}<br>
+                              {{@$user->address}}<br>
+                              {{@$user->email}}<br>
+                              {{@$user->phone}}<br>
                             </address>
                           </div>
                           <div class="col-6 text-end">
                             <p class="h3">@lang('To')</p>
                             <address>
                                 {{$invoice->address}}<br>
-                                {{$invoice->email}} 
+                                {{$invoice->email}}
                             </address>
                           </div>
                           <div class="col-12 my-5">
@@ -84,7 +84,7 @@
                           </tr>
                           @endforeach
                          <tr>
-                             
+
                              <td colspan="12" class="text-end fw-bold">@lang('Total : '.$invoice->currency->symbol.numFormat($invoice->final_amount))</td>
                          </tr>
                         </table>
@@ -100,7 +100,7 @@
       <!-- Tabler Core -->
       <script src="{{asset('assets/user/')}}/js/tabler.min.js"></script>
       <script src="{{asset('assets/user/')}}/js/demo.min.js"></script>
- 
+
       {{-- @include('notify.alert') --}}
       @stack('script')
 
