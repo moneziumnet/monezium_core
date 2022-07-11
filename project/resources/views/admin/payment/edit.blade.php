@@ -4,10 +4,10 @@
 
 <div class="card">
     <div class="d-sm-flex align-items-center justify-content-between py-3">
-    <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Edit Payment Gateway') }} <a class="btn btn-primary btn-rounded btn-sm" href="{{route('admin.payment.index')}}"><i class="fas fa-arrow-left"></i> {{ __('Back') }}</a></h5>
+    <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Edit Payment Gateway') }} <a class="btn btn-primary btn-rounded btn-sm" href="{{route('admin.subinstitution.paymentgateways', $data->subins_id)}}"><i class="fas fa-arrow-left"></i> {{ __('Back') }}</a></h5>
     <ol class="breadcrumb m-0 py-0">
         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
-        <li class="breadcrumb-item"><a href="{{ route('admin.payment.index') }}">{{ __('Payment Gateways') }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.subinstitution.index') }}">{{ __('Sub Institutions List') }}</a></li>
         <li class="breadcrumb-item"><a href="{{route('admin.payment.edit',$data->id)}}">{{ __('Edit Payment') }}</a></li>
     </ol>
     </div>
@@ -19,7 +19,7 @@
       </div>
 
       <div class="card-body">
-        
+
         <form class="geniusform"  action="{{route('admin.payment.update',$data->id)}}" method="POST" enctype="multipart/form-data">
 
             @include('includes.admin.form-both')
@@ -81,7 +81,7 @@
 
               <div class="form-group">
                 <label for="inp-title">{{ __('Name') }}</label>
-                <input type="text" class="form-control" id="inp-title" name="title"  placeholder="{{ __('Enter Name') }}" value="{{ $data->title }}" required>
+                <input type="text" class="form-control" id="inp-title" name="name"  placeholder="{{ __('Enter Name') }}" value="{{ $data->name }}" required>
               </div>
 
               <div class="form-group">
@@ -98,6 +98,25 @@
               </div>
 
               @endif
+              @if ($informations == NULL | count($informations) == 0)
+                <p>{{ __('No field Added') }}</p>
+
+                @else
+                @foreach ($informations as $key=>$info)
+                    <div class="lang-area mb-3">
+                    <span class="remove lang-remove"><i class="fas fa-times"></i></span>
+                    <div class="row">
+                        <div class="col-md-4">
+                        <input type="text" name="form_builder[{{ $key }}][field]" class="form-control" placeholder="{{ __('Field Name') }}" value="{{ $info['field'] }}">
+                        </div>
+                        <div class="col-md-7">
+                            <input type="text" name="form_builder[{{ $key }}][value]" class="form-control" placeholder="{{ __('Field Name') }}" value="{{ $info['value'] }}">
+                        </div>
+                    </div>
+                    </div>
+                @endforeach
+              @endif
+
             @endif
 
             <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Submit') }}</button>
@@ -106,5 +125,64 @@
     </div>
 
 
+@endsection
+@section('scripts')
+<script type="text/javascript">
+  'use strict';
+  function isEmpty(el){
+      return !$.trim(el.html())
+  }
+
+  let id = '{{count($informations) == 0 ? 1 : count($informations) + 1}}';
+
+$("#lang-btn").on('click', function(){
+
+    $("#lang-section").append(''+
+            `<div class="lang-area mb-3">
+            <span class="remove lang-remove"><i class="fas fa-times"></i></span>
+            <div class="row">
+              <div class="col-md-4">
+                <input type="text" name="form_builder[${id}][field]" class="form-control" placeholder="{{ __('Field Name') }}">
+              </div>
+
+              <div class="col-md-7">
+                <input type="text" name="form_builder[${id}][value]" class="form-control" placeholder="{{ __('Field Value') }}">
+              </div>
+
+
+            </div>
+          </div>`+
+          '');
+      id ++;
+});
+
+$(document).on('click','.lang-remove', function(){
+
+    $(this.parentNode).remove();
+    if(id && id >1){
+      id --;
+    }
+    if (isEmpty($('#lang-section'))) {
+
+      $("#lang-section").append(''+
+            `<div class="lang-area mb-3">
+            <span class="remove lang-remove"><i class="fas fa-times"></i></span>
+            <div class="row">
+              <div class="col-md-6">
+                <input type="text" name="form_builder[1][field]" class="form-control" placeholder="{{ __('Field Name') }}">
+              </div>
+
+              <div class="col-md-6">
+                <input type="text" name="form_builder[1][value]" class="form-control" placeholder="{{ __('Field Value') }}">
+              </div>
+
+            </div>
+          </div>`+
+          '');
+    }
+
+});
+
+</script>
 @endsection
 

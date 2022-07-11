@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Datatables;
 use App\Models\PaymentGateway;
 use App\Models\User;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Str;
@@ -77,8 +78,9 @@ class PaymentGatewayController extends Controller
         return view('admin.payment.index');
     }
 
-    public function create(){
-        return view('admin.payment.create');
+    public function create(Request $request){
+        $subins_id = $request->id;
+        return view('admin.payment.create', compact('subins_id'));
     }
 
     public function store(Request $request)
@@ -93,6 +95,7 @@ class PaymentGatewayController extends Controller
         $data = new PaymentGateway();
         $input = $request->all();
         $input['type'] = "manual";
+        $input['information'] = json_encode(array_values($request->form_builder));
         $data->fill($input)->save();
 
         $msg = __('New Data Added Successfully.').' '.'<a href="'.route("admin.payment.index").'">'.__('View Lists.').'</a>';
@@ -103,7 +106,8 @@ class PaymentGatewayController extends Controller
     {
         $data = PaymentGateway::findOrFail($id);
         $users = User::where('id','!=',1)->orderBy('name','asc')->get();
-        return view('admin.payment.edit',compact('data','users'));
+        $informations = json_decode($data->information,true);
+        return view('admin.payment.edit',compact('data','users', 'informations'));
     }
 
     public function update(Request $request, $id)
@@ -112,9 +116,9 @@ class PaymentGatewayController extends Controller
         $data = PaymentGateway::findOrFail($id);
         $prev = '';
 
-        if(PaymentGateway::where('name',$request->name)->where('id','!=',$id)->exists()){
-            return response()->json(array('errors' => [0 =>'This name has already been taken.']));
-        }
+        // if(PaymentGateway::where('name',$request->name)->where('id','!=',$id)->exists()){
+        //     return response()->json(array('errors' => [0 =>'This name has already been taken.']));
+        // }
 
 
         if($data->type == "automatic"){
@@ -177,6 +181,7 @@ class PaymentGatewayController extends Controller
             }
 
             $input = $request->all();
+            $input['information'] = json_encode(array_values($request->form_builder));
             $data->update($input);
         }
 
