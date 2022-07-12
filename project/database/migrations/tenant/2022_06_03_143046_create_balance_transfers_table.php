@@ -16,8 +16,7 @@ class CreateBalanceTransfersTable extends Migration
         Schema::create('balance_transfers', function (Blueprint $table) {
             $table->integer('id', true);
             $table->integer('user_id')->nullable();
-            $table->integer('receiver_id')->nullable();
-            $table->integer('other_bank_id')->nullable();
+            $table->integer('bank_id')->nullable();
             $table->integer('beneficiary_id')->nullable();
             $table->string('transaction_no')->nullable();
             $table->integer('currency_id')->nullable();
@@ -25,7 +24,6 @@ class CreateBalanceTransfersTable extends Migration
             $table->integer('amount')->nullable();
             $table->text('description')->nullable();
             $table->double('final_amount')->nullable();
-            $table->enum('type', ['own', 'other'])->nullable();
             $table->tinyInteger('status')->default(0);
             $table->timestamps();
         });
