@@ -320,9 +320,11 @@ class UserController extends Controller
             $trnx->type        = '-';
             $trnx->details     = trans('Upgrade Plan');
             $trnx->save();
+            user_wallet_decrement($id, $currency_id, $plan->amount);
 
             $user = User::findorFail($id);
             if ($user) {
+
                 $user->bank_plan_id = $subscription_type_id;
                 $user->plan_end_date = $user->plan_end_date->addDays($plan->days);
                 $user->update();
@@ -345,6 +347,75 @@ class UserController extends Controller
             return view('admin.user.profilebanks',$data);
         }
 
+        public function transctionEdit($id)
+        {
+            $transaction            = Transaction::findOrFail($id);
+            $user                   = User::findOrFail($transaction->user_id);
+            $data['data']           = $user;
+            $data['transaction']    = $transaction;
+            return view('admin.user.transctionEdit',$data);
+        }
+        
+        public function transctionUpdate(Request $request, $id)
+        {
+            if($request->isMethod('POST'))
+            {
+
+                $rules = [
+                    'transaction_date' => 'required',
+                    'trnx' => 'required',
+                    'description' => 'required',
+                    'remark' => 'required',
+                    'amount' => 'required'
+                ];
+    
+                $validator = Validator::make($request->all(), $rules);
+    
+                if ($validator->fails()) {
+                    return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
+                }
+                $trnx            = Transaction::findOrFail($id);
+
+                $currency_id = Currency::whereIsDefault(1)->first()->id;
+                $userBalance = user_wallet_balance($trnx->user_id,$currency_id);
+                $amount = $request->input('amount');
+                $charge = $request->input('charge');
+
+                if($trnx->type == "-")
+                {
+                    $totalAmt = $trnx->amount + $trnx->charge;
+                    $balance = $userBalance + $totalAmt;
+                }
+                
+                if($trnx->type == "+")
+                {
+                    $totalAmt = $trnx->amount + $trnx->charge;
+                    $balance = $userBalance - $totalAmt;
+                }
+
+                if($amount > $userBalance)
+                {
+                    return response()->json(array('errors' => 'Customer Balance not Available.'));
+                }
+
+                // $trnx->trnx        = str_rand();
+                // $trnx->user_id     = $id;
+                // $trnx->user_type   = 1;
+                $trnx->currency_id = $currency_id;
+                $trnx->amount      = $amount;
+                $trnx->charge      = $charge;
+                $trnx->remark      = $request->input('remark');
+               // $trnx->type        = '-';
+                $trnx->details     = $request->input('description');
+                $trnx->save();
+                return response()->json(array('success' => 'Transacton Update Success'));
+                
+            }else{
+                return response()->json(array('errors' => 'Should be correct button click.'));
+            }
+            
+        }
+        
         public function profileTransctionsDetails($id)
         {
             $user = User::findOrFail($id);
@@ -383,7 +454,7 @@ class UserController extends Controller
                                 return $data->type.amount($data->amount,$currency->type,2).$currency->code;
                             })
                             ->editColumn('trnx', function(Transaction $data) {
-                                $trnx = $data->txnid;
+                                $trnx = $data->trnx;
                                 return $trnx;
                             })
                             ->editColumn('created_at', function(Transaction $data) {

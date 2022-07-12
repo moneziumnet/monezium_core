@@ -16,7 +16,7 @@
             <a class="nav-link {{menu('admin-user-pricingplan')}}" id="pricingplan" href="{{route('admin-user-pricingplan',$data->id) }}" role="button" >Pricing Plan</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{menu('admin-user-transactions')}}" id="transactions" href="{{route('admin-user-transactions',$data->id) }}" role="button" >Transactions</a>
+            <a class="nav-link {{menu('admin-user-transactions')}} {{menu('admin-user.transaction-edit')}}" id="transactions" href="{{route('admin-user-transactions',$data->id) }}" role="button" >Transactions</a>
         </li>
         <li class="nav-item">
             <a class="nav-link {{menu('admin-user-banks')}}" id="banks" href="{{route('admin-user-banks',$data->id) }}" role="button" >Banks</a>
