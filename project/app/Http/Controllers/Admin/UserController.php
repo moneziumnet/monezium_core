@@ -281,6 +281,7 @@ class UserController extends Controller
             $data = User::findOrFail($id);
             $plans = BankPlan::where('id','!=',$data->bank_plan_id)->get();
             $plan = BankPlan::findOrFail($data->bank_plan_id);
+            //dd($plan);
             $data['data'] = $data;
             $data['plan'] = $plan;
             $data['plans'] = $plans;
@@ -322,7 +323,7 @@ class UserController extends Controller
 
             $user = User::findorFail($id);
             if ($user) {
-                $user->bank_plan_id = $plan->$id;
+                $user->bank_plan_id = $subscription_type_id;
                 $user->plan_end_date = $user->plan_end_date->addDays($plan->days);
                 $user->update();
             }
