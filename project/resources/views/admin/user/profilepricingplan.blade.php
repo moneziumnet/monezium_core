@@ -25,7 +25,7 @@
         <div class="tab-pane fade show p-3 active" id="modules" role="tabpanel" aria-labelledby="modules-tab">
           <div class="card-body">
               <div class="card-header">
-                <h4>{{$plan->name}}</h4>
+                <h4>{{__('Current Plan')}}</h4>
               </div>
 
               <div class="row mb-3">
@@ -34,7 +34,7 @@
                     <div class="card-body">
                       <div class="row align-items-center">
                         <div class="col mr-2">
-                          <div class="text-xs font-weight-bold text-uppercase mb-1"> </div>
+                          <div class="text-xs font-weight-bold text-uppercase mb-1">{{$plan->title}} </div>
                           <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">Price {{ showprice($plan->amount,$currency) }}  </div>
                           <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">Duration {{$plan->days}} days  </div>
                         </div>
