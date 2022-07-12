@@ -19,6 +19,8 @@ class CreateWalletsTable extends Migration
             $table->boolean('user_type')->comment('1 => user, 2 => \'merchant\', 3  => \'agent\'');
             $table->integer('currency_id');
             $table->decimal('balance', 20, 10)->default(0);
+            $table->tinyInteger('wallet_type')->comment('1=>currency, 2=>card, 3=>deposit, 4=>loan, 5=>escrow');
+            $table->string('wallet_no');
             $table->timestamps();
         });
     }

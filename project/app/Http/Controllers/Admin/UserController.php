@@ -106,7 +106,7 @@ class UserController extends Controller
         $rules = [
             'name'=> 'required',
             'email' => 'required|unique:users',
-            'photo' => 'required|mimes:jpeg,jpg,png,svg',            
+            'photo' => 'required|mimes:jpeg,jpg,png,svg',
             'password'=> 'required',
             'phone'=> 'required',
         ];
@@ -165,7 +165,18 @@ class UserController extends Controller
             $data['data'] = $data;
             return view('admin.user.profileaccounts',$data);
         }
- 
+
+        public function profilewallets($id, $wallet_type, $currency_id)
+        {
+            if($wallet_type == 0) {
+                $wallets = Wallet::where('user_id',$id)->where('user_id',$id)->with('currency')->get();
+            }
+            else {
+                $wallets = Wallet::where('user_id', $id)->where('wallet_type', $wallet_type)->where('currency_id', $currency_id)->with('currency')->get();
+            }
+            return $wallets;
+        }
+
 
         public function profileDocuments($id)
         {
@@ -192,25 +203,25 @@ class UserController extends Controller
                     'document_name'   => 'required',
                     'document_file'   => 'required'
                 ];
-    
+
                 $validator = Validator::make($request->all(), $rules);
-    
+
                 if ($validator->fails()) {
-                    return redirect()->back()->with('unsuccess','Select Valid file for upload'); 
+                    return redirect()->back()->with('unsuccess','Select Valid file for upload');
                 }
-    
+
                 if (!$request->hasFile('document_file')) {
-                    return redirect()->back()->with('unsuccess','Select Valid file for upload'); 
+                    return redirect()->back()->with('unsuccess','Select Valid file for upload');
                 } else {
-    
+
                     //$allowedfileExtension = ['jpg', 'png', 'gif', 'pdf', 'jpeg', 'doc', 'docx', 'xls', 'xlsx'];
                     $allowedfileExtension = ['pdf'];  // ['jpg', 'png', 'gif', 'pdf', 'jpeg', 'doc', 'docx', 'xls', 'xlsx'];
                     $files = $request->file('document_file');
-    
+
                     $extension = $files->getClientOriginalExtension();
-    
+
                     $check = in_array($extension, $allowedfileExtension);
-    
+
                     if ($check) {
                         $path = public_path() . '/assets/user_documents';
                         $files->move($path, $files->getClientOriginalName());
@@ -219,34 +230,34 @@ class UserController extends Controller
                         //  exit;
                         $user = User::findOrFail($id);
                         //store image file into directory and db
-                        
+
                         $save = new UserDocument();
                         $save->user_id = $user->id;
                         $save->name = $request->input('document_name');
                         $save->file = $file;
                         $save->save();
-                        return redirect()->back()->with('success','Document Saved Successfully.'); 
+                        return redirect()->back()->with('success','Document Saved Successfully.');
                     } else {
-                        return redirect()->back()->with('unsuccess','Please check your file extention and document name.'); 
+                        return redirect()->back()->with('unsuccess','Please check your file extention and document name.');
                     }
                 }
             } else {
-                return redirect()->back()->with('unsuccess','Please check your file extention and document name.'); 
+                return redirect()->back()->with('unsuccess','Please check your file extention and document name.');
             }
         }
 
         public function fileDownload($id)
         {
             $document = UserDocument::findOrFail($id);
-    
+
             $file = public_path("assets/user_documents/" . $document->file);
             return Response::download($file);
         }
-        
+
         public function fileView($id)
         {
             $document = UserDocument::findOrFail($id);
-    
+
             // $file = public_path("assets/user_documents/" . $document->file);
             // return Response::download($file);
 
@@ -258,15 +269,15 @@ class UserController extends Controller
         public function fileDestroy($id)
         {
             $document = UserDocument::findOrFail($id);
-    
+
             if (file_exists(public_path("assets/user_documents/" . $document->file))) {
                 @unlink(public_path("assets/user_documents/" . $document->file));
             }
             $document->delete();
             //--- Redirect Section
             $msg = 'Document Has Been Deleted Successfully.';
-            return redirect()->back()->with('success',$msg); 
-            
+            return redirect()->back()->with('success',$msg);
+
         }
 
         public function profileSettings($id)
@@ -457,7 +468,7 @@ class UserController extends Controller
             //return (new AdminExportTransaction($user_id))->download('transaction.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
             return Excel::download( new AdminExportTransaction($user_id), 'transaction.pdf',\Maatwebsite\Excel\Excel::DOMPDF);
         }
-        
+
         public function transactionExport($user_id)
         {
             return Excel::download( new AdminExportTransaction($user_id), 'transaction.xlsx');
@@ -465,8 +476,8 @@ class UserController extends Controller
 
         public function trandatatables($id)
         {
-            $datas = Transaction::where('user_id',$id)->orderBy('id','desc')->get();  
-        
+            $datas = Transaction::where('user_id',$id)->orderBy('id','desc')->get();
+
             return Datatables::of($datas)
                             ->editColumn('amount', function(Transaction $data) {
                                 $currency = Currency::whereId($data->currency_id)->first();
@@ -491,7 +502,7 @@ class UserController extends Controller
                                 return ' <a href="javascript:;"  data-href="" onclick="getDetails('.$data->id.')" class="detailsBtn" >
                                 ' . __("Details") . '</a>';
                             })
-                            
+
                             ->rawColumns(['action'])
                             ->toJson();
         }
@@ -532,7 +543,7 @@ class UserController extends Controller
             }
 
             $user->update($input);
-            return redirect()->back()->with('success','Password Successfully Changed.'); 
+            return redirect()->back()->with('success','Password Successfully Changed.');
         }
 
         public function updateModules(Request $request, $id)
@@ -543,7 +554,7 @@ class UserController extends Controller
             } else {
                 $input['section'] = '';
             }
-            
+
             $user->update($input);
 
             $msg = __('Password Successfully Changed.');
@@ -572,7 +583,7 @@ class UserController extends Controller
 
             $user = User::findOrFail($id);
             $data = $request->all();
-            
+
             if ($file = $request->file('photo'))
             {
                 $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
@@ -680,10 +691,10 @@ class UserController extends Controller
 
                 @unlink('/assets/images/'.$user->photo);
                 $user->delete();
-                
+
                 $msg = 'Data Deleted Successfully.';
-                return response()->json($msg);       
+                return response()->json($msg);
         }
 
-       
+
 }
