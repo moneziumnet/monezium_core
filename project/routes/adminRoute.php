@@ -208,6 +208,7 @@ Route::prefix('admin')->group(function () {
 
     Route::get('/user/{id}/accounts', [UserController::class, 'profileAccounts'])->name('admin-user-accounts');
     Route::get('/user/{id}/accounts/wallets/{wallet_type}/{currency_id}',[UserController::class, 'profilewallets'])->name('admin-user-wallets');
+    Route::get('/user/{id}/accounts/wallet/create/{wallet_type}/{currency_id}',[UserController::class, 'profilewalletcreate'])->name('admin-user-wallet-create');
     Route::get('/user/{id}/documents', [UserController::class, 'profileDocuments'])->name('admin-user-documents');
     Route::get('/user/{id}/settings', [UserController::class, 'profileSettings'])->name('admin-user-settings');
     Route::get('/user/{id}/pricingplan', [UserController::class, 'profilePricingplan'])->name('admin-user-pricingplan');

@@ -70,7 +70,7 @@
                 </div>
               </div>
               @else
-              <div class="col-xl-3 col-md-6 mb-4">
+              <a href="javascript:;" data-toggle="modal" data-target="#statusModal" data-href="{{ route('admin-user-wallet-create',['id' => $data->id, 'wallet_type' => $i, 'currency_id' =>$dcurr->id ]) }}" class = "col-xl-3 col-md-6 mb-4" style="text-decoration: none;">
                 <div class="card h-100" style="background-color: #a2b2c5;">
                   <div class="card-body">
                     <div class="row align-items-center">
@@ -84,8 +84,8 @@
                       </div>
                     </div>
                   </div>
-                </div>
               </div>
+            </a>
               @endif
               @endforeach
             @endfor
@@ -102,10 +102,35 @@
   </div>
 </div>
 </div>
+<div class="modal fade status-modal" id="statusModal" tabindex="-1" role="dialog" aria-labelledby="statusModalTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">{{ __("Add New Wallet") }}</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+			<div class="modal-body">
+				<p class="text-center">{{ __("Now You are adding new Wallet.") }}</p>
+				<p class="text-center">{{ __("Do you want to proceed?") }}</p>
+			</div>
+
+			<div class="modal-footer">
+				<a href="javascript:;" class="btn btn-secondary" data-dismiss="modal">{{ __("Cancel") }}</a>
+				<a href="javascript:;" class="btn btn-success btn-ok" id="addpayment" >{{ __("Add") }}</a>
+			</div>
+		</div>
+	</div>
+</div>
 <!--Row-->
 @endsection
 @section('scripts')
 <script type="text/javascript">
+$('#addpayment').on('click', function() {
+    window.location.reload();
+});
 let accounttype = ['All', 'Current', 'Card', 'Deposit', 'load', 'Escrow'];
     let _orignhtml = $('div#walletlist').html();
     $('#wallet_type').on('change', function() {
@@ -141,7 +166,10 @@ let accounttype = ['All', 'Current', 'Card', 'Deposit', 'load', 'Escrow'];
                         });
             }
             else {
-                _divhtml += '<div class="col-xl-3 col-md-6 mb-4"> \
+                var createurl = `${mainurl}/admin/user/${data}/accounts/wallet/create/${wallet_type}/${value.id}`;
+
+
+                _divhtml += '              <a href="javascript:;" data-toggle="modal" data-target="#statusModal" data-href='+ createurl + ' class = "col-xl-3 col-md-6 mb-4" style="text-decoration: none;"> \
                         <div class="card h-100" style="background-color: #a2b2c5;"> \
                             <div class="card-body"> \
                                 <div class="row align-items-center"> \
@@ -156,7 +184,7 @@ let accounttype = ['All', 'Current', 'Card', 'Deposit', 'load', 'Escrow'];
                             </div> \
                             </div> \
                             </div> \
-                            </div>'
+                            </a>'
 
             }
             if(wallet_type==0){

@@ -177,6 +177,32 @@ class UserController extends Controller
             return $wallets;
         }
 
+        public function profilewalletcreate($id, $wallet_type, $currency_id)
+        {
+            {
+                $wallet = Wallet::where('user_id', $id)->where('wallet_type', $wallet_type)->where('currency_id', $currency_id)->first();
+
+                if(!$wallet)
+                {
+                  $user_wallet = new Wallet();
+                  $user_wallet->user_id = $id;
+                  $user_wallet->user_type = 1;
+                  $user_wallet->currency_id = $currency_id;
+                  $user_wallet->balance = 0;
+                  $user_wallet->wallet_type = $wallet_type;
+                  $user_wallet->wallet_no ="WN". date('ydis') . random_int(100000, 999999);
+                  $user_wallet->created_at = date('Y-m-d H:i:s');
+                  $user_wallet->updated_at = date('Y-m-d H:i:s');
+                  $user_wallet->save();
+                  $msg = __('Account New Wallet Updated Successfully.');
+                  return response()->json($msg);
+                }
+                else {
+                    return response()->json(array('errors' => [0 =>'This wallet has already been created.']));
+                }
+
+              }
+        }
 
         public function profileDocuments($id)
         {
