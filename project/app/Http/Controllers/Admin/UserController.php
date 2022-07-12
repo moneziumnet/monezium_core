@@ -380,35 +380,54 @@ class UserController extends Controller
                 $userBalance = user_wallet_balance($trnx->user_id,$currency_id);
                 $amount = $request->input('amount');
                 $charge = $request->input('charge');
+                $newTotal = $amount + $charge;
 
                 if($trnx->type == "-")
                 {
                     $totalAmt = $trnx->amount + $trnx->charge;
                     $balance = $userBalance + $totalAmt;
+
+                    if($amount > $balance)
+                    {
+                        return response()->json(array('errors' => 'Customer Balance not Available.'));
+                    }
+                    user_wallet_increment($trnx->user_id, $currency_id, $totalAmt);
+                    $trnx->currency_id = $currency_id;
+                    $trnx->amount      = $amount;
+                    $trnx->charge      = $charge;
+                    $trnx->remark      = $request->input('remark');
+                // $trnx->type        = '-';
+                    $trnx->details     = $request->input('description');
+                    $trnx->save();
+
+                    user_wallet_decrement($trnx->user_id, $currency_id, $newTotal);
+                    return response()->json(array('success' => 'Transacton Update Success'));
                 }
                 
                 if($trnx->type == "+")
                 {
                     $totalAmt = $trnx->amount + $trnx->charge;
                     $balance = $userBalance - $totalAmt;
+                    user_wallet_decrement($trnx->user_id, $currency_id, $totalAmt);
+
+                    $trnx->currency_id = $currency_id;
+                    $trnx->amount      = $amount;
+                    $trnx->charge      = $charge;
+                    $trnx->remark      = $request->input('remark');
+                // $trnx->type        = '-';
+                    $trnx->details     = $request->input('description');
+                    $trnx->save();
+                    user_wallet_increment($trnx->user_id, $currency_id, $amount);
+
+                    return response()->json(array('success' => 'Transacton Update Success'));
                 }
 
-                if($amount > $userBalance)
-                {
-                    return response()->json(array('errors' => 'Customer Balance not Available.'));
-                }
+                
 
                 // $trnx->trnx        = str_rand();
                 // $trnx->user_id     = $id;
                 // $trnx->user_type   = 1;
-                $trnx->currency_id = $currency_id;
-                $trnx->amount      = $amount;
-                $trnx->charge      = $charge;
-                $trnx->remark      = $request->input('remark');
-               // $trnx->type        = '-';
-                $trnx->details     = $request->input('description');
-                $trnx->save();
-                return response()->json(array('success' => 'Transacton Update Success'));
+                
                 
             }else{
                 return response()->json(array('errors' => 'Should be correct button click.'));

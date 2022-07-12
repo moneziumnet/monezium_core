@@ -58,7 +58,7 @@
               
               <div class="form-group">
                 <label for="charge">{{ __('Charge') }} ({{$currency->code}})</label>
-                <input type="number" class="form-control amount_check" id="charge" name="charge" placeholder="{{ __('0.00') }}" min="1" step="0.01" value="{{ $transaction->charge}}">
+                <input type="number" class="form-control amount_check" id="charge" name="charge" placeholder="{{ __('0.00') }}" step="0.01" value="{{ $transaction->charge}}">
               </div>
               <button type="submit" id="submit-btn" class="btn btn-primary w-100 mt-2">{{ __('Update') }}</button>
         
