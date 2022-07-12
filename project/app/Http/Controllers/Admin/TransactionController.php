@@ -28,7 +28,7 @@ class TransactionController extends Controller
                             return ucwords(str_replace('_',' ',$data->remark));
                         })
                         ->editColumn('trnx', function(Transaction $data) {
-                            $trnx = $data->txnid;
+                            $trnx = $data->trnx;
                             return $trnx;
                         })
                         ->editColumn('charge', function(Transaction $data) {
