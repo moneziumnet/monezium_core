@@ -130,16 +130,10 @@
 
   @if(getModule('Money Transfer'))
   <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#moneytransfer" aria-expanded="true" aria-controls="collapseTable">
+    <a class="nav-link " href="{{ route('admin.other.banks.transfer.index') }}" >
       <i class="fas fa-exchange-alt"></i>
-    <span>{{ __('Money Transfer') }}</span>
+    <span>{{ __('Bank Transfer') }}</span>
   </a>
-    <div id="moneytransfer" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
-      <div class="bg-white py-2 collapse-inner rounded">
-        <a class="collapse-item" href="{{ route('admin.own.banks.transfer.index') }}">{{ __('Own Bank Transfer') }}</a>
-        <a class="collapse-item" href="{{ route('admin.other.banks.transfer.index') }}">{{ __('Other Bank Transfer') }}</a>
-      </div>
-    </div>
   </li>
   @endif
 

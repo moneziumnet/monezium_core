@@ -14,7 +14,7 @@
 
 <div class="row mt-3">
   <div class="col-lg-12">
-    <div class="card mt-1 tab-card">
+    <div class="card  tab-card">
       @include('admin.user.profiletab')
 
       <div class="tab-content" id="myTabContent">
@@ -22,16 +22,84 @@
         $currency = defaultCurr();
         @endphp
         @include('includes.admin.form-success')
-        <div class="tab-pane fade show p-3 active" id="modules" role="tabpanel" aria-labelledby="modules-tab">
-          <div class="card-body">
-            <div class="gocover" style="background: url({{asset('assets/images/'.$gs->admin_loader)}}) no-repeat scroll center center rgba(45, 45, 45, 0.5);"></div>
-             <h2> This function will add in next Stage </h2>
-          </div>
+        <div class="tab-pane fade show active" id="modules" role="tabpanel" aria-labelledby="modules-tab">
+            <div class="card-body">
+                <div class="card mb-4">
+                    <div class="table-responsive p-3">
+                    <table id="geniustable" class="table table-hover dt-responsive" cellspacing="0" width="100%">
+                        <thead class="thead-light">
+                        <tr>
+                            <th>{{__('Transaction no')}}</th>
+                            <th>{{__('Transfer From')}}</th>
+                            <th>{{__('Transfer To')}}</th>
+                            <th>{{__('Amount')}}</th>
+                            <th>{{__('Cost')}}</th>
+                            <th>{{__('Status')}}</th>
+                            <th>{{__('Options')}}</th>
+                        </tr>
+                        </thead>
+                    </table>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
+     </div>
     </div>
   </div>
 </div>
-</div>
-<!--Row-->
-@endsection
+
+      {{-- STATUS MODAL --}}
+      <div class="modal fade confirm-modal" id="statusModal" tabindex="-1" role="dialog" aria-labelledby="statusModalTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title">{{ __("Update Status") }}</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                      </button>
+                  </div>
+                  <div class="modal-body">
+                      <p class="text-center">{{ __("You are about to change the status.") }}</p>
+                      <p class="text-center">{{ __("Do you want to proceed?") }}</p>
+                  </div>
+
+                  <div class="modal-footer">
+                      <a href="javascript:;" class="btn btn-secondary" data-dismiss="modal">{{ __("Cancel") }}</a>
+                      <a href="javascript:;" class="btn btn-success btn-ok">{{ __("Update") }}</a>
+                  </div>
+              </div>
+          </div>
+      </div>
+      {{-- STATUS MODAL ENDS --}}
+
+
+      @endsection
+
+
+      @section('scripts')
+
+      <script type="text/javascript">
+          "use strict";
+
+          var table = $('#geniustable').DataTable({
+                 ordering: false,
+                 processing: true,
+                 serverSide: true,
+                 searching: true,
+                 ajax: '{{ route('admin.other.banks.transfer.subdatatables',['id' => $data->id]) }}',
+                 columns: [
+                      { data: 'transaction_no', name: 'transaction_no' },
+                      { data: 'user_id', name: 'user_id' },
+                      { data: 'beneficiary_id', name: 'beneficiary_id' },
+                      { data: 'amount', name: 'amount' },
+                      { data: 'cost', name: 'cost' },
+                      { data: 'status', name: 'status' },
+                      { data: 'action', searchable: false, orderable: false }
+                  ],
+                  language : {
+                      processing: '<img src="{{asset('assets/images/'.$gs->admin_loader)}}">'
+                  }
+              });
+      </script>
+
+      @endsection

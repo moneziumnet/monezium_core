@@ -103,6 +103,92 @@ class OtherBankTransferController extends Controller
       ->toJson();
   }
 
+  public function subdatatables(Request $request)
+  {
+
+    $datas = BalanceTransfer::whereType('other')->where('user_id', $request->id)->orderBy('id', 'desc');
+
+    return Datatables::of($datas)
+
+      ->editColumn('user_id', function (BalanceTransfer $data) {
+        $data = User::whereId($data->user_id)->first();
+        if ($data) {
+          return '<div>
+                                            <span>' . $data->name . '</span>
+                                            <p>' . $data->account_number . '</p>
+                                    </div>';
+        } else {
+          return $data = '';
+        }
+      })
+
+      ->editColumn('beneficiary_id', function (BalanceTransfer $data) {
+        $data = Beneficiary::whereId($data->beneficiary_id)->first();
+
+        if ($data) {
+          return '<div>
+                                            <span>' . $data->account_name . '</span>
+                                            <p>' . $data->account_number . '</p>
+                                    </div>';
+        } else {
+          return $data = '';
+        }
+      })
+
+      ->editColumn('amount', function (BalanceTransfer $data) {
+        $curr = Currency::where('is_default', '=', 1)->first();
+        return $curr->symbol . $data->amount;
+      })
+
+      ->editColumn('cost', function (BalanceTransfer $data) {
+        $curr = Currency::where('is_default', '=', 1)->first();
+        return $curr->symbol . $data->cost;
+      })
+
+      ->editColumn('status', function (BalanceTransfer $data) {
+        if ($data->status == 1) {
+          $status  = __('Completed');
+        } elseif ($data->status == 2) {
+          $status  = __('Rejected');
+        } else {
+          $status  = __('Pending');
+        }
+
+        if ($data->status == 1) {
+          $status_sign  = 'success';
+        } elseif ($data->status == 2) {
+          $status_sign  = 'danger';
+        } else {
+          $status_sign = 'warning';
+        }
+
+        return '<div class="btn-group mb-1">
+                                <button type="button" class="btn btn-' . $status_sign . ' btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  ' . $status . '
+                                </button>
+                                <div class="dropdown-menu" x-placement="bottom-start">
+                                  <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="' . route('admin.other.banks.transfer.status', ['id1' => $data->id, 'status' => 1]) . '">' . __("completed") . '</a>
+                                  <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="' . route('admin.other.banks.transfer.status', ['id1' => $data->id, 'status' => 2]) . '">' . __("rejected") . '</a>
+                                </div>
+                              </div>';
+      })
+
+      ->addColumn('action', function (BalanceTransfer $data) {
+
+        return '<div class="btn-group mb-1">
+                                  <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    ' . 'Actions' . '
+                                  </button>
+                                  <div class="dropdown-menu" x-placement="bottom-start">
+                                    <a href="' . route('admin.other.banks.transfer.show', $data->id) . '"  class="dropdown-item">' . __("Details") . '</a>
+                                  </div>
+                                </div>';
+      })
+
+      ->rawColumns(['user_id', 'beneficiary_id', 'amount', 'cost', 'status', 'action'])
+      ->toJson();
+  }
+
   public function index()
   {
     return view('admin.otherbanktransfer.index');
