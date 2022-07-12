@@ -383,7 +383,7 @@ class UserController extends Controller
                                 return $data->type.amount($data->amount,$currency->type,2).$currency->code;
                             })
                             ->editColumn('trnx', function(Transaction $data) {
-                                $trnx = $data->txnid;
+                                $trnx = $data->trnx;
                                 return $trnx;
                             })
                             ->editColumn('created_at', function(Transaction $data) {
