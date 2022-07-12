@@ -40,7 +40,7 @@
         <tr>
             <td>{{$i}}</td>
             <td>{{date('d-m-Y', strtotime($tran->created_at))}}</td>
-            <td>{{$tran->txnid}}</td>
+            <td>{{$tran->trnx}}</td>
             <td>{{ucwords(str_replace('_',' ',$tran->remark))}}</td>
             <td>{{$tran->type}} {{amount($tran->amount,$tran->currency->type,2)}} {{$tran->currency->code}}</td>
         </tr>

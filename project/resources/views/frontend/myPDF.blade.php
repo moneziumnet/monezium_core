@@ -13,7 +13,7 @@
             <tr>
               <th>@lang('No')</th>
               <th>@lang('Type')</th>
-              <th>@lang('Txnid')</th>
+              <th>@lang('Trnx')</th>
               <th>@lang('Amount')</th>
               <th>@lang('Date')</th>
               <th></th>
@@ -35,9 +35,9 @@
                   </div>
                 </td>
 
-                <td data-label="@lang('Txnid')">
+                <td data-label="@lang('Trnx')">
                   <div>
-                    {{ $data->txnid }}
+                    {{ $data->trnx }}
                   </div>
                 </td>
 
