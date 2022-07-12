@@ -25,25 +25,70 @@
         <div class="tab-pane fade show p-3 active" id="accounts" role="tabpanel" aria-labelledby="accounts-tab">
 
           <div class="card-body">
-            <div class="card-header">
-              <h4>@lang('Your Wallets')</h4>
-            </div>
-
             <div class="row mb-3">
-              @foreach ($wallets as $item)
+                <div class="mr-3">
+                    <h4 class="mt-1">@lang('Select Type:')</h4>
+                </div>
+                <div class="col-3 mr-3">
+                    <select class="col-lg select mb-3 input-field" id="wallet_type">
+                        <option value="0"> {{'All'}} </option>
+                        <option value="1"> {{'Curreny'}} </option>
+                        <option value="2"> {{'Card'}} </option>
+                        <option value="3"> {{'Deposit'}} </option>
+                        <option value="4"> {{'loan'}} </option>
+                        <option value="5"> {{'Escrow'}} </option>
+                    </select>
+                </div>
+
+            </div>
+            @php
+                $accounttype = ['All', 'Current', 'Card', 'Deposit', 'load', 'Escrow'];
+                $curlist = DB::table('currencies')->get();
+            @endphp
+
+            <div class="row mb-3" id="walletlist">
+            @for ($i = 1; $i < 6; $i++)
+              @foreach (DB::table('currencies')->get() as $dcurr)
+              @php
+                  $wallet = DB::table('wallets')->where('user_id', $data->id)->where('wallet_type',$i)->where('currency_id',$dcurr->id)->first();
+              @endphp
+              @if ($wallet != null)
               <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card h-100">
+                <div class="card h-100" >
                   <div class="card-body">
                     <div class="row align-items-center">
                       <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-uppercase mb-1"> {{$item->currency->curr_name}}</div>
-                        <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{amount($item->balance,$item->currency->type,2)}} {{$item->currency->code}} ({{$item->currency->symbol}}) </div>
+                        <div class="row mb-1 mr-1">
+                            <div class='col font-weight-bold text-gray-900'>{{$accounttype[$i]}}</div>
+                            <div class='col font-weight-bold text-gray-900'>{{$wallet->wallet_no}}</div>
+                         </div>
+                        <div class="text-xs font-weight-bold text-uppercase mb-1"> {{$dcurr->curr_name}}</div>
+                        <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{amount($wallet->balance,$dcurr->type,2)}} {{$dcurr->code}} ({{$dcurr->symbol}}) </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
+              @else
+              <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card h-100" style="background-color: #a2b2c5;">
+                  <div class="card-body">
+                    <div class="row align-items-center">
+                      <div class="col mr-2">
+                        <div class="row mb-1 mr-1">
+                            <div class='col font-weight-bold text-gray-900'>{{$accounttype[$i]}}</div>
+                            <div class='col font-weight-bold text-gray-900'></div>
+                         </div>
+                        <div class="text-xs font-weight-bold text-uppercase mb-1"> {{$dcurr->curr_name}}</div>
+                        <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{'xxx'}} {{$dcurr->code}} ({{$dcurr->symbol}}) </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              @endif
               @endforeach
+            @endfor
             </div>
             <div class="card-header">
               <h5>@lang('Transaction Type')</h5>
@@ -58,4 +103,70 @@
 </div>
 </div>
 <!--Row-->
+@endsection
+@section('scripts')
+<script type="text/javascript">
+let accounttype = ['All', 'Current', 'Card', 'Deposit', 'load', 'Escrow'];
+    let _orignhtml = $('div#walletlist').html();
+    $('#wallet_type').on('change', function() {
+        let wallet_type = $("#wallet_type").val();
+        let data ="{{$data->id }}";
+        let curlist = '{{$curlist}}';
+        const obj = curlist.replace(/&quot;/g, '"');
+        let _divhtml = "" ;
+        $.each(JSON.parse(obj), function(key, value) {
+
+
+        var url = `${mainurl}/admin/user/${data}/accounts/wallets/${wallet_type}/${value.id}`;
+        $.get(url, function(res) {
+            if (res.length >=1){
+
+                $.each(res, function(i, item) {
+                    _divhtml += '<div class="col-xl-3 col-md-6 mb-4"> \
+                        <div class="card h-100"> \
+                            <div class="card-body"> \
+                                <div class="row align-items-center"> \
+                                    <div class="col mr-2"> \
+                                        <div class="row mb-1 mr-1"> \
+                                        <div class="col font-weight-bold text-gray-900">' + accounttype[item.wallet_type] + '</div>\
+                                                <div class="col font-weight-bold text-gray-900">' + item.wallet_no +'</div> \
+                                        </div> \
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">' + item.currency.curr_name + '</div> \
+                            <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">' + parseFloat(item.balance).toFixed(2) + " " + item.currency.code + " " + item.currency.symbol + '</div> \
+                            </div> \
+                            </div> \
+                            </div> \
+                            </div> \
+                            </div>'
+                        });
+            }
+            else {
+                _divhtml += '<div class="col-xl-3 col-md-6 mb-4"> \
+                        <div class="card h-100" style="background-color: #a2b2c5;"> \
+                            <div class="card-body"> \
+                                <div class="row align-items-center"> \
+                                    <div class="col mr-2"> \
+                                        <div class="row mb-1 mr-1"> \
+                                        <div class="col font-weight-bold text-gray-900">' + accounttype[wallet_type] + '</div>\
+                                                <div class="col font-weight-bold text-gray-900">' + "" +'</div> \
+                                        </div> \
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">' + value.curr_name + '</div> \
+                            <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">'  + value.code + " " + value.symbol + '</div> \
+                            </div> \
+                            </div> \
+                            </div> \
+                            </div> \
+                            </div>'
+
+            }
+            if(wallet_type==0){
+                $('div#walletlist').html(_orignhtml);
+            }
+            else{
+                $('div#walletlist').html(_divhtml);
+            }
+            })
+        })
+    })
+</script>
 @endsection
