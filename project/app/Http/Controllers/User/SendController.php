@@ -25,7 +25,7 @@ class SendController extends Controller
     }
 
     public function create(){
-        
+
         if(auth()->user()->twofa)
         {
             $ga = new GoogleAuthenticator();
@@ -39,7 +39,7 @@ class SendController extends Controller
         }else{
             return redirect()->route('user.show2faForm')->with('unsuccess','You must be enable 2FA Security');
         }
-        
+
     }
 
     public function savedUser($no){
@@ -68,12 +68,12 @@ class SendController extends Controller
             session(['sendstatus'=>0]);
             $data['savedUser'] =  NULL;
             $data['saveAccounts'] = SaveAccount::whereUserId(auth()->id())->orderBy('id','desc')->get();
-            
+
             return view('user.sendmoney.create',$data);
         }
     }
 
-    
+
     public function store(Request $request){
 
         $request->validate([
@@ -89,7 +89,7 @@ class SendController extends Controller
         $ga = new GoogleAuthenticator();
         $secret = $user->go;
         $oneCode = $ga->getCode($secret);
-        
+
         if ($oneCode != $request->code) {
             return redirect()->back()->with('unsuccess','Two factor authentication code is wrong');
         }
@@ -115,7 +115,7 @@ class SendController extends Controller
         if($monthlySend > $bank_plan->monthly_send){
             return redirect()->back()->with('unsuccess','Monthly send limit over.');
         }
-        
+
         $gs = Generalsetting::first();
 
         if($request->account_number == $user->account_number){
@@ -129,7 +129,7 @@ class SendController extends Controller
         if($request->amount > user_wallet_balance(auth()->id(), $currency_id)){
             return redirect()->back()->with('unsuccess','Insufficient Balance.');
         }
-        
+
         if($receiver = User::where('account_number',$request->account_number)->first()){
             $txnid = Str::random(4).time();
             // $data = new BalanceTransfer();
@@ -143,7 +143,7 @@ class SendController extends Controller
             // $data->description = $request->description;
             // $data->status = 1;
             // $data->save();
-    
+
             // $receiver->increment('balance',$request->amount);
             // $user->decrement('balance',$request->amount);
 
@@ -173,9 +173,11 @@ class SendController extends Controller
             $trans->details     = trans('Send Money');
             $trans->save();
 
-            user_wallet_decrement($user->id, $currency_id, $request->amount);
-            user_wallet_increment($receiver->id, $currency_id, $request->amount);
-            
+            // user_wallet_decrement($user->id, $currency_id, $request->amount);
+            // user_wallet_increment($receiver->id, $currency_id, $request->amount);
+
+            user_wallet_decrement_current($user->id, $currency_id, $request->amount);
+            user_wallet_increment_current($receiver->id, $currency_id, $request->amount);
             if(SaveAccount::whereUserId(auth()->id())->where('receiver_id',$receiver->id)->exists()){
                 return redirect()->route('send.money.create')->with('success','Money Send Successfully');
             }
@@ -193,7 +195,7 @@ class SendController extends Controller
                 ];
 
                 $mailer = new GeniusMailer();
-                $mailer->sendAutoMail($data);            
+                $mailer->sendAutoMail($data);
             }
             else
             {
@@ -201,7 +203,7 @@ class SendController extends Controller
                 $subject = " Money send successfully.";
                 $msg = "Hello ".$receiver->name."!\nMoney send successfully.\nThank you.";
                 $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-                mail($to,$subject,$msg,$headers);            
+                mail($to,$subject,$msg,$headers);
             }
 
             return redirect()->route('user.send.money.success');

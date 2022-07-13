@@ -20,7 +20,7 @@ if(!function_exists('getModule')){
         }else{
             return auth()->guard('admin')->user();
         }
-          
+
       });
 
       $sections = explode(" , ", $admin->section);
@@ -33,10 +33,10 @@ if(!function_exists('getModule')){
 }
 
   if(!function_exists('showPrice')){
-      
+
       function showPrice($price,$currency){
         $gs = Generalsetting::first();
-        
+
         $price = round(($price) * $currency->rate,2);
         if($gs->currency_format == 0){
             return $currency->symbol. $price;
@@ -46,7 +46,7 @@ if(!function_exists('getModule')){
         }
     }
   }
-  
+
 
   if(!function_exists('admin')){
     function admin()
@@ -69,13 +69,13 @@ if(!function_exists('getModule')){
   {
     return auth()->guard('merchant')->user();
   }
-  
+
   function loginIp(){
     $info = unserialize(file_get_contents('http://www.geoplugin.net/php.gp?ip='.$_SERVER['REMOTE_ADDR']));
     return json_decode(json_encode($info));
 }
 
-  
+
   if(!function_exists('convertedPrice')){
     function convertedPrice($price,$currency){
       return $price = $price * $currency->rate;
@@ -87,7 +87,7 @@ if(!function_exists('getModule')){
       return Currency::where('is_default','=',1)->first();
     }
   }
-  
+
   if(!function_exists('charge')){
     function charge($slug)
     {
@@ -95,10 +95,10 @@ if(!function_exists('getModule')){
         return $charge->data;
     }
   }
-  
-  
+
+
   if(!function_exists('chargeCalc')){
-    
+
     function chargeCalc($charge,$amount,$rate = 1)
     {
       return  ($charge->fixed_charge * $rate) + ($amount * ($charge->percent_charge/100));
@@ -106,50 +106,50 @@ if(!function_exists('getModule')){
   }
 
   if(!function_exists('numFormat')){
-    
+
     function numFormat($amount, $length = 0)
     {
         if(0 < $length)return number_format( $amount + 0, $length);
         return $amount + 0;
     }
   }
-  
+
   if(!function_exists('amount')){
-    
+
     function amount($amount,$type = 1,$length = 0){
         if($type == 2) return numFormat($amount,8);
-        else return numFormat($amount,$length);  
+        else return numFormat($amount,$length);
     }
   }
-  
+
   if(!function_exists('dateFormat')){
-    
+
     function dateFormat($date,$format = 'd M Y -- h:i a'){
       return Carbon::parse($date)->format($format);
     }
   }
 
   if(!function_exists('randNum')){
-    
+
     function randNum($digits = 6){
       return rand(pow(10, $digits-1), pow(10, $digits)-1);
     }
   }
-  
+
   if(!function_exists('str_rand')){
-    
+
     function str_rand($length = 12,$up = false)
     {
         if($up) return Str::random($length);
-        else return strtoupper(Str::random($length)); 
+        else return strtoupper(Str::random($length));
     }
   }
 
   if(!function_exists('email')){
-    
+
     function email($data){
       $gs = Generalsetting::first();
-  
+
       if ($gs->email_notify) {
           if ($gs->mail_type == 'php_mail') {
               $headers = "From: $gs->sitename <$gs->email_from> \r\n";
@@ -160,7 +160,7 @@ if(!function_exists('getModule')){
           }
           else {
               $mail = new PHPMailer(true);
-      
+
               try {
                   // $mail->isSMTP();
                   $mail->Host       = $gs->smtp_host;
@@ -211,11 +211,11 @@ if(!function_exists('getModule')){
 
         if($gs->email_notify){
             $message = str_replace('{name}', $user->name, $template->email_body);
-        
+
             foreach ($data as $key => $value) {
                 $message = str_replace("{" . $key . "}", $value, $message);
             }
-        
+
             if ($gs->mail_type == 'php_mail') {
                 $headers = "From: $gs->sitename <$gs->email_from> \r\n";
                 $headers .= "Reply-To: $gs->sitename <$gs->email_from> \r\n";
@@ -224,7 +224,7 @@ if(!function_exists('getModule')){
                 @mail($user->email, $template->email_subject, $message, $headers);
             } else {
                 $mail = new PHPMailer(true);
-        
+
                 try {
                     $mail->isSMTP();
                     $mail->Host       = $gs->smtp_host;
@@ -258,18 +258,18 @@ if(!function_exists('getModule')){
             }
             sendSMS($user->phone,$message,$gs->contact_no);
         }
-        
+
     }
   }
-  
+
   if(!function_exists('userBalance')){
     function userBalance($user_id){
-      $sql = "SELECT 
-                sum((`w`.`balance`/`c`.`rate`)) as `total_amount` 
+      $sql = "SELECT
+                sum((`w`.`balance`/`c`.`rate`)) as `total_amount`
               FROM  `wallets` as `w`,
-                    `currencies` as `c` 
-              WHERE `w`.`user_id`=$user_id AND 
-                    `w`.`user_type`=1 AND 
+                    `currencies` as `c`
+              WHERE `w`.`user_id`=$user_id AND
+                    `w`.`user_type`=1 AND
                     `w`.`currency_id` = `c`.`id`";
         $row = DB::selectOne($sql);
         return $row;
@@ -305,7 +305,7 @@ if(!function_exists('getModule')){
         $queries = request()->query();
         if(count($queries) > 0) $delimeter = '&';
         else  $delimeter = '?';
-        
+
         if(request()->has($key)){
           $url = request()->getRequestUri();
           $pattern = "\?$key";
@@ -315,7 +315,7 @@ if(!function_exists('getModule')){
           return  $filteredURL.$delimeter."$key=$value";
         }
         return  request()->getRequestUri().$delimeter."$key=$value";
-        
+
 
     }
   }
@@ -329,7 +329,7 @@ if(!function_exists('getModule')){
           return $balance? $balance->balance: 0;
       }
   }
-  
+
   if(!function_exists('user_wallet_decrement'))
   {
       function user_wallet_decrement($auth_id, $currency_id, $amount)
@@ -346,14 +346,14 @@ if(!function_exists('getModule')){
         }
       }
   }
-  
+
   if(!function_exists('user_wallet_increment'))
   {
       function user_wallet_increment($auth_id, $currency_id, $amount)
       {
         $wallet = Wallet::where('user_id', $auth_id)
             ->where('currency_id',$currency_id)->first();
-        
+
         if(!$wallet)
         {
           $user_wallet = new Wallet();
@@ -361,6 +361,56 @@ if(!function_exists('getModule')){
           $user_wallet->user_type = 1;
           $user_wallet->currency_id = $currency_id;
           $user_wallet->balance = $amount;
+          $user_wallet->created_at = date('Y-m-d H:i:s');
+          $user_wallet->updated_at = date('Y-m-d H:i:s');
+          $user_wallet->save();
+          return $user_wallet->balance;
+        }
+        else {
+          $wallet->balance += $amount;
+          $wallet->update();
+          return $wallet->balance;
+        }
+
+      }
+  }
+
+
+  if(!function_exists('user_wallet_decrement_current'))
+  {
+      function user_wallet_decrement_current($auth_id, $currency_id, $amount)
+      {
+        $wallet = Wallet::where('user_id', $auth_id)->where('wallet_type', '1')
+                  ->where('currency_id',$currency_id)->first();
+
+        if($wallet && $wallet->balance >= $amount)
+        {
+          $balance = Wallet::where('user_id', $auth_id)
+                      ->where('currency_id',$currency_id)
+                      ->where('wallet_type', '1')
+                      ->decrement('balance', $amount);
+          return $balance;
+        }
+      }
+  }
+
+  if(!function_exists('user_wallet_increment_current'))
+  {
+      function user_wallet_increment_current($auth_id, $currency_id, $amount)
+      {
+        $wallet = Wallet::where('user_id', $auth_id)->where('wallet_type', '1')
+            ->where('currency_id',$currency_id)->first();
+
+        if(!$wallet)
+        {
+
+          $user_wallet = new Wallet();
+          $user_wallet->user_id = $auth_id;
+          $user_wallet->user_type = 1;
+          $user_wallet->currency_id = $currency_id;
+          $user_wallet->balance = $amount;
+          $user_wallet->wallet_type = 'Current';
+          $user_wallet->wallet_no ="WN". date('ydis') . random_int(100000, 999999);
           $user_wallet->created_at = date('Y-m-d H:i:s');
           $user_wallet->updated_at = date('Y-m-d H:i:s');
           $user_wallet->save();
