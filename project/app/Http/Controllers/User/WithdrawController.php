@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use App\Models\BankPlan;
 use Auth;
 use App\Models\Currency;
@@ -16,6 +17,7 @@ use App\Models\WithdrawMethod;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Str;
 use Validator;
+use Illuminate\Support\Facades\DB;
 
 class WithdrawController extends Controller
 {
@@ -26,16 +28,31 @@ class WithdrawController extends Controller
 
   	public function index()
     {
-        $withdraws = Withdrawals::whereUserId(auth()->id())->orderBy('id','desc')->paginate(10);     
+        $withdraws = Withdrawals::whereUserId(auth()->id())->orderBy('id','desc')->paginate(10);
         return view('user.withdraw.index',compact('withdraws'));
     }
 
     public function create()
     {
-        $data['methods'] = WithdrawMethod::whereStatus(1)->orderBy('id','desc')->get();
+        // $data['methods'] = WithdrawMethod::whereStatus(1)->orderBy('id','desc')->get();
+        $data['subinstitude'] = Admin::where('id', '!=', 1)->orderBy('id')->get();
+
         return view('user.withdraw.create' ,$data);
     }
 
+    public function gateway(Request $request) {
+        return DB::table('payment_gateways')->where('subins_id', $request->id)->whereStatus(1)->get();
+    }
+
+    public function gatewaycurrency(Request $request) {
+        $currency['id'] = DB::table('payment_gateways')->where('subins_id', $request->id)->where('keyword', $request->keyword)->whereStatus(1)->first()->currency_id;
+        $res = [];
+        foreach (json_decode($currency['id']) as $value) {
+            $code =  Currency::where('id',$value)->first();
+            array_push($res,$code);
+        }
+        return $res;
+    }
 
     public function store(Request $request)
     {
@@ -53,8 +70,9 @@ class WithdrawController extends Controller
             return redirect()->back()->with('unsuccess','Plan Date Expired.');
         }
 
-        $withdraw_method = WithdrawMethod::whereId($request->methods)->first();
-        $userBalance = user_wallet_balance($user->id,$withdraw_method->currency_id);
+        // $withdraw_method = WithdrawMethod::whereId($request->methods)->first();
+        $withdraw_method = WithdrawMethod::whereId(1)->first();
+        $userBalance = user_wallet_balance($user->id,$request->currency_id);
 
         $bank_plan = BankPlan::whereId($user->bank_plan_id)->first();
         $dailyWithdraws = Withdrawals::whereDate('created_at', '=', date('Y-m-d'))->whereStatus('completed')->sum('amount');
@@ -67,7 +85,7 @@ class WithdrawController extends Controller
         if($monthlyWithdraws > $bank_plan->monthly_withdraw){
             return redirect()->back()->with('unsuccess','Monthly withdraw limit over.');
         }
-        
+
         if($request->amount > $userBalance){
             return redirect()->back()->with('unsuccess','Insufficient Account Balance.');
         }
@@ -83,7 +101,7 @@ class WithdrawController extends Controller
         $amount = $request->amount; //$amountToAdd;
         $fee = (($withdraw_method->percentage / 100) * $amount) + $charge;
         $finalamount = $amount - $fee;
-        
+
         if($finalamount < 0){
             return redirect()->back()->with('unsuccess','Request Amount should be greater than this '.$amountToAdd.' (USD)');
         }
@@ -95,7 +113,7 @@ class WithdrawController extends Controller
         $finalamount = number_format((float)$finalamount,2,'.','');
 
         user_wallet_decrement($user->id, $currency->id, $amount);
-       
+
 
         $txnid = Str::random(12);
         $newwithdrawal = new Withdrawals();
@@ -110,7 +128,8 @@ class WithdrawController extends Controller
 
         $newwithdrawal->trx         = Str::random(12);
         $newwithdrawal->user_id = auth()->id();
-        $newwithdrawal->method_id   = $request->methods;
+        // $newwithdrawal->method_id   = $request->methods;
+        $newwithdrawal->method_id   = 1;
         $newwithdrawal->currency_id = $currency->id;
         $newwithdrawal->amount      = $amount;
         $newwithdrawal->charge      = $fee;
@@ -146,7 +165,7 @@ class WithdrawController extends Controller
     }
 
     public function details(Request $request, $id){
-        $data['data'] = Withdrawals::findOrFail($id);        
+        $data['data'] = Withdrawals::findOrFail($id);
         return view('user.withdraw.details',$data);
     }
 }

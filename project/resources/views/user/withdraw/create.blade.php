@@ -32,12 +32,26 @@
                                 @csrf
 
                                 <div class="form-group">
-                                    <label class="form-label required">{{__('Withdraw Method')}}</label>
-                                    <select name="methods" id="withmethod" class="form-select withmethod" required>
-                                        <option value="">{{ __('Select Withdraw Method') }}</option>
-                                        @foreach ($methods as $data)
-                                            <option value="{{$data->id}}">{{$data->method}}</option>
+                                    <label class="form-label required">{{__('Institution')}}</label>
+                                    <select name="subinstitude" id="subinstitude" class="form-select" required>
+                                        <option value="">{{ __('Select Institution') }}</option>
+                                        @foreach ($subinstitude as $ins)
+                                            <option value="{{$ins->id}}">{{$ins->name}}</option>
                                         @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="form-group mt-3">
+                                    <label class="form-label required">{{__('Withdraw Method')}}</label>
+                                    <select name="methods" id="withmethod" class="form-select" required>
+                                        <option value="">{{ __('Select Withdraw Method') }}</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group mt-3">
+                                    <label class="form-label required">{{__('Withdraw Currency')}}</label>
+                                    <select name="currency_id" id="withcurrency" class="form-select" required>
+                                        <option value="">{{ __('Select Withdraw Currency') }}</option>
                                     </select>
                                 </div>
 
@@ -69,11 +83,28 @@
 
 @push('js')
 
-<script>
-    $(function(){
-        $('.withmethod').on('change',function () {
-            // alert("ddd");
-        });
+<script type="text/javascript">
+    $("#subinstitude").on('click',function(){
+        let subinstitude = $("#subinstitude").val();
+        $.post("{{ route('user.withdraw.gateway') }}",{id:subinstitude,_token:'{{csrf_token()}}'},function (res) {
+            let _optionHtml = '<option value="">Select Withdraw Method</option>';
+            $.each(res, function(i, item) {
+                _optionHtml += '<option value="' + item.keyword + '">' + item.name + '</option>';
+            });
+            $('select#withmethod').html(_optionHtml);
+        })
+    });
+
+    $("#withmethod").on('change',function(){
+        let keywordvalue = $("#withmethod").val();
+        let subinstitude = $("#subinstitude").val();
+        $.post("{{ route('user.withdraw.gatewaycurrency') }}",{id:subinstitude,keyword:keywordvalue,_token:'{{csrf_token()}}'},function (res) {
+            let _optionHtml = '<option value="">Select Payment Currency</option>';
+            $.each(res, function(i,item) {
+                _optionHtml += '<option value="' + item.id + '">' + item.code + '</option>';
+            });
+            $('select#withcurrency').html(_optionHtml);
+        })
     });
 
 </script>
