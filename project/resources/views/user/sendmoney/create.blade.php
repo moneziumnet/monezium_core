@@ -35,6 +35,7 @@
                       <div class="tab-content">
                         <div class="tab-pane active show" id="other-account">
                             @includeIf('includes.flash')
+                            {{-- <form action="{{route('send.money.store-two-auth')}}" method="POST" enctype="multipart/form-data"> --}}
                             <form action="{{route('send.money.store')}}" method="POST" enctype="multipart/form-data">
                                 @csrf
 
@@ -69,6 +70,12 @@
                                 <div class="form-group mt-3">
                                     <label class="form-label required">{{__('Description')}}</label>
                                     <textarea name="description" id="description" class="form-control" placeholder="{{__('Enter description')}}" rows="5" required></textarea>
+                                </div>
+                                
+                                <div class="form-group mt-3">
+                                    <label class="form-label required">{{__('Google Authenticator Code')}}</label>
+                                    <input type="hidden" name="key" value="{{$secret}}">
+                                    <input type="text" class="form-control" name="code" required placeholder="@lang('Enter Google Authenticator Code')">
                                 </div>
 
                                 <div class="form-footer">

@@ -73,8 +73,24 @@
                                             </div>
                                           </td>
                                           <td data-label="{{ __('Status') }}">
+                                            @if($data->status == 1)
+                                              @php
+                                                  $bclass = "success";
+                                                  $bstatus = "completed";
+                                              @endphp
+                                            @elseif($data->status == 2)
+                                              @php
+                                                  $bclass = "danger";
+                                                  $bstatus = "cancelled";
+                                              @endphp
+                                            @else
+                                              @php
+                                                  $bclass = "warning";
+                                                  $bstatus = "pending";
+                                              @endphp
+                                            @endif
                                             <div>
-                                              <span class="badge badge-{{ $data->status == 1 ? 'success' : 'warning'}}">{{ $data->status == 1 ? 'completed' : 'pending'}}</span>
+                                              <span class="badge badge-{{ $bclass }}">{{ $bstatus}}</span>
                                             </div>
                                           </td>
 

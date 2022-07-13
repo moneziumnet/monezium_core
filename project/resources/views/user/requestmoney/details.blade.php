@@ -151,7 +151,7 @@
                                 <tr>
                                     <td class="text-center" colspan="3">
 
-                                            <a href="javascript:;" id="sendBtn" data-href="{{ route('user.request.money.send',$data->id) }}" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-success">
+                                            <a href="javascript:;" id="sendBtn" data-href="{{ route('user.request.money.verify',$data->id) }}" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-success">
                                             {{__('Send')}}
                                             </a>
                                             <a href="javascript:;" id="cancelBtn" data-href="{{ route('user.request.money.cancel',$data->id) }}" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-cancel">

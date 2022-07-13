@@ -130,6 +130,8 @@ Route::prefix('user')->group(function() {
         Route::get('/request-money/receive',[MoneyRequestController::class,'receive'])->name('user.request.money.receive');
         Route::get('/money-request/create', [MoneyRequestController::class,'create'])->name('user.money.request.create');
         Route::post('/money-request/store', [MoneyRequestController::class,'store'])->name('user.money.request.store');
+        Route::get('/request/money/verify/{id}', [MoneyRequestController::class,'verify'])->name('user.request.money.verify');
+        Route::post('/request/money/verify/{id}', [MoneyRequestController::class,'verify'])->name('user.request.money.verify');
         Route::post('/request/money/send/{id}', [MoneyRequestController::class,'send'])->name('user.request.money.send');
         Route::post('/request/money/cancel/{id}', [MoneyRequestController::class,'cancel'])->name('user.request.money.cancel');
         Route::get('/money-request/details/{id}', [MoneyRequestController::class,'details'])->name('user.money.request.details');
@@ -205,6 +207,7 @@ Route::prefix('user')->group(function() {
 
       Route::group(['middleware'=>'kyc:Transfer'],function(){
         Route::get('/send-money',[SendController::class,'create'])->name('send.money.create');
+        // Route::post('/send-money-two-auth',[SendController::class,'storeTwoAuth'])->name('send.money.store-two-auth');
         Route::post('/send-money',[SendController::class,'store'])->name('send.money.store');
         Route::get('/send/money/success',[SendController::class,'success'])->name('user.send.money.success');
         Route::get('/send/money/cancle',[SendController::class,'cancle'])->name('user.send.money.cancle');

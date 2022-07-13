@@ -10,6 +10,7 @@ use App\Models\Wallet;
 use App\Models\SaveAccount;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
+use App\Classes\GoogleAuthenticator;
 use Illuminate\Http\Request;
 use App\Classes\GeniusMailer;
 use App\Models\Generalsetting;
@@ -24,21 +25,37 @@ class SendController extends Controller
     }
 
     public function create(){
-        $wallets = Wallet::where('user_id',auth()->id())->with('currency')->get();
-        $data['wallets'] = $wallets;
-        $data['saveAccounts'] = SaveAccount::whereUserId(auth()->id())->orderBy('id','desc')->get();
-        $data['savedUser'] = NULL;
+        
+        if(auth()->user()->twofa)
+        {
+            $ga = new GoogleAuthenticator();
+            $data['secret'] = $ga->createSecret();
+            $wallets = Wallet::where('user_id',auth()->id())->with('currency')->get();
+            $data['wallets'] = $wallets;
+            $data['saveAccounts'] = SaveAccount::whereUserId(auth()->id())->orderBy('id','desc')->get();
+            $data['savedUser'] = NULL;
 
-        return view('user.sendmoney.create',$data);
+            return view('user.sendmoney.create',$data);
+        }else{
+            return redirect()->route('user.show2faForm')->with('unsuccess','You must be enable 2FA Security');
+        }
+        
     }
 
     public function savedUser($no){
-        $wallets = Wallet::where('user_id',auth()->id())->with('currency')->get();
-        $data['wallets'] = $wallets;
-        $data['savedUser'] = User::whereAccountNumber($no)->first();
-        $data['saveAccounts'] = SaveAccount::whereUserId(auth()->id())->orderBy('id','desc')->get();
+        if(auth()->user()->twofa)
+        {
+            $ga = new GoogleAuthenticator();
+            $data['secret'] = $ga->createSecret();
+            $wallets = Wallet::where('user_id',auth()->id())->with('currency')->get();
+            $data['wallets'] = $wallets;
+            $data['savedUser'] = User::whereAccountNumber($no)->first();
+            $data['saveAccounts'] = SaveAccount::whereUserId(auth()->id())->orderBy('id','desc')->get();
 
-        return view('user.sendmoney.create',$data);
+            return view('user.sendmoney.create',$data);
+        }else{
+            return redirect()->route('user.show2faForm')->with('unsuccess','You must be enable 2FA Security');
+        }
     }
 
     public function success(){
@@ -56,6 +73,7 @@ class SendController extends Controller
         }
     }
 
+    
     public function store(Request $request){
 
         $request->validate([
@@ -63,10 +81,18 @@ class SendController extends Controller
             'wallet_id'         => 'required',
             'account_name'      => 'required',
             'amount'            => 'required|numeric|min:0',
-            'description'       => 'required'
+            'description'       => 'required',
+            'code'              => 'required'
         ]);
 
         $user = auth()->user();
+        $ga = new GoogleAuthenticator();
+        $secret = $user->go;
+        $oneCode = $ga->getCode($secret);
+        
+        if ($oneCode != $request->code) {
+            return redirect()->back()->with('unsuccess','Two factor authentication code is wrong');
+        }
 
         if($user->bank_plan_id === null){
             return redirect()->back()->with('unsuccess','You have to buy a plan to withdraw.');

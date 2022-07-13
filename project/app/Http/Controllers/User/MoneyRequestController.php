@@ -8,6 +8,7 @@ use App\Models\Currency;
 use App\Models\Wallet;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
+use App\Classes\GoogleAuthenticator;
 use App\Models\MoneyRequest;
 use Illuminate\Http\Request;
 use App\Classes\GeniusMailer;
@@ -27,8 +28,13 @@ class MoneyRequestController extends Controller
     }
 
     public function receive(){
-        $data['requests'] = MoneyRequest::orderby('id','desc')->whereReceiverId(auth()->id())->paginate(10);
-        return view('user.requestmoney.receive',$data);
+        if(auth()->user()->twofa)
+        {
+            $data['requests'] = MoneyRequest::orderby('id','desc')->whereReceiverId(auth()->id())->paginate(10);
+            return view('user.requestmoney.receive',$data);
+        }else{
+            return redirect()->route('user.show2faForm')->with('unsuccess','You must be enable 2FA Security');
+        }
     }
 
     public function create(){
@@ -117,7 +123,36 @@ class MoneyRequestController extends Controller
         
     }
 
-    public function send($id){
+    public function verify($id)
+    {
+        if(auth()->user()->twofa)
+        {
+            $data['id'] = $id;
+            return view('user.requestmoney.verify', $data);
+        }else{
+            return redirect()->route('user.show2faForm')->with('unsuccess','You must be enable 2FA Security');
+        }
+    }
+
+    public function send(Request $request, $id){
+        if(auth()->user()->twofa != 1)
+        {
+            return redirect()->route('user.show2faForm')->with('unsuccess','You must be enable 2FA Security');
+        }
+
+        $request->validate([
+            'code' => 'required'
+        ]);
+
+        $user = auth()->user();
+        $ga = new GoogleAuthenticator();
+        $secret = $user->go;
+        $oneCode = $ga->getCode($secret);
+        
+        if ($oneCode != $request->code) {
+            return redirect()->back()->with('unsuccess','Two factor authentication code is wrong');
+        }
+
         $data = MoneyRequest::findOrFail($id);
         $gs = Generalsetting::first();
     
@@ -200,8 +235,8 @@ class MoneyRequestController extends Controller
             $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
             mail($to,$subject,$msg,$headers);            
         }
-
-        return back()->with('message','Successfully Money Send.');
+        return redirect()->route('user.request.money.receive')->with('message','Successfully Money Send.');
+        //return back()->with('message','Successfully Money Send.');
     }
 
     public function cancel($id)
