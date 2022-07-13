@@ -179,10 +179,16 @@
 
   @if(getModule('Deposits'))
   <li class="nav-item">
-    <a class="nav-link" href="{{ route('admin.deposits.index') }}">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#bank" aria-expanded="true" aria-controls="collapseTable">
       <i class="fas fa-piggy-bank"></i>
       <span>{{ __('Deposits') }}</span>
     </a>
+    <div id="bank" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+          <a class="collapse-item" href="{{ route('admin.deposits.bank.index') }}">{{ __('Bank Deposit') }}</a>
+          <a class="collapse-item" href="{{ route('admin.deposits.index') }}">{{ __('Gateway Deposit') }}</a>
+        </div>
+    </div>
   </li>
   @endif
 

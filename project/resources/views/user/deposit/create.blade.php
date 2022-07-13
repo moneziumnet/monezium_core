@@ -10,7 +10,7 @@
       <div class="row align-items-center">
         <div class="col">
           <h2 class="page-title">
-            {{__('Deposit Now')}}
+            {{__('Deposit Now (Payment Gateway)')}}
           </h2>
         </div>
       </div>
@@ -105,7 +105,6 @@
                             </div>
                         </div>
 
-                        <input type="hidden" id="currencyCode" name="currency_code" value="{{ $defaultCurrency->code }}">
 
 
                         <div class="form-group mb-3 mt-3">

@@ -59,6 +59,7 @@ use App\Http\Controllers\Admin\OwnBankTransferController;
 use App\Http\Controllers\Admin\WireTransferBankController;
 use App\Http\Controllers\Admin\OtherBankTransferController;
 use App\Http\Controllers\Admin\DepositController as AppDepositController;
+use App\Http\Controllers\Admin\DepositBankController as AppDepositBankController;
 use App\Http\Controllers\Admin\ReferralController as AdminReferralController;
 use App\Http\Controllers\Admin\WireTransferController as AdminWireTransferController;
 
@@ -388,6 +389,10 @@ Route::prefix('admin')->group(function () {
     Route::get('/deposits/datatables', [AppDepositController::class, 'datatables'])->name('admin.deposits.datatables');
     Route::get('/deposits', [AppDepositController::class, 'index'])->name('admin.deposits.index');
     Route::get('/deposits/status/{id1}/{id2}', [AppDepositController::class, 'status'])->name('admin.deposits.status');
+
+    Route::get('/deposits/bank/datatables', [AppDepositBankController::class, 'datatables'])->name('admin.deposits.bank.datatables');
+    Route::get('/deposits/bank', [AppDepositBankController::class, 'index'])->name('admin.deposits.bank.index');
+    Route::get('/deposits/bank/status/{id1}/{id2}', [AppDepositBankController::class, 'status'])->name('admin.deposits.bank.status');
   });
 
   Route::group(['middleware' => 'permissions:Manage Blog'], function () {

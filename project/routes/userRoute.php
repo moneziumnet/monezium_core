@@ -8,6 +8,7 @@ use App\Http\Controllers\Deposit\PaytmController;
 use App\Http\Controllers\Deposit\RazorpayController;
 use App\Http\Controllers\Deposit\StripeController;
 use App\Http\Controllers\User\DepositController;
+use App\Http\Controllers\User\DepositBankController;
 use App\Http\Controllers\User\BeneficiaryController;
 use App\Http\Controllers\Deposit\FlutterwaveController;
 use App\Http\Controllers\Deposit\ManualController;
@@ -234,6 +235,11 @@ Route::prefix('user')->group(function() {
       Route::get('/deposit/create',[DepositController::class,'create'])->name('user.deposit.create');
       Route::POST('/deposit/gateway',[DepositController::class,'gateway'])->name('user.deposit.gateway');
       Route::POST('/deposit/gatewaycurrency',[DepositController::class,'gatewaycurrency'])->name('user.deposit.gatewaycurrency');
+
+      Route::get('/bank/deposits',[DepositBankController::class,'index'])->name('user.depositbank.index');
+      Route::get('/bank/deposit/create',[DepositBankController::class,'create'])->name('user.depositbank.create');
+      Route::POST('/bank/deposit/list',[DepositBankController::class,'list'])->name('user.depositbank.list');
+      Route::POST('/bank/deposit/store',[DepositBankController::class,'store'])->name('user.depositbank.store');
 
       Route::post('/deposit/stripe-submit', [StripeController::class,'store'])->name('deposit.stripe.submit');
 

@@ -4,11 +4,11 @@
 
 <div class="card">
 	<div class="d-sm-flex align-items-center justify-content-between">
-	<h5 class=" mb-0 text-gray-800 pl-3">{{ __('Deposits(Payment Gateway)') }}</h5>
+	<h5 class=" mb-0 text-gray-800 pl-3">{{ __('Deposits(Bank)') }}</h5>
 	<ol class="breadcrumb">
 		<li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
 
-		<li class="breadcrumb-item"><a href="{{ route('admin.deposits.index') }}">{{ __('Deposits(Payment Gateway)') }}</a></li>
+		<li class="breadcrumb-item"><a href="{{ route('admin.deposits.bank.index') }}">{{ __('Deposits(Bank)') }}</a></li>
 	</ol>
 	</div>
 </div>
@@ -74,7 +74,7 @@
            processing: true,
            serverSide: true,
            searching: true,
-           ajax: '{{ route('admin.deposits.datatables') }}',
+           ajax: '{{ route('admin.deposits.bank.datatables') }}',
            columns: [
                 { data: 'created_at', name: 'created_at' },
                 { data: 'deposit_number', name: 'deposit_number' },

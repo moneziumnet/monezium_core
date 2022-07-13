@@ -24,7 +24,7 @@
           $count = count($modules);
           @endphp
 
-          @if ($count < 8) 
+          @if ($count < 8)
           @if (in_array('Loan',$modules)) <li class="nav-item dropdown {{ request()->routeIs('user.loans.plan') || request()->routeIs('user.loans.index') || request()->routeIs('user.loans.pending') || request()->routeIs('user.loans.paid') || request()->routeIs('user.loans.rejected') ? 'active' : '' }}">
             <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
               <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -462,8 +462,11 @@
                 @endif
                 @if (in_array('Deposit',$modules))
                 <a class="dropdown-item" href="{{route('user.deposit.index')}}">
-                  {{__('Deposit')}}
+                  {{__('Deposit (Payment Gateway)')}}
                 </a>
+                <a class="dropdown-item" href="{{route('user.depositbank.index')}}">
+                    {{__('Deposit (Bank)')}}
+                  </a>
                 @endif
                 @if (in_array('Wire Transfer',$modules))
                 <a class="dropdown-item" href="{{route('user.wire.transfer.index')}}">
