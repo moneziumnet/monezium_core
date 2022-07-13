@@ -314,7 +314,7 @@ Route::prefix('admin')->group(function () {
 
   Route::group(['middleware' => 'permissions:Management Withdraw'], function () {
     Route::get('withdraw/method/datatables', [WithdrawMethodController::class, 'datatables'])->name('admin.withdraw.method.datatables'); //->middleware('permission:withdraw method');
-    Route::get('withdraw/method', [WithdrawMethodController::class, 'index'])->name('admin.withdraw'); //->middleware('permission:withdraw method');
+    // Route::get('withdraw/method', [WithdrawMethodController::class, 'index'])->name('admin.withdraw'); //->middleware('permission:withdraw method');
     Route::get('withdraw/method-create', [WithdrawMethodController::class, 'create'])->name('admin.withdraw.create'); //->middleware('permission:withdraw method create');
     Route::post('withdraw/method-create', [WithdrawMethodController::class, 'store']); //->middleware('permission:withdraw method create');
     Route::get('withdraw/method/search', [WithdrawMethodController::class, 'index'])->name('admin.withdraw.search'); //->middleware('permission:withdraw method search');

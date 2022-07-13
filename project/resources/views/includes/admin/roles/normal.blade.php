@@ -93,7 +93,6 @@
   </a>
     <div id="withdraw" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
-        <a class="collapse-item" href="{{ route('admin.withdraw') }}">{{ __('Withdraw Method') }}</a>
         <a class="collapse-item" href="{{ route('admin.withdraw.pending') }}">{{ __('Pending Withdraws') }}
         @if( DB::table('withdrawals')->where('status','pending')->count() > 0)
           <span class="badge badge-sm badge-danger badge-counter">{{ DB::table('withdrawals')->where('status','pending')->count() }}</span>
