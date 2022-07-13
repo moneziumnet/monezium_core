@@ -17,8 +17,10 @@ use Illuminate\Support\Str;
 class PaytmController extends Controller
 {
     public function store(Request $request){
+        $currency_code = Currency::where('id',$request->currency_id)->first()->code;
+        $request->currency_code = $currency_code;
 
-        if($request->currency_code != "INR")
+        if($currency_code != "INR")
         {
             return back()->with('warning','Please Select INR Currency For Paytm.');
         }
@@ -336,7 +338,7 @@ class PaytmController extends Controller
         $gs = Generalsetting::first();
         $data = PaymentGateway::whereKeyword('Paytm')->first();
         $paydata = $data->convertAutoData();
-    
+
         if ($paydata['sandbox_check'] == 1) {
             define('PAYTM_ENVIRONMENT', 'TEST');
         } elseif ($paydata['sandbox_check'] == 0) {
@@ -359,7 +361,7 @@ class PaytmController extends Controller
     }
 
     public function paytmCallback( Request $request ) {
-        
+
         $deposit_number = Session::get('deposit_number');
         $input = Session::get('input_data');
 
@@ -367,7 +369,7 @@ class PaytmController extends Controller
         if ( 'TXN_SUCCESS' === $request['STATUS'] ) {
             $transaction_id = $request['TXNID'];
             $deposit = Deposit::where('deposit_number',$deposit_number)->where('status','pending')->first();
-            
+
             $data['txnid'] = $transaction_id;
             $data['status'] = "complete";
             $deposit->update($data);
@@ -380,7 +382,7 @@ class PaytmController extends Controller
             $currency_id = Currency::whereIsDefault(1)->first()->id;
             user_wallet_increment($user->id, $currency_id, $deposit->amount);
 
-           
+
 
             $trans = new Transaction();
             $trans->trnx = $deposit_number;
@@ -414,7 +416,7 @@ class PaytmController extends Controller
                 ];
 
                 $mailer = new GeniusMailer();
-                $mailer->sendAutoMail($data);            
+                $mailer->sendAutoMail($data);
             }
             else
             {
@@ -422,7 +424,7 @@ class PaytmController extends Controller
                 $subject = " You have deposited successfully.";
                 $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
                 $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-                mail($to,$subject,$msg,$headers);            
+                mail($to,$subject,$msg,$headers);
             }
 
             Session::forget('deposit_number');

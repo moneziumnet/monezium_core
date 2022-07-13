@@ -27,7 +27,7 @@
                         @csrf
                         <div class="form-group">
                             <label class="form-label required">{{__('Institution')}}</label>
-                            <select name="method" id="subinstitude" class="form-select" required>
+                            <select name="subinstitude" id="subinstitude" class="form-select" required>
                                 <option value="">{{ __('Select Institution') }}</option>
 
                                 @foreach ($subinstitude as $ins)
@@ -54,7 +54,7 @@
 
                         <div class="form-group mt-3">
                             <label class="form-label required">{{__('Payment Currency')}}</label>
-                            <select name="method" id="withcurrency" class="form-select" required>
+                            <select name="currency_id" id="withcurrency" class="form-select" required>
                                 <option value="">{{ __('Select Payment Currency') }}</option>
                             </select>
                         </div>
@@ -105,9 +105,7 @@
                             </div>
                         </div>
 
-                        <input type="hidden" name="currency_sign" value="{{ $defaultCurrency->symbol }}">
                         <input type="hidden" id="currencyCode" name="currency_code" value="{{ $defaultCurrency->code }}">
-                        <input type="hidden" name="currency_id" value="{{ $defaultCurrency->id }}">
 
 
                         <div class="form-group mb-3 mt-3">

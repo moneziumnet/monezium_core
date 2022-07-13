@@ -30,14 +30,16 @@ class RazorpayController extends Controller
 
     public function store(Request $request)
     {
-        if($request->currency_code != "INR")
+        $currency_code = Currency::where('id',$request->currency_id)->first()->code;
+        $request->currency_code = $currency_code;
+        if($currency_code != "INR")
         {
             return redirect()->back()->with('warning','Please Select INR Currency For Rezorpay.');
         }
-        
+
         $settings = Generalsetting::findOrFail(1);
         $deposit = new Deposit();
-        
+
         $input = $request->all();
         $item_name = $settings->title." Deposit";
         $item_number = Str::random(12);
@@ -56,32 +58,32 @@ class RazorpayController extends Controller
             'currency'        => 'INR',
             'payment_capture' => 1 // auto capture
         ];
-        
+
         $razorpayOrder = $this->api->order->create($orderData);
 
         $input['user_id'] = auth()->user()->id;
-        
+
         Session::put('input_data',$input);
         Session::put('order_data',$order);
         Session::put('order_payment_id', $razorpayOrder['id']);
 
         $displayAmount = $amount = $orderData['amount'];
-                    
+
         if ($this->displayCurrency !== 'INR')
         {
             $url = "https://api.fixer.io/latest?symbols=$this->displayCurrency&base=INR";
             $exchange = json_decode(file_get_contents($url), true);
-        
+
             $displayAmount = $exchange['rates'][$this->displayCurrency] * $amount / 100;
         }
-        
+
         $checkout = 'automatic';
-        
+
         if (isset($_GET['checkout']) and in_array($_GET['checkout'], ['automatic', 'manual'], true))
         {
             $checkout = $_GET['checkout'];
         }
-        
+
         $data = [
             "key"               => $this->keyId,
             "amount"            => $amount,
@@ -101,16 +103,16 @@ class RazorpayController extends Controller
             ],
             "order_id"          => $razorpayOrder['id'],
         ];
-        
+
         if ($this->displayCurrency !== 'INR')
         {
             $data['display_currency']  = $this->displayCurrency;
             $data['display_amount']    = $displayAmount;
         }
-        
+
         $json = json_encode($data);
         $displayCurrency = $this->displayCurrency;
-        
+
         return view( 'frontend.razorpay-checkout', compact( 'data','displayCurrency','json','notify_url' ) );
     }
 
@@ -126,7 +128,7 @@ class RazorpayController extends Controller
 
         if (empty($input_data['razorpay_payment_id']) === false)
         {
-        
+
             try
             {
                 $attributes = array(
@@ -134,7 +136,7 @@ class RazorpayController extends Controller
                     'razorpay_payment_id' => $input_data['razorpay_payment_id'],
                     'razorpay_signature' => $input_data['razorpay_signature']
                 );
-        
+
                 $this->api->utility->verifyPaymentSignature($attributes);
             }
             catch(SignatureVerificationError $e)
@@ -164,7 +166,7 @@ class RazorpayController extends Controller
             $user = auth()->user();
             $currency_id = $request->currency_id?$request->currency_id:Currency::whereIsDefault(1)->first()->id;
             user_wallet_increment($user->id, $currency_id, $amountToAdd);
-           
+
 
             $trans = new Transaction();
             $trans->trnx = $deposit->deposit_number;
@@ -198,7 +200,7 @@ class RazorpayController extends Controller
                 ];
 
                 $mailer = new GeniusMailer();
-                $mailer->sendAutoMail($data);            
+                $mailer->sendAutoMail($data);
             }
             else
             {
@@ -206,13 +208,13 @@ class RazorpayController extends Controller
                $subject = " You have deposited successfully.";
                $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
                $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-               mail($to,$subject,$msg,$headers);            
+               mail($to,$subject,$msg,$headers);
             }
 
-     
-            
+
+
             return redirect()->route('user.deposit.create')->with('success','Deposit amount '.$input['amount'].' ('.$input['currency_code'].') successfully!');
-            
+
         }
         return redirect()->back()->with('warning','Something Went wrong!');
     }

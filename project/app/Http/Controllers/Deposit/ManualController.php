@@ -43,7 +43,7 @@ class ManualController extends Controller
             ];
 
             $mailer = new GeniusMailer();
-            $mailer->sendAutoMail($data);            
+            $mailer->sendAutoMail($data);
         }
         else
         {
@@ -51,9 +51,9 @@ class ManualController extends Controller
            $subject = " You have deposited successfully.";
            $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
            $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-           mail($to,$subject,$msg,$headers);            
+           mail($to,$subject,$msg,$headers);
         }
 
-        return redirect()->route('user.deposit.create')->with('success','Deposit amount '.$request->amount.' ('.$request->currency_code.') successfully!');
+        return redirect()->route('user.deposit.create')->with('success','Deposit amount '.$request->amount.' ('.$currency->code.') successfully!');
     }
 }

@@ -39,9 +39,10 @@ class StripeController extends Controller
         $item_name = $settings->title." Deposit";
         $item_number = Str::random(4).time();
         $item_amount = $request->amount;
-        
+        $currency_code = Currency::where('id',$request->currency_id)->first()->code;
+
         $support = ['USD'];
-        if(!in_array($request->currency_code,$support)){
+        if(!in_array($currency_code,$support)){
             return redirect()->back()->with('warning','Please Select USD Or EUR Currency For Paypal.');
         }
         $user = auth()->user();
@@ -71,7 +72,7 @@ class StripeController extends Controller
 
                 $charge = $stripe->charges()->create([
                     'card' => $token['id'],
-                    'currency' => $request->currency_code,
+                    'currency' => $currency_code,
                     'amount' => $item_amount,
                     'description' => $item_name,
                     ]);
@@ -91,12 +92,12 @@ class StripeController extends Controller
                     $deposit->save();
 
                     $gs =  Generalsetting::findOrFail(1);
-        
+
                     $user = auth()->user();
                     $currency_id = $request->currency_id?$request->currency_id:Currency::whereIsDefault(1)->first()->id;
                     user_wallet_increment($user->id, $currency_id, $amountToAdd);
-                   
-        
+
+
                     $trans = new Transaction();
                     $trans->trnx = $deposit->deposit_number;
                     $trans->user_id     = $user->id;
@@ -130,7 +131,7 @@ class StripeController extends Controller
                         ];
 
                         $mailer = new GeniusMailer();
-                        $mailer->sendAutoMail($data);            
+                        $mailer->sendAutoMail($data);
                     }
                     else
                     {
@@ -138,12 +139,12 @@ class StripeController extends Controller
                        $subject = " You have deposited successfully.";
                        $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
                        $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-                       mail($to,$subject,$msg,$headers);            
+                       mail($to,$subject,$msg,$headers);
                     }
 
                     return redirect()->route('user.deposit.create')->with('success','Deposit amount '.$request->amount.' (USD) successfully!');
                 }
-                
+
             }catch (Exception $e){
                 return back()->with('unsuccess', $e->getMessage());
             }catch (\Cartalyst\Stripe\Exception\CardErrorException $e){

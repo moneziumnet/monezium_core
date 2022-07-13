@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Deposit;
 
 use App\Http\Controllers\Controller;
 use App\Classes\GeniusMailer;
+use App\Models\Currency;
 use App\Models\Deposit;
 use App\Models\Generalsetting;
 use App\Models\PaymentGateway;
@@ -18,15 +19,16 @@ class AuthorizeController extends Controller
 {
     public function store(Request $request){
         $settings = Generalsetting::find(1);
-        
+
         $authorizeinfo    = PaymentGateway::whereKeyword('authorize.net')->first();
         $authorizesettings= $authorizeinfo->convertAutoData();
 
         $item_name = $settings->title." Deposit";
         $item_number = Str::random(4).time();
         $item_amount = $request->amount;
-        
-     
+        $currency_code = Currency::where('id',$request->currency_id)->first()->code;
+
+
         $validator = Validator::make($request->all(),[
             'cardNumber' => 'required',
             'cardCVC' => 'required',
@@ -50,13 +52,13 @@ class AuthorizeController extends Controller
 
             $paymentOne = new AnetAPI\PaymentType();
             $paymentOne->setCreditCard($creditCard);
-        
+
             $orderr = new AnetAPI\OrderType();
             $orderr->setInvoiceNumber($item_number);
             $orderr->setDescription($item_name);
 
             $transactionRequestType = new AnetAPI\TransactionRequestType();
-            $transactionRequestType->setTransactionType("authCaptureTransaction"); 
+            $transactionRequestType->setTransactionType("authCaptureTransaction");
             $transactionRequestType->setAmount($item_amount);
             $transactionRequestType->setOrder($orderr);
             $transactionRequestType->setPayment($paymentOne);
@@ -65,21 +67,21 @@ class AuthorizeController extends Controller
             $requestt->setMerchantAuthentication($merchantAuthentication);
             $requestt->setRefId($refId);
             $requestt->setTransactionRequest($transactionRequestType);
-        
+
 
             $controller = new AnetController\CreateTransactionController($requestt);
             if($authorizesettings['sandbox_check'] == 1){
                 $response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::SANDBOX);
             }
             else {
-                $response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::PRODUCTION);                
+                $response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::PRODUCTION);
             }
 
-        
+
             if ($response != null) {
                 if ($response->getMessages()->getResultCode() == "Ok") {
                     $tresponse = $response->getTransactionResponse();
-                
+
                     if ($tresponse != null && $tresponse->getMessages() != null) {
                         $deposit = new Deposit();
                         $deposit['deposit_number'] = Str::random(12);
@@ -88,15 +90,15 @@ class AuthorizeController extends Controller
                         $deposit['amount'] = $request->amount;
                         $deposit['method'] = $request->method;
                         $deposit['status'] = "complete";
-    
+
                         $deposit->save();
 
 
                         $gs =  Generalsetting::findOrFail(1);
                         $user = auth()->user();
                         user_wallet_increment($user->id, $request->currency_id, $request->amount);
-                       
-            
+
+
                         if($gs->is_smtp == 1)
                         {
                             $data = [
@@ -108,9 +110,9 @@ class AuthorizeController extends Controller
                                 'aemail' => "",
                                 'wtitle' => "",
                             ];
-            
+
                             $mailer = new GeniusMailer();
-                            $mailer->sendAutoMail($data);            
+                            $mailer->sendAutoMail($data);
                         }
                         else
                         {
@@ -118,18 +120,18 @@ class AuthorizeController extends Controller
                            $subject = " You have deposited successfully.";
                            $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
                            $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-                           mail($to,$subject,$msg,$headers);            
+                           mail($to,$subject,$msg,$headers);
                         }
-    
 
-                        return redirect()->route('user.deposit.create')->with('success','Deposit amount '.$request->amount.' ('.$request->currency_code.') successfully!');
+
+                        return redirect()->route('user.deposit.create')->with('success','Deposit amount '.$request->amount.' ('.$currency_code.') successfully!');
 
                     } else {
                         return redirect()->route('user.deposit.create')->with('unsuccess', 'Payment Failed.');
                     }
                 } else {
                     return redirect()->route('user.deposit.create')->with('unsuccess', 'Payment Failed.');
-                }      
+                }
             } else {
                 return redirect()->route('user.deposit.create')->with('unsuccess', 'Payment Failed.');
             }

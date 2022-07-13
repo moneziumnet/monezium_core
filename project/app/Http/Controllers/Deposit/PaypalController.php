@@ -37,7 +37,7 @@ class PaypalController extends Controller
     {
         $data = PaymentGateway::whereKeyword('paypal')->first();
         $paydata = $data->convertAutoData();
-        
+
         $paypal_conf = \Config::get('paypal');
         $paypal_conf['client_id'] = $paydata['client_id'];
         $paypal_conf['secret'] = $paydata['client_secret'];
@@ -59,15 +59,16 @@ class PaypalController extends Controller
         $item_name = $settings->title." Deposit";
         $item_number = Str::random(12);
         $item_amount = $request->amount;
-        
+        $currency_code = Currency::where('id',$request->currency_id)->first()->code;
+
         $support = ['USD','EUR'];
-        if(!in_array($request->currency_code,$support)){
+        if(!in_array($currency_code,$support)){
             return redirect()->back()->with('warning','Please Select USD Or EUR Currency For Paypal.');
         }
 
         $currency = Currency::whereId($request->currency_id)->first();
         $amountToAdd = $request->amount/$currency->rate;
-       
+
         $deposit['user_id'] = auth()->user()->id;
         $deposit['currency_id'] = $request->currency_id;
         $deposit['amount'] = $amountToAdd ;
@@ -102,8 +103,8 @@ class PaypalController extends Controller
             ->setPayer($payer)
             ->setRedirectUrls($redirect_urls)
             ->setTransactions(array($transaction));
-            
-            
+
+
         try {
             $payment->create($this->_api_context);
         } catch (\PayPal\Exception\PPConnectionException $ex) {
@@ -115,7 +116,7 @@ class PaypalController extends Controller
                 break;
             }
         }
-        
+
         Session::put('deposit_data',$request->all());
         Session::put('paypal_payment_id', $payment->getId());
         Session::put('deposit_number',$item_number);
@@ -142,8 +143,8 @@ class PaypalController extends Controller
 
         $payment_id = Session::get('paypal_payment_id');
         if (empty( $request['PayerID']) || empty( $request['token'])) {
-            return redirect()->back()->with('error', 'Payment Failed'); 
-        } 
+            return redirect()->back()->with('error', 'Payment Failed');
+        }
 
         $payment = Payment::get($payment_id, $this->_api_context);
         $execution = new PaymentExecution();
@@ -163,7 +164,7 @@ class PaypalController extends Controller
 
                 $gs =  Generalsetting::findOrFail(1);
 
-    
+
                 if($gs->is_smtp == 1)
                 {
                     $data = [
@@ -177,7 +178,7 @@ class PaypalController extends Controller
                     ];
 
                     $mailer = new GeniusMailer();
-                    $mailer->sendAutoMail($data);            
+                    $mailer->sendAutoMail($data);
                 }
                 else
                 {
@@ -185,11 +186,11 @@ class PaypalController extends Controller
                     $subject = " You have deposited successfully.";
                     $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
                     $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-                    mail($to,$subject,$msg,$headers);            
+                    mail($to,$subject,$msg,$headers);
                 }
                 $currency_id = Currency::whereIsDefault(1)->first()->id;
                 user_wallet_increment($user->id, $currency_id, $deposit->amount);
-               
+
 
                 $trans = new AppTransaction();
                 $trans->trnx = $deposit->deposit_number;

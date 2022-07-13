@@ -19,13 +19,15 @@ class InstamojoController extends Controller
 {
     public function store(Request $request)
     {
+        $currency_code = Currency::where('id',$request->currency_id)->first()->code;
+        $request->currency_code = $currency_code;
         $input = $request->all();
         $data = PaymentGateway::whereKeyword('instamojo')->first();
         $gs = Generalsetting::first();
         $total =  $request->amount;
         $paydata = $data->convertAutoData();
 
-        if($request->currency_code != "INR")
+        if($currency_code != "INR")
         {
             return redirect()->back()->with('warning',__('Please Select INR Currency For This Payment.'));
         }
@@ -77,7 +79,7 @@ class InstamojoController extends Controller
         $user = auth()->user();
 
         $deposit = new Deposit();
- 
+
         $payment_id = Session::get('order_payment_id');
         if($input_data['payment_status'] == 'Failed'){
             return redirect()->back()->with('unsuccess','Something Went wrong!');
@@ -103,7 +105,7 @@ class InstamojoController extends Controller
 
             $user = auth()->user();
             user_wallet_increment($user->id, $input['currency_id'], $amountToAdd);
-           
+
 
             $trans = new Transaction();
             $trans->trnx = $order_data['item_number'];
@@ -132,7 +134,7 @@ class InstamojoController extends Controller
                 ];
 
                 $mailer = new GeniusMailer();
-                $mailer->sendAutoMail($data);            
+                $mailer->sendAutoMail($data);
             }
             else
             {
@@ -140,7 +142,7 @@ class InstamojoController extends Controller
                $subject = " You have deposited successfully.";
                $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
                $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-               mail($to,$subject,$msg,$headers);            
+               mail($to,$subject,$msg,$headers);
             }
 
             return redirect()->route('user.deposit.create')->with('success','Deposit amount '.$input['amount'].' ('.$input['currency_code'].') successfully!');

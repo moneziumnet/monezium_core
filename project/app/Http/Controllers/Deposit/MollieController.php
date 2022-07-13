@@ -50,7 +50,8 @@ class MollieController extends Controller
             'USD',
             'ZAR'
         ];
-        if(!in_array($request->currency_code,$support)){
+        $currency_code = Currency::where('id',$request->currency_id)->first()->code;
+        if(!in_array($currency_code,$support)){
             return redirect()->back()->with('warning','Please Select USD Or EUR Currency For Paypal.');
         }
 
@@ -59,7 +60,7 @@ class MollieController extends Controller
 
         $item_name = "Deposit via Molly Payment";
 
-      
+
         $payment = Mollie::api()->payments()->create([
             'amount' => [
                 'currency' => 'USD',
@@ -69,7 +70,7 @@ class MollieController extends Controller
             'redirectUrl' => route('deposit.molly.notify'),
             ]);
 
-    
+
         Session::put('molly_data',$input);
         Session::put('payment_id',$payment->id);
         $payment = Mollie::api()->payments()->get($payment->id);
@@ -82,7 +83,7 @@ class MollieController extends Controller
 
         $input = Session::get('molly_data');
         $payment = Mollie::api()->payments()->get(Session::get('payment_id'));
-      
+
         if($payment->status == 'paid'){
             $currency = Currency::where('id',$input['currency_id'])->first();
             $amountToAdd = $input['amount']/$currency->rate;
@@ -99,7 +100,7 @@ class MollieController extends Controller
 
             $user = auth()->user();
             user_wallet_increment($user->id, $input['currency_id'], $amountToAdd);
-           
+
 
             $trans = new Transaction();
             $trans->trnx = $deposit->deposit_number;
@@ -137,7 +138,7 @@ class MollieController extends Controller
                 ];
 
                 $mailer = new GeniusMailer();
-                $mailer->sendAutoMail($data);            
+                $mailer->sendAutoMail($data);
             }
             else
             {
@@ -145,9 +146,9 @@ class MollieController extends Controller
                $subject = " You have deposited successfully.";
                $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
                $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-               mail($to,$subject,$msg,$headers);            
+               mail($to,$subject,$msg,$headers);
             }
-   
+
             Session::forget('molly_data');
             return redirect()->route('user.deposit.create')->with('success','Deposit amount ('.$input['amount'].') successfully!');
         }

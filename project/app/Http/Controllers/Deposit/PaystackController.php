@@ -17,7 +17,9 @@ class PaystackController extends Controller
     }
 
     public function store(Request $request){
-        if($request->currency_code != "NGN")
+        $currency_code = Currency::where('id',$request->currency_id)->first()->code;
+
+        if($currency_code != "NGN")
         {
             return redirect()->back()->with('unsuccess','Please Select NGN Currency For Paystack.');
         }
@@ -30,7 +32,7 @@ class PaystackController extends Controller
 
         $deposit->save();
 
-        
+
         $gs =  Generalsetting::findOrFail(1);
         $currency = Currency::where('id',$request->currency_id)->first();
         $amountToAdd = $request->amount/$currency->rate;
@@ -51,7 +53,7 @@ class PaystackController extends Controller
             ];
 
             $mailer = new GeniusMailer();
-            $mailer->sendAutoMail($data);            
+            $mailer->sendAutoMail($data);
         }
         else
         {
@@ -59,9 +61,9 @@ class PaystackController extends Controller
            $subject = " You have deposited successfully.";
            $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
            $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-           mail($to,$subject,$msg,$headers);            
+           mail($to,$subject,$msg,$headers);
         }
-        
+
         return redirect()->route('user.deposit.create')->with('success','Deposit amount ('.$request->amount.') successfully!');
     }
 }

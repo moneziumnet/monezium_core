@@ -29,7 +29,8 @@ class FlutterwaveController extends Controller
         $curl = curl_init();
 
         $customer_email =  auth()->user()->email;
-        $currency = $request->currency_code;
+        $currency = Currency::where('id',$request->currency_id)->first()->code;
+        $request->currency_code = $currency;
         $PBFPubKey = $this->public_key;
         $redirect_url = route('deposit.flutter.notify');
         $payment_plan = "";
@@ -39,7 +40,7 @@ class FlutterwaveController extends Controller
         $item_number = Str::random(12);
         $txref = $item_number;
         $item_amount = $request->amount;
-       
+
         $deposit = new Deposit();
         $deposit['user_id'] = auth()->user()->id;
         $deposit['currency_id'] = $request->currency_id;
@@ -71,20 +72,20 @@ class FlutterwaveController extends Controller
               "cache-control: no-cache"
             ],
           ));
-          
+
           $response = curl_exec($curl);
           $err = curl_error($curl);
-          
+
           if($err){
             die('Curl returned error: ' . $err);
           }
-          
+
           $transaction = json_decode($response);
-          
+
           if(!$transaction->data && !$transaction->data->link){
             print_r('API returned error: ' . $transaction->message);
           }
-          
+
           return redirect($transaction->data->link);
 
      }
@@ -94,7 +95,7 @@ class FlutterwaveController extends Controller
         $input = $request->all();
         $deposit_number = Session::get('deposit_number');
         $deposit_data = Session::get('deposit_data');
- 
+
         $deposit = Deposit::where('deposit_number',$deposit_number)->where('status','pending')->first();
 
         if($request->cancelled == "true"){
@@ -110,14 +111,14 @@ class FlutterwaveController extends Controller
             );
 
             $data_string = json_encode($query);
-              
-            $ch = curl_init('https://api.ravepay.co/flwv3-pug/getpaidx/api/v2/verify');                                                                      
+
+            $ch = curl_init('https://api.ravepay.co/flwv3-pug/getpaidx/api/v2/verify');
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                              
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-    
+
             $response = curl_exec($ch);
             curl_close($ch);
             $resp = json_decode($response, true);
@@ -128,7 +129,7 @@ class FlutterwaveController extends Controller
               $chargeResponsecode = $resp['data']['chargecode'];
 
               if (($chargeResponsecode == "00" || $chargeResponsecode == "0") && ($paymentStatus == "successful")) {
-      
+
                   $order['txnid'] = $resp['data']['txid'];
                   $data['status'] = "complete";
                   $deposit->update($data);
@@ -137,10 +138,10 @@ class FlutterwaveController extends Controller
 
                   $currency = Currency::where('id',$deposit_data['currency_id'])->first();
                   $amountToAdd = $deposit_data['amount']/$currency->rate;
-      
+
                   $user = auth()->user();
                   user_wallet_increment($user->id, $currency->id, $amountToAdd);
-                 
+
 
                   if($gs->is_smtp == 1)
                   {
@@ -153,9 +154,9 @@ class FlutterwaveController extends Controller
                           'aemail' => "",
                           'wtitle' => "",
                       ];
-  
+
                       $mailer = new GeniusMailer();
-                      $mailer->sendAutoMail($data);            
+                      $mailer->sendAutoMail($data);
                   }
                   else
                   {
@@ -163,12 +164,12 @@ class FlutterwaveController extends Controller
                       $subject = " You have deposited successfully.";
                       $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
                       $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-                      mail($to,$subject,$msg,$headers);            
+                      mail($to,$subject,$msg,$headers);
                   }
 
 
                   return redirect()->route('user.deposit.create')->with('success','Deposit amount '.$deposit_data['amount'].' ('.$deposit_data['currency_code'].') successfully!');
-              
+
               }
               else {
                 return redirect()->route('user.deposit.create')->with('error','Something went wrong!');
