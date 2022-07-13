@@ -30,7 +30,7 @@ class SubInsBankController extends Controller
                                             <h6 class="text-primary">'.$data->name.'</h6>
                                             '.$data->address.'
                                         </div>';
-                            }) 
+                            })
                             ->editColumn('account', function(SubInsBank $data) {
                                 return  '<div>
                                             <h6 class="text-primary">'.'SWIFT:'.$data->swift.'</h6>
@@ -79,7 +79,7 @@ class SubInsBankController extends Controller
                                     <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.  route('admin.subinstitution.banks.delete',$data->id).'">'.__("Delete").'</a>
                                   </div>
                                 </div>';
-  
+
                               })
                             ->rawColumns(['name','account','min_limit','fixed_charge','status','action'])
                             ->toJson();
@@ -115,6 +115,10 @@ class SubInsBankController extends Controller
             return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
         }
 
+        if (SubInsBank::where('ins_id', $request->ins_id)->where('name', $request->name)->first()) {
+            return response()->json(array('errors'=>[0 =>'The same name exist. Please write other name.']));
+        }
+
         $input = $request->all();
         $data = new SubInsBank();
 
@@ -124,7 +128,7 @@ class SubInsBankController extends Controller
         $data->fill($input)->save();
 
         $msg = 'New Bank Added Successfully.<a href="'.route('admin.subinstitution.banks',$data->ins_id).'">View Bank Lists.</a>';
-        return response()->json($msg); 
+        return response()->json($msg);
     }
 
     public function edit(Request $request, $id){
@@ -170,7 +174,7 @@ class SubInsBankController extends Controller
         $data->update($input);
 
         $msg = 'Bank Updated Successfully.<a href="'.route('admin.subinstitution.banks',$data->ins_id).'">View Bank Lists.</a>';
-        return response()->json($msg); 
+        return response()->json($msg);
     }
 
     public function status($id1,$id2)
@@ -189,7 +193,7 @@ class SubInsBankController extends Controller
         $data->delete();
 
         $msg = 'Data Deleted Successfully.';
-        return response()->json($msg);       
+        return response()->json($msg);
     }
 
 }
