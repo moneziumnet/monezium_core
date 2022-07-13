@@ -18,9 +18,18 @@ class KYCController extends Controller
     
     public function kycform()
     {
-        $userType = 'user';
-        $userForms = KycForm::where('user_type',$userType == 'user' ? 1 : 2)->get();
-        return view('user.kyc.index',compact('userType','userForms'));
+        if (auth()->user()->kyc_status != 1)
+        {
+            if (auth()->user()->kyc_status != 3)
+            {   
+                $userType = 'user';
+                $userForms = KycForm::where('user_type',$userType == 'user' ? 1 : 2)->get();
+                return view('user.kyc.index',compact('userType','userForms'));
+            }else{
+                return redirect()->route('user.dashboard')->with('unsuccess','You have submitted kyc for verification.');
+            }
+        }
+        
     }
 
     public function kyc(Request $request){
@@ -64,6 +73,7 @@ class KYCController extends Controller
         $user = auth()->user();
         if(!empty($details)){
             $user->kyc_info = json_encode($details,true);
+            $user->kyc_status = 3;
         }
         $user->save();
 
