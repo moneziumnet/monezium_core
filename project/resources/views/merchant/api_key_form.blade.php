@@ -80,7 +80,7 @@
  
 @endsection
 
-@push('script')
+@push('js')
 <script src="{{asset('assets/user/js/clipboard.min.js')}}"></script>
 <script>
         $(function () {
