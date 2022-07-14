@@ -181,7 +181,7 @@ class LoanController extends Controller
       $data = UserLoan::findOrFail($id);
       $data['requiredInformations'] = json_decode($data->required_information,true);
       $data['data'] = $data;
-      $data['currency'] = Currency::whereIsDefault(1)->first();
+      $data['currencyinfo'] = Currency::whereId($data->currency->id)->first();
 
       return view('admin.loan.show',$data);
     }
@@ -189,7 +189,7 @@ class LoanController extends Controller
     public function logShow($id){
       $loan = UserLoan::findOrfail($id);
       $logs = InstallmentLog::where('transaction_no',$loan->transaction_no)->latest()->paginate(20);
-      $currency = Currency::whereIsDefault(1)->first();
+      $currency = Currency::whereId($loan->currency->id)->first();
 
       return view('admin.loan.log',compact('loan','logs','currency'));
     }

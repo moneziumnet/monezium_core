@@ -34,7 +34,7 @@
                                         <td width="10%">:</td>
                                         <td width="45%"><a href="{{asset('assets/images/'.$value[0])}}" download><img src="{{asset('assets/images/'.$value[0])}}" class="img-thumbnail"></a></td>
                                     </tr>
-                                    @else 
+                                    @else
                                         <tr>
                                             <th width="45%">{{$key}}</th>
                                             <td width="10%">:</td>
@@ -82,12 +82,12 @@
                                     <tr>
                                         <th width="45%">{{__('Request Amount')}}</th>
                                         <th width="10%">:</th>
-                                        <td width="45%">{{ $currency->symbol}} {{$data->loan_amount}}</td>
+                                        <td width="45%">{{ $currencyinfo->symbol}} {{$data->loan_amount}}</td>
                                     </tr>
                                     <tr>
                                         <th width="45%">{{__('Pay Amount')}}</th>
                                         <th width="10%">:</th>
-                                        <td width="45%">{{ $currency->symbol}} {{round($data->total_installment * $data->per_installment_amount,2)}}</td>
+                                        <td width="45%">{{ $currencyinfo->symbol}} {{round($data->total_installment * $data->per_installment_amount,2)}}</td>
                                     </tr>
                                     <tr>
                                         <th width="45%">{{__('Total Installment')}}</th>
@@ -97,7 +97,7 @@
                                     <tr>
                                         <th width="45%">{{__('Per Installment')}}</th>
                                         <th width="10%">:</th>
-                                        <td width="45%">{{ $currency->symbol}} {{$data->per_installment_amount}}</td>
+                                        <td width="45%">{{ $currencyinfo->symbol}} {{$data->per_installment_amount}}</td>
                                     </tr>
                                     <tr>
                                         <th width="45%">{{__('Given Installment')}}</th>

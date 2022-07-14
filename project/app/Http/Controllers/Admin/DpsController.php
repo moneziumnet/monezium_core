@@ -34,13 +34,12 @@ class DpsController extends Controller
                                         <br>
                                         <span class="text-info">'.$data->plan->title.'</span>
                                 </div>';
-                            }) 
+                            })
                             ->editColumn('deposit_amount', function(UserDps $data){
-                                $curr = Currency::where('is_default','=',1)->first();
                                 return  '<div>
-                                            '.$curr->symbol.$data->deposit_amount.'
+                                            '.$data->currency->symbol.amount($data->deposit_amount, $data->currency->type, 2).'
                                             <br>
-                                            <span class="text-info">Per Installment '.$curr->symbol.$data->per_installment.'</span>
+                                            <span class="text-info">Per Installment '.$data->currency->symbol.amount($data->per_installment, $data->currency->type, 2).'</span>
                                         </div>';
                             })
                             ->editColumn('user_id', function(UserDps $data){
@@ -50,17 +49,15 @@ class DpsController extends Controller
                                       </div>';
                             })
                             ->editColumn('total_installment', function(UserDps $data) {
-                                $curr = Currency::where('is_default','=',1)->first();
                                 return '<div>
                                         '.$data->total_installment.'
                                         <br>
-                                        <span class="text-info">'.$data->given_installment.' Given ('.$curr->symbol.$data->paid_amount.')</span>
+                                        <span class="text-info">'.$data->given_installment.' Given ('.$data->currency->symbol.amount($data->paid_amount, $data->currency->type, 2).')</span>
                                 </div>';
                             })
                             ->editColumn('matured_amount', function(UserDps $data) {
-                                $curr = Currency::where('is_default','=',1)->first();
                                 return '<div>
-                                        '.$curr->symbol.$data->matured_amount.'
+                                        '.$data->currency->symbol.amount($data->matured_amount, $data->currency->type, 2).'
                                         <br>
                                         <span class="text-info">Interest Rate'.$data->interest_rate.' (%)</span>
                                 </div>';
@@ -78,8 +75,8 @@ class DpsController extends Controller
                                 <a href="' . route('admin.dps.log.show',$data->id) . '"  class="dropdown-item">'.__("Logs").'</a>
                               </div>
                             </div>';
-    
-                            }) 
+
+                            })
 
                             ->rawColumns(['transaction_no','deposit_amount','user_id','total_installment','matured_amount','next_installment','action'])
                             ->toJson();
@@ -102,15 +99,15 @@ class DpsController extends Controller
     public function logShow($id){
       $dps = UserDps::findOrfail($id);
       $logs = InstallmentLog::where('transaction_no',$dps->transaction_no)->latest()->paginate(20);
-      $currency = Currency::whereIsDefault(1)->first();
+      $currencyinfo = Currency::whereId($dps->currency->id)->first();
 
-      return view('admin.dps.log',compact('dps','logs','currency'));
+      return view('admin.dps.log',compact('dps','logs','currencyinfo'));
     }
 
     public function installmentCheck(){
         $dps = UserDps::whereStatus(1)->get();
         $now = Carbon::now();
-  
+
         foreach($dps as $key=>$data){
           if($data->given_installment == $data->total_installment){
             if($data->is_given !=1){
@@ -119,9 +116,9 @@ class DpsController extends Controller
             return false;
           }
           if($now->gt($data->next_installment)){
-            $this->takeLoanAmount($data->user_id,$data->per_installment);
+            $this->takeLoanAmount($data->user_id,$data->per_installment, $data);
             $this->logCreate($data->transaction_no,$data->per_installment,$data->user_id);
-            
+
             $data->next_installment = Carbon::now()->addDays($data->plan->installment_interval);
             $data->given_installment += 1;
             $data->paid_amount += $data->per_installment;
@@ -130,15 +127,15 @@ class DpsController extends Controller
           }
         }
       }
-  
-    public function takeLoanAmount($userId,$installment){
+
+    public function takeLoanAmount($userId,$installment, $data){
       $user = User::whereId($userId)->first();
-      
-      $currency = Currency::whereIsDefault(1)->first()->id;
-      $userBalance = user_wallet_balance($user->id, $currency);
-  
+
+      $currency = $data->currency->id;
+      $userBalance = user_wallet_balance($user->id, $currency, 4);
+
       if($user && $userBalance>=$installment){
-        user_wallet_decrement($user->id, $currency, $installment);
+        user_wallet_decrement($user->id, $currency, $installment, 4);
       }
     }
 
@@ -150,15 +147,15 @@ class DpsController extends Controller
           $dps->next_installment = NULL;
           $dps->update();
 
-          $this->sendMaturedMoney($dps->user_id,$dps->matured_amount);
+          $this->sendMaturedMoney($dps->user_id,$dps->matured_amount, $dps);
       }
     }
 
-    public function sendMaturedMoney($userId,$maturedAmount){
+    public function sendMaturedMoney($userId,$maturedAmount,$dps){
       $user = User::findOrfail($userId);
-      $currency = Currency::whereIsDefault(1)->first()->id;
+      $currency = $dps->currency->id;
       if($user){
-        user_wallet_increment($user->id, $currency, $maturedAmount);
+        user_wallet_increment($user->id, $currency, $maturedAmount, 4);
       }
     }
 
