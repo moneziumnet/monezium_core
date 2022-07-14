@@ -76,7 +76,7 @@
     </div>
 @endsection
 
-@push('script')
+@push('js')
     <script>
         'use strict';
         $('.pay').on('click',function () { 

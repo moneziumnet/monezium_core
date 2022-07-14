@@ -98,7 +98,7 @@
 
 @endsection
 
-@push('script')
+@push('js')
     <script>
         'use strict';
        
