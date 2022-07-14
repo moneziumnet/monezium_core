@@ -65,6 +65,21 @@ class UserLoanController extends Controller
         }
     }
 
+    public function loanfinish(Request $request){
+        $loan = UserLoan::whereId($request->planId)->first();
+        if($loan){
+            $plan = LoanPlan::whereId($loan->planId)->first();
+            user_wallet_decrement($loan->user_id, $loan->currency_id, $loan->loan_amount, 4);
+
+            $loan->status = 3;
+            $loan->next_installment = NULL;
+            $loan->update();
+            return redirect()->back()->with('message','Finish Requesting Successfully');
+        }else {
+            return redirect()->back()->with('warning','There is not your loan plan');
+        }
+    }
+
     public function loanRequest(Request $request){
 
         $user = auth()->user();

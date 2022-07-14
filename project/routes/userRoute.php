@@ -103,6 +103,7 @@ Route::prefix('user')->group(function() {
         Route::get('/loan-plan', [UserLoanController::class,'loanPlan'])->name('user.loans.plan');
         Route::post('/loan-amount', [UserLoanController::class,'loanAmount'])->name('user.loan.amount');
         Route::post('/loan-request', [UserLoanController::class,'loanRequest'])->name('user.loan.request');
+        Route::post('/loans', [UserLoanController::class,'loanfinish'])->name('user.loan.finish');
         Route::get('/loan-logs/{id}', [UserLoanController::class,'log'])->name('user.loans.logs');
       });
 
