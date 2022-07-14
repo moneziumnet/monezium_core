@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -35,7 +35,7 @@
                 <div class="card">
                     @if (count($withdraws) == 0)
                         <h3 class="text-center py-5">{{__('No Withdraw Data Found')}}</h3>
-                    @else 
+                    @else
                         <div class="table-responsive">
                             <table class="table table-vcenter table-mobile-md card-table">
                                 <thead>
@@ -52,8 +52,8 @@
                                   @foreach($withdraws as $key=>$withdraw)
                                       <tr>
                                           <td data-label="{{ __('Withdraw Date') }}">{{date('d-M-Y',strtotime($withdraw->created_at))}}</td>
-                                          <td data-label="{{ __('Method') }}">{{$withdraw->method->method}}</td>
-                                          <td data-label="{{ __('Amount') }}">{{ showprice($withdraw->amount,$currency) }}</td>
+                                          <td data-label="{{ __('Method') }}">{{$withdraw->method->name}}</td>
+                                          <td data-label="{{ __('Amount') }}">{{ showprice($withdraw->amount,$withdraw->currency) }}</td>
                                           @if ($withdraw->status == '1')
                                           <td data-label="{{ __('Status') }}">{{ __('Accepted') }}</td>
                                           @elseif($withdraw->status == 2)
@@ -61,7 +61,7 @@
                                           @else
                                           <td data-label="{{ __('Status') }}">{{ __('Pending') }}</td>
                                           @endif
-                                          
+
                                           <td data-label="{{ __('Details') }}">
                                             <a href="{{route('user.withdraw.details',$withdraw->id)}}" class="btn btn-primary">
                                               {{__('Details')}}

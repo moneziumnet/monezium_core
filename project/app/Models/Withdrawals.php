@@ -11,19 +11,19 @@ class Withdrawals extends Model
 
     public function method()
     {
-        return $this->belongsTo(WithdrawMethod::class,'method_id')->withDefault();
+        return $this->belongsTo(PaymentGateway::class,'method_id')->withDefault();
     }
 
     public function currency()
     {
         return $this->belongsTo(Currency::class,'currency_id')->withDefault();
     }
-    
+
     public function user()
     {
         return $this->belongsTo(User::class,'user_id');
     }
-    
+
     public function merchant()
     {
         return $this->belongsTo(Merchant::class,'merchant_id');

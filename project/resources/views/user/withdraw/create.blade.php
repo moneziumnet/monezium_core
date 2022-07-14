@@ -89,16 +89,16 @@
         $.post("{{ route('user.withdraw.gateway') }}",{id:subinstitude,_token:'{{csrf_token()}}'},function (res) {
             let _optionHtml = '<option value="">Select Withdraw Method</option>';
             $.each(res, function(i, item) {
-                _optionHtml += '<option value="' + item.keyword + '">' + item.name + '</option>';
+                _optionHtml += '<option value="' + item.id + '">' + item.name + '</option>';
             });
             $('select#withmethod').html(_optionHtml);
         })
     });
 
     $("#withmethod").on('change',function(){
-        let keywordvalue = $("#withmethod").val();
+        let paymentid = $("#withmethod").val();
         let subinstitude = $("#subinstitude").val();
-        $.post("{{ route('user.withdraw.gatewaycurrency') }}",{id:subinstitude,keyword:keywordvalue,_token:'{{csrf_token()}}'},function (res) {
+        $.post("{{ route('user.withdraw.gatewaycurrency') }}",{id:paymentid,_token:'{{csrf_token()}}'},function (res) {
             let _optionHtml = '<option value="">Select Payment Currency</option>';
             $.each(res, function(i,item) {
                 _optionHtml += '<option value="' + item.id + '">' + item.code + '</option>';

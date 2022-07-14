@@ -205,7 +205,7 @@ Route::prefix('user')->group(function() {
         Route::post('/withdraw/store', [WithdrawController::class,'store'])->name('user.withdraw.store');
         Route::get('/withdraw/{id}', [WithdrawController::class,'details'])->name('user.withdraw.details');
         Route::POST('/withdraw/gateway',[WithdrawController::class,'gateway'])->name('user.withdraw.gateway');
-        Route::POST('/withdraw/gatewaycurrency',[DepositController::class,'gatewaycurrency'])->name('user.withdraw.gatewaycurrency');
+        Route::POST('/withdraw/gatewaycurrency',[WithdrawController::class,'gatewaycurrency'])->name('user.withdraw.gatewaycurrency');
     });
 
       Route::group(['middleware'=>'kyc:Transfer'],function(){
