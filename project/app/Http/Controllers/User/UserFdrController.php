@@ -35,6 +35,7 @@ class UserFdrController extends Controller
 
     public function fdrPlan(){
         $data['plans'] = FdrPlan::orderBy('id','desc')->whereStatus(1)->orderby('id','desc')->paginate(12);
+        $data['currencylist'] = Currency::whereStatus(1)->where('type', 1)->get();
         return view('user.fdr.plan',$data);
     }
 
@@ -45,7 +46,7 @@ class UserFdrController extends Controller
         if($amount >= $plan->min_amount && $amount <= $plan->max_amount){
             $data['data'] = $plan;
             $data['fdrAmount'] = $amount;
-            $data['currency'] = Currency::whereIsDefault(1)->first();
+            $data['currencyinfo'] = Currency::whereId($request->currency_id)->first();
 
             return view('user.fdr.apply',$data);
         }else{
@@ -70,7 +71,8 @@ class UserFdrController extends Controller
             $data->profit_type = $plan->interval_type;
             $data->profit_amount = $request->profit_amount;
             $data->interest_rate = $plan->interest_rate;
-            
+            $data->currency_id = $request->currency_id;
+
             if($plan->interval_type == 'partial'){
                 $data->next_profit_time = Carbon::now()->addDays($plan->interest_interval);
             }
@@ -85,7 +87,7 @@ class UserFdrController extends Controller
             $trans->trnx = $data->transaction_no;
             $trans->user_id     = auth()->id();
             $trans->user_type   = 1;
-            $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
+            $trans->currency_id = $request->currency_id;
             $trans->amount      = $request->fdr_amount;
             $trans->charge      = 0;
             $trans->type        = '-';

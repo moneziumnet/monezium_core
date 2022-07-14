@@ -38,6 +38,8 @@
                                     <th>{{ __('Total Installement') }}</th>
                                     <th>{{ __('Next Installment') }}</th>
                                     <th>{{ __('Status') }}</th>
+                                    <th>{{ __('View log') }}</th>
+                                    <th>{{ __('Action') }}</th>
                                     <th class="w-1"></th>
                                 </tr>
                                 </thead>
@@ -94,6 +96,15 @@
                                               </a>
                                             </div>
                                           </td>
+                                          <td data-label="{{__('Action')}}">
+                                            <div class="btn-list flex-nowrap">
+                                               @if($data->status == 1)
+                                              <a href="#" id="finish" class="btn">
+                                                @lang('Finish')
+                                              </a>
+                                              @endif
+                                            </div>
+                                          </td>
                                       </tr>
                                   @endforeach
                                 </tbody>
@@ -105,12 +116,46 @@
             </div>
         </div>
     </div>
+    <div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-status bg-primary"></div>
+            <div class="modal-body text-center py-4">
+                <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+                <h3>@lang('Do you want to finish this plan now?')</h3>
+            </div>
+            <div class="modal-footer">
+                <div class="w-100">
+                    <div class="row">
+                    <div class="col"><a href="#" class="btn w-100" data-bs-dismiss="modal">
+                        @lang('Cancel')
+                        </a></div>
+                    <div class="col">
+                        <button type="button" class="btn btn-primary w-100 confirm">
+                        @lang('Confirm')
+                        </button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
 </div>
 
 
 @endsection
 
 @push('js')
+<script>
+    $('#finish').on('click',function () {
+        $('#modal-success').modal('show')
+    })
 
+    $('.confirm').on('click',function () {
+
+    })
+</script>
 @endpush
 

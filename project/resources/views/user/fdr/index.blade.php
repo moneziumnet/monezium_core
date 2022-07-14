@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -27,7 +27,7 @@
                 <div class="card">
                     @if (count($fdr) == 0)
                         <h3 class="text-center py-5">{{__('No Dps Data Found')}}</h3>
-                    @else 
+                    @else
                         <div class="table-responsive">
                             <table class="table table-vcenter table-mobile-md card-table">
                                 <thead>
@@ -44,7 +44,7 @@
                                       <tr>
                                           <td data-label="{{ __('Plan No') }}">
                                             <div>
-                                              
+
                                               {{ $data->transaction_no }}
                                               <br>
                                             <span class="text-info">{{ $data->plan->title }}</span>
@@ -53,8 +53,8 @@
 
                                           <td data-label="{{ __('FDR Amount') }}">
                                             <div>
-                                                
-                                              {{ showprice($data->amount,$currency) }}
+
+                                              {{ amount($data->amount, $data->currency->type, 2)}} {{ $data->currency->code}}
                                               <br>
                                               <span class="text-info">@lang('Profit Rate') {{$data->interest_rate}} (%) </span>
                                             </div>
@@ -68,12 +68,12 @@
 
                                           <td data-label="{{ __('Profit') }}">
                                             <div class="text-center text-md-start">
-                                                
-                                              {{ showprice($data->profit_amount,$currency) }}
+
+                                              {{ amount($data->profit_amount, $data->currency->type, 2) }} {{ $data->currency->code}}
                                               <br>
                                               @if ($data->profit_type == 'partial')
                                                   <span class="text-info"> @lang('Next Frofit Days') ({{ $data->next_profit_time->toDateString() }})</span>
-                                              @else 
+                                              @else
                                                   <span class="text-info"> @lang('Profit will get after locked period') </span>
                                               @endif
                                             </div>
@@ -83,7 +83,7 @@
                                             <div>
                                               @if ($data->status == 1)
                                                 <span class="badge bg-success">@lang('Running')</span>
-                                              @else 
+                                              @else
                                                 <span class="badge bg-danger">@lang('Closed')</span>
                                               @endif
                                             </div>

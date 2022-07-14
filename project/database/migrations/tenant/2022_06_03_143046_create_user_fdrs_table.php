@@ -17,6 +17,7 @@ class CreateUserFdrsTable extends Migration
             $table->integer('id', true);
             $table->string('transaction_no')->nullable();
             $table->integer('user_id')->nullable();
+            $table->integer('currency_id')->nullable();
             $table->integer('fdr_plan_id')->nullable();
             $table->double('amount')->nullable();
             $table->string('profit_type')->nullable();

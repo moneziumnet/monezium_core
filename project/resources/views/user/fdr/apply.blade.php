@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -36,7 +36,7 @@
                                 <td>
                                     <p class="strong mb-1">{{__('FDR Amount')}}</p>
                                 </td>
-                                <td class="text-end">{{ $currency->symbol }} {{ $fdrAmount }}</td>
+                                <td class="text-end">{{ $currencyinfo->symbol }} {{ $fdrAmount }}</td>
                             </tr>
 
                             <tr>
@@ -53,7 +53,7 @@
                                     </td>
                                     <td class="text-end"> {{ $data->interest_interval }} {{ __('Days') }}</td>
                                 </tr>
-                            @else 
+                            @else
                                 <tr>
                                     <td>
                                         <p class="strong mb-1">{{__('Get Profit')}}</p>
@@ -78,14 +78,15 @@
 
                         </tbody>
                     </table>
-                    
+
                     <form action="{{ route('user.fdr.request') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="plan_id" value="{{ $data->id }}">
                         <input type="hidden" name="currency_id" value="{{ $currency->id }}">
                         <input type="hidden" name="fdr_amount" value="{{ $fdrAmount }}">
                         <input type="hidden" name="profit_amount" value="{{ ($fdrAmount * $data->interest_rate)/100 }}">
-    
+                        <input type="hidden" name="currency_id" value="{{$currencyinfo->id }}">
+
                         <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Submit') }}</button>
                     </form>
 

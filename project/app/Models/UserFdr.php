@@ -12,6 +12,7 @@ class UserFdr extends Model
     protected $fillable = [
         'transaction_no',
         'user_id',
+        'currency_id',
         'fdr_plan_id',
         'amount',
         'profit_type',
@@ -31,5 +32,9 @@ class UserFdr extends Model
 
     public function user(){
         return $this->belongsTo(User::class)->withDefault();
+    }
+
+    public function currency(){
+        return $this->belongsTo(Currency::class,'currency_id')->withDefault();
     }
 }
