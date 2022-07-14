@@ -30,7 +30,7 @@ class SendController extends Controller
         {
             $ga = new GoogleAuthenticator();
             $data['secret'] = $ga->createSecret();
-            $wallets = Wallet::where('user_id',auth()->id())->with('currency')->get();
+            $wallets = Wallet::where('user_id',auth()->id())->where('balance','>',0)->with('currency')->get();
             $data['wallets'] = $wallets;
             $data['saveAccounts'] = SaveAccount::whereUserId(auth()->id())->orderBy('id','desc')->get();
             $data['savedUser'] = NULL;
@@ -101,8 +101,9 @@ class SendController extends Controller
         if(now()->gt($user->plan_end_date)){
             return redirect()->back()->with('unsuccess','Plan Date Expired.');
         }
+        $wallet = Wallet::where('id',$request->wallet_id)->with('currency')->first();
 
-        $currency_id = $request->wallet_id; //Currency::whereId($wallet_id)->first()->id;
+        $currency_id = $wallet->currency->id; //Currency::whereId($wallet_id)->first()->id;
 
         $bank_plan = BankPlan::whereId($user->bank_plan_id)->first();
         $dailySend = BalanceTransfer::whereUserId(auth()->id())->whereDate('created_at', '=', date('Y-m-d'))->whereStatus(1)->sum('amount');
@@ -126,7 +127,7 @@ class SendController extends Controller
             return redirect()->back()->with('unsuccess','Request Amount should be greater than this!');
         }
 
-        if($request->amount > user_wallet_balance(auth()->id(), $currency_id)){
+        if($request->amount > user_wallet_balance(auth()->id(), $currency_id, $wallet->wallet_type)){
             return redirect()->back()->with('unsuccess','Insufficient Balance.');
         }
 
@@ -176,8 +177,8 @@ class SendController extends Controller
             // user_wallet_decrement($user->id, $currency_id, $request->amount);
             // user_wallet_increment($receiver->id, $currency_id, $request->amount);
 
-            user_wallet_decrement_current($user->id, $currency_id, $request->amount);
-            user_wallet_increment_current($receiver->id, $currency_id, $request->amount);
+            user_wallet_decrement($user->id, $currency_id, $request->amount, $wallet->wallet_type);
+            user_wallet_increment($receiver->id, $currency_id, $request->amount, $wallet->wallet_type);
             if(SaveAccount::whereUserId(auth()->id())->where('receiver_id',$receiver->id)->exists()){
                 return redirect()->route('send.money.create')->with('success','Money Send Successfully');
             }

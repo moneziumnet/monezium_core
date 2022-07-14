@@ -50,7 +50,8 @@
                                       <option value="">Select</option>
                                       @if(!empty($wallets))
                                         @foreach($wallets as $wallet)
-                                          <option value="{{$wallet->currency->id}}">{{$wallet->currency->code}} --  ({{amount($wallet->balance,$wallet->currency->type,2)}})</option>
+                                          <option value="{{$wallet->id}}">{{$wallet->currency->code}} --  ({{amount($wallet->balance,$wallet->currency->type,2)}})</option>
+
                                         @endforeach
                                       @endif
                                     </select>
@@ -71,7 +72,7 @@
                                     <label class="form-label required">{{__('Description')}}</label>
                                     <textarea name="description" id="description" class="form-control" placeholder="{{__('Enter description')}}" rows="5" required></textarea>
                                 </div>
-                                
+
                                 <div class="form-group mt-3">
                                     <label class="form-label required">{{__('Google Authenticator Code')}}</label>
                                     <input type="hidden" name="key" value="{{$secret}}">
