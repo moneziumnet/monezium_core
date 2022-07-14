@@ -70,6 +70,29 @@
       </div>
 
     </div>
+    <div class="row justify-content-center">
+        <h1>@lang('Wallet list')</h1>
+    </div>
+    @php
+        $wallet_type = ['All', 'Current', 'Card', 'Deposit', 'load', 'Escrow'];
+    @endphp
+
+    <div class="row justify-content-center " style="max-height: 368px;overflow-y: scroll;">
+        @foreach ($wallets as $item)
+        <div class="col-sm-6 col-md-4 mb-3">
+            <div class="card h-100 card--info-item">
+              <div class="text-end icon">
+                <i class="fas fa-dollar-sign"></i>
+              </div>
+              <div class="card-body">
+                <div class="h3 m-0 text-uppercase"> {{$wallet_type[$item->wallet_type]}}-{{ $item->wallet_no }}</div>
+                <div class="text-muted">{{ amount($item->balance,$item->currency->type,2) }}  {{$item->currency->code}}</div>
+              </div>
+            </div>
+          </div>
+          @endforeach
+    </div>
+    <hr>
 
     <div class="row justify-content-center">
       <div class="col-sm-6 col-md-4 mb-3">
@@ -161,7 +184,7 @@
     </div>
 
     <div class="row row-deck row-cards">
-    <div class="col-lg-9">
+    <div class="col-lg-12">
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">@lang('Recent Transaction')</h3>
@@ -204,7 +227,7 @@
                     <span class="badge badge-dark">{{ucwords(str_replace('_',' ',$data->remark))}}</span>
                   </td>
                   <td data-label="@lang('Amount')">
-									<span class="{{$data->type == '+' ? 'text-success':'text-danger'}}">{{$data->type}} {{amount($data->amount,$data->currency->type,2)}} {{$data->currency->code}}</span> 
+									<span class="{{$data->type == '+' ? 'text-success':'text-danger'}}">{{$data->type}} {{amount($data->amount,$data->currency->type,2)}} {{$data->currency->code}}</span>
 								</td>
                 <td data-label="@lang('Details')" class="text-end">
                         <button class="btn btn-primary btn-sm details" data-data="{{$data}}">@lang('Details')</button>
@@ -218,37 +241,6 @@
           @endif
 
         </div>
-    </div>
-    <div class="col-lg-3">
-      <div class="card wallet__card">
-        <div class="card-header">
-          <h4>@lang('Your Wallets')</h4>
-        </div>
-        <div class="card-body card-body-scrollable card-body-scrollable-shadow">
-          <div class="divide-y">
-            @foreach ($wallets as $item)
-            <div>
-              <div class="row align-items-center">
-                <div class="col-auto">
-                  <span class="bg-blue text-white avatar">
-                    {{$item->currency->symbol}}
-                  </span>
-                </div>
-                <div class="col">
-                  <div class="{{$item->currency->default == 1 ? 'font-weight-bold text-success' : 'font-weight-medium'}}">
-                    {{amount($item->balance,$item->currency->type,2)}} {{$item->currency->code}}
-                  </div>
-                  <div class="text-muted">
-                    {{$item->currency->curr_name}}
-                  </div>
-                </div>
-              </div>
-            </div>
-            @endforeach
-            
-          </div>
-        </div>
-      </div>
     </div>
     </div>
 
@@ -265,7 +257,7 @@
       <h3>@lang('Transaction Details')</h3>
       <p class="trx_details"></p>
       <ul class="list-group mt-2">
-         
+
       </ul>
       </div>
       <div class="modal-footer">
@@ -297,11 +289,11 @@
 </script>
 <script>
       'use strict';
-   
-      $('.details').on('click',function () { 
+
+      $('.details').on('click',function () {
         var url = "{{url('user/transaction/details/')}}"+'/'+$(this).data('data').id
         $('.trx_details').text($(this).data('data').details)
-        $.get(url,function (res) { 
+        $.get(url,function (res) {
           if(res == 'empty'){
             $('.list-group').html('<p>@lang('No details found!')</p>')
           }else{
