@@ -42,7 +42,7 @@
 
             </div>
             @php
-                $accounttype = ['All', 'Current', 'Card', 'Deposit', 'load', 'Escrow'];
+                $accounttype = ['All', 'Current', 'Card', 'Deposit', 'Loan', 'Escrow'];
                 $curlist = DB::table('currencies')->get();
             @endphp
 
@@ -131,7 +131,7 @@
 $('#addpayment').on('click', function() {
     window.location.reload();
 });
-let accounttype = ['All', 'Current', 'Card', 'Deposit', 'load', 'Escrow'];
+let accounttype = ['All', 'Current', 'Card', 'Deposit', 'Loan', 'Escrow'];
     let _orignhtml = $('div#walletlist').html();
     $('#wallet_type').on('change', function() {
         let wallet_type = $("#wallet_type").val();

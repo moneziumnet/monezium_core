@@ -74,7 +74,7 @@
         <h1>@lang('Wallet list')</h1>
     </div>
     @php
-        $wallet_type = ['All', 'Current', 'Card', 'Deposit', 'load', 'Escrow'];
+        $wallet_type = ['All', 'Current', 'Card', 'Deposit', 'Loan', 'Escrow'];
     @endphp
 
     <div class="row justify-content " style="max-height: 368px;overflow-y: scroll;">

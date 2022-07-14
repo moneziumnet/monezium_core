@@ -43,13 +43,12 @@ class LoanController extends Controller
                             })
 
                             ->editColumn('loan_amount', function(UserLoan $data){
-                              $curr = Currency::where('is_default','=',1)->first();
-                              return  '<div>
-                                          '.$curr->symbol.$data->loan_amount.'
-                                          <br>
-                                          <span class="text-info">Per Installment '.$curr->symbol.$data->per_installment_amount.'</span>
-                                      </div>';
-                            })
+                               return  '<div>
+                                           '.$data->currency->symbol.amount($data->loan_amount,$data->currency->type, 2).'
+                                           <br>
+                                           <span class="text-info">Per Installment '.$data->currency->symbol.amount($data->per_installment_amount, $data->currency->type, 2).'</span>
+                                       </div>';
+                             })
 
                             ->editColumn('total_installment', function(UserLoan $data) {
                               return '<div>
@@ -60,11 +59,11 @@ class LoanController extends Controller
                             })
 
                             ->editColumn('total_amount', function(UserLoan $data) {
-                              $curr = Currency::where('is_default','=',1)->first();
+                              $curr = Currency::whereId($data->currency->id)->first();
                               return  '<div>
                                           '.$curr->symbol.round($data->total_installment * $data->per_installment_amount,2).'
                                           <br>
-                                          <span class="text-info">Paid Amount '.$curr->symbol.$data->paid_amount.'</span>
+                                          <span class="text-info">Paid Amount '.$curr->symbol.amount($data->paid_amount, $data->currency->type, 2).'</span>
                                       </div>';
                             })
 
@@ -130,7 +129,7 @@ class LoanController extends Controller
                           </div>
                         </div>';
 
-                        }) 
+                        })
                         ->rawColumns(['transaction_no','user_id','loan_amount','total_installment','total_amount','next_installment','status','action'])
                         ->toJson();
     }
@@ -166,8 +165,8 @@ class LoanController extends Controller
 
       if($id2 == 1){
         if($user = User::where('id',$data->user_id)->first()){
-          $currency = Currency::whereIsDefault(1)->first()->id;
-          user_wallet_increment($user->id, $currency, $data->loan_amount);
+          $currency = Currency::whereId($data->currency_id)->first()->id;
+          user_wallet_increment($user->id, $currency, $data->loan_amount, 4);
         }
         $data->next_installment = Carbon::now()->addDays($data->plan->installment_interval);
       }
@@ -204,7 +203,7 @@ class LoanController extends Controller
           return false;
         }
         if($now->gt($data->next_installment)){
-          $this->takeLoanAmount($data->user_id,$data->per_installment_amount);
+          $this->takeLoanAmount($data->user_id,$data->per_installment_amount, $data);
           $this->logCreate($data->transaction_no,$data->per_installment_amount,$data->user_id);
 
           $data->next_installment = Carbon::now()->addDays($data->plan->installment_interval);
@@ -219,12 +218,12 @@ class LoanController extends Controller
       }
     }
 
-    public function takeLoanAmount($userId,$installment){
+    public function takeLoanAmount($userId,$installment, $data){
       $user = User::whereId($userId)->first();
-      $currency = Currency::whereIsDefault(1)->first()->id;
-      $userBalance = user_wallet_balance($user->id, $currency);
+      $currency = $data->currency->id;
+      $userBalance = user_wallet_balance($user->id, $currency, 4);
       if($user && $userBalance>=$installment){
-        user_wallet_decrement($user->id, $currency, $installment);
+        user_wallet_decrement($user->id, $currency, $installment, 4);
       }
     }
 
@@ -236,6 +235,7 @@ class LoanController extends Controller
           $loan->update();
       }
     }
+
 
     public function logCreate($transactionNo,$amount,$userId){
       $data = new InstallmentLog();
