@@ -181,7 +181,7 @@ class UserController extends Controller
         {
             {
                 $wallet = Wallet::where('user_id', $id)->where('wallet_type', $wallet_type)->where('currency_id', $currency_id)->first();
-
+                $gs = Generalsetting::first();
                 if(!$wallet)
                 {
                   $user_wallet = new Wallet();
@@ -190,7 +190,7 @@ class UserController extends Controller
                   $user_wallet->currency_id = $currency_id;
                   $user_wallet->balance = 0;
                   $user_wallet->wallet_type = $wallet_type;
-                  $user_wallet->wallet_no ="WN". date('ydis') . random_int(100000, 999999);
+                  $user_wallet->wallet_no =$gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
                   $user_wallet->created_at = date('Y-m-d H:i:s');
                   $user_wallet->updated_at = date('Y-m-d H:i:s');
                   $user_wallet->save();
@@ -392,7 +392,7 @@ class UserController extends Controller
             $data['transaction']    = $transaction;
             return view('admin.user.transctionEdit',$data);
         }
-        
+
         public function transctionUpdate(Request $request, $id)
         {
             if($request->isMethod('POST'))
@@ -405,9 +405,9 @@ class UserController extends Controller
                     'remark' => 'required',
                     'amount' => 'required'
                 ];
-    
+
                 $validator = Validator::make($request->all(), $rules);
-    
+
                 if ($validator->fails()) {
                     return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
                 }
@@ -440,7 +440,7 @@ class UserController extends Controller
                     user_wallet_decrement($trnx->user_id, $currency_id, $newTotal);
                     return response()->json(array('success' => 'Transacton Update Success'));
                 }
-                
+
                 if($trnx->type == "+")
                 {
                     $totalAmt = $trnx->amount + $trnx->charge;
@@ -459,19 +459,19 @@ class UserController extends Controller
                     return response()->json(array('success' => 'Transacton Update Success'));
                 }
 
-                
+
 
                 // $trnx->trnx        = str_rand();
                 // $trnx->user_id     = $id;
                 // $trnx->user_type   = 1;
-                
-                
+
+
             }else{
                 return response()->json(array('errors' => 'Should be correct button click.'));
             }
-            
+
         }
-        
+
         public function profileTransctionsDetails($id)
         {
             $user = User::findOrFail($id);

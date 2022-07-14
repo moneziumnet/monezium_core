@@ -355,6 +355,7 @@ if(!function_exists('getModule')){
       function user_wallet_increment($auth_id, $currency_id, $amount, $wallet_type=NULL)
       {
         $wallet_type == NULL ? 1:$wallet_type;
+        $gs = Generalsetting::first();
         $wallet = Wallet::where('user_id', $auth_id)->where('wallet_type', $wallet_type)
             ->where('currency_id',$currency_id)->first();
         if(!$wallet)
@@ -365,7 +366,7 @@ if(!function_exists('getModule')){
           $user_wallet->currency_id = $currency_id;
           $user_wallet->balance = $amount;
           $user_wallet->wallet_type = $wallet_type;
-          $user_wallet->wallet_no ="WN". date('ydis') . random_int(100000, 999999);
+          $user_wallet->wallet_no =$gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
           $user_wallet->created_at = date('Y-m-d H:i:s');
           $user_wallet->updated_at = date('Y-m-d H:i:s');
           $user_wallet->save();

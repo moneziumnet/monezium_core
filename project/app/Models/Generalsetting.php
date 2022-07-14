@@ -14,6 +14,7 @@ class Generalsetting extends Model
             'banner',
             'title',
             'account_no_prefix',
+            'wallet_no_prefix',
             'header_email',
             'header_phone',
             'footer',
@@ -124,6 +125,6 @@ class Generalsetting extends Model
             if (file_exists(public_path().'/assets/images/'.$oldname)) {
                 unlink(public_path().'/assets/images/'.$oldname);
             }
-        }  
+        }
     }
 }

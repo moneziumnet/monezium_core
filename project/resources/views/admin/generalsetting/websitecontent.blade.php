@@ -117,18 +117,25 @@
         </div>
 
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-4">
               <div class="form-group">
                 <label for="inp-prefix">{{  __('User Account No Prefix')  }}</label>
                 <input type="text" class="form-control" id="inp-prefix" name="account_no_prefix"  placeholder="{{ __('User Account No Prefix') }}" value="{{ $gs->account_no_prefix }}" required>
               </div>
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="inp-prefix">{{  __('User Wallet No Prefix')  }}</label>
+              <input type="text" class="form-control" id="inp-prefix" name="wallet_no_prefix"  placeholder="{{ __('User Wallet No Prefix') }}" value="{{ $gs->wallet_no_prefix }}" required>
+            </div>
+        </div>
+
+          <div class="col-md-4">
             <div class="form-group">
               <label for="inp-title">{{  __('Website Title')  }}</label>
               <input type="text" class="form-control" id="inp-title" name="title"  placeholder="{{ __('Enter Website Title') }}" value="{{ $gs->title }}" required>
-            </div>    
+            </div>
           </div>
 
         </div>

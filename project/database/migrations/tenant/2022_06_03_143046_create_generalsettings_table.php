@@ -22,6 +22,7 @@ class CreateGeneralsettingsTable extends Migration
             $table->string('banner', 191)->nullable();
             $table->string('title', 191);
             $table->string('account_no_prefix')->nullable();
+            $table->string('wallet_no_prefix')->nullable();
             $table->text('header_email')->nullable();
             $table->text('header_phone')->nullable();
             $table->text('footer');
