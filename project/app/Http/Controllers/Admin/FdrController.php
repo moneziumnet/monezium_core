@@ -34,11 +34,10 @@ class FdrController extends Controller
                                         <span class="text-info">'.$data->plan->title.'</span>
                                 </div>';
 
-                            }) 
+                            })
                             ->editColumn('amount', function(UserFdr $data){
-                                $curr = Currency::where('is_default','=',1)->first();
                                 return  '<div>
-                                            '.$curr->symbol.$data->amount.'
+                                            '.$data->currency->symbol.amount($data->amount, $data->currency->type, 2).'
                                             <br>
                                             <span class="text-info">Profit Rate '.$data->interest_rate.' (%)</span>
                                         </div>';
@@ -56,22 +55,21 @@ class FdrController extends Controller
                             })
 
                             ->editColumn('profit_amount', function(UserFdr $data) {
-                                $curr = Currency::where('is_default','=',1)->first();
                                 $nextProfitTime = $data->next_profit_time != NULL ? $data->next_profit_time->toDateString() : 'Closed FDR';
                                 if($data->profit_type == 'partial'){
                                     return '<div>
-                                            '.$curr->symbol.$data->profit_amount.'
+                                            '.$data->currency->symbol.amount($data->profit_amount, $data->currency->type, 2).'
                                             <br>
                                             <span class="text-info"> '.__('Next Frofit Days').' ('.$nextProfitTime.')</span>
                                         </div>';
                                 }else{
                                     if($data->status == 2){
                                         return '<div>
-                                                <span class="text-success">'.$curr->symbol.$data->profit_amount.'</span>
+                                                <span class="text-success">'.$data->currency->symbol.amount($data->profit_amount, $data->currency->type, 2).'</span>
                                             </div>';
                                     }
                                     return '<div>
-                                                '.$curr->symbol.$data->profit_amount.'
+                                                '.$data->currency->symbol.amount($data->profit_amount, $data->currency->type, 2).'
                                                 <br>
                                                 <span class="text-info"> '.__('Profit will get after locked period').' </span>
                                             </div>';
@@ -129,7 +127,7 @@ class FdrController extends Controller
     public function getPartialProfit($id){
         $fdr = UserFdr::findOrFail($id);
         if($fdr){
-            $this->getUserProfit($fdr->user_id,$fdr->profit_amount);
+            $this->getUserProfit($fdr->user_id,$fdr->profit_amount, $fdr);
 
             $fdr->next_profit_time = Carbon::now()->addDays($fdr->plan->interest_interval);
             $fdr->update();
@@ -140,31 +138,31 @@ class FdrController extends Controller
         $fdr = UserFdr::findOrFail($data->id);
 
         if($fdr){
-            $this->getUserProfit($fdr->user_id,$fdr->profit_amount);
-            $this->getMainAmount($fdr->user_id,$fdr->amount);
+            $this->getUserProfit($fdr->user_id,$fdr->profit_amount, $fdr);
+            $this->getMainAmount($fdr->user_id,$fdr->amount, $fdr);
 
             $fdr->status = 2;
             $fdr->update();
         }
     }
 
-    public function getUserProfit($userId,$profitAmount){
+    public function getUserProfit($userId,$profitAmount, $fdr ){
         $user = User::whereId($userId)->first();
-        $currency = Currency::whereIsDefault(1)->first()->id;
-        user_wallet_increment($user->id, $currency, $profitAmount);
+        $currency = $fdr->currency->id;
+        user_wallet_increment($user->id, $currency, $profitAmount, 4);
     }
 
     public function closedFdr($id){
         $fdr = UserFdr::findOrFail($id);
-        $this->getMainAmount($fdr->user_id,$fdr->amount);
+        $this->getMainAmount($fdr->user_id,$fdr->amount, $fdr);
         $fdr->next_profit_time = NULL;
         $fdr->status = 2;
         $fdr->update();
     }
 
-    public function getMainAmount($userId,$amount){
+    public function getMainAmount($userId,$amount, $fdr){
         $user = User::whereId($userId)->first();
-        $currency = Currency::whereIsDefault(1)->first()->id;
-        user_wallet_increment($user->id, $currency, $amount);
+        $currency = $fdr->currency->id;
+        user_wallet_increment($user->id, $currency, $amount, 4);
     }
 }
