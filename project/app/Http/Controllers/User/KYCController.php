@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\KycForm;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class KYCController extends Controller
 {
@@ -35,7 +36,20 @@ class KYCController extends Controller
     public function kyc(Request $request){
         $userType = 'user';
         $userForms = KycForm::where('user_type',$userType == 'user' ? 1 : 2)->get();
+        /** Direct Photo upload**/
+        $img = $request->image;
 
+        $folderPath = "uploads/";
+        
+        $image_parts = explode(";base64,", $img);
+        $image_type_aux = explode("image/", $image_parts[0]);
+        $image_type = $image_type_aux[1];
+        
+        $image_base64 = base64_decode($image_parts[1]);
+        $fileName = uniqid() . '.png';
+        
+        $file = $folderPath . $fileName;
+        
         $requireInformations = [];
         if($userForms){
             foreach($userForms as $key=>$value){
@@ -48,6 +62,7 @@ class KYCController extends Controller
                     $requireInformations['file'][$key] = strtolower(str_replace(' ', '_', $value->label));
                 }
             }
+            Storage::put($file, $image_base64);
         }
 
 
@@ -73,6 +88,7 @@ class KYCController extends Controller
         $user = auth()->user();
         if(!empty($details)){
             $user->kyc_info = json_encode($details,true);
+            $user->kyc_photo = $fileName;
             $user->kyc_status = 3;
         }
         $user->save();
