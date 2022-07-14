@@ -323,24 +323,27 @@ if(!function_exists('getModule')){
 
   if(!function_exists('user_wallet_balance'))
   {
-      function user_wallet_balance($auth_id, $currency_id)
+      function user_wallet_balance($auth_id, $currency_id, $wallet_type=NULL)
       {
-          $balance = Wallet::where('user_id', $auth_id)->where('currency_id',$currency_id)->first();
+          $wallet_type == NULL ? 1:$wallet_type;
+          $balance = Wallet::where('user_id', $auth_id)->where('wallet_type', $wallet_type)->where('currency_id',$currency_id)->first();
           return $balance? $balance->balance: 0;
       }
   }
 
   if(!function_exists('user_wallet_decrement'))
   {
-      function user_wallet_decrement($auth_id, $currency_id, $amount)
+      function user_wallet_decrement($auth_id, $currency_id, $amount, $wallet_type=NULL)
       {
-        $wallet = Wallet::where('user_id', $auth_id)
+        $wallet_type == NULL ? 1:$wallet_type;
+        $wallet = Wallet::where('user_id', $auth_id)->where('wallet_type', $wallet_type)
                   ->where('currency_id',$currency_id)->first();
 
         if($wallet && $wallet->balance >= $amount)
         {
           $balance = Wallet::where('user_id', $auth_id)
                       ->where('currency_id',$currency_id)
+                      ->where('wallet_type', $wallet_type)
                       ->decrement('balance', $amount);
           return $balance;
         }
@@ -349,11 +352,12 @@ if(!function_exists('getModule')){
 
   if(!function_exists('user_wallet_increment'))
   {
-      function user_wallet_increment($auth_id, $currency_id, $amount)
+      function user_wallet_increment($auth_id, $currency_id, $amount, $wallet_type=NULL)
       {
-        $wallet = Wallet::where('user_id', $auth_id)
+        $wallet_type == NULL ? 1:$wallet_type;
+        $gs = Generalsetting::first();
+        $wallet = Wallet::where('user_id', $auth_id)->where('wallet_type', $wallet_type)
             ->where('currency_id',$currency_id)->first();
-
         if(!$wallet)
         {
           $user_wallet = new Wallet();
@@ -361,6 +365,8 @@ if(!function_exists('getModule')){
           $user_wallet->user_type = 1;
           $user_wallet->currency_id = $currency_id;
           $user_wallet->balance = $amount;
+          $user_wallet->wallet_type = $wallet_type;
+          $user_wallet->wallet_no =$gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
           $user_wallet->created_at = date('Y-m-d H:i:s');
           $user_wallet->updated_at = date('Y-m-d H:i:s');
           $user_wallet->save();
@@ -376,54 +382,6 @@ if(!function_exists('getModule')){
   }
 
 
-  if(!function_exists('user_wallet_decrement_current'))
-  {
-      function user_wallet_decrement_current($auth_id, $currency_id, $amount)
-      {
-        $wallet = Wallet::where('user_id', $auth_id)->where('wallet_type', '1')
-                  ->where('currency_id',$currency_id)->first();
-
-        if($wallet && $wallet->balance >= $amount)
-        {
-          $balance = Wallet::where('user_id', $auth_id)
-                      ->where('currency_id',$currency_id)
-                      ->where('wallet_type', '1')
-                      ->decrement('balance', $amount);
-          return $balance;
-        }
-      }
-  }
-
-  if(!function_exists('user_wallet_increment_current'))
-  {
-      function user_wallet_increment_current($auth_id, $currency_id, $amount)
-      {
-        $wallet = Wallet::where('user_id', $auth_id)->where('wallet_type', '1')
-            ->where('currency_id',$currency_id)->first();
-
-        if(!$wallet)
-        {
-
-          $user_wallet = new Wallet();
-          $user_wallet->user_id = $auth_id;
-          $user_wallet->user_type = 1;
-          $user_wallet->currency_id = $currency_id;
-          $user_wallet->balance = $amount;
-          $user_wallet->wallet_type = 'Current';
-          $user_wallet->wallet_no ="WN". date('ydis') . random_int(100000, 999999);
-          $user_wallet->created_at = date('Y-m-d H:i:s');
-          $user_wallet->updated_at = date('Y-m-d H:i:s');
-          $user_wallet->save();
-          return $user_wallet->balance;
-        }
-        else {
-          $wallet->balance += $amount;
-          $wallet->update();
-          return $wallet->balance;
-        }
-
-      }
-  }
 
 
   if(!function_exists('check_user_type'))

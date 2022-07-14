@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use App\Models\BankPlan;
+use App\Models\PaymentGateway;
 use Auth;
 use App\Models\Currency;
 use App\Models\Generalsetting;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Str;
 use Validator;
 use Illuminate\Support\Facades\DB;
+use App\Models\Charge;
 
 class WithdrawController extends Controller
 {
@@ -45,9 +47,9 @@ class WithdrawController extends Controller
     }
 
     public function gatewaycurrency(Request $request) {
-        $currency['id'] = DB::table('payment_gateways')->where('subins_id', $request->id)->where('keyword', $request->keyword)->whereStatus(1)->first()->currency_id;
+        $currency['id'] = PaymentGateway::whereId($request->id)->whereStatus(1)->first();
         $res = [];
-        foreach (json_decode($currency['id']) as $value) {
+        foreach (json_decode($currency['id']->currency_id) as $value) {
             $code =  Currency::where('id',$value)->first();
             array_push($res,$code);
         }
@@ -72,7 +74,8 @@ class WithdrawController extends Controller
 
         // $withdraw_method = WithdrawMethod::whereId($request->methods)->first();
         $withdraw_method = WithdrawMethod::whereId(1)->first();
-        $userBalance = user_wallet_balance($user->id,$request->currency_id);
+        $withdraw_charge = Charge::where('plan_id',$user->bank_plan_id)->where('slug','transfer-money')->first()->value('data');
+        $userBalance = user_wallet_balance($user->id,$request->currency_id,1);
 
         $bank_plan = BankPlan::whereId($user->bank_plan_id)->first();
         $dailyWithdraws = Withdrawals::whereDate('created_at', '=', date('Y-m-d'))->whereStatus('completed')->sum('amount');
@@ -90,16 +93,16 @@ class WithdrawController extends Controller
             return redirect()->back()->with('unsuccess','Insufficient Account Balance.');
         }
 
-        $charge = $withdraw_method->fixed;
+        $charge = $withdraw_charge->fixed_charge;
 
-        $messagefee = (($withdraw_method->percentage / 100) * $request->amount) + $charge;
+        $messagefee = (($withdraw_charge->percent_charge / 100) * $request->amount) + $charge;
         $messagefinal = $request->amount - $messagefee;
 
-        $currency = Currency::whereId($withdraw_method->currency_id)->first();
-        // $amountToAdd = $request->amount/$currency->rate;
+        $currency = Currency::whereId($request->currency_id)->first();
+        $amountToAdd = $request->amount/$currency->rate;
 
-        $amount = $request->amount; //$amountToAdd;
-        $fee = (($withdraw_method->percentage / 100) * $amount) + $charge;
+        $amount = $amountToAdd; //$amountToAdd;
+        $fee = (($withdraw_charge->percent_charge / 100) * $amount) + $charge/$currency->rate;
         $finalamount = $amount - $fee;
 
         if($finalamount < 0){
@@ -128,8 +131,8 @@ class WithdrawController extends Controller
 
         $newwithdrawal->trx         = Str::random(12);
         $newwithdrawal->user_id = auth()->id();
-        // $newwithdrawal->method_id   = $request->methods;
-        $newwithdrawal->method_id   = 1;
+        $newwithdrawal->method_id   = $request->methods;
+        // $newwithdrawal->method_id   = 1;
         $newwithdrawal->currency_id = $currency->id;
         $newwithdrawal->amount      = $amount;
         $newwithdrawal->charge      = $fee;

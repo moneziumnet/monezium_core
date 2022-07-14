@@ -9,7 +9,7 @@
       </a>
     </h1>
     <div class="navbar-nav flex-row order-md-last">
-      <div class="change-language me-2">
+      {{-- <div class="change-language me-2">
         <select name="currency" class="currency selectors nice language-bar">
           @foreach(DB::table('currencies')->get() as $currency)
           <option value="{{route('front.currency',$currency->id)}}" {{ Session::has('currency') ? ( Session::get('currency') == $currency->id ? 'selected' : '' ) : (DB::table('currencies')->where('is_default','=',1)->first()->id == $currency->id ? 'selected' : '') }}>
@@ -17,7 +17,7 @@
           </option>
           @endforeach
         </select>
-      </div>
+      </div> --}}
       <a href="?theme=dark" class="nav-link px-0 hide-theme-dark" title="Enable dark mode" data-bs-toggle="tooltip" data-bs-placement="bottom">
         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
