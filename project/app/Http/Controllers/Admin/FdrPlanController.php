@@ -33,12 +33,12 @@ class FdrPlanController extends Controller
                                             </div>';
                                 }
 
-                            }) 
+                            })
                             ->editColumn('min_amount', function(FdrPlan $data){
                                 $curr = Currency::where('is_default','=',1)->first();
                                 return  '<div>
-                                            Min: '.$curr->symbol.$data->min_amount.'
-                                            <p>Max: '.$curr->symbol.$data->max_amount.'</p>
+                                            Min: '.$data->min_amount.'
+                                            <p>Max: '.$data->max_amount.'</p>
                                         </div>';
                             })
                             ->editColumn('status', function(FdrPlan $data) {
@@ -66,7 +66,7 @@ class FdrPlanController extends Controller
                                     <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.  route('admin.fdr.plan.delete',$data->id).'">'.__("Delete").'</a>
                                   </div>
                                 </div>';
-  
+
                               })
                             ->rawColumns(['interest_rate','min_amount','status','action'])
                             ->toJson();
@@ -102,7 +102,7 @@ class FdrPlanController extends Controller
         $data->fill($input)->save();
 
         $msg = 'New Plan Added Successfully.<a href="'.route('admin.fdr.plan.index').'">View Plan Lists.</a>';
-        return response()->json($msg); 
+        return response()->json($msg);
     }
 
     public function edit(Request $request, $id){
@@ -136,7 +136,7 @@ class FdrPlanController extends Controller
         $data->update($input);
 
         $msg = 'New Plan Updated Successfully.<a href="'.route('admin.fdr.plan.index').'">View Plan Lists.</a>';
-        return response()->json($msg); 
+        return response()->json($msg);
     }
 
     public function status($id1,$id2)
@@ -155,6 +155,6 @@ class FdrPlanController extends Controller
         $data->delete();
 
         $msg = 'Plan Deleted Successfully.';
-        return response()->json($msg);       
+        return response()->json($msg);
     }
 }

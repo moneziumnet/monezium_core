@@ -66,14 +66,14 @@
           <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
-                    <label for="final_amount">{{ __('Total Deposit') }} ({{$currency->code}})</label>
+                    <label for="final_amount">{{ __('Total Deposit') }} </label>
                     <input type="number" class="form-control" id="final_amount" name="final_amount" placeholder="{{ __('Total Deposit') }}" min="1" value="" required readonly>
                   </div>
               </div>
 
               <div class="col-md-6">
                 <div class="form-group">
-                    <label for="user_profit">{{ __('User Profit') }} ({{$currency->code}})</label>
+                    <label for="user_profit">{{ __('User Profit') }} </label>
                     <input type="number" class="form-control" id="user_profit" name="user_profit" placeholder="{{ __('User Profit') }}" min="1" value="" required readonly>
                   </div>
               </div>
@@ -81,7 +81,7 @@
 
           <div>
             <h3 class="col-lg-12 d-none deposit-amount text-primary text-center">
-                {{__('After mature, the user will get')}} : ({{$currency->code}}) <span class="text-primary"></span>
+                {{__('After mature, the user will get')}}  <span class="text-primary"></span>
             </h3>
           </div>
 

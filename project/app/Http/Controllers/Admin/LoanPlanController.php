@@ -25,12 +25,11 @@ class LoanPlanController extends Controller
          return Datatables::of($datas)
 
                             ->editColumn('min_amount', function(LoanPlan $data) {
-                                $curr = Currency::where('is_default','=',1)->first();
                                 return  '<div>
-                                        Min: '.$curr->symbol.$data->min_amount.'
-                                        <p>Max: '.$curr->symbol.$data->max_amount.'</p>
+                                        Min: '.$data->min_amount.'
+                                        <p>Max: '.$data->max_amount.'</p>
                                 </div>';
-                            }) 
+                            })
                             ->editColumn('total_installment', function(LoanPlan $data){
                                 return '<div>
                                     '.$data->per_installment.'% of every '.$data->installment_interval.' days for '.$data->total_installment.' times.
@@ -61,7 +60,7 @@ class LoanPlanController extends Controller
                                     <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.  route('admin.loan.plan.delete',$data->id).'">'.__("Delete").'</a>
                                   </div>
                                 </div>';
-  
+
                               })
                             ->rawColumns(['min_amount','total_installment','status','action'])
                             ->toJson();
@@ -103,7 +102,7 @@ class LoanPlanController extends Controller
         $data->fill($input)->save();
 
         $msg = 'New Plan Added Successfully.<a href="'.route('admin.loan.plan.index').'">View Plan Lists.</a>';
-        return response()->json($msg); 
+        return response()->json($msg);
     }
 
     public function edit(Request $request, $id){
@@ -126,7 +125,7 @@ class LoanPlanController extends Controller
         $data->update($input);
 
         $msg = 'New Plan Updated Successfully.<a href="'.route('admin.loan.plan.index').'">View Plan Lists.</a>';
-        return response()->json($msg); 
+        return response()->json($msg);
     }
 
     public function status($id1,$id2)
@@ -145,6 +144,6 @@ class LoanPlanController extends Controller
         $data->delete();
 
         $msg = 'Plan Deleted Successfully.';
-        return response()->json($msg);       
+        return response()->json($msg);
     }
 }

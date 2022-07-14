@@ -25,14 +25,14 @@ class DpsPlanController extends Controller
                             ->editColumn('per_installment', function(DpsPlan $data) {
                                 $curr = Currency::where('is_default','=',1)->first();
                                 return  '<div>
-                                        <span class="text-primary">'.$curr->symbol.$data->per_installment.'</span>/ <span class="text-primary">'.$data->installment_interval.'</span> Days
+                                        <span class="text-primary">'.$data->per_installment.'</span>/ <span class="text-primary">'.$data->installment_interval.'</span> Days
                                         <p>for <span class="text-primary">'.$data->total_installment.'</span> times.</p>
                                 </div>';
-                            }) 
+                            })
                             ->editColumn('final_amount', function(DpsPlan $data){
                                 $curr = Currency::where('is_default','=',1)->first();
                                 return '<div>
-                                        <span class="text-primary">'.$curr->symbol.round($data->final_amount + $data->user_profit,2).'</span>
+                                        <span class="text-primary">'.round($data->final_amount + $data->user_profit,2).'</span>
                                 </div>';
                             })
                             ->editColumn('status', function(DpsPlan $data) {
@@ -60,7 +60,7 @@ class DpsPlanController extends Controller
                                     <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.  route('admin.dps.plan.delete',$data->id).'">'.__("Delete").'</a>
                                   </div>
                                 </div>';
-  
+
                               })
                             ->rawColumns(['per_installment','final_amount','status','action'])
                             ->toJson();
@@ -96,7 +96,7 @@ class DpsPlanController extends Controller
         $data->fill($input)->save();
 
         $msg = 'New Plan Added Successfully.<a href="'.route('admin.dps.plan.index').'">View Plan Lists.</a>';
-        return response()->json($msg); 
+        return response()->json($msg);
     }
 
     public function edit(Request $request, $id){
@@ -128,7 +128,7 @@ class DpsPlanController extends Controller
         $data->update($input);
 
         $msg = 'New Plan Updated Successfully.<a href="'.route('admin.dps.plan.index').'">View Plan Lists.</a>';
-        return response()->json($msg); 
+        return response()->json($msg);
     }
 
     public function status($id1,$id2)
@@ -147,6 +147,6 @@ class DpsPlanController extends Controller
         $data->delete();
 
         $msg = 'Plan Deleted Successfully.';
-        return response()->json($msg);       
+        return response()->json($msg);
     }
 }

@@ -33,12 +33,12 @@
           </div>
 
           <div class="form-group">
-            <label for="min_amount">{{ __('Minimum Price in') }} ({{$currency->code}})</label>
+            <label for="min_amount">{{ __('Minimum Price in') }} </label>
             <input type="number" class="form-control" id="min_amount" name="min_amount" placeholder="{{ __('Enter Minimum Price') }}" min="1" step="0.01" value="{{ $data->min_amount}}" required>
           </div>
 
           <div class="form-group">
-            <label for="max_amount">{{ __('Maximum Price in') }} ({{$currency->code}})</label>
+            <label for="max_amount">{{ __('Maximum Price in') }} </label>
             <input type="number" class="form-control" id="max_amount" name="max_amount" placeholder="{{ __('Enter Maximum Price') }}" min="1" step="0.01" value="{{ $data->max_amount}}" required>
           </div>
 
@@ -56,7 +56,7 @@
             <label for="total_installment">{{ __('Total Installment') }}</label>
             <input type="number" class="form-control" id="total_installment" name="total_installment" placeholder="{{ __('Total Installment') }}" min="1" value="{{ $data->total_installment}}" required>
           </div>
-          
+
           <div class="form-group">
             <h3 id="profitShow" class="text-center"></h3>
           </div>

@@ -74,14 +74,14 @@
             <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                      <label for="min_amount">{{ __('Minimum Amount') }} ({{$currency->code}})</label>
+                      <label for="min_amount">{{ __('Minimum Amount') }} </label>
                       <input type="number" class="form-control" id="min_amount" name="min_amount" placeholder="{{ __('Minimum Amount') }}" min="1" value="{{$data->min_amount}}" required>
                     </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-group">
-                      <label for="max_amount">{{ __('Maximum Amount') }} ({{$currency->code}})</label>
+                      <label for="max_amount">{{ __('Maximum Amount') }} </label>
                       <input type="number" class="form-control" id="max_amount" name="max_amount" placeholder="{{ __('Maximum Amount') }}" min="1" value="{{$data->max_amount}}" required>
                     </div>
                 </div>
