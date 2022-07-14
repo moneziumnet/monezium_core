@@ -18,9 +18,10 @@ class UserLoan extends Model
         'given_installment',
         'paid_amount',
         'total_amount',
+        'currency_id',
         'required_information',
     ];
-    
+
     protected $dates = [
         'next_installment',
     ];
@@ -31,5 +32,9 @@ class UserLoan extends Model
 
     public function user(){
         return $this->belongsTo(User::class)->withDefault();
+    }
+
+    public function currency(){
+        return $this->belongsTo(Currency::class,'currency_id')->withDefault();
     }
 }

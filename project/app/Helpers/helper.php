@@ -325,7 +325,10 @@ if(!function_exists('getModule')){
   {
       function user_wallet_balance($auth_id, $currency_id, $wallet_type=NULL)
       {
-          $wallet_type == NULL ? 1:$wallet_type;
+        if(!$wallet_type)
+        {
+            $wallet_type = 1;
+        }
           $balance = Wallet::where('user_id', $auth_id)->where('wallet_type', $wallet_type)->where('currency_id',$currency_id)->first();
           return $balance? $balance->balance: 0;
       }
@@ -335,7 +338,10 @@ if(!function_exists('getModule')){
   {
       function user_wallet_decrement($auth_id, $currency_id, $amount, $wallet_type=NULL)
       {
-        $wallet_type == NULL ? 1:$wallet_type;
+        if(!$wallet_type)
+        {
+            $wallet_type = 1;
+        }
         $wallet = Wallet::where('user_id', $auth_id)->where('wallet_type', $wallet_type)
                   ->where('currency_id',$currency_id)->first();
 
@@ -354,7 +360,10 @@ if(!function_exists('getModule')){
   {
       function user_wallet_increment($auth_id, $currency_id, $amount, $wallet_type=NULL)
       {
-        $wallet_type == NULL ? 1:$wallet_type;
+        if(!$wallet_type)
+        {
+            $wallet_type = 1;
+        }
         $gs = Generalsetting::first();
         $wallet = Wallet::where('user_id', $auth_id)->where('wallet_type', $wallet_type)
             ->where('currency_id',$currency_id)->first();

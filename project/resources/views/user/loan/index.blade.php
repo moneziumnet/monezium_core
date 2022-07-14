@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -27,7 +27,7 @@
                 <div class="card">
                     @if (count($loans) == 0)
                         <h3 class="text-center py-5">{{__('No Loan Data Found')}}</h3>
-                    @else 
+                    @else
                         <div class="table-responsive">
                             <table class="table table-vcenter table-mobile-lg card-table">
                                 <thead>
@@ -53,12 +53,12 @@
                                           </td>
                                           <td data-label="{{ __('Loan Amount') }}">
                                             <div>
-                                              {{ showprice($data->loan_amount,$currency) }}
+                                              {{ amount($data->loan_amount, $data->currency->type, 2) }} {{$data->currency->code}}
                                             </div>
                                           </td>
                                           <td data-label="{{ __('Per Installment') }}">
                                             <div>
-                                              {{ showprice($data->per_installment_amount,$currency) }}
+                                              {{ amount($data->per_installment_amount,$data->currency->type, 2) }} {{$data->currency->code}}
                                             </div>
                                           </td>
                                           <td data-label="{{ __('Total Installement') }}">
@@ -69,7 +69,7 @@
                                               </div>
                                           </td>
 
-                                          <td data-label="{{ __('Next Installment') }}"> 
+                                          <td data-label="{{ __('Next Installment') }}">
                                             <div>
                                               {{ $data->next_installment ?  $data->next_installment->toDateString() : '--'}}
                                             </div>
@@ -82,7 +82,7 @@
                                                   <span class="badge bg-success">@lang('Running')</span>
                                               @elseif($data->status == 3)
                                                   <span class="badge bg-info">@lang('Paid')</span>
-                                              @else 
+                                              @else
                                                   <span class="badge bg-danger">@lang('Rejected')</span>
                                               @endif
                                             </div>

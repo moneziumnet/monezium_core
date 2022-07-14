@@ -35,7 +35,7 @@ class UserLoanController extends Controller
     }
 
     public function paid(){
-        $data['loans'] = UserLoan::whereStatus(3)->whereUserId(auth()->id())->orderby('id','desc')->paginate(10); 
+        $data['loans'] = UserLoan::whereStatus(3)->whereUserId(auth()->id())->orderby('id','desc')->paginate(10);
         return view('user.loan.paid',$data);
     }
 
@@ -46,6 +46,7 @@ class UserLoanController extends Controller
 
     public function loanPlan(){
         $data['plans'] = LoanPlan::orderBy('id','desc')->whereStatus(1)->paginate(12);
+        $data['currencylist'] = Currency::whereStatus(1)->where('type', 1)->get();
         return view('user.loan.plan',$data);
     }
 
@@ -56,7 +57,7 @@ class UserLoanController extends Controller
         if($amount >= $plan->min_amount && $amount <= $plan->max_amount){
             $data['data'] = $plan;
             $data['loanAmount'] = $amount;
-            $data['currency'] = Currency::whereIsDefault(1)->first();
+            $data['currencyinfo'] = Currency::whereId($request->currency_id)->first();
             $data['perInstallment'] = ($amount * $plan->per_installment)/100;
             return view('user.loan.apply',$data);
         }else{
@@ -82,7 +83,7 @@ class UserLoanController extends Controller
         if($monthlyLoans > $bank_plan->loan_amount){
             return redirect()->route('user.loans.plan')->with('warning','Monthly loan limit over.');
         }
-        
+
         $data = new UserLoan();
         $input = $request->all();
 
@@ -119,7 +120,7 @@ class UserLoanController extends Controller
         if(!empty($details)){
             $input['required_information'] = json_encode($details,true);
         }
-        
+
         $txnid = Str::random(4).time();
         $input['transaction_no'] = $txnid;
         $input['user_id'] = auth()->id();
@@ -127,13 +128,14 @@ class UserLoanController extends Controller
         $input['given_installment'] = 0;
         $input['paid_amount'] = 0;
         $input['total_amount'] = $request->loan_amount;
+        $input['currency_id'] = $request->currency_id;
         $data->fill($input)->save();
 
         $trans = new Transaction();
         $trans->trnx = $txnid;
         $trans->user_id     = $user->id;
         $trans->user_type   = 1;
-        $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
+        $trans->currency_id = $request->currency_id;
         $trans->amount      = $request->loan_amount;
         $trans->charge      = 0;
         $trans->type        = '+';

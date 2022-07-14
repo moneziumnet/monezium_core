@@ -47,7 +47,8 @@
                                     </div>
 
                                     <div class="info">
-                                      {{ showprice($data->min_amount,$currency) }}
+                                      {{-- {{ showprice($data->min_amount,$currency) }} --}}
+                                      {{$data->min_amount}}
                                     </div>
                                 </li>
                                 <li>
@@ -56,7 +57,8 @@
                                     </div>
 
                                     <div class="info">
-                                        {{ showprice($data->max_amount,$currency) }}
+                                        {{-- {{ showprice($data->max_amount,$currency) }} --}}
+                                        {{$data->max_amount}}
                                     </div>
                                 </li>
                                 <li>
@@ -105,6 +107,17 @@
                 <label class="form-label required">{{__('Amount')}}</label>
                 <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" step="any" value="{{ old('amount') }}" min="1" required>
               </div>
+
+              <div class="form-group mt-3">
+                <label class="form-label required">{{__('Currency')}}</label>
+                <select name="currency_id" id="withcurrency" class="form-select" required>
+                    <option value="">{{ __('Select Currency') }}</option>
+                    @foreach ($currencylist as $currency )
+                    <option value="{{$currency->id}}">{{ $currency->code }}</option>
+                    @endforeach
+                </select>
+              </div>
+
 
               <input type="hidden" name="planId" id="planId" value="">
             </div>

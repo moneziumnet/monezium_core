@@ -106,7 +106,7 @@ class WithdrawController extends Controller
         $finalamount = $amount - $fee;
 
         if($finalamount < 0){
-            return redirect()->back()->with('unsuccess','Request Amount should be greater than this '.$amountToAdd.' (USD)');
+            return redirect()->back()->with('unsuccess','Request Amount should be greater than this '.$amountToAdd.' ('.$currency->code.')');
         }
 
         if($finalamount > $userBalance){

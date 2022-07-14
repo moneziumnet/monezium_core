@@ -18,6 +18,7 @@ class CreateUserLoansTable extends Migration
             $table->string('transaction_no')->nullable();
             $table->integer('user_id')->nullable();
             $table->integer('plan_id');
+            $table->integer('currency_id')->nullable();
             $table->decimal('loan_amount', 20, 10)->nullable();
             $table->decimal('per_installment_amount', 20, 10)->nullable();
             $table->integer('total_installment')->nullable();
