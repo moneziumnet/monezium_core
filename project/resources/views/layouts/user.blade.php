@@ -38,6 +38,7 @@
     <script src="{{asset('assets/user/js/demo.min.js')}}"></script>
     <script src="{{asset('assets/front/js/custom.js')}}"></script>
     <script src="{{asset('assets/user/js/notify.min.js')}}"></script>
+    <script src="{{asset('assets/user/js/webcam.min.js')}}"></script>
     <script src="{{asset('assets/front/js/toastr.min.js')}}"></script>
     @stack('js')
 
