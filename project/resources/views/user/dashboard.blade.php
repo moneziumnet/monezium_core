@@ -77,15 +77,18 @@
         $wallet_type = ['All', 'Current', 'Card', 'Deposit', 'load', 'Escrow'];
     @endphp
 
-    <div class="row justify-content-center " style="max-height: 368px;overflow-y: scroll;">
+    <div class="row justify-content " style="max-height: 368px;overflow-y: scroll;">
         @foreach ($wallets as $item)
         <div class="col-sm-6 col-md-4 mb-3">
             <div class="card h-100 card--info-item">
               <div class="text-end icon">
-                <i class="fas fa-dollar-sign"></i>
+                <i class="fas ">
+                    {{$item->currency->symbol}}
+                </i>
               </div>
               <div class="card-body">
-                <div class="h3 m-0 text-uppercase"> {{$wallet_type[$item->wallet_type]}}-{{ $item->wallet_no }}</div>
+                <div class="h3 m-0 text-uppercase"> {{$wallet_type[$item->wallet_type]}}</div>
+                <div class="h4 m-0 text-uppercase"> {{ $item->wallet_no }}</div>
                 <div class="text-muted">{{ amount($item->balance,$item->currency->type,2) }}  {{$item->currency->code}}</div>
               </div>
             </div>
