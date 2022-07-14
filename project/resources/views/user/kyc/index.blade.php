@@ -44,7 +44,16 @@
                               </div>
                             @endif
                           @endforeach
-
+                          <div class="form-group mb-3 mt-3">
+                              <label class="form-label required">@lang('Own Photo')</label>
+                              <div id="my_camera"></div>
+                              <br/>
+                              <input type=button value="Take Snapshot" onClick="take_snapshot()">
+                              <input type="hidden" name="image" class="image-tag">
+                          </div>
+                          <div class="form-group mb-3 mt-3">
+                              <div id="results">Your captured photo will appear here...</div>
+                          </div>
                           <div class="form-footer">
                             <button type="submit" class="btn btn-primary w-100">{{__('Submit')}}</button>
                           </div>
@@ -59,5 +68,21 @@
 @endsection
 
 @push('js')
-
+<script language="JavaScript">
+  Webcam.set({
+      width: 490,
+      height: 350,
+      image_format: 'jpeg',
+      jpeg_quality: 90
+  });
+  
+  Webcam.attach( '#my_camera' );
+  
+  function take_snapshot() {
+      Webcam.snap( function(data_uri) {
+          $(".image-tag").val(data_uri);
+          document.getElementById('results').innerHTML = '<img src="'+data_uri+'"/>';
+      } );
+  }
+</script>
 @endpush
