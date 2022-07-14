@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -23,7 +23,7 @@
               <div class="card">
                   <h3 class="text-center">{{__('NO DPS PLAN FOUND')}}</h3>
               </div>
-            @else 
+            @else
 
             @foreach ($plans as $key=>$data)
 
@@ -50,7 +50,7 @@
                                     </div>
 
                                     <div class="info">
-                                        {{ showprice($data->per_installment,$currency) }}
+                                        {{ $data->per_installment }}
                                     </div>
                                 </li>
 
@@ -60,7 +60,7 @@
                                     </div>
 
                                     <div class="info">
-                                        {{ showprice($data->final_amount,$currency) }}
+                                        {{ $data->final_amount}}
                                     </div>
                                 </li>
 
@@ -70,7 +70,7 @@
                                     </div>
 
                                     <div class="info">
-                                        {{ showprice(round($data->final_amount + $data->user_profit,2),$currency) }}
+                                        {{ round($data->final_amount + $data->user_profit,2) }}
                                     </div>
                                 </li>
 
@@ -92,9 +92,12 @@
                                     <div class="info">
                                         {{ $data->total_installment }}
                                     </div>
-                                </li>    
+                                </li>
                             </ul>
-                                <a href="{{ route('user.dps.planDetails',$data->id) }}" class="btn btn-green w-100">{{__('Apply')}}</a>
+                            <a href="javascript:;" class="btn btn-green w-100 apply-dps" data-id="{{ $data->id}}" data-bs-toggle="modal" data-bs-target="#modal-apply">
+                                {{__('Apply')}}
+                              </a>
+                                {{-- <a href="{{ route('user.dps.planDetails',$data->id) }}" class="btn btn-green w-100">{{__('Apply')}}</a> --}}
                         </div>
                     </div>
                 </div>
@@ -103,9 +106,48 @@
       </div>
     </div>
   </div>
+
+  <div class="modal modal-blur fade" id="modal-apply" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{('Apply for DPS')}}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <form action="{{ route('user.dps.planDetails') }}" method="post">
+            @csrf
+            <div class="modal-body">
+
+              <div class="form-group mt-3">
+                <label class="form-label required">{{__('Currency')}}</label>
+                <select name="currency_id" id="withcurrency" class="form-select" required>
+                    <option value="">{{ __('Select Currency') }}</option>
+                    @foreach ($currencylist as $currency )
+                    <option value="{{$currency->id}}">{{ $currency->code }}</option>
+                    @endforeach
+                </select>
+              </div>
+
+              <input type="hidden" name="planId" id="planId" value="">
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" id="submit-btn" class="btn btn-primary">{{ __('Submit') }}</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
 @endsection
 
 @push('js')
-
+<script>
+  'use strict';
+    $('.apply-dps').on('click',function(){
+        let id = $(this).data('id');
+        $('#planId').val(id);
+    });
+</script>
 @endpush
 

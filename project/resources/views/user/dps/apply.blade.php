@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -36,21 +36,21 @@
                                 <td>
                                     <p class="strong mb-1">{{__('Per Installment Amount')}}</p>
                                 </td>
-                                <td class="text-end">{{ showprice($data->per_installment,$currency) }}</td>
+                                <td class="text-end">{{ $data->per_installment }} {{$currencyinfo->code}}</td>
                             </tr>
 
                             <tr>
                                 <td>
                                     <p class="strong mb-1">{{__('Total Deposit Amount')}}</p>
                                 </td>
-                                <td class="text-end">{{ showprice($data->final_amount,$currency) }}</td>
+                                <td class="text-end">{{ $data->final_amount }} {{$currencyinfo->code}}</td>
                             </tr>
 
                             <tr>
                                 <td>
                                     <p class="strong mb-1">{{__('User Profit')}}</p>
                                 </td>
-                                <td class="text-end">{{ showprice(($data->final_amount + $data->user_profit),$currency) }}</td>
+                                <td class="text-end">{{ $data->final_amount + $data->user_profit }} {{$currencyinfo->code}}</td>
                             </tr>
 
                             <tr>
@@ -70,12 +70,12 @@
 
                         </tbody>
                     </table>
-                    
+
                     <form action="{{route('user.loan.dpsSubmit')}}" method="POST" enctype="multipart/form-data">
                         @csrf
 
                         <input type="hidden" name="dps_plan_id" value="{{ $data->id }}">
-                        <input type="hidden" name="currency_id" value="{{ $currency->id }}">
+                        <input type="hidden" name="currency_id" value="{{ $currencyinfo->id }}">
                         <input type="hidden" name="per_installment" value="{{ $data->per_installment }}">
                         <input type="hidden" name="deposit_amount" value="{{ $data->final_amount }}">
                         <input type="hidden" name="matured_amount" value="{{ $data->final_amount + $data->user_profit }}">

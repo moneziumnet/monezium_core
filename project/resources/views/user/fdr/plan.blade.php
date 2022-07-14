@@ -93,7 +93,7 @@
                                 </li>
                                 @endif
                             </ul>
-                            <a href="javascript:;" class="btn btn-green w-100 apply-loan" data-id="{{ $data->id}}" data-bs-toggle="modal" data-bs-target="#modal-apply">
+                            <a href="javascript:;" class="btn btn-green w-100 apply-fdr" data-id="{{ $data->id}}" data-bs-toggle="modal" data-bs-target="#modal-apply">
                                     {{__('Apply')}}
                                   </a>
                         </div>
@@ -147,7 +147,7 @@
 @push('js')
 <script>
   'use strict';
-    $('.apply-loan').on('click',function(){
+    $('.apply-fdr').on('click',function(){
         let id = $(this).data('id');
         $('#planId').val(id);
     });

@@ -149,7 +149,7 @@ class UserLoanController extends Controller
     public function log($id){
         $loan = UserLoan::findOrfail($id);
         $logs = InstallmentLog::whereTransactionNo($loan->transaction_no)->whereUserId(auth()->id())->orderby('id','desc')->paginate(20);
-        $currency = Currency::whereIsDefault(1)->first();
+        $currency = Currency::whereId($loan->currency->id)->first();
 
         return view('user.loan.log',compact('logs','currency'));
     }

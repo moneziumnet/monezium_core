@@ -17,6 +17,7 @@ class CreateUserDpsTable extends Migration
             $table->integer('id', true);
             $table->string('transaction_no')->nullable();
             $table->integer('user_id')->nullable();
+            $table->integer('currency_id')->nullable();
             $table->integer('dps_plan_id')->nullable();
             $table->decimal('per_installment', 10, 0)->nullable();
             $table->integer('installment_interval')->nullable();
