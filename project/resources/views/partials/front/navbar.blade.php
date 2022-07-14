@@ -19,7 +19,7 @@
                 </li>
             @endif
         </ul>
-        <div class="change-language me-md-auto">
+        {{-- <div class="change-language me-md-auto">
             <select name="currency" class="currency selectors nice language-bar">
                 @foreach(DB::table('currencies')->get() as $currency)
                     <option value="{{route('front.currency',$currency->id)}}" {{ Session::has('currency') ? ( Session::get('currency') == $currency->id ? 'selected' : '' ) : (DB::table('currencies')->where('is_default','=',1)->first()->id == $currency->id ? 'selected' : '') }}>
@@ -27,7 +27,7 @@
                     </option>
                 @endforeach
             </select>
-        </div>
+        </div> --}}
     </div>
     <ul class="contact-bar py-1 py-md-0">
         <li>
