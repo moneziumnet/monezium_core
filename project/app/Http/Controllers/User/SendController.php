@@ -61,6 +61,7 @@ class SendController extends Controller
     public function success(){
         if(session('saveData') && session('sendstatus') == 1){
             $data['data'] = session()->get('saveData');
+            $data['user_id'] = auth()->user()->id;
 
             session(['sendstatus'=>0]);
             return view('user.sendmoney.success',$data);
@@ -160,7 +161,6 @@ class SendController extends Controller
             $trans->details     = trans('Send Money');
             $trans->save();
 
-            session(['sendstatus'=>1, 'saveData'=>$trans]);
 
             $trans = new Transaction();
             $trans->trnx = $txnid;
@@ -174,6 +174,7 @@ class SendController extends Controller
             $trans->details     = trans('Send Money');
             $trans->save();
 
+            session(['sendstatus'=>1, 'saveData'=>$trans]);
             // user_wallet_decrement($user->id, $currency_id, $request->amount);
             // user_wallet_increment($receiver->id, $currency_id, $request->amount);
 

@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -33,8 +33,8 @@
                             <div class="col-md-4">
                                 <form action="{{ route('user.save.account') }}" method="post">
                                     @csrf
-                                    <input type="hidden" name="user_id" value="{{ $data->user_id }}">
-                                    <input type="hidden" name="receiver_id" value="{{ $data->receiver_id }}">
+                                    <input type="hidden" name="user_id" value="{{ $user_id }}">
+                                    <input type="hidden" name="receiver_id" value="{{ $data->user_id }}">
                                     <button type="submit" class="btn btn-primary w-100">{{__('Saved Account')}}</button>
                                 </form>
                             </div>
