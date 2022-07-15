@@ -564,7 +564,7 @@ class UserController extends Controller
         {
             $user = User::findOrFail($id);
             if ($request->newpass == $request->renewpass){
-                $input['password'] = Hash::make($request['password']);
+                $input['password'] = bcrypt($request['password']);
             }else{
                 return response()->json(array('errors' => [ 0 => "Confirm password does not match." ]));                
             }
