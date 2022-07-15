@@ -99,9 +99,7 @@
                                           <td data-label="{{__('Action')}}">
                                             <div class="btn-list flex-nowrap">
                                                @if($data->status == 1)
-                                                <input type="hidden" name="plan_Id" id="plan_Id" value="{{$data->id}}">
-
-                                              <a href="#" id="finish" class="btn">
+                                                <a href="#" id="finish" data-id="{{$data->id}}" class="btn finish">
                                                 @lang('Finish')
                                               </a>
                                               @endif
@@ -148,10 +146,11 @@
 
 @push('js')
 <script>
-    $('#finish').on('click',function () {
+    $('a.finish').on('click',  function () {
+        $this=$(this);
+        var data_id = $this.attr('data-id');
         $('#modal-success').modal('show');
-        let id = $('#plan_Id').val();
-        $('#planId').val(id);
+        $('#planId').val(data_id);
     })
 
 </script>
