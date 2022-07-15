@@ -113,6 +113,7 @@ Route::prefix('user')->group(function() {
       Route::get('/dps-plan', [UserDpsController::class,'dpsPlan'])->name('user.dps.plan');
       Route::post('/dps-plan', [UserDpsController::class,'planDetails'])->name('user.dps.planDetails');
       Route::post('/dps-submit', [UserDpsController::class,'dpsSubmit'])->name('user.loan.dpsSubmit');
+      Route::post('/dps/finish', [UserDpsController::class,'finish'])->name('user.dps.finish');
       Route::get('/dps-logs/{id}', [UserDpsController::class,'log'])->name('user.dps.logs');
 
       Route::get('/fdr', [UserFdrController::class,'index'])->name('user.fdr.index');

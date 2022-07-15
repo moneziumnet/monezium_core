@@ -46,6 +46,22 @@ class UserDpsController extends Controller
         return view('user.dps.apply',$data);
     }
 
+    public function finish(Request $request) {
+        $dps = UserDps::whereId($request->planId)->first();
+        if($dps){
+
+            $dps->status = 2;
+            $dps->next_installment = NULL;
+            $dps->update();
+            user_wallet_increment($dps->user_id, $dps->currency_id, $dps->paid_amount, 4);
+
+            return redirect()->back()->with('message','Finish Requesting Successfully');
+        }else {
+            return redirect()->back()->with('warning','There is not your DPS plan');
+        }
+
+    }
+
     public function dpsSubmit(Request $request){
         $user = auth()->user();
 
