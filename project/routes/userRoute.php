@@ -103,7 +103,7 @@ Route::prefix('user')->group(function() {
         Route::get('/loan-plan', [UserLoanController::class,'loanPlan'])->name('user.loans.plan');
         Route::post('/loan-amount', [UserLoanController::class,'loanAmount'])->name('user.loan.amount');
         Route::post('/loan-request', [UserLoanController::class,'loanRequest'])->name('user.loan.request');
-        Route::post('/loans', [UserLoanController::class,'loanfinish'])->name('user.loan.finish');
+        Route::post('/loans/finish', [UserLoanController::class,'loanfinish'])->name('user.loan.finish');
         Route::get('/loan-logs/{id}', [UserLoanController::class,'log'])->name('user.loans.logs');
       });
 
@@ -121,6 +121,7 @@ Route::prefix('user')->group(function() {
       Route::get('/fdr-plan', [UserFdrController::class,'fdrPlan'])->name('user.fdr.plan');
       Route::post('/fdr-amount', [UserFdrController::class,'fdrAmount'])->name('user.fdr.amount');
       Route::post('/fdr-request', [UserFdrController::class,'fdrRequest'])->name('user.fdr.request');
+      Route::post('/fdr/finish', [UserFdrController::class,'finish'])->name('user.fdr.finish');
 
       Route::get('/merchant/generate-qrcode', [MerchantController::class,'generateQR'])->name('user.merchant.qr');
       Route::get('/merchant/download-qr/{email}',  [MerchantController::class,'downloadQR'])->name('user.merchant.download.qr');

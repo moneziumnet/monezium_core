@@ -55,6 +55,22 @@ class UserFdrController extends Controller
         }
     }
 
+    public function finish(Request $request){
+        $fdr = UserFdr::whereId($request->planId)->first();
+        if($fdr){
+            // user_wallet_decrement($fdr->user_id, $fdr->currency_id, $fdr->fdr_amount, 4);
+            $currency = $fdr->currency->id;
+            user_wallet_increment($fdr->user_id, $currency, $fdr->amount, 4);
+            $fdr->next_profit_time = NULL;
+            $fdr->status = 2;
+            $fdr->update();
+
+            return redirect()->back()->with('message','Finish Requesting Successfully');
+        }else {
+            return redirect()->back()->with('warning','There is not your FDR plan');
+        }
+    }
+
     public function fdrRequest(Request $request){
         // $user = auth()->user();
         // dd($request);

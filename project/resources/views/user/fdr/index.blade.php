@@ -37,6 +37,7 @@
                                     <th>{{ __('Profit Type') }}</th>
                                     <th>{{ __('Profit') }}</th>
                                     <th>{{ __('Status') }}</th>
+                                    <th>{{ __('Action') }}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -88,6 +89,17 @@
                                               @endif
                                             </div>
                                           </td>
+
+                                          <td data-label="{{ __('Action') }}">
+                                            <div>
+                                              @if ($data->status == 1)
+                                              <input type="hidden" name="plan_Id" id="plan_Id" value="{{$data->id}}">
+                                              <a href="#" id="finish" class="btn">
+                                                @lang('Finish')
+                                                </a>
+                                              @endif
+                                            </div>
+                                          </td>
                                       </tr>
                                   @endforeach
                                 </tbody>
@@ -100,11 +112,41 @@
         </div>
     </div>
 </div>
+<div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-status bg-primary"></div>
+        <div class="modal-body text-center py-4">
+            <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+            <h3>@lang('Do you want to finish this plan now?')</h3>
+        </div>
+        <form action="{{ route('user.fdr.finish') }}" method="post">
+            @csrf
+            <div class="modal-body">
+              <div class="form-group">
+                  <input type="hidden" name="planId" id="planId" value="">
+              </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" id="submit-btn" class="btn btn-primary">{{ __('Ok') }}</button>
+            </div>
+        </form>
+    </div>
+    </div>
+</div>
 
 
 @endsection
 
 @push('js')
+<script>
+    $('#finish').on('click',function () {
+        $('#modal-success').modal('show');
+        let id = $('#plan_Id').val();
+        $('#planId').val(id);
+    })
 
+</script>
 @endpush
 
