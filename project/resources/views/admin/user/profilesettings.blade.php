@@ -26,7 +26,7 @@
           </div>
 
           <div class="card-body">
-            <form id="request-form" action="{{ route('admin-user-changepassword',$data->id) }}" method="POST" enctype="multipart/form-data">
+            <form class="geniusform" id="request-form" action="{{ route('admin-user-changepassword',$data->id) }}" method="POST" enctype="multipart/form-data">
               @include('includes.admin.form-both')
               {{ csrf_field() }}
               <div class="form-group">

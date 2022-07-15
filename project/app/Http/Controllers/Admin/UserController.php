@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Exports\AdminExportTransaction;
 use App\Models\BankPlan;
+use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 
 
@@ -563,13 +564,12 @@ class UserController extends Controller
         {
             $user = User::findOrFail($id);
             if ($request->newpass == $request->renewpass){
-                $input['password'] = bcrypt($request['password']);
+                $input['password'] = Hash::make($request['password']);
             }else{
-                return redirect()->back()->with('unsuccess','Confirm password does not match.');
+                return response()->json(array('errors' => [ 0 => "Confirm password does not match." ]));                
             }
-
             $user->update($input);
-            return redirect()->back()->with('success','Password Successfully Changed.');
+            return response()->json('Password Successfully Changed.');
         }
 
         public function updateModules(Request $request, $id)
