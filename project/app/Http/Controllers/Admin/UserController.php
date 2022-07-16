@@ -9,6 +9,7 @@ use App\Models\Follow;
 use App\Models\Rating;
 use App\Models\Wallet;
 use App\Models\Plan;
+use App\Models\Charge;
 use App\Models\UserDps;
 use App\Models\UserFdr;
 use App\Models\Currency;
@@ -534,6 +535,142 @@ class UserController extends Controller
                             ->toJson();
         }
 
+
+        public function profilePricingplandatatables($id)
+        {
+            $customlist = ["Transfer Money","Exchange Money","Request Money","Merchant Payment","Create Voucher","Create Invoice","Make Escrow","API Merchant Payment","Account Maintenance","Card Maintenance","Transaction 1","Transaction 2","Transaction 3"];
+            $user = User::findOrFail($id);
+            $global = Charge::where('plan_id', $user->bank_plan_id)->get();
+            $datas = $global;
+            foreach ($customlist as $value) {
+                $customplan =  Charge::where('user_id',$id)->where('name', $value)->first();
+                if ($customplan) {
+                   $datas->add($customplan);
+                }
+                else {
+                    $newcustomplan = new Charge();
+                    $newcustomplan->name = $value;
+                    $datas->add($newcustomplan);
+                }
+            }
+            return Datatables::of($datas)
+                            ->editColumn('name', function(Charge $data) {
+                                return $data->name;
+                            })
+                            ->editColumn('user_id', function(Charge $data) {
+                                if($data->user_id) {
+                                    return 'Customer';
+                                }
+                                else {
+                                    return 'Global';
+                                }
+                            })
+                            ->editColumn('percent', function(Charge $data) {
+                                if ($data->data){
+                                    return $data->data->percent_charge;
+                                }
+                                else {
+                                    return 0;
+                                }
+                            })
+                            ->editColumn('fixed', function(Charge $data) {
+                                if ($data->data){
+                                    return $data->data->fixed_charge;
+                                }
+                                else {
+                                    return 0;
+                                }
+                            })
+                            ->addColumn('action', function (Charge $data) {
+                                if($data->user_id) {
+                                    return '<button type="button" class="btn btn-primary btn-big btn-rounded " onclick="getDetails('.$data->id.')" aria-haspopup="true" aria-expanded="false">
+                                    Edit
+                                    </button>';
+                                }
+                                else {
+                                    if ($data->id) {
+                                        return '';
+                                    }
+                                    else {
+                                        return '<button type="button" class="btn btn-primary btn-big btn-rounded " data-id="'.$data->name.'" onclick="createDetails(\''.$data->name.'\')" aria-haspopup="true" aria-expanded="false">
+                                        Create
+                                        </button>';
+                                    }
+                                }
+                            })
+
+                            ->rawColumns(['action'])
+                            ->toJson();
+        }
+
+        public function profilePricingplanedit($id) {
+            $plandetail = Charge::findOrFail($id);
+            return view('admin.user.profilepricingplanedit',compact('plandetail'));
+        }
+
+        public function profilePricingplancreate($id, $name) {
+            $plandetail = new Charge();
+            $plandetail->name = $name;
+            $plandetail->user_id = $id;
+            $plandetail->plan_id = 0;
+            switch ($name) {
+                case 'Transfer Money':
+                    $plandetail->data = json_decode('{"percent_charge":"2","fixed_charge":"2","minimum":"10","maximum":"1000","daily_limit":"2000","monthly_limit":"5000"}');
+                    $plandetail->slug = 'transfer-money-0-'.$id;
+                    break;
+                case 'Exchange Money':
+                    $plandetail->data = json_decode('{"percent_charge":"2","fixed_charge":"2","minimum":"10","maximum":"1000"}');
+                    $plandetail->slug = 'exchange-money-0-'.$id;
+                    break;
+                case 'Request Money':
+                    $plandetail->data = json_decode('{"percent_charge":"1","fixed_charge":"2","minimum":"10","maximum":"2000"}');
+                    $plandetail->slug = 'request-money-0-'.$id;
+                    break;
+                case 'Merchant Payment':
+                    $plandetail->data = json_decode('{"percent_charge":"5","fixed_charge":"2"}');
+                    $plandetail->slug = 'merchant-payment-0-'.$id;
+                    break;
+                case 'Create Voucher':
+                    $plandetail->data = json_decode('{"percent_charge":"2","fixed_charge":"2","minimum":"10","maximum":"2000","commission":"10"}');
+                    $plandetail->slug = 'create-voucher-0-'.$id;
+                    break;
+                case 'Create Invoice':
+                    $plandetail->data = json_decode('{"percent_charge":"5","fixed_charge":"2"}');
+                    $plandetail->slug = 'create-invoice-0-'.$id;
+                    break;
+                case 'Make Escrow':
+                    $plandetail->data = json_decode('{"percent_charge":"5","fixed_charge":"2"}');
+                    $plandetail->slug = 'make-escrow-0-'.$id;
+                    break;
+                case 'API Merchant Payment':
+                    $plandetail->data = json_decode('{"percent_charge":"5","fixed_charge":"2"}');
+                    $plandetail->slug = 'api-payment-0-'.$id;
+                    break;
+                case 'Account Maintenance':
+                    $plandetail->data = json_decode('{"percent_charge":"2","fixed_charge":"2","minimum":"10","maximum":"100000"}');
+                    $plandetail->slug = 'account-maintenance-0-'.$id;
+                    break;
+                case 'Card Maintenance':
+                    $plandetail->data = json_decode('{"percent_charge":"2","fixed_charge":"2","minimum":"10","maximum":"100000"}');
+                    $plandetail->slug = 'card-maintenance-0-'.$id;
+                    break;
+                case 'Transaction 1':
+                    $plandetail->data = json_decode('{"percent_charge":"1","fixed_charge":"2","minimum":"1","maximum":"5000"}');
+                    $plandetail->slug = 'transaction-1-0-'.$id;
+                    break;
+                case 'Transaction 2':
+                    $plandetail->data = json_decode('{"percent_charge":"1","fixed_charge":"2","minimum":"5001","maximum":"20000"}');
+                    $plandetail->slug = 'transaction-2-0-'.$id;
+                    break;
+                case 'Transaction 3':
+                    $plandetail->data = json_decode('{"percent_charge":"1","fixed_charge":"2","minimum":"20001","maximum":"50000"}');
+                    $plandetail->slug = 'transaction-3-0-'.$id;
+                    break;
+            }
+            return view('admin.user.profilepricingplanedit',compact('plandetail'));
+        }
+
+
         public function profileModules($id)
         {
             $data = User::findOrFail($id);
@@ -566,7 +703,7 @@ class UserController extends Controller
             if ($request->newpass == $request->renewpass){
                 $input['password'] = Hash::make($request->newpass);
             }else{
-                return response()->json(array('errors' => [ 0 => "Confirm password does not match." ]));                
+                return response()->json(array('errors' => [ 0 => "Confirm password does not match." ]));
             }
             $user->update($input);
             return response()->json('Password Successfully Changed.');

@@ -213,6 +213,9 @@ Route::prefix('admin')->group(function () {
     Route::get('/user/{id}/documents', [UserController::class, 'profileDocuments'])->name('admin-user-documents');
     Route::get('/user/{id}/settings', [UserController::class, 'profileSettings'])->name('admin-user-settings');
     Route::get('/user/{id}/pricingplan', [UserController::class, 'profilePricingplan'])->name('admin-user-pricingplan');
+    Route::get('/user/pricingplan/edit/{id}', [UserController::class, 'profilePricingplanedit'])->name('admin-user-pricingplan-edit');
+    Route::get('/user/pricingplan/create/{id}/{name}', [UserController::class, 'profilePricingplancreate'])->name('admin-user-pricingplan-create');
+    Route::get('/user/pricingplan/datatables/{id}', [UserController::class, 'profilePricingplandatatables'])->name('admin-user-pricingplan-datatables');
     Route::post('/user/{id}/admin-user-upgrade-plan', [UserController::class, 'upgradePlan'])->name('admin-user-upgrade-plan');
     Route::get('/user/{id}/transactions', [UserController::class, 'profileTransctions'])->name('admin-user-transactions');
     Route::get('/user/{id}/banks', [UserController::class, 'profileBanks'])->name('admin-user-banks');
@@ -333,6 +336,7 @@ Route::prefix('admin')->group(function () {
   Route::group(['middleware' => 'permissions:Manage Charges'], function () {
     Route::get('/manage-charges/{id}', [ManageChargeController::class, 'index'])->name('admin.manage.charge');
     Route::get('/edit-charge/{id}', [ManageChargeController::class, 'editCharge'])->name('admin.edit.charge');
+    Route::post('/create-charge', [ManageChargeController::class, 'createCharge'])->name('admin.create.charge');
     Route::post('/update-charge/{id}', [ManageChargeController::class, 'updateCharge'])->name('admin.update.charge');
   });
 

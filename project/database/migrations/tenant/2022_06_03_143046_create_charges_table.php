@@ -19,6 +19,7 @@ class CreateChargesTable extends Migration
             $table->string('slug')->unique();
             $table->text('data');
             $table->integer('plan_id');
+            $table->integer('user_id');
             $table->timestamps();
         });
     }

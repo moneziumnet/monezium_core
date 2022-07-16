@@ -26,6 +26,24 @@ class ManageChargeController extends Controller
         return view('admin.charge.edit',compact('charge'));
     }
 
+    public function createCharge(Request $request)
+    {
+        $data = new Charge();
+        $data->name = $request->name;
+        $data->user_id = $request->user_id;
+        $data->plan_id = $request->plan_id;
+        $data->slug = $request->slug;
+        $inputs = $request->except(array('_token','name','user_id', 'plan_id', 'slug' ));
+        foreach($inputs as $key =>  $input){
+            $rules[$key] = 'required|numeric|min:0';
+        }
+        $request->validate($rules);
+        $data->data = $inputs;
+
+        $data->save();
+        return redirect()->back()->with(array('message' => 'Customer Plan Create Successfully'));
+    }
+
     public function updateCharge(Request $request,$id)
     {
         if($request->fixed_charge < $request->percent_charge){
@@ -43,6 +61,6 @@ class ManageChargeController extends Controller
         $request->validate($rules);
         $charge->data = $inputs;
         $charge->update();
-        return back()->with('success',$charge->name.' Charge Updated');
+        return back()->with('message',$charge->name.' Plan Charge Updated');
     }
 }
