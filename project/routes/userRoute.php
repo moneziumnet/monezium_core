@@ -52,6 +52,7 @@ use App\Http\Controllers\User\TransferController;
 use App\Http\Controllers\User\ExchangeMoneyController;
 use App\Http\Controllers\User\MerchantController;
 use App\Http\Controllers\User\MerchantSendController;
+use App\Http\Controllers\User\MerchantMoneyRequestController;
 
 Route::prefix('user')->group(function() {
 
@@ -135,6 +136,16 @@ Route::prefix('user')->group(function() {
       Route::get('/merchant/send/money/cancle',[MerchantSendController::class,'cancle'])->name('user.merchant.send.money.cancle');
       Route::get('/merchant/send-money/{number}',[MerchantSendController::class,'savedUser'])->name('user.merchant.send.money.savedUser');
       Route::post('/merchant/save-account',[MerchantSendController::class,'saveAccount'])->name('user.merchant.save.account');
+
+      Route::get('/merchant/money-request', [MerchantMoneyRequestController::class,'index'])->name('user.merchant.money.request.index');
+      Route::get('/merchant/request-money/receive',[MerchantMoneyRequestController::class,'receive'])->name('user.merchant.request.money.receive');
+      Route::get('/merchant/money-request/create', [MerchantMoneyRequestController::class,'create'])->name('user.merchant.money.request.create');
+      Route::post('/merchant/money-request/store', [MerchantMoneyRequestController::class,'store'])->name('user.merchant.money.request.store');
+      Route::get('/merchant/request/money/verify/{id}', [MerchantMoneyRequestController::class,'verify'])->name('user.merchant.request.money.verify');
+      Route::post('/merchant/request/money/verify/{id}', [MerchantMoneyRequestController::class,'verify'])->name('user.merchant.request.money.verify');
+      Route::post('/merchant/request/money/send/{id}', [MerchantMoneyRequestController::class,'send'])->name('user.merchant.request.money.send');
+      Route::post('/merchant/request/money/cancel/{id}', [MerchantMoneyRequestController::class,'cancel'])->name('user.merchant.request.money.cancel');
+      Route::get('/merchant/money-request/details/{id}', [MerchantMoneyRequestController::class,'details'])->name('user.merchant.money.request.details');
 
 
       Route::group(['middleware'=>'kyc:Request Money'],function(){

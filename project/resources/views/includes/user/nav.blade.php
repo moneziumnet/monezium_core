@@ -233,7 +233,7 @@
             @endif
 
             @if(check_user_type(4))
-            <li class="nav-item dropdown {{ request()->routeIs('user.merchant.qr') || request()->routeIs('user.merchant.api.key.form') || request()->routeIs('user.merchant.send.money.create') ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ request()->routeIs('user.merchant.qr') || request()->routeIs('user.merchant.api.key.form') || request()->routeIs('user.merchant.send.money.create') || request()->routeIs('user.merchant.money.request.index') || request()->routeIs('user.merchant.request.money.receive') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                   <i class="fas fa-users"></i>
@@ -253,6 +253,14 @@
 
                 <a class="dropdown-item" href="{{route('user.merchant.send.money.create')}}">
                     {{__('Send Money')}}
+                </a>
+
+                <a class="dropdown-item" href="{{route('user.merchant.money.request.index')}}">
+                    {{__('Send Request Money')}}
+                </a>
+
+                <a class="dropdown-item" href="{{route('user.merchant.request.money.receive')}}">
+                    {{__('Receive Money')}}
                 </a>
 
 
@@ -549,7 +557,7 @@
             @endif
 
             @if(check_user_type(4))
-            <li class="nav-item dropdown {{ request()->routeIs('user.merchant.qr') || request()->routeIs('user.merchant.api.key.form') || request()->routeIs('user.merchant.send.money.create') ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ request()->routeIs('user.merchant.qr') || request()->routeIs('user.merchant.api.key.form') || request()->routeIs('user.merchant.send.money.create') || request()->routeIs('user.merchant.money.request.index') || request()->routeIs('user.merchant.request.money.receive') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                   <i class="fas fa-users"></i>
@@ -569,6 +577,14 @@
 
                 <a class="dropdown-item" href="{{route('user.merchant.send.money.create')}}">
                     {{__('Send Money')}}
+                </a>
+
+                <a class="dropdown-item" href="{{route('user.merchant.money.request.index')}}">
+                    {{__('Send Request Money')}}
+                </a>
+
+                <a class="dropdown-item" href="{{route('user.merchant.request.money.receive')}}">
+                    {{__('Receive Money')}}
                 </a>
 
               </div>
