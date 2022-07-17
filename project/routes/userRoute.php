@@ -51,6 +51,7 @@ use App\Http\Controllers\User\EscrowController;
 use App\Http\Controllers\User\TransferController;
 use App\Http\Controllers\User\ExchangeMoneyController;
 use App\Http\Controllers\User\MerchantController;
+use App\Http\Controllers\User\MerchantSendController;
 
 Route::prefix('user')->group(function() {
 
@@ -127,6 +128,12 @@ Route::prefix('user')->group(function() {
       Route::get('/merchant/generate-qrcode', [MerchantController::class,'generateQR'])->name('user.merchant.qr');
       Route::get('/merchant/download-qr/{email}',  [MerchantController::class,'downloadQR'])->name('user.merchant.download.qr');
       Route::get('/merchant/api-key',  [MerchantController::class,'apiKeyForm'])->name('user.merchant.api.key.form');
+      Route::get('/merchant/send-money',[MerchantSendController::class,'create'])->name('user.merchant.send.money.create');
+      Route::post('/merchant/send-money',[MerchantSendController::class,'store'])->name('user.merchant.send.money.store');
+      Route::get('/merchant/send/money/success',[MerchantSendController::class,'success'])->name('user.merchant.send.money.success');
+      Route::get('/merchant/send/money/cancle',[MerchantSendController::class,'cancle'])->name('user.merchant.send.money.cancle');
+      Route::get('/merchant/send-money/{number}',[MerchantSendController::class,'savedUser'])->name('user.merchant.send.money.savedUser');
+      Route::post('/merchant/save-account',[MerchantSendController::class,'saveAccount'])->name('user.merchant.save.account');
 
 
       Route::group(['middleware'=>'kyc:Request Money'],function(){
