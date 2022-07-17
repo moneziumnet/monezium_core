@@ -90,7 +90,7 @@
                     <th>{{__('Fixed')}}</th>
                     <th >{{__('Percent')}}</th>
                     <th>{{__('Fixed')}}</th>
-                   </tr>
+                </tr>
                 </thead>
             </table>
             </div>

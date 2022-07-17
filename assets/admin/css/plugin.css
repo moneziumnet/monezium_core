@@ -809,7 +809,7 @@ table.table-bordered.dataTable th:last-child,
 table.table-bordered.dataTable th:last-child,
 table.table-bordered.dataTable td:last-child,
 table.table-bordered.dataTable td:last-child {
-	border-right-width: 0;
+	border-right-width: 1px;
 }
 table.table-bordered.dataTable tbody th,
 table.table-bordered.dataTable tbody td {
