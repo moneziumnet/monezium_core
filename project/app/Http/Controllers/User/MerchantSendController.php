@@ -49,7 +49,7 @@ class MerchantSendController extends Controller
             $data['secret'] = $ga->createSecret();
             $wallets = Wallet::where('user_id',auth()->id())->with('currency')->get();
             $data['wallets'] = $wallets;
-            $data['savedUser'] = User::whereAccountNumber($no)->first();
+            $data['savedUser'] = User::whereEmail($no)->first();
             $data['saveAccounts'] = SaveAccount::whereUserId(auth()->id())->orderBy('id','desc')->get();
 
             return view('user.merchant.sendmoney.create',$data);
@@ -78,7 +78,7 @@ class MerchantSendController extends Controller
     public function store(Request $request){
 
         $request->validate([
-            'account_number'    => 'required',
+            'email'    => 'required',
             'wallet_id'         => 'required',
             'account_name'      => 'required',
             'amount'            => 'required|numeric|min:0',
@@ -91,9 +91,9 @@ class MerchantSendController extends Controller
         $secret = $user->go;
         $oneCode = $ga->getCode($secret);
 
-        // if ($oneCode != $request->code) {
-        //     return redirect()->back()->with('unsuccess','Two factor authentication code is wrong');
-        // }
+        if ($oneCode != $request->code) {
+            return redirect()->back()->with('unsuccess','Two factor authentication code is wrong');
+        }
 
         if($user->bank_plan_id === null){
             return redirect()->back()->with('unsuccess','You have to buy a plan to withdraw.');
@@ -120,7 +120,7 @@ class MerchantSendController extends Controller
 
         $gs = Generalsetting::first();
 
-        if($request->account_number == $user->account_number){
+        if($request->email == $user->email){
             return redirect()->back()->with('unsuccess','You can not send money yourself!!');
         }
 
@@ -132,7 +132,7 @@ class MerchantSendController extends Controller
             return redirect()->back()->with('unsuccess','Insufficient Balance.');
         }
 
-        if($receiver = User::where('account_number',$request->account_number)->first()){
+        if($receiver = User::where('email',$request->email)->first()){
             $txnid = Str::random(4).time();
             // $data = new BalanceTransfer();
             // $data->user_id = auth()->user()->id;
@@ -218,7 +218,7 @@ class MerchantSendController extends Controller
         $savedUser = SaveAccount::whereUserId(auth()->id())->where('receiver_id',$request->receiver_id)->first();
 
         if($savedUser){
-            return redirect()->route('user.merchant.send.money.create')->with('success','Already in Beneficiary.');
+            return redirect()->route('user.merchant.send.money.create')->with('success','Already Saved.');
         }
         $data = new SaveAccount();
 

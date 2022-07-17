@@ -218,7 +218,7 @@ class SendController extends Controller
         $savedUser = SaveAccount::whereUserId(auth()->id())->where('receiver_id',$request->receiver_id)->first();
 
         if($savedUser){
-            return redirect()->route('send.money.create')->with('success','Already in Beneficiary.');
+            return redirect()->route('send.money.create')->with('success','Already Saved.');
         }
         $data = new SaveAccount();
 

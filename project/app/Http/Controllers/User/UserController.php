@@ -29,10 +29,10 @@ class UserController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     public function index()
     {
-        $data['user'] = Auth::user();  
+        $data['user'] = Auth::user();
         $wallets = Wallet::where('user_id',auth()->id())->where('user_type',1)->with('currency')->get();
         $data['wallets'] = $wallets;
         $data['transactions'] = Transaction::whereUserId(auth()->id())->orderBy('id','desc')->limit(5)->get();
@@ -46,17 +46,17 @@ class UserController extends Controller
     public function transaction()
     {
         $user = Auth::user();
-        $transactions = Transaction::whereUserId(auth()->id())->orderBy('id','desc')->paginate(20); 
+        $transactions = Transaction::whereUserId(auth()->id())->orderBy('id','desc')->paginate(20);
         foreach ($transactions as $key => $transaction) {
             $transaction->currency = Currency::whereId($transaction->currency_id)->first();
         }
 
         return view('user.transactions',compact('user','transactions'));
     }
-    
+
     public function transactionExport()
     {
-        
+
         return Excel::download( new ExportTransaction, 'transaction.xlsx');
         // foreach ($transactions as $key => $transaction) {
         //     $transaction->currency = Currency::whereId($transaction->currency_id)->first();
@@ -78,7 +78,7 @@ class UserController extends Controller
 
     public function profile()
     {
-        $user = Auth::user();  
+        $user = Auth::user();
         return view('user.profile',compact('user'));
     }
 
@@ -89,19 +89,19 @@ class UserController extends Controller
             'email' => 'unique:users,email,'.Auth::user()->id
         ]);
 
-        $input = $request->all();  
-        $data = Auth::user();        
-        if ($file = $request->file('photo')) 
-        {              
+        $input = $request->all();
+        $data = Auth::user();
+        if ($file = $request->file('photo'))
+        {
             $name = time().$file->getClientOriginalName();
             $file->move('assets/images/',$name);
             @unlink('assets/images/'.$data->photo);
-        
+
             $input['photo'] = $name;
 
             $input['is_provider'] = 0;
         }
-         
+
         $data->update($input);
         $msg = 'Successfully updated your profile';
         return redirect()->back()->with('success',$msg);
@@ -123,11 +123,11 @@ class UserController extends Controller
                     return redirect()->back()->with('unsuccess','Confirm password does not match.');
                 }
             }else{
-                return redirect()->back()->with('unsuccess','Current password Does not match.'); 
+                return redirect()->back()->with('unsuccess','Current password Does not match.');
             }
         }
         $user->update($input);
-        return redirect()->back()->with('success','Password Successfully Changed.'); 
+        return redirect()->back()->with('success','Password Successfully Changed.');
     }
 
     public function showTwoFactorForm()
@@ -160,7 +160,7 @@ class UserController extends Controller
             $user->go = $request->key;
             $user->twofa = 1;
             $user->save();
-            
+
             return redirect()->back()->with('success','Two factor authentication activated');
         } else {
             return redirect()->back()->with('error','Something went wrong!');
@@ -203,18 +203,26 @@ class UserController extends Controller
        }
     }
 
+    public function username_by_email($email){
+        if($data = User::where('email',$email)->first()){
+            return $data;
+        }else{
+            return false;
+        }
+     }
+
     public function generatePDF()
     {
         $data = [
             'title' => 'Welcome to geniusbank',
             'date' => date('m/d/Y')
         ];
-          
+
         $pdf = PDF::loadView('frontend.myPDF', $data);
-    
+
         return $pdf->download('transaction.pdf');
     }
-    
+
     public function transactionPDF()
     {
         return Excel::download( new ExportTransaction, 'transaction.pdf',\Maatwebsite\Excel\Excel::DOMPDF);
