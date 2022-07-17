@@ -538,34 +538,20 @@ class UserController extends Controller
 
         public function profilePricingplandatatables($id)
         {
-            $customlist = ["Transfer Money","Exchange Money","Request Money","Merchant Payment","Create Voucher","Create Invoice","Make Escrow","API Merchant Payment","Account Maintenance","Card Maintenance","Transaction 1","Transaction 2","Transaction 3"];
+            $customlist = ["Account Maintenance","Card Maintenance","Transaction 1","Transaction 2","Transaction 3"];
             $user = User::findOrFail($id);
-            $global = Charge::where('plan_id', $user->bank_plan_id)->get();
-            $datas = $global;
+            $globals = Charge::where('plan_id', $user->bank_plan_id)->get();
+            $datas = $globals;
             foreach ($customlist as $value) {
-                $customplan =  Charge::where('user_id',$id)->where('name', $value)->first();
-                if ($customplan) {
-                   $datas->add($customplan);
-                }
-                else {
                     $newcustomplan = new Charge();
                     $newcustomplan->name = $value;
                     $datas->add($newcustomplan);
-                }
             }
             return Datatables::of($datas)
                             ->editColumn('name', function(Charge $data) {
                                 return $data->name;
                             })
-                            ->editColumn('user_id', function(Charge $data) {
-                                if($data->user_id) {
-                                    return 'Customer';
-                                }
-                                else {
-                                    return 'Global';
-                                }
-                            })
-                            ->editColumn('percent', function(Charge $data) {
+                            ->editColumn('percent', function(Charge $data)  {
                                 if ($data->data){
                                     return $data->data->percent_charge;
                                 }
@@ -581,21 +567,38 @@ class UserController extends Controller
                                     return 0;
                                 }
                             })
-                            ->addColumn('action', function (Charge $data) {
-                                if($data->user_id) {
-                                    return '<button type="button" class="btn btn-primary btn-big btn-rounded " onclick="getDetails('.$data->id.')" aria-haspopup="true" aria-expanded="false">
+                            ->editColumn('percent_customer', function(Charge $data) use($id) {
+                                $customplan =  Charge::where('user_id',$id)->where('name', $data->name)->first();
+                                if ($customplan){
+                                    return $customplan->data->percent_charge;
+                                }
+                                else {
+                                    return 0;
+                                }
+                            })
+                            ->editColumn('fixed_customer', function(Charge $data) use($id) {
+                                $customplan =  Charge::where('user_id',$id)->where('name', $data->name)->first();
+
+                                if ($customplan){
+                                    return $customplan->data->fixed_charge;
+                                }
+                                else {
+                                    return 0;
+                                }
+                            })
+                            ->addColumn('action', function (Charge $data) use($id) {
+                                $customplan =  Charge::where('user_id',$id)->where('name', $data->name)->first();
+
+                                if($customplan) {
+                                    return '<button type="button" class="btn btn-primary btn-big btn-rounded " onclick="getDetails('.$customplan->id.')" aria-haspopup="true" aria-expanded="false">
                                     Edit
                                     </button>';
                                 }
                                 else {
-                                    if ($data->id) {
-                                        return '';
-                                    }
-                                    else {
+
                                         return '<button type="button" class="btn btn-primary btn-big btn-rounded " data-id="'.$data->name.'" onclick="createDetails(\''.$data->name.'\')" aria-haspopup="true" aria-expanded="false">
                                         Create
                                         </button>';
-                                    }
                                 }
                             })
 

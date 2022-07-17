@@ -77,15 +77,20 @@
             </div>
             <hr>
             <div class="table-responsive">
-            <table id="geniustable" class="table table-hover dt-responsive" cellspacing="0" width="100%">
+            <table id="geniustable" class="table table-hover  dt-responsive cell-border text-center row-border table-bordered" cellspacing="0" width="100%">
                 <thead class="thead-light">
                  <tr>
-                  <th>{{__('Fee Type')}}</th>
-                  <th>{{__('Plan Type')}}</th>
-                  <th>{{__('Percent')}}</th>
-                  <th>{{__('Fixed')}}</th>
-                  <th>{{__('Action')}}</th>
+                  <th rowspan="2" >{{__('Fee Type')}}</th>
+                  <th colspan="2" >{{__('Golbal')}}</th>
+                  <th colspan="2" >{{__('Customer')}}</th>
+                  <th rowspan="2">{{__('Action')}}</th>
                  </tr>
+                 <tr>
+                    <th >{{__('Percent')}}</th>
+                    <th>{{__('Fixed')}}</th>
+                    <th >{{__('Percent')}}</th>
+                    <th>{{__('Fixed')}}</th>
+                   </tr>
                 </thead>
             </table>
             </div>
@@ -136,9 +141,10 @@
            ajax: '{{ route('admin-user-pricingplan-datatables',$data->id) }}',
            columns: [
                 { data: 'name', name: 'name' },
-                { data: 'user_id', name: 'user_id' },
                 { data: 'percent', name: 'percent' },
                 { data: 'fixed', name:'fixed' },
+                { data: 'percent_customer', name: 'percent_customer' },
+                { data: 'fixed_customer', name:'fixed_customer' },
                 { data: 'action', name: 'action' },
             ],
             language : {
