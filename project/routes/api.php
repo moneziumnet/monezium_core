@@ -20,5 +20,23 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 Route::prefix('api')->group(function () {
     Route::post('/user/login', [UserController::class,'login']);
+    Route::post('/user/register', [UserController::class,'register']);
+    Route::post('/user/forgot', [UserController::class, 'forgot']);
+    Route::post('/user/dashboard', [UserController::class,'dashboard']);
+
+    Route::post('/user/loan', [UserController::class,'loan_index']);
+    Route::post('/user/loan-plan', [UserController::class,'loanplan']);
+    Route::post('/user/pending-loans', [UserController::class,'pendingloan']);
+    Route::post('/user/running-loans', [UserController::class,'runningloan']);
+    Route::post('/user/paid-loans', [UserController::class,'paidloan']);
+    Route::post('/user/rejected-loans', [UserController::class,'rejectedloan']);
+    Route::post('/user/loan-amount', [UserController::class,'loanamount']);
+    Route::post('/user/loan-request', [UserController::class,'loanrequest']);
+    Route::post('/user/loan-finish', [UserController::class,'loanfinish']);
+    Route::get('/user/loan-logs/{id}', [UserController::class,'loanlog']);
+
+    Route::post('/user/send-money', [UserController::class, 'sendmoney']);
+    Route::post('/user/request-money', [UserController::class, 'requestmoney']);
+
     // Route::post('register', 'API\UserController@register');
 });
