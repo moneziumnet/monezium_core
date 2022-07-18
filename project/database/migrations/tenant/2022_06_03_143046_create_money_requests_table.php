@@ -24,6 +24,7 @@ class CreateMoneyRequestsTable extends Migration
             $table->double('amount')->nullable();
             $table->tinyInteger('status')->default(0)->comment('1 == success
 0 == pending');
+            $table->tinyInteger('user_type');
             $table->text('details')->nullable();
             $table->timestamps();
         });
