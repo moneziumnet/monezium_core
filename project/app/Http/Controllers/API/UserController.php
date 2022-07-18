@@ -475,9 +475,9 @@ class UserController extends Controller
             $secret = $user->go;
             $oneCode = $ga->getCode($secret);
 
-            // if ($oneCode != $request->code) {
-            //     return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Two factor authentication code is wrong.']);
-            // }
+            if ($oneCode != $request->code) {
+                return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Two factor authentication code is wrong.']);
+            }
 
             if($user->bank_plan_id === null){
                 return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'You have to buy a plan to withdraw.']);
@@ -614,7 +614,8 @@ class UserController extends Controller
             $gs = Generalsetting::first();
 
             if($request->account_number == $user->account_number){
-                return redirect()->back()->with('unsuccess','You can not send money yourself!');
+                return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'You can not send money yourself!']);
+
             }
 
             $receiver = User::where('account_number',$request->account_number)->first();
@@ -649,6 +650,147 @@ class UserController extends Controller
             $data->save();
 
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Request Money Send Successfully.']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
+        }
+    }
+
+    public function approvemoney(Request $request, $id)
+    {
+        try {
+            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user = User::whereId($user_id)->first();
+            if($uesr->twofa != 1)
+            {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'You must be enable 2FA Security.']);
+            }
+
+            $request->validate([
+                'code' => 'required'
+            ]);
+
+            $ga = new GoogleAuthenticator();
+            $secret = $user->go;
+            $oneCode = $ga->getCode($secret);
+
+            if ($oneCode != $request->code) {
+                return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Two factor authentication code is wrong.']);
+            }
+
+            $data = MoneyRequest::findOrFail($id);
+            $gs = Generalsetting::first();
+
+            $currency_id = Currency::whereIsDefault(1)->first()->id;
+            $sender = User::whereId($data->receiver_id)->first();
+            $receiver = User::whereId($data->user_id)->first();
+
+            if($data->amount > user_wallet_balance($sender->id, $currency_id)){
+                return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'You don,t have sufficient balance!']);
+            }
+
+            $finalAmount = $data->amount - $data->cost;
+
+            user_wallet_decrement($sender->id, $currency_id, $data->amount);
+            user_wallet_increment($receiver->id, $currency_id, $finalAmount);
+
+            $data->update(['status'=>1]);
+
+            $trans = new Transaction();
+            $trans->trnx = $data->transaction_no;
+            $trans->user_id     = $user_id;
+            $trans->user_type   = $data->user_type;
+            $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
+            $trans->amount      = $data->amount;
+            $trans->charge      = 0;
+            $trans->type        = '-';
+            $trans->remark      = 'Request_Money';
+            $trans->details     = trans('Request Money');
+
+            $trans->save();
+
+            $trans = new Transaction();
+            $trans->trnx = $data->transaction_no;
+            $trans->user_id     = $receiver->id;
+            $trans->user_type   = $data->user_type;
+            $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
+            $trans->amount      = $data->amount;
+            $trans->charge      = 0;
+            $trans->type        = '+';
+            $trans->remark      = 'Request_Money';
+            $trans->details     = trans('Request Money');
+
+            $trans->save();
+
+            if($gs->is_smtp == 1)
+            {
+                $data = [
+                    'to' => $receiver->email,
+                    'type' => "request money",
+                    'cname' => $receiver->name,
+                    'oamount' => $finalAmount,
+                    'aname' => "",
+                    'aemail' => "",
+                    'wtitle' => "",
+                ];
+
+                $mailer = new GeniusMailer();
+                $mailer->sendAutoMail($data);
+            }
+            else
+            {
+                $to = $receiver->email;
+                $subject = " Money send successfully.";
+                $msg = "Hello ".$receiver->name."!\nMoney send successfully.\nThank you.";
+                $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
+                mail($to,$subject,$msg,$headers);
+            }
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Successfully Money Send.']);
+
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
+        }
+    }
+
+    public function requestcancel(Request $request, $id)
+    {
+        try {
+            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            if ($user_id) {
+            $data = MoneyRequest::findOrFail($id);
+            $data->update(['status'=>2]);
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Successfully Money Request Cancelled.']);
+            }
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
+        }
+    }
+
+    public function receive(Request $request){
+        try {
+            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user = User::whereId($user_id)->first();
+            if($user->twofa)
+            {
+                $data['requests'] = MoneyRequest::orderby('id','desc')->whereReceiverId($user_id)->paginate(10);
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Success.', 'data' => $data]);
+            }else{
+
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'You must be enable 2FA Security.']);
+            }
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
+        }
+    }
+
+    public function create(Request $request){
+        try {
+            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            if($user_id)
+            {
+                $wallets = Wallet::where('user_id',$user_id)->with('currency')->get();
+                $data['wallets'] = $wallets;
+                return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Success.', 'data' => $data]);
+            }
         } catch (\Throwable $th) {
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
         }

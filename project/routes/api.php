@@ -37,6 +37,10 @@ Route::prefix('api')->group(function () {
 
     Route::post('/user/send-money', [UserController::class, 'sendmoney']);
     Route::post('/user/request-money', [UserController::class, 'requestmoney']);
+    Route::post('/user/approve-requestmoney/{$id}', [UserController::class, 'approvemoney']);
+    Route::post('/user/cancel-requestmoney/{$id}', [UserController::class, 'requestcancel']);
+    Route::post('/user/create-request', [UserController::class, 'create']);
+    Route::post('/user/receive', [UserController::class, 'receive']);
 
     // Route::post('register', 'API\UserController@register');
 });
