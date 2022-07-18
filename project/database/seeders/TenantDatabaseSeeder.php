@@ -67,15 +67,17 @@ class TenantDatabaseSeeder extends Seeder
         $ss->save();
         
         // clone pricing plan table
-        $plan = tenancy()->central(function ($tenant) {
-            return BankPlan::first();
+        $plans = tenancy()->central(function ($tenant) {
+            return BankPlan::get();
         });
-        $new_plan = $plan->replicate();
-        $new_plan->save();
-
+        foreach ($plans as $plan) {
+            $new_plan = $plan->replicate();
+            $new_plan->save();
+        }
+        
         // clone charges table
         $charges = tenancy()->central(function ($tenant) use($plan) {
-            return Charge::where('plan_id', $plan->id)->get();
+            return Charge::get();
         }); 
 
         foreach ($charges as $charge) {
