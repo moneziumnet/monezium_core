@@ -26,9 +26,21 @@
                     <form id="request-form" action="{{ route('user.merchant.money.request.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
+
                         <div class="form-group mb-3 mt-3">
-                            <label class="form-label required">{{__('Account Number')}}</label>
-                            <input name="email" id="email" class="form-control" autocomplete="off" placeholder="{{__('000.000.0000')}}" type="text" value="{{ old('email') }}" min="1" required>
+                            <label class="form-label required">{{__('Account Email')}}</label>
+                            <input name="email" id="email" class="form-control" autocomplete="off" placeholder="{{__('user@mail.com')}}" type="text" value="{{ old('email') }}" min="1" required>
+                        </div>
+
+
+                        <div class="form-group mb-3 mt-3">
+                            <label class="form-label required">{{__('Account Name')}}</label>
+                            <input name="account_name" id="account_name" class="form-control" autocomplete="off" placeholder="{{__('Jhon Doe')}}" type="text" value="{{ old('account_name') }}" min="1" required readonly>
+                        </div>
+
+                        <div class="form-group mb-3 mt-3">
+                            <label class="form-label required">{{__('Account PhoneNumber')}}</label>
+                            <input name="account_phone" id="account_phone" class="form-control" autocomplete="off" placeholder="{{__('+1234567890')}}" type="text" value="{{ old('account_phone') }}" min="1" required readonly>
                         </div>
 
                         <div class="form-group mb-3 mt-3">
@@ -42,10 +54,6 @@
 
                       </div>
 
-                        <div class="form-group mb-3 mt-3">
-                            <label class="form-label required">{{__('Account Name')}}</label>
-                            <input name="account_name" id="account_name" class="form-control" autocomplete="off" placeholder="{{__('Jhon Doe')}}" type="text" value="{{ old('account_name') }}" min="1" required readonly>
-                        </div>
 
                         <div class="form-group mb-3">
                             <label class="form-label required">{{__('Request Amount')}}</label>
@@ -81,7 +89,8 @@
       let url = `${mainurl}/user/username-by-email/${email}`;
 
       $.get(url, function(data){
-        $("#account_name").val(data);
+        $("#account_name").val(data['name']);
+        $("#account_phone").val(data['phone']);
         $(".submit-btn").prop( "disabled", false );
       });
     })
