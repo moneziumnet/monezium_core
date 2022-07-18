@@ -30,7 +30,7 @@ class MoneyRequestController extends Controller
     public function receive(){
         if(auth()->user()->twofa)
         {
-            $data['requests'] = MoneyRequest::orderby('id','desc')->whereReceiverId(auth()->id())->where('user_type', 1)->paginate(10);
+            $data['requests'] = MoneyRequest::orderby('id','desc')->whereReceiverId(auth()->id())->paginate(10);
             return view('user.requestmoney.receive',$data);
         }else{
             return redirect()->route('user.show2faForm')->with('unsuccess','You must be enable 2FA Security');
@@ -178,7 +178,7 @@ class MoneyRequestController extends Controller
         $trans = new Transaction();
         $trans->trnx = $data->transaction_no;
         $trans->user_id     = auth()->id();
-        $trans->user_type   = 1;
+        $trans->user_type   = $data->user_type;
         $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
         $trans->amount      = $data->amount;
         $trans->charge      = 0;
@@ -197,7 +197,7 @@ class MoneyRequestController extends Controller
         $trans = new Transaction();
         $trans->trnx = $data->transaction_no;
         $trans->user_id     = $receiver->id;
-        $trans->user_type   = 1;
+        $trans->user_type   = $data->user_type;
         $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
         $trans->amount      = $data->amount;
         $trans->charge      = 0;

@@ -53,6 +53,7 @@ use App\Http\Controllers\User\ExchangeMoneyController;
 use App\Http\Controllers\User\MerchantController;
 use App\Http\Controllers\User\MerchantSendController;
 use App\Http\Controllers\User\MerchantMoneyRequestController;
+use App\Http\Controllers\User\MerchantOtherBankController;
 
 Route::prefix('user')->group(function() {
 
@@ -141,11 +142,11 @@ Route::prefix('user')->group(function() {
       Route::get('/merchant/request-money/receive',[MerchantMoneyRequestController::class,'receive'])->name('user.merchant.request.money.receive');
       Route::get('/merchant/money-request/create', [MerchantMoneyRequestController::class,'create'])->name('user.merchant.money.request.create');
       Route::post('/merchant/money-request/store', [MerchantMoneyRequestController::class,'store'])->name('user.merchant.money.request.store');
-      Route::get('/merchant/request/money/verify/{id}', [MerchantMoneyRequestController::class,'verify'])->name('user.merchant.request.money.verify');
-      Route::post('/merchant/request/money/verify/{id}', [MerchantMoneyRequestController::class,'verify'])->name('user.merchant.request.money.verify');
-      Route::post('/merchant/request/money/send/{id}', [MerchantMoneyRequestController::class,'send'])->name('user.merchant.request.money.send');
-      Route::post('/merchant/request/money/cancel/{id}', [MerchantMoneyRequestController::class,'cancel'])->name('user.merchant.request.money.cancel');
       Route::get('/merchant/money-request/details/{id}', [MerchantMoneyRequestController::class,'details'])->name('user.merchant.money.request.details');
+
+      Route::get('/merchant/other-bank',[MerchantOtherBankController::class,'index'])->name('user.merchant.other.bank');
+      Route::get('/merchant/other-bank/{id}',[MerchantOtherBankController::class,'othersend'])->name('user.merchant.other.send');
+      Route::post('/merchant/other-bank/store', [MerchantOtherBankController::class,'store'])->name('user.merchant.other.send.store');
 
 
       Route::group(['middleware'=>'kyc:Request Money'],function(){

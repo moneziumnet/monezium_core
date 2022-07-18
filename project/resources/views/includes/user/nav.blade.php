@@ -141,8 +141,11 @@
                 @endif
                 @if (in_array('Deposit',$modules))
                 <a class="dropdown-item" href="{{route('user.deposit.index')}}">
-                  {{__('Deposit')}}
+                  {{__('Deposit (Payment Gateway)')}}
                 </a>
+                <a class="dropdown-item" href="{{route('user.depositbank.index')}}">
+                    {{__('Deposit (Bank)')}}
+                  </a>
                 @endif
                 @if (in_array('Wire Transfer',$modules))
                 <a class="dropdown-item" href="{{route('user.wire.transfer.index')}}">
@@ -233,7 +236,7 @@
             @endif
 
             @if(check_user_type(4))
-            <li class="nav-item dropdown {{ request()->routeIs('user.merchant.qr') || request()->routeIs('user.merchant.api.key.form') || request()->routeIs('user.merchant.send.money.create') || request()->routeIs('user.merchant.money.request.index') || request()->routeIs('user.merchant.request.money.receive') ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ request()->routeIs('user.merchant.qr') || request()->routeIs('user.merchant.api.key.form') || request()->routeIs('user.merchant.send.money.create') || request()->routeIs('user.merchant.money.request.index') || request()->routeIs('user.merchant.other.bank') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                   <i class="fas fa-users"></i>
@@ -259,12 +262,11 @@
                     {{__('Send Request Money')}}
                 </a>
 
-                <a class="dropdown-item" href="{{route('user.merchant.request.money.receive')}}">
-                    {{__('Receive Request Money')}}
+                @if (in_array('Bank Transfer',$modules))
+                <a class="dropdown-item" href="{{route('user.merchant.other.bank')}}">
+                  {{__('Other Bank Transfer')}}
                 </a>
-
-
-
+                @endif
               </div>
             </li>
             @endif
@@ -557,7 +559,7 @@
             @endif
 
             @if(check_user_type(4))
-            <li class="nav-item dropdown {{ request()->routeIs('user.merchant.qr') || request()->routeIs('user.merchant.api.key.form') || request()->routeIs('user.merchant.send.money.create') || request()->routeIs('user.merchant.money.request.index') || request()->routeIs('user.merchant.request.money.receive') ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ request()->routeIs('user.merchant.qr') || request()->routeIs('user.merchant.api.key.form') || request()->routeIs('user.merchant.send.money.create') || request()->routeIs('user.merchant.money.request.index') || request()->routeIs('user.merchant.other.bank') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                   <i class="fas fa-users"></i>
@@ -583,10 +585,11 @@
                     {{__('Send Request Money')}}
                 </a>
 
-                <a class="dropdown-item" href="{{route('user.merchant.request.money.receive')}}">
-                    {{__('Receive Request Money')}}
+                @if (in_array('Bank Transfer',$modules))
+                <a class="dropdown-item" href="{{route('user.merchant.other.bank')}}">
+                  {{__('Other Bank Transfer')}}
                 </a>
-
+                @endif
               </div>
             </li>
             @endif
