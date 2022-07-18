@@ -538,15 +538,9 @@ class UserController extends Controller
 
         public function profilePricingplandatatables($id)
         {
-            $customlist = ["Account Maintenance","Card Maintenance","Transaction 1","Transaction 2","Transaction 3"];
             $user = User::findOrFail($id);
             $globals = Charge::where('plan_id', $user->bank_plan_id)->get();
             $datas = $globals;
-            foreach ($customlist as $value) {
-                    $newcustomplan = new Charge();
-                    $newcustomplan->name = $value;
-                    $datas->add($newcustomplan);
-            }
             return Datatables::of($datas)
                             ->editColumn('name', function(Charge $data) {
                                 return $data->name;
