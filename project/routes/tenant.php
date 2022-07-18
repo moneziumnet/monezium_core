@@ -27,3 +27,10 @@ Route::middleware([
   require 'userRoute.php';
   require 'web.php';
 });
+Route::middleware([
+  'api',
+  InitializeTenancyByDomainOrSubdomain::class,
+  PreventAccessFromCentralDomains::class,
+])->group(function () {
+  require 'api.php';
+});
