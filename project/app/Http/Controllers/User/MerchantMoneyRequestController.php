@@ -23,14 +23,14 @@ class MerchantMoneyRequestController extends Controller
     }
 
     public function index(){
-        $data['requests'] = MoneyRequest::orderby('id','desc')->whereUserId(auth()->id())->paginate(10);
+        $data['requests'] = MoneyRequest::orderby('id','desc')->whereUserId(auth()->id())->where('user_type', 2)->paginate(10);
         return view('user.merchant.requestmoney.index',$data);
     }
 
     public function receive(){
         if(auth()->user()->twofa)
         {
-            $data['requests'] = MoneyRequest::orderby('id','desc')->whereReceiverId(auth()->id())->paginate(10);
+            $data['requests'] = MoneyRequest::orderby('id','desc')->whereReceiverId(auth()->id())->where('user_type', 2)->paginate(10);
             return view('user.merchant.requestmoney.receive',$data);
         }else{
             return redirect()->route('user.show2faForm')->with('unsuccess','You must be enable 2FA Security');
@@ -98,6 +98,7 @@ class MerchantMoneyRequestController extends Controller
         $data->amount = $request->amount;
         $data->status = 0;
         $data->details = $request->details;
+        $data->user_type = 2;
         $data->save();
 
         // $trans = new Transaction();
@@ -149,9 +150,9 @@ class MerchantMoneyRequestController extends Controller
         $secret = $user->go;
         $oneCode = $ga->getCode($secret);
 
-        // if ($oneCode != $request->code) {
-        //     return redirect()->back()->with('unsuccess','Two factor authentication code is wrong');
-        // }
+        if ($oneCode != $request->code) {
+            return redirect()->back()->with('unsuccess','Two factor authentication code is wrong');
+        }
 
         $data = MoneyRequest::findOrFail($id);
         $gs = Generalsetting::first();

@@ -21,16 +21,16 @@ class MoneyRequestController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     public function index(){
-        $data['requests'] = MoneyRequest::orderby('id','desc')->whereUserId(auth()->id())->paginate(10);
+        $data['requests'] = MoneyRequest::orderby('id','desc')->whereUserId(auth()->id())->where('user_type', 1)->paginate(10);
         return view('user.requestmoney.index',$data);
     }
 
     public function receive(){
         if(auth()->user()->twofa)
         {
-            $data['requests'] = MoneyRequest::orderby('id','desc')->whereReceiverId(auth()->id())->paginate(10);
+            $data['requests'] = MoneyRequest::orderby('id','desc')->whereReceiverId(auth()->id())->where('user_type', 1)->paginate(10);
             return view('user.requestmoney.receive',$data);
         }else{
             return redirect()->route('user.show2faForm')->with('unsuccess','You must be enable 2FA Security');
@@ -98,6 +98,7 @@ class MoneyRequestController extends Controller
         $data->amount = $request->amount;
         $data->status = 0;
         $data->details = $request->details;
+        $data->user_type = 1;
         $data->save();
 
         // $trans = new Transaction();
@@ -110,7 +111,7 @@ class MoneyRequestController extends Controller
         // $trans->type        = '+';
         // $trans->remark      = 'Request_Money';
         // $trans->details     = trans('Request Money');
-        
+
         // $trans->email = $user->email;
         // $trans->amount = $finalAmount;
         // $trans->type = "Request Money";
@@ -120,7 +121,7 @@ class MoneyRequestController extends Controller
         // $trans->save();
 
         return redirect()->back()->with('success','Request Money Send Successfully.');
-        
+
     }
 
     public function verify($id)
@@ -148,14 +149,14 @@ class MoneyRequestController extends Controller
         $ga = new GoogleAuthenticator();
         $secret = $user->go;
         $oneCode = $ga->getCode($secret);
-        
+
         if ($oneCode != $request->code) {
             return redirect()->back()->with('unsuccess','Two factor authentication code is wrong');
         }
 
         $data = MoneyRequest::findOrFail($id);
         $gs = Generalsetting::first();
-    
+
         $currency_id = Currency::whereIsDefault(1)->first()->id;
         $sender = User::whereId($data->receiver_id)->first();
         $receiver = User::whereId($data->user_id)->first();
@@ -170,7 +171,7 @@ class MoneyRequestController extends Controller
         user_wallet_increment($receiver->id, $currency_id, $finalAmount);
 
         // $sender->decrement('balance',$data->amount);
-        // $receiver->increment('balance',$finalAmount);        
+        // $receiver->increment('balance',$finalAmount);
 
         $data->update(['status'=>1]);
 
@@ -225,7 +226,7 @@ class MoneyRequestController extends Controller
             ];
 
             $mailer = new GeniusMailer();
-            $mailer->sendAutoMail($data);            
+            $mailer->sendAutoMail($data);
         }
         else
         {
@@ -233,7 +234,7 @@ class MoneyRequestController extends Controller
             $subject = " Money send successfully.";
             $msg = "Hello ".$receiver->name."!\nMoney send successfully.\nThank you.";
             $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-            mail($to,$subject,$msg,$headers);            
+            mail($to,$subject,$msg,$headers);
         }
         return redirect()->route('user.request.money.receive')->with('message','Successfully Money Send.');
         //return back()->with('message','Successfully Money Send.');

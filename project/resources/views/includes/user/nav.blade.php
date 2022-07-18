@@ -260,7 +260,7 @@
                 </a>
 
                 <a class="dropdown-item" href="{{route('user.merchant.request.money.receive')}}">
-                    {{__('Receive Money')}}
+                    {{__('Receive Request Money')}}
                 </a>
 
 
@@ -584,7 +584,7 @@
                 </a>
 
                 <a class="dropdown-item" href="{{route('user.merchant.request.money.receive')}}">
-                    {{__('Receive Money')}}
+                    {{__('Receive Request Money')}}
                 </a>
 
               </div>
