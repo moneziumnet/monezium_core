@@ -30,7 +30,9 @@
                         <a href="#saved-account" class="nav-link" data-bs-toggle="tab">{{__('Saved Account')}}</a>
                       </li>
                     </ul>
-
+                    @php
+                        $wallet_type_list = ['All', 'Current', 'Card', 'Deposit', 'Loan', 'Escrow'];
+                    @endphp
                     <div class="card-body">
                       <div class="tab-content">
                         <div class="tab-pane active show" id="other-account">
@@ -61,7 +63,7 @@
                                       <option value="">Select</option>
                                       @if(!empty($wallets))
                                         @foreach($wallets as $wallet)
-                                          <option value="{{$wallet->id}}">{{$wallet->currency->code}} --  ({{amount($wallet->balance,$wallet->currency->type,2)}})</option>
+                                          <option value="{{$wallet->id}}">{{$wallet->currency->code}} --  ({{amount($wallet->balance,$wallet->currency->type,2)}}) -- {{$wallet_type_list[$wallet->wallet_type]}} </option>
 
                                         @endforeach
                                       @endif

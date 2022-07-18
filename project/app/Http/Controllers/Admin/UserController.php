@@ -597,7 +597,7 @@ class UserController extends Controller
                                 else {
 
                                         return '<button type="button" class="btn btn-primary btn-big btn-rounded " data-id="'.$data->name.'" onclick="createDetails(\''.$data->name.'\')" aria-haspopup="true" aria-expanded="false">
-                                        Create
+                                        Edit
                                         </button>';
                                 }
                             })
