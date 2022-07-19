@@ -31,7 +31,14 @@
                       </li>
                     </ul>
                     @php
-                        $wallet_type_list = ['All', 'Current', 'Card', 'Deposit', 'Loan', 'Escrow'];
+                        $userType = explode(',', auth()->user()->user_type);
+                        $supervisor = DB::table('customer_types')->where('type_name', 'Supervisors')->first()->id;
+                        if(in_array($supervisor, $userType)) {
+                            $wallet_type_list = ['All', 'Current', 'Card', 'Deposit', 'Loan', 'Escrow', 'Supervisor'];
+                        }
+                        else {
+                            $wallet_type_list = ['All', 'Current', 'Card', 'Deposit', 'Loan', 'Escrow'];
+                        }
                     @endphp
                     <div class="card-body">
                       <div class="tab-content">
@@ -63,8 +70,9 @@
                                       <option value="">Select</option>
                                       @if(!empty($wallets))
                                         @foreach($wallets as $wallet)
-                                          <option value="{{$wallet->id}}">{{$wallet->currency->code}} --  ({{amount($wallet->balance,$wallet->currency->type,2)}}) -- {{$wallet_type_list[$wallet->wallet_type]}} </option>
-
+                                        @if (isset($wallet_type_list[$wallet->wallet_type]))
+                                            <option value="{{$wallet->id}}">{{$wallet->currency->code}} --  ({{amount($wallet->balance,$wallet->currency->type,2)}}) -- {{$wallet_type_list[$wallet->wallet_type]}} </option>
+                                        @endif
                                         @endforeach
                                       @endif
                                     </select>

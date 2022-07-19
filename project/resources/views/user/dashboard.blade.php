@@ -74,11 +74,19 @@
         <h1>@lang('Wallet list')</h1>
     </div>
     @php
+    $userType = explode(',', auth()->user()->user_type);
+    $supervisor = DB::table('customer_types')->where('type_name', 'Supervisors')->first()->id;
+    if(in_array($supervisor, $userType)) {
+        $wallet_type = ['All', 'Current', 'Card', 'Deposit', 'Loan', 'Escrow', 'Supervisor'];
+    }
+    else {
         $wallet_type = ['All', 'Current', 'Card', 'Deposit', 'Loan', 'Escrow'];
+    }
     @endphp
 
     <div class="row justify-content " style="max-height: 368px;overflow-y: scroll;">
         @foreach ($wallets as $item)
+        @if (isset($wallet_type[$item->wallet_type]))
         <div class="col-sm-6 col-md-4 mb-3">
             <div class="card h-100 card--info-item">
               <div class="text-end icon">
@@ -92,8 +100,9 @@
                 <div class="text-muted">{{ amount($item->balance,$item->currency->type,2) }}  {{$item->currency->code}}</div>
               </div>
             </div>
-          </div>
-          @endforeach
+        </div>
+        @endif
+        @endforeach
     </div>
     <hr>
 

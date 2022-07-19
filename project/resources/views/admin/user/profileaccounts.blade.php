@@ -23,6 +23,17 @@
         @endphp
         @include('includes.admin.form-success')
         <div class="tab-pane fade show p-3 active" id="accounts" role="tabpanel" aria-labelledby="accounts-tab">
+            @php
+                $userType = explode(',', $data->user_type);
+                $supervisor = DB::table('customer_types')->where('type_name', 'Supervisors')->first()->id;
+                if(in_array($supervisor, $userType)) {
+                    $accounttype = ['All', 'Current', 'Card', 'Deposit', 'Loan', 'Escrow', 'Supervisor'];
+                }
+                else {
+                    $accounttype = ['All', 'Current', 'Card', 'Deposit', 'Loan', 'Escrow'];
+                }
+                $curlist = DB::table('currencies')->get();
+            @endphp
 
           <div class="card-body">
             <div class="row mb-3">
@@ -35,19 +46,18 @@
                         <option value="1"> {{'Curreny'}} </option>
                         <option value="2"> {{'Card'}} </option>
                         <option value="3"> {{'Deposit'}} </option>
-                        <option value="4"> {{'loan'}} </option>
+                        <option value="4"> {{'Loan'}} </option>
                         <option value="5"> {{'Escrow'}} </option>
+                        @if (sizeof($accounttype)>6)
+                        <option value="6"> {{'Supervisor'}} </option>
+                        @endif
                     </select>
                 </div>
 
             </div>
-            @php
-                $accounttype = ['All', 'Current', 'Card', 'Deposit', 'Loan', 'Escrow'];
-                $curlist = DB::table('currencies')->get();
-            @endphp
 
             <div class="row mb-3" id="walletlist">
-            @for ($i = 1; $i < 6; $i++)
+            @for ($i = 1; $i < sizeof($accounttype); $i++)
               @foreach (DB::table('currencies')->get() as $dcurr)
               @php
                   $wallet = DB::table('wallets')->where('user_id', $data->id)->where('wallet_type',$i)->where('currency_id',$dcurr->id)->first();
@@ -131,7 +141,7 @@
 $('#addpayment').on('click', function() {
     window.location.reload();
 });
-let accounttype = ['All', 'Current', 'Card', 'Deposit', 'Loan', 'Escrow'];
+    let accounttype = ['All', 'Current', 'Card', 'Deposit', 'Loan', 'Escrow', 'Supervisor'];
     let _orignhtml = $('div#walletlist').html();
     $('#wallet_type').on('change', function() {
         let wallet_type = $("#wallet_type").val();
