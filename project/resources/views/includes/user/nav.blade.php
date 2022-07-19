@@ -272,7 +272,7 @@
             @endif
 
             @if(check_user_type(3))
-            <li class="nav-item dropdown {{ request()->routeIs('user.referral.invite-user') || request()->routeIs('user.referral.index') || request()->routeIs('user.referral.commissions') ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ request()->routeIs('user.referral.invite-user') || request()->routeIs('user.referral.index') || request()->routeIs('user.referral.commissions') || request()->routeIs('user-pricingplan') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                   <i class="fas fa-box"></i>
@@ -292,6 +292,10 @@
 
                 <a class="dropdown-item" href="{{route('user.referral.commissions')}}">
                   {{__('Referral Commissions')}}
+                </a>
+
+                <a class="dropdown-item" href="{{route('user-pricingplan')}}">
+                    {{__('Price Plan')}}
                 </a>
 
               </div>
@@ -595,7 +599,7 @@
             @endif
 
             @if(check_user_type(3))
-            <li class="nav-item dropdown {{ request()->routeIs('user.referral.invite-user') || request()->routeIs('user.referral.index') || request()->routeIs('user.referral.commissions') ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ request()->routeIs('user.referral.invite-user') || request()->routeIs('user.referral.index') || request()->routeIs('user.referral.commissions') || request()->routeIs('user-pricingplan') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                   <i class="fas fa-box"></i>
@@ -615,6 +619,10 @@
 
                 <a class="dropdown-item" href="{{route('user.referral.commissions')}}">
                   {{__('Referral Commissions')}}
+                </a>
+
+                <a class="dropdown-item" href="{{route('user-pricingplan')}}">
+                    {{__('Price Plan')}}
                 </a>
 
               </div>

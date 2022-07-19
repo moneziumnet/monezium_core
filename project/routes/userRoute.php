@@ -54,6 +54,8 @@ use App\Http\Controllers\User\MerchantController;
 use App\Http\Controllers\User\MerchantSendController;
 use App\Http\Controllers\User\MerchantMoneyRequestController;
 use App\Http\Controllers\User\MerchantOtherBankController;
+use App\http\Controllers\User\UserOtherBankApiController;
+use App\http\Controllers\User\SupervisorController;
 
 Route::prefix('user')->group(function() {
 
@@ -250,6 +252,10 @@ Route::prefix('user')->group(function() {
         Route::get('/beneficiaries/create', [BeneficiaryController::class,'create'])->name('user.beneficiaries.create');
         Route::post('/beneficiaries/store', [BeneficiaryController::class,'store'])->name('user.beneficiaries.store');
         Route::get('/beneficiaries/show/{id}', [BeneficiaryController::class,'show'])->name('user.beneficiaries.show');
+
+        Route::get('/otherbank/createaccount', [UserOtherBankApiController::class, 'CreateAccount'])->name('user.otherbank.api.createaccount');
+        Route::get('/otherbank/getaccountlist', [UserOtherBankApiController::class, 'GetAccountList'])->name('user.otherbank.api.getaccountlist');
+        Route::get('/otherbank/getaccount/{id}', [UserOtherBankApiController::class, 'GetAccount'])->name('user.otherbank.api.getaccount');
       });
 
       Route::get('/package',[PricingPlanController::class,'index'])->name('user.package.index');
@@ -321,6 +327,14 @@ Route::prefix('user')->group(function() {
       Route::get('/referral-commissions',[ReferralController::class,'commissions'])->name('user.referral.commissions');
       Route::get('/invite-user',[ReferralController::class,'invite_user'])->name('user.referral.invite-user');
       Route::post('/invite-user',[ReferralController::class,'invite_send'])->name('user.referral.invite-user');
+
+      Route::get('/pricingplan', [SupervisorController::class, 'index'])->name('user-pricingplan');
+      Route::get('/pricingplan/edit/{id}', [SupervisorController::class, 'edit'])->name('user-pricingplan-edit');
+      Route::get('/pricingplan/create/{id}/{name}', [SupervisorController::class, 'create'])->name('user-pricingplan-create');
+      Route::get('/pricingplan/datatables/{id}', [SupervisorController::class, 'datatables'])->name('user-pricingplan-datatables');
+      Route::post('/pricingplan/updatecharge/{id}', [SupervisorController::class, 'updateCharge'])->name('user-pricingplan-update-charge');
+      Route::post('/pricingplan/createcharge', [SupervisorController::class, 'createCharge'])->name('user-pricingplan-create-charge');
+
 
 
       Route::get('/affilate/code', [UserController::class,'affilate_code'])->name('user-affilate-code');
