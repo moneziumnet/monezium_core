@@ -18,7 +18,7 @@
       <div class="row align-items-center">
         <div class="col">
           <h2 class="page-title">
-            {{__('Price Plan')}}
+            {{__('Charge Fee')}}
           </h2>
         </div>
       </div>
@@ -32,7 +32,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="tab-pane fade show p-3 active" id="modules" role="tabpanel" aria-labelledby="modules-tab">
-                        <div class="table-responsive">
+                        <div class="">
                         <table id="geniustable" class="table table-hover  dt-responsive cell-border text-center row-border table-bordered" cellspacing="0" width="100%">
                             <thead class="thead-light">
                              <tr>
@@ -88,6 +88,7 @@
            serverSide: true,
            searching: false,
            bPaginate: false,
+           scrollX:        false,
            ajax: '{{ route('user-pricingplan-datatables',$data->id) }}',
            columns: [
                 { data: 'name', name: 'name' },
