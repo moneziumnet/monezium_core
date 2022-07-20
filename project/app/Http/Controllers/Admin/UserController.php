@@ -644,11 +644,11 @@ class UserController extends Controller
                     $plandetail->slug = 'api-payment-0-'.$id;
                     break;
                 case 'Account Maintenance':
-                    $plandetail->data = json_decode('{"percent_charge":"2","fixed_charge":"2","minimum":"10","maximum":"100000"}');
+                    $plandetail->data = json_decode('{"percent_charge":"0","fixed_charge":"20"}');
                     $plandetail->slug = 'account-maintenance-0-'.$id;
                     break;
                 case 'Card Maintenance':
-                    $plandetail->data = json_decode('{"percent_charge":"2","fixed_charge":"2","minimum":"10","maximum":"100000"}');
+                    $plandetail->data = json_decode('{"percent_charge":"0","fixed_charge":"10"}');
                     $plandetail->slug = 'card-maintenance-0-'.$id;
                     break;
                 case 'Transaction 1':
@@ -665,7 +665,7 @@ class UserController extends Controller
                     break;
                 case 'Referral':
                     $plandetail->data = json_decode('{"percent_charge":"1","fixed_charge":"2", "referral":"10","invited":"5"}');
-                    $plandetail->slug = 'Referral-0-'.$id;
+                    $plandetail->slug = 'referral-0-'.$id;
                     break;
             }
             return view('admin.user.profilepricingplanedit',compact('plandetail'));

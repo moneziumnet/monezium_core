@@ -142,6 +142,42 @@ class BankPlanController extends Controller
             'data' => '{"percent_charge":"5","fixed_charge":"2"}',
             'plan_id' => $data->id,
         ]);
+        DB::table('charges')->insert([
+            'name' => 'Account Maintenance',
+            'slug' => 'account-maintenance-'.$data->id,
+            'data' => '{"percent_charge":"0","fixed_charge":"20"}',
+            'plan_id' => $data->id,
+        ]);
+        DB::table('charges')->insert([
+            'name' => 'Card Maintenance',
+            'slug' => 'card-maintenance-'.$data->id,
+            'data' => '{"percent_charge":"0","fixed_charge":"10"}',
+            'plan_id' => $data->id,
+        ]);
+        DB::table('charges')->insert([
+            'name' => 'Transaction 1',
+            'slug' => 'transaction-1-'.$data->id,
+            'data' => '{"percent_charge":"1","fixed_charge":"2","from":"1","till":"5000"}',
+            'plan_id' => $data->id,
+        ]);
+        DB::table('charges')->insert([
+            'name' => 'Transaction 2',
+            'slug' => 'transaction-2-'.$data->id,
+            'data' => '{"percent_charge":"1","fixed_charge":"2","from":"5001","till":"20000"}',
+            'plan_id' => $data->id,
+        ]);
+        DB::table('charges')->insert([
+            'name' => 'Transaction 3',
+            'slug' => 'transaction-3-'.$data->id,
+            'data' => '{"percent_charge":"1","fixed_charge":"2","from":"20001","till":"50000"}',
+            'plan_id' => $data->id,
+        ]);
+        DB::table('charges')->insert([
+            'name' => 'Referral',
+            'slug' => 'referral-'.$data->id,
+            'data' => '{"percent_charge":"1","fixed_charge":"2", "referral":"10","invited":"5"}',
+            'plan_id' => $data->id,
+        ]);
         $msg = 'New Data Added Successfully.'.'<a href="'.route("admin.bank.plan.index").'">View Plan Lists</a>';
         return response()->json($msg);
     }
