@@ -52,6 +52,11 @@ Route::prefix('api')->group(function () {
     Route::post('/user/fdr-plan', [UserController::class,'fdrplan']);
     Route::post('/user/running-fdr', [UserController::class,'runningfdr']);
     Route::post('/user/closed-fdr', [UserController::class,'closedfdr']);
+    
+    Route::post('/user/make-escrow', [UserController::class,'makeescrow']);
+    Route::post('/user/my-escrow', [UserController::class,'myescrow']);
+    Route::post('/user/escrow-pending', [UserController::class,'escrowpending']);
+    
 
 
 });

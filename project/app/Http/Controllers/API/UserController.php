@@ -20,6 +20,7 @@ use App\Models\DpsPlan;
 use App\Models\LoanPlan;
 use App\Models\FdrPlan;
 use App\Models\UserFdr;
+use App\Models\Escrow;
 use App\Models\MoneyRequest;
 use App\Models\InstallmentLog;
 use Illuminate\Http\Request;
@@ -895,5 +896,40 @@ class UserController extends Controller
         }
     }
 /**END FDR API**/
+
+/*********************START ESCROW API******************************/
+    public function myescrow(Request $request)
+    {
+        try {
+            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $data['escrow']          = Escrow::with('currency','recipient')->whereUserId($user_id)->orderby('id','desc')->paginate(10);
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
+        }
+    }
+    
+    public function makeescrow(Request $request)
+    {
+        // try {
+        //     $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+        //     $data['escrow']          = Escrow::with('currency')->whereUserId($user_id)->orderby('id','desc')->paginate(10);
+        //     return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
+        // } catch (\Throwable $th) {
+        //     return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
+        // }
+    }
+    
+    public function escrowpending(Request $request)
+    {
+        try {
+            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $data['escrow']          = Escrow::with('currency')->where('recipient_id',$user_id)->orderby('id','desc')->paginate(10);
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
+        }
+    }
+/*********************END ESCROW API******************************/
 
 }
