@@ -54,7 +54,7 @@ use App\Http\Controllers\User\MerchantController;
 use App\Http\Controllers\User\MerchantSendController;
 use App\Http\Controllers\User\MerchantMoneyRequestController;
 use App\Http\Controllers\User\MerchantOtherBankController;
-use App\Http\Controllers\User\UserOtherBankApiController;
+use App\Http\Controllers\User\UserOpenPaydController;
 use App\Http\Controllers\User\SupervisorController;
 
 Route::prefix('user')->group(function() {
@@ -253,9 +253,17 @@ Route::prefix('user')->group(function() {
         Route::post('/beneficiaries/store', [BeneficiaryController::class,'store'])->name('user.beneficiaries.store');
         Route::get('/beneficiaries/show/{id}', [BeneficiaryController::class,'show'])->name('user.beneficiaries.show');
 
-        Route::get('/otherbank/createaccount', [UserOtherBankApiController::class, 'CreateAccount'])->name('user.otherbank.api.createaccount');
-        Route::get('/otherbank/getaccountlist', [UserOtherBankApiController::class, 'GetAccountList'])->name('user.otherbank.api.getaccountlist');
-        Route::get('/otherbank/getaccount/{id}', [UserOtherBankApiController::class, 'GetAccount'])->name('user.otherbank.api.getaccount');
+        Route::get('/otherbank/createaccount', [UserOpenPaydController::class, 'CreateAccount'])->name('user.otherbank.api.createaccount');
+        Route::get('/otherbank/getaccountlist', [UserOpenPaydController::class, 'GetAccountList'])->name('user.otherbank.api.getaccountlist');
+        Route::get('/otherbank/getaccount/{id}', [UserOpenPaydController::class, 'GetAccount'])->name('user.otherbank.api.getaccount');
+        Route::get('/otherbank/getbanklist', [UserOpenPaydController::class, 'GetBankList'])->name('user.otherbank.api.getbanklist');
+        Route::get('/otherbank/createbeneficiary', [UserOpenPaydController::class, 'CreateBeneficiary'])->name('user.otherbank.api.createbeneficiary');
+        Route::get('/otherbank/getbeneficiaries', [UserOpenPaydController::class, 'GetBeneficiaries'])->name('user.otherbank.api.getbeneficiaries');
+        Route::get('/otherbank/getbeneficiary/{$id}', [UserOpenPaydController::class, 'GetBeneficiary'])->name('user.otherbank.api.getbeneficiary');
+        Route::get('/otherbank/createbankbeneficiary', [UserOpenPaydController::class, 'CreateBankBeneficiary'])->name('user.otherbank.api.createbankbeneficiary');
+        Route::get('/otherbank/getbankbeneficiarylist', [UserOpenPaydController::class, 'GetBankBeneficiaryList'])->name('user.otherbank.api.getbankbeneficiarylist');
+        Route::get('/otherbank/getbankbeneficiary/{id}', [UserOpenPaydController::class, 'GetBankBeneficiary'])->name('user.otherbank.api.getbankbeneficiary');
+        Route::get('/otherbank/createbankpayout', [UserOpenPaydController::class, 'CreateBankPayout'])->name('user.otherbank.api.createbankpayout');
       });
 
       Route::get('/package',[PricingPlanController::class,'index'])->name('user.package.index');
