@@ -47,6 +47,11 @@ Route::prefix('api')->group(function () {
     Route::post('/user/dps-plan', [UserController::class,'dpsplan']);
     Route::post('/user/running-dps', [UserController::class,'runningdps']);
     Route::post('/user/matured-dps', [UserController::class,'matureddps']);
+   
+    Route::post('/user/fdr', [UserController::class,'fdr_index']);
+    Route::post('/user/fdr-plan', [UserController::class,'fdrplan']);
+    Route::post('/user/running-fdr', [UserController::class,'runningfdr']);
+    Route::post('/user/closed-fdr', [UserController::class,'closedfdr']);
 
 
 });
