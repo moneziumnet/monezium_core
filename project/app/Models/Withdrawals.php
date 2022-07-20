@@ -26,6 +26,6 @@ class Withdrawals extends Model
 
     public function merchant()
     {
-        return $this->belongsTo(Merchant::class,'merchant_id');
+        return $this->belongsTo(User::class,'merchant_id');
     }
 }

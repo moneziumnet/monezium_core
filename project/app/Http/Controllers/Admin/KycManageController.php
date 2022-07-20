@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Generalsetting;
 use App\Models\KYC;
 use App\Models\KycForm;
-use App\Models\Merchant;
 use App\Models\User;
 use Datatables;
 
