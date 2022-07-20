@@ -16,6 +16,7 @@ use App\Models\Notification;
 use App\Models\Currency;
 use App\Models\UserLoan;
 use App\Models\UserDps;
+use App\Models\DpsPlan;
 use App\Models\LoanPlan;
 use App\Models\MoneyRequest;
 use App\Models\InstallmentLog;
@@ -806,6 +807,40 @@ class UserController extends Controller
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
         } catch (\Throwable $th) {
             //throw $th;
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
+        }
+    }
+
+    public function runningdps(Request $request)
+    {
+        try {
+            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $data['dps'] = UserDps::whereStatus(1)->whereUserId($user_id)->orderby('id','desc')->paginate(10);
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
+        }
+    }
+    
+    public function matureddps(Request $request)
+    {
+        try {
+            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $data['dps'] = UserDps::whereStatus(2)->whereUserId($user_id)->orderby('id','desc')->paginate(10);
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
+        }
+    }
+    
+    public function dpsplan(Request $request)
+    {
+        try {
+            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $data['plans']          = DpsPlan::whereStatus(1)->orderby('id','desc')->paginate(10);
+            $data['currencylist']   = Currency::whereStatus(1)->where('type', 1)->get();
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
+        } catch (\Throwable $th) {
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
         }
     }
