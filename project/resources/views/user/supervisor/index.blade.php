@@ -19,7 +19,6 @@
         <div class="col">
           <h2 class="page-title">
             {{__('Price Plan')}}
-            {{$data->id}}
           </h2>
         </div>
       </div>
@@ -63,22 +62,15 @@
     <div class="modal-dialog modal-md modal-dialog-centered" role="document">
     <div class="modal-content">
         <div class="modal-status bg-primary"></div>
-        <div class="modal-body text-center py-4">
-        <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
-        <h3>@lang('Plan Details')</h3>
+        <div class="modal-body py-4">
+        <div class=" text-center">
+            <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+        </div>
         <ul class="list-group mt-2">
 
         </ul>
         </div>
         <div class="modal-footer">
-        <div class="w-100">
-            <div class="row">
-            <div class="col"><a href="javascript:;" class="btn w-100 closed" data-bs-dismiss="modal">
-                @lang('Close')
-                </a>
-              </div>
-            </div>
-        </div>
         </div>
     </div>
     </div>
@@ -94,7 +86,8 @@
            ordering: false,
            processing: true,
            serverSide: true,
-           searching: true,
+           searching: false,
+           bPaginate: false,
            ajax: '{{ route('user-pricingplan-datatables',$data->id) }}',
            columns: [
                 { data: 'name', name: 'name' },

@@ -1,4 +1,5 @@
 @if ($plandetail->id)
+<h3 class="text-center">@lang($plandetail->name)</h3>
 <form action="{{route('user-pricingplan-update-charge',$plandetail->id)}}" method="post">
     @csrf
     @if($plandetail->data)
@@ -17,13 +18,15 @@
         @endif
     @endif
     {{-- @if (access('update charge')) --}}
-    <div class="form-group text-right">
+    <div class="form-group text-right col text-center">
         {{-- <button class="btn btn-primary btn-lg">@lang('Update')</button> --}}
-        <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Update') }}</button>
+        <button type="submit" id="submit-btn " class="btn btn-primary " style="width:45%">{{ __('Update') }}</button>
+        <a type="" class="btn closed" data-bs-dismiss="modal" style="width:45%" >{{ __('Close') }}</a>
     </div>
     {{-- @endif --}}
 </form>
 @else
+<h3 class="text-center">@lang($plandetail->name)</h3>
 <form action="{{route('user-pricingplan-create-charge')}}" method="post">
     @csrf
     <input  type="hidden" name="name" class="form-control" value="{{$plandetail->name}}">
@@ -47,9 +50,10 @@
         @endif
     @endif
     {{-- @if (access('update charge')) --}}
-    <div class="form-group text-right">
+    <div class="form-group text-right col text-center">
         {{-- <button class="btn btn-primary btn-lg">@lang('Update')</button> --}}
-        <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Create') }}</button>
+        <button type="submit" id="submit-btn " class="btn btn-primary " style="width:45%">{{ __('Create') }}</button>
+        <a type="" class="btn closed" data-bs-dismiss="modal" style="width:45%" >{{ __('Close') }}</a>
     </div>
     {{-- @endif --}}
 </form>

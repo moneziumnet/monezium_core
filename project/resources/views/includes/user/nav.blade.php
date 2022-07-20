@@ -295,7 +295,7 @@
                 </a>
 
                 <a class="dropdown-item" href="{{route('user-pricingplan')}}">
-                    {{__('Price Plan')}}
+                    {{__('Charge Fee')}}
                 </a>
 
               </div>
@@ -622,7 +622,7 @@
                 </a>
 
                 <a class="dropdown-item" href="{{route('user-pricingplan')}}">
-                    {{__('Price Plan')}}
+                    {{__('Charge Fee')}}
                 </a>
 
               </div>
