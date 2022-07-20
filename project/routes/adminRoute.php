@@ -2,6 +2,7 @@
 
 use App\Http\Controllers;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Admin\DpsController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\FdrController;
@@ -13,8 +14,8 @@ use App\Http\Controllers\Admin\PlanController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\BonusController;
 use App\Http\Controllers\Admin\EmailController;
-use App\Http\Controllers\Admin\LoginController;
 
+use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\CounterController;
@@ -34,22 +35,22 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DocumentsController;
 use App\Http\Controllers\Admin\KycManageController;
 use App\Http\Controllers\Admin\OtherBankController;
-use App\Http\Controllers\Admin\SubInsBankController;
 
+use App\Http\Controllers\Admin\SubInsBankController;
 use App\Http\Controllers\Admin\SubscriberController;
 use App\Http\Controllers\Admin\WithdrawalController;
 use App\Http\Controllers\Admin\InstitutionController;
 use App\Http\Controllers\Admin\PageSettingController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\BlogCategoryController;
+
 use App\Http\Controllers\Admin\ManageChargeController;
 
 use App\Http\Controllers\Admin\ManageEscrowController;
-
 use App\Http\Controllers\Admin\RequestMoneyController;
 use App\Http\Controllers\Admin\AdminLanguageController;
-use App\Http\Controllers\Admin\RequestDomainController;
 
+use App\Http\Controllers\Admin\RequestDomainController;
 use App\Http\Controllers\Admin\SocialSettingController;
 use App\Http\Controllers\Admin\AccountProcessController;
 use App\Http\Controllers\Admin\GeneralSettingController;
@@ -59,8 +60,8 @@ use App\Http\Controllers\Admin\OwnBankTransferController;
 use App\Http\Controllers\Admin\WireTransferBankController;
 use App\Http\Controllers\Admin\OtherBankTransferController;
 use App\Http\Controllers\Admin\DepositController as AppDepositController;
-use App\Http\Controllers\Admin\DepositBankController as AppDepositBankController;
 use App\Http\Controllers\Admin\ReferralController as AdminReferralController;
+use App\Http\Controllers\Admin\DepositBankController as AppDepositBankController;
 use App\Http\Controllers\Admin\WireTransferController as AdminWireTransferController;
 
 
