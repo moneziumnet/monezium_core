@@ -1,5 +1,5 @@
 @extends('layouts.user')
-{{-- 
+{{--
 @section('title')
    @lang('Exchange Money')
 @endsection
@@ -39,12 +39,24 @@
                                 <div class="form-label">@lang('Amount')</div>
                                 <input type="text" name="amount" class="form-control amount shadow-none" required>
                             </div>
+                            @php
+                                $userType = explode(',', auth()->user()->user_type);
+                                $supervisor = DB::table('customer_types')->where('type_name', 'Supervisors')->first()->id;
+                                if(in_array($supervisor, $userType)) {
+                                    $wallet_type_list = ['All', 'Current', 'Card', 'Deposit', 'Loan', 'Escrow', 'Supervisor'];
+                                }
+                                else {
+                                    $wallet_type_list = ['All', 'Current', 'Card', 'Deposit', 'Loan', 'Escrow'];
+                                }
+                            @endphp
                             <div class="col-md-6 mb-3">
                                 <div class="form-label">@lang('From Currency')</div>
                                 <select class="form-select from shadow-none" name="from_wallet_id">
                                     <option value="" selected>@lang('Select')</option>
                                     @foreach ($wallets as $wallet)
-                                    <option value="{{$wallet->id}}" data-curr="{{$wallet->currency->id}}" data-rate="{{$wallet->currency->rate}}" data-code="{{$wallet->currency->code}}" data-type="{{$wallet->currency->type}}">{{$wallet->currency->code}} -- ({{amount($wallet->balance,$wallet->currency->type,2)}})</option>
+                                    @if (isset($wallet_type_list[$wallet->wallet_type]))
+                                    <option value="{{$wallet->id}}" data-curr="{{$wallet->currency->id}}" data-rate="{{$wallet->currency->rate}}" data-code="{{$wallet->currency->code}}" data-type="{{$wallet->currency->type}}">{{$wallet->currency->code}} -- ({{amount($wallet->balance,$wallet->currency->type,2)}}) --  {{$wallet_type_list[$wallet->wallet_type]}}</option>
+                                    @endif
                                     @endforeach
                                 </select>
                             </div>
@@ -69,16 +81,16 @@
 
 
                                     <li class="list-group-item d-flex justify-content-between font-weight-bold">@lang('Exchange Charge : ')<span class="exCharge"></span></li>
-                                    
+
                                     <li class="list-group-item d-flex justify-content-between font-weight-bold">@lang('Will get : ')<span class="total_amount"></span></li>
                                 </ul>
                             </div>
 
-                        
+
                             <div class="col-md-12 mb-3">
                                 <div class="form-label">&nbsp;</div>
                                 <a href="#" class="btn btn-primary exchange w-100">
-                                    @lang('Exchange') 
+                                    @lang('Exchange')
                                 </a>
                             </div>
 
@@ -163,7 +175,7 @@
 @push('js')
     <script>
         'use strict';
-        $('.from').on('change',function () { 
+        $('.from').on('change',function () {
             if($('.amount').val() == ''){
                 toast('error','@lang('Please provide the amount first')')
                 return false
@@ -182,14 +194,14 @@
                 return false
             }else{
                 if( to.val() != '') $('.info').removeClass('d-none')
-                
+
             }
 
             exchange();
             $('.to').attr('disabled',false)
         })
 
-        $('.amount').on('keyup',function () { 
+        $('.amount').on('keyup',function () {
             exchange();
         })
 
@@ -214,7 +226,7 @@
             $('.total_amount').text(finalAmount.toFixed(8) +' '+ toCode)
         }
 
-        $('.to').on('change',function () { 
+        $('.to').on('change',function () {
             var from = $('.from option:selected');
             var to = $('.to option:selected');
 
@@ -232,7 +244,7 @@
             }
         })
 
-        $('.exchange').on('click',function () { 
+        $('.exchange').on('click',function () {
             var from = $('.from option:selected');
             var to = $('.to option:selected').val();
             var amount = $('.amount').val()
@@ -248,7 +260,7 @@
             $('#modal-success').modal('show')
         })
 
-        $('.confirm').on('click',function () { 
+        $('.confirm').on('click',function () {
             $('#form').submit()
             $(this).attr('disabled',true)
         })
