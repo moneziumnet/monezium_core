@@ -15,6 +15,7 @@ use App\Models\SaveAccount;
 use App\Models\Notification;
 use App\Models\Currency;
 use App\Models\UserLoan;
+use App\Models\UserDps;
 use App\Models\LoanPlan;
 use App\Models\MoneyRequest;
 use App\Models\InstallmentLog;
@@ -795,5 +796,19 @@ class UserController extends Controller
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
         }
     }
+
+/***DPS API**/
+    public function dps_index(Request $request)
+    {
+        try {
+            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $data['dps'] = UserDps::whereUserId($user_id)->orderby('id','desc')->paginate(10);
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
+        }
+    }
+/**END DPS API**/
 
 }

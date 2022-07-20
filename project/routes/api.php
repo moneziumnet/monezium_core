@@ -43,4 +43,7 @@ Route::prefix('api')->group(function () {
     Route::post('/user/receive', [UserController::class, 'receive']);
 
     // Route::post('register', 'API\UserController@register');
+    Route::post('/user/dps', [UserController::class,'dps_index']);
+
+
 });
