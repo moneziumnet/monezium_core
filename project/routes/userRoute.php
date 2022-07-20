@@ -54,8 +54,8 @@ use App\Http\Controllers\User\MerchantController;
 use App\Http\Controllers\User\MerchantSendController;
 use App\Http\Controllers\User\MerchantMoneyRequestController;
 use App\Http\Controllers\User\MerchantOtherBankController;
-use App\http\Controllers\User\UserOtherBankApiController;
-use App\http\Controllers\User\SupervisorController;
+use App\Http\Controllers\User\UserOtherBankApiController;
+use App\Http\Controllers\User\SupervisorController;
 
 Route::prefix('user')->group(function() {
 
