@@ -652,16 +652,20 @@ class UserController extends Controller
                     $plandetail->slug = 'card-maintenance-0-'.$id;
                     break;
                 case 'Transaction 1':
-                    $plandetail->data = json_decode('{"percent_charge":"1","fixed_charge":"2","minimum":"1","maximum":"5000"}');
+                    $plandetail->data = json_decode('{"percent_charge":"1","fixed_charge":"2","from":"1","till":"5000"}');
                     $plandetail->slug = 'transaction-1-0-'.$id;
                     break;
                 case 'Transaction 2':
-                    $plandetail->data = json_decode('{"percent_charge":"1","fixed_charge":"2","minimum":"5001","maximum":"20000"}');
+                    $plandetail->data = json_decode('{"percent_charge":"1","fixed_charge":"2","from":"5001","till":"20000"}');
                     $plandetail->slug = 'transaction-2-0-'.$id;
                     break;
                 case 'Transaction 3':
-                    $plandetail->data = json_decode('{"percent_charge":"1","fixed_charge":"2","minimum":"20001","maximum":"50000"}');
+                    $plandetail->data = json_decode('{"percent_charge":"1","fixed_charge":"2","from":"20001","till":"50000"}');
                     $plandetail->slug = 'transaction-3-0-'.$id;
+                    break;
+                case 'Referral':
+                    $plandetail->data = json_decode('{"percent_charge":"1","fixed_charge":"2", "referral":"10","invited":"5"}');
+                    $plandetail->slug = 'Referral-0-'.$id;
                     break;
             }
             return view('admin.user.profilepricingplanedit',compact('plandetail'));
