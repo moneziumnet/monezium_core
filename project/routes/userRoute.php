@@ -55,6 +55,7 @@ use App\Http\Controllers\User\MerchantSendController;
 use App\Http\Controllers\User\MerchantMoneyRequestController;
 use App\Http\Controllers\User\MerchantOtherBankController;
 use App\Http\Controllers\User\UserOpenPaydController;
+use App\Http\Controllers\User\UserRailsbankController;
 use App\Http\Controllers\User\SupervisorController;
 
 Route::prefix('user')->group(function() {
@@ -259,7 +260,7 @@ Route::prefix('user')->group(function() {
         Route::get('/openpayd/getbanklist', [UserOpenPaydController::class, 'GetBankList'])->name('user.openpayd.api.getbanklist');
         Route::get('/openpayd/createbeneficiary', [UserOpenPaydController::class, 'CreateBeneficiary'])->name('user.openpayd.api.createbeneficiary');
         Route::get('/openpayd/getbeneficiaries', [UserOpenPaydController::class, 'GetBeneficiaries'])->name('user.openpayd.api.getbeneficiaries');
-        Route::get('/openpayd/getbeneficiary/{$id}', [UserOpenPaydController::class, 'GetBeneficiary'])->name('user.openpayd.api.getbeneficiary');
+        Route::get('/openpayd/getbeneficiary/{id}', [UserOpenPaydController::class, 'GetBeneficiary'])->name('user.openpayd.api.getbeneficiary');
         Route::get('/openpayd/createbankbeneficiary', [UserOpenPaydController::class, 'CreateBankBeneficiary'])->name('user.openpayd.api.createbankbeneficiary');
         Route::get('/openpayd/getbankbeneficiarylist', [UserOpenPaydController::class, 'GetBankBeneficiaryList'])->name('user.openpayd.api.getbankbeneficiarylist');
         Route::get('/openpayd/getbankbeneficiary/{id}', [UserOpenPaydController::class, 'GetBankBeneficiary'])->name('user.openpayd.api.getbankbeneficiary');
@@ -267,6 +268,22 @@ Route::prefix('user')->group(function() {
         Route::get('/openpayd/createinternaltransfer', [UserOpenPaydController::class, 'CreateInternalTransfer'])->name('user.openpayd.api.createinternaltransfer');
         Route::get('/openpayd/gettransaction/{id}', [UserOpenPaydController::class, 'GetTransaction'])->name('user.openpayd.api.gettransaction');
         Route::get('/openpayd/gettransactionlist', [UserOpenPaydController::class, 'GetTransactionList'])->name('user.openpayd.api.gettransactionlist');
+
+        Route::get('/railsbank/getenduserlist', [UserRailsbankcontroller::class, 'GetEnduserList'])->name('user.railsbank.api.getenduserlist');
+        Route::get('/railsbank/createenduser', [UserRailsbankcontroller::class, 'CreateEnduser'])->name('user.railsbank.api.createenduser');
+        Route::get('/railsbank/checkenduserstatus/{id}', [UserRailsbankcontroller::class, 'CheckEnduserStatus'])->name('user.railsbank.api.checkenduserstatus');
+        Route::get('/railsbank/createledger', [UserRailsbankcontroller::class, 'CreateLedger'])->name('user.railsbank.api.createledger');
+        Route::get('/railsbank/getledgerlist', [UserRailsbankcontroller::class, 'GetLegderList'])->name('user.railsbank.api.getledgerlist');
+        Route::get('/railsbank/getledger/{id}', [UserRailsbankcontroller::class, 'GetLegder'])->name('user.railsbank.api.getledger');
+        Route::get('/railsbank/assigniban/{id}', [UserRailsbankcontroller::class, 'Assigniban'])->name('user.railsbank.api.assigniban');
+        Route::get('/railsbank/gettransaction/{id}', [UserRailsbankcontroller::class, 'GetTransaction'])->name('user.railsbank.api.gettransaction');
+        Route::get('/railsbank/gettransactionlist', [UserRailsbankcontroller::class, 'GetTransactionList'])->name('user.railsbank.api.gettransactionlist');
+        Route::get('/railsbank/createbeneficiary', [UserRailsbankcontroller::class, 'CreateBeneficiary'])->name('user.railsbank.api.createbeneficiary');
+        Route::get('/railsbank/getbeneficiarylist', [UserRailsbankcontroller::class, 'GetBeneficiaryList'])->name('user.railsbank.api.getbeneficiarylist');
+        Route::get('/railsbank/getbeneficiary/{id}', [UserRailsbankcontroller::class, 'GetBeneficiary'])->name('user.railsbank.api.getbeneficiary');
+        Route::get('/railsbank/createtransfer', [UserRailsbankcontroller::class, 'CreateTransfer'])->name('user.railsbank.api.createtransfer');
+
+
       });
 
       Route::get('/package',[PricingPlanController::class,'index'])->name('user.package.index');
