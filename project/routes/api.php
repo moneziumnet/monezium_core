@@ -62,6 +62,11 @@ Route::prefix('api')->group(function () {
     Route::post('/user/reedem-voucher', [UserController::class,'reedemvoucher']);
     Route::post('/user/reedemed-history', [UserController::class,'reedemedhistory']);
     
+    Route::post('/user/invoices', [UserController::class,'invoices']);
+    Route::post('/user/create-invoice', [UserController::class,'createinvoice']);
+    Route::post('/user/invoice-view', [UserController::class,'invoiceview']);
+    Route::post('/user/invoice-url', [UserController::class,'invoiceurl']);
+    
 
 
 });

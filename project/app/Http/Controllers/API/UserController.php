@@ -21,6 +21,7 @@ use App\Models\LoanPlan;
 use App\Models\FdrPlan;
 use App\Models\UserFdr;
 use App\Models\Escrow;
+use App\Models\Invoice;
 use App\Models\MoneyRequest;
 use App\Models\InstallmentLog;
 use App\Models\Voucher;
@@ -1148,5 +1149,17 @@ class UserController extends Controller
     }
 
 /*********************END VOUCHER API******************************/
-
+    /********** Start Invoice API******/
+    public function invoices()
+    {
+        try{
+            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $data['invoices'] = Invoice::with('currency')->whereUserId($user_id)->orderby('id','desc')->paginate(10);
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
+        }catch(\Throwable $th)
+        {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
+        }
+    }
+    /********** End Invoice API******/
 }
