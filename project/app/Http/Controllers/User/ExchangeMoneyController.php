@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\User;
 
 use App\Models\Wallet;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Models\Currency;
+use Illuminate\Http\Request;
 use App\Models\ExchangeMoney;
+use App\Models\Generalsetting;
+use App\Http\Controllers\Controller;
 
 class ExchangeMoneyController extends Controller
 {
@@ -42,11 +43,14 @@ class ExchangeMoneyController extends Controller
         $toWallet = Wallet::where('currency_id',$request->to_wallet_id)->where('user_id',auth()->id())->where('user_type',1)->first();
 
         if(!$toWallet){
+            $gs = Generalsetting::first();
             $toWallet = Wallet::create([
                 'user_id'     => auth()->id(),
                 'user_type'   => 1,
                 'currency_id' => $request->to_wallet_id,
-                'balance'     => 0
+                'balance'     => 0,
+                'wallet_type' => 1,
+                'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
             ]);
         }
 

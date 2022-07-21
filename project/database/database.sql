@@ -1,10 +1,17 @@
 /*
+ Navicat Premium Data Transfer
+
+ Source Server         : localhost_1
+ Source Server Type    : MySQL
+ Source Server Version : 100424
  Source Host           : localhost:3306
+ Source Schema         : geniusbank_db
+
  Target Server Type    : MySQL
  Target Server Version : 100424
  File Encoding         : 65001
 
- Date: 21/07/2022 03:41:55
+ Date: 21/07/2022 10:22:11
 */
 
 SET NAMES utf8mb4;
@@ -54,6 +61,70 @@ CREATE TABLE `admin_languages`  (
 INSERT INTO `admin_languages` VALUES (1, 1, 'En', '1603880510hWH6gk7S.json', '1603880510hWH6gk7S', 0, NULL, NULL);
 
 -- ----------------------------
+-- Table structure for admin_user_conversations
+-- ----------------------------
+DROP TABLE IF EXISTS `admin_user_conversations`;
+CREATE TABLE `admin_user_conversations`  (
+  `id` int(191) NOT NULL AUTO_INCREMENT,
+  `subject` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_id` int(191) NOT NULL,
+  `message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp(0) NULL DEFAULT NULL,
+  `updated_at` timestamp(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for admin_user_messages
+-- ----------------------------
+DROP TABLE IF EXISTS `admin_user_messages`;
+CREATE TABLE `admin_user_messages`  (
+  `id` int(191) NOT NULL AUTO_INCREMENT,
+  `conversation_id` int(191) NOT NULL,
+  `message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_id` int(191) NULL DEFAULT NULL,
+  `created_at` timestamp(0) NULL DEFAULT NULL,
+  `updated_at` timestamp(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 50 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for admins
+-- ----------------------------
+DROP TABLE IF EXISTS `admins`;
+CREATE TABLE `admins`  (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `phone` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `photo` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `password` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1,
+  `remember_token` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `created_at` timestamp(0) NULL DEFAULT NULL,
+  `updated_at` timestamp(0) NULL DEFAULT NULL,
+  `tenant_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `zip` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `city` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `address` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `country_id` int(11) NULL DEFAULT NULL,
+  `vat` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `plan_id` int(11) NULL DEFAULT NULL,
+  `section` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `admins_email_unique`(`email`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 76 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of admins
+-- ----------------------------
+INSERT INTO `admins` VALUES (1, 'Supper Admin', 'admin@gmail.com', '01629552892', '1639300861admin.jpg', '$2y$10$NSxBfIBeDdxRjisT83p/0uN4GN4LcbYvKzuazAfyekwPffExwBUpO', 1, 'x9hxNawwQu0bPl7yNNaenNvwFxQ0I2s5JiFoArJwnZWyDJDYvPrV3fZYM0Qh', '2018-03-01 00:27:08', '2022-06-27 11:08:56', NULL, NULL, NULL, NULL, 127, NULL, 0, 'Manage Customers , Loan Management , DPS Management , FDR Management , Manage Escrow , Money Transfer , Wire Transfer , Request Money , Management Withdraw , Management Deposit , Transactions , Deposits , Currency Setting , General Setting , Homepage Manage , Email Setting , Language Manage');
+INSERT INTO `admins` VALUES (10, 'violetfocus1', 'violetfocus0618@gmail.com', '123123123', 'onO5Lo131652995971.png', '$2y$10$7UkPuoJ9.P58z6iCjagG.uS3JF6Is/G4OwIshyUbngLE2R3R0djvC', 1, NULL, '2022-05-09 08:24:28', '2022-06-30 15:41:54', '43', '1234', 'Serbia', 'Noname address', 191, '11111', 1, 'Manage Customers , Loan Management , DPS Management , FDR Management , Manage Escrow , Money Transfer , Wire Transfer , Request Money , Management Withdraw , Management Deposit , Transactions , Deposits , Currency Setting , General Setting , Homepage Manage , Email Setting , Language Manage');
+INSERT INTO `admins` VALUES (50, 'bank1', 'bank1@gmail.com', '', NULL, '$2y$10$RS2zxaXOEcwAvnbcnWJm/uOVQwpPYYwSNxC7gvwghvKMD0WZ1bYyW', 1, NULL, '2022-06-19 20:17:56', '2022-06-19 20:18:32', '50', NULL, NULL, NULL, NULL, NULL, 1, 'Sub Institutions management , Manage Customers , Loan Management , DPS Management , FDR Management , Manage Escrow , Money Transfer , Wire Transfer , Request Money , Management Withdraw , Management Deposit , Transactions , Deposits , Currency Setting , General Setting , Homepage Manage , Email Setting , Language Manage');
+INSERT INTO `admins` VALUES (51, 'bank2', 'bank2@gmail.com', '12231231', 'mkdKchmi1656307846.png', '$2y$10$vobQJGxed0gvgjjUvc4dsOR0KBnjb81H0SFKGRS9rjTMHCbicxkA2', 1, NULL, '2022-06-20 00:13:16', '2022-07-14 15:43:53', '51', NULL, NULL, NULL, 1, NULL, 1, 'Sub Institutions management , Manage Customers , Loan Management , DPS Management , FDR Management , Manage Escrow , Money Transfer , Wire Transfer , Request Money , Management Withdraw , Management Deposit , Transactions , Deposits , Currency Setting , General Setting , Homepage Manage , Email Setting , Manage KYC Form , Language Manage');
+INSERT INTO `admins` VALUES (75, 'aaaa', 'aaaa@gmail.com', '', NULL, '$2y$10$7QWIpdix.ymy3uUUq5zwYuLyjq.o0vawppYdkI.fYiumUTXP.ofaG', 1, NULL, '2022-07-21 08:18:12', '2022-07-21 08:27:34', '75', NULL, NULL, NULL, NULL, NULL, NULL, 'Sub Institutions management , Manage Customers , Loan Management , DPS Management , FDR Management , Manage Escrow , Money Transfer , Wire Transfer , Request Money , Management Withdraw , Management Deposit , Transactions , Currency Setting , Homepage Manage , Manage KYC Form , Language Manage');
+
+-- ----------------------------
 -- Table structure for bank_plans
 -- ----------------------------
 DROP TABLE IF EXISTS `bank_plans`;
@@ -79,8 +150,8 @@ CREATE TABLE `bank_plans`  (
 -- Records of bank_plans
 -- ----------------------------
 INSERT INTO `bank_plans` VALUES (1, 'Free', 0, 10000, 10000, 10000, 100000, 100000, 100000, 100000, NULL, 30, '2022-06-07 21:21:12', '2022-06-07 21:21:12');
-INSERT INTO `bank_plans` VALUES (2, 'Standard', 50, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, NULL, 30, '2022-06-18 04:55:10', '2022-06-18 08:20:18');
-INSERT INTO `bank_plans` VALUES (3, 'Professional', 100, 10000, 10000, 10000, 10000, 10000, 10000, 10000, NULL, 90, '2022-06-18 08:20:57', '2022-06-18 08:20:57');
+INSERT INTO `bank_plans` VALUES (13, 'Standard', 50, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, NULL, 30, '2022-06-18 04:55:10', '2022-06-18 08:20:18');
+INSERT INTO `bank_plans` VALUES (14, 'Professional', 100, 10000, 10000, 10000, 10000, 10000, 10000, 10000, NULL, 90, '2022-06-18 08:20:57', '2022-06-18 08:20:57');
 
 -- ----------------------------
 -- Table structure for blog_categories
@@ -132,61 +203,36 @@ INSERT INTO `blogs` VALUES (29, 4, 'Finance now! Opportunities for embedded lend
 INSERT INTO `blogs` VALUES (30, 5, 'What are “cloud skills” for banks, anyway?', 'what-are-cloud-skills-for-banks-anyway', 'Most banks are making significant investments in the cloud and planning to migrate core computing workloads in the coming years. Our research on “Mainframe Migration to the Cloud in Banking”—which we outline in the current issue of the Banking Cloud Altimeter—surveyed 150 banking executives across 16 countries and found that 82% of large banks that are planning to or are in the process of moving at least half of their mainframe workloads to the cloud. Of those aiming to move 75% or more of their workloads to the cloud, most plan to achieve that goal within the next five years.iv> \r\n<br><br><br>\r\nMore Accenture analysis has found that banking is ahead of most industries in its cloud adoption, which includes sourcing and training the skills needed to maximize the cloud’s potential. In terms of cloud adoption, banking leads industries like insurance, automotive and travel while trailing only a few high-tech industries like software.  \r\n<br><br><br>\r\nBut hiring, on its own, is not a viable solution to the talent problem. Demand for both cloud technologists and cloud fluency across the entire organization is rising in banking and beyond. There is not enough external cloud talent to meet the demand.', 'uqb6sKZm1647249780.jpg', 'genius', 0, 1, NULL, NULL, NULL, '2022-03-14 23:23:00');
 
 -- ----------------------------
--- Table structure for charges
+-- Table structure for contacts
 -- ----------------------------
-DROP TABLE IF EXISTS `charges`;
-CREATE TABLE `charges`  (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `data` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+DROP TABLE IF EXISTS `contacts`;
+CREATE TABLE `contacts`  (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `full_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `dob` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `personal_code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `c_phone` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `c_email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `c_address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `c_city` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `c_zip_code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `id_number` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `date_of_issue` datetime(0) NULL DEFAULT NULL,
+  `issued_authority` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `created_at` timestamp(0) NULL DEFAULT NULL,
   `updated_at` timestamp(0) NULL DEFAULT NULL,
-  `plan_id` int(11) NOT NULL,
-  `user_id` int(11) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE INDEX `charges_slug_unique`(`slug`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 68 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+  `date_of_expire` datetime(0) NULL DEFAULT NULL,
+  `c_country` int(11) NULL DEFAULT NULL,
+  `contact` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 36 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Records of charges
+-- Records of contacts
 -- ----------------------------
-INSERT INTO `charges` VALUES (1, 'Transfer Money', 'transfer-money', '{\"percent_charge\":\"2\",\"fixed_charge\":\"3\",\"minimum\":\"10\",\"maximum\":\"1000\",\"daily_limit\":\"2000\",\"monthly_limit\":\"500000\"}', '2022-06-20 21:32:25', '2022-07-14 13:26:52', 1, 0);
-INSERT INTO `charges` VALUES (2, 'Exchange Money', 'money-exchange', '{\"percent_charge\":\"2\",\"fixed_charge\":\"2\",\"minimum\":\"10\",\"maximum\":\"1000\"}', '2022-06-20 21:32:25', '2022-06-20 21:32:25', 1, 0);
-INSERT INTO `charges` VALUES (3, 'Request Money', 'request-money', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\",\"minimum\":\"10\",\"maximum\":\"2000\"}', '2022-06-20 21:32:25', '2022-06-20 21:32:25', 1, 0);
-INSERT INTO `charges` VALUES (5, 'Create Voucher', 'create-voucher', '{\"percent_charge\":\"2\",\"fixed_charge\":\"2\",\"minimum\":\"10\",\"maximum\":\"2000\",\"commission\":\"10\"}', '2022-06-20 21:32:25', '2022-06-20 21:32:25', 1, 0);
-INSERT INTO `charges` VALUES (6, 'Create Invoice', 'create-invoice', '{\"percent_charge\":\"5\",\"fixed_charge\":\"2\"}', '2022-06-20 21:32:25', '2022-06-20 21:32:25', 1, 0);
-INSERT INTO `charges` VALUES (7, 'Make Escrow', 'make-escrow', '{\"percent_charge\":\"5\",\"fixed_charge\":\"2\"}', '2022-06-20 21:32:25', '2022-06-20 21:32:25', 1, 0);
-INSERT INTO `charges` VALUES (9, 'Transfer Money', 'transfer-money-2', '{\"percent_charge\":\"2\",\"fixed_charge\":\"2\",\"minimum\":\"10\",\"maximum\":\"1000\",\"daily_limit\":\"2000\",\"monthly_limit\":\"500000\"}', '2022-06-20 21:32:25', '2022-07-14 13:31:24', 2, 0);
-INSERT INTO `charges` VALUES (10, 'Exchange Money', 'exchange-money-2', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\",\"minimum\":\"10\",\"maximum\":\"1000\"}', '2022-06-20 21:32:25', '2022-06-24 06:08:07', 2, 0);
-INSERT INTO `charges` VALUES (11, 'Request Money', 'request-money-2', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\",\"minimum\":\"10\",\"maximum\":\"200000\"}', '2022-06-20 21:32:25', '2022-07-14 13:31:37', 2, 0);
-INSERT INTO `charges` VALUES (13, 'Create Voucher', 'create-voucher-2', '{\"percent_charge\":\"2\",\"fixed_charge\":\"2\",\"minimum\":\"10\",\"maximum\":\"2000\",\"commission\":\"10\"}', '2022-06-20 21:32:25', '2022-07-14 13:31:37', 2, 0);
-INSERT INTO `charges` VALUES (14, 'Create Invoice', 'create-invoice-2', '{\"percent_charge\":\"2\",\"fixed_charge\":\"6\"}', '2022-06-20 21:32:25', '2022-07-14 13:31:37', 2, 0);
-INSERT INTO `charges` VALUES (15, 'Make Escrow', 'make-escrow-2', '{\"percent_charge\":\"5\",\"fixed_charge\":\"2\"}', '2022-06-20 21:32:25', '2022-07-14 13:31:37', 2, 0);
-INSERT INTO `charges` VALUES (17, 'Transfer Money', 'transfer-money-3', '{\"percent_charge\":\"2\",\"fixed_charge\":\"2\",\"minimum\":\"10\",\"maximum\":\"1000\",\"daily_limit\":\"2000\",\"monthly_limit\":\"500000\"}', '2022-06-20 21:32:25', '2022-07-14 13:31:37', 3, 0);
-INSERT INTO `charges` VALUES (18, 'Exchange Money', 'exchange-money-3', '{\"percent_charge\":\"2\",\"fixed_charge\":\"2\",\"minimum\":\"10\",\"maximum\":\"1000\"}', '2022-06-20 21:32:25', '2022-07-14 13:31:37', 3, 0);
-INSERT INTO `charges` VALUES (19, 'Request Money', 'request-money-3', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\",\"minimum\":\"10\",\"maximum\":\"2000\"}', '2022-06-20 21:32:25', '2022-07-14 13:31:37', 3, 0);
-INSERT INTO `charges` VALUES (21, 'Create Voucher', 'create-voucher-3', '{\"percent_charge\":\"2\",\"fixed_charge\":\"2\",\"minimum\":\"10\",\"maximum\":\"2000\",\"commission\":\"10\"}', '2022-06-20 21:32:25', '2022-07-14 13:31:37', 3, 0);
-INSERT INTO `charges` VALUES (22, 'Create Invoice', 'create-invoice-3', '{\"percent_charge\":\"5\",\"fixed_charge\":\"2\"}', '2022-06-20 21:32:25', '2022-07-14 13:31:37', 3, 0);
-INSERT INTO `charges` VALUES (23, 'Make Escrow', 'make-escrow-3', '{\"percent_charge\":\"5\",\"fixed_charge\":\"2\"}', '2022-06-20 21:32:25', '2022-07-14 13:31:37', 3, 0);
-INSERT INTO `charges` VALUES (40, 'Account Maintenance', 'account-maintenance-2', '{\"percent_charge\":\"2\",\"fixed_charge\":\"2\",\"minimum\":\"10\",\"maximum\":\"100000\"}', '2022-07-19 01:31:06', '2022-07-19 01:31:06', 2, 0);
-INSERT INTO `charges` VALUES (41, 'Card Maintenance', 'card-maintenance-2', '{\"percent_charge\":\"2\",\"fixed_charge\":\"20\",\"minimum\":\"100\",\"maximum\":\"100000\"}', '2022-07-19 02:01:34', '2022-07-19 02:17:32', 2, 0);
-INSERT INTO `charges` VALUES (42, 'Transaction 1', 'transaction-1-2', '{\"percent_charge\":\"1\",\"fixed_charge\":\"10\",\"From\":\"100\",\"Till\":\"5000\"}', '2022-07-19 01:27:30', '2022-07-19 02:17:47', 2, 0);
-INSERT INTO `charges` VALUES (43, 'Transaction 2', 'transaction-2-2', '{\"percent_charge\":\"1\",\"fixed_charge\":\"20\",\"From\":\"5001\",\"Till\":\"20000\"}', '2022-07-19 01:27:39', '2022-07-19 02:17:58', 2, 0);
-INSERT INTO `charges` VALUES (44, 'Transaction 3', 'transaction-3-2', '{\"percent_charge\":\"1\",\"fixed_charge\":\"50\",\"From\":\"20001\",\"Till\":\"50000\"}', '2022-07-19 01:27:45', '2022-07-19 02:18:11', 2, 0);
-INSERT INTO `charges` VALUES (45, 'Account Maintenance', 'account-maintenance', '{\"percent_charge\":\"2\",\"fixed_charge\":\"2\",\"minimum\":\"10\",\"maximum\":\"100000\"}', '2022-07-19 01:31:06', '2022-07-19 01:31:06', 1, 0);
-INSERT INTO `charges` VALUES (46, 'Card Maintenance', 'card-maintenance', '{\"percent_charge\":\"2\",\"fixed_charge\":\"2\",\"minimum\":\"10\",\"maximum\":\"100000\"}', '2022-07-19 02:01:34', '2022-07-19 02:01:34', 1, 0);
-INSERT INTO `charges` VALUES (47, 'Transaction 1', 'transaction-1', '{\"percent_charge\":\"1\",\"fixed_charge\":\"10\",\"From\":\"100\",\"Till\":\"5000\"}', '2022-07-19 01:27:30', '2022-07-19 02:16:34', 1, 0);
-INSERT INTO `charges` VALUES (48, 'Transaction 2', 'transaction-2', '{\"percent_charge\":\"1\",\"fixed_charge\":\"20\",\"From\":\"5001\",\"Till\":\"20000\"}', '2022-07-19 01:27:39', '2022-07-19 02:15:58', 1, 0);
-INSERT INTO `charges` VALUES (49, 'Transaction 3', 'transaction-3', '{\"percent_charge\":\"0\",\"fixed_charge\":\"50\",\"From\":\"20001\",\"Till\":\"50000\"}', '2022-07-19 01:27:45', '2022-07-19 02:16:19', 1, 0);
-INSERT INTO `charges` VALUES (50, 'Account Maintenance', 'account-maintenance-3', '{\"percent_charge\":\"2\",\"fixed_charge\":\"2\",\"minimum\":\"10\",\"maximum\":\"100000\"}', '2022-07-19 01:31:06', '2022-07-19 01:31:06', 3, 0);
-INSERT INTO `charges` VALUES (51, 'Card Maintenance', 'card-maintenance-3', '{\"percent_charge\":\"2\",\"fixed_charge\":\"10\",\"minimum\":\"100\",\"maximum\":\"100000\"}', '2022-07-19 02:01:34', '2022-07-19 02:18:37', 3, 0);
-INSERT INTO `charges` VALUES (52, 'Transaction 1', 'transaction-1-3', '{\"percent_charge\":\"1\",\"fixed_charge\":\"10\",\"From\":\"100\",\"Till\":\"5000\"}', '2022-07-19 01:27:30', '2022-07-19 02:18:52', 3, 0);
-INSERT INTO `charges` VALUES (53, 'Transaction 2', 'transaction-2-3', '{\"percent_charge\":\"1\",\"fixed_charge\":\"20\",\"From\":\"5001\",\"Till\":\"20000\"}', '2022-07-19 01:27:39', '2022-07-19 02:19:06', 3, 0);
-INSERT INTO `charges` VALUES (54, 'Transaction 3', 'transaction-3-3', '{\"percent_charge\":\"1\",\"fixed_charge\":\"50\",\"From\":\"20001\",\"Till\":\"50000\"}', '2022-07-19 01:27:45', '2022-07-19 02:19:18', 3, 0);
-INSERT INTO `charges` VALUES (63, 'Referral', 'Referral', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\", \"referral\":\"10\",\"invited\":\"5\"}', '2022-07-19 01:27:45', '2022-07-19 01:27:45', 1, 0);
-INSERT INTO `charges` VALUES (66, 'Referral', 'Referral-2', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\", \"referral\":\"10\",\"invited\":\"5\"}', '2022-07-19 01:27:45', '2022-07-19 01:27:45', 2, 0);
-INSERT INTO `charges` VALUES (67, 'Referral', 'Referral-3', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\", \"referral\":\"10\",\"invited\":\"5\"}', '2022-07-19 01:27:45', '2022-07-19 01:27:45', 3, 0);
+INSERT INTO `contacts` VALUES (31, 51, 'Aleksandar Todorovic', '2022-06-21', '234', '234234', 'aleksandart450@gmail.com', 'Konatice Noname street 378', 'Konatice', '11506', NULL, NULL, NULL, NULL, NULL, NULL, 190, 'Onwer111');
+INSERT INTO `contacts` VALUES (32, 10, 'Aleksandar Todorovic', '2022-05-30', '234', '234234', 'aleksandart450@gmail.com', 'Konatice Noname street 378', 'Konatice', '11506', NULL, NULL, NULL, NULL, NULL, NULL, 190, 'Onwer');
 
 -- ----------------------------
 -- Table structure for counters
@@ -519,25 +565,64 @@ INSERT INTO `currencies` VALUES (13, 0, '₦', 'NGN', 'Nigerian naira', 1, 1, 1.
 INSERT INTO `currencies` VALUES (17, 0, 'Ð', 'ETH', 'Ethereum', 2, 1, 0.0005300000, NULL, NULL);
 
 -- ----------------------------
--- Table structure for customer_types
+-- Table structure for disputes
 -- ----------------------------
-DROP TABLE IF EXISTS `customer_types`;
-CREATE TABLE `customer_types`  (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `type_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+DROP TABLE IF EXISTS `disputes`;
+CREATE TABLE `disputes`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `escrow_id` int(11) NOT NULL,
+  `user_id` int(11) NULL DEFAULT NULL,
+  `admin_id` int(11) NULL DEFAULT NULL,
+  `message` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `file` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   `created_at` timestamp(0) NULL DEFAULT NULL,
   `updated_at` timestamp(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Records of customer_types
+-- Table structure for documents
 -- ----------------------------
-INSERT INTO `customer_types` VALUES (1, 'Private', '2022-06-14 21:18:24', NULL);
-INSERT INTO `customer_types` VALUES (2, 'Corporate', '2022-06-14 21:18:29', NULL);
-INSERT INTO `customer_types` VALUES (3, 'Merchants', '2022-06-14 21:18:34', NULL);
-INSERT INTO `customer_types` VALUES (4, 'Supervisors', '2022-06-14 21:18:39', NULL);
-INSERT INTO `customer_types` VALUES (5, 'Staff', '2022-06-14 21:18:43', NULL);
+DROP TABLE IF EXISTS `documents`;
+CREATE TABLE `documents`  (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `ins_id` int(11) NULL DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `file` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 55 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of documents
+-- ----------------------------
+INSERT INTO `documents` VALUES (52, 51, 'Institution Introduction', '81.jpg');
+
+-- ----------------------------
+-- Table structure for domains
+-- ----------------------------
+DROP TABLE IF EXISTS `domains`;
+CREATE TABLE `domains`  (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `domain` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tenant_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp(0) NULL DEFAULT NULL,
+  `updated_at` timestamp(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `domains_domain_unique`(`domain`) USING BTREE,
+  INDEX `domains_tenant_id_foreign`(`tenant_id`) USING BTREE,
+  CONSTRAINT `domains_ibfk_1` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of domains
+-- ----------------------------
+INSERT INTO `domains` VALUES (9, 'bank1', '50', '2022-06-19 20:18:32', '2022-06-19 20:18:32');
+INSERT INTO `domains` VALUES (10, 'bank2', '51', '2022-06-20 00:13:52', '2022-06-20 00:13:52');
+INSERT INTO `domains` VALUES (11, 'bank3', '54', '2022-06-20 00:53:19', '2022-06-20 00:53:19');
+INSERT INTO `domains` VALUES (12, 'bbbbb', '69', '2022-06-24 22:48:31', '2022-06-24 22:48:31');
+INSERT INTO `domains` VALUES (13, 'ccc', '71', '2022-06-25 08:42:47', '2022-06-25 08:42:47');
+INSERT INTO `domains` VALUES (14, 'smiss', '74', '2022-07-21 08:12:01', '2022-07-21 08:12:01');
+INSERT INTO `domains` VALUES (15, 'aaaa', '75', '2022-07-21 08:20:10', '2022-07-21 08:20:10');
 
 -- ----------------------------
 -- Table structure for dps_plans
@@ -570,21 +655,20 @@ INSERT INTO `dps_plans` VALUES (4, 'Basic', 80, 30, 20, 20, 1600, 320, 1, '2022-
 DROP TABLE IF EXISTS `email_templates`;
 CREATE TABLE `email_templates`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `email_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-  `email_subject` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
-  `email_body` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  `email_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
+  `email_subject` mediumtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
+  `email_body` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
   `status` int(11) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of email_templates
 -- ----------------------------
-INSERT INTO `email_templates` VALUES (1, 'Withdraw', 'Your withdraw is completed successfully.', '<p>Hello {customer_name},<br>Your withdraw is completed successfully.</p><p>Thank You<br></p>', 1);
-INSERT INTO `email_templates` VALUES (2, 'Deposit', 'You have invested successfully.', '<p>Hello {customer_name},<br>You have deposited successfully.</p><p>Transaction ID:&nbsp;<span style=\"color: rgb(33, 37, 41);\">{order_number}.</span></p><p>Thank You.</p>', 1);
-INSERT INTO `email_templates` VALUES (3, 'send money', 'Your send money is completed successfully.', '<p>Hello {customer_name},<br>Your send money is completed successfully.</p><p>Thank You<br></p>', 1);
-INSERT INTO `email_templates` VALUES (4, 'request money', 'Your request money is completed successfully.', '<p>Hello {customer_name},<br>Your request money is completed successfully.</p><p>Thank You<br></p>', 1);
-INSERT INTO `email_templates` VALUES (5, 'invite email', 'Invite', '<p>{customer_name},<br>Invited to you click on this {ref_id}.</p><p>Thank You<br></p>', 1);
+INSERT INTO `email_templates` VALUES (3, 'Withdraw', 'Your withdraw is completed successfully.', '<p>Hello {customer_name},<br>Your withdraw is completed successfully.</p><p>Thank You<br></p>', 1);
+INSERT INTO `email_templates` VALUES (4, 'Deposit', 'You have invested successfully.', '<p>Hello {customer_name},<br>You have deposited successfully.</p><p>Transaction ID:&nbsp;<span style=\"color: rgb(33, 37, 41);\">{order_number}.</span></p><p>Thank You.</p>', 1);
+INSERT INTO `email_templates` VALUES (5, 'send money', 'Your send money is completed successfully.', '<p>Hello {customer_name},<br>Your send money is completed successfully.</p><p>Thank You<br></p>', 1);
+INSERT INTO `email_templates` VALUES (6, 'request money', 'Your request money is completed successfully.', '<p>Hello {customer_name},<br>Your request money is completed successfully.</p><p>Thank You<br></p>', 1);
 
 -- ----------------------------
 -- Table structure for faqs
@@ -629,8 +713,8 @@ CREATE TABLE `fdr_plans`  (
 -- ----------------------------
 -- Records of fdr_plans
 -- ----------------------------
-INSERT INTO `fdr_plans` VALUES (2, 'Basic', 20, 200, NULL, 'fixed', 3, 30, 1, '2022-01-12 05:05:44', '2022-03-14 21:57:33');
-INSERT INTO `fdr_plans` VALUES (3, 'Standard', 50, 100, 30, 'partial', 4, 365, 1, '2022-01-12 05:54:25', '2022-03-14 21:57:47');
+INSERT INTO `fdr_plans` VALUES (2, 'Basic', 20, 200, NULL, 'fixed', 3, 30, 1, '2022-01-12 06:05:44', '2022-03-14 22:57:33');
+INSERT INTO `fdr_plans` VALUES (3, 'Standard', 50, 100, 30, 'partial', 4, 365, 1, '2022-01-12 06:54:25', '2022-03-14 22:57:47');
 
 -- ----------------------------
 -- Table structure for features
@@ -680,7 +764,7 @@ INSERT INTO `fonts` VALUES (11, 'Manrope', 'Manrope', 1, '2022-03-03 10:24:26', 
 -- ----------------------------
 DROP TABLE IF EXISTS `generalsettings`;
 CREATE TABLE `generalsettings`  (
-  `id` int(191) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `logo` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   `favicon` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `loader` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -773,13 +857,38 @@ CREATE TABLE `generalsettings`  (
   `user_module` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
   `is_verify` tinyint(4) NULL DEFAULT 0,
   `two_fa` tinyint(1) NOT NULL DEFAULT 1,
+  `wallet_no_prefix` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of generalsettings
 -- ----------------------------
-INSERT INTO `generalsettings` VALUES (1, 'gdV5JbBZ1652956530.png', '16393007481563335660service-icon-1.png', '5monWltX1641808745.gif', '33CiUFaI1641808748.gif', '1563350277herobg.jpg', 'MT Payment System - All in One Banking System', 'MT', 'Info@example.com', '0123 456789', 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae', '<p>COPYRIGHT © 2022. All Rights Reserved By <a href=\"https://monezium.net/\" target=\"_blank\">monezium.net</a></p>', '#0ba026', 0, '<script type=\"text/javascript\">\r\nvar Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();\r\n(function(){\r\nvar s1=document.createElement(\"script\"),s0=document.getElementsByTagName(\"script\")[0];\r\ns1.async=true;\r\ns1.src=\'https://embed.tawk.to/5bc2019c61d0b77092512d03/default\';\r\ns1.charset=\'UTF-8\';\r\ns1.setAttribute(\'crossorigin\',\'*\');\r\ns0.parentNode.insertBefore(s1,s0);\r\n})();\r\n</script>', 1, 1, 'AIzaSyB1GpE4qeoJ__70UZxvX9CTMUTZRZNHcu8', 1, 'MoneziumNET', 1, 1, 1, 'smtp.gmail.com', '465', 'tls', 'ahmmedafzal4@gmail.com', 'ohzgxzxyaebarzop', 'ahmmedafzal4@gmail.com', 'GeniusOcean', 1, 'Coupon Found', 'Coupon Already Applied', 'THANK YOU FOR YOUR INVEST.', '<h5 class=\"sub-title\">A litter bit More&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</h5>', '<h2 class=\"title extra-padding\">About US&nbsp;</h2>', '<p>Our organization pursues several goals that can be \r\n											identified as our mission. Learn more about them below.\r\n											Auis nostrud exercitation ullamc laboris nisitm aliquip ex \r\nbea sed consequat duis autes ure dolor. dolore magna aliqua nim ad \r\nminim.</p>\r\n									<p>\r\n											Auis nostrud exercitation ullamc laboris nisitm aliquip ex \r\nbea sed consequat duis autes ure dolor. dolore magna aliqua nim ad \r\nminim.&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</p>', '1563350729about.png', 'We\'ll email you an order confirmation with details and tracking info.', 1, 1, 'PRICING', 'Choose Plans & Pricing', 'Choose the best for yourself', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'You are subscribed Successfully.', 'This email has already been taken.', 'OOPS ! ... PAGE NOT FOUND', 'THE PAGE YOU ARE LOOKING FOR MIGHT HAVE BEEN REMOVED, HAD ITS NAME CHANGED, OR IS TEMPORARILY UNAVAILABLE.', '16392899281561878540404.png', 'b4GEKQxa1654847903.jpg', 1, 'USD', '$', 0, 5, 5, 1, 5, '16406712051566471347add.jpg', 'ZzsMLGKe162CfA5EcG6j', 3000, 1, 5, 5, '1EGZG7py1652956537.png', 'U36807958', 1, 'cdb2163c-91cc-4fa6-b3fc-7de11bdcdf1a', 1, 'ACb87cec0c7d04b80d78bf1647edf8f67f', 'ee60fb893d6e7a2db56e5748e5eab8a3', '01976814812', 1, 'ba9111b8', 'cgxbAg4KnE80bcKx', '01976814812', 1, 0, 0, '{\"Home\":{\"title\":\"Home\",\"dropdown\":\"no\",\"href\":\"\\/\",\"target\":\"self\"},\"Pricing\":{\"title\":\"Pricing\",\"dropdown\":\"no\",\"href\":\"\\/#pricing\",\"target\":\"self\"},\"Services\":{\"title\":\"Services\",\"dropdown\":\"no\",\"href\":\"\\/services\",\"target\":\"self\"},\"About\":{\"title\":\"About\",\"dropdown\":\"no\",\"href\":\"\\/about\",\"target\":\"self\"},\"Blog\":{\"title\":\"Blog\",\"dropdown\":\"no\",\"href\":\"\\/blogs\",\"target\":\"self\"}}', 1, 0.8, 10, 1000, 1, 0.3, 1000, 5000, '', '', 1, 1);
+INSERT INTO `generalsettings` VALUES (1, 'gdV5JbBZ1652956530.png', '16393007481563335660service-icon-1.png', '5monWltX1641808745.gif', '33CiUFaI1641808748.gif', '1563350277herobg.jpg', 'MT Payment System - All in One Banking System', 'MT', 'Info@example.com', '0123 456789', 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae', '<p>COPYRIGHT © 2022. All Rights Reserved By <a href=\"https://monezium.net/\" target=\"_blank\">monezium.net</a></p>', '#0ba026', 0, '<script type=\"text/javascript\">\r\nvar Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();\r\n(function(){\r\nvar s1=document.createElement(\"script\"),s0=document.getElementsByTagName(\"script\")[0];\r\ns1.async=true;\r\ns1.src=\'https://embed.tawk.to/5bc2019c61d0b77092512d03/default\';\r\ns1.charset=\'UTF-8\';\r\ns1.setAttribute(\'crossorigin\',\'*\');\r\ns0.parentNode.insertBefore(s1,s0);\r\n})();\r\n</script>', 1, 1, 'AIzaSyB1GpE4qeoJ__70UZxvX9CTMUTZRZNHcu8', 1, 'MoneziumNET', 1, 1, 1, 'smtp.gmail.com', '465', 'tls', 'ahmmedafzal4@gmail.com', 'ohzgxzxyaebarzop', 'ahmmedafzal4@gmail.com', 'GeniusOcean', 1, 'Coupon Found', 'Coupon Already Applied', 'THANK YOU FOR YOUR INVEST.', '<h5 class=\"sub-title\">A litter bit More&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</h5>', '<h2 class=\"title extra-padding\">About US&nbsp;</h2>', '<p>Our organization pursues several goals that can be \r\n											identified as our mission. Learn more about them below.\r\n											Auis nostrud exercitation ullamc laboris nisitm aliquip ex \r\nbea sed consequat duis autes ure dolor. dolore magna aliqua nim ad \r\nminim.</p>\r\n									<p>\r\n											Auis nostrud exercitation ullamc laboris nisitm aliquip ex \r\nbea sed consequat duis autes ure dolor. dolore magna aliqua nim ad \r\nminim.&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</p>', '1563350729about.png', 'We\'ll email you an order confirmation with details and tracking info.', 1, 1, 'PRICING', 'Choose Plans & Pricing', 'Choose the best for yourself', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'You are subscribed Successfully.', 'This email has already been taken.', 'OOPS ! ... PAGE NOT FOUND', 'THE PAGE YOU ARE LOOKING FOR MIGHT HAVE BEEN REMOVED, HAD ITS NAME CHANGED, OR IS TEMPORARILY UNAVAILABLE.', '16392899281561878540404.png', 'b4GEKQxa1654847903.jpg', 1, 'USD', '$', 0, 5, 5, 1, 5, '16406712051566471347add.jpg', 'ZzsMLGKe162CfA5EcG6j', 3000, 1, 4, 10, '1EGZG7py1652956537.png', 'U36807958', 1, 'cdb2163c-91cc-4fa6-b3fc-7de11bdcdf1a', 1, 'ACb87cec0c7d04b80d78bf1647edf8f67f', 'ee60fb893d6e7a2db56e5748e5eab8a3', '01976814812', 1, 'ba9111b8', 'cgxbAg4KnE80bcKx', '01976814812', 1, 0, 0, '{\"Home\":{\"title\":\"Home\",\"dropdown\":\"no\",\"href\":\"\\/\",\"target\":\"self\"},\"Pricing\":{\"title\":\"Pricing\",\"dropdown\":\"no\",\"href\":\"\\/#pricing\",\"target\":\"self\"},\"Services\":{\"title\":\"Services\",\"dropdown\":\"no\",\"href\":\"\\/services\",\"target\":\"self\"},\"About\":{\"title\":\"About\",\"dropdown\":\"no\",\"href\":\"\\/about\",\"target\":\"self\"},\"Blog\":{\"title\":\"Blog\",\"dropdown\":\"no\",\"href\":\"\\/blogs\",\"target\":\"self\"}}', 1, 0.8, 10, 1000, 1, 0.3, 1000, 5000, '', '', 1, 1, 'MONE123');
+
+-- ----------------------------
+-- Table structure for kyc_forms
+-- ----------------------------
+DROP TABLE IF EXISTS `kyc_forms`;
+CREATE TABLE `kyc_forms`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_type` tinyint(4) NULL DEFAULT NULL,
+  `type` int(11) NULL DEFAULT NULL,
+  `label` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `required` tinyint(4) NOT NULL DEFAULT 0,
+  `created_at` timestamp(0) NULL DEFAULT NULL,
+  `updated_at` timestamp(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of kyc_forms
+-- ----------------------------
+INSERT INTO `kyc_forms` VALUES (9, 1, 1, 'Full Name', 'full_name', 1, '2022-03-06 07:08:28', '2022-03-06 07:08:28');
+INSERT INTO `kyc_forms` VALUES (10, 1, 2, 'NID', 'nid', 1, '2022-03-06 07:08:38', '2022-03-06 07:08:38');
+INSERT INTO `kyc_forms` VALUES (11, 1, 3, 'Present Address', 'present_address', 1, '2022-03-06 07:08:51', '2022-03-06 07:08:51');
+INSERT INTO `kyc_forms` VALUES (12, 1, 3, 'Parmanent Address', 'parmanent_address', 1, '2022-03-06 07:09:04', '2022-03-06 07:09:04');
 
 -- ----------------------------
 -- Table structure for languages
@@ -1024,36 +1133,6 @@ INSERT INTO `migrations` VALUES (151, '2022_06_03_172626_create_domains_table', 
 INSERT INTO `migrations` VALUES (152, '2022_06_03_172627_add_foreign_keys_to_domains_table', 0);
 
 -- ----------------------------
--- Table structure for other_banks
--- ----------------------------
-DROP TABLE IF EXISTS `other_banks`;
-CREATE TABLE `other_banks`  (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `min_limit` decimal(18, 8) NOT NULL,
-  `max_limit` decimal(18, 8) NOT NULL,
-  `daily_maximum_limit` decimal(18, 8) NOT NULL DEFAULT 0,
-  `monthly_maximum_limit` decimal(18, 8) NOT NULL DEFAULT 0,
-  `monthly_total_transaction` int(11) NOT NULL DEFAULT 0 COMMENT 'Count',
-  `daily_total_transaction` int(11) NOT NULL DEFAULT 0 COMMENT 'Count',
-  `fixed_charge` decimal(18, 8) NOT NULL DEFAULT 0,
-  `percent_charge` decimal(18, 2) NOT NULL DEFAULT 0,
-  `processing_time` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `instruction` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
-  `required_information` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1 COMMENT '0 == \'pending\'\r\n1 == \'completed\'\r\n2 == \'reject\'',
-  `created_at` timestamp(0) NULL DEFAULT NULL,
-  `updated_at` timestamp(0) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of other_banks
--- ----------------------------
-INSERT INTO `other_banks` VALUES (1, 'Brac Bank', 500.00000000, 5000.00000000, 1000.00000000, 100000.00000000, 100, 20, 5.00000000, 2.00, '24 hours', NULL, '[{\"field_name\":\"NID No\",\"type\":\"text\",\"validation\":\"required\"},{\"field_name\":\"Driving Lience\",\"type\":\"file\",\"validation\":\"required\"},{\"field_name\":\"Address\",\"type\":\"textarea\",\"validation\":\"required\"}]', 1, '2022-01-16 01:54:10', '2022-03-13 19:40:38');
-INSERT INTO `other_banks` VALUES (2, 'Dutch Bangla Bank', 500.00000000, 5000.00000000, 500000.00000000, 10000000.00000000, 100, 20, 5.00000000, 5.00, '24 hours', NULL, '[{\"field_name\":\"NID\",\"type\":\"text\",\"validation\":\"required\"}]', 1, '2022-01-16 23:38:59', '2022-03-13 19:40:08');
-
--- ----------------------------
 -- Table structure for pages
 -- ----------------------------
 DROP TABLE IF EXISTS `pages`;
@@ -1161,6 +1240,90 @@ CREATE TABLE `pagesettings`  (
 INSERT INTO `pagesettings` VALUES (1, 'Success! Thanks for contacting us, we will get back to you shortly.', 'admin@geniusocean.com', '<h4 class=\"subtitle\" style=\"margin-bottom: 6px; font-weight: 600; line-height: 28px; font-size: 28px; text-transform: uppercase;\">WE\'D LOVE TO</h4><h2 class=\"title\" style=\"margin-bottom: 13px;font-weight: 600;line-height: 50px;font-size: 40px;color: #1f71d4;text-transform: uppercase;\">HEAR FROM YOU</h2>', '<span style=\"color: rgb(119, 119, 119);\">Send us a message and we\' ll respond as soon as possible</span><br>', 'FEEL FREE TO DROP US A MESSAGE', 'Need to speak to us? Do you have any queries or suggestions? Please contact us about all enquiries including membership and volunteer work using the form below.', '3584 Hickory Heights Drive ,Hanover MD 21076, USA', '+12 3456 7890 1234', '00 000 000 000', 'admin@geniusocean.com', 'https://geniusocean.com/', 1, 1, 0, 0, 0, 1, 1, 1, 1, 'Simple And Safe Digital Banking System', 'MT System works around your schedule, offering innovative products that is better, faster and affordable', 'http://localhost/geniusbank/', 'https://www.youtube.com/watch?v=lG-J1QC8cKY&ab_channel=EsoGolpoKoriPrime', 'qN2bqitJ1645077354.jpg', 1, 1, 'The client perspective depends on Business first growth.', 'The Better Way to Save & Invest', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'Simple Transparent Pricing', 'The best price we only can ask for you.', 'Testimonial', 'What customers say about us', 'The client perspective depends on Business first growth. How big business can be. We provide best service all area.', 'Need a Personalized Solution?', 'Explicabo repellat minus eaque velit unde nulla nobis veritatis labore dolore, necessitatibus harum laborum at, aut reprehenderit!', 'http://localhost/geniusbank/', '4TsFX1TA1645088780.png', 'uhzm3tT31645088780.jpg', 'Latest Blog', 'Latest News & Tips', 'Banking commodi explicabo aperiam unde maxime debitis.', 'Frequently Asked Questions', 'Though we have provided lots of information about us and how we serve what is our working process our terms and conditions our policies etc.', 'N7TNLIK31645005637.jpg', 'WE ARE Genius Bank', 'A place for everyone who wants to simply banking system. Deposit funds using payment gateway or bank transfer. A Bank at fair price is guaranteed. Nothing extra. Join over 700,000 users from all over the world satisfied with our services. A place for everyone who wants to simply loans and Dps. Even with a history of hefty technological investments and an even larger donations, consumer and investor confidence has never waned.', '[\"Get up to $15,000 Cash Fast\",\"15 Minute Online Application\",\"Coverage around the world\",\"Business without borders\",\"Affiliates and partnerships\",\"Bad Credit Considered2\"]', 'https://www.google.com/', '<h3>We are Secure and Stable</h3>\r\nGenius Bank has become one of the largest donors and the largest bank donor in Bangladesh. The bank has won numerous international awards because of its unique approach as a socially conscious bank\r\nAs a result it now provides unrivaled banking technology offerings to all its customers. Because of this mindset, most local banks have joined Genius Bank banking infrastructure instead of pursuing their own.\r\n<br><br><br>\r\n<h3>We are Secure and Stable</h3>\r\nGenius Bank has become one of the largest donors and the largest bank donor in Bangladesh. The bank has won numerous international awards because of its unique approach as a socially conscious bank\r\nAs a result it now provides unrivaled banking technology offerings to all its customers. Because of this mindset, most local banks have joined Genius Bank banking infrastructure instead of pursuing their own.\r\n<br><br><br>\r\n\r\n<h3>We are Secure and Stable</h3>\r\nGenius Bank has become one of the largest donors and the largest bank donor in Bangladesh. The bank has won numerous international awards because of its unique approach as a socially conscious bank\r\nAs a result it now provides unrivaled banking technology offerings to all its customers. Because of this mindset, most local banks have joined Genius Bank banking infrastructure instead of pursuing their own.\r\n<br><br><br>\r\n\r\n<h3>We are Secure and Stable</h3>\r\nGenius Bank has become one of the largest donors and the largest bank donor in Bangladesh. The bank has won numerous international awards because of its unique approach as a socially conscious bank\r\nAs a result it now provides unrivaled banking technology offerings to all its customers. Because of this mindset, most local banks have joined Genius Bank banking infrastructure instead of pursuing their own.\r\n<br><br><br>', '1639568953bg-banner.jpg', 'https://www.youtube.com/watch?v=0gv7OC9L2s8', 'How it Works', 'The strategy where user can use the banking system. The strategy is simple easier to use. This is the fewer step to follow to create a bank account.', 'cjER6eH01645442056.png', '1639561929call-to-action-bg.jpg', 'GET STARTED TODAY WITH BITCOIN', 'Open account for free and start trading Bitcoins!', '<h4 class=\"subtitle\" style=\"font-weight: 600; line-height: 1.2381; font-size: 24px; color: rgb(31, 113, 212);\">More convenient than others</h4>', '<h2 class=\"title\" style=\"font-weight: 600; line-height: 60px; font-size: 50px; color: rgb(23, 34, 44);\">Find Value &amp; Build confidence</h2>', 'https://www.google.com/', 'https://www.google.com/', 'gFNRbRDL1645425298.png', 'Your banking experience anytime, anywhere', 'Deserunt hic consequatur ex placeat! atque repellendus inventore quisquam, perferendis, eum reiciendis quia nesciunt fuga. Natus illum doloremque sed perferendis blanditiis maiores, voluptas ad quas beatae facilis totam officiis ratione, ab cumque libero. Ducimus molestias iusto facilis!\r\n\r\nNatus illum doloremque sed perferendis blanditiis maiores, voluptas ad quas beatae facilis totam officiis ratione, ab cumque libero. Ducimus molestias iusto facilis!', '9HX3cjLu1645425298.png', 'https://www.google.com/', 'zbT8VZef1645425298.png', NULL);
 
 -- ----------------------------
+-- Table structure for payment_gateways
+-- ----------------------------
+DROP TABLE IF EXISTS `payment_gateways`;
+CREATE TABLE `payment_gateways`  (
+  `id` int(191) NOT NULL AUTO_INCREMENT,
+  `subtitle` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `title` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `details` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `type` enum('manual','automatic') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT 'manual',
+  `information` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  `keyword` varchar(191) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  `currency_id` varchar(191) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT '0',
+  `status` int(191) NOT NULL DEFAULT 1,
+  `subins_id` int(11) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 28 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of payment_gateways
+-- ----------------------------
+INSERT INTO `payment_gateways` VALUES (6, NULL, NULL, NULL, 'Flutter Wave', 'automatic', '{\"public_key\":\"FLWPUBK_TEST-299dc2c8bf4c7f14f7d7f48c32433393-X\",\"secret_key\":\"FLWSECK_TEST-afb1f2a4789002d7c0f2185b830450b7-X\",\"text\":\"Pay via your Flutter Wave account.\"}', 'flutterwave', '[\"1\"]', 0, NULL);
+INSERT INTO `payment_gateways` VALUES (8, NULL, NULL, NULL, 'Authorize.Net', 'automatic', '{\"login_id\":\"76zu9VgUSxrJ\",\"txn_key\":\"2Vj62a6skSrP5U3X\",\"sandbox_check\":1,\"text\":\"Pay Via Authorize.Net\"}', 'authorize.net', '[\"1\"]', 0, NULL);
+INSERT INTO `payment_gateways` VALUES (9, NULL, NULL, NULL, 'Razorpay', 'automatic', '{\"key\":\"rzp_test_xDH74d48cwl8DF\",\"secret\":\"cr0H1BiQ20hVzhpHfHuNbGri\",\"text\":\"Pay via your Razorpay account.\"}', 'razorpay', '[\"8\"]', 0, NULL);
+INSERT INTO `payment_gateways` VALUES (10, NULL, NULL, NULL, 'Mollie Payment', 'automatic', '{\"key\":\"test_jePgBjaRV5rUdzWc44rb2fUxgM2dM9\",\"text\":\"Pay with Mollie Payment.\"}', 'mollie', '[\"1\",\"6\"]', 1, NULL);
+INSERT INTO `payment_gateways` VALUES (11, NULL, NULL, NULL, 'Paytm', 'automatic', '{\"merchant\":\"tkogux49985047638244\",\"secret\":\"LhNGUUKE9xCQ9xY8\",\"website\":\"WEBSTAGING\",\"industry\":\"Retail\",\"sandbox_check\":1,\"text\":\"Pay via your Paytm account.\"}', 'paytm', '[\"8\"]', 1, NULL);
+INSERT INTO `payment_gateways` VALUES (12, NULL, NULL, NULL, 'Paystack', 'automatic', '{\"key\":\"pk_test_162a56d42131cbb01932ed0d2c48f9cb99d8e8e2\",\"email\":\"junnuns@gmail.com\",\"text\":\"Pay via your Paystack account.\"}', 'paystack', '[\"9\"]', 1, NULL);
+INSERT INTO `payment_gateways` VALUES (13, NULL, NULL, NULL, 'Instamojo', 'automatic', '{\"key\":\"test_172371aa837ae5cad6047dc3052\",\"token\":\"test_4ac5a785e25fc596b67dbc5c267\",\"sandbox_check\":1,\"text\":\"Pay via your Instamojo account.\"}', 'instamojo', '[\"8\"]', 1, NULL);
+INSERT INTO `payment_gateways` VALUES (14, NULL, NULL, NULL, 'Stripe', 'automatic', '{\"key\":\"pk_test_UnU1Coi1p5qFGwtpjZMRMgJM\",\"secret\":\"sk_test_QQcg3vGsKRPlW6T3dXcNJsor\",\"text\":\"Pay via your Credit Card.\"}', 'stripe', '[\"1\"]', 1, NULL);
+INSERT INTO `payment_gateways` VALUES (15, NULL, NULL, NULL, 'Paypal', 'automatic', '{\"client_id\":\"AcWYnysKa_elsQIAnlfsJXokR64Z31CeCbpis9G3msDC-BvgcbAwbacfDfEGSP-9Dp9fZaGgD05pX5Qi\",\"client_secret\":\"EGZXTq6d6vBPq8kysVx8WQA5NpavMpDzOLVOb9u75UfsJ-cFzn6aeBXIMyJW2lN1UZtJg5iDPNL9ocYE\",\"sandbox_check\":1,\"text\":\"Pay via your PayPal account.\"}', 'paypal', '[\"1\"]', 1, NULL);
+
+-- ----------------------------
+-- Table structure for plans
+-- ----------------------------
+DROP TABLE IF EXISTS `plans`;
+CREATE TABLE `plans`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `price` double(8, 2) NOT NULL DEFAULT 0,
+  `duration` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `durationtype` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `max_users` int(11) NOT NULL DEFAULT 0,
+  `tenant_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `created_at` timestamp(0) NULL DEFAULT NULL,
+  `updated_at` timestamp(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `plans_name_unique`(`name`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of plans
+-- ----------------------------
+INSERT INTO `plans` VALUES (1, 'Free', 0.00, '1', 'month', 0, NULL, '2022-05-05 07:20:38', '2022-05-05 07:20:38');
+INSERT INTO `plans` VALUES (2, 'STARTER', 50.00, '6', 'Month', 0, NULL, '2022-05-05 08:12:26', '2022-05-05 08:12:26');
+INSERT INTO `plans` VALUES (3, 'PRO', 100.00, '1', 'Year', 0, NULL, '2022-05-05 08:12:47', '2022-05-05 08:12:47');
+
+-- ----------------------------
+-- Table structure for request_domains
+-- ----------------------------
+DROP TABLE IF EXISTS `request_domains`;
+CREATE TABLE `request_domains`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `domain_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tenant_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `is_approved` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp(0) NULL DEFAULT NULL,
+  `updated_at` timestamp(0) NULL DEFAULT NULL,
+  `reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 68 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of request_domains
+-- ----------------------------
+INSERT INTO `request_domains` VALUES (38, 'bank1', 'bank1@gmail.com', 'bank1', '$2y$10$RS2zxaXOEcwAvnbcnWJm/uOVQwpPYYwSNxC7gvwghvKMD0WZ1bYyW', NULL, 'Admin', 1, '2022-06-19 20:17:35', '2022-06-19 20:18:32', NULL);
+INSERT INTO `request_domains` VALUES (39, 'bank2', 'bank2@gmail.com', 'bank2', '$2y$10$vobQJGxed0gvgjjUvc4dsOR0KBnjb81H0SFKGRS9rjTMHCbicxkA2', NULL, 'Admin', 1, '2022-06-20 00:12:55', '2022-06-20 00:13:52', NULL);
+INSERT INTO `request_domains` VALUES (40, 'bank3', 'bank3@gmail.com', 'bank3', '$2y$10$WSMPra5PMXsEN5lg9XOeXubJ8iI2aTMqc2FjaN36HF7uW2hyqijfq', NULL, 'Admin', 1, '2022-06-20 00:31:40', '2022-06-20 00:53:19', NULL);
+INSERT INTO `request_domains` VALUES (67, 'aaaa', 'aaaa@gmail.com', 'aaaa', '$2y$10$7QWIpdix.ymy3uUUq5zwYuLyjq.o0vawppYdkI.fYiumUTXP.ofaG', NULL, 'Admin', 1, '2022-07-21 08:17:59', '2022-07-21 08:20:10', NULL);
+
+-- ----------------------------
 -- Table structure for reviews
 -- ----------------------------
 DROP TABLE IF EXISTS `reviews`;
@@ -1178,6 +1341,22 @@ CREATE TABLE `reviews`  (
 -- ----------------------------
 INSERT INTO `reviews` VALUES (5, 'PME52yRz1645070778.png', 'Jhon Smith', 'CEO & Founder', 'The is just awesome,  best quality service ever I had. You can trust them and deposit your funds. Their Loan plans are really helpful. Easy to use their online banking system.');
 INSERT INTO `reviews` VALUES (6, 'AjOD94Yk1645070744.png', 'Jazmin Sultana', 'CEO & Founder', 'The is just awesome,  best quality service ever I had. You can trust them and deposit your funds. Their Loan plans are really helpful. Easy to use their online banking system.');
+
+-- ----------------------------
+-- Table structure for seotools
+-- ----------------------------
+DROP TABLE IF EXISTS `seotools`;
+CREATE TABLE `seotools`  (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `google_analytics` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  `meta_keys` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of seotools
+-- ----------------------------
+INSERT INTO `seotools` VALUES (1, '<script async src=\"https://www.googletagmanager.com/gtag/js?id=UA-137437974-1\"></script>  <script>    window.dataLayer = window.dataLayer || [];    function gtag(){dataLayer.push(arguments);}    gtag(\'js\', new Date());    gtag(\'config\', \'UA-137437974-1\');  </script>', 'Genius,Ocean,Sea,Etc,Genius,Ocean,SeaGenius,Ocean,Sea,Etc,Genius,Ocean,SeaGenius,Ocean,Sea,Etc,Genius,Ocean,Sea');
 
 -- ----------------------------
 -- Table structure for services
@@ -1200,6 +1379,19 @@ INSERT INTO `services` VALUES (17, 'MOBILE APP', 'Trading via our Mobile App, Av
 INSERT INTO `services` VALUES (18, 'PAYMENT OPTIONS', 'Popular methods: Visa, MasterCard,</br>\r\nbank transfer, cryptocurrency', '1639476937payment-options.png');
 INSERT INTO `services` VALUES (19, 'WORLD COVERAGE', 'Providing services in 99% countries</br>\r\naround all the globe', '1639476969world-coverage.png');
 INSERT INTO `services` VALUES (20, 'STRONG SECURITY', 'Protection against DDoS attacks,</br>\r\nfull data encryption', '1639476998strong-security.png');
+
+-- ----------------------------
+-- Table structure for sitemaps
+-- ----------------------------
+DROP TABLE IF EXISTS `sitemaps`;
+CREATE TABLE `sitemaps`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `sitemap_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `filename` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `created_at` timestamp(0) NULL DEFAULT NULL,
+  `updated_at` timestamp(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for sliders
@@ -1230,6 +1422,26 @@ CREATE TABLE `sliders`  (
 -- ----------------------------
 INSERT INTO `sliders` VALUES (9, 'YOU CAN TRUST', '24', '#ffffff', 'slideInUp', 'BITCOIN EXCHANGE', '60', '#ffffff', 'slideInDown', 'Highlight your personality  and look with these fabulous and exquisite fashion.', '16', '#ffffff', 'slideInDown', '1639479478bg1.jpg', 'slide-one', 'https://www.google.com/');
 INSERT INTO `sliders` VALUES (10, 'TO BITCOIN', '24', '#c32d2d', 'slideInUp', 'SECURE AND EASY WAY', '60', '#bc2727', 'slideInDown', NULL, NULL, '#c51d1d', 'slideInLeft', '1639479394bg2.jpg', 'slide-one', 'https://www.google.com/');
+
+-- ----------------------------
+-- Table structure for social_providers
+-- ----------------------------
+DROP TABLE IF EXISTS `social_providers`;
+CREATE TABLE `social_providers`  (
+  `id` int(191) NOT NULL AUTO_INCREMENT,
+  `user_id` int(191) NOT NULL,
+  `provider_id` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `provider` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp(0) NULL DEFAULT NULL,
+  `updated_at` timestamp(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of social_providers
+-- ----------------------------
+INSERT INTO `social_providers` VALUES (3, 17, '102485372716947456487', 'google', '2019-06-19 19:06:00', '2019-06-19 19:06:00');
+INSERT INTO `social_providers` VALUES (4, 18, '109955884428371086401', 'google', '2019-06-19 19:17:04', '2019-06-19 19:17:04');
 
 -- ----------------------------
 -- Table structure for socialsettings
@@ -1276,7 +1488,87 @@ CREATE TABLE `subscribers`  (
 -- ----------------------------
 -- Records of subscribers
 -- ----------------------------
-INSERT INTO `subscribers` VALUES (1, 'admin@iteverests.com');
-INSERT INTO `subscribers` VALUES (2, 'ivo@iteverests.com');
+INSERT INTO `subscribers` VALUES (1, 'ahmmedafzal4@gmail.com');
+INSERT INTO `subscribers` VALUES (2, 'imtiaze93@yahoo.com');
+
+-- ----------------------------
+-- Table structure for tenants
+-- ----------------------------
+DROP TABLE IF EXISTS `tenants`;
+CREATE TABLE `tenants`  (
+  `id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp(0) NULL DEFAULT NULL,
+  `updated_at` timestamp(0) NULL DEFAULT NULL,
+  `data` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tenants
+-- ----------------------------
+INSERT INTO `tenants` VALUES ('50', '2022-06-19 20:17:56', '2022-06-19 20:17:56', '{\"tenancy_db_name\":\"bank1\",\"tenancy_db_username\":\"root\",\"tenancy_db_password\":null}');
+INSERT INTO `tenants` VALUES ('51', '2022-06-20 00:13:16', '2022-06-20 00:13:16', '{\"tenancy_db_name\":\"bank2\",\"tenancy_db_username\":\"root\",\"tenancy_db_password\":null}');
+INSERT INTO `tenants` VALUES ('54', '2022-06-20 00:52:37', '2022-06-20 00:52:37', '{\"tenancy_db_name\":\"bank3\",\"tenancy_db_username\":\"root\",\"tenancy_db_password\":null}');
+INSERT INTO `tenants` VALUES ('69', '2022-06-24 22:47:50', '2022-06-24 22:47:50', '{\"updated_at\":\"2022-06-24 22:47:50\",\"created_at\":\"2022-06-24 22:47:50\",\"tenancy_db_name\":\"bbb\",\"tenancy_db_username\":\"root\",\"tenancy_db_password\":null}');
+INSERT INTO `tenants` VALUES ('71', '2022-06-25 08:41:56', '2022-06-25 08:41:56', '{\"updated_at\":\"2022-06-25 08:41:56\",\"created_at\":\"2022-06-25 08:41:56\",\"tenancy_db_name\":\"ccc\",\"tenancy_db_username\":\"root\",\"tenancy_db_password\":null}');
+INSERT INTO `tenants` VALUES ('72', '2022-07-21 07:52:21', '2022-07-21 07:52:21', '{\"updated_at\":\"2022-07-21 07:52:21\",\"created_at\":\"2022-07-21 07:52:21\",\"tenancy_db_name\":\"boris\",\"tenancy_db_username\":\"root\",\"tenancy_db_password\":null}');
+INSERT INTO `tenants` VALUES ('73', '2022-07-21 07:57:10', '2022-07-21 07:57:10', '{\"updated_at\":\"2022-07-21 07:57:10\",\"created_at\":\"2022-07-21 07:57:10\",\"tenancy_db_name\":\"itever\",\"tenancy_db_username\":\"root\",\"tenancy_db_password\":null}');
+INSERT INTO `tenants` VALUES ('74', '2022-07-21 08:10:01', '2022-07-21 08:10:01', '{\"updated_at\":\"2022-07-21 08:10:01\",\"created_at\":\"2022-07-21 08:10:01\",\"tenancy_db_name\":\"smiss\",\"tenancy_db_username\":\"root\",\"tenancy_db_password\":null}');
+INSERT INTO `tenants` VALUES ('75', '2022-07-21 08:18:12', '2022-07-21 08:18:12', '{\"updated_at\":\"2022-07-21 08:18:12\",\"created_at\":\"2022-07-21 08:18:12\",\"tenancy_db_name\":\"aaaa\",\"tenancy_db_username\":\"root\",\"tenancy_db_password\":null}');
+
+-- ----------------------------
+-- Table structure for user_subscriptions
+-- ----------------------------
+DROP TABLE IF EXISTS `user_subscriptions`;
+CREATE TABLE `user_subscriptions`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `subscription_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `txnid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `user_id` int(11) NULL DEFAULT NULL,
+  `bank_plan_id` int(11) NULL DEFAULT NULL,
+  `currency_id` int(11) NULL DEFAULT NULL,
+  `price` double NULL DEFAULT NULL,
+  `method` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `days` int(11) NULL DEFAULT NULL,
+  `status` enum('pending','completed') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'pending',
+  `created_at` timestamp(0) NULL DEFAULT NULL,
+  `updated_at` timestamp(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 49 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of user_subscriptions
+-- ----------------------------
+INSERT INTO `user_subscriptions` VALUES (18, 'jIVw1644993862', '3137234', 50, 6, 1, 100, 'flutterwave', 100, 'completed', '2022-02-16 01:44:22', '2022-02-16 01:44:53');
+INSERT INTO `user_subscriptions` VALUES (19, 'vreF1646111014', NULL, 62, 6, 1, 100, 'paypal', 100, 'pending', '2022-03-01 06:03:34', '2022-03-01 06:03:34');
+INSERT INTO `user_subscriptions` VALUES (20, 'yeTi1646111315', '2adbacc97c6246998aa69d90aab5375e', 62, 6, 9, 1.3513513513514, 'instamojo', 100, 'completed', '2022-03-01 06:08:35', '2022-03-01 06:08:35');
+INSERT INTO `user_subscriptions` VALUES (21, 'ZII41646111557', 'txn_3KYO0qJlIV5dN9n71WhB4b5r', 62, 6, 9, 1.3513513513514, 'stripe', 100, 'pending', '2022-03-01 06:12:39', '2022-03-01 06:12:39');
+INSERT INTO `user_subscriptions` VALUES (22, 'pG6M1646111589', NULL, 62, 6, 9, 1.3513513513514, 'paypal', 100, 'pending', '2022-03-01 06:13:09', '2022-03-01 06:13:09');
+INSERT INTO `user_subscriptions` VALUES (23, 'vMpW1646111619', NULL, 62, 6, 9, 1.3513513513514, 'paypal', 100, 'pending', '2022-03-01 06:13:39', '2022-03-01 06:13:39');
+INSERT INTO `user_subscriptions` VALUES (24, 'bKo41646111907', '56004648YH063573D', 62, 6, 9, 1.3513513513514, 'paypal', 100, 'completed', '2022-03-01 06:18:27', '2022-03-01 06:19:38');
+INSERT INTO `user_subscriptions` VALUES (25, 'JKPP1646112310', '97P17095MP529492Y', 62, 6, 1, 100, 'paypal', 100, 'completed', '2022-03-01 06:25:10', '2022-03-01 06:25:24');
+INSERT INTO `user_subscriptions` VALUES (26, 'O65E1646112794', NULL, 62, 6, 9, 1.3513513513514, 'authorize.net', 100, 'pending', '2022-03-01 06:33:16', '2022-03-01 06:33:16');
+INSERT INTO `user_subscriptions` VALUES (27, 'AanR1646825572', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'pending', '2022-03-09 12:32:53', '2022-03-09 12:32:53');
+INSERT INTO `user_subscriptions` VALUES (28, 'SIoo1646825881', NULL, 50, 6, 1, 100, 'mollie', 100, 'completed', '2022-03-09 12:38:02', '2022-03-09 12:38:02');
+INSERT INTO `user_subscriptions` VALUES (29, 'Rnkb1646826036', '26W28613JS034702K', 50, 6, 9, 1.3513513513514, 'paypal', 100, 'completed', '2022-03-09 12:40:36', '2022-03-09 12:41:06');
+INSERT INTO `user_subscriptions` VALUES (30, 'hGPy1646884602', NULL, 50, 6, 1, 100, 'mollie', 100, 'completed', '2022-03-10 04:56:43', '2022-03-10 04:56:43');
+INSERT INTO `user_subscriptions` VALUES (31, 'd9U61646885817', NULL, 50, 6, 9, 100, 'paypal', 100, 'pending', '2022-03-10 05:16:57', '2022-03-10 05:16:57');
+INSERT INTO `user_subscriptions` VALUES (32, '6qyx1646885923', NULL, 50, 6, 9, 100, 'paypal', 100, 'pending', '2022-03-10 05:18:43', '2022-03-10 05:18:43');
+INSERT INTO `user_subscriptions` VALUES (33, 'WMv71646885953', NULL, 50, 6, 1, 100, 'paypal', 100, 'pending', '2022-03-10 05:19:13', '2022-03-10 05:19:13');
+INSERT INTO `user_subscriptions` VALUES (34, 'FAU01646885997', NULL, 50, 6, 6, 100, 'paypal', 100, 'pending', '2022-03-10 05:19:57', '2022-03-10 05:19:57');
+INSERT INTO `user_subscriptions` VALUES (35, 'e5Jc1646886604', '20220310111212800110168503203512219', 50, 6, 9, 100, 'paytm', 100, 'completed', '2022-03-10 05:30:04', '2022-03-10 05:30:19');
+INSERT INTO `user_subscriptions` VALUES (36, 'GJhw1647143160', '5X30428265724942N', 72, 6, 1, 100, 'paypal', 100, 'completed', '2022-03-13 17:46:00', '2022-03-13 17:46:32');
+INSERT INTO `user_subscriptions` VALUES (37, 'Ixnj1647143227', '7GR99816HC461762T', 72, 6, 1, 100, 'paypal', 100, 'completed', '2022-03-13 17:47:07', '2022-03-13 17:47:17');
+INSERT INTO `user_subscriptions` VALUES (38, 'dIn31647143349', '1K984646SG758972E', 50, 6, 1, 100, 'paypal', 100, 'completed', '2022-03-13 17:49:09', '2022-03-13 17:49:59');
+INSERT INTO `user_subscriptions` VALUES (39, 'k5AM1647143691', '0V0048634V776132H', 72, 6, 1, 100, 'paypal', 100, 'completed', '2022-03-13 17:54:51', '2022-03-13 17:55:01');
+INSERT INTO `user_subscriptions` VALUES (40, 'vSMm1647143730', '9L599537RL016344E', 72, 6, 1, 100, 'paypal', 100, 'completed', '2022-03-13 17:55:30', '2022-03-13 17:55:40');
+INSERT INTO `user_subscriptions` VALUES (41, 'uL2z1647143769', 'txn_3KciXPJlIV5dN9n70Y6wP7q6', 72, 6, 1, 100, 'stripe', 100, 'pending', '2022-03-13 17:56:12', '2022-03-13 17:56:12');
+INSERT INTO `user_subscriptions` VALUES (42, 'Qn6n1647144166', 'txn_3KcidoJlIV5dN9n71sW7KiXs', 50, 6, 1, 100, 'stripe', 100, 'pending', '2022-03-13 18:02:48', '2022-03-13 18:02:48');
+INSERT INTO `user_subscriptions` VALUES (43, 'WeAK1647144188', '9CY544766H703262B', 72, 6, 1, 100, 'paypal', 100, 'completed', '2022-03-13 18:03:08', '2022-03-13 18:03:19');
+INSERT INTO `user_subscriptions` VALUES (44, 'IpcI1647144483', NULL, 72, 6, 1, 100, 'mollie', 100, 'completed', '2022-03-13 18:08:04', '2022-03-13 18:08:04');
+INSERT INTO `user_subscriptions` VALUES (45, 'k2W81647144688', NULL, 72, 6, 9, 100, 'paytm', 100, 'pending', '2022-03-13 18:11:28', '2022-03-13 18:11:28');
+INSERT INTO `user_subscriptions` VALUES (46, 'ZuzG1647144720', '20220313111212800110168581603506962', 72, 6, 9, 100, 'paytm', 100, 'completed', '2022-03-13 18:12:00', '2022-03-13 18:12:33');
+INSERT INTO `user_subscriptions` VALUES (47, 'a0Ie1647145474', 'order_J6RN0gLagRgC7j', 72, 6, 9, 100, 'razorpay', 100, 'completed', '2022-03-13 18:25:37', '2022-03-13 18:25:37');
+INSERT INTO `user_subscriptions` VALUES (48, 'hDrK1653381058', NULL, 124, 6, 1, 100, 'paypal', 100, 'pending', '2022-05-24 14:30:58', '2022-05-24 14:30:58');
 
 SET FOREIGN_KEY_CHECKS = 1;

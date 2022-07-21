@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Escrow;
-use App\Models\Dispute;
-use App\Helpers\MediaHelper;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Transaction;
 use App\Models\Wallet;
+use App\Models\Dispute;
+use App\Models\Transaction;
+use App\Helpers\MediaHelper;
+use Illuminate\Http\Request;
+use App\Models\Generalsetting;
+use App\Http\Controllers\Controller;
 
 class ManageEscrowController extends Controller
 {
@@ -84,12 +85,15 @@ class ManageEscrowController extends Controller
 
         $escrow = Escrow::findOrFail($request->escrow_id);
         $wallet = Wallet::where('user_id',$request->id)->where('user_type',1)->where('currency_id',$escrow->currency_id)->first();
+        $gs = Generalsetting::first();
         if(!$wallet){
             $wallet = Wallet::create([
                 'user_id' => $request->id,
                 'user_type' => 1,
                 'currency_id' => $escrow->currency_id,
-                'balance' => 0
+                'balance' => 0,
+                'wallet_type' => 1,
+                'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
             ]);
         }
         

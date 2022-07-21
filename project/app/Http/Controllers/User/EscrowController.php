@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Helpers\MediaHelper;
 use App\Models\User;
+use App\Models\Escrow;
 use App\Models\Wallet;
+use App\Models\Dispute;
 use App\Models\Currency;
 use App\Models\Transaction;
-use App\Models\Dispute;
-use App\Models\Escrow;
-use App\Http\Controllers\Controller;
+use App\Helpers\MediaHelper;
 use Illuminate\Http\Request;
+use App\Models\Generalsetting;
+use App\Http\Controllers\Controller;
 
 class EscrowController extends Controller
 {
@@ -170,12 +171,15 @@ class EscrowController extends Controller
                             ->first();
 
         if(!$recipientWallet){
+            $gs = Generalsetting::first();
             $recipientWallet =  Wallet::create(
                 [
                     'user_id'      => $recipient->id,
                     'user_type'    => 1,
                     'currency_id'  => $escrow->currency_id,
-                    'balance'      => 0
+                    'balance'      => 0,
+                    'wallet_type' => 1,
+                    'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
                 ]
             );
         } 
