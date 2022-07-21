@@ -179,7 +179,7 @@
 <!-- How It Works -->
 
 <!-- Plan -->
-<section class="plan-section bg--section pt-50 pb-150">
+<section class="plan-section bg--section pt-50 pb-150" id="pricing">
     <div class="container">
         <div class="section-title text-center">
             <h6 class="subtitle text--base">@lang('Pricing Plan')</h6>
