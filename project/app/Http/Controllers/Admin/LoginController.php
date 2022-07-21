@@ -64,14 +64,14 @@ class LoginController extends Controller
             }
             elseif (!empty($current_domain) || !empty($user->tenant_id)) 
             {
-                // if (empty($current_domain) && !empty($user->tenant_id))
-                // {
-                //     return response()->json(array('errors' => [ 0 =>  __('Permission denied, Please use your domain after approve') ]));
-                // }
+                if (empty($current_domain) && !empty($user->tenant_id))
+                {
+                    return response()->json(array('errors' => [ 0 =>  __('Permission denied, Please use your domain after approve') ]));
+                }
 
-                // $user = tenancy()->central(function ($tenant) {
-                //     return Admin::where('tenant_id', $tenant->id)->first();
-                // });
+                $user = tenancy()->central(function ($tenant) {
+                    return Admin::where('tenant_id', $tenant->id)->first();
+                });
                 if ($user->status == 1) {
                     if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
                         return response()->json(route('admin.dashboard'));
