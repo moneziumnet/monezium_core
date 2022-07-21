@@ -19,7 +19,6 @@ class CreateBankPoolAccounts extends Migration
             $table->integer('currency_id');
             $table->decimal('balance', 20, 10)->default(0);
             $table->timestamps();
-            $table->timestamps();
         });
     }
 
