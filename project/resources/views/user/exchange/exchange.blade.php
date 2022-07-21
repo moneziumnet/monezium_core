@@ -35,7 +35,7 @@
                     <form action="" id="form" method="post">
                     @csrf
                         <div class="row">
-                            <div class="col-md-12 mb-3">
+                            <div class="col-md-6 mb-3">
                                 <div class="form-label">@lang('Amount')</div>
                                 <input type="text" name="amount" class="form-control amount shadow-none" required>
                             </div>
@@ -43,10 +43,10 @@
                                 $userType = explode(',', auth()->user()->user_type);
                                 $supervisor = DB::table('customer_types')->where('type_name', 'Supervisors')->first()->id;
                                 if(in_array($supervisor, $userType)) {
-                                    $wallet_type_list = ['All', 'Current', 'Card', 'Deposit', 'Loan', 'Escrow', 'Supervisor'];
+                                    $wallet_type_list = ['Select', 'Current', 'Card', 'Deposit', 'Loan', 'Escrow', 'Supervisor'];
                                 }
                                 else {
-                                    $wallet_type_list = ['All', 'Current', 'Card', 'Deposit', 'Loan', 'Escrow'];
+                                    $wallet_type_list = ['Select', 'Current', 'Card', 'Deposit', 'Loan', 'Escrow'];
                                 }
                             @endphp
                             <div class="col-md-6 mb-3">
@@ -57,6 +57,15 @@
                                     @if (isset($wallet_type_list[$wallet->wallet_type]))
                                     <option value="{{$wallet->id}}" data-curr="{{$wallet->currency->id}}" data-rate="{{$wallet->currency->rate}}" data-code="{{$wallet->currency->code}}" data-type="{{$wallet->currency->type}}">{{$wallet->currency->code}} -- ({{amount($wallet->balance,$wallet->currency->type,2)}}) --  {{$wallet_type_list[$wallet->wallet_type]}}</option>
                                     @endif
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <div class="form-label">@lang('To Wallet')</div>
+                                <select class="form-select wallet" name="wallet_type" disabled>
+                                    @foreach ($wallet_type_list as $key=>$wallet)
+                                    <option value="{{$key}}" >{{$wallet}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -199,6 +208,7 @@
 
             exchange();
             $('.to').attr('disabled',false)
+            $('.wallet').attr('disabled',false)
         })
 
         $('.amount').on('keyup',function () {
