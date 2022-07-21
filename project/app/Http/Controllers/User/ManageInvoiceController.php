@@ -305,7 +305,7 @@ class ManageInvoiceController extends Controller
                return back()->with('error','Something went wrong');
             }
 
-            $wallet = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('currency_id',$invoice->currency_id)->first();
+            $wallet = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('currency_id',$invoice->currency_id)->where('wallet_type', 1)->first();
 
             if(!$wallet){
                 $gs = Generalsetting::first();
@@ -340,7 +340,7 @@ class ManageInvoiceController extends Controller
             $trnx->details     = trans('Payemnt to invoice : '). $invoice->number;
             $trnx->save();
 
-            $rcvWallet = Wallet::where('user_id',$invoice->user_id)->where('user_type',1)->where('currency_id',$invoice->currency_id)->first();
+            $rcvWallet = Wallet::where('user_id',$invoice->user_id)->where('user_type',1)->where('currency_id',$invoice->currency_id)->where('wallet_type', 1)->first();
 
             if(!$rcvWallet){
                 $gs = Generalsetting::first();
