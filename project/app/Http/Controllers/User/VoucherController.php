@@ -7,6 +7,7 @@ use App\Models\Voucher;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\Generalsetting;
 use App\Http\Controllers\Controller;
 
 class VoucherController extends Controller
@@ -18,7 +19,7 @@ class VoucherController extends Controller
 
     public function vouchers()
     {
-        
+
         $data['vouchers'] = Voucher::where('user_id',auth()->id())->orderBy('status','asc')->paginate(20);
         return view('user.voucher.vouchers',$data);
 
@@ -27,8 +28,8 @@ class VoucherController extends Controller
 
     public function create()
     {
-       
-        $data['wallets'] = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('balance', '>', 0)->get();
+
+        $data['wallets'] = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('balance', '>', 0)->where('wallet_type',1)->get();
         $data['charge'] = charge('create-voucher');
         $data['recentVouchers'] = Voucher::where('user_id',auth()->id())->latest()->take(7)->get();
         return view('user.voucher.voucher_create',$data);
@@ -43,7 +44,7 @@ class VoucherController extends Controller
 
         $wallet = Wallet::where('id',$request->wallet_id)->where('user_type',1)->where('user_id',auth()->id())->first();
         if(!$wallet) return back()->with('error','Wallet not found');
-        
+
         $charge = charge('create-voucher');
         $rate = $wallet->currency->rate;
 
@@ -55,7 +56,7 @@ class VoucherController extends Controller
         $finalAmount = numFormat($request->amount + $finalCharge);
 
         $commission  = ($request->amount * $charge->commission)/100;
-      
+
         $voucher = new Voucher();
         $voucher->user_id = auth()->id();
         $voucher->currency_id = $wallet->currency_id;
@@ -64,7 +65,7 @@ class VoucherController extends Controller
         $voucher->save();
         $userBalance = user_wallet_balance(auth()->id(), $wallet->currency_id);
         if($finalAmount > $userBalance) return back()->with('error','Wallet has insufficient balance');
-        
+
         user_wallet_decrement(auth()->id(),$wallet->currency_id,$finalAmount);
         // $wallet->balance -=  $finalAmount;
         // $wallet->save();
@@ -112,7 +113,7 @@ class VoucherController extends Controller
        $request->validate(['code' => 'required']);
 
        $voucher = Voucher::where('code',$request->code)->where('status',0)->first();
-      
+
        if(!$voucher){
            return back()->with('error','Invalid voucher code');
        }
@@ -120,14 +121,17 @@ class VoucherController extends Controller
        if( $voucher->user_id == auth()->id()){
           return back()->with('error','Can\'t reedem your own voucher');
        }
-       
-       $wallet = Wallet::where('currency_id',$voucher->currency_id)->where('user_id',auth()->id())->first();
+
+       $wallet = Wallet::where('currency_id',$voucher->currency_id)->where('user_id',auth()->id())->where('wallet_type', 1)->first();
        if(!$wallet){
+          $gs = Generalsetting::first();
           $wallet = Wallet::create([
               'user_id' => auth()->id(),
               'user_type' => 1,
               'currency_id' => $voucher->currency_id,
-              'balance'   => 0
+              'balance'   => 0,
+              'wallet_type' => 1,
+              'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
           ]);
        }
 
@@ -155,7 +159,7 @@ class VoucherController extends Controller
     }
 
     public function reedemHistory()
-    { 
+    {
         $data['history'] = Voucher::where('status',1)->where('reedemed_by',auth()->id())->paginate(20);
         return view('user.voucher.history',$data);
     }

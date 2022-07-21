@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Helpers\MediaHelper;
 use App\Models\User;
+use App\Models\Escrow;
 use App\Models\Wallet;
+use App\Models\Dispute;
 use App\Models\Currency;
 use App\Models\Transaction;
-use App\Models\Dispute;
-use App\Models\Escrow;
-use App\Http\Controllers\Controller;
+use App\Helpers\MediaHelper;
 use Illuminate\Http\Request;
+use App\Models\Generalsetting;
+use App\Http\Controllers\Controller;
 
 class EscrowController extends Controller
 {
@@ -26,7 +27,7 @@ class EscrowController extends Controller
     public function index()
     {
         $data['escrows'] = Escrow::where('user_id',auth()->id())->paginate(15);
-        return view('user.escrow.index',$data);  
+        return view('user.escrow.index',$data);
     }
 
     /**
@@ -36,7 +37,7 @@ class EscrowController extends Controller
      */
     public function create()
     {
-        $data['wallets'] = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('balance', '>', 0)->get();
+        $data['wallets'] = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('balance', '>', 0)->where('wallet_type',1)->get();
         $data['charge'] = charge('make-escrow');
         return view('user.escrow.create',$data);
     }
@@ -53,29 +54,29 @@ class EscrowController extends Controller
             'receiver'  => 'required|email',
             'wallet_id' => 'required|integer',
             'amount'    => 'required|numeric|gt:0',
-            'description'    => 'required' 
+            'description'    => 'required'
         ],
         [
             'wallet_id.required' => 'Wallet is required'
         ]);
 
-    
+
         $receiver = User::where('email',$request->receiver)->first();
         if(!$receiver) return back()->with('error','Recipient not found');
-        
+
         $senderWallet = Wallet::where('id',$request->wallet_id)->where('user_type',1)->where('user_id',auth()->id())->first();
 
         if(!$senderWallet) return back()->with('error','Your wallet not found');
-        
+
         $currency = Currency::findOrFail($senderWallet->currency->id);
-        $charge = charge('make-escrow');  
+        $charge = charge('make-escrow');
 
         $finalCharge = amount(chargeCalc($charge,$request->amount,$currency->rate),$currency->type);
         if($request->pay_charge) $finalAmount =  amount($request->amount + $finalCharge, $currency->type);
         else  $finalAmount =  amount($request->amount, $currency->type);
-        
+
         if($senderWallet->balance < $finalAmount) return back()->with('error','Insufficient balance.');
-        
+
         $senderWallet->balance -= $finalAmount;
         $senderWallet->update();
 
@@ -112,14 +113,14 @@ class EscrowController extends Controller
         if (auth()->id() != $escrow->recipient_id && auth()->id() != $escrow->user_id){
             return back()->with('error','Invalid access');
         }
-       
+
         if(url()->previous() == url('user/escrow-pending')) session()->put('route',route('user.escrow.pending'));
         elseif(url()->previous() == url('user/my-escrow'))  session()->forget('route');
-        
+
         $messages = Dispute::where('escrow_id',$escrow->id)->with('user')->get();
         $data['escrow'] = $escrow;
         $data['messages'] = $messages;
-        
+
         return view('user.escrow.dispute',$data);
     }
 
@@ -131,7 +132,7 @@ class EscrowController extends Controller
             return back()->with('error','Invalid access');
         }
         if($escrow->status == 4) return back()->with('error','Dispute has been closed');
-        
+
         $escrow->status = 3;
         if($escrow->dispute_created == null) $escrow->dispute_created = auth()->id();
         $escrow->save();
@@ -167,22 +168,26 @@ class EscrowController extends Controller
         $recipientWallet = Wallet::where('user_id',$recipient->id)
                             ->where('user_type',1)
                             ->where('currency_id',$escrow->currency_id)
+                            ->where('wallet_type', 1)
                             ->first();
 
         if(!$recipientWallet){
+            $gs = Generalsetting::first();
             $recipientWallet =  Wallet::create(
                 [
                     'user_id'      => $recipient->id,
                     'user_type'    => 1,
                     'currency_id'  => $escrow->currency_id,
-                    'balance'      => 0
+                    'balance'      => 0,
+                    'wallet_type' => 1,
+                    'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
                 ]
             );
-        } 
+        }
 
         $amount = $escrow->amount;
         if($escrow->pay_charge == 0) $amount -= $escrow->charge;
-        
+
         $recipientWallet->balance += $amount;
         $recipientWallet->update();
 

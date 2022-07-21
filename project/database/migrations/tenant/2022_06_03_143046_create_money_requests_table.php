@@ -21,6 +21,7 @@ class CreateMoneyRequestsTable extends Migration
             $table->string('receiver_name')->nullable();
             $table->integer('currency_id')->nullable();
             $table->double('cost')->nullable();
+            $table->double('supervisor_cost')->nullable();
             $table->double('amount')->nullable();
             $table->tinyInteger('status')->default(0)->comment('1 == success
 0 == pending');

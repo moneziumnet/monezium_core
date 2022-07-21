@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\User;
 
 use App\Models\Wallet;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Models\Currency;
+use Illuminate\Http\Request;
 use App\Models\ExchangeMoney;
+use App\Models\Generalsetting;
+use App\Http\Controllers\Controller;
 
 class ExchangeMoneyController extends Controller
 {
@@ -14,7 +15,7 @@ class ExchangeMoneyController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     public function exchangeForm()
     {
         $wallets = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('balance', '>', 0)->get();
@@ -37,16 +38,19 @@ class ExchangeMoneyController extends Controller
 
         $charge  = charge('money-exchange');
 
-        $fromWallet = Wallet::where('id',$request->from_wallet_id)->where('user_id',auth()->id())->where('user_type',1)->firstOrFail();
+        $fromWallet = Wallet::where('id',$request->from_wallet_id)->where('user_id',auth()->id())->firstOrFail();
 
-        $toWallet = Wallet::where('currency_id',$request->to_wallet_id)->where('user_id',auth()->id())->where('user_type',1)->first();
+        $toWallet = Wallet::where('currency_id',$request->to_wallet_id)->where('user_id',auth()->id())->where('user_type',$request->wallet_type)->first();
 
         if(!$toWallet){
+            $gs = Generalsetting::first();
             $toWallet = Wallet::create([
                 'user_id'     => auth()->id(),
                 'user_type'   => 1,
                 'currency_id' => $request->to_wallet_id,
-                'balance'     => 0
+                'balance'     => 0,
+                'wallet_type' => $request->wallet_type,
+                'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
             ]);
         }
 
@@ -78,7 +82,7 @@ class ExchangeMoneyController extends Controller
 
         @mailSend('exchange_money',['from_curr'=>$fromWallet->currency->code,'to_curr'=>$toWallet->currency->code,'charge'=> amount($charge,$fromWallet->currency->type,3),'from_amount'=> amount($request->amount,$fromWallet->currency->type,3),'to_amount'=> amount($finalAmount,$toWallet->currency->type,3),'date_time'=> dateFormat($exchange->created_at)],auth()->user());
 
-        return back()->with('success','Money exchanged successfully.'); 
+        return back()->with('success','Money exchanged successfully.');
     }
 
     public function exchangeHistory()

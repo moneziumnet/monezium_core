@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -36,7 +36,7 @@
                 <div class="card">
                     @if (count($requests) == 0)
                         <h3 class="text-center py-5">{{__('No Request Money Data Found')}}</h3>
-                    @else 
+                    @else
                         <div class="table-responsive">
                             <table class="table table-vcenter table-mobile-lg card-table">
                                 <thead>
@@ -64,7 +64,7 @@
                                           </td>
                                           <td data-label="{{ __('Amount') }}">
                                             <div>
-                                              {{ showprice($data->amount,$data->currency) }}
+                                              {{ $data->amount.$data->currency->symbol }}
                                             </div>
                                           </td>
                                           <td data-label="{{ __('Receiver') }}">

@@ -7,6 +7,7 @@ use App\Models\Wallet;
 use App\Models\Currency;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use App\Models\Generalsetting;
 use App\Http\Controllers\Controller;
 
 class TransferController extends Controller
@@ -66,11 +67,14 @@ class TransferController extends Controller
         $recieverWallet = Wallet::where('currency_id',$currency->id)->where('user_type',1)->where('user_id',$receiver->id)->first();
 
         if(!$recieverWallet){
+            $gs = Generalsetting::first();
             $recieverWallet = Wallet::create([
                 'user_id'     => $receiver->id,
                 'user_type'   => 1,
                 'currency_id' => $currency->id,
-                'balance'     => 0
+                'balance'     => 0,
+                'wallet_type' => 1,
+                'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
             ]);
         }
 

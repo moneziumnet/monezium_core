@@ -1103,11 +1103,14 @@ class UserController extends Controller
 
             $wallet = Wallet::where('currency_id',$voucher->currency_id)->where('user_id',$user_id)->first();
             if(!$wallet){
+                $gs = Generalsetting::first();
                 $wallet = Wallet::create([
                     'user_id' => $user_id,
                     'user_type' => 1,
                     'currency_id' => $voucher->currency_id,
-                    'balance'   => 0
+                    'balance'   => 0,
+                    'wallet_type' => 1,
+                    'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
                 ]);
             }
 

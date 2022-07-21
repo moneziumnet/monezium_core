@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\User;
 
+use Auth;
+use App\Models\User;
 use App\Models\Wallet;
 use App\Models\InvItem;
 use App\Models\Invoice;
 use App\Models\Currency;
 use App\Models\Transaction;
-use App\Models\User;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Auth;
+use App\Models\Generalsetting;
+use App\Http\Controllers\Controller;
 
 class ManageInvoiceController extends Controller
 {
@@ -304,14 +305,17 @@ class ManageInvoiceController extends Controller
                return back()->with('error','Something went wrong');
             }
 
-            $wallet = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('currency_id',$invoice->currency_id)->first();
+            $wallet = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('currency_id',$invoice->currency_id)->where('wallet_type', 1)->first();
 
             if(!$wallet){
+                $gs = Generalsetting::first();
                 $wallet =  Wallet::create([
                     'user_id'     => auth()->id(),
                     'user_type'   => 1,
                     'currency_id' => $invoice->currency_id,
-                    'balance'     => 0
+                    'balance'     => 0,
+                    'wallet_type' => 1,
+                    'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
                 ]);
             }
 
@@ -336,14 +340,17 @@ class ManageInvoiceController extends Controller
             $trnx->details     = trans('Payemnt to invoice : '). $invoice->number;
             $trnx->save();
 
-            $rcvWallet = Wallet::where('user_id',$invoice->user_id)->where('user_type',1)->where('currency_id',$invoice->currency_id)->first();
+            $rcvWallet = Wallet::where('user_id',$invoice->user_id)->where('user_type',1)->where('currency_id',$invoice->currency_id)->where('wallet_type', 1)->first();
 
             if(!$rcvWallet){
+                $gs = Generalsetting::first();
                 $rcvWallet =  Wallet::create([
                     'user_id'     => $invoice->user_id,
                     'user_type'   => 1,
                     'currency_id' => $invoice->currency_id,
-                    'balance'     => 0
+                    'balance'     => 0,
+                    'wallet_type' => 1,
+                    'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
                 ]);
             }
 
