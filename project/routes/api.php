@@ -57,6 +57,11 @@ Route::prefix('api')->group(function () {
     Route::post('/user/my-escrow', [UserController::class,'myescrow']);
     Route::post('/user/escrow-pending', [UserController::class,'escrowpending']);
     
+    Route::post('/user/vouchers', [UserController::class,'vouchers']);
+    Route::post('/user/create-voucher', [UserController::class,'createvoucher']);
+    Route::post('/user/reedem-voucher', [UserController::class,'reedemvoucher']);
+    Route::post('/user/reedemed-history', [UserController::class,'reedemedhistory']);
+    
 
 
 });
