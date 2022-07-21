@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use App\Models\EmailTemplate;
 use App\Models\Generalsetting;
 use PHPMailer\PHPMailer\PHPMailer;
+use Illuminate\Support\Facades\DB;
 
 if(!function_exists('getModule')){
   function getModule($value)
@@ -407,7 +408,7 @@ if(!function_exists('getModule')){
   {
       function check_custom_transaction_fee($amount, $user)
       {
-          $transaction_plan = Charge::whereIn('name', ['Transaction 1', 'Transaction 2','Transaction 3'])->where('plan_id', $user->bank_plan_id)->where('data->from','<=',$amount)->where('data->till','>=',$amount)->first();
+          $transaction_plan = Charge::whereIn('name', ['Transaction 1', 'Transaction 2', 'Transaction 3'])->where('user_id', $user->id)->where('data->from','<=',$amount)->where('data->till','>=',$amount)->first();
           return $transaction_plan;
       }
   }
@@ -416,7 +417,7 @@ if(!function_exists('getModule')){
   {
       function check_global_transaction_fee($amount, $user)
       {
-          $transaction_plan = Charge::whereIn('name', ['Transaction 1', 'Transaction 2','Transaction 3'])->where('user_id', $user->id)->where('data->from','<=',$amount)->where('data->till','>=',$amount)->first();
+          $transaction_plan = Charge::whereIn('name', ['Transaction 1', 'Transaction 2','Transaction 3'])->where('plan_id', $user->bank_plan_id)->where('data->from','<=',$amount)->where('data->till','>=',$amount)->first();
           return $transaction_plan;
       }
   }

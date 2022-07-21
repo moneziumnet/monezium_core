@@ -6,6 +6,7 @@ use App\Models\Wallet;
 use App\Models\Currency;
 use Illuminate\Http\Request;
 use App\Models\ExchangeMoney;
+use App\Models\Charge;
 use App\Models\Generalsetting;
 use App\Http\Controllers\Controller;
 
@@ -38,9 +39,9 @@ class ExchangeMoneyController extends Controller
 
         $charge  = charge('money-exchange');
 
-        $fromWallet = Wallet::where('id',$request->from_wallet_id)->where('user_id',auth()->id())->firstOrFail();
+        $fromWallet = Wallet::where('id',$request->from_wallet_id)->where('user_id',auth()->id())->where('user_type',1)->firstOrFail();
 
-        $toWallet = Wallet::where('currency_id',$request->to_wallet_id)->where('user_id',auth()->id())->where('user_type',$request->wallet_type)->first();
+        $toWallet = Wallet::where('currency_id',$request->to_wallet_id)->where('user_id',auth()->id())->where('wallet_type',$request->wallet_type)->where('user_type',1)->first();
 
         if(!$toWallet){
             $gs = Generalsetting::first();
@@ -53,11 +54,43 @@ class ExchangeMoneyController extends Controller
                 'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
             ]);
         }
+        $user= auth()->user();
+        $global_charge = Charge::where('name', 'Exchange Money')->where('plan_id', $user->bank_plan_id)->first();
+        $global_cost = 0;
+        $transaction_global_cost = 0;
+        $global_cost = $global_charge->data->fixed_charge + ($request->amount/100) * $global_charge->data->percent_charge;
+        if ($request->amount < $global_charge->data->minimum || $request->amount > $global_charge->data->maximum) {
+            return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_charge->data->maximum.' and Min value is '.$global_charge->data->minimum );
+        }
+        $transaction_global_fee = check_global_transaction_fee($request->amount, $user);
+        if($transaction_global_fee)
+        {
+            $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/100) * $transaction_global_fee->data->percent_charge;
+        }
+        $custom_cost = 0;
+        $transaction_custom_cost = 0;
+        if(check_user_type(3))
+        {
+            $custom_charge = Charge::where('name', 'Exchange Money')->where('user_id', $user->id)->first();
+            if($custom_charge)
+            {
+                $custom_cost = $custom_charge->data->fixed_charge + ($request->amount/100) * $custom_charge->data->percent_charge;
+                if ($request->amount < $custom_charge->data->minimum || $request->amount > $custom_charge->data->maximum) {
+                    return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$custom_charge->data->maximum.' and Min value is '.$custom_charge->data->minimum );
+                }
+            }
+            $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user);
+            if($transaction_custom_fee) {
+                $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/100) * $transaction_custom_fee->data->percent_charge;
+            }
+        }
+
+
 
         $defaultAmount = $request->amount / $fromWallet->currency->rate;
         $finalAmount   = amount($defaultAmount * $toWallet->currency->rate,$toWallet->currency->type);
 
-        $charge = amount(chargeCalc($charge,$request->amount,$fromWallet->currency->rate),$fromWallet->currency->type);
+        $charge = amount($custom_cost+$global_cost+$transaction_global_cost+$transaction_custom_cost,$fromWallet->currency->type);
         $totalAmount = amount(($request->amount +  $charge),$fromWallet->currency->type);
 
         if($fromWallet->balance < $totalAmount){
