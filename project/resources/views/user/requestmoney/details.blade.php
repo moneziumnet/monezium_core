@@ -100,19 +100,19 @@
                             <tr>
                                 <th class="45%" width="45%">{{__('Amount')}}</th>
                                 <td width="10%">:</td>
-                                <td class="45%" width="45%">{{ showprice($data->amount,$data->currency) }}</td>
+                                <td class="45%" width="45%">{{ $data->amount.$data->currency->symbol}}</td>
                             </tr>
 
                             <tr>
                                 <th class="45%" width="45%">{{__('Cost')}}</th>
                                 <td width="10%">:</td>
-                                <td class="45%" width="45%">{{ showprice($data->cost,$data->currency) }}</td>
+                                <td class="45%" width="45%">{{ ($data->cost + $data->supervisor_cost).$data->currency->symbol }}</td>
                             </tr>
 
                             <tr>
                                 <th class="45%" width="45%">{{__('Amount To Get')}}</th>
                                 <td width="10%">:</td>
-                                <td class="45%" width="45%">{{ showprice(($data->amount - $data->cost),$data->currency) }}</td>
+                                <td class="45%" width="45%">{{ ($data->amount - $data->cost - $data->supervisor_cost).$data->currency->symbol }}</td>
                             </tr>
                                 @if($data->status == 1)
                                     @php
@@ -148,18 +148,19 @@
                                 <td width="45%">{{ $data->created_at->diffForHumans() }}</td>
                             </tr>
                             @if ($data->status == 0)
-                                <tr>
-                                    <td class="text-center" colspan="3">
+                             @if ($from != auth()->user())
+                             <tr>
+                                 <td class="text-center" colspan="3">
+                                     <a href="javascript:;" id="sendBtn" data-href="{{ route('user.request.money.verify',$data->id) }}" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-success">
+                                        {{__('Send')}}
+                                    </a>
+                                    <a href="javascript:;" id="cancelBtn" data-href="{{ route('user.request.money.cancel',$data->id) }}" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-cancel">
+                                        {{__('Cancel')}}
+                                    </a>
 
-                                            <a href="javascript:;" id="sendBtn" data-href="{{ route('user.request.money.verify',$data->id) }}" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-success">
-                                            {{__('Send')}}
-                                            </a>
-                                            <a href="javascript:;" id="cancelBtn" data-href="{{ route('user.request.money.cancel',$data->id) }}" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-cancel">
-                                            {{__('Cancel')}}
-                                            </a>
-
-                                    </td>
-                                </tr>
+                                </td>
+                            </tr>
+                            @endif
                             @endif
 
                             </tbody>
