@@ -75,9 +75,6 @@ class ExchangeMoneyController extends Controller
             if($custom_charge)
             {
                 $custom_cost = $custom_charge->data->fixed_charge + ($request->amount/100) * $custom_charge->data->percent_charge;
-                if ($request->amount < $custom_charge->data->minimum || $request->amount > $custom_charge->data->maximum) {
-                    return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$custom_charge->data->maximum.' and Min value is '.$custom_charge->data->minimum );
-                }
             }
             $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user);
             if($transaction_custom_fee) {

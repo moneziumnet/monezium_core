@@ -829,7 +829,7 @@ class UserController extends Controller
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
         }
     }
-    
+
     public function matureddps(Request $request)
     {
         try {
@@ -840,7 +840,7 @@ class UserController extends Controller
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
         }
     }
-    
+
     public function dpsplan(Request $request)
     {
         try {
@@ -877,7 +877,7 @@ class UserController extends Controller
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
         }
     }
-    
+
     public function closedfdr(Request $request)
     {
         try {
@@ -888,7 +888,7 @@ class UserController extends Controller
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
         }
     }
-    
+
     public function fdrplan(Request $request)
     {
         try {
@@ -913,7 +913,7 @@ class UserController extends Controller
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
         }
     }
-    
+
     public function makeescrow(Request $request)
     {
         try {
@@ -933,13 +933,13 @@ class UserController extends Controller
 
             $receiver = User::where('email',$request->receiver)->first();
             if(!$receiver) return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Recipient not found']);
-            
+
             $senderWallet = Wallet::where('id',$request->wallet_id)->where('user_type',1)->whereUserId($user_id)->first();
 
             if(!$senderWallet) return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Your wallet not found']);
-            
+
             $currency = Currency::findOrFail($senderWallet->currency->id);
-            $charge = charge('make-escrow');  
+            $charge = charge('make-escrow');
 
             $finalCharge = amount(chargeCalc($charge,$request->amount,$currency->rate),$currency->type);
 
@@ -975,12 +975,12 @@ class UserController extends Controller
             $trnx->details     = trans('Made escrow to '). $receiver->email;
             $trnx->save();
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Escrow has been created successfully', 'data' => $escrow]);
-        
+
         } catch (\Throwable $th) {
              return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
         }
     }
-    
+
     public function escrowpending(Request $request)
     {
         try {
@@ -1019,7 +1019,7 @@ class UserController extends Controller
 
         $wallet = Wallet::where('id',$request->wallet_id)->where('user_type',1)->where('user_id',$user_id)->first();
         if(!$wallet) return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Wallet not found']);
-        
+
         $charge = charge('create-voucher');
         $rate = $wallet->currency->rate;
 
@@ -1031,7 +1031,7 @@ class UserController extends Controller
         $finalAmount = numFormat($request->amount + $finalCharge);
 
         $commission  = ($request->amount * $charge->commission)/100;
-      
+
         $voucher = new Voucher();
         $voucher->user_id = $user_id;
         $voucher->currency_id = $wallet->currency_id;
@@ -1040,7 +1040,7 @@ class UserController extends Controller
         $voucher->save();
         $userBalance = user_wallet_balance($user_id, $wallet->currency_id);
         if($finalAmount > $userBalance) return response()->json(['status' => '401', 'error_code' => $finalAmount, 'message' => 'Wallet has insufficient balance']);
-        
+
         user_wallet_decrement($user_id,$wallet->currency_id,$finalAmount);
         // $wallet->balance -=  $finalAmount;
         // $wallet->save();
@@ -1074,28 +1074,28 @@ class UserController extends Controller
         $commissionTrnx->save();
         $data['vouchers']          = Voucher::with('currency')->whereUserId($user_id)->orderby('id','desc')->paginate(10);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Voucher has been created successfully', 'data' => $data]);
-            
+
         }catch(\Throwable $th){
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
         }
     }
-    
+
     public function reedemvoucher(Request $request)
     {
         try{
             $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
             $request->validate([
                 'code'          => 'required',
-               
+
             ],
             [
                 'code.required' => 'Voucher is required'
             ]);
-            
+
             $user = User::whereId($user_id)->first();
 
             $voucher = Voucher::where('code',$request->code)->where('status',0)->first();
-      
+
             if(!$voucher){
                 return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Invalid voucher code']);
             }
@@ -1136,13 +1136,13 @@ class UserController extends Controller
             $voucher->reedemed_by = $user_id;
             $voucher->update();
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Voucher reedemed successfully']);
-            
+
 
         } catch (\Throwable $th) {
                 return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
            }
     }
-    
+
     public function reedemedhistory(Request $request)
     {
         try{
@@ -1167,7 +1167,7 @@ class UserController extends Controller
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
         }
     }
-    
+
     public function invoiceview(Request $request)
     {
         try{
@@ -1233,15 +1233,15 @@ class UserController extends Controller
                 'email'   => $invoice->email,
                 "subject" => trans('Invoice Payment'),
                 'message' => trans('Hello')." $invoice->invoice_to,<br/></br>".
-    
+
                     trans('You have pending payment of invoice')." <b>$invoice->number</b>.".trans('Please click the below link to complete your payment') .".<br/></br>".
-    
+
                     trans('Invoice details').": <br/></br>".
-    
+
                     trans('Amount')  .":  $amount $currency->code <br/>".
                     trans('Payment Link')." :  <a href='$route' target='_blank'>".trans('Click To Payment')."</a><br/>".
                     trans('Time')." : $invoice->created_at,
-    
+
                 "
             ]);
             $data['invoices'] = Invoice::with('currency')->whereUserId($user_id)->where('number',$invoice->number)->firstOrFail();
@@ -1260,7 +1260,7 @@ class UserController extends Controller
                 'number' => 'required'
             ]);
             $number = $request->number;
-            
+
             $route = route('invoice.view',encrypt($number));
             $data['invoice_link'] = $route;
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
@@ -1295,12 +1295,12 @@ class UserController extends Controller
             $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
             $recentExchanges = ExchangeMoney::whereUserId($user_id)->with(['fromCurr','toCurr'])->orderBy('id','desc')->take(10)->get();
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $recentExchanges]);
-            
+
         }catch(\Throwable $th){
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
         }
     }
-    
+
     public function exchangemoney(Request $request)
     {
         try{
@@ -1314,13 +1314,13 @@ class UserController extends Controller
                 'from_wallet_id.required' => 'From currency is required',
                 'to_wallet_id.required' => 'To currency is required',
             ]);
-            
+
             $charge  = charge('money-exchange');
 
             $fromWallet = Wallet::where('id',$request->from_wallet_id)->where('user_id',$user_id)->where('user_type',1)->firstOrFail();
 
             $toWallet = Wallet::where('currency_id',$request->to_wallet_id)->where('user_id',$user_id)->where('wallet_type',$request->wallet_type)->where('user_type',1)->first();
-            
+
         if(!$toWallet){
             $gs = Generalsetting::first();
             $toWallet = Wallet::create([
@@ -1332,20 +1332,20 @@ class UserController extends Controller
                 'wallet_no'     => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
             ]);
         }
-        
-        
+
+
         $user= User::whereId($user_id)->first();
         $global_charge      = Charge::where('name', 'Exchange Money')->where('plan_id', $user->bank_plan_id)->first();
         $global_cost        = 0;
         $transaction_global_cost = 0;
         $global_cost = $global_charge->data->fixed_charge + ($request->amount/100) * $global_charge->data->percent_charge;
 
-        
+
 
         if ($request->amount < $global_charge->data->minimum || $request->amount > $global_charge->data->maximum) {
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Your amount is not in defined range. Max value is '.$global_charge->data->maximum.' and Min value is '.$global_charge->data->minimum]);
         }
-        
+
         $transaction_global_fee = check_global_transaction_fee($request->amount, $user);
         if($transaction_global_fee)
         {
@@ -1355,24 +1355,21 @@ class UserController extends Controller
         $transaction_custom_cost = 0;
 
         $explode = explode(',',$user->user_type);
-        
+
         if(in_array(3,$explode))
         {
             $custom_charge = Charge::where('name', 'Exchange Money')->where('user_id', $user_id)->first();
-            
+
             if($custom_charge)
             {
                 $custom_cost = $custom_charge->data->fixed_charge + ($request->amount/100) * $custom_charge->data->percent_charge;
-                if ($request->amount < $custom_charge->data->minimum || $request->amount > $custom_charge->data->maximum) {
-                    return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Your amount is not in defined range. Max value is '.$custom_charge->data->maximum.' and Min value is '.$custom_charge->data->minimum ]);
-                }
             }
             $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user);
             if($transaction_custom_fee) {
                 $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/100) * $transaction_custom_fee->data->percent_charge;
             }
         }
-        
+
 
         $defaultAmount = $request->amount / $fromWallet->currency->rate;
         $finalAmount   = amount($defaultAmount * $toWallet->currency->rate,$toWallet->currency->type);
@@ -1404,7 +1401,7 @@ class UserController extends Controller
         //@mailSend('exchange_money',['from_curr'=>$fromWallet->currency->code,'to_curr'=>$toWallet->currency->code,'charge'=> amount($charge,$fromWallet->currency->type,3),'from_amount'=> amount($request->amount,$fromWallet->currency->type,3),'to_amount'=> amount($finalAmount,$toWallet->currency->type,3),'date_time'=> dateFormat($exchange->created_at)],$user_id);
 
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Money exchanged successfully.']);
-            
+
         }catch(\Throwable $th){
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
         }
