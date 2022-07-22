@@ -70,6 +70,9 @@ Route::prefix('api')->group(function () {
     Route::post('user/exchange-money-history',[UserController::class,'exchangemoneyhistory']);
     Route::post('user/exchange-recents',[UserController::class,'exchangerecents']);
     Route::post('user/exchange-money',[UserController::class,'exchangemoney']);
+
+    Route::post('user/transactions',[UserController::class,'transactions']);
+
     
 
 

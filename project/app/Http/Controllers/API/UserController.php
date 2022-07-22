@@ -1411,4 +1411,19 @@ class UserController extends Controller
     }
 
     /************End Exchange API***************/
+
+    public function transactions(Request $request)
+    {
+        try{
+            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $transactions = Transaction::whereUserId($user_id)->orderBy('id','desc')->paginate(10);
+            foreach ($transactions as $key => $transaction) {
+                $transaction->currency = Currency::whereId($transaction->currency_id)->first();
+            }
+            $data['transactions'] = $transaction;
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Money exchanged successfully.', 'data' => $data]);
+        }catch(\Throwable $th){
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
+        }
+    }
 }
