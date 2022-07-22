@@ -106,15 +106,15 @@ class SupervisorController extends Controller
         $plandetail->plan_id = 0;
         switch ($name) {
             case 'Transfer Money':
-                $plandetail->data = json_decode('{"percent_charge":"2","fixed_charge":"2","minimum":"10","maximum":"1000","daily_limit":"2000","monthly_limit":"5000"}');
+                $plandetail->data = json_decode('{"percent_charge":"2","fixed_charge":"2"}');
                 $plandetail->slug = 'transfer-money-0-'.$id;
                 break;
             case 'Exchange Money':
-                $plandetail->data = json_decode('{"percent_charge":"2","fixed_charge":"2","minimum":"10","maximum":"1000"}');
+                $plandetail->data = json_decode('{"percent_charge":"2","fixed_charge":"2"}');
                 $plandetail->slug = 'exchange-money-0-'.$id;
                 break;
             case 'Request Money':
-                $plandetail->data = json_decode('{"percent_charge":"1","fixed_charge":"2","minimum":"10","maximum":"2000"}');
+                $plandetail->data = json_decode('{"percent_charge":"1","fixed_charge":"2"}');
                 $plandetail->slug = 'request-money-0-'.$id;
                 break;
             case 'Merchant Payment':
@@ -122,7 +122,7 @@ class SupervisorController extends Controller
                 $plandetail->slug = 'merchant-payment-0-'.$id;
                 break;
             case 'Create Voucher':
-                $plandetail->data = json_decode('{"percent_charge":"2","fixed_charge":"2","minimum":"10","maximum":"2000","commission":"10"}');
+                $plandetail->data = json_decode('{"percent_charge":"2","fixed_charge":"2"}');
                 $plandetail->slug = 'create-voucher-0-'.$id;
                 break;
             case 'Create Invoice':
