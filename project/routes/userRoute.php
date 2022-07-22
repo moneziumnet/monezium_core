@@ -187,6 +187,7 @@ Route::prefix('user')->group(function() {
       Route::group(['middleware'=>'kyc:Escrow'],function(){
         Route::get('make-escrow',   [EscrowController::class,'create'])->name('user.escrow.create');
         Route::post('make-escrow',   [EscrowController::class,'store']);
+        Route::get('calcharge/{amount}',   [EscrowController::class,'calcharge']);
       });
 
       //Reedem voucher
