@@ -66,6 +66,10 @@ Route::prefix('api')->group(function () {
     Route::post('/user/create-invoice', [UserController::class,'createinvoice']);
     Route::post('/user/invoice-view', [UserController::class,'invoiceview']);
     Route::post('/user/invoice-url', [UserController::class,'invoiceurl']);
+
+    Route::post('user/exchange-money-history',[UserController::class,'exchangemoneyhistory']);
+    Route::post('user/exchange-recents',[UserController::class,'exchangerecents']);
+    Route::post('user/exchange-money',[UserController::class,'exchangemoney']);
     
 
 
