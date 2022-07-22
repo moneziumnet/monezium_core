@@ -99,6 +99,9 @@ class ExchangeMoneyController extends Controller
 
         $fromWallet->balance -=  $totalAmount;
         $fromWallet->update();
+        if (check_user_type(3)) {
+            user_wallet_increment($user->id, $fromWallet->currency_id, $custom_cost+$transaction_custom_cost, 6);
+        }
 
         $toWallet->balance += $finalAmount;
         $toWallet->update();

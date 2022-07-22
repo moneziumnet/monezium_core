@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Models\Wallet;
 use App\Models\Voucher;
 use App\Models\Transaction;
+use App\Models\Charge;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
@@ -30,7 +31,7 @@ class VoucherController extends Controller
     {
 
         $data['wallets'] = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('balance', '>', 0)->where('wallet_type',1)->get();
-        $data['charge'] = charge('create-voucher');
+        $data['charge'] = Charge::where('name', 'Create Voucher')->where('plan_id', auth()->user()->bank_plan_id)->first()->data;
         $data['recentVouchers'] = Voucher::where('user_id',auth()->id())->latest()->take(7)->get();
         return view('user.voucher.voucher_create',$data);
     }
@@ -48,14 +49,46 @@ class VoucherController extends Controller
         $charge = charge('create-voucher');
         $rate = $wallet->currency->rate;
 
-        if($request->amount <  $charge->minimum * $rate || $request->amount >  $charge->maximum * $rate){
-            return back()->with('error','Please follow the limit');
+        $user= auth()->user();
+        $global_charge = Charge::where('name', 'Create Voucher')->where('plan_id', $user->bank_plan_id)->first();
+        $global_cost = 0;
+        $transaction_global_cost = 0;
+        $global_cost = $global_charge->data->fixed_charge + ($request->amount/100) * $global_charge->data->percent_charge;
+        if ($request->amount < $global_charge->data->minimum || $request->amount > $global_charge->data->maximum) {
+            return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_charge->data->maximum.' and Min value is '.$global_charge->data->minimum );
+        }
+        $transaction_global_fee = check_global_transaction_fee($request->amount, $user);
+        if($transaction_global_fee)
+        {
+            $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/100) * $transaction_global_fee->data->percent_charge;
+        }
+        $custom_cost = 0;
+        $transaction_custom_cost = 0;
+        if(check_user_type(3))
+        {
+            $custom_charge = Charge::where('name', 'Create Voucher')->where('user_id', $user->id)->first();
+            if($custom_charge)
+            {
+                $custom_cost = $custom_charge->data->fixed_charge + ($request->amount/100) * $custom_charge->data->percent_charge;
+                if ($request->amount < $custom_charge->data->minimum || $request->amount > $custom_charge->data->maximum) {
+                    return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$custom_charge->data->maximum.' and Min value is '.$custom_charge->data->minimum );
+                }
+            }
+            $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user);
+            if($transaction_custom_fee) {
+                $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/100) * $transaction_custom_fee->data->percent_charge;
+            }
         }
 
-        $finalCharge = chargeCalc($charge,$request->amount,$rate);
-        $finalAmount = numFormat($request->amount + $finalCharge);
 
-        $commission  = ($request->amount * $charge->commission)/100;
+
+
+        $finalCharge = amount($custom_cost+$global_cost+$transaction_global_cost+$transaction_custom_cost,$wallet->currency->type);
+        $finalAmount = $request->amount + $finalCharge;
+
+        $commission  = ($request->amount * $global_charge->data->commission)/100;
+        $userBalance = user_wallet_balance(auth()->id(), $wallet->currency_id);
+        if($finalAmount > $userBalance) return back()->with('error','Wallet has insufficient balance');
 
         $voucher = new Voucher();
         $voucher->user_id = auth()->id();
@@ -63,10 +96,9 @@ class VoucherController extends Controller
         $voucher->amount = $request->amount;
         $voucher->code = randNum(10).'-'.randNum(10);
         $voucher->save();
-        $userBalance = user_wallet_balance(auth()->id(), $wallet->currency_id);
-        if($finalAmount > $userBalance) return back()->with('error','Wallet has insufficient balance');
 
         user_wallet_decrement(auth()->id(),$wallet->currency_id,$finalAmount);
+
         // $wallet->balance -=  $finalAmount;
         // $wallet->save();
 
@@ -83,6 +115,9 @@ class VoucherController extends Controller
         $trnx->save();
 
         user_wallet_increment(auth()->id(),$wallet->currency_id,$commission);
+        if(check_user_type(3)){
+            user_wallet_increment($user->id, $wallet->currency_id, $custom_cost+$transaction_custom_cost, 6);
+        }
         // $wallet->balance +=  $commission;
         // $wallet->save();
 

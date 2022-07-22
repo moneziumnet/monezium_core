@@ -227,8 +227,8 @@
             var minimum = '{{$charge->minimum}}'
             var maximum = '{{$charge->maximum}}'
 
-            var minLimit = minimum * rate;
-            var maxLimit = maximum * rate;
+            var minLimit = minimum * 1;
+            var maxLimit = maximum * 1;
 
             return {'minLimit': minLimit,'maxLimit': maxLimit};
         }
