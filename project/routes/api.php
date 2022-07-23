@@ -44,12 +44,12 @@ Route::prefix('api')->group(function () {
 
     // Route::post('register', 'API\UserController@register');
     Route::post('/user/dps', [UserController::class,'dps_index']);
-    Route::post('/user/dps-plan', [UserController::class,'dpsplan']);
+    Route::get('/user/dps-plan', [UserController::class,'dpsplan']);
     Route::post('/user/running-dps', [UserController::class,'runningdps']);
     Route::post('/user/matured-dps', [UserController::class,'matureddps']);
    
     Route::post('/user/fdr', [UserController::class,'fdr_index']);
-    Route::post('/user/fdr-plan', [UserController::class,'fdrplan']);
+    Route::get('/user/fdr-plan', [UserController::class,'fdrplan']);
     Route::post('/user/running-fdr', [UserController::class,'runningfdr']);
     Route::post('/user/closed-fdr', [UserController::class,'closedfdr']);
     
@@ -72,6 +72,11 @@ Route::prefix('api')->group(function () {
     Route::post('user/exchange-money',[UserController::class,'exchangemoney']);
 
     Route::post('user/transactions',[UserController::class,'transactions']);
+    Route::post('user/transfer-logs',[UserController::class,'transferlogs']);
+    Route::post('user/beneficiaries',[UserController::class,'beneficiaries']);
+    Route::post('user/beneficiaries-details',[UserController::class,'beneficiariesdetails']);
+    Route::post('user/beneficiaries-create',[UserController::class,'beneficiariescreate']);
+    Route::post('user/other-bank-transfer',[UserController::class,'otherbanktransfer']);
 
     
 
