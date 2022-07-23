@@ -204,7 +204,7 @@ class MoneyRequestController extends Controller
         $trans->user_type   = $data->user_type;
         $trans->currency_id = $currency_id;
         $trans->amount      = $data->amount;
-        $trans->charge      = $data->cost + $data->supervisor_cost;
+        $trans->charge      = 0;
         $trans->type        = '-';
         $trans->remark      = 'Request_Money';
         $trans->details     = trans('Request Money');
@@ -222,7 +222,7 @@ class MoneyRequestController extends Controller
         $trans->user_id     = $receiver->id;
         $trans->user_type   = $data->user_type;
         $trans->currency_id = $currency_id;
-        $trans->amount      = $data->amount;
+        $trans->amount      = $finalAmount;
         $trans->charge      = $data->cost + $data->supervisor_cost;
         $trans->type        = '+';
         $trans->remark      = 'Request_Money';
