@@ -147,7 +147,13 @@
             $.get(url,function (res) {
                 $('#modal-success').find('.amount').text(amount +' '+selected.data('code'))
                 $('#modal-success').find('.charge').text(res +' '+ selected.data('code'))
-                $('#modal-success').find('.total_amount').text((parseFloat(res)+amount).toFixed(3) +' '+selected.data('code'))
+                if ($('.form-check-input').is(':checked')) {
+                    $('#modal-success').find('.total_amount').text((parseFloat(res)+amount).toFixed(3) +' '+selected.data('code'))
+                }
+                else {
+                    $('#modal-success').find('.total_amount').text((amount - parseFloat(res)).toFixed(3) +' '+selected.data('code'))
+
+                }
                 $('#modal-success').modal('show')
             })
         })
