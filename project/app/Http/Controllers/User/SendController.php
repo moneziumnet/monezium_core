@@ -9,6 +9,7 @@ use App\Models\Currency;
 use App\Models\Wallet;
 use App\Models\SaveAccount;
 use App\Models\Transaction;
+use App\Models\Charge;
 use Illuminate\Support\Str;
 use App\Classes\GoogleAuthenticator;
 use Illuminate\Http\Request;
@@ -106,15 +107,15 @@ class SendController extends Controller
 
         $currency_id = $wallet->currency->id; //Currency::whereId($wallet_id)->first()->id;
 
-        $bank_plan = BankPlan::whereId($user->bank_plan_id)->first();
         $dailySend = BalanceTransfer::whereUserId(auth()->id())->whereDate('created_at', '=', date('Y-m-d'))->whereStatus(1)->sum('amount');
         $monthlySend = BalanceTransfer::whereUserId(auth()->id())->whereMonth('created_at', '=', date('m'))->whereStatus(1)->sum('amount');
+        $global_charge = Charge::where('name', 'Transfer Money')->where('plan_id', $user->bank_plan_id)->first();
 
-        if($dailySend > $bank_plan->daily_send){
+        if($dailySend > $global_charge->data->daily_limit){
             return redirect()->back()->with('unsuccess','Daily send limit over.');
         }
 
-        if($monthlySend > $bank_plan->monthly_send){
+        if($monthlySend > $global_charge->data->monthly_limit){
             return redirect()->back()->with('unsuccess','Monthly send limit over.');
         }
 
@@ -131,20 +132,50 @@ class SendController extends Controller
         if($request->amount > user_wallet_balance(auth()->id(), $currency_id, $wallet->wallet_type)){
             return redirect()->back()->with('unsuccess','Insufficient Balance.');
         }
+        $global_cost = 0;
+        $transaction_global_cost = 0;
+        $global_cost = $global_charge->data->fixed_charge + ($request->amount/100) * $global_charge->data->percent_charge;
+        if ($request->amount < $global_charge->data->minimum || $request->amount > $global_charge->data->maximum) {
+            return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_charge->data->maximum.' and Min value is '.$global_charge->data->minimum );
+        }
+        $transaction_global_fee = check_global_transaction_fee($request->amount, $user);
+        if($transaction_global_fee)
+        {
+            $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/100) * $transaction_global_fee->data->percent_charge;
+        }
+        $custom_cost = 0;
+        $transaction_custom_cost = 0;
+        if(check_user_type(3))
+        {
+            $custom_charge = Charge::where('name', 'Transfer Money')->where('user_id', $user->id)->first();
+            if($custom_charge)
+            {
+                $custom_cost = $custom_charge->data->fixed_charge + ($request->amount/100) * $custom_charge->data->percent_charge;
+            }
+            $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user);
+            if($transaction_custom_fee) {
+                $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/100) * $transaction_custom_fee->data->percent_charge;
+            }
+        }
+
+
+
+        $finalCharge = amount($custom_cost+$global_cost+$transaction_global_cost+$transaction_custom_cost, $wallet->currency->type);
+        $finalamount = amount( $request->amount + $finalCharge, $wallet->currency->type);
 
         if($receiver = User::where('account_number',$request->account_number)->first()){
             $txnid = Str::random(4).time();
-            // $data = new BalanceTransfer();
-            // $data->user_id = auth()->user()->id;
-            // $data->receiver_id = $receiver->id;
-            // $data->transaction_no = $txnid;
-            // $data->currency_id = $request->wallet_id;
-            // $data->type = 'own';
-            // $data->cost = 0;
-            // $data->amount = $request->amount;
-            // $data->description = $request->description;
-            // $data->status = 1;
-            // $data->save();
+            $data = new BalanceTransfer();
+            $data->user_id = auth()->user()->id;
+            $data->receiver_id = $receiver->id;
+            $data->transaction_no = $txnid;
+            $data->currency_id = $request->wallet_id;
+            $data->type = 'own';
+            $data->cost = $finalCharge;
+            $data->amount = $finalamount;
+            $data->description = $request->description;
+            $data->status = 1;
+            $data->save();
 
             // $receiver->increment('balance',$request->amount);
             // $user->decrement('balance',$request->amount);
@@ -154,8 +185,8 @@ class SendController extends Controller
             $trans->user_id     = $user->id;
             $trans->user_type   = 1;
             $trans->currency_id = $currency_id;
-            $trans->amount      = $request->amount;
-            $trans->charge      = 0;
+            $trans->amount      = $finalamount;
+            $trans->charge      = $finalCharge;
             $trans->type        = '-';
             $trans->remark      = 'Send_Money';
             $trans->details     = trans('Send Money');
@@ -178,8 +209,11 @@ class SendController extends Controller
             // user_wallet_decrement($user->id, $currency_id, $request->amount);
             // user_wallet_increment($receiver->id, $currency_id, $request->amount);
 
-            user_wallet_decrement($user->id, $currency_id, $request->amount, $wallet->wallet_type);
+            user_wallet_decrement($user->id, $currency_id, $finalamount, $wallet->wallet_type);
             user_wallet_increment($receiver->id, $currency_id, $request->amount, $wallet->wallet_type);
+            if(check_user_type(3)) {
+                user_wallet_increment($user->id, $currency_id, $custom_cost +$transaction_custom_cost, 6);
+            }
             if(SaveAccount::whereUserId(auth()->id())->where('receiver_id',$receiver->id)->exists()){
                 return redirect()->route('send.money.create')->with('success','Money Send Successfully');
             }
