@@ -12,9 +12,9 @@ class TransferLogController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     public function index(){
-        $data['logs'] = BalanceTransfer::whereUserId(auth()->id())->orderBy('id','desc')->paginate(10);
+        $data['logs'] = BalanceTransfer::whereUserId(auth()->id())->whereType('other')->orderBy('id','desc')->paginate(10);
         return view('user.transfer.index',$data);
     }
 }

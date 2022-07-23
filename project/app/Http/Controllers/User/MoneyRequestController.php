@@ -99,9 +99,6 @@ class MoneyRequestController extends Controller
             if($custom_charge)
             {
                 $custom_cost = $custom_charge->data->fixed_charge + ($request->amount/100) * $custom_charge->data->percent_charge;
-                if ($request->amount < $custom_charge->data->minimum || $request->amount > $custom_charge->data->maximum) {
-                    return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$custom_charge->data->maximum.' and Min value is '.$custom_charge->data->minimum );
-                }
             }
             $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user);
             if($transaction_custom_fee) {
@@ -207,7 +204,7 @@ class MoneyRequestController extends Controller
         $trans->user_type   = $data->user_type;
         $trans->currency_id = $currency_id;
         $trans->amount      = $data->amount;
-        $trans->charge      = $data->cost + $data->supervisor_cost;
+        $trans->charge      = 0;
         $trans->type        = '-';
         $trans->remark      = 'Request_Money';
         $trans->details     = trans('Request Money');
@@ -225,7 +222,7 @@ class MoneyRequestController extends Controller
         $trans->user_id     = $receiver->id;
         $trans->user_type   = $data->user_type;
         $trans->currency_id = $currency_id;
-        $trans->amount      = $data->amount;
+        $trans->amount      = $finalAmount;
         $trans->charge      = $data->cost + $data->supervisor_cost;
         $trans->type        = '+';
         $trans->remark      = 'Request_Money';

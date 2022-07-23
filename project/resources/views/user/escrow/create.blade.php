@@ -41,7 +41,7 @@
                         <div class="col-md-12 mb-3">
                             <div class="form-label ">@lang('Description : ') </div>
                             <textarea name="description" id="description" class="form-control shadow-none"  rows="5" required></textarea>
-                    
+
                         </div>
                         <div class="col-md-12">
                             <label class="form-check">
@@ -102,12 +102,12 @@
 @push('js')
     <script>
         'use strict';
-        $('.receiver').on('focusout',function () { 
+        $('.receiver').on('focusout',function () {
             var url   = '{{ route('user.check.receiver') }}';
             var value = $(this).val();
             var token = '{{ csrf_token() }}';
             var data  = {receiver:value,_token:token}
-           
+
             $.post(url,data,function(res) {
                 if(res.self){
                     if($('.check').hasClass('text-success')){
@@ -128,49 +128,44 @@
                         $('.check').removeClass('text-success');
                     }
                     $('.check').text('@lang('Recipient not found.')').addClass('text-danger');
-                    
+
                 }
             });
         })
 
-        $('.transfer').on('click',function () { 
+        $('.transfer').on('click',function () {
 
             var amount = parseFloat($('#amount').val());
             var selected = $('.wallet option:selected')
             var description = $('#description').val()
-           
+
             if(amount == '' || selected.val() == '' || description == ''){
                 toast('error','@lang('Please fill up the required fields.')')
                 return false;
             }
-           
-            $('#modal-success').find('.amount').text(amount +' '+selected.data('code'))
-            $('#modal-success').find('.charge').text(charge().final +' '+ selected.data('code'))
-            $('#modal-success').find('.total_amount').text((charge().final+amount).toFixed(3) +' '+selected.data('code'))
-            $('#modal-success').modal('show')
+            var url = "{{url('user/calcharge')}}"+'/'+amount;
+            $.get(url,function (res) {
+                $('#modal-success').find('.amount').text(amount +' '+selected.data('code'))
+                $('#modal-success').find('.charge').text(res +' '+ selected.data('code'))
+                if ($('.form-check-input').is(':checked')) {
+                    $('#modal-success').find('.total_amount').text((parseFloat(res)+amount).toFixed(3) +' '+selected.data('code'))
+                }
+                else {
+                    $('#modal-success').find('.total_amount').text((amount - parseFloat(res)).toFixed(3) +' '+selected.data('code'))
+
+                }
+                $('#modal-success').modal('show')
+            })
         })
 
-        $('.confirm').on('click',function () { 
+        $('.confirm').on('click',function () {
             $('#form').submit()
             $(this).attr('disabled',true)
         })
 
-        
 
-        function charge() { 
-            var selected = $('.wallet option:selected')
-            var rate = selected.data('rate')
-            var amount = $('#amount').val()
 
-            var fixedCharge   = '{{$charge->fixed_charge}}'
-            var percentCharge = '{{$charge->percent_charge}}'
-            var fixed = fixedCharge * rate
-            var finalCharge =  fixed + (amount * (percentCharge/100))
-            return {'final':finalCharge,'fixed':fixed,'percent':percentCharge};
-
-        }
-
-        $('.wallet').on('change',function () { 
+        $('.wallet').on('change',function () {
             var selected = $('.wallet option:selected');
            if(selected.val() == ''){
             $('#amount').attr('disabled',true)
@@ -180,8 +175,8 @@
             }
             var type = selected.data('type')
             var code = $('.wallet option:selected').data('code')
-          
-            $('.charge').text("Total Charge : " +amount(charge().fixed,type) +' '+code+' + '+charge().percent + '%')
+
+            $('.charge').text("Please input amount")
         })
     </script>
 @endpush
