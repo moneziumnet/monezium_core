@@ -170,6 +170,7 @@ Route::prefix('user')->group(function() {
         Route::post('exchange-money',  [ExchangeMoneyController::class,'submitExchange']);
       });
       Route::get('exchange-money/history',  [ExchangeMoneyController::class,'exchangeHistory'])->name('user.exchange.history');
+      Route::get('exchange-money/escrow/calcharge/{amount}',  [ExchangeMoneyController::class,'calcharge'])->name('user.exchange.calcharge');
 
        //invoice
        Route::group(['middleware'=>'kyc:Invoice'],function(){
@@ -187,7 +188,7 @@ Route::prefix('user')->group(function() {
       Route::group(['middleware'=>'kyc:Escrow'],function(){
         Route::get('make-escrow',   [EscrowController::class,'create'])->name('user.escrow.create');
         Route::post('make-escrow',   [EscrowController::class,'store']);
-        Route::get('calcharge/{amount}',   [EscrowController::class,'calcharge']);
+        Route::get('escrow/calcharge/{amount}',   [EscrowController::class,'calcharge']);
       });
 
       //Reedem voucher

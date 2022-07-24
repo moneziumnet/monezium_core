@@ -143,7 +143,7 @@
                 toast('error','@lang('Please fill up the required fields.')')
                 return false;
             }
-            var url = "{{url('user/calcharge')}}"+'/'+amount;
+            var url = "{{url('user/escrow/calcharge')}}"+'/'+amount;
             $.get(url,function (res) {
                 $('#modal-success').find('.amount').text(amount +' '+selected.data('code'))
                 $('#modal-success').find('.charge').text(res +' '+ selected.data('code'))

@@ -118,6 +118,39 @@ class ExchangeMoneyController extends Controller
         return back()->with('success','Money exchanged successfully.');
     }
 
+    public function calcharge($amount)
+    {
+        $user= auth()->user();
+        $global_charge = Charge::where('name', 'Exchange Money')->where('plan_id', $user->bank_plan_id)->first();
+        $global_cost = 0;
+        $transaction_global_cost = 0;
+        $global_cost = $global_charge->data->fixed_charge + ($amount/100) * $global_charge->data->percent_charge;
+        if ($amount < $global_charge->data->minimum || $amount > $global_charge->data->maximum) {
+            return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_charge->data->maximum.' and Min value is '.$global_charge->data->minimum );
+        }
+        $transaction_global_fee = check_global_transaction_fee($amount, $user);
+        if($transaction_global_fee)
+        {
+            $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($amount/100) * $transaction_global_fee->data->percent_charge;
+        }
+        $custom_cost = 0;
+        $transaction_custom_cost = 0;
+        if(check_user_type(3))
+        {
+            $custom_charge = Charge::where('name', 'Exchange Money')->where('user_id', $user->id)->first();
+            if($custom_charge)
+            {
+                $custom_cost = $custom_charge->data->fixed_charge + ($amount/100) * $custom_charge->data->percent_charge;
+            }
+            $transaction_custom_fee = check_custom_transaction_fee($amount, $user);
+            if($transaction_custom_fee) {
+                $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($amount/100) * $transaction_custom_fee->data->percent_charge;
+            }
+        }
+        $finalCharge = $custom_cost+$global_cost+$transaction_global_cost+$transaction_custom_cost;
+        return $finalCharge;
+    }
+
     public function exchangeHistory()
     {
         $search = request('search');

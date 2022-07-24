@@ -228,12 +228,16 @@
             var finalAmount = defaultAmount * toRate;
 
             var charge   = (parseFloat('{{$charge->fixed_charge}}')* fromRate) + (amount * ('{{$charge->percent_charge}}'/100))
+            var url = "{{url('user/exchange-money/escrow/calcharge')}}"+'/'+amount;
+            $.get(url,function (res) {
 
-            $('.fromCurr').text(fromCode)
-            $('.toCurr').text(toCode)
-            $('.exAmount').text(amount +' '+ fromCode)
-            $('.exCharge').text(charge.toFixed(8) +' '+ fromCode)
-            $('.total_amount').text(finalAmount.toFixed(8) +' '+ toCode)
+                $('.fromCurr').text(fromCode)
+                $('.toCurr').text(toCode)
+                $('.exAmount').text(amount +' '+ fromCode)
+                $('.exCharge').text(parseFloat(res).toFixed(8) +' '+ fromCode)
+                $('.total_amount').text(finalAmount.toFixed(8) +' '+ toCode)
+            });
+
         }
 
         $('.to').on('change',function () {
