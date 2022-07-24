@@ -7,6 +7,8 @@ use App\Models\Withdrawals;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Wallet;
+use App\Models\User;
+use App\Models\Charge;
 
 class WithdrawalController extends Controller
 {
@@ -52,7 +54,7 @@ class WithdrawalController extends Controller
     public function withdrawReject(Request $request, Withdrawals $withdraw)
     {
         $request->validate(['reason_of_reject' => 'required']);
-    
+
         $withdraw->status = 2;
         $withdraw->reject_reason = $request->reason_of_reject;
         $withdraw->save();
@@ -60,7 +62,24 @@ class WithdrawalController extends Controller
         if($withdraw->user_id){
             $user = $withdraw->user;
             //$wallet = Wallet::where('user_id',$withdraw->user_id)->where('user_type',1)->where('currency_id',$withdraw->currency_id)->firstOrFail();
-            user_wallet_increment($withdraw->user_id, $withdraw->currency_id, $withdraw->total_amount);
+            user_wallet_increment($withdraw->user_id, $withdraw->currency_id, $withdraw->amount);
+            $explode = explode(',',User::whereId($withdraw->user_id)->first()->user_type);
+
+            if(in_array(3,$explode))
+            {
+                $custom_cost = 0;
+                $transaction_custom_cost = 0;
+                $custom_charge = Charge::where('name', 'Transfer Money')->where('user_id', $withdraw->user_id)->first();
+                if($custom_charge)
+                {
+                    $custom_cost = $custom_charge->data->fixed_charge + ($withdraw->amount/100) * $custom_charge->data->percent_charge;
+                }
+                $transaction_custom_fee = check_custom_transaction_fee($withdraw->amount, User::whereId($withdraw->user_id)->first());
+                if($transaction_custom_fee) {
+                    $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($withdraw->amount/100) * $transaction_custom_fee->data->percent_charge;
+                }
+                user_wallet_decrement($withdraw->user_id, $withdraw->currency_id, $custom_cost+$transaction_custom_cost, 6);
+            }
             // $wallet->balance += $withdraw->total_amount;
             // $wallet->save();
 
@@ -70,7 +89,7 @@ class WithdrawalController extends Controller
             $trnx->user_type   = 1;
             $trnx->currency_id = $withdraw->currency->id;
             $trnx->amount      = $withdraw->amount;
-            $trnx->charge      = $withdraw->charge;
+            $trnx->charge      = 0;
             $trnx->remark      = 'withdraw_reject';
             $trnx->type        = '+';
             $trnx->details     = trans('Withdraw request rejected');
@@ -78,9 +97,9 @@ class WithdrawalController extends Controller
 
         } else{
             $user = $withdraw->merchant;
-            $wallet = Wallet::where('user_id',$withdraw->merchant_id)->where('user_type',2)->where('currency_id',$withdraw->currency_id)->firstOrFail();
+            $wallet = Wallet::where('user_id',$withdraw->merchant_id)->where('user_type',2)->where('currency_id',$withdraw->currency_id)->where('wallet_type', 1)->firstOrFail();
 
-            $wallet->balance += $withdraw->total_amount;
+            $wallet->balance += $withdraw->amount;
             $wallet->save();
 
             $trnx              = new Transaction();
@@ -89,7 +108,7 @@ class WithdrawalController extends Controller
             $trnx->user_type   = 2;
             $trnx->currency_id = $withdraw->currency->id;
             $trnx->amount      = $withdraw->amount;
-            $trnx->charge      = $withdraw->charge;
+            $trnx->charge      = 0;
             $trnx->remark      = 'withdraw_reject';
             $trnx->type        = '+';
             $trnx->details     = trans('Withdraw request rejected');

@@ -53,7 +53,7 @@
                                       <tr>
                                           <td data-label="{{ __('Withdraw Date') }}">{{date('d-M-Y',strtotime($withdraw->created_at))}}</td>
                                           <td data-label="{{ __('Method') }}">{{$withdraw->method->name}}</td>
-                                          <td data-label="{{ __('Amount') }}">{{ showprice($withdraw->amount,$withdraw->currency) }}</td>
+                                          <td data-label="{{ __('Amount') }}">{{ amount($withdraw->amount, $withdraw->currency->type, 2).$withdraw->currency->symbol }}</td>
                                           @if ($withdraw->status == '1')
                                           <td data-label="{{ __('Status') }}">{{ __('Accepted') }}</td>
                                           @elseif($withdraw->status == 2)

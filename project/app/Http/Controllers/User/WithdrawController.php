@@ -73,7 +73,7 @@ class WithdrawController extends Controller
         }
 
         // $withdraw_method = WithdrawMethod::whereId($request->methods)->first();
-        $withdraw_method = WithdrawMethod::whereId(1)->first();
+        // $withdraw_method = WithdrawMethod::whereId(1)->first();
         $withdraw_charge = Charge::where('plan_id',$user->bank_plan_id)->where('slug','transfer-money')->first()->value('data');
         $userBalance = user_wallet_balance($user->id,$request->currency_id,1);
 
@@ -93,30 +93,50 @@ class WithdrawController extends Controller
             return redirect()->back()->with('unsuccess','Insufficient Account Balance.');
         }
 
+        $global_charge = Charge::where('name', 'Transfer Money')->where('plan_id', $user->bank_plan_id)->first();
+        $global_cost = 0;
+        $transaction_global_cost = 0;
+        $global_cost = $global_charge->data->fixed_charge + ($request->amount/100) * $global_charge->data->percent_charge;
+        if ($request->amount < $global_charge->data->minimum || $request->amount > $global_charge->data->maximum) {
+            return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_charge->data->maximum.' and Min value is '.$global_charge->data->minimum );
+        }
+        $transaction_global_fee = check_global_transaction_fee($request->amount, $user);
+        if($transaction_global_fee)
+        {
+            $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/100) * $transaction_global_fee->data->percent_charge;
+        }
+        $custom_cost = 0;
+        $transaction_custom_cost = 0;
+        if(check_user_type(3))
+        {
+            $custom_charge = Charge::where('name', 'Transfer Money')->where('user_id', $user->id)->first();
+            if($custom_charge)
+            {
+                $custom_cost = $custom_charge->data->fixed_charge + ($request->amount/100) * $custom_charge->data->percent_charge;
+            }
+            $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user);
+            if($transaction_custom_fee) {
+                $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/100) * $transaction_custom_fee->data->percent_charge;
+            }
+        }
+
         $charge = $withdraw_charge->fixed_charge;
 
-        $messagefee = (($withdraw_charge->percent_charge / 100) * $request->amount) + $charge;
+        $messagefee = $global_cost + $transaction_global_cost + $custom_cost + $transaction_custom_cost;
         $messagefinal = $request->amount - $messagefee;
 
         $currency = Currency::whereId($request->currency_id)->first();
-        $amountToAdd = $request->amount/$currency->rate;
 
-        $amount = $amountToAdd; //$amountToAdd;
-        $fee = (($withdraw_charge->percent_charge / 100) * $amount) + $charge/$currency->rate;
-        $finalamount = $amount - $fee;
-
-        if($finalamount < 0){
-            return redirect()->back()->with('unsuccess','Request Amount should be greater than this '.$amountToAdd.' ('.$currency->code.')');
+        if($messagefinal < 0){
+            return redirect()->back()->with('unsuccess','Request Amount should be greater than this '.$request->amount.' ('.$currency->code.')');
         }
 
-        if($finalamount > $userBalance){
-            return redirect()->back()->with('unsuccess','Insufficient Balance.');
+
+
+        user_wallet_decrement($user->id, $currency->id, $request->amount);
+        if(check_user_type(3)) {
+            user_wallet_increment($user->id, $currency->id, $custom_cost + $transaction_custom_cost, 6);
         }
-
-        $finalamount = number_format((float)$finalamount,2,'.','');
-
-        user_wallet_decrement($user->id, $currency->id, $amount);
-
 
         $txnid = Str::random(12);
         $newwithdrawal = new Withdrawals();
@@ -134,9 +154,9 @@ class WithdrawController extends Controller
         $newwithdrawal->method_id   = $request->methods;
         // $newwithdrawal->method_id   = 1;
         $newwithdrawal->currency_id = $currency->id;
-        $newwithdrawal->amount      = $amount;
-        $newwithdrawal->charge      = $fee;
-        $newwithdrawal->total_amount= $finalamount;
+        $newwithdrawal->amount      = $request->amount;
+        $newwithdrawal->charge      = $messagefee;
+        $newwithdrawal->total_amount= $messagefinal;
         $newwithdrawal->user_data   = $request->details;
         $newwithdrawal->save();
 
@@ -149,8 +169,8 @@ class WithdrawController extends Controller
         $trans->user_id     = $user->id;
         $trans->user_type   = 1;
         $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
-        $trans->amount      = $finalamount;
-        $trans->charge      = 0;
+        $trans->amount      = $request->amount;
+        $trans->charge      = $messagefee;
         $trans->type        = '-';
         $trans->remark      = 'Payout';
         $trans->details     = trans('Payout created');
