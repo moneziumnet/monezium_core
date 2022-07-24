@@ -13,6 +13,7 @@ use App\Models\Generalsetting;
 use App\Models\BalanceTransfer;
 use App\Models\SaveAccount;
 use App\Models\Notification;
+use App\Models\Withdrawals;
 use App\Models\Currency;
 use App\Models\Beneficiary;
 use App\Models\OtherBank;
@@ -20,6 +21,7 @@ use App\Models\UserLoan;
 use App\Models\UserDps;
 use App\Models\DpsPlan;
 use App\Models\LoanPlan;
+use App\Models\Deposit;
 use App\Models\FdrPlan;
 use App\Models\UserFdr;
 use App\Models\Escrow;
@@ -30,6 +32,7 @@ use App\Models\InstallmentLog;
 use App\Models\Voucher;
 use App\Models\Charge;
 use App\Models\ExchangeMoney;
+use App\Models\DepositBank;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Classes\GeniusMailer;
@@ -1441,7 +1444,7 @@ class UserController extends Controller
     {
         try{
             $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
-            $data['beneficiaries'] = Beneficiary::whereUserId($user_id)->orderBy('id','desc')->paginate(10);
+            $data['beneficiaries'] = Beneficiary::with('bank')->whereUserId($user_id)->orderBy('id','desc')->paginate(10);
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
         }catch(\Throwable $th){
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
@@ -1524,6 +1527,39 @@ class UserController extends Controller
             ]);
             $beneficiary_id = $request->beneficiary_id;
             $data['beneficiaries'] = Beneficiary::whereUserId($user_id)->where('id', $beneficiary_id)->first();
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data'=> $data]);
+        }catch(\Throwable $th){
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
+        }
+    }
+
+    public function depositsbank(Request $request)
+    {
+        try{
+            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $data['deposits'] = DepositBank::whereUserId($user_id)->orderby('id','desc')->paginate(10);
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data'=> $data]);
+        }catch(\Throwable $th){
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
+        }
+    }
+    
+    public function withdrawbank(Request $request)
+    {
+        try{
+            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $data['withdaw'] = Withdrawals::whereUserId($user_id)->orderBy('id','desc')->paginate(10); 
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data'=> $data]);
+        }catch(\Throwable $th){
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
+        }
+    }
+    
+    public function depositgateways(Request $request)
+    {
+        try{
+            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $data['deposits'] = Deposit::whereUserId($user_id)->orderBy('id','desc')->paginate(10); 
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data'=> $data]);
         }catch(\Throwable $th){
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
