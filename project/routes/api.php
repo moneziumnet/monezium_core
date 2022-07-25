@@ -81,10 +81,14 @@ Route::prefix('api')->group(function () {
     Route::post('user/beneficiaries-details',[UserController::class,'beneficiariesdetails']);
     Route::post('user/beneficiaries-create',[UserController::class,'beneficiariescreate']);
     Route::post('user/other-bank-transfer',[UserController::class,'otherbanktransfer']);
-    
+    Route::get('user/other-bank',[UserController::class,'otherbank']);
+    Route::post('user/other-bank-send',[UserController::class,'otherbanksend']);
+
     Route::post('user/deposit',[UserController::class,'deposit']);
     Route::post('user/deposit-details',[UserController::class,'depositdetails']);
+
     Route::post('user/depositsbank',[UserController::class,'depositsbank']);
+    Route::post('user/deposit-bank-create',[UserController::class,'depositbankcreate']);
 
     Route::post('user/withdraw',[UserController::class,'withdraw']);
     Route::post('user/withdraw-create',[UserController::class,'withdrawcreate']);
