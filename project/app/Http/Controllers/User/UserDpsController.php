@@ -53,7 +53,8 @@ class UserDpsController extends Controller
             $dps->status = 2;
             $dps->next_installment = NULL;
             $dps->update();
-            user_wallet_increment($dps->user_id, $dps->currency_id, $dps->paid_amount, 4);
+            user_wallet_increment($dps->user_id, $dps->currency_id, $dps->paid_amount, 1);
+            user_wallet_decrement($dps->user_id, $dps->currency_id, $dps->paid_amount, 3);
 
             return redirect()->back()->with('message','Finish Requesting Successfully');
         }else {
@@ -65,7 +66,7 @@ class UserDpsController extends Controller
     public function dpsSubmit(Request $request){
         $user = auth()->user();
 
-        if(user_wallet_balance(auth()->id(),$request->input('currency_id'), 4) >= $request->per_installment){
+        if(user_wallet_balance(auth()->id(),$request->input('currency_id'), 1) >= $request->per_installment){
             $data = new UserDps();
 
             $plan = DpsPlan::findOrFail($request->dps_plan_id);
@@ -85,7 +86,8 @@ class UserDpsController extends Controller
             $data->next_installment = Carbon::now()->addDays($plan->installment_interval);
             $data->save();
 
-            user_wallet_decrement(auth()->id(),$request->input('currency_id'),$request->per_installment, 4);
+            user_wallet_decrement(auth()->id(),$request->input('currency_id'),$request->per_installment, 1);
+            user_wallet_increment(auth()->id(),$request->input('currency_id'),$request->per_installment, 3);
             //$user->decrement('balance',$request->per_installment);
 
             $log = new InstallmentLog();
@@ -116,7 +118,7 @@ class UserDpsController extends Controller
 
             return redirect()->route('user.dps.index')->with('success','DPS application submitted');
         }else{
-            return redirect()->route('user.dps.plan')->with('warning','You Don,t have sufficient balance');
+            return redirect()->route('user.dps.plan')->with('warning','You Don\'t have sufficient balance');
         }
     }
 
