@@ -65,7 +65,7 @@ class UserController extends Controller
             $rules = [
                 'email'   => 'required|email|unique:users',
                 'phone' => 'required',
-                'password' => 'required||min:6|confirmed'
+                'password' => 'required|min:6'
             ];
             $validator = Validator::make($request->all(), $rules);
 
@@ -193,6 +193,14 @@ class UserController extends Controller
     {
         try {
             $gs = Generalsetting::findOrFail(1);
+            $rules = [
+                'email'   => 'required|email'
+            ];
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
+            }
+
             $input =  $request->all();
 
             if (User::where('email', '=', $request->email)->count() > 0) {
@@ -265,13 +273,13 @@ class UserController extends Controller
     public function loanplan(Request $request)
     {
         try {
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
-            if ($user_id)
-            {
+           // $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            //if ($user_id)
+           // {
                 $data['plans'] = LoanPlan::orderBy('id','desc')->whereStatus(1)->paginate(12);
                 $data['currencylist'] = Currency::whereStatus(1)->where('type', 1)->get();
                 return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
-            }
+            //}
         } catch (\Throwable $th) {
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
         }
@@ -325,6 +333,18 @@ class UserController extends Controller
     {
         try {
             $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+
+            $rules = [
+                'planId'   => 'required',
+                'amount'    => 'required',
+                'currency_id'    => 'required'
+            ];
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
+            }
+
+
             if ($user_id) {
                 $plan = LoanPlan::whereId($request->planId)->first();
                 $amount = $request->amount;
@@ -1556,6 +1576,17 @@ class UserController extends Controller
     }
     
     public function depositgateways(Request $request)
+    {
+        try{
+            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $data['deposits'] = Deposit::whereUserId($user_id)->orderBy('id','desc')->paginate(10); 
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data'=> $data]);
+        }catch(\Throwable $th){
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
+        }
+    }
+    
+    public function withdrawcreate(Request $request)
     {
         try{
             $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;

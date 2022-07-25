@@ -25,7 +25,7 @@ Route::prefix('api')->group(function () {
     Route::post('/user/dashboard', [UserController::class,'dashboard']);
 
     Route::post('/user/loan', [UserController::class,'loan_index']);
-    Route::post('/user/loan-plan', [UserController::class,'loanplan']);
+    Route::get('/user/loan-plan', [UserController::class,'loanplan']);
     Route::post('/user/pending-loans', [UserController::class,'pendingloan']);
     Route::post('/user/running-loans', [UserController::class,'runningloan']);
     Route::post('/user/paid-loans', [UserController::class,'paidloan']);
@@ -79,6 +79,8 @@ Route::prefix('api')->group(function () {
     Route::post('user/other-bank-transfer',[UserController::class,'otherbanktransfer']);
     Route::post('user/depositsbank',[UserController::class,'depositsbank']);
     Route::post('user/withdrawbank',[UserController::class,'withdrawbank']);
+    Route::post('user/withdraw-details',[UserController::class,'withdrawdetails']);
+    Route::post('user/withdraw-create',[UserController::class,'withdrawcreate']);
     Route::post('user/deposit-gateways',[UserController::class,'depositgateways']);
     
 
