@@ -341,7 +341,7 @@ if(!function_exists('getModule')){
         $wallet = Wallet::where('user_id', $auth_id)->where('wallet_type', $wallet_type)
                   ->where('currency_id',$currency_id)->first();
 
-        if($wallet && $wallet->balance >= $amount)
+        if($wallet)
         {
           $balance = Wallet::where('user_id', $auth_id)
                       ->where('currency_id',$currency_id)
