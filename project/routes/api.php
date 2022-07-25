@@ -77,6 +77,7 @@ Route::prefix('api')->group(function () {
 
     Route::post('user/transactions',[UserController::class,'transactions']);
     Route::post('user/transfer-logs',[UserController::class,'transferlogs']);
+    
     Route::post('user/beneficiaries',[UserController::class,'beneficiaries']);
     Route::post('user/beneficiaries-details',[UserController::class,'beneficiariesdetails']);
     Route::post('user/beneficiaries-create',[UserController::class,'beneficiariescreate']);

@@ -1645,7 +1645,7 @@ class UserController extends Controller
         try{
             $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
 
-            $request->validate([
+            $rules = [
                 'other_bank_id' => 'required',
                 'account_number' => 'required',
                 'account_name' => 'required',
@@ -1654,8 +1654,14 @@ class UserController extends Controller
                 'beneficiary_bank_address' => 'required',
                 'swift_bic' => 'required',
                 'national_id_no' => 'required',
-            ]);
-    
+            ];
+            $validator = Validator::make($request->all(), $rules);
+            
+            if ($validator->fails()) {
+                return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
+            }
+
+           
             $data = new Beneficiary();
             $input = $request->all();
     
@@ -1696,9 +1702,16 @@ class UserController extends Controller
     {
         try{
             $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
-            $request->validate([
-                'beneficiary_id' => 'required'
-            ]);
+            $rules = [
+                'beneficiary_id'       => 'required'
+            ];
+            $validator = Validator::make($request->all(), $rules);
+            
+            if ($validator->fails()) {
+                return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
+            }
+
+            
             $beneficiary_id = $request->beneficiary_id;
             $data['beneficiaries'] = Beneficiary::whereUserId($user_id)->where('id', $beneficiary_id)->first();
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data'=> $data]);
