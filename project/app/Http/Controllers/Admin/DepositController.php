@@ -9,6 +9,7 @@ use App\Models\Deposit;
 use App\Models\Generalsetting;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Models\Charge;
 use Illuminate\Http\Request;
 use Datatables;
 
@@ -16,7 +17,7 @@ class DepositController extends Controller
 {
     public function datatables()
     {
-        $datas = Deposit::orderBy('id','desc');  
+        $datas = Deposit::orderBy('id','desc');
 
         return Datatables::of($datas)
                         ->editColumn('created_at', function(Deposit $data) {
@@ -33,8 +34,7 @@ class DepositController extends Controller
                         })
                         ->editColumn('amount', function(Deposit $data) {
                             $gs = Generalsetting::find(1);
-                            $defaultCurrency = Currency::where('is_default',1)->first();
-                            return $defaultCurrency->symbol.round($data->amount*$defaultCurrency->rate);
+                            return $data->currency->symbol.round($data->amount*$data->currency->rate);
                         })
                         ->editColumn('status', function(Deposit $data) {
                             $status = $data->status == 'pending' ? '<span class="badge badge-warning">pending</span>' : '<span class="badge badge-success">completed</span>';
@@ -69,18 +69,53 @@ class DepositController extends Controller
           $msg = 'Deposits already completed';
           return response()->json($msg);
         }
-  
+
         $user = User::findOrFail($data->user_id);
-        $currency = Currency::whereIsDefault(1)->first()->id;
-        user_wallet_increment($user->id, $currency, $data->amount);
+
+        $amount = $data->amount*$data->currency->rate;
+        $global_charge = Charge::where('name', 'Transfer Money')->where('plan_id', $user->bank_plan_id)->first();
+        $global_cost = 0;
+        $transaction_global_cost = 0;
+        $global_cost = $global_charge->data->fixed_charge + ($amount/100) * $global_charge->data->percent_charge;
+        if ($amount < $global_charge->data->minimum || $amount > $global_charge->data->maximum) {
+            return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_charge->data->maximum.' and Min value is '.$global_charge->data->minimum );
+        }
+        $transaction_global_fee = check_global_transaction_fee($amount, $user);
+        if($transaction_global_fee)
+        {
+            $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($amount/100) * $transaction_global_fee->data->percent_charge;
+        }
+        $custom_cost = 0;
+        $transaction_custom_cost = 0;
+
+        $explode = explode(',',User::whereId($user->id)->first()->user_type);
+
+        if(in_array(3,$explode))
+        {
+            $custom_charge = Charge::where('name', 'Transfer Money')->where('user_id', $user->id)->first();
+            if($custom_charge)
+            {
+                $custom_cost = $custom_charge->data->fixed_charge + ($amount/100) * $custom_charge->data->percent_charge;
+            }
+            $transaction_custom_fee = check_custom_transaction_fee($amount, $user);
+            if($transaction_custom_fee) {
+                $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($amount/100) * $transaction_custom_fee->data->percent_charge;
+            }
+            user_wallet_increment($user->id, $data->currency_id, $custom_cost+$transaction_custom_cost, 6);
+        }
+        $final_chargefee = $global_cost + $transaction_global_cost + $custom_cost + $transaction_custom_cost;
+        $final_amount = amount($amount - $final_chargefee, $data->currency->type );
+
+
+        user_wallet_increment($user->id, $data->currency_id, $final_amount);
 
         $trans = new Transaction();
         $trans->trnx = $data->deposit_number;
         $trans->user_id     = $user->id;
         $trans->user_type   = 1;
-        $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
-        $trans->amount      = $data->amount;
-        $trans->charge      = 0;
+        $trans->currency_id = $data->currency_id;
+        $trans->amount      = $amount;
+        $trans->charge      = $final_chargefee;
         $trans->type        = '+';
         $trans->remark      = 'Deposit_create';
         $trans->details     = trans('Deposit complete');
@@ -94,14 +129,14 @@ class DepositController extends Controller
                 'to' => $user->email,
                 'type' => "Deposti",
                 'cname' => $user->name,
-                'oamount' => $data->amount,
+                'oamount' => $amount,
                 'aname' => "",
                 'aemail' => "",
                 'wtitle' => "",
             ];
 
             $mailer = new GeniusMailer();
-            $mailer->sendAutoMail($data);            
+            $mailer->sendAutoMail($data);
         }
         else
         {
@@ -109,9 +144,9 @@ class DepositController extends Controller
             $subject = " You have deposited successfully.";
             $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
             $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-            mail($to,$subject,$msg,$headers);            
+            mail($to,$subject,$msg,$headers);
         }
-  
+
         $msg = 'Data Updated Successfully.';
         return response()->json($msg);
       }
