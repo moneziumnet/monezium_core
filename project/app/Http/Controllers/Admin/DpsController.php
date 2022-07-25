@@ -132,10 +132,11 @@ class DpsController extends Controller
       $user = User::whereId($userId)->first();
 
       $currency = $data->currency->id;
-      $userBalance = user_wallet_balance($user->id, $currency, 4);
+      $userBalance = user_wallet_balance($user->id, $currency, 1);
 
       if($user && $userBalance>=$installment){
-        user_wallet_decrement($user->id, $currency, $installment, 4);
+        user_wallet_decrement($user->id, $currency, $installment, 1);
+        user_wallet_increment($user->id, $currency, $installment, 3);
       }
     }
 
@@ -155,7 +156,7 @@ class DpsController extends Controller
       $user = User::findOrfail($userId);
       $currency = $dps->currency->id;
       if($user){
-        user_wallet_increment($user->id, $currency, $maturedAmount, 4);
+        user_wallet_increment($user->id, $currency, $maturedAmount-$dps->deposit_amount, 3);
       }
     }
 
