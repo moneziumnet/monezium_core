@@ -60,7 +60,8 @@ class UserFdrController extends Controller
         if($fdr){
             // user_wallet_decrement($fdr->user_id, $fdr->currency_id, $fdr->fdr_amount, 4);
             $currency = $fdr->currency->id;
-            user_wallet_increment($fdr->user_id, $currency, $fdr->amount, 4);
+            user_wallet_increment($fdr->user_id, $currency, $fdr->amount, 1);
+            user_wallet_decrement($fdr->user_id, $currency, $fdr->amount, 3);
             $fdr->next_profit_time = NULL;
             $fdr->status = 2;
             $fdr->update();
@@ -75,7 +76,7 @@ class UserFdrController extends Controller
         // $user = auth()->user();
         // dd($request);
         // if($user->balance >= $request->fdr_amount){
-        if(user_wallet_balance(auth()->id(),$request->input('currency_id'), 4)  >= $request->fdr_amount){
+        if(user_wallet_balance(auth()->id(),$request->input('currency_id'), 1)  >= $request->fdr_amount){
 
             $data = new UserFdr();
             $plan = FdrPlan::findOrFail($request->plan_id);
@@ -97,7 +98,8 @@ class UserFdrController extends Controller
             $data->save();
 
             //$user->decrement('balance',$request->fdr_amount);
-            user_wallet_decrement(auth()->id(),$request->input('currency_id'),$request->fdr_amount, 4);
+            user_wallet_decrement(auth()->id(),$request->input('currency_id'),$request->fdr_amount, 1);
+            user_wallet_increment(auth()->id(),$request->input('currency_id'),$request->fdr_amount, 3);
 
             $trans = new Transaction();
             $trans->trnx = $data->transaction_no;
