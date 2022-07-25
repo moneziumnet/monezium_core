@@ -70,7 +70,7 @@ class UserLoanController extends Controller
         $loan = UserLoan::whereId($request->plan_Id)->first();
         if($loan){
             $plan = LoanPlan::whereId($loan->plan_Id)->first();
-            user_wallet_decrement($loan->user_id, $loan->currency_id, $loan->loan_amount, 4);
+            user_wallet_decrement($loan->user_id, $loan->currency_id, $loan->per_installment_amount*$loan->total_installment - $loan->paid_amount, 4);
 
             $loan->status = 3;
             $loan->next_installment = NULL;
