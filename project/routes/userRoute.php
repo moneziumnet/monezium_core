@@ -57,7 +57,7 @@ use App\Http\Controllers\User\MerchantOtherBankController;
 use App\Http\Controllers\User\UserOpenPaydController;
 use App\Http\Controllers\User\UserRailsbankController;
 use App\Http\Controllers\User\SupervisorController;
-use App\Http\Controllers\User\OwnTransferContoller;
+use App\Http\Controllers\User\OwnTransferController;
 
 Route::prefix('user')->group(function() {
 
@@ -367,9 +367,9 @@ Route::prefix('user')->group(function() {
       Route::post('/pricingplan/createcharge', [SupervisorController::class, 'createCharge'])->name('user-pricingplan-create-charge');
 
     //   Route::get('/own/money',[OwnTransferContoller::class, 'index'])->name('user.ownaccounttransfer.index');
-      Route::get('/own', [OwnTransferContoller::class, 'index'])->name('ownaccounttransfer-index');
+      Route::get('/own', [OwnTransferController::class, 'index'])->name('ownaccounttransfer-index');
 
-      Route::post('own/transfer',[OwnTransferContoller::class, 'transfer'])->name('user.ownaccounttransfer.transfer');
+      Route::post('own',[OwnTransferController::class, 'transfer'])->name('user.ownaccounttransfer.transfer');
 
 
 

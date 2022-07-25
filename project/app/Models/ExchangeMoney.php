@@ -29,7 +29,7 @@ class ExchangeMoney extends Model
             $trnx->user_id     = auth()->id();
             $trnx->user_type   = 1;
             $trnx->currency_id = $exchange->from_currency;
-            $trnx->amount      = $exchange->from_amount;
+            $trnx->amount      = $exchange->from_amount + $exchange->charge;
             $trnx->charge      = $exchange->charge;
             $trnx->remark      = 'money_exchange';
             $trnx->type        = '-';
