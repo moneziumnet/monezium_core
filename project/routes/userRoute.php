@@ -57,6 +57,7 @@ use App\Http\Controllers\User\MerchantOtherBankController;
 use App\Http\Controllers\User\UserOpenPaydController;
 use App\Http\Controllers\User\UserRailsbankController;
 use App\Http\Controllers\User\SupervisorController;
+use App\Http\Controllers\User\OwnTransferContoller;
 
 Route::prefix('user')->group(function() {
 
@@ -103,10 +104,10 @@ Route::prefix('user')->group(function() {
 
       Route::group(['middleware'=>'kyc:Loan'],function(){
         Route::get('/loans', [UserLoanController::class,'index'])->name('user.loans.index');
-        Route::get('/pending-loans', [UserLoanController::class,'pending'])->name('user.loans.pending');
-        Route::get('/running-loans', [UserLoanController::class,'running'])->name('user.loans.running');
-        Route::get('/paid-loans', [UserLoanController::class,'paid'])->name('user.loans.paid');
-        Route::get('/rejected-loans', [UserLoanController::class,'rejected'])->name('user.loans.rejected');
+        // Route::get('/pending-loans', [UserLoanController::class,'pending'])->name('user.loans.pending');
+        // Route::get('/running-loans', [UserLoanController::class,'running'])->name('user.loans.running');
+        // Route::get('/paid-loans', [UserLoanController::class,'paid'])->name('user.loans.paid');
+        // Route::get('/rejected-loans', [UserLoanController::class,'rejected'])->name('user.loans.rejected');
         Route::get('/loan-plan', [UserLoanController::class,'loanPlan'])->name('user.loans.plan');
         Route::post('/loan-amount', [UserLoanController::class,'loanAmount'])->name('user.loan.amount');
         Route::post('/loan-request', [UserLoanController::class,'loanRequest'])->name('user.loan.request');
@@ -364,6 +365,11 @@ Route::prefix('user')->group(function() {
       Route::get('/pricingplan/datatables/{id}', [SupervisorController::class, 'datatables'])->name('user-pricingplan-datatables');
       Route::post('/pricingplan/updatecharge/{id}', [SupervisorController::class, 'updateCharge'])->name('user-pricingplan-update-charge');
       Route::post('/pricingplan/createcharge', [SupervisorController::class, 'createCharge'])->name('user-pricingplan-create-charge');
+
+    //   Route::get('/own/money',[OwnTransferContoller::class, 'index'])->name('user.ownaccounttransfer.index');
+      Route::get('/own', [OwnTransferContoller::class, 'index'])->name('ownaccounttransfer-index');
+
+      Route::post('own/transfer',[OwnTransferContoller::class, 'transfer'])->name('user.ownaccounttransfer.transfer');
 
 
 

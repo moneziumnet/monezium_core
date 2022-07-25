@@ -47,6 +47,7 @@ class UserLoanController extends Controller
     public function loanPlan(){
         $data['plans'] = LoanPlan::orderBy('id','desc')->whereStatus(1)->paginate(12);
         $data['currencylist'] = Currency::whereStatus(1)->where('type', 1)->get();
+        $data['loans'] = UserLoan::whereUserId(auth()->id())->orderby('id','desc')->paginate(10);
         return view('user.loan.plan',$data);
     }
 
@@ -66,9 +67,9 @@ class UserLoanController extends Controller
     }
 
     public function loanfinish(Request $request){
-        $loan = UserLoan::whereId($request->planId)->first();
+        $loan = UserLoan::whereId($request->plan_Id)->first();
         if($loan){
-            $plan = LoanPlan::whereId($loan->planId)->first();
+            $plan = LoanPlan::whereId($loan->plan_Id)->first();
             user_wallet_decrement($loan->user_id, $loan->currency_id, $loan->loan_amount, 4);
 
             $loan->status = 3;

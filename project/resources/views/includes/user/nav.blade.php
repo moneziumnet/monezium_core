@@ -39,7 +39,7 @@
                 {{__('Loan Plan')}}
               </a>
 
-              <a class="dropdown-item" href="{{route('user.loans.index')}}">
+              {{-- <a class="dropdown-item" href="{{route('user.loans.index')}}">
                 {{__('All Loans')}}
               </a>
 
@@ -57,7 +57,7 @@
 
               <a class="dropdown-item" href="{{route('user.loans.rejected')}}">
                 {{__('Rejected Loans')}}
-              </a>
+              </a> --}}
             </div>
             </li>
             @endif
@@ -163,6 +163,9 @@
                   {{__('Transfer History')}}
                 </a>
                 @endif
+                <a class="dropdown-item" href="{{ route('ownaccounttransfer-index') }}">
+                    {{__('Own Money Transfer')}}
+                </a>
               </div>
             </li>
             @endif
@@ -379,7 +382,7 @@
                 <a class="dropdown-item" href="{{route('user.loans.plan')}}">
                   {{__('Loan Plan')}}
                 </a>
-
+{{--
                 <a class="dropdown-item" href="{{route('user.loans.index')}}">
                   {{__('All Loans')}}
                 </a>
@@ -398,7 +401,7 @@
 
                 <a class="dropdown-item" href="{{route('user.loans.rejected')}}">
                   {{__('Rejected Loans')}}
-                </a>
+                </a> --}}
               </div>
             </li>
             @endif
@@ -504,6 +507,9 @@
                   {{__('Transfer History')}}
                 </a>
                 @endif
+                <a class="dropdown-item" href="{{ route('ownaccounttransfer-index') }}">
+                    {{__('Own Money Transfer')}}
+                </a>
               </div>
             </li>
             @endif
