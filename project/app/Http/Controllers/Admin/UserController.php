@@ -539,7 +539,7 @@ class UserController extends Controller
         public function profilePricingplandatatables($id)
         {
             $user = User::findOrFail($id);
-            $globals = Charge::where('plan_id', $user->bank_plan_id)->get();
+            $globals = Charge::where('plan_id', $user->bank_plan_id)->orderBy('name','desc')->get();
             $datas = $globals;
             return Datatables::of($datas)
                             ->editColumn('name', function(Charge $data) {
@@ -590,7 +590,7 @@ class UserController extends Controller
                                 }
                                 else {
 
-                                        return '<button type="button" class="btn btn-primary btn-big btn-rounded " data-id="'.$data->name.'" onclick="createDetails(\''.$data->name.'\')" aria-haspopup="true" aria-expanded="false">
+                                        return '<button type="button" class="btn btn-primary btn-big btn-rounded " data-id="'.$data->id.'" onclick="createDetails(\''.$data->id.'\')" aria-haspopup="true" aria-expanded="false">
                                         Edit
                                         </button>';
                                 }
@@ -605,70 +605,23 @@ class UserController extends Controller
             return view('admin.user.profilepricingplanedit',compact('plandetail'));
         }
 
-        public function profilePricingplancreate($id, $name) {
+        public function profilePricingplancreate($id, $charge_id) {
+            $global = Charge::findOrFail($charge_id);
             $plandetail = new Charge();
-            $plandetail->name = $name;
+            $plandetail->name = $global->name;
             $plandetail->user_id = $id;
             $plandetail->plan_id = 0;
-            switch ($name) {
-                case 'Transfer Money':
-                    $plandetail->data = json_decode('{"percent_charge":"2","fixed_charge":"2"}');
-                    $plandetail->slug = 'transfer-money-0-'.$id;
-                    break;
-                case 'Exchange Money':
-                    $plandetail->data = json_decode('{"percent_charge":"2","fixed_charge":"2"}');
-                    $plandetail->slug = 'exchange-money-0-'.$id;
-                    break;
-                case 'Request Money':
-                    $plandetail->data = json_decode('{"percent_charge":"1","fixed_charge":"2"}');
-                    $plandetail->slug = 'request-money-0-'.$id;
-                    break;
-                case 'Merchant Payment':
-                    $plandetail->data = json_decode('{"percent_charge":"5","fixed_charge":"2"}');
-                    $plandetail->slug = 'merchant-payment-0-'.$id;
-                    break;
-                case 'Create Voucher':
-                    $plandetail->data = json_decode('{"percent_charge":"2","fixed_charge":"2"}');
-                    $plandetail->slug = 'create-voucher-0-'.$id;
-                    break;
-                case 'Create Invoice':
-                    $plandetail->data = json_decode('{"percent_charge":"5","fixed_charge":"2"}');
-                    $plandetail->slug = 'create-invoice-0-'.$id;
-                    break;
-                case 'Make Escrow':
-                    $plandetail->data = json_decode('{"percent_charge":"5","fixed_charge":"2"}');
-                    $plandetail->slug = 'make-escrow-0-'.$id;
-                    break;
-                case 'API Merchant Payment':
-                    $plandetail->data = json_decode('{"percent_charge":"5","fixed_charge":"2"}');
-                    $plandetail->slug = 'api-payment-0-'.$id;
-                    break;
-                case 'Account Maintenance':
-                    $plandetail->data = json_decode('{"percent_charge":"0","fixed_charge":"20"}');
-                    $plandetail->slug = 'account-maintenance-0-'.$id;
-                    break;
-                case 'Card Maintenance':
-                    $plandetail->data = json_decode('{"percent_charge":"0","fixed_charge":"10"}');
-                    $plandetail->slug = 'card-maintenance-0-'.$id;
-                    break;
-                case 'Transaction 1':
-                    $plandetail->data = json_decode('{"percent_charge":"1","fixed_charge":"2","from":"1","till":"5000"}');
-                    $plandetail->slug = 'transaction-1-0-'.$id;
-                    break;
-                case 'Transaction 2':
-                    $plandetail->data = json_decode('{"percent_charge":"1","fixed_charge":"2","from":"5001","till":"20000"}');
-                    $plandetail->slug = 'transaction-2-0-'.$id;
-                    break;
-                case 'Transaction 3':
-                    $plandetail->data = json_decode('{"percent_charge":"1","fixed_charge":"2","from":"20001","till":"50000"}');
-                    $plandetail->slug = 'transaction-3-0-'.$id;
-                    break;
-                case 'Referral':
-                    $plandetail->data = json_decode('{"percent_charge":"1","fixed_charge":"2", "referral":"10","invited":"5"}');
-                    $plandetail->slug = 'referral-0-'.$id;
-                    break;
-            }
+            $plandetail->data =  $global->data;
+            $plandetail->slug = $global->slug;
             return view('admin.user.profilepricingplanedit',compact('plandetail'));
+        }
+
+        public function profilePricingplanglobalcreate($id) {
+            $plandetail = new Charge();
+            $plandetail->user_id = 0;
+            $plandetail->plan_id = User::findOrFail($id)->bank_plan_id;
+            $plandetail->data =  json_decode('{"percent_charge":"0","fixed_charge":"0","from":"0","till":"0"}');
+            return view('admin.user.profilepricingplancreate',compact('plandetail'));
         }
 
 

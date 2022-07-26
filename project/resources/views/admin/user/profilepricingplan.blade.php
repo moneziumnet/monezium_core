@@ -152,11 +152,18 @@
             }
         });
 
+        $(function() {
+        $(".btn-area").append('<div class="col-sm-12 col-md-4 pr-3 text-right">'+
+            '<button class="btn btn-primary"  data-id="'+'{{$data->id}}'+'" onclick="createglobalplan(\''+'{{$data->id}}'+'\')" ><i class="fas fa-plus"></i> {{__('Add New Plan')}} </button>'+
+        '</a>'+
+        '</div>');
+    });
+
 
         function getDetails (id=null)
         {
             if (id) {
-                var url = "{{url('admin/user/pricingplan/edit/')}}"+'/'+id
+                var url = "{{url('admin/user/pricingplan/edit')}}"+'/'+id
                 $.get(url,function (res) {
                   if(res == 'empty'){
                     $('.list-group').html('<p>@lang('No details found!')</p>')
@@ -169,9 +176,9 @@
               $('#modal-success').modal('show')
         }
 
-        function createDetails(name)
+        function createDetails(id)
         {
-                var url = "{{url('admin/user/pricingplan/create/')}}"+'/'+'{{$data->id}}'+'/'+`${name}`
+                var url = "{{url('admin/user/pricingplan/create')}}"+'/'+'{{$data->id}}'+'/'+`${id}`
                 console.log(url);
                 $.get(url,function (res) {
                   if(res == 'empty'){
@@ -185,6 +192,25 @@
         $('.closed').click(function() {
             $('#modal-success').modal('hide');
         });
+
+        function createglobalplan(id)
+        {
+                var url = "{{url('admin/user/pricingplancreate')}}"+'/'+`${id}`
+                console.log(url);
+                $.get(url,function (res) {
+                  if(res == 'empty'){
+                    $('.list-group').html('<p>@lang('No details found!')</p>')
+                  }else{
+                    $('.list-group').html(res)
+                  }
+                });
+                $('#modal-success').modal('show')
+        }
+        $('.closed').click(function() {
+            $('#modal-success').modal('hide');
+        });
+
+
 
 </script>
 

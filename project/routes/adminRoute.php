@@ -216,6 +216,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/user/{id}/pricingplan', [UserController::class, 'profilePricingplan'])->name('admin-user-pricingplan');
     Route::get('/user/pricingplan/edit/{id}', [UserController::class, 'profilePricingplanedit'])->name('admin-user-pricingplan-edit');
     Route::get('/user/pricingplan/create/{id}/{name}', [UserController::class, 'profilePricingplancreate'])->name('admin-user-pricingplan-create');
+    Route::get('/user/pricingplancreate/{id}', [UserController::class, 'profilePricingplanglobalcreate'])->name('admin-user-pricingplan-global-create');
     Route::get('/user/pricingplan/datatables/{id}', [UserController::class, 'profilePricingplandatatables'])->name('admin-user-pricingplan-datatables');
     Route::post('/user/{id}/admin-user-upgrade-plan', [UserController::class, 'upgradePlan'])->name('admin-user-upgrade-plan');
     Route::get('/user/{id}/transactions', [UserController::class, 'profileTransctions'])->name('admin-user-transactions');
