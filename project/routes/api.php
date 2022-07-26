@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\UserLoanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,16 +25,16 @@ Route::prefix('api')->group(function () {
     Route::post('/user/forgot', [UserController::class, 'forgot']);
     Route::post('/user/dashboard', [UserController::class,'dashboard']);
 
-    Route::post('/user/loan', [UserController::class,'loan_index']);
-    Route::get('/user/loan-plan', [UserController::class,'loanplan']);
-    Route::post('/user/pending-loans', [UserController::class,'pendingloan']);
-    Route::post('/user/running-loans', [UserController::class,'runningloan']);
-    Route::post('/user/paid-loans', [UserController::class,'paidloan']);
-    Route::post('/user/rejected-loans', [UserController::class,'rejectedloan']);
-    Route::post('/user/loan-amount', [UserController::class,'loanamount']);
-    Route::post('/user/loan-request', [UserController::class,'loanrequest']);
-    Route::post('/user/loan-finish', [UserController::class,'loanfinish']);
-    Route::get('/user/loan-logs/{id}', [UserController::class,'loanlog']);
+    Route::post('/user/loan', [UserLoanController::class,'loan_index']);
+    Route::get('/user/loan-plan', [UserLoanController::class,'loanplan']);
+    Route::post('/user/pending-loans', [UserLoanController::class,'pendingloan']);
+    Route::post('/user/running-loans', [UserLoanController::class,'runningloan']);
+    Route::post('/user/paid-loans', [UserLoanController::class,'paidloan']);
+    Route::post('/user/rejected-loans', [UserLoanController::class,'rejectedloan']);
+    Route::post('/user/loan-amount', [UserLoanController::class,'loanamount']);
+    Route::post('/user/loan-request', [UserLoanController::class,'loanrequest']);
+    Route::post('/user/loan-finish', [UserLoanController::class,'loanfinish']);
+    Route::get('/user/loan-logs/{id}', [UserLoanController::class,'loanlog']);
 
     Route::post('/user/send-money', [UserController::class, 'sendmoney']);
     Route::post('/user/request-money', [UserController::class, 'requestmoney']);
@@ -77,14 +78,19 @@ Route::prefix('api')->group(function () {
 
     Route::post('user/transactions',[UserController::class,'transactions']);
     Route::post('user/transfer-logs',[UserController::class,'transferlogs']);
+    
     Route::post('user/beneficiaries',[UserController::class,'beneficiaries']);
     Route::post('user/beneficiaries-details',[UserController::class,'beneficiariesdetails']);
     Route::post('user/beneficiaries-create',[UserController::class,'beneficiariescreate']);
     Route::post('user/other-bank-transfer',[UserController::class,'otherbanktransfer']);
-    
+    Route::get('user/other-bank',[UserController::class,'otherbank']);
+    Route::post('user/other-bank-send',[UserController::class,'otherbanksend']);
+
     Route::post('user/deposit',[UserController::class,'deposit']);
     Route::post('user/deposit-details',[UserController::class,'depositdetails']);
+
     Route::post('user/depositsbank',[UserController::class,'depositsbank']);
+    Route::post('user/deposit-bank-create',[UserController::class,'depositbankcreate']);
 
     Route::post('user/withdraw',[UserController::class,'withdraw']);
     Route::post('user/withdraw-create',[UserController::class,'withdrawcreate']);

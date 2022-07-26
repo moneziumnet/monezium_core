@@ -1645,7 +1645,7 @@ class UserController extends Controller
         try{
             $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
 
-            $request->validate([
+            $rules = [
                 'other_bank_id' => 'required',
                 'account_number' => 'required',
                 'account_name' => 'required',
@@ -1654,8 +1654,14 @@ class UserController extends Controller
                 'beneficiary_bank_address' => 'required',
                 'swift_bic' => 'required',
                 'national_id_no' => 'required',
-            ]);
-    
+            ];
+            $validator = Validator::make($request->all(), $rules);
+            
+            if ($validator->fails()) {
+                return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
+            }
+
+           
             $data = new Beneficiary();
             $input = $request->all();
     
@@ -1696,9 +1702,16 @@ class UserController extends Controller
     {
         try{
             $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
-            $request->validate([
-                'beneficiary_id' => 'required'
-            ]);
+            $rules = [
+                'beneficiary_id'       => 'required'
+            ];
+            $validator = Validator::make($request->all(), $rules);
+            
+            if ($validator->fails()) {
+                return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
+            }
+
+            
             $beneficiary_id = $request->beneficiary_id;
             $data['beneficiaries'] = Beneficiary::whereUserId($user_id)->where('id', $beneficiary_id)->first();
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data'=> $data]);
@@ -1711,12 +1724,169 @@ class UserController extends Controller
     {
         try{
             $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
-            $request->validate([
-                'beneficiary_id' => 'required'
-            ]);
+
+            $rules = [
+                'beneficiary_id'       => 'required'
+            ];
+            $validator = Validator::make($request->all(), $rules);
+            
+            if ($validator->fails()) {
+                return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
+            }
+
+           
             $beneficiary_id = $request->beneficiary_id;
             $data['beneficiaries'] = Beneficiary::whereUserId($user_id)->where('id', $beneficiary_id)->first();
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data'=> $data]);
+        }catch(\Throwable $th){
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
+        }
+    }
+    
+    public function otherbank(Request $request)
+    {
+        try{
+           // $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+           
+            $data['otherBanks'] = OtherBank::orderBy('id','desc')->paginate(10);
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data'=> $data]);
+        }catch(\Throwable $th){
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
+        }
+    }
+
+    public function otherbanksend(Request $request)
+    {
+        try{
+            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $rules = [
+                'other_bank_id'       => 'required',
+                'beneficiary_id'       => 'required',
+                'description'       => 'required',
+                'amount' => 'required|numeric|min:0'
+            ];
+            $validator = Validator::make($request->all(), $rules);
+            
+            if ($validator->fails()) {
+                return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
+            }
+
+
+            $other_bank_id = $request->other_bank_id;
+            $amount = $request->amount;
+
+            $user = User::whereId($user_id)->first();
+            if($user->bank_plan_id === null){
+                return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'You have to buy a plan to withdraw.']);
+            }
+    
+            if(strtotime($user->plan_end_date)< strtotime(date('Y-m-dH:i:s'))){
+                return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Plan Date Expired.']);
+            }
+
+            $bank_plan = BankPlan::whereId($user->bank_plan_id)->first();
+            $dailySend = BalanceTransfer::whereUserId($user_id)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus(1)->sum('amount');
+            $monthlySend = BalanceTransfer::whereUserId($user_id)->whereMonth('created_at', '=', date('m'))->whereStatus(1)->sum('amount');
+
+            if($dailySend > $bank_plan->daily_send){
+                return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Daily send limit over.']);
+            }
+
+            if($monthlySend > $bank_plan->monthly_send){
+                return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Monthly send limit over.']);
+            }
+
+            $gs = Generalsetting::first();
+            $otherBank = OtherBank::whereId($request->other_bank_id)->first();
+            $dailyTransactions = BalanceTransfer::whereType('other')->whereUserId($user_id)->whereDate('created_at', now())->get();
+            $monthlyTransactions = BalanceTransfer::whereType('other')->whereUserId($user_id)->whereMonth('created_at', now()->month())->get();
+
+            if ($otherBank ) {
+                $cost = $otherBank->fixed_charge + ($request->amount/100) * $otherBank->percent_charge;
+                $finalAmount = $request->amount + $cost;
+
+                if($otherBank->min_limit > $request->amount){
+                    return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Request Amount should be greater than this']);
+                }
+
+                if($otherBank->max_limit < $request->amount){
+                    return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Request Amount should be less than this']);
+                }
+
+                $currency = defaultCurr();
+                $balance = user_wallet_balance($user_id, $currency->id);
+
+                if($balance<0 && $finalAmount > $balance){
+                    return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Insufficient Balance!']);
+                }
+
+                if($otherBank->daily_maximum_limit <= $finalAmount){
+                    return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Your daily limitation of transaction is over.']);
+                }
+
+                if($otherBank->daily_maximum_limit <= $dailyTransactions->sum('final_amount')){
+                    return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Your daily limitation of transaction is over.']);
+                }
+
+                if($otherBank->daily_total_transaction <= count($dailyTransactions)){
+                    return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Your daily number of transaction is over.']);
+                }
+
+                if($otherBank->monthly_maximum_limit < $monthlyTransactions->sum('final_amount')){
+                    return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Your monthly limitation of transaction is over.']);
+                }
+
+                if($otherBank->monthly_total_transaction <= count($monthlyTransactions)){
+                    return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Your monthly number of transaction is over!']);
+                }
+
+                if($request->amount > $balance){
+                    return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Insufficient Account Balance.']);
+                }
+
+                $txnid = Str::random(4).time();
+
+                $data = new BalanceTransfer();
+                $data->user_id =$user_id;
+                $data->transaction_no = $txnid;
+                $data->other_bank_id = $request->other_bank_id;
+                $data->beneficiary_id = $request->beneficiary_id;
+                $data->type = 'other';
+                $data->cost = $cost;
+                $data->amount = $request->amount;
+                $data->final_amount = $finalAmount;
+                $data->description = $request->description;
+                $data->status = 0;
+                $data->save();
+
+                $trans = new Transaction();
+                $trans->trnx = $txnid;
+                $trans->user_id     = $user->id;
+                $trans->user_type   = 1;
+                $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
+                $trans->amount      = $finalAmount;
+                $trans->charge      = $cost;
+                $trans->type        = '-';
+                $trans->remark      = 'Send_Money';
+                $trans->details     = trans('Send Money');
+
+                // $trans->email = $user->email;
+                // $trans->amount = $finalAmount;
+                // $trans->type = "Send Money";
+                // $trans->profit = "minus";
+                // $trans->txnid = $txnid;
+                // $trans->user_id = $user->id;
+                $trans->save();
+
+                // $user->decrement('balance',$finalAmount);
+                // $currency = defaultCurr();
+                user_wallet_decrement($user_id,$currency->id,$finalAmount);
+                return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Money Send successfully.']);
+            
+            }
+    
+
+            
         }catch(\Throwable $th){
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
         }
@@ -1732,6 +1902,8 @@ class UserController extends Controller
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
         }
     }
+    
+    
     
     public function depositdetails(Request $request)
     {
@@ -1761,6 +1933,71 @@ class UserController extends Controller
             $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
             $data['deposits'] = DepositBank::whereUserId($user_id)->orderby('id','desc')->paginate(10);
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data'=> $data]);
+        }catch(\Throwable $th){
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
+        }
+    }
+    
+    public function depositbankcreate(Request $request)
+    {
+        try{
+            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+
+            $rules = [
+                'subinstitude_id' => 'required',
+                'txnid'       => 'required',
+                'currency_id'       => 'required',
+                'method_id'       => 'required',
+                'amount'          => 'required'
+            ];
+            $validator = Validator::make($request->all(), $rules);
+            
+            if ($validator->fails()) {
+                return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
+            }
+
+
+            $currency = Currency::where('id',$request->currency_id)->first();
+            $amountToAdd = $request->amount/$currency->rate;
+            $txnid = Str::random(4).time();
+            $deposit = new DepositBank();
+            $deposit['deposit_number'] = Str::random(12);
+            $deposit['user_id'] = $user_id;
+            $deposit['currency_id'] = $request->currency_id;
+            $deposit['amount'] = $amountToAdd;
+            $deposit['method'] = $request->method_id;
+            $deposit['txnid'] = $request->txnid;
+            $deposit['status'] = "pending";
+            $deposit->save();
+
+
+            $gs =  Generalsetting::findOrFail(1);
+            $user = User::whereId($user_id)->first();
+            if($gs->is_smtp == 1)
+            {
+                $data = [
+                    'to' => $user->email,
+                    'type' => "Deposit",
+                    'cname' => $user->name,
+                    'oamount' => $amountToAdd,
+                    'aname' => "",
+                    'aemail' => "",
+                    'wtitle' => "",
+                ];
+
+                $mailer = new GeniusMailer();
+                $mailer->sendAutoMail($data);
+            }
+            else
+            {
+                $to = $user->email;
+                $subject = " You have deposited successfully.";
+                $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
+                $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
+                mail($to,$subject,$msg,$headers);
+            }
+
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Deposit amount '.$request->amount.' ('.$currency->code.') successfully!']);
         }catch(\Throwable $th){
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
         }
@@ -1950,10 +2187,13 @@ class UserController extends Controller
             if ($validator->fails()) {
                 return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
             }
+
+            
             $user_withdraw_id = $request->user_withdraw_id;
 
             $withdraw = Withdrawals::findOrFail($user_withdraw_id);
-            if($withdras)
+            
+            if($withdraw)
             {
                 $data['withdraws'] = $withdraw;
                 return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
