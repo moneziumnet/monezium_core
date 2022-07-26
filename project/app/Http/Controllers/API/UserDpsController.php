@@ -6,6 +6,7 @@ use Session;
 use Validator;
 use App\Models\User;
 use App\Models\UserApiCred;
+use App\Models\Transaction;
 use App\Models\Currency;
 use App\Models\UserDps;
 use App\Models\DpsPlan;
