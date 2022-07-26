@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\UserLoanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,16 +25,16 @@ Route::prefix('api')->group(function () {
     Route::post('/user/forgot', [UserController::class, 'forgot']);
     Route::post('/user/dashboard', [UserController::class,'dashboard']);
 
-    Route::post('/user/loan', [UserController::class,'loan_index']);
-    Route::get('/user/loan-plan', [UserController::class,'loanplan']);
-    Route::post('/user/pending-loans', [UserController::class,'pendingloan']);
-    Route::post('/user/running-loans', [UserController::class,'runningloan']);
-    Route::post('/user/paid-loans', [UserController::class,'paidloan']);
-    Route::post('/user/rejected-loans', [UserController::class,'rejectedloan']);
-    Route::post('/user/loan-amount', [UserController::class,'loanamount']);
-    Route::post('/user/loan-request', [UserController::class,'loanrequest']);
-    Route::post('/user/loan-finish', [UserController::class,'loanfinish']);
-    Route::get('/user/loan-logs/{id}', [UserController::class,'loanlog']);
+    Route::post('/user/loan', [UserLoanController::class,'loan_index']);
+    Route::get('/user/loan-plan', [UserLoanController::class,'loanplan']);
+    Route::post('/user/pending-loans', [UserLoanController::class,'pendingloan']);
+    Route::post('/user/running-loans', [UserLoanController::class,'runningloan']);
+    Route::post('/user/paid-loans', [UserLoanController::class,'paidloan']);
+    Route::post('/user/rejected-loans', [UserLoanController::class,'rejectedloan']);
+    Route::post('/user/loan-amount', [UserLoanController::class,'loanamount']);
+    Route::post('/user/loan-request', [UserLoanController::class,'loanrequest']);
+    Route::post('/user/loan-finish', [UserLoanController::class,'loanfinish']);
+    Route::get('/user/loan-logs/{id}', [UserLoanController::class,'loanlog']);
 
     Route::post('/user/send-money', [UserController::class, 'sendmoney']);
     Route::post('/user/request-money', [UserController::class, 'requestmoney']);
