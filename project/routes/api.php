@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\UserLoanController;
+use App\Http\Controllers\API\UserDpsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,11 +45,11 @@ Route::prefix('api')->group(function () {
     Route::post('/user/receive', [UserController::class, 'receive']);
 
     // Route::post('register', 'API\UserController@register');
-    Route::post('/user/dps', [UserController::class,'dps_index']);
-    Route::get('/user/dps-plan', [UserController::class,'dpsplan']);
-    Route::post('/user/running-dps', [UserController::class,'runningdps']);
-    Route::post('/user/matured-dps', [UserController::class,'matureddps']);
-    Route::get('/user/dps-details/{id}', [UserController::class,'dpsdetails']);
+    Route::post('/user/dps', [UserDpsController::class,'dps_index']);
+    Route::get('/user/dps-plan', [UserDpsController::class,'dpsplan']);
+    Route::post('/user/running-dps', [UserDpsController::class,'runningdps']);
+    Route::post('/user/matured-dps', [UserDpsController::class,'matureddps']);
+    Route::get('/user/dps-details/{id}', [UserDpsController::class,'dpsdetails']);
    
     Route::post('/user/fdr', [UserController::class,'fdr_index']);
     Route::get('/user/fdr-plan', [UserController::class,'fdrplan']);
