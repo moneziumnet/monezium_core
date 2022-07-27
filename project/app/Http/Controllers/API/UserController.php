@@ -9,6 +9,7 @@ use App\Models\UserApiCred;
 use App\Models\Wallet;
 use App\Models\Transaction;
 use App\Models\BankPlan;
+use App\Models\AdminUserConversation;
 use App\Models\Generalsetting;
 use App\Models\Notification;
 use App\Models\Currency;
@@ -289,6 +290,17 @@ class UserController extends Controller
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
         }
         
+    }
+
+    public function supportmessage(Request $request)
+    {
+        try{
+            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $data['tickets'] = AdminUserConversation::whereUserId($user_id)->orderby('id','desc')->paginate(10);
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data'=> $data]);
+        }catch(\Throwable $th){
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
+        }
     }
  
 }

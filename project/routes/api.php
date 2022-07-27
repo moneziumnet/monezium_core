@@ -41,6 +41,7 @@ Route::prefix('api')->group(function () {
     Route::post('/user/dashboard', [UserController::class,'dashboard']);
     Route::get('/user/packages', [UserController::class,'packages']);
     Route::post('/user/change-password', [UserController::class,'changepassword']);
+    Route::post('/user/support-tickets', [UserController::class,'supportmessage']);
 
     Route::post('/user/loan', [UserLoanController::class,'loan_index']);
     Route::get('/user/loan-plan', [UserLoanController::class,'loanplan']);
