@@ -105,7 +105,7 @@ Route::prefix('api')->group(function () {
 
     Route::post('/user/make-escrow', [EscrowController::class,'makeescrow']);
     Route::post('/user/my-escrow', [EscrowController::class,'myescrow']);
-    Route::post('/user/escrow-pending', [EscrowController::class,'escrowpending']);
+    Route::post('/user/fetch-escrow-pending', [EscrowController::class,'escrowpending']);
 
     Route::post('user/exchange-money-history',[ExchangeMoneyController::class,'exchangemoneyhistory']);
     Route::post('user/exchange-recents',[ExchangeMoneyController::class,'exchangerecents']);
