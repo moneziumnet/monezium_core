@@ -18,6 +18,7 @@ use App\Http\Controllers\API\EscrowController;
 use App\Http\Controllers\API\ExchangeMoneyController;
 use App\Http\Controllers\API\TransactionController;
 use App\Http\Controllers\API\SendController;
+use App\Http\Controllers\API\MerchantController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +39,8 @@ Route::prefix('api')->group(function () {
     Route::post('/user/register', [UserController::class,'register']);
     Route::post('/user/forgot', [UserController::class, 'forgot']);
     Route::post('/user/dashboard', [UserController::class,'dashboard']);
+    Route::get('/user/packages', [UserController::class,'packages']);
+    Route::post('/user/change-password', [UserController::class,'changepassword']);
 
     Route::post('/user/loan', [UserLoanController::class,'loan_index']);
     Route::get('/user/loan-plan', [UserLoanController::class,'loanplan']);
@@ -112,6 +115,9 @@ Route::prefix('api')->group(function () {
     Route::post('user/exchange-money',[ExchangeMoneyController::class,'exchangemoney']);
 
     Route::post('user/transactions',[TransactionController::class,'transactions']);
+    Route::post('user/transfer-logs',[TransactionController::class,'transferlogs']);
+
+    Route::post('user/merchant-api-key',[MerchantController::class,'apikey']);
     Route::post('user/transfer-logs',[TransactionController::class,'transferlogs']);
     
 
