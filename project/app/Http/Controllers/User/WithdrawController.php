@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Str;
 use Validator;
 use Illuminate\Support\Facades\DB;
-use App\Models\Charge;
+use App\Models\PlanDetail;
 
 class WithdrawController extends Controller
 {
@@ -74,18 +74,17 @@ class WithdrawController extends Controller
 
         // $withdraw_method = WithdrawMethod::whereId($request->methods)->first();
         // $withdraw_method = WithdrawMethod::whereId(1)->first();
-        $withdraw_charge = Charge::where('plan_id',$user->bank_plan_id)->where('slug','transfer-money')->first()->value('data');
+        $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'withdraw')->first();
         $userBalance = user_wallet_balance($user->id,$request->currency_id,1);
 
-        $bank_plan = BankPlan::whereId($user->bank_plan_id)->first();
         $dailyWithdraws = Withdrawals::whereDate('created_at', '=', date('Y-m-d'))->whereStatus('completed')->sum('amount');
         $monthlyWithdraws = Withdrawals::whereMonth('created_at', '=', date('m'))->whereStatus('completed')->sum('amount');
 
-        if($dailyWithdraws > $bank_plan->daily_withdraw){
+        if($dailyWithdraws > $global_range->daily_limit){
             return redirect()->back()->with('unsuccess','Daily withdraw limit over.');
         }
 
-        if($monthlyWithdraws > $bank_plan->monthly_withdraw){
+        if($monthlyWithdraws > $global_range->monthly_limit){
             return redirect()->back()->with('unsuccess','Monthly withdraw limit over.');
         }
 
@@ -93,36 +92,26 @@ class WithdrawController extends Controller
             return redirect()->back()->with('unsuccess','Insufficient Account Balance.');
         }
 
-        $global_charge = Charge::where('name', 'Transfer Money')->where('plan_id', $user->bank_plan_id)->first();
-        $global_cost = 0;
         $transaction_global_cost = 0;
-        $global_cost = $global_charge->data->fixed_charge + ($request->amount/100) * $global_charge->data->percent_charge;
-        if ($request->amount < $global_charge->data->minimum || $request->amount > $global_charge->data->maximum) {
-            return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_charge->data->maximum.' and Min value is '.$global_charge->data->minimum );
+        if ($request->amount < $global_range->min || $request->amount > $global_range->max) {
+            return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
         }
-        $transaction_global_fee = check_global_transaction_fee($request->amount, $user);
+        $transaction_global_fee = check_global_transaction_fee($request->amount, $user, 'withdraw');
         if($transaction_global_fee)
         {
             $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/100) * $transaction_global_fee->data->percent_charge;
         }
-        $custom_cost = 0;
         $transaction_custom_cost = 0;
         if(check_user_type(3))
         {
-            $custom_charge = Charge::where('name', 'Transfer Money')->where('user_id', $user->id)->first();
-            if($custom_charge)
-            {
-                $custom_cost = $custom_charge->data->fixed_charge + ($request->amount/100) * $custom_charge->data->percent_charge;
-            }
-            $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user);
+            $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user, 'withdraw');
             if($transaction_custom_fee) {
                 $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/100) * $transaction_custom_fee->data->percent_charge;
             }
         }
 
-        $charge = $withdraw_charge->fixed_charge;
 
-        $messagefee = $global_cost + $transaction_global_cost + $custom_cost + $transaction_custom_cost;
+        $messagefee = $transaction_global_cost + $transaction_custom_cost;
         $messagefinal = $request->amount - $messagefee;
 
         $currency = Currency::whereId($request->currency_id)->first();
@@ -135,7 +124,7 @@ class WithdrawController extends Controller
 
         user_wallet_decrement($user->id, $currency->id, $request->amount);
         if(check_user_type(3)) {
-            user_wallet_increment($user->id, $currency->id, $custom_cost + $transaction_custom_cost, 6);
+            user_wallet_increment($user->id, $currency->id,  $transaction_custom_cost, 6);
         }
 
         $txnid = Str::random(12);
