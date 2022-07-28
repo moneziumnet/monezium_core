@@ -10,6 +10,7 @@ use App\Models\Wallet;
 use App\Models\SaveAccount;
 use App\Models\Transaction;
 use App\Models\Charge;
+use App\Models\PlanDetail;
 use Illuminate\Support\Str;
 use App\Classes\GoogleAuthenticator;
 use Illuminate\Http\Request;
@@ -92,9 +93,9 @@ class SendController extends Controller
         $secret = $user->go;
         $oneCode = $ga->getCode($secret);
 
-        if ($oneCode != $request->code) {
-            return redirect()->back()->with('unsuccess','Two factor authentication code is wrong');
-        }
+        // if ($oneCode != $request->code) {
+        //     return redirect()->back()->with('unsuccess','Two factor authentication code is wrong');
+        // }
 
         if($user->bank_plan_id === null){
             return redirect()->back()->with('unsuccess','You have to buy a plan to withdraw.');
@@ -109,13 +110,13 @@ class SendController extends Controller
 
         $dailySend = BalanceTransfer::whereUserId(auth()->id())->whereDate('created_at', '=', date('Y-m-d'))->whereStatus(1)->sum('amount');
         $monthlySend = BalanceTransfer::whereUserId(auth()->id())->whereMonth('created_at', '=', date('m'))->whereStatus(1)->sum('amount');
-        $global_charge = Charge::where('name', 'Transfer Money')->where('plan_id', $user->bank_plan_id)->first();
+        $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'send')->first();
 
-        if($dailySend > $global_charge->data->daily_limit){
+        if($dailySend > $global_range->daily_limit){
             return redirect()->back()->with('unsuccess','Daily send limit over.');
         }
 
-        if($monthlySend > $global_charge->data->monthly_limit){
+        if($monthlySend > $global_range->monthly_limit){
             return redirect()->back()->with('unsuccess','Monthly send limit over.');
         }
 
@@ -134,11 +135,10 @@ class SendController extends Controller
         }
         $global_cost = 0;
         $transaction_global_cost = 0;
-        $global_cost = $global_charge->data->fixed_charge + ($request->amount/100) * $global_charge->data->percent_charge;
-        if ($request->amount < $global_charge->data->minimum || $request->amount > $global_charge->data->maximum) {
-            return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_charge->data->maximum.' and Min value is '.$global_charge->data->minimum );
+        if ($request->amount < $global_range->min || $request->amount > $global_range->max) {
+            return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_range->maximum.' and Min value is '.$global_range->minimum );
         }
-        $transaction_global_fee = check_global_transaction_fee($request->amount, $user);
+        $transaction_global_fee = check_global_transaction_fee($request->amount, $user, 'send');
         if($transaction_global_fee)
         {
             $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/100) * $transaction_global_fee->data->percent_charge;
@@ -147,12 +147,7 @@ class SendController extends Controller
         $transaction_custom_cost = 0;
         if(check_user_type(3))
         {
-            $custom_charge = Charge::where('name', 'Transfer Money')->where('user_id', $user->id)->first();
-            if($custom_charge)
-            {
-                $custom_cost = $custom_charge->data->fixed_charge + ($request->amount/100) * $custom_charge->data->percent_charge;
-            }
-            $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user);
+            $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user, 'send');
             if($transaction_custom_fee) {
                 $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/100) * $transaction_custom_fee->data->percent_charge;
             }
@@ -160,7 +155,7 @@ class SendController extends Controller
 
 
 
-        $finalCharge = amount($custom_cost+$global_cost+$transaction_global_cost+$transaction_custom_cost, $wallet->currency->type);
+        $finalCharge = amount($transaction_global_cost+$transaction_custom_cost, $wallet->currency->type);
         $finalamount = amount( $request->amount + $finalCharge, $wallet->currency->type);
 
         if($receiver = User::where('account_number',$request->account_number)->first()){
@@ -212,7 +207,7 @@ class SendController extends Controller
             user_wallet_decrement($user->id, $currency_id, $finalamount, $wallet->wallet_type);
             user_wallet_increment($receiver->id, $currency_id, $request->amount, $wallet->wallet_type);
             if(check_user_type(3)) {
-                user_wallet_increment($user->id, $currency_id, $custom_cost +$transaction_custom_cost, 6);
+                user_wallet_increment($user->id, $currency_id, $transaction_custom_cost, 6);
             }
             if(SaveAccount::whereUserId(auth()->id())->where('receiver_id',$receiver->id)->exists()){
                 return redirect()->route('send.money.create')->with('success','Money Send Successfully');
