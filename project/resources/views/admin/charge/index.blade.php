@@ -73,6 +73,31 @@
       </div>
     </div>
   </div>
+
+  <div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-status bg-primary"></div>
+        <div class="modal-body text-center py-4">
+        <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+        <h3>@lang('Plan Details')</h3>
+        <ul class="list-group mt-2">
+
+        </ul>
+        </div>
+        <div class="modal-footer">
+        <div class="w-100">
+            <div class="row">
+            <div class="col"><a href="javascript:;" class="btn w-100 closed" data-bs-dismiss="modal">
+                @lang('Close')
+                </a>
+              </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+  </div>
 @endsection
 
 @section('scripts')
@@ -97,6 +122,28 @@
             language : {
                 processing: '<img src="{{asset('assets/images/'.$gs->admin_loader)}}">'
             }
+        });
+        $(function() {
+        $(".btn-area").append('<div class="col-sm-12 col-md-4 pr-3 text-right">'+
+            '<button class="btn btn-primary"  data-id="'+'{{$plan_id}}'+'" onclick="createglobalplan(\''+'{{$plan_id}}'+'\')" ><i class="fas fa-plus"></i> {{__('Add New Plan')}} </button>'+
+        '</a>'+
+        '</div>');
+    });
+    function createglobalplan(id)
+        {
+                var url = "{{url('admin/user/pricingplancreate')}}"+'/'+`${id}`
+                console.log(url);
+                $.get(url,function (res) {
+                  if(res == 'empty'){
+                    $('.list-group').html('<p>@lang('No details found!')</p>')
+                  }else{
+                    $('.list-group').html(res)
+                  }
+                });
+                $('#modal-success').modal('show')
+        }
+        $('.closed').click(function() {
+            $('#modal-success').modal('hide');
         });
 
 </script>

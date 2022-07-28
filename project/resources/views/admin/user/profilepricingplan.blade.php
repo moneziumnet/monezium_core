@@ -64,8 +64,8 @@
                             <label for="inp-name">{{ __('Subscription Type') }}</label>
                                 <select class="form-control" name="subscription_type" id="subscription_type">
                                 <option value="">{{ __('Select Subscription Type') }}</option>
-                                @foreach($plans as $plan)
-                                <option value="{{ $plan->id }}">{{ $plan->title }} {{ showprice($plan->amount,$currency)}} for {{$plan->days}} days</option>
+                                @foreach($plans as $value)
+                                <option value="{{ $value->id }}">{{ $value->title }} {{ showprice($value->amount,$currency)}} for {{$value->days}} days</option>
                                 @endforeach
                                 </select>
                             </div>
@@ -154,7 +154,7 @@
 
         $(function() {
         $(".btn-area").append('<div class="col-sm-12 col-md-4 pr-3 text-right">'+
-            '<button class="btn btn-primary"  data-id="'+'{{$data->id}}'+'" onclick="createglobalplan(\''+'{{$data->id}}'+'\')" ><i class="fas fa-plus"></i> {{__('Add New Plan')}} </button>'+
+            '<button class="btn btn-primary"  data-id="'+'{{$plan->id}}'+'" onclick="createglobalplan(\''+'{{$plan->id}}'+'\')" ><i class="fas fa-plus"></i> {{__('Add New Plan')}} </button>'+
         '</a>'+
         '</div>');
     });

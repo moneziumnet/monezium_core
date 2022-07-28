@@ -639,7 +639,7 @@ class UserController extends Controller
         public function profilePricingplanglobalcreate($id) {
             $plandetail = new Charge();
             $plandetail->user_id = 0;
-            $plandetail->plan_id = User::findOrFail($id)->bank_plan_id;
+            $plandetail->plan_id = $id;
             $plandetail->data =  json_decode('{"percent_charge":"0","fixed_charge":"0","from":"0","till":"0"}');
             return view('admin.user.profilepricingplancreate',compact('plandetail'));
         }

@@ -41,7 +41,7 @@ class ManageChargeController extends Controller
                                 }
                             })
                             ->addColumn('action', function (Charge $data)  {
-                                        return '<a href="'.route('admin.edit.charge',$data->id).'" class="btn btn-primary btn-block"><i class="fas fa-edit"></i>'. __('Edit Charge').'</a>';
+                                        return '<a href="'.route('admin.edit.charge',$data->id).'" class="btn btn-primary">'. __('Edit Charge').'</a>';
                             })
 
                             ->rawColumns(['action'])
