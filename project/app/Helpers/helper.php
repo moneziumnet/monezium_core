@@ -406,19 +406,31 @@ if(!function_exists('getModule')){
 
   if(!function_exists('check_custom_transaction_fee'))
   {
-      function check_custom_transaction_fee($amount, $user)
+      function check_custom_transaction_fee($amount, $user, $slug)
       {
-          $transaction_plan = Charge::whereIn('name', ['Transaction 1', 'Transaction 2', 'Transaction 3'])->where('user_id', $user->id)->where('data->from','<=',$amount)->where('data->till','>=',$amount)->first();
-          return $transaction_plan;
+          $transaction_plan = Charge::where('slug', $slug)->where('user_id', $user->id)->get();
+          $res = null;
+          foreach ($transaction_plan as $value) {
+            if ($value->data->from <= $amount && $value->data->till >= $amount) {
+                $res = $value;
+                return $res;
+            }
+          }
       }
   }
 
   if(!function_exists('check_global_transaction_fee'))
   {
-      function check_global_transaction_fee($amount, $user)
+      function check_global_transaction_fee($amount, $user, $slug)
       {
-          $transaction_plan = Charge::whereIn('name', ['Transaction 1', 'Transaction 2','Transaction 3'])->where('plan_id', $user->bank_plan_id)->where('data->from','<=',$amount)->where('data->till','>=',$amount)->first();
-          return $transaction_plan;
+          $transaction_plan = Charge::where('slug', $slug)->where('plan_id', $user->bank_plan_id)->get();
+          $res = null;
+          foreach ($transaction_plan as $value) {
+            if ($value->data->from <= $amount && $value->data->till >= $amount) {
+                $res = $value;
+                return $res;
+            }
+          }
       }
   }
 
