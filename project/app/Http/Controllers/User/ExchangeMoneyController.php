@@ -54,24 +54,24 @@ class ExchangeMoneyController extends Controller
             ]);
         }
         $user= auth()->user();
-        $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'send')->first();
+        // $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'send')->first();
         $transaction_global_cost = 0;
-        if ($request->amount < $global_range->min || $request->amount > $global_range->max) {
-            return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
-        }
-        $transaction_global_fee = check_global_transaction_fee($request->amount, $user, 'send');
-        if($transaction_global_fee)
-        {
-            $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/100) * $transaction_global_fee->data->percent_charge;
-        }
+        // if ($request->amount < $global_range->min || $request->amount > $global_range->max) {
+        //     return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
+        // }
+        // $transaction_global_fee = check_global_transaction_fee($request->amount, $user, 'send');
+        // if($transaction_global_fee)
+        // {
+        //     $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/100) * $transaction_global_fee->data->percent_charge;
+        // }
         $transaction_custom_cost = 0;
-        if(check_user_type(3))
-        {
-            $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user,  'send');
-            if($transaction_custom_fee) {
-                $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/100) * $transaction_custom_fee->data->percent_charge;
-            }
-        }
+        // if(check_user_type(3))
+        // {
+        //     $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user,  'send');
+        //     if($transaction_custom_fee) {
+        //         $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/100) * $transaction_custom_fee->data->percent_charge;
+        //     }
+        // }
 
 
 
@@ -112,24 +112,24 @@ class ExchangeMoneyController extends Controller
     public function calcharge($amount)
     {
         $user= auth()->user();
-        $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'send')->first();
+        // $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'send')->first();
         $transaction_global_cost = 0;
-        if ($amount < $global_range->min || $amount > $global_range->max) {
-            return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
-        }
-        $transaction_global_fee = check_global_transaction_fee($amount, $user, 'send');
-        if($transaction_global_fee)
-        {
-            $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($amount/100) * $transaction_global_fee->data->percent_charge;
-        }
+        // if ($amount < $global_range->min || $amount > $global_range->max) {
+        //     return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
+        // }
+        // $transaction_global_fee = check_global_transaction_fee($amount, $user, 'send');
+        // if($transaction_global_fee)
+        // {
+        //     $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($amount/100) * $transaction_global_fee->data->percent_charge;
+        // }
         $transaction_custom_cost = 0;
-        if(check_user_type(3))
-        {
-            $transaction_custom_fee = check_custom_transaction_fee($amount, $user, 'send');
-            if($transaction_custom_fee) {
-                $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($amount/100) * $transaction_custom_fee->data->percent_charge;
-            }
-        }
+        // if(check_user_type(3))
+        // {
+        //     $transaction_custom_fee = check_custom_transaction_fee($amount, $user, 'send');
+        //     if($transaction_custom_fee) {
+        //         $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($amount/100) * $transaction_custom_fee->data->percent_charge;
+        //     }
+        // }
         $finalCharge = $transaction_global_cost+$transaction_custom_cost;
         return $finalCharge;
     }
