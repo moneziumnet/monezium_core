@@ -62,13 +62,12 @@ class BankPlanController extends Controller
         $rules=[
             'title' => 'required',
             'amount' => 'required|numeric|min:0',
-            'daily_send' => 'required|numeric|gt:0',
-            'monthly_send' => 'required|numeric|gt:0',
-            'daily_receive' => 'required|numeric|gt:01',
-            'monthly_receive' => 'required|numeric|gt:0',
-            'daily_withdraw' => 'required|numeric|gt:0',
-            'monthly_withdraw' => 'required|numeric|gt:0',
-            'loan_amount' => 'required|numeric|gt:0',
+            // 'monthly_send' => 'required|numeric|gt:0',
+            // 'daily_receive' => 'required|numeric|gt:01',
+            // 'monthly_receive' => 'required|numeric|gt:0',
+            // 'daily_withdraw' => 'required|numeric|gt:0',
+            // 'monthly_withdraw' => 'required|numeric|gt:0',
+            // 'loan_amount' => 'required|numeric|gt:0',
         ];
 
         $validator = Validator::make($request->all(),$rules);

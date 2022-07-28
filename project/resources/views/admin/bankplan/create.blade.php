@@ -42,7 +42,7 @@
             </div>
           </div>
 
-          <div class="row">
+          {{-- <div class="row">
             <div class="col-md-6">
               <div class="form-group">
                 <label for="daily_send">{{ __('Maximum Send Money') }} ({{ __('Daily')}})</label>
@@ -88,7 +88,7 @@
                 <input type="number" class="form-control" id="monthly_withdraw" name="monthly_withdraw" placeholder="{{ __('ex.10000') }}" min="0" value="" required>
               </div>
             </div>
-          </div>
+          </div> --}}
 
           <div class="row">
             <div class="col-md-6">
@@ -98,16 +98,16 @@
               </div>
             </div>
 
-            <div class="col-md-6">
+            {{-- <div class="col-md-6">
               <div class="form-group">
                 <label for="loan_amount">{{ __('Maximum Loan Amount') }} ({{ __('Monthly')}})</label>
                 <input type="number" class="form-control" id="loan_amount" name="loan_amount" placeholder="{{ __('Loan Amount') }}" min="1" value="" required>
               </div>
             </div>
-          </div>
+          </div> --}}
 
 
-
+{{--
           <div class="featured-keyword-area">
             <div class="lang-tag-top-filds" id="lang-section">
 
@@ -115,7 +115,7 @@
             </div>
 
             <a href="javascript:;" id="lang-btn" class="add-fild-btn d-flex justify-content-center"><i class="icofont-plus"></i> {{__('Add Attribute')}}</a>
-          </div>
+          </div> --}}
 
           <button type="submit" id="submit-btn" class="btn btn-primary w-100 mt-2">{{ __('Submit') }}</button>
 
