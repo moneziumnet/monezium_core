@@ -8,6 +8,7 @@ use App\Models\Wallet;
 use App\Models\Dispute;
 use App\Models\Currency;
 use App\Models\Charge;
+use App\Models\PlanDetail;
 use App\Models\Transaction;
 use App\Helpers\MediaHelper;
 use Illuminate\Http\Request;
@@ -73,6 +74,10 @@ class EscrowController extends Controller
         $user= auth()->user();
         $transaction_global_cost = 0;
         $transaction_global_fee = check_global_transaction_fee($request->amount, $user, 'escrow');
+        $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'escrow')->first();
+        if ($request->amount < $global_range->min || $request->amount > $global_range->max) {
+            return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
+        }
         if($transaction_global_fee)
         {
             $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/100) * $transaction_global_fee->data->percent_charge;
