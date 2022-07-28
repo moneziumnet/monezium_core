@@ -226,6 +226,7 @@ Route::prefix('admin')->group(function () {
     Route::post('/users/{id}/updatemodules', [UserController::class, 'updateModules'])->name('admin-user-updatemodules');
 
     Route::get('/user/accounts/fee/{id}', [UserController::class, 'profileAccountFee'])->name('admin-user-accounts-fee');
+    Route::post('/user/cal/manual/fee/', [UserController::class, 'calmanualfee'])->name('admin.cal.manual.charge');
     Route::post('/user/accounts/deposit', [UserController::class, 'profileAccountDeposit'])->name('admin-user-accounts-deposit');
 
     Route::get('/users/ban/{id1}/{id2}', [UserController::class, 'ban'])->name('admin-user-ban');

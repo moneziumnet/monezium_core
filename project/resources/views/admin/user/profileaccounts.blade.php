@@ -74,6 +74,10 @@
                          </div>
                         <div class="text-xs font-weight-bold text-uppercase mb-1"> {{$dcurr->curr_name}}</div>
                         <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{amount($wallet->balance,$dcurr->type,2)}} {{$dcurr->code}} ({{$dcurr->symbol}}) </div>
+                        <div class="row mb-1 mr-1">
+                            <button class="col btn btn-primary ml-2 w-25 mt-2" onclick="getDetails({{$wallet->id}})">{{ __('Fee') }}</button>
+                            <button class="col btn btn-primary ml-1 w-25 mt-2">{{ __('Deposit') }}</button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -134,10 +138,44 @@
 		</div>
 	</div>
 </div>
+
+<div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-status bg-primary"></div>
+        <div class="modal-body text-center py-4">
+        <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+        <h3>@lang('Fee Details')</h3>
+        <ul class="list-group mt-2">
+
+        </ul>
+        </div>
+    </div>
+    </div>
+  </div>
 <!--Row-->
 @endsection
 @section('scripts')
 <script type="text/javascript">
+
+function getDetails (id)
+{
+        var url = "{{url('admin/user/accounts/fee')}}"+'/'+id
+        $.get(url,function (res) {
+            if(res == 'empty'){
+            $('.list-group').html('<p>@lang('No details found!')</p>')
+            }else{
+            $('.list-group').html(res)
+            }
+        });
+
+        $('#modal-success').modal('show')
+}
+
+$('.closed').click(function() {
+            $('#modal-success').modal('hide');
+});
+
 $('#addpayment').on('click', function() {
     window.location.reload();
 });

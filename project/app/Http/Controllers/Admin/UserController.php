@@ -605,6 +605,26 @@ class UserController extends Controller
             return view('admin.user.profilepricingplanedit',compact('plandetail'));
         }
 
+        public function profileAccountFee($id) {
+            $wallet = Wallet::findOrFail($id);
+            $user = User::findOrFail($wallet->user_id);
+            $manual = Charge::where('plan_id', $user->bank_plan_id)->where('slug', 'manual')->get();
+            return view('admin.user.walletfee', compact('wallet', 'manual'));
+
+        }
+
+        public function calmanualfee(Request $request) {
+            $wallet = Wallet::where('id',$request->wallet_id)->with('currency')->first();
+            $userBalance = user_wallet_balance($wallet->user_id, $wallet->currency->id, $wallet->wallet_type);
+            $manualfee = Charge::findOrFail($request->charge_id);
+            if ($manualfee->data->fixed_charge > $userBalance) {
+                return redirect()->back()->with(array('warning' => 'Customer Balance not Available.'));
+            }
+            user_wallet_decrement($wallet->user_id, $wallet->currency->id,$manualfee->data->fixed_charge,$wallet->wallet_type);
+            return redirect()->back()->with(array('message' => 'Customer Plan Create Successfully'));
+
+        }
+
         public function profilePricingplancreate($id, $charge_id) {
             $global = Charge::findOrFail($charge_id);
             $plandetail = new Charge();
