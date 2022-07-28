@@ -57,64 +57,105 @@
 
           </div>
       </form>
-            @foreach ($plan_details as $detail)
-                <form class="geniusform" action="{{route('admin.bank.plan.detail.update',$detail->id)}}" method="POST" enctype="multipart/form-data">
-                    @include('includes.admin.form-both')
-
-                    {{ csrf_field() }}
-
-
-                    <div class="row">
-                    <div class="col-md-1">
-                        <div class="form-group">
-                        <label for="detail_type">{{ __('Name') }}</label>
-                        <input type="text" class="form-control" id="detail_type" name="detail_type" placeholder="{{ __('Enter Name') }}" value="{{ $detail->type }}" readonly>
-                        </div>
-                    </div>
-
-                    <div class="col-md-1">
-                        <div class="form-group">
-                        <label for="detail_min">{{ __('Min') }}</label>
-                        <input type="number" class="form-control" id="detail_min" name="detail_min" placeholder="{{ __('Enter Min Value') }}" min="0" value="{{ $detail->min }}" required>
-                        </div>
-                    </div>
-
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label for="detail_max">{{ __('Max') }}</label>
-                            <input type="number" class="form-control" id="detail_max" name="detail_max" placeholder="{{ __('Enter Max Value') }}" min="1" value="{{ $detail->max }}" required>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="detail_daily">{{ __('Maximum Send Money') }} ({{ __('Daily')}})</label>
-                            <input type="number" class="form-control" id="detail_daily" name="detail_daily" placeholder="{{ __('Enter Max Value') }}" min="1" value="{{ $detail->daily_limit }}" required>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="detail_monthly">{{ __('Maximum Send Money') }} ({{ __('Monthly')}})</label>
-                            <input type="number" class="form-control" id="detail_monthly" name="detail_monthly" placeholder="{{ __('Enter Max Value') }}" min="1" value="{{ $detail->monthly_limit }}" required>
-                        </div>
-                    </div>
-
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label >{{ __('') }}</label>
-                            <button type="submit" id="submit-btn" class="btn btn-primary w-100 mt-2">{{ __('Update') }}</button>
-                        </div>
-                    </div>
-
-                    </div>
-                </form>
-            @endforeach
         </div>
   </div>
 </div>
 
 </div>
+<div class="row mt-3">
+    <div class="col-lg-12">
+
+      @include('includes.admin.form-success')
+
+      <div class="card mb-4">
+        <div class="table-responsive p-3">
+          <table id="geniustable" class="table table-hover dt-responsive" cellspacing="0" width="100%">
+            <thead class="thead-light">
+              <tr>
+                  <th>{{__('Name')}}</th>
+                  <th>{{__('Min')}}</th>
+                  <th>{{__('Max')}}</th>
+                  <th>{{__('Daily Limit')}}</th>
+                  <th>{{__('Monthly Limit')}}</th>
+                  <th>{{__('Action')}}</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-status bg-primary"></div>
+        <div class="modal-body text-center py-4">
+        <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+        <h3>@lang('Plan Details')</h3>
+        <ul class="list-group mt-2">
+
+        </ul>
+        </div>
+        <div class="modal-footer">
+        <div class="w-100">
+            <div class="row">
+            <div class="col"><a href="javascript:;" class="btn w-100 closed" data-bs-dismiss="modal">
+                @lang('Close')
+                </a>
+              </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+  </div>
+
+@endsection
+
+@section('scripts')
+
+<script type="text/javascript">
+	"use strict";
+
+    var table = $('#geniustable').DataTable({
+           ordering: false,
+           processing: true,
+           serverSide: true,
+           searching: true,
+           ajax: '{{ route('admin.bank.plan.detail.datatables', $data->id) }}',
+           columns: [
+                { data: 'name', name: 'name' },
+                { data: 'min', name: 'min' },
+                { data: 'max', name:'max' },
+                { data: 'daily_limit', name: 'daily_limit' },
+                { data: 'monthly_limit', name:'monthly_limit' },
+                { data: 'action', name: 'action' },
+            ],
+            language : {
+                processing: '<img src="{{asset('assets/images/'.$gs->admin_loader)}}">'
+            }
+        });
+
+    function createglobalplan(id)
+        {
+                var url = "{{url('admin/bank-plan/detail')}}"+'/'+`${id}`
+                console.log(url);
+                $.get(url,function (res) {
+                  if(res == 'empty'){
+                    $('.list-group').html('<p>@lang('No details found!')</p>')
+                  }else{
+                    $('.list-group').html(res)
+                  }
+                });
+                $('#modal-success').modal('show')
+        }
+        $('.closed').click(function() {
+            $('#modal-success').modal('hide');
+        });
+
+
+</script>
 
 @endsection
 

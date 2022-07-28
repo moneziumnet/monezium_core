@@ -50,6 +50,36 @@ class BankPlanController extends Controller
                             ->toJson();
     }
 
+    public function detaildatatables($id)
+    {
+        $datas = PlanDetail::where('plan_id', $id)->get();
+
+        return Datatables::of($datas)
+                           ->editColumn('name', function(PlanDetail $data) {
+                               return $data->type;
+                           })
+                           ->editColumn('min', function(PlanDetail $data)  {
+                                return $data->min;
+                           })
+                           ->editColumn('max', function(PlanDetail $data) {
+                                return $data->max;
+                           })
+                           ->editColumn('daily_limit', function(PlanDetail $data)  {
+                                return $data->daily_limit;
+                           })
+                           ->editColumn('monthly_limit', function(PlanDetail $data)  {
+                                return $data->monthly_limit;
+                           })
+                           ->addColumn('action', function (PlanDetail $data)  {
+                            return '<button type="button" class="btn btn-primary btn-big btn-rounded " data-id="'.$data->id.'" onclick="createglobalplan(\''.$data->id.'\')" aria-haspopup="true" aria-expanded="false">
+                            Edit
+                            </button>';
+                           })
+
+                           ->rawColumns(['action'])
+                           ->toJson();
+    }
+
     public function index(){
         return view('admin.bankplan.index');
     }
@@ -327,13 +357,13 @@ class BankPlanController extends Controller
         $rules=[
             'title' => 'required',
             'amount' => 'required|numeric|min:0',
-            'daily_send' => 'required|numeric|gt:0',
-            'monthly_send' => 'required|numeric|gt:0',
-            'daily_receive' => 'required|numeric|gt:01',
-            'monthly_receive' => 'required|numeric|gt:0',
-            'daily_withdraw' => 'required|numeric|gt:0',
-            'monthly_withdraw' => 'required|numeric|gt:0',
-            'loan_amount' => 'required|numeric|gt:0',
+            // 'daily_send' => 'required|numeric|gt:0',
+            // 'monthly_send' => 'required|numeric|gt:0',
+            // 'daily_receive' => 'required|numeric|gt:01',
+            // 'monthly_receive' => 'required|numeric|gt:0',
+            // 'daily_withdraw' => 'required|numeric|gt:0',
+            // 'monthly_withdraw' => 'required|numeric|gt:0',
+            // 'loan_amount' => 'required|numeric|gt:0',
         ];
 
         $validator = Validator::make($request->all(),$rules);
@@ -384,8 +414,13 @@ class BankPlanController extends Controller
         $data->monthly_limit = $request->detail_monthly;
         $data->update();
 
-        $msg = 'Data Updated Successfully.'.'<a href="'.route("admin.bank.plan.index").'">View Plan Lists</a>';
-        return response()->json($msg);
+
+        return back()->with('message','Data Updated Successfully.');
+    }
+
+    public function plandetailget($id) {
+        $detail = PlanDetail::findOrFail($id);
+        return view('admin.bankplan.detail',compact('detail'));
     }
 
     public function destroy($id){

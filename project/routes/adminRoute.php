@@ -237,6 +237,7 @@ Route::prefix('admin')->group(function () {
     Route::post('/user/balance/add/deduct', [UserController::class, 'adddeduct'])->name('admin.user.balance.add.deduct');
 
     Route::get('/bank-plan/datatables', [BankPlanController::class, 'datatables'])->name('admin.bank.plan.datatables');
+    Route::get('/bank-plan/detaildatatables/{id}', [BankPlanController::class, 'detaildatatables'])->name('admin.bank.plan.detail.datatables');
     Route::get('/bank-plans', [BankPlanController::class, 'index'])->name('admin.bank.plan.index');
     Route::get('/bank-plan/create', [BankPlanController::class, 'create'])->name('admin.bank.plan.create');
     Route::get('/bank-plan/edit/{id}', [BankPlanController::class, 'edit'])->name('admin.bank.plan.edit');
@@ -244,6 +245,7 @@ Route::prefix('admin')->group(function () {
     Route::post('/bank-plan/store', [BankPlanController::class, 'store'])->name('admin.bank.plan.store');
     Route::post('/bank-plan/update/{id}', [BankPlanController::class, 'update'])->name('admin.bank.plan.update');
     Route::post('/bank-plan/detail/update/{id}', [BankPlanController::class, 'plandetailupdate'])->name('admin.bank.plan.detail.update');
+    Route::get('/bank-plan/detail/{id}', [BankPlanController::class, 'plandetailget'])->name('admin.bank.plan.detail.get');
 
     Route::get('/plan/datatables', [PlanController::class, 'datatables'])->name('admin.plan.datatables');
     Route::get('/plans', [PlanController::class, 'index'])->name('admin.plan.index');
