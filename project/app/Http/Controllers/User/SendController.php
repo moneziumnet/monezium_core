@@ -136,7 +136,7 @@ class SendController extends Controller
         $global_cost = 0;
         $transaction_global_cost = 0;
         if ($request->amount < $global_range->min || $request->amount > $global_range->max) {
-            return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_range->maximum.' and Min value is '.$global_range->minimum );
+            return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
         }
         $transaction_global_fee = check_global_transaction_fee($request->amount, $user, 'send');
         if($transaction_global_fee)

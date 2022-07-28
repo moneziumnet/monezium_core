@@ -6,7 +6,7 @@ use App\Models\User;
 use App\Models\BankPlan;
 use App\Models\Currency;
 use App\Models\Wallet;
-use App\Models\Charge;
+use App\Models\PlanDetail;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
 use App\Classes\GoogleAuthenticator;
@@ -64,6 +64,8 @@ class MoneyRequestController extends Controller
         $bank_plan = BankPlan::whereId($user->bank_plan_id)->first();
         $dailyRequests = MoneyRequest::whereUserId(auth()->id())->whereDate('created_at', '=', date('Y-m-d'))->whereStatus('success')->sum('amount');
         $monthlyRequests = MoneyRequest::whereUserId(auth()->id())->whereMonth('created_at', '=', date('m'))->whereStatus('success')->sum('amount');
+        $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'recieve')->first();
+
 
         $gs = Generalsetting::first();
 
@@ -76,31 +78,23 @@ class MoneyRequestController extends Controller
             return redirect()->back()->with('unsuccess','No register user with this email!');
         }
 
-        if($dailyRequests > $bank_plan->daily_receive){
+        if($dailyRequests > $global_range->daily_limit){
             return redirect()->back()->with('unsuccess','Daily request limit over.');
         }
 
-        if($monthlyRequests > $bank_plan->monthly_receive){
+        if($monthlyRequests > $global_range->monthly_limit){
             return redirect()->back()->with('unsuccess','Monthly request limit over.');
         }
-        $global_charge = Charge::where('name', 'Request Money')->where('plan_id', $user->bank_plan_id)->first();
-        $global_cost = $global_charge->data->fixed_charge + ($request->amount/100) * $global_charge->data->percent_charge;
 
-        if ($request->amount < $global_charge->data->minimum || $request->amount > $global_charge->data->maximum) {
-            return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_charge->data->maximum.' and Min value is '.$global_charge->data->minimum );
+        if ($request->amount < $global_range->min || $request->amount > $global_range->max) {
+            return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
         }
-        $transaction_global_fee = check_global_transaction_fee($request->amount, $user);
+        $transaction_global_fee = check_global_transaction_fee($request->amount, $user, 'recieve');
         $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/100) * $transaction_global_fee->data->percent_charge;
         if(check_user_type(3))
         {
-            $custom_charge = Charge::where('name', 'Request Money')->where('user_id', $user->id)->first();
-            $custom_cost = 0;
             $transaction_custom_cost = 0;
-            if($custom_charge)
-            {
-                $custom_cost = $custom_charge->data->fixed_charge + ($request->amount/100) * $custom_charge->data->percent_charge;
-            }
-            $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user);
+            $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user, 'recieve');
             if($transaction_custom_fee) {
                 $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/100) * $transaction_custom_fee->data->percent_charge;
             }
@@ -115,8 +109,8 @@ class MoneyRequestController extends Controller
         $data->receiver_name = $receiver->name;
         $data->transaction_no = $txnid;
         $data->currency_id = $request->wallet_id;
-        $data->cost = $global_cost + $transaction_global_cost;
-        $data->supervisor_cost = check_user_type(3) ? $custom_cost + $transaction_custom_cost : 0 ;
+        $data->cost = $transaction_global_cost;
+        $data->supervisor_cost = check_user_type(3) ? $transaction_custom_cost : 0 ;
         $data->amount = $request->amount;
         $data->status = 0;
         $data->details = $request->details;
