@@ -6,12 +6,14 @@
     @php
         $accountlist = ['Deposit', 'Send', 'Recieve', 'Escrow', 'Withdraw']
     @endphp
+    <div class="form-group">
     <label class="form-label">{{__('Select Type')}}</label>
     <select name="name" id="wallet_id" class="form-control mb-3" required>
         @foreach ($accountlist as $key => $account )
         <option value="{{$account}}">{{$account}} </option>
         @endforeach
-
+    </select>
+    </div>
 
     @if($plandetail->data)
     @foreach ($plandetail->data as $key => $value)

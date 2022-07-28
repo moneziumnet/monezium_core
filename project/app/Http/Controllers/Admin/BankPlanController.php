@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\BankPlan;
 use App\Models\Charge;
 use App\Models\Currency;
+use App\Models\PlanDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -31,7 +32,7 @@ class BankPlanController extends Controller
                                 return  '<div>
                                             '.$curr->symbol.$data->amount.'
                                         </div>';
-                            }) 
+                            })
                             ->addColumn('action', function(BankPlan $data) {
                                 $delete = $data->id == 1 ? '':'<a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.  route('admin.bank.plan.delete',$data->id).'">'.__("Delete").'</a>';
                                 return '<div class="btn-group mb-1">
@@ -43,7 +44,7 @@ class BankPlanController extends Controller
                                     <a href="' . route('admin.bank.plan.edit',$data->id) . '"  class="dropdown-item">'.__("Edit").'</a>'.$delete.'
                                   </div>
                                 </div>';
-  
+
                               })
                             ->rawColumns(['amount','action'])
                             ->toJson();
@@ -186,6 +187,7 @@ class BankPlanController extends Controller
         $data = BankPlan::findOrFail($id);
         $data['attributes'] = json_decode($data->attribute,true);
         $data['data'] = $data;
+        $data['plan_details'] = PlanDetail::where('plan_id', $id)->get();
         return view('admin.bankplan.edit',$data);
     }
 
@@ -222,6 +224,32 @@ class BankPlanController extends Controller
         if($request->attribute){
             $data->attribute = json_encode($request->attribute,true);
         }
+        $data->update();
+
+        $msg = 'Data Updated Successfully.'.'<a href="'.route("admin.bank.plan.index").'">View Plan Lists</a>';
+        return response()->json($msg);
+    }
+
+    public function plandetailupdate(Request $request, $id) {
+        $rules=[
+            'detail_type' => 'required',
+            'detail_min' => 'required|numeric|min:0',
+            'detail_max' => 'required|numeric|gt:0',
+            'detail_daily' => 'required|numeric|gt:0',
+            'detail_monthly' => 'required|numeric|gt:0',
+        ];
+
+        $validator = Validator::make($request->all(),$rules);
+
+        if($validator->fails()){
+            return response()->json(['errors'=> $validator->getMessageBag()->toArray()]);
+        }
+
+        $data = PlanDetail::findOrFail($id);
+        $data->min = $request->detail_min;
+        $data->max = $request->detail_max;
+        $data->daily_limit = $request->detail_daily;
+        $data->monthly_limit = $request->detail_monthly;
         $data->update();
 
         $msg = 'Data Updated Successfully.'.'<a href="'.route("admin.bank.plan.index").'">View Plan Lists</a>';

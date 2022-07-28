@@ -27,111 +27,90 @@
           {{ csrf_field() }}
 
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-3">
               <div class="form-group">
                 <label for="title">{{ __('Title') }}</label>
                 <input type="text" class="form-control" id="title" name="title" placeholder="{{ __('Enter Title') }}" value="{{ $data->title }}" required>
               </div>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-3">
               <div class="form-group">
                 <label for="amount">{{ __('Amount') }}</label>
                 <input type="number" class="form-control" id="amount" name="amount" placeholder="{{ __('Enter Amount') }}" min="0" value="{{ $data->amount }}" required>
               </div>
             </div>
+
+            <div class="col-md-3">
+                <div class="form-group">
+                  <label for="days">{{ __('Days') }}</label>
+                  <input type="number" class="form-control" id="days" name="days" placeholder="{{ __('Enter Days') }}" min="1" value="{{ $data->days }}" required>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label >{{ __('') }}</label>
+                    <button type="submit" id="submit-btn" class="btn btn-primary w-100 mt-2">{{ __('Submit') }}</button>
+                </div>
+            </div>
+
           </div>
-
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="daily_send">{{ __('Maximum Send Money') }} ({{ __('Daily')}})</label>
-                <input type="number" class="form-control" id="daily_send" name="daily_send" placeholder="{{ __('ex.1000') }}" min="0" value="{{ $data->daily_send }}" required>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="monthly_send">{{ __('Maximum Send Money') }} ({{ __('Monthly')}})</label>
-                <input type="number" class="form-control" id="monthly_send" name="monthly_send" placeholder="{{ __('ex.10000') }}" min="0" value="{{ $data->monthly_send }}" required>
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="daily_receive">{{ __('Maximum Request Money') }} ({{ __('Daily')}})</label>
-                <input type="number" class="form-control" id="daily_receive" name="daily_receive" placeholder="{{ __('ex.1000') }}" min="0" value="{{ $data->daily_receive }}" required>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="monthly_receive">{{ __('Maximum Request Money') }} ({{ __('Monthly')}})</label>
-                <input type="number" class="form-control" id="monthly_receive" name="monthly_receive" placeholder="{{ __('ex.10000') }}" min="0" value="{{ $data->monthly_receive }}" required>
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="daily_withdraw">{{ __('Maximum Withdraw Amount') }} ({{ __('Daily')}})</label>
-                <input type="number" class="form-control" id="daily_withdraw" name="daily_withdraw" placeholder="{{ __('ex.1000') }}" min="0" value="{{ $data->daily_withdraw }}" required>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="monthly_withdraw">{{ __('Maximum Withdraw Amount') }} ({{ __('Monthly')}})</label>
-                <input type="number" class="form-control" id="monthly_withdraw" name="monthly_withdraw" placeholder="{{ __('ex.10000') }}" min="0" value="{{ $data->monthly_withdraw }}" required>
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="days">{{ __('Days') }}</label>
-                <input type="number" class="form-control" id="days" name="days" placeholder="{{ __('Enter Days') }}" min="1" value="{{ $data->days }}" required>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="loan_amount">{{ __('Maximum Loan Amount') }} ({{ __('Monthly')}})</label>
-                <input type="number" class="form-control" id="loan_amount" name="loan_amount" placeholder="{{ __('Loan Amount') }}" min="1" value="{{ $data->loan_amount }}" required>
-              </div>
-            </div>
-          </div>
-
-
-
-          <div class="featured-keyword-area">
-            <div class="lang-tag-top-filds" id="lang-section">
-                @if ($attributes)
-                    @foreach ($attributes as $key=>$data)
-                        <div class="lang-area mb-3">
-                            <span class="remove lang-remove"><i class="fas fa-times"></i></span>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <input type="text" class="form-control" name="attribute[]" placeholder="{{ __('Enter Plan Attribute') }}" value="{{ $data }}" required>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                @endif
-
-            </div>
-
-            <a href="javascript:;" id="lang-btn" class="add-fild-btn d-flex justify-content-center"><i class="icofont-plus"></i> {{__('Add Attribute')}}</a>
-          </div>
-
-          <button type="submit" id="submit-btn" class="btn btn-primary w-100 mt-2">{{ __('Submit') }}</button>
-
       </form>
-    </div>
+            @foreach ($plan_details as $detail)
+                <form class="geniusform" action="{{route('admin.bank.plan.detail.update',$detail->id)}}" method="POST" enctype="multipart/form-data">
+                    @include('includes.admin.form-both')
+
+                    {{ csrf_field() }}
+
+
+                    <div class="row">
+                    <div class="col-md-1">
+                        <div class="form-group">
+                        <label for="detail_type">{{ __('Name') }}</label>
+                        <input type="text" class="form-control" id="detail_type" name="detail_type" placeholder="{{ __('Enter Name') }}" value="{{ $detail->type }}" readonly>
+                        </div>
+                    </div>
+
+                    <div class="col-md-1">
+                        <div class="form-group">
+                        <label for="detail_min">{{ __('Min') }}</label>
+                        <input type="number" class="form-control" id="detail_min" name="detail_min" placeholder="{{ __('Enter Min Value') }}" min="0" value="{{ $detail->min }}" required>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="detail_max">{{ __('Max') }}</label>
+                            <input type="number" class="form-control" id="detail_max" name="detail_max" placeholder="{{ __('Enter Max Value') }}" min="1" value="{{ $detail->max }}" required>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="detail_daily">{{ __('Maximum Send Money') }} ({{ __('Daily')}})</label>
+                            <input type="number" class="form-control" id="detail_daily" name="detail_daily" placeholder="{{ __('Enter Max Value') }}" min="1" value="{{ $detail->daily_limit }}" required>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="detail_monthly">{{ __('Maximum Send Money') }} ({{ __('Monthly')}})</label>
+                            <input type="number" class="form-control" id="detail_monthly" name="detail_monthly" placeholder="{{ __('Enter Max Value') }}" min="1" value="{{ $detail->monthly_limit }}" required>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label >{{ __('') }}</label>
+                            <button type="submit" id="submit-btn" class="btn btn-primary w-100 mt-2">{{ __('Update') }}</button>
+                        </div>
+                    </div>
+
+                    </div>
+                </form>
+            @endforeach
+        </div>
   </div>
 </div>
 
@@ -139,35 +118,3 @@
 
 @endsection
 
-@section('scripts')
-  <script type="text/javascript">
-    "use strict";
-    function isEmpty(el){
-        return !$.trim(el.html())
-    }
-
-
-  $("#lang-btn").on('click', function(){
-
-      $("#lang-section").append(''+
-                                  '<div class="lang-area mb-3">'+
-                                    '<span class="remove lang-remove"><i class="fas fa-times"></i></span>'+
-                                    '<div class="row">'+
-                                      '<div class="col-md-12">'+
-                                      '<input type="text" class="form-control" name="attribute[]" placeholder="{{ __('Enter Plan Attribute') }}" value="" required>'+
-                                      '</div>'+
-                                    '</div>'+
-                                  '</div>'+
-                              '');
-
-  });
-
-  $(document).on('click','.lang-remove', function(){
-
-      $(this.parentNode).remove();
-
-  });
-
-  </script>
-
-@endsection

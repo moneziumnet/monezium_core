@@ -239,6 +239,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/bank-plan/delete/{id}', [BankPlanController::class, 'destroy'])->name('admin.bank.plan.delete');
     Route::post('/bank-plan/store', [BankPlanController::class, 'store'])->name('admin.bank.plan.store');
     Route::post('/bank-plan/update/{id}', [BankPlanController::class, 'update'])->name('admin.bank.plan.update');
+    Route::post('/bank-plan/detail/update/{id}', [BankPlanController::class, 'plandetailupdate'])->name('admin.bank.plan.detail.update');
 
     Route::get('/plan/datatables', [PlanController::class, 'datatables'])->name('admin.plan.datatables');
     Route::get('/plans', [PlanController::class, 'index'])->name('admin.plan.index');
