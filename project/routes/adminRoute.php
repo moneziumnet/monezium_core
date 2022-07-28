@@ -225,6 +225,9 @@ Route::prefix('admin')->group(function () {
     Route::post('/users/{id}/changepassword', [UserController::class, 'changePassword'])->name('admin-user-changepassword');
     Route::post('/users/{id}/updatemodules', [UserController::class, 'updateModules'])->name('admin-user-updatemodules');
 
+    Route::get('/user/accounts/fee/{id}', [UserController::class, 'profileAccountFee'])->name('admin-user-accounts-fee');
+    Route::post('/user/accounts/deposit', [UserController::class, 'profileAccountDeposit'])->name('admin-user-accounts-deposit');
+
     Route::get('/users/ban/{id1}/{id2}', [UserController::class, 'ban'])->name('admin-user-ban');
     Route::get('/users/verify/{id1}/{id2}', [UserController::class, 'verify'])->name('admin-user-verify');
     Route::get('/user/default/image', [UserController::class, 'image'])->name('admin-user-image');
@@ -341,6 +344,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/edit-charge/{id}', [ManageChargeController::class, 'editCharge'])->name('admin.edit.charge');
     Route::post('/create-charge', [ManageChargeController::class, 'createCharge'])->name('admin.create.charge');
     Route::post('/update-charge/{id}', [ManageChargeController::class, 'updateCharge'])->name('admin.update.charge');
+    Route::get('/database-charge/{id}', [ManageChargeController::class, 'datatables'])->name('admin.charge.plan.datatables');
   });
 
   //manage escrow

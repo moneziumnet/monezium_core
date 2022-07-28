@@ -15,7 +15,7 @@
 </div>
 
 
-<div class="row mt-3">
+{{-- <div class="row mt-3">
     @forelse ($charges as $charge)
     <div class="col-sm-6 col-lg-4 col-xl-3 currency--card">
       <div class="card card-primary">
@@ -30,18 +30,18 @@
                   <span class="font-weight-bold">{{@$value}}
                     @if ($key == 'percent_charge')
                         %
-                    @else
+                    @else --}}
                       {{-- {{$gs->curr_code}} --}}
-                    @endif 
+                    {{-- @endif
                   </span>
                 </li>
               @endif
             @endforeach
-          </ul>
+          </ul> --}}
           {{-- @if (access('edit charge')) --}}
-          <a href="{{route('admin.edit.charge',$charge->id)}}" class="btn btn-primary btn-block"><i class="fas fa-edit"></i> @lang('Edit Charge')</a>
+          {{-- <a href="{{route('admin.edit.charge',$charge->id)}}" class="btn btn-primary btn-block"><i class="fas fa-edit"></i> @lang('Edit Charge')</a> --}}
           {{-- @endif --}}
-        </div>
+        {{-- </div>
       </div>
     </div>
     @empty
@@ -49,5 +49,56 @@
         <h5>@lang('No data found')</h5>
     </div>
     @endforelse
-</div>
+</div> --}}
+<div class="row mt-3">
+    <div class="col-lg-12">
+
+      @include('includes.admin.form-success')
+
+      <div class="card mb-4">
+        <div class="table-responsive p-3">
+          <table id="geniustable" class="table table-hover dt-responsive" cellspacing="0" width="100%">
+            <thead class="thead-light">
+              <tr>
+                  <th>{{__('Name')}}</th>
+                  <th>{{__('Percent')}}</th>
+                  <th>{{__('Fixed')}}</th>
+                  <th>{{__('From')}}</th>
+                  <th>{{__('Till')}}</th>
+                  <th>{{__('Action')}}</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+@endsection
+
+@section('scripts')
+
+<script type="text/javascript">
+	"use strict";
+
+    var table = $('#geniustable').DataTable({
+           ordering: false,
+           processing: true,
+           serverSide: true,
+           searching: true,
+           ajax: '{{ route('admin.charge.plan.datatables', $plan_id) }}',
+           columns: [
+                { data: 'name', name: 'name' },
+                { data: 'percent', name: 'percent' },
+                { data: 'fixed', name:'fixed' },
+                { data: 'from', name: 'from' },
+                { data: 'till', name:'till' },
+                { data: 'action', name: 'action' },
+            ],
+            language : {
+                processing: '<img src="{{asset('assets/images/'.$gs->admin_loader)}}">'
+            }
+        });
+
+</script>
+
 @endsection

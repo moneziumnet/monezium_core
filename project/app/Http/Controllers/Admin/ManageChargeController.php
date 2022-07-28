@@ -5,9 +5,50 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Charge;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Datatables;
 
 class ManageChargeController extends Controller
 {
+
+    public function datatables($id)
+    {
+         $datas = Charge::where('plan_id', $id)->get();
+
+         return Datatables::of($datas)
+                            ->editColumn('name', function(Charge $data) {
+                                return $data->name;
+                            })
+                            ->editColumn('percent', function(Charge $data)  {
+                                    return $data->data->percent_charge;
+                            })
+                            ->editColumn('fixed', function(Charge $data) {
+                                    return $data->data->fixed_charge;
+                            })
+                            ->editColumn('from', function(Charge $data)  {
+                                if (isset($data->data->from)) {
+                                    return  $data->data->from;
+                                }
+                                else {
+                                    return 0;
+                                }
+                            })
+                            ->editColumn('till', function(Charge $data)  {
+                                if (isset($data->data->till)) {
+                                    return  $data->data->till;
+                                }
+                                else {
+                                    return 0;
+                                }
+                            })
+                            ->addColumn('action', function (Charge $data)  {
+                                        return '<a href="'.route('admin.edit.charge',$data->id).'" class="btn btn-primary btn-block"><i class="fas fa-edit"></i>'. __('Edit Charge').'</a>';
+                            })
+
+                            ->rawColumns(['action'])
+                            ->toJson();
+        }
+
+
     public function index(Request $request, $id)
     {
         $search  = $request->search;
