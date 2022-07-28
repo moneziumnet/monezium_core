@@ -29,11 +29,18 @@ class ManageChargeController extends Controller
     public function createCharge(Request $request)
     {
         $data = new Charge();
-        $total = Charge::where('slug', strtolower($request->name))->where('plan_id',$request->plan_id )->get()->count() + 1;
-        $data->name = $request->name." ".$total;
+        if ($request->user_id == 0)
+        {
+            $total = Charge::where('slug', strtolower($request->name))->where('plan_id',$request->plan_id )->get()->count() + 1;
+            $data->name = $request->name." ".$total;
+            $data->slug = strtolower($request->name);
+        }
+        else {
+            $data->name = $request->name;
+            $data->slug = $request->slug;
+        }
         $data->user_id = $request->user_id;
         $data->plan_id = $request->plan_id;
-        $data->slug = strtolower($request->name);
         $inputs = $request->except(array('_token','name','user_id', 'plan_id', 'slug' ));
         foreach($inputs as $key =>  $input){
             $rules[$key] = 'required|numeric|min:0';
