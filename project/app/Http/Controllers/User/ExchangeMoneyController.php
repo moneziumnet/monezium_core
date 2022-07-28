@@ -106,7 +106,7 @@ class ExchangeMoneyController extends Controller
 
         @mailSend('exchange_money',['from_curr'=>$fromWallet->currency->code,'to_curr'=>$toWallet->currency->code,'charge'=> amount($charge,$fromWallet->currency->type,3),'from_amount'=> amount($request->amount,$fromWallet->currency->type,3),'to_amount'=> amount($finalAmount,$toWallet->currency->type,3),'date_time'=> dateFormat($exchange->created_at)],auth()->user());
 
-        return back()->with('success','Money exchanged successfully.');
+        return back()->with('message','Money exchanged successfully.');
     }
 
     public function calcharge($amount)

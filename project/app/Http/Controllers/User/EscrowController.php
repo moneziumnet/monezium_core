@@ -39,7 +39,6 @@ class EscrowController extends Controller
     public function create()
     {
         $data['wallets'] = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('balance', '>', 0)->where('wallet_type',1)->get();
-        $data['charge'] = charge('make-escrow');
         return view('user.escrow.create',$data);
     }
 
@@ -70,34 +69,24 @@ class EscrowController extends Controller
         if(!$senderWallet) return back()->with('error','Your wallet not found');
 
         $currency = Currency::findOrFail($senderWallet->currency->id);
-        $charge = charge('make-escrow');
 
         $user= auth()->user();
-        $global_charge = Charge::where('name', 'Make Escrow')->where('plan_id', $user->bank_plan_id)->first();
-        $global_cost = 0;
         $transaction_global_cost = 0;
-        $global_cost = $global_charge->data->fixed_charge + ($request->amount/100) * $global_charge->data->percent_charge;
-        $transaction_global_fee = check_global_transaction_fee($request->amount, $user);
+        $transaction_global_fee = check_global_transaction_fee($request->amount, $user, 'escrow');
         if($transaction_global_fee)
         {
             $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/100) * $transaction_global_fee->data->percent_charge;
         }
-        $custom_cost = 0;
         $transaction_custom_cost = 0;
         if(check_user_type(3))
         {
-            $custom_charge = Charge::where('name', 'Make Escrow')->where('user_id', $user->id)->first();
-            if($custom_charge)
-            {
-                $custom_cost = $custom_charge->data->fixed_charge + ($request->amount/100) * $custom_charge->data->percent_charge;
-            }
-            $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user);
+            $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user, 'escrow');
             if($transaction_custom_fee) {
                 $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/100) * $transaction_custom_fee->data->percent_charge;
             }
         }
 
-        $finalCharge = amount($custom_cost+$global_cost+$transaction_global_cost+$transaction_custom_cost,$currency->type);
+        $finalCharge = amount($transaction_global_cost+$transaction_custom_cost,$currency->type);
         if($request->charge_pay) $finalAmount =  amount($request->amount + $finalCharge, $currency->type);
         else  $finalAmount =  amount($request->amount, $currency->type);
 
@@ -106,7 +95,7 @@ class EscrowController extends Controller
         $senderWallet->balance -= $finalAmount;
         $senderWallet->update();
         if(check_user_type(3)){
-            user_wallet_increment($user->id, $currency->id, $custom_cost+$transaction_custom_cost, 6);
+            user_wallet_increment($user->id, $currency->id, $transaction_custom_cost, 6);
         }
 
         $escrow               = new Escrow();
@@ -133,37 +122,28 @@ class EscrowController extends Controller
         $trnx->details     = trans('Made escrow to '). $receiver->email;
         $trnx->save();
 
-        return back()->with('success','Escrow has been created successfully');
+        return back()->with('message','Escrow has been created successfully');
     }
 
     public function calcharge($amount)
         {
         $user= auth()->user();
-        $global_charge = Charge::where('name', 'Make Escrow')->where('plan_id', $user->bank_plan_id)->first();
-        $global_cost = 0;
         $transaction_global_cost = 0;
-        $global_cost = $global_charge->data->fixed_charge + ($amount/100) * $global_charge->data->percent_charge;
-        $transaction_global_fee = check_global_transaction_fee($amount, $user);
+        $transaction_global_fee = check_global_transaction_fee($amount, $user, 'escrow');
         if($transaction_global_fee)
         {
             $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($amount/100) * $transaction_global_fee->data->percent_charge;
         }
-        $custom_cost = 0;
         $transaction_custom_cost = 0;
         if(check_user_type(3))
         {
-            $custom_charge = Charge::where('name', 'Make Escrow')->where('user_id', $user->id)->first();
-            if($custom_charge)
-            {
-                $custom_cost = $custom_charge->data->fixed_charge + ($amount/100) * $custom_charge->data->percent_charge;
-            }
-            $transaction_custom_fee = check_custom_transaction_fee($amount, $user);
+            $transaction_custom_fee = check_custom_transaction_fee($amount, $user, 'escrow');
             if($transaction_custom_fee) {
                 $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($amount/100) * $transaction_custom_fee->data->percent_charge;
             }
         }
 
-        $finalCharge = $custom_cost+$global_cost+$transaction_global_cost+$transaction_custom_cost;
+        $finalCharge = $transaction_global_cost+$transaction_custom_cost;
         return $finalCharge;
     }
 
@@ -203,7 +183,7 @@ class EscrowController extends Controller
         $dispute->message = $request->message;
         if($request->file) $dispute->file = MediaHelper::handleMakeImage($request->file);
         $dispute->save();
-        return back()->with('success','Replied submitted');
+        return back()->with('message','Replied submitted');
     }
 
     public function fileDownload($id)
@@ -266,7 +246,7 @@ class EscrowController extends Controller
         $escrow->status = 1;
         $escrow->save();
 
-        return back()->with('success','Escrow has been released');
+        return back()->with('message','Escrow has been released');
 
     }
 
