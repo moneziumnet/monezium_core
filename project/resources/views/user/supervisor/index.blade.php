@@ -117,9 +117,9 @@
               $('#modal-success').modal('show')
         }
 
-        function createDetails(name)
+        function createDetails(id)
         {
-                var url = "{{url('user/pricingplan/create/')}}"+'/'+'{{$data->id}}'+'/'+`${name}`
+                var url = "{{url('user/pricingplan/create/')}}"+'/'+'{{$data->id}}'+'/'+`${id}`
                 console.log(url);
                 $.get(url,function (res) {
                   if(res == 'empty'){
