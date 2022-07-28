@@ -25,8 +25,8 @@
           @endphp
 
           @if ($count < 8)
-          @if (in_array('Loan',$modules)) <li class="nav-item dropdown {{ request()->routeIs('user.loans.plan') || request()->routeIs('user.loans.index') || request()->routeIs('user.loans.pending') || request()->routeIs('user.loans.paid') || request()->routeIs('user.loans.rejected') ? 'active' : '' }}">
-            <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
+            @if (in_array('Loan',$modules)) <li class="nav-item dropdown {{ request()->routeIs('user.loans.plan') ? 'active' : '' }}">
+            <a class="nav-link" href="{{route('user.loans.plan')}}">
               <span class="nav-link-icon d-md-none d-lg-inline-block">
                 <i class="fas fa-cash-register"></i>
               </span>
@@ -34,31 +34,6 @@
                 {{__('Loan')}}
               </span>
             </a>
-            <div class="dropdown-menu">
-              <a class="dropdown-item" href="{{route('user.loans.plan')}}">
-                {{__('Loan Plan')}}
-              </a>
-
-              {{-- <a class="dropdown-item" href="{{route('user.loans.index')}}">
-                {{__('All Loans')}}
-              </a>
-
-              <a class="dropdown-item" href="{{route('user.loans.pending')}}">
-                {{__('Pending Loans')}}
-              </a>
-
-              <a class="dropdown-item" href="{{route('user.loans.running')}}">
-                {{__('Running Loans')}}
-              </a>
-
-              <a class="dropdown-item" href="{{route('user.loans.paid')}}">
-                {{__('Paid Loans')}}
-              </a>
-
-              <a class="dropdown-item" href="{{route('user.loans.rejected')}}">
-                {{__('Rejected Loans')}}
-              </a> --}}
-            </div>
             </li>
             @endif
 
@@ -368,41 +343,15 @@
               </div>
             </li>
             @else
-            @if (in_array('Loan',$modules))
-            <li class="nav-item dropdown {{ request()->routeIs('user.loans.plan') || request()->routeIs('user.loans.index') || request()->routeIs('user.loans.pending') || request()->routeIs('user.loans.paid') || request()->routeIs('user.loans.rejected') ? 'active' : '' }}">
-              <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
-                <span class="nav-link-icon d-md-none d-lg-inline-block">
-                  <i class="fas fa-cash-register"></i>
-                </span>
-                <span class="nav-link-title">
-                  {{__('Loan')}}
-                </span>
-              </a>
-              <div class="dropdown-menu">
-                <a class="dropdown-item" href="{{route('user.loans.plan')}}">
-                  {{__('Loan Plan')}}
-                </a>
-{{--
-                <a class="dropdown-item" href="{{route('user.loans.index')}}">
-                  {{__('All Loans')}}
-                </a>
-
-                <a class="dropdown-item" href="{{route('user.loans.pending')}}">
-                  {{__('Pending Loans')}}
-                </a>
-
-                <a class="dropdown-item" href="{{route('user.loans.running')}}">
-                  {{__('Running Loans')}}
-                </a>
-
-                <a class="dropdown-item" href="{{route('user.loans.paid')}}">
-                  {{__('Paid Loans')}}
-                </a>
-
-                <a class="dropdown-item" href="{{route('user.loans.rejected')}}">
-                  {{__('Rejected Loans')}}
-                </a> --}}
-              </div>
+            @if (in_array('Loan',$modules)) <li class="nav-item dropdown {{ request()->routeIs('user.loans.plan') ? 'active' : '' }}">
+            <a class="nav-link" href="{{route('user.loans.plan')}}">
+              <span class="nav-link-icon d-md-none d-lg-inline-block">
+                <i class="fas fa-cash-register"></i>
+              </span>
+              <span class="nav-link-title">
+                {{__('Loan')}}
+              </span>
+            </a>
             </li>
             @endif
 
