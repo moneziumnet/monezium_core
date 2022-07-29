@@ -132,10 +132,10 @@ class DpsController extends Controller
       $user = User::whereId($userId)->first();
 
       $currency = $data->currency->id;
-      $userBalance = user_wallet_balance($user->id, $currency, 1);
+      $userBalance = user_wallet_balance($user->id, $currency, 3);
 
       if($user && $userBalance>=$installment){
-        user_wallet_decrement($user->id, $currency, $installment, 1);
+        user_wallet_decrement($user->id, $currency, $installment, 3);
         user_wallet_increment($user->id, $currency, $installment, 3);
       }
     }
