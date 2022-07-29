@@ -132,7 +132,7 @@ class DepositBankController extends Controller
         {
             $data = [
                 'to' => $user->email,
-                'type' => "Deposti",
+                'type' => "Deposit",
                 'cname' => $user->name,
                 'oamount' => $data->amount,
                 'aname' => "",
