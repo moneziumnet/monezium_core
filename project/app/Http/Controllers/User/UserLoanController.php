@@ -50,7 +50,7 @@ class UserLoanController extends Controller
         $data['currencylist'] = Currency::whereStatus(1)->where('type', 1)->get();
         $data['loans'] = UserLoan::whereUserId(auth()->id())->orderby('id','desc')->paginate(10);
         
-        $wallets = Wallet::where('user_id',auth()->id())->where('wallet_type',3)->with('currency')->get();
+        $wallets = Wallet::where('user_id',auth()->id())->where('wallet_type',4)->with('currency')->get();
         $data['wallets'] = $wallets;
 
         return view('user.loan.plan',$data);
