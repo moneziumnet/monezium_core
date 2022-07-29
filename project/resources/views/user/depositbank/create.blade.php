@@ -7,10 +7,11 @@
 @section('contents')
 <div class="container-xl">
     <div class="page-header d-print-none">
-      <div class="row align-items-center">
+        @include('user.deposittab')
+      <div class="row align-items-center mt-3">
         <div class="col">
           <h2 class="page-title">
-            {{__('Deposit Now (Bank)')}}
+            {{__('Incoming (Bank)')}}
           </h2>
         </div>
       </div>
@@ -50,7 +51,7 @@
 
 
                         <div class="form-group mb-3 mt-3">
-                            <label class="form-label required">{{__('Deposit Amount (USD)')}}</label>
+                            <label class="form-label required">{{__('Incoming Amount (USD)')}}</label>
                             <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" step="any" value="{{ old('amount') }}" min="1" required>
                         </div>
 

@@ -7,10 +7,11 @@
 @section('contents')
 <div class="container-xl">
     <div class="page-header d-print-none">
-      <div class="row align-items-center">
+        @include('user.deposittab')
+      <div class="row align-items-center mt-3">
         <div class="col">
           <h2 class="page-title">
-            {{__('Deposit Now (Payment Gateway)')}}
+            {{__('Incoming (Payment Gateway)')}}
           </h2>
         </div>
       </div>
