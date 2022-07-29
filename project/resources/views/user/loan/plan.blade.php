@@ -117,7 +117,7 @@
                 </i>
               </div>
               <div class="card-body">
-                <div class="h3 m-0 text-uppercase"> {{__('Deposit')}}</div>
+                <div class="h3 m-0 text-uppercase"> {{__('Loan')}}</div>
                 <div class="h4 m-0 text-uppercase"> {{ $item->wallet_no }}</div>
                 <div class="text-muted">{{ amount($item->balance,$item->currency->type,2) }}  {{$item->currency->code}}</div>
               </div>
