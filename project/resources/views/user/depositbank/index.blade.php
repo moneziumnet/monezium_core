@@ -7,13 +7,14 @@
 @section('contents')
 <div class="container-xl">
     <div class="page-header d-print-none">
-      <div class="row align-items-center">
+        @include('user.deposittab')
+      <div class="row align-items-center mt-3">
         <div class="col">
           <div class="page-pretitle">
             {{__('Overview')}}
           </div>
           <h2 class="page-title">
-            {{__('Deposits (Bank)')}}
+            {{__('Incoming (Bank)')}}
           </h2>
         </div>
         <div class="col-auto ms-auto d-print-none">
@@ -21,7 +22,7 @@
 
             <a href="{{ route('user.depositbank.create') }}" class="btn btn-primary d-none d-sm-inline-block">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
-              {{__('Create new Deposit')}}
+              {{__('Create new Incoming')}}
             </a>
           </div>
         </div>
@@ -35,13 +36,13 @@
             <div class="col-12">
                 <div class="card">
                     @if (count($deposits) == 0)
-                        <h3 class="text-center py-5">{{__('No Deposit Data Found')}}</h3>
+                        <h3 class="text-center py-5">{{__('No Incoming Data Found')}}</h3>
                     @else
                         <div class="table-responsive">
                             <table class="table table-vcenter table-mobile-md card-table">
                                 <thead>
                                 <tr>
-                                    <th>{{ __('Deposit Date') }}</th>
+                                    <th>{{ __('Incoming Date') }}</th>
                                     <th>{{ __('Method') }}</th>
                                     <th>{{ __('Account') }}</th>
                                     <th>{{ __('Amount') }}</th>
@@ -51,7 +52,7 @@
                                 <tbody>
                                 @foreach($deposits as $deposit)
                                     <tr>
-                                        <td data-label="{{ __('Deposit Date') }}">
+                                        <td data-label="{{ __('Incoming Date') }}">
                                         <div>
                                           {{date('d-M-Y',strtotime($deposit->created_at))}}
                                         </div>
