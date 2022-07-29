@@ -103,6 +103,11 @@ class FrontendController extends Controller
     {
         return view('frontend.about');
     }
+    
+    public function termService()
+    {
+        return view('frontend.term-service');
+    }
 
     public function blog()
     {

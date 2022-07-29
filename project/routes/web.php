@@ -21,6 +21,7 @@ Route::get('/blog/archive/{slug}', [FrontendController::class, 'blogarchive'])->
 
 Route::get('/services', [FrontendController::class, 'services'])->name('front.services');
 
+Route::get('/term-service', [FrontendController::class, 'termService'])->name('front.term-service');
 Route::get('/about', [FrontendController::class, 'about'])->name('front.about');
 Route::get('/contact', [FrontendController::class, 'contact'])->name('front.contact');
 Route::post('/contact', [FrontendController::class, 'contactemail'])->name('front.contact.submit');

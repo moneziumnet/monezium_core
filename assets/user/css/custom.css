@@ -650,3 +650,13 @@ footer {
 	font-size: 14px;
 	line-height: 1.65;
 }
+
+footer ul li{
+	list-style: none;
+}
+
+footer ul {
+	
+	padding-left:0px !important;
+}
+

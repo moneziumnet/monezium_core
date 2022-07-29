@@ -10,12 +10,20 @@
                 <div class="footer-links">
                     <h5 class="title">@lang('About')</h5>
                     <ul>
-                        @foreach(DB::table('pages')->whereStatus(1)->orderBy('id','desc')->get() as $data)
+                        {{-- @foreach(DB::table('pages')->whereStatus(1)->orderBy('id','desc')->get() as $data)
                             <li>
                                 <a href="{{ route('front.page',$data->slug) }}">{{ $data->title }}</a>
                             </li>
-                        @endforeach
-
+                        @endforeach --}}
+                        <li>
+                            <a href="{{ route('front.page','privacy') }}">{{__('Privacy & Policy') }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('front.page','term-service') }}">{{ __('Term of Service') }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('front.page','about') }}">{{ __('About Us') }}</a>
+                        </li>
                     </ul>
                 </div>
                 <div class="footer-links mobile-second-item">
