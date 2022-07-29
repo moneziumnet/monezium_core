@@ -110,7 +110,7 @@ class DepositBankController extends Controller
         $final_amount = amount($amount - $final_chargefee, $data->currency->type );
 
 
-        user_wallet_increment($user->id, $data->currency_id, $final_amount, 3);
+        user_wallet_increment($user->id, $data->currency_id, $final_amount, 1);
 
 
 
