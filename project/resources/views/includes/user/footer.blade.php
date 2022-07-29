@@ -4,7 +4,7 @@
             <div class="footer-wrapper">
                 <div class="footer-logo">
                     <a href="{{ route('front.index') }}">
-                        <img src="{{asset('assets/images/'.$gs->logo)}}" width="110" height="32" alt="Tabler" class="navbar-brand-image">
+                        <img src="{{asset('assets/images/'.$gs->logo)}}" width="110" height="32" alt="Tabler" class="navbar-brand-image" style="width: auto;">
                       </a>
                 </div>
                 <div class="footer-links">
