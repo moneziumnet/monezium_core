@@ -68,12 +68,12 @@
                   {{__('Withdraw')}}
                 </a>
                 @endif
-                @if (in_array('Deposit',$modules))
+                @if (in_array('Incoming',$modules))
                 <a class="dropdown-item" href="{{route('user.deposit.index')}}">
-                  {{__('Deposit (Payment Gateway)')}}
+                  {{__('Incoming (Payment Gateway)')}}
                 </a>
                 <a class="dropdown-item" href="{{route('user.depositbank.index')}}">
-                    {{__('Deposit (Bank)')}}
+                    {{__('Incoming (Bank)')}}
                   </a>
                 @endif
                 @if (in_array('Wire Transfer',$modules))
@@ -340,12 +340,12 @@
                   {{__('Withdraw')}}
                 </a>
                 @endif
-                @if (in_array('Deposit',$modules))
+                @if (in_array('Incoming',$modules))
                 <a class="dropdown-item" href="{{route('user.deposit.index')}}">
-                  {{__('Deposit (Payment Gateway)')}}
+                  {{__('Incoming (Payment Gateway)')}}
                 </a>
                 <a class="dropdown-item" href="{{route('user.depositbank.index')}}">
-                    {{__('Deposit (Bank)')}}
+                    {{__('Incoming (Bank)')}}
                   </a>
                 @endif
                 @if (in_array('Wire Transfer',$modules))

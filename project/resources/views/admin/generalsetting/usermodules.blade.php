@@ -66,12 +66,12 @@
               </div>
             </div>
             @endif
-            @if(Auth::guard('admin')->user()->sectionCheck('Deposit'))
+            @if(Auth::guard('admin')->user()->sectionCheck('Incoming'))
             <div class="col-md-6">
                 <div class="form-group">
                   <div class="custom-control custom-switch">
-                    <input type="checkbox" name="user_module[]" value="Deposit" {{ $data->moduleCheck('Deposit') ? 'checked' : '' }} class="custom-control-input" id="Deposit">
-                    <label class="custom-control-label" for="Deposit">{{__('Deposit')}}</label>
+                    <input type="checkbox" name="user_module[]" value="Incoming" {{ $data->moduleCheck('Incoming') ? 'checked' : '' }} class="custom-control-input" id="Incoming">
+                    <label class="custom-control-label" for="Incoming">{{__('Incoming')}}</label>
                     </div>
                 </div>
             </div>
