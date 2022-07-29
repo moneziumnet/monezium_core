@@ -16,6 +16,7 @@
       </div>
     </div>
   </div>
+
   <div class="page-body">
     <div class="container-xl">
       <div class="row mb--25-none">
@@ -26,7 +27,7 @@
             @else
 
             @foreach ($plans as $key=>$data)
-                <div class="col-sm-6 col-lg-4 col-xl-4">
+                <div class="col-sm-6 col-lg-3 col-xl-3">
                     <div class="plan__item position-relative">
                         <div class="ribbon ribbon-top ribbon-bookmark bg-green">
                         </div>
@@ -91,6 +92,41 @@
       </div>
     </div>
   </div>
+
+  <div class="container-xl">
+    <div class="page-header d-print-none">
+      <div class="row align-items-center">
+        <div class="col">
+          </div>
+          <h2 class="page-title">
+            {{__('Deposit Account')}}
+          </h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-body">
+      <div class="container-xl">
+      <div class="row justify-content " style="max-height: 368px;">
+        @foreach ($wallets as $item)
+        <div class="col-sm-6 col-md-4 mb-3">
+            <div class="card h-100 card--info-item">
+              <div class="text-end icon">
+                <i class="fas ">
+                    {{$item->currency->symbol}}
+                </i>
+              </div>
+              <div class="card-body">
+                <div class="h3 m-0 text-uppercase"> {{__('Deposit')}}</div>
+                <div class="h4 m-0 text-uppercase"> {{ $item->wallet_no }}</div>
+                <div class="text-muted">{{ amount($item->balance,$item->currency->type,2) }}  {{$item->currency->code}}</div>
+              </div>
+            </div>
+        </div>
+        @endforeach
+      </div>
+      </div>
+    </div>
 
   <div class="modal modal-blur fade" id="modal-apply" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">

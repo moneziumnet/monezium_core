@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Http\Controllers\Controller;
+use App\Models\Wallet;
 use App\Models\BankPlan;
 use App\Models\Currency;
-use App\Models\InstallmentLog;
 use App\Models\LoanPlan;
-use App\Models\Transaction;
 use App\Models\UserLoan;
-use Illuminate\Http\Request;
+use App\Models\Transaction;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Models\InstallmentLog;
+use App\Http\Controllers\Controller;
 
 class UserLoanController extends Controller
 {
@@ -48,6 +49,10 @@ class UserLoanController extends Controller
         $data['plans'] = LoanPlan::orderBy('id','desc')->whereStatus(1)->paginate(12);
         $data['currencylist'] = Currency::whereStatus(1)->where('type', 1)->get();
         $data['loans'] = UserLoan::whereUserId(auth()->id())->orderby('id','desc')->paginate(10);
+        
+        $wallets = Wallet::where('user_id',auth()->id())->where('wallet_type',3)->with('currency')->get();
+        $data['wallets'] = $wallets;
+
         return view('user.loan.plan',$data);
     }
 
