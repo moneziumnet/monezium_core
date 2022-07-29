@@ -23,7 +23,7 @@
         <a class="collapse-item" href="{{ route('admin.bank.plan.index') }}">{{ __('Pricing Plan') }}</a>
         <!-- <a class="collapse-item" href="{{ route('admin.gs.user.modules') }}">{{ __('User Modules') }}</a> -->
          <a class="collapse-item" href="{{route('admin.kyc.info','user')}}">{{ __('User KYC Info') }}</a>
-        <!--<a class="collapse-item" href="{{route('admin.manage.module')}}">{{ __('User KYC Modules') }}</a> -->
+        <a class="collapse-item" href="{{route('admin.manage.module')}}">{{ __('User KYC Modules') }}</a>
         <a class="collapse-item" href="{{ route('admin.other.banks.index') }}">{{ __('Other Banks') }}</a>
         <!-- <a class="collapse-item" href="{{ route('admin.user.bonus') }}">{{ __('Supervisor Fee') }}</a> -->
       </div>

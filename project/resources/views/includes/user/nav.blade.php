@@ -21,11 +21,13 @@
 
           @php
           $modules = explode(" , ", auth()->user()->section);
+          $kyc_modules = explode(" , ", $gs->module_section);
           $count = count($modules);
           @endphp
 
           @if ($count < 8)
-            @if (in_array('Loan',$modules)) <li class="nav-item dropdown {{ request()->routeIs('user.loans.plan') ? 'active' : '' }}">
+          @if (in_array('Loan',$modules) && !(auth()->user()->kyc_status != 1 && in_array('Loan',$kyc_modules)))
+          <li class="nav-item dropdown {{ request()->routeIs('user.loans.plan') ? 'active' : '' }}">
             <a class="nav-link" href="{{route('user.loans.plan')}}">
               <span class="nav-link-icon d-md-none d-lg-inline-block">
                 <i class="fas fa-cash-register"></i>
@@ -37,7 +39,7 @@
             </li>
             @endif
 
-            @if (in_array('DPS',$modules))
+            @if (in_array('DPS',$modules) && !(auth()->user()->kyc_status != 1 && in_array('DPS',$kyc_modules)))
             <li class="nav-item dropdown {{ request()->routeIs('user.dps.plan') || request()->routeIs('user.dps.index') || request()->routeIs('user.dps.running') || request()->routeIs('user.dps.matured') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -68,7 +70,7 @@
             </li>
             @endif
 
-            @if (in_array('FDR',$modules))
+            @if (in_array('FDR',$modules) && !(auth()->user()->kyc_status != 1 && in_array('FDR',$kyc_modules)))
             <li class="nav-item dropdown {{ request()->routeIs('user.fdr.plan') || request()->routeIs('user.fdr.index') || request()->routeIs('user.fdr.running') || request()->routeIs('user.fdr.closed') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -98,7 +100,7 @@
             </li>
             @endif
 
-            @if (in_array('External Payment',$modules))
+            @if (in_array('External Payment',$modules) && !(auth()->user()->kyc_status != 1 && in_array('External Payment',$kyc_modules)))
             <li class="nav-item dropdown {{ request()->routeIs('user.deposit.index', 'user.wire.transfer.index', 'user.other.bank', 'user.beneficiaries.index', 'tranfer.logs.index','user.withdraw.index') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -145,7 +147,7 @@
             </li>
             @endif
 
-            @if (in_array('Request Money',$modules))
+            @if (in_array('Request Money',$modules) && !(auth()->user()->kyc_status != 1 && in_array('Request Money',$kyc_modules)))
             <li class="nav-item dropdown {{ request()->routeIs('user.money.request.index','user.request.money.receive', 'send.money.create') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -170,7 +172,7 @@
             @endif
 
 
-            @if (in_array('Exchange Money',$modules))
+            @if (in_array('Exchange Money',$modules) && !(auth()->user()->kyc_status != 1 && in_array('Exchange Money',$kyc_modules)))
             <li class="nav-item {{ request()->routeIs('user.exchange.money') ? 'active' : '' }}">
               <a class="nav-link" href="{{route('user.exchange.money')}}">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -183,7 +185,7 @@
             </li>
             @endif
 
-            @if (in_array('Voucher',$modules))
+            @if (in_array('Voucher',$modules) && !(auth()->user()->kyc_status != 1 && in_array('Voucher',$kyc_modules)))
             <li class="nav-item dropdown {{ request()->routeIs('user.vouchers', 'user.reedem.voucher','user.reedem.history') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -213,7 +215,7 @@
             </li>
             @endif
 
-            @if(check_user_type(4))
+            @if(check_user_type(3))
             <li class="nav-item dropdown {{ request()->routeIs('user.merchant.qr') || request()->routeIs('user.merchant.api.key.form') || request()->routeIs('user.merchant.send.money.create') || request()->routeIs('user.merchant.money.request.index') || request()->routeIs('user.merchant.other.bank') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -249,7 +251,7 @@
             </li>
             @endif
 
-            @if(check_user_type(3))
+            @if(check_user_type(4))
             <li class="nav-item dropdown {{ request()->routeIs('user.referral.invite-user') || request()->routeIs('user.referral.index') || request()->routeIs('user.referral.commissions') || request()->routeIs('user-pricingplan') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -280,7 +282,7 @@
             </li>
             @endif
 
-            @if (in_array('Invoice',$modules))
+            @if (in_array('Invoice',$modules) && !(auth()->user()->kyc_status != 1 && in_array('Invoice',$kyc_modules)))
             <li class="nav-item dropdown {{ request()->routeIs('user.invoice.create') || request()->routeIs('user.invoice.index') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -303,7 +305,7 @@
             </li>
             @endif
 
-            @if (in_array('Escrow',$modules))
+            @if (in_array('Escrow',$modules) && !(auth()->user()->kyc_status != 1 && in_array('Escrow',$kyc_modules)))
             <li class="nav-item dropdown {{ request()->routeIs('user.escrow.create') || request()->routeIs('user.escrow.index') || request()->routeIs('user.escrow.pending') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -343,7 +345,9 @@
               </div>
             </li>
             @else
-            @if (in_array('Loan',$modules)) <li class="nav-item dropdown {{ request()->routeIs('user.loans.plan') ? 'active' : '' }}">
+
+            @if (in_array('Loan',$modules) && !(auth()->user()->kyc_status != 1 && in_array('Loan',$kyc_modules))) 
+            <li class="nav-item dropdown {{ request()->routeIs('user.loans.plan') ? 'active' : '' }}">
             <a class="nav-link" href="{{route('user.loans.plan')}}">
               <span class="nav-link-icon d-md-none d-lg-inline-block">
                 <i class="fas fa-cash-register"></i>
@@ -355,7 +359,7 @@
             </li>
             @endif
 
-            @if (in_array('DPS',$modules))
+            @if (in_array('DPS',$modules)&& !(auth()->user()->kyc_status != 1 && in_array('DPS',$kyc_modules)))
             <li class="nav-item dropdown {{ request()->routeIs('user.dps.plan') || request()->routeIs('user.dps.index') || request()->routeIs('user.dps.running') || request()->routeIs('user.dps.matured') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -386,7 +390,7 @@
             </li>
             @endif
 
-            @if (in_array('FDR',$modules))
+            @if (in_array('FDR',$modules)&& !(auth()->user()->kyc_status != 1 && in_array('FDR',$kyc_modules)))
             <li class="nav-item dropdown {{ request()->routeIs('user.fdr.plan') || request()->routeIs('user.fdr.index') || request()->routeIs('user.fdr.running') || request()->routeIs('user.fdr.closed') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -416,7 +420,7 @@
             </li>
             @endif
 
-            @if (in_array('External Payment',$modules))
+            @if (in_array('External Payment',$modules) && !(auth()->user()->kyc_status != 1 && in_array('External Payment',$kyc_modules)))
             <li class="nav-item dropdown {{ request()->routeIs('user.deposit.index', 'user.wire.transfer.index', 'user.other.bank', 'user.beneficiaries.index', 'tranfer.logs.index','user.withdraw.index') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -463,7 +467,7 @@
             </li>
             @endif
 
-            @if (in_array('Request Money',$modules))
+            @if (in_array('Request Money',$modules)&& !(auth()->user()->kyc_status != 1 && in_array('Request Money',$kyc_modules)))
             <li class="nav-item dropdown {{ request()->routeIs('user.money.request.index','user.request.money.receive', 'send.money.create') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -487,7 +491,7 @@
             </li>
             @endif
 
-            @if (in_array('Voucher',$modules))
+            @if (in_array('Voucher',$modules) && !(auth()->user()->kyc_status != 1 && in_array('Voucher',$kyc_modules)))
             <li class="nav-item dropdown {{ request()->routeIs('user.vouchers', 'user.reedem.voucher','user.reedem.history') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -517,7 +521,7 @@
             </li>
             @endif
 
-            @if(check_user_type(4))
+            @if(check_user_type(3))
             <li class="nav-item dropdown {{ request()->routeIs('user.merchant.qr') || request()->routeIs('user.merchant.api.key.form') || request()->routeIs('user.merchant.send.money.create') || request()->routeIs('user.merchant.money.request.index') || request()->routeIs('user.merchant.other.bank') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -553,7 +557,7 @@
             </li>
             @endif
 
-            @if(check_user_type(3))
+            @if(check_user_type(4))
             <li class="nav-item dropdown {{ request()->routeIs('user.referral.invite-user') || request()->routeIs('user.referral.index') || request()->routeIs('user.referral.commissions') || request()->routeIs('user-pricingplan') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -584,7 +588,7 @@
             </li>
             @endif
 
-            @if (in_array('Invoice',$modules))
+            @if (in_array('Invoice',$modules) && !(auth()->user()->kyc_status != 1 && in_array('Invoice',$kyc_modules)))
             <li class="nav-item dropdown {{ request()->routeIs('user.invoice.create') || request()->routeIs('user.invoice.index') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -607,7 +611,7 @@
             </li>
             @endif
 
-            @if (in_array('Escrow',$modules))
+            @if (in_array('Escrow',$modules) && !(auth()->user()->kyc_status != 1 && in_array('Escrow',$kyc_modules)))
             <li class="nav-item dropdown {{ request()->routeIs('user.escrow.create') || request()->routeIs('user.escrow.index') || request()->routeIs('user.escrow.pending') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
