@@ -131,7 +131,7 @@ class DepositController extends Controller
         {
             $data = [
                 'to' => $user->email,
-                'type' => "Deposti",
+                'type' => "Deposit",
                 'cname' => $user->name,
                 'oamount' => $amount,
                 'aname' => "",
