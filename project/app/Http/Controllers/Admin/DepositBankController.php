@@ -78,17 +78,17 @@ class DepositBankController extends Controller
         $amount = $data->amount*$data->currency->rate;
         $transaction_global_cost = 0;
         if ($amount < $global_range->min || $amount > $global_range->max) {
-            return response()->json(array('errors' => [0 => 'Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min]));
+            return response()->json(array('unsuccess' => [0 => 'Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min]));
             // return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
         }
 
         if($dailydeposit > $global_range->daily_limit){
-            return response()->json(array('errors' => [0 => 'Daily deposit limit over.']));
+            return response()->json(array('unsuccess' => [0 => 'Daily deposit limit over.']));
             // return redirect()->back()->with('unsuccess','Daily deposit limit over.');
         }
 
         if($monthlydeposit > $global_range->monthly_limit){
-            return response()->json(array('errors' => [0 => 'Monthly deposit limit over.']));
+            return response()->json(array('unsuccess' => [0 => 'Monthly deposit limit over.']));
             // return redirect()->back()->with('unsuccess','Monthly deposit limit over.');
         }
 
