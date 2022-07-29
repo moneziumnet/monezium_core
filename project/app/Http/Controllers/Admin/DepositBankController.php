@@ -71,16 +71,55 @@ class DepositBankController extends Controller
         }
 
         $user = User::findOrFail($data->user_id);
-        $currency = Currency::whereIsDefault(1)->first()->id;
-        user_wallet_increment($user->id, $currency, $data->amount);
+        $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'deposit')->first();
+        $dailydeposit = DepositBank::where('id', '!=', $id1)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus('complete')->sum('amount');
+        $monthlydeposit = DepositBank::where('id', '!=', $id1)->whereMonth('created_at', '=', date('m'))->whereStatus('complete')->sum('amount');
+        $amount = $data->amount*$data->currency->rate;
+        $transaction_global_cost = 0;
+        if ($amount < $global_range->min || $amount > $global_range->max) {
+            return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
+        }
+
+        if($dailydeposit > $global_range->daily_limit){
+            return redirect()->back()->with('unsuccess','Daily deposit limit over.');
+        }
+
+        if($monthlydeposit > $global_range->monthly_limit){
+            return redirect()->back()->with('unsuccess','Monthly deposit limit over.');
+        }
+
+        $transaction_global_fee = check_global_transaction_fee($amount, $user, 'deposit');
+        if($transaction_global_fee)
+        {
+            $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($amount/100) * $transaction_global_fee->data->percent_charge;
+        }
+        $transaction_custom_cost = 0;
+
+        $explode = explode(',',User::whereId($user->id)->first()->user_type);
+
+        if(in_array(3,$explode))
+        {
+            $transaction_custom_fee = check_custom_transaction_fee($amount, $user, 'deposit');
+            if($transaction_custom_fee) {
+                $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($amount/100) * $transaction_custom_fee->data->percent_charge;
+            }
+            user_wallet_increment($user->id, $data->currency_id, $transaction_custom_cost, 6);
+        }
+        $final_chargefee = $transaction_global_cost + $transaction_custom_cost;
+        $final_amount = amount($amount - $final_chargefee, $data->currency->type );
+
+
+        user_wallet_increment($user->id, $data->currency_id, $final_amount, 3);
+
+
 
         $trans = new Transaction();
         $trans->trnx = $data->deposit_number;
         $trans->user_id     = $user->id;
         $trans->user_type   = 1;
-        $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
-        $trans->amount      = $data->amount;
-        $trans->charge      = 0;
+        $trans->currency_id = $data->currency_id;
+        $trans->amount      = $amount;
+        $trans->charge      = $final_chargefee;
         $trans->type        = '+';
         $trans->remark      = 'Deposit_create';
         $trans->details     = trans('Deposit complete');

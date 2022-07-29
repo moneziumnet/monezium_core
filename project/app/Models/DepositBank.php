@@ -20,4 +20,9 @@ class DepositBank extends Model
     public function user(){
         return $this->belongsTo(User::class)->withDefault();
     }
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class,'currency_id')->withDefault();
+    }
 }
