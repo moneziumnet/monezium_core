@@ -168,6 +168,29 @@ class UserController extends Controller
             return view('admin.user.profileaccounts',$data);
         }
 
+        public function profileAccountDeposit(Request $request)
+        {
+            $wallet = Wallet::findOrFail($request->wallet_id);
+            user_wallet_increment($wallet->user_id,$wallet->currency_id,$request->amount, $wallet->wallet_type);
+
+            $trans = new Transaction();
+            $trans->trnx = Str::random(4).time();
+            $trans->user_id     = $wallet->user_id;
+            $trans->user_type   = 1;
+            $trans->currency_id = $wallet->currency_id;
+            $trans->amount      = $request->amount;
+            $trans->charge      = 0;
+            $trans->type        = '+';
+            $trans->remark      = 'Deposit_create';
+            $trans->details     = trans('Deposit complete');
+            $trans->save();
+            return redirect()->back()->with(array('message' => 'Deposit Create Successfully'));
+        }
+
+        public function profileAccountDepositForm() {
+            return view('admin.user.walletdeposit');
+        }
+
         public function profilewallets($id, $wallet_type, $currency_id)
         {
             if($wallet_type == 0) {
