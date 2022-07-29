@@ -18,26 +18,7 @@ class UserFdrController extends Controller
         $this->middleware('auth');
     }
 
-    public function index(){
-        $data['fdr'] = UserFdr::whereUserId(auth()->id())->orderby('id','desc')->paginate(10);
-        return view('user.fdr.index',$data);
-    }
 
-    public function running(){
-        $data['fdr'] = UserFdr::whereStatus(1)->whereUserId(auth()->id())->orderby('id','desc')->paginate(10);
-        return view('user.fdr.running',$data);
-    }
-
-    public function closed(){
-        $data['fdr'] = UserFdr::whereStatus(2)->whereUserId(auth()->id())->orderby('id','desc')->paginate(10);
-        return view('user.fdr.closed',$data);
-    }
-
-    public function fdrPlan(){
-        $data['plans'] = FdrPlan::orderBy('id','desc')->whereStatus(1)->orderby('id','desc')->paginate(12);
-        $data['currencylist'] = Currency::whereStatus(1)->where('type', 1)->get();
-        return view('user.fdr.plan',$data);
-    }
 
     public function fdrAmount(Request $request){
         $plan = FdrPlan::whereId($request->planId)->first();
@@ -51,16 +32,16 @@ class UserFdrController extends Controller
             return view('user.fdr.apply',$data);
         }else{
             // return redirect()->back()->with('warning','Request Money should be between minium and maximum amount!');
-            return redirect()->route('user.fdr.plan')->with('warning','Request Money should be between minium and maximum amount!');
+            return redirect()->route('user.invest.index')->with('warning','Request Money should be between minium and maximum amount!');
         }
     }
 
     public function finish(Request $request){
-        $fdr = UserFdr::whereId($request->planId)->first();
+        $fdr = UserFdr::whereId($request->plan_Id)->first();
         if($fdr){
             // user_wallet_decrement($fdr->user_id, $fdr->currency_id, $fdr->fdr_amount, 4);
             $currency = $fdr->currency->id;
-            user_wallet_increment($fdr->user_id, $currency, $fdr->amount, 1);
+            user_wallet_increment($fdr->user_id, $currency, $fdr->amount, 3);
             user_wallet_decrement($fdr->user_id, $currency, $fdr->amount, 3);
             $fdr->next_profit_time = NULL;
             $fdr->status = 2;
@@ -76,7 +57,7 @@ class UserFdrController extends Controller
         // $user = auth()->user();
         // dd($request);
         // if($user->balance >= $request->fdr_amount){
-        if(user_wallet_balance(auth()->id(),$request->input('currency_id'), 1)  >= $request->fdr_amount){
+        if(user_wallet_balance(auth()->id(),$request->input('currency_id'), 3)  >= $request->fdr_amount){
 
             $data = new UserFdr();
             $plan = FdrPlan::findOrFail($request->plan_id);
@@ -98,7 +79,7 @@ class UserFdrController extends Controller
             $data->save();
 
             //$user->decrement('balance',$request->fdr_amount);
-            user_wallet_decrement(auth()->id(),$request->input('currency_id'),$request->fdr_amount, 1);
+            user_wallet_decrement(auth()->id(),$request->input('currency_id'),$request->fdr_amount, 3);
             user_wallet_increment(auth()->id(),$request->input('currency_id'),$request->fdr_amount, 3);
 
             $trans = new Transaction();
@@ -120,10 +101,10 @@ class UserFdrController extends Controller
             // $trans->user_id = auth()->id();
             $trans->save();
 
-            return redirect()->route('user.fdr.index')->with('success','Loan Requesting Successfully');
+            return redirect()->route('user.invest.index')->with('success','Loan Requesting Successfully');
         }else{
             // return redirect()->back()->with('warning','You Don,t have sufficient balance');
-            return redirect()->route('user.fdr.plan')->with('warning','You Don,t have sufficient balance');
+            return redirect()->route('user.invest.index')->with('warning','You Don,t have sufficient balance');
         }
     }
 }

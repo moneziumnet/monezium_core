@@ -19,41 +19,22 @@ class UserDpsController extends Controller
         $this->middleware('auth');
     }
 
-    public function index(){
-        $data['dps'] = UserDps::whereUserId(auth()->id())->orderby('id','desc')->paginate(10);
-        return view('user.dps.index',$data);
-    }
 
-    public function running(){
-        $data['dps'] = UserDps::whereStatus(1)->whereUserId(auth()->id())->orderby('id','desc')->paginate(10);
-        return view('user.dps.running',$data);
-    }
-
-    public function matured(){
-        $data['dps'] = UserDps::whereStatus(2)->whereUserId(auth()->id())->orderby('id','desc')->paginate(10);
-        return view('user.dps.matured',$data);
-    }
-
-    public function dpsPlan(){
-        $data['plans'] = DpsPlan::orderBy('id','desc')->whereStatus(1)->orderby('id','desc')->paginate(12);
-        $data['currencylist'] = Currency::whereStatus(1)->where('type', 1)->get();
-        return view('user.dps.plan',$data);
-    }
 
     public function planDetails(Request $request){
-        $data['data'] = DpsPlan::findOrFail($request->planId);
+        $data['data'] = DpsPlan::findOrFail($request->planIddps);
         $data['currencyinfo'] = Currency::whereId($request->currency_id)->first();
         return view('user.dps.apply',$data);
     }
 
     public function finish(Request $request) {
-        $dps = UserDps::whereId($request->planId)->first();
+        $dps = UserDps::whereId($request->plan_Id)->first();
         if($dps){
 
             $dps->status = 2;
             $dps->next_installment = NULL;
             $dps->update();
-            user_wallet_increment($dps->user_id, $dps->currency_id, $dps->paid_amount, 1);
+            user_wallet_increment($dps->user_id, $dps->currency_id, $dps->paid_amount, 3);
             user_wallet_decrement($dps->user_id, $dps->currency_id, $dps->paid_amount, 3);
 
             return redirect()->back()->with('message','Finish Requesting Successfully');
@@ -66,7 +47,7 @@ class UserDpsController extends Controller
     public function dpsSubmit(Request $request){
         $user = auth()->user();
 
-        if(user_wallet_balance(auth()->id(),$request->input('currency_id'), 1) >= $request->per_installment){
+        if(user_wallet_balance(auth()->id(),$request->input('currency_id'), 3) >= $request->per_installment){
             $data = new UserDps();
 
             $plan = DpsPlan::findOrFail($request->dps_plan_id);
@@ -86,7 +67,7 @@ class UserDpsController extends Controller
             $data->next_installment = Carbon::now()->addDays($plan->installment_interval);
             $data->save();
 
-            user_wallet_decrement(auth()->id(),$request->input('currency_id'),$request->per_installment, 1);
+            user_wallet_decrement(auth()->id(),$request->input('currency_id'),$request->per_installment, 3);
             user_wallet_increment(auth()->id(),$request->input('currency_id'),$request->per_installment, 3);
             //$user->decrement('balance',$request->per_installment);
 
@@ -116,9 +97,9 @@ class UserDpsController extends Controller
             // $trans->user_id = auth()->id();
             $trans->save();
 
-            return redirect()->route('user.dps.index')->with('success','DPS application submitted');
+            return redirect()->route('user.invest.index')->with('success','DPS application submitted');
         }else{
-            return redirect()->route('user.dps.plan')->with('warning','You Don\'t have sufficient balance');
+            return redirect()->route('user.invest.index')->with('warning','You Don\'t have sufficient balance');
         }
     }
 

@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -24,7 +24,7 @@
                 <div class="card">
                     @if (count($fdr) == 0)
                         <h3 class="text-center py-5">{{__('No FDR Data Found')}}</h3>
-                    @else 
+                    @else
                         <div class="table-responsive">
                             <table class="table table-vcenter table-mobile-md card-table">
                                 <thead>
@@ -66,8 +66,8 @@
                                               {{ showprice($data->profit_amount,$currency) }}
                                               <br>
                                               @if ($data->profit_type == 'partial')
-                                                  <span class="text-info"> @lang('Next Frofit Days') ({{ $data->next_profit_time->toDateString() }})</span>
-                                              @else 
+                                                  <span class="text-info"> @lang('Next Frofit Days') ({{$data->next_profit_time ? $data->next_profit_time->toDateString() : '--' }})</span>
+                                              @else
                                                   <span class="text-info"> @lang('Profit will get after locked period') </span>
                                               @endif
                                             </div>
@@ -77,7 +77,7 @@
                                             <div>
                                               @if ($data->status == 1)
                                                 <span class="badge bg-success">@lang('Running')</span>
-                                              @else 
+                                              @else
                                                 <span class="badge bg-danger">@lang('Closed')</span>
                                               @endif
                                             </div>

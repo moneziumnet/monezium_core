@@ -58,6 +58,7 @@ use App\Http\Controllers\User\UserOpenPaydController;
 use App\Http\Controllers\User\UserRailsbankController;
 use App\Http\Controllers\User\SupervisorController;
 use App\Http\Controllers\User\OwnTransferController;
+use App\Http\Controllers\User\UserInvestmentController;
 
 Route::prefix('user')->group(function() {
 
@@ -114,20 +115,13 @@ Route::prefix('user')->group(function() {
         Route::post('/loans/finish', [UserLoanController::class,'loanfinish'])->name('user.loan.finish');
         Route::get('/loan-logs/{id}', [UserLoanController::class,'log'])->name('user.loans.logs');
       });
+      Route::get('/invest', [UserInvestmentController::class,'index'])->name('user.invest.index');
 
-      Route::get('/dps', [UserDpsController::class,'index'])->name('user.dps.index');
-      Route::get('/running-dps', [UserDpsController::class,'running'])->name('user.dps.running');
-      Route::get('/matured-dps', [UserDpsController::class,'matured'])->name('user.dps.matured');
-      Route::get('/dps-plan', [UserDpsController::class,'dpsPlan'])->name('user.dps.plan');
       Route::post('/dps-plan', [UserDpsController::class,'planDetails'])->name('user.dps.planDetails');
       Route::post('/dps-submit', [UserDpsController::class,'dpsSubmit'])->name('user.loan.dpsSubmit');
       Route::post('/dps/finish', [UserDpsController::class,'finish'])->name('user.dps.finish');
       Route::get('/dps-logs/{id}', [UserDpsController::class,'log'])->name('user.dps.logs');
 
-      Route::get('/fdr', [UserFdrController::class,'index'])->name('user.fdr.index');
-      Route::get('/running-fdr', [UserFdrController::class,'running'])->name('user.fdr.running');
-      Route::get('/closed-fdr', [UserFdrController::class,'closed'])->name('user.fdr.closed');
-      Route::get('/fdr-plan', [UserFdrController::class,'fdrPlan'])->name('user.fdr.plan');
       Route::post('/fdr-amount', [UserFdrController::class,'fdrAmount'])->name('user.fdr.amount');
       Route::post('/fdr-request', [UserFdrController::class,'fdrRequest'])->name('user.fdr.request');
       Route::post('/fdr/finish', [UserFdrController::class,'finish'])->name('user.fdr.finish');
