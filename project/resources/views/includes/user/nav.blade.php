@@ -63,18 +63,15 @@
                 </span>
               </a>
               <div class="dropdown-menu">
+                @if (in_array('Incoming',$modules))
+                <a class="dropdown-item" href="{{route('user.depositbank.index')}}">
+                    {{__('Incoming')}}
+                </a>
+                @endif
                 @if (in_array('Withdraw',$modules))
                 <a class="dropdown-item" href="{{route('user.withdraw.index')}}">
                   {{__('Withdraw')}}
                 </a>
-                @endif
-                @if (in_array('Incoming',$modules))
-                <a class="dropdown-item" href="{{route('user.deposit.index')}}">
-                  {{__('Incoming (Payment Gateway)')}}
-                </a>
-                <a class="dropdown-item" href="{{route('user.depositbank.index')}}">
-                    {{__('Incoming (Bank)')}}
-                  </a>
                 @endif
                 @if (in_array('Wire Transfer',$modules))
                 <a class="dropdown-item" href="{{route('user.wire.transfer.index')}}">
@@ -335,18 +332,15 @@
                 </span>
               </a>
               <div class="dropdown-menu">
+                @if (in_array('Incoming',$modules))
+                <a class="dropdown-item" href="{{route('user.depositbank.index')}}">
+                    {{__('Incoming')}}
+                </a>
+                @endif
                 @if (in_array('Withdraw',$modules))
                 <a class="dropdown-item" href="{{route('user.withdraw.index')}}">
                   {{__('Withdraw')}}
                 </a>
-                @endif
-                @if (in_array('Incoming',$modules))
-                <a class="dropdown-item" href="{{route('user.deposit.index')}}">
-                  {{__('Incoming (Payment Gateway)')}}
-                </a>
-                <a class="dropdown-item" href="{{route('user.depositbank.index')}}">
-                    {{__('Incoming (Bank)')}}
-                  </a>
                 @endif
                 @if (in_array('Wire Transfer',$modules))
                 <a class="dropdown-item" href="{{route('user.wire.transfer.index')}}">
