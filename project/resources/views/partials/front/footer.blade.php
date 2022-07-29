@@ -72,12 +72,11 @@
     </div>
     <div class="footer-bottom position-relative pb-5">
         <div class="container text-center">
-            {{-- <p>
+            <p>
                 @php
                     echo $gs->copyright;
                 @endphp
-            </p> --}}
-            <p>MoneziumNET © 2022. All Rights Reserved By <a href="https://monezium.net/" target="_blank">monezium.net</a></p>
+            </p>
         </div>
     </div>
 </footer>

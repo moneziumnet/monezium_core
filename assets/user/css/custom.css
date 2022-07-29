@@ -520,3 +520,133 @@ div[class*="col"]:nth-of-type(6n + 4) .card--info-item .icon {
 .text--base {
 	color: var(--base-clr) !important;
 }
+
+*Footer*/
+.footer-top {
+	padding: 90px 0 45px;
+}
+
+.footer-wrapper {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	margin: 0 -12px;
+}
+
+.footer-wrapper .footer-logo,
+.footer-wrapper .footer-links,
+.footer-wrapper .footer-comunity {
+	padding: 0 12px 40px;
+	width: 100%;
+}
+
+.footer-wrapper .title {
+	margin-bottom: 15px;
+}
+
+.footer-wrapper .footer-links {
+	max-width: 250px;
+}
+
+.footer-wrapper .footer-links ul li a {
+	color: #004e89;
+	padding: 3px 0;
+}
+
+.footer-wrapper .footer-links ul li a:hover {
+	padding-left: 3px;
+	color: #ff8500;
+}
+
+@media (max-width: 1399px) {
+	.footer-wrapper .footer-links {
+		max-width: 200px;
+	}
+}
+
+.footer-wrapper .footer-comunity {
+	max-width: 290px;
+}
+
+.footer-wrapper .footer-logo {
+	max-width: 190px;
+}
+
+.footer-wrapper .footer-logo a {
+	display: block;
+}
+
+.footer-wrapper .footer-logo a img {
+	width: 100%;
+}
+
+@media (max-width: 991px) {
+	.footer-wrapper .footer-logo a {
+		max-width: 200px;
+	}
+}
+
+@media screen and (max-width: 991px) and (min-width: 450px) {
+	.footer-wrapper .footer-logo,
+	.footer-wrapper .footer-links,
+	.footer-wrapper .footer-comunity {
+		max-width: 50%;
+	}
+
+	.footer-wrapper .footer-logo {
+		order: 2;
+	}
+
+	.footer-wrapper .mobile-second-item {
+		order: 1;
+	}
+}
+
+@media screen and (max-width: 449.9px) {
+	.footer-wrapper .footer-logo,
+	.footer-wrapper .footer-comunity {
+		max-width: 100%;
+	}
+
+	.footer-wrapper .footer-links {
+		max-width: 200px;
+	}
+}
+
+.footer-input-group {
+	position: relative;
+}
+
+.footer-input-group .form-control {
+	outline: none;
+	box-shadow: none !important;
+	border: 1px solid #e8eaff;
+	height: 45px;
+	-webkit-border-radius: 24px !important;
+	-moz-border-radius: 24px !important;
+	border-radius: 24px !important;
+	padding: 0 65px 0 20px;
+	background: rgba(0, 78, 137, 0.1);
+}
+
+.footer-input-group .form-control:focus {
+	border-color: #ff8500;
+}
+
+.footer-input-group .input-group-text {
+	-webkit-border-radius: 20px !important;
+	-moz-border-radius: 20px !important;
+	border-radius: 20px !important;
+	height: 37px;
+	width: 50px;
+	justify-content: center;
+	position: absolute;
+	right: 5px;
+	top: 4px;
+	z-index: 9;
+}
+
+footer {
+	font-size: 14px;
+	line-height: 1.65;
+}
