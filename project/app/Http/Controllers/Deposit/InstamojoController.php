@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\PaymentGateway;
+use App\Models\PlanDetail;
 use App\Models\Generalsetting;
 use App\Classes\GeniusMailer;
 use Illuminate\Http\Request;
@@ -22,6 +23,25 @@ class InstamojoController extends Controller
         $currency_code = Currency::where('id',$request->currency_id)->first()->code;
         $request->currency_code = $currency_code;
         $input = $request->all();
+
+        $user = auth()->user();
+        $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'deposit')->first();
+        $dailydeposit = Deposit::where('user_id', $user->id)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus('complete')->sum('amount');
+        $monthlydeposit = Deposit::where('user_id', $user->id)->whereMonth('created_at', '=', date('m'))->whereStatus('complete')->sum('amount');
+
+        if ( $request->amount < $global_range->min ||  $request->amount > $global_range->max) {
+           return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
+
+        }
+
+        if($dailydeposit > $global_range->daily_limit){
+            return redirect()->back()->with('unsuccess','Daily deposit limit over.');
+        }
+
+        if($monthlydeposit > $global_range->monthly_limit){
+            return redirect()->back()->with('unsuccess','Monthly deposit limit over.');
+        }
+
         $data = PaymentGateway::whereKeyword('instamojo')->first();
         $gs = Generalsetting::first();
         $total =  $request->amount;

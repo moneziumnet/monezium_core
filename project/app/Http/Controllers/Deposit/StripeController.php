@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Controller;
 use App\Models\Currency;
 use App\Models\Deposit;
+use App\Models\PlanDetail;
 use App\Models\Generalsetting;
 use App\Models\PaymentGateway;
 use App\Models\Transaction;
@@ -40,6 +41,24 @@ class StripeController extends Controller
         $item_number = Str::random(4).time();
         $item_amount = $request->amount;
         $currency_code = Currency::where('id',$request->currency_id)->first()->code;
+        $user = auth()->user();
+        $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'deposit')->first();
+        $dailydeposit = Deposit::where('user_id', $user->id)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus('complete')->sum('amount');
+        $monthlydeposit = Deposit::where('user_id', $user->id)->whereMonth('created_at', '=', date('m'))->whereStatus('complete')->sum('amount');
+
+        if ( $request->amount < $global_range->min ||  $request->amount > $global_range->max) {
+           return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
+
+        }
+
+        if($dailydeposit > $global_range->daily_limit){
+            return redirect()->back()->with('unsuccess','Daily deposit limit over.');
+        }
+
+        if($monthlydeposit > $global_range->monthly_limit){
+            return redirect()->back()->with('unsuccess','Monthly deposit limit over.');
+        }
+
 
         $support = ['USD'];
         if(!in_array($currency_code,$support)){

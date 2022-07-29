@@ -72,24 +72,9 @@ class DepositController extends Controller
         }
 
         $user = User::findOrFail($data->user_id);
-        $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'deposit')->first();
-        $dailydeposit = Deposit::where('id', '!=', $id1)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus('complete')->sum('amount');
-        $monthlydeposit = Deposit::where('id', '!=', $id1)->whereMonth('created_at', '=', date('m'))->whereStatus('complete')->sum('amount');
 
         $amount = $data->amount*$data->currency->rate;
         $transaction_global_cost = 0;
-        if ($amount < $global_range->min || $amount > $global_range->max) {
-            return response()->json('Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
-
-        }
-
-        if($dailydeposit > $global_range->daily_limit){
-            return response()->json('Daily deposit limit over.');
-        }
-
-        if($monthlydeposit > $global_range->monthly_limit){
-            return response()->json('Monthly deposit limit over.');
-        }
 
         $transaction_global_fee = check_global_transaction_fee($amount, $user, 'deposit');
         if($transaction_global_fee)
