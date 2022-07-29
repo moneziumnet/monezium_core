@@ -6,6 +6,7 @@ use App\Classes\GeniusMailer;
 use App\Http\Controllers\Controller;
 use App\Models\Currency;
 use App\Models\DepositBank;
+use App\Models\PlanDetail;
 use App\Models\Generalsetting;
 use App\Models\Transaction;
 use App\Models\User;
