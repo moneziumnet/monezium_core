@@ -99,7 +99,7 @@
         <div class="col">
           </div>
           <h2 class="page-title">
-            {{__('Deposit Account')}}
+            {{__('Loan Account')}}
           </h2>
         </div>
       </div>
