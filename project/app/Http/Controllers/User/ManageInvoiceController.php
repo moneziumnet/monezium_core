@@ -56,7 +56,7 @@ class ManageInvoiceController extends Controller
             'amount.*'   => 'required|numeric|gt:0'
         ]);
 
-        $charge = charge('create-invoice');
+        $charge = charge('recieve');
         $currency = Currency::findOrFail($request->currency);
 
         $amount = array_sum($request->amount);
@@ -154,7 +154,7 @@ class ManageInvoiceController extends Controller
             'amount.*'   => 'required|numeric|gt:0'
         ],['amount.*.gt'=>'Amount must be greater than 0']);
 
-        $charge = charge('create-invoice');
+        $charge = charge('recieve');
         $currency = Currency::findOrFail($request->currency);
 
         $finalCharge = chargeCalc($charge,array_sum($request->amount),$currency->rate);
