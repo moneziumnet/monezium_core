@@ -44,8 +44,8 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <div class="custom-control custom-switch">
-                      <input type="checkbox" name="section[]" value="DPS" {{ $data->sectionCheck('DPS') ? 'checked' : '' }} class="custom-control-input" id="DPS">
-                      <label class="custom-control-label" for="DPS">{{__('DPS')}}</label>
+                      <input type="checkbox" name="section[]" value="Investments" {{ $data->sectionCheck('Investments') ? 'checked' : '' }} class="custom-control-input" id="Investments">
+                      <label class="custom-control-label" for="Investments">{{__('Investments')}}</label>
                     </div>
                   </div>
                 </div>
@@ -53,17 +53,8 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <div class="custom-control custom-switch">
-                      <input type="checkbox" name="section[]" value="FDR" {{ $data->sectionCheck('FDR') ? 'checked' : '' }} class="custom-control-input" id="FDR">
-                      <label class="custom-control-label" for="FDR">{{__('FDR')}}</label>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <div class="custom-control custom-switch">
-                      <input type="checkbox" name="section[]" value="External Payment" {{ $data->sectionCheck('External Payment') ? 'checked' : '' }} class="custom-control-input" id="External Payment">
-                      <label class="custom-control-label" for="External Payment">{{__('External Payment')}}</label>
+                      <input type="checkbox" name="section[]" value="Payments" {{ $data->sectionCheck('Payments') ? 'checked' : '' }} class="custom-control-input" id="Payments">
+                      <label class="custom-control-label" for="Payments">{{__('Payments')}}</label>
                     </div>
                   </div>
                 </div>
