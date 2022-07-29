@@ -10,11 +10,7 @@
                 <div class="footer-links">
                     <h5 class="title">@lang('About')</h5>
                     <ul>
-                        {{-- @foreach(DB::table('pages')->whereStatus(1)->orderBy('id','desc')->get() as $data)
-                            <li>
-                                <a href="{{ route('front.page',$data->slug) }}">{{ $data->title }}</a>
-                            </li>
-                        @endforeach --}}
+
                         <li>
                             <a href="{{ route('front.page','privacy') }}">{{__('Privacy & Policy') }}</a>
                         </li>
@@ -33,10 +29,10 @@
                             <a href="#0">{{$ps->street}}</a>
                         </li>
                         <li>
-                            <a href="{{$ps->contact_email}}">{{$ps->contact_email}}</a>
+                            <a href="#0">{{$ps->contact_email}}</a>
                         </li>
                         <li>
-                            <a href="{{$ps->phone}}">{{$ps->phone}}</a>
+                            <a href="#0">{{$ps->phone}}</a>
                         </li>
                     </ul>
                 </div>
