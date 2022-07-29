@@ -34,7 +34,30 @@
                   </div>
               </div>
             </div>
-
+            <div class="col-md-6">
+              <div class="form-group">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" name="module_section[]" value="DPS" {{ $data->sectionCheck('DPS') ? 'checked' : '' }} class="custom-control-input" id="DPS">
+                  <label class="custom-control-label" for="DPS">{{__('DPS')}}</label>
+                  </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" name="module_section[]" value="FDR" {{ $data->sectionCheck('FDR') ? 'checked' : '' }} class="custom-control-input" id="FDR">
+                  <label class="custom-control-label" for="FDR">{{__('FDR')}}</label>
+                  </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" name="module_section[]" value="External Payment" {{ $data->sectionCheck('External Payment') ? 'checked' : '' }} class="custom-control-input" id="External Payment">
+                  <label class="custom-control-label" for="External Payment">{{__('External Payment')}}</label>
+                  </div>
+              </div>
+            </div>
             <div class="col-md-6">
               <div class="form-group">
                 <div class="custom-control custom-switch">
@@ -44,33 +67,6 @@
               </div>
             </div>
 
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="module_section[]" value="Wire Transfer" {{ $data->sectionCheck('Wire Transfer') ? 'checked' : '' }} class="custom-control-input" id="Wire Transfer">
-                  <label class="custom-control-label" for="Wire Transfer">{{__('Wire Transfer')}}</label>
-                  </div>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="module_section[]" value="Transfer" {{ $data->sectionCheck('Transfer') ? 'checked' : '' }} class="custom-control-input" id="Transfer">
-                  <label class="custom-control-label" for="Transfer">{{__('Transfer')}}</label>
-                  </div>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="module_section[]" value="Withdraw" {{ $data->sectionCheck('Withdraw') ? 'checked' : '' }} class="custom-control-input" id="Withdraw">
-                  <label class="custom-control-label" for="Withdraw">{{__('Withdraw')}}</label>
-                  </div>
-              </div>
-            </div>
-            
             <div class="col-md-6">
               <div class="form-group">
                 <div class="custom-control custom-switch">
