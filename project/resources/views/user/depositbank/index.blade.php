@@ -47,6 +47,7 @@
                                     <th>{{ __('Account') }}</th>
                                     <th>{{ __('Amount') }}</th>
                                     <th>{{ __('Status') }}</th>
+                                    <th class="text-end">{{ __('Details') }}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -69,7 +70,7 @@
                                         </td>
 
                                         <td data-label="{{ __('Amount') }}">
-                                          <div>
+                                          <div id="li_amount">
                                             {{ showprice($deposit->amount,$currency) }}
                                           </div>
                                         </td>
@@ -78,6 +79,12 @@
                                           <div>
                                             {{ ucfirst($deposit->status) }}
                                           </div>
+                                        </td>
+                                        <td data-label="@lang('Details')" class="text-end">
+                                            @php
+                                                $data = DB::table('sub_ins_banks')->where('name', $deposit->method)->first();
+                                            @endphp
+                                            <button class="btn btn-primary btn-sm details" data-data="{{json_encode($data)}}">@lang('Details')</button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -92,10 +99,41 @@
     </div>
 </div>
 
+<div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-status bg-primary"></div>
+        <div class="modal-body text-center py-4">
+        <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+        <h3>@lang('Bank Details')</h3>
+        <ul class="list-group mt-2">
+            <li class="list-group-item d-flex justify-content-between">@lang('Bank Name')<span id="bank_name"></span></li>
+            <li class="list-group-item d-flex justify-content-between">@lang('Bank Address')<span id="bank_address"></span></li>
+            <li class="list-group-item d-flex justify-content-between">@lang('Bank Iban')<span id="bank_iban"></span></li>
+            <li class="list-group-item d-flex justify-content-between">@lang('Bank Swift')<span id="bank_swift"></span></li>
+            <li class="list-group-item d-flex justify-content-between">@lang('Amount')<span id="amount"></span></li>
+        </ul>
+        </div>
+    </div>
+    </div>
+</div>
+
 
 @endsection
 
 @push('js')
+<script type="text/javascript">
+    'use strict';
+      $('.details').on('click', function() {
+          $('#bank_name').text($(this).data('data').name);
+          $('#bank_address').text($(this).data('data').address);
+          $('#bank_iban').text($(this).data('data').iban);
+          $('#bank_swift').text($(this).data('data').swift);
+          $('#amount').text($('#li_amount').text());
+          $('#modal-success').modal('show');
 
+      })
+    </script>
 @endpush
 
