@@ -26,24 +26,15 @@
                     @includeIf('includes.flash')
                     <form id="deposit-form" action="{{route('user.depositbank.store')}}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <div class="form-group">
-                            <label class="form-label required">{{__('Institution')}}</label>
-                            <select name="subinstitude" id="subinstitude" class="form-select" required>
-                                <option value="">{{ __('Select Institution') }}</option>
-
-                                @foreach ($subinstitude as $ins)
-                                        <option value="{{$ins->id}}">{{ $ins->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
                         <div class="form-group mt-3">
                             <label class="form-label required">{{__('Bank')}}</label>
                             <select name="method" id="withmethod" class="form-select" required>
                                 <option value="">{{ __('Select Bank') }}</option>
+                                @foreach ($banks as $bank)
+                                        <option value="{{$bank->name}}">{{$bank->name}}</option>
+                                @endforeach
                             </select>
                         </div>
-
 
                         <input type="hidden" name="currency_sign" value="$">
                         <input type="hidden" id="currencyCode" name="currency_code" value="USD">
@@ -79,18 +70,6 @@
 
   <script type="text/javascript">
   'use strict';
-
-    $("#subinstitude").on('click',function(){
-        let subinstitude = $("#subinstitude").val();
-        $.post("{{ route('user.depositbank.list') }}",{id:subinstitude,_token:'{{csrf_token()}}'},function (res) {
-            let _optionHtml = '<option value="">Select Bank</option>';
-            $.each(res, function(i, item) {
-                _optionHtml += '<option value="' + item.name + '(Bank)' + '">' + item.name + '</option>';
-            });
-            $('select#withmethod').html(_optionHtml);
-        })
-    });
-
   </script>
 
 @endpush

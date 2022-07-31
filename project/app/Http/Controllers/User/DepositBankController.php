@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\PaymentGateway;
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
+use App\Models\SubInsBank;
 use Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -30,16 +31,8 @@ class DepositBankController extends Controller
     }
 
     public function create(){
-        $data['subinstitude'] = Admin::where('id', '!=', 1)->orderBy('id')->get();
-        $data['availableGatways'] = ['flutterwave','authorize.net','razorpay','mollie','paytm','instamojo','stripe','paypal'];
-        $data['gateways'] = PaymentGateway::OrderBy('id','desc')->whereStatus(1)->get();
-        $data['defaultCurrency'] = Currency::where('is_default',1)->first();
-
+        $data['banks'] = SubInsBank::get();
         return view('user.depositbank.create',$data);
-    }
-
-    public function list(Request $request) {
-        return DB::table('sub_ins_banks')->where('ins_id', $request->id)->whereStatus(1)->get();
     }
 
     public function store(Request $request){

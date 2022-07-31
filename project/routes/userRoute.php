@@ -294,7 +294,6 @@ Route::prefix('user')->group(function() {
 
       Route::get('/bank/deposits',[DepositBankController::class,'index'])->name('user.depositbank.index');
       Route::get('/bank/deposit/create',[DepositBankController::class,'create'])->name('user.depositbank.create');
-      Route::POST('/bank/deposit/list',[DepositBankController::class,'list'])->name('user.depositbank.list');
       Route::POST('/bank/deposit/store',[DepositBankController::class,'store'])->name('user.depositbank.store');
 
       Route::post('/deposit/stripe-submit', [StripeController::class,'store'])->name('deposit.stripe.submit');
