@@ -59,6 +59,7 @@ class DepositBankController extends Controller
                         ->editColumn('action', function(DepositBank $data) {
                             $detail = SubInsBank::where('name', $data->method)->first();
                             $detail->address = str_replace(' ', '-', $detail->address);
+                            $detail->name = str_replace(' ', '-', $detail->name);
                             return '<input type="hidden", id="sub_data", value ='.json_encode($detail).'>'.' <a href="javascript:;"   onclick=getDetails('.json_encode($detail).') class="detailsBtn" >
                             ' . __("Details") . '</a>';
                         })

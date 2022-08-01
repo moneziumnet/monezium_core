@@ -120,7 +120,7 @@
         });
 
         function getDetails(res_data) {
-            $('#bank_name').text(res_data['name']);
+            $('#bank_name').text(res_data.name.replace(/-/gi, ' '));
             $('#bank_address').text(res_data.address.replace(/-/gi, ' '));
             $('#bank_iban').text(res_data.iban);
             $('#bank_swift').text(res_data.swift);
