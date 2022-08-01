@@ -90,13 +90,25 @@ class DepositBankController extends Controller
 
         $explode = explode(',',User::whereId($user->id)->first()->user_type);
 
-        if(in_array(4,$explode))
+        if($user->referral_id != 0)
         {
             $transaction_custom_fee = check_custom_transaction_fee($amount, $user, 'deposit');
             if($transaction_custom_fee) {
                 $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($amount/100) * $transaction_custom_fee->data->percent_charge;
             }
-            user_wallet_increment($user->id, $data->currency_id, $transaction_custom_cost, 6);
+            user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost, 6);
+
+            $trans = new Transaction();
+            $trans->trnx = str_rand();
+            $trans->user_id     = $user->referral_id;
+            $trans->user_type   = 1;
+            $trans->currency_id = $data->currency_id;
+            $trans->amount      = $transaction_custom_cost;
+            $trans->charge      = 0;
+            $trans->type        = '+';
+            $trans->remark      = 'Deposit_create_supervisor_fee';
+            $trans->details     = trans('Deposit complete');
+            $trans->save();
         }
         $final_chargefee = $transaction_global_cost + $transaction_custom_cost;
         $final_amount = amount($amount - $final_chargefee, $data->currency->type );
