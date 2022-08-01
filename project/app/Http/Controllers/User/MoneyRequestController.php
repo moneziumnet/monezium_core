@@ -91,7 +91,7 @@ class MoneyRequestController extends Controller
         }
         $transaction_global_fee = check_global_transaction_fee($request->amount, $user, 'recieve');
         $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/100) * $transaction_global_fee->data->percent_charge;
-        if(check_user_type(4))
+        if($user->referral_id != 0)
         {
             $transaction_custom_cost = 0;
             $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user, 'recieve');
@@ -110,31 +110,12 @@ class MoneyRequestController extends Controller
         $data->transaction_no = $txnid;
         $data->currency_id = $request->wallet_id;
         $data->cost = $transaction_global_cost;
-        $data->supervisor_cost = check_user_type(3) ? $transaction_custom_cost : 0 ;
+        $data->supervisor_cost = $user->referral_id != 0 ? $transaction_custom_cost : 0 ;
         $data->amount = $request->amount;
         $data->status = 0;
         $data->details = $request->details;
         $data->user_type = 1;
         $data->save();
-
-        // $trans = new Transaction();
-        // $trans->trnx = $txnid;
-        // $trans->user_id     = $user->id;
-        // $trans->user_type   = 1;
-        // $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
-        // $trans->amount      = $finalAmount;
-        // $trans->charge      = 0;
-        // $trans->type        = '+';
-        // $trans->remark      = 'Request_Money';
-        // $trans->details     = trans('Request Money');
-
-        // $trans->email = $user->email;
-        // $trans->amount = $finalAmount;
-        // $trans->type = "Request Money";
-        // $trans->profit = "plus";
-        // $trans->txnid = $txnid;
-        // $trans->user_id = $user->id;
-        // $trans->save();
 
         return redirect()->back()->with('success','Request Money Send Successfully.');
 
@@ -184,11 +165,24 @@ class MoneyRequestController extends Controller
         $finalAmount = $data->amount - $data->cost -$data->supervisor_cost;
 
         user_wallet_decrement($sender->id, $currency_id, $data->amount);
-        user_wallet_increment($receiver->id, $currency_id, $data->supervisor_cost,6);
+        if ($receiver->referral_id != 0) {
+
+            user_wallet_increment($receiver->referral_id, $currency_id, $data->supervisor_cost,6);
+
+            $trans = new Transaction();
+            $trans->trnx = str_rand();
+            $trans->user_id     = $receiver->referral_id;
+            $trans->user_type   = 1;
+            $trans->currency_id = $currency_id;
+            $trans->amount      = $data->supervisor_cost;
+            $trans->charge      = 0;
+            $trans->type        = '+';
+            $trans->remark      = 'Request_money_supervisor_fee';
+            $trans->details     = trans('Request Money');
+            $trans->save();
+        }
         user_wallet_increment($receiver->id, $currency_id, $finalAmount);
 
-        // $sender->decrement('balance',$data->amount);
-        // $receiver->increment('balance',$finalAmount);
 
         $data->update(['status'=>1]);
 
@@ -203,12 +197,6 @@ class MoneyRequestController extends Controller
         $trans->remark      = 'Request_Money';
         $trans->details     = trans('Request Money');
 
-        // $trans->email = auth()->user()->email;
-        // $trans->amount = $data->amount;
-        // $trans->type = "Request Money";
-        // $trans->profit = "minus";
-        // $trans->txnid = $data->transaction_no;
-        // $trans->user_id = auth()->id();
         $trans->save();
 
         $trans = new Transaction();
@@ -216,18 +204,12 @@ class MoneyRequestController extends Controller
         $trans->user_id     = $receiver->id;
         $trans->user_type   = $data->user_type;
         $trans->currency_id = $currency_id;
-        $trans->amount      = $finalAmount;
+        $trans->amount      = $data->amount;
         $trans->charge      = $data->cost + $data->supervisor_cost;
         $trans->type        = '+';
         $trans->remark      = 'Request_Money';
         $trans->details     = trans('Request Money');
 
-        // $trans->email = $receiver->email;
-        // $trans->amount = $data->amount;
-        // $trans->type = "Request Money";
-        // $trans->profit = "plus";
-        // $trans->txnid = $data->transaction_no;
-        // $trans->user_id = $receiver->id;
         $trans->save();
 
         if($gs->is_smtp == 1)

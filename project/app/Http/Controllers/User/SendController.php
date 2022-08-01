@@ -149,7 +149,7 @@ class SendController extends Controller
             if($transaction_custom_fee) {
                 $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/100) * $transaction_custom_fee->data->percent_charge;
             }
-            user_wallet_increment($user->id, $currency_id, $transaction_custom_cost, 6);
+            user_wallet_increment($user->referral_id, $currency_id, $transaction_custom_cost, 6);
             $trans = new Transaction();
             $trans->trnx = str_rand();
             $trans->user_id     = $user->referral_id;
