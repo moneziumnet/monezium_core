@@ -42,11 +42,13 @@
                             @php
                                 $userType = explode(',', auth()->user()->user_type);
                                 $supervisor = DB::table('customer_types')->where('type_name', 'Supervisors')->first()->id;
+                                $merchant = DB::table('customer_types')->where('type_name', 'Merchants')->first()->id;
+                                $wallet_type_list = array('0'=>'All', '1'=>'Current', '2'=>'Card', '3'=>'Deposit', '4'=>'Loan', '5'=>'Escrow');
                                 if(in_array($supervisor, $userType)) {
-                                    $wallet_type_list = ['Select', 'Current', 'Card', 'Deposit', 'Loan', 'Escrow', 'Supervisor'];
+                                    $wallet_type_list['6'] = 'Supervisor';
                                 }
-                                else {
-                                    $wallet_type_list = ['Select', 'Current', 'Card', 'Deposit', 'Loan', 'Escrow'];
+                                if(in_array($merchant, $userType)) {
+                                    $wallet_type_list['7'] = 'Merchant';
                                 }
                             @endphp
                             <div class="col-md-6 mb-3">

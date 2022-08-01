@@ -35,7 +35,7 @@ class OwnTransferController extends Controller
         ],[
             'from_wallet_id.required' => 'From currency is required',
         ]);
-
+        $user= auth()->user();
 
         $fromWallet = Wallet::where('id',$request->from_wallet_id)->where('user_id',auth()->id())->where('user_type',1)->firstOrFail();
 
@@ -59,9 +59,6 @@ class OwnTransferController extends Controller
 
         $fromWallet->balance -=  $request->amount;
         $fromWallet->update();
-        if (check_user_type(3)) {
-            user_wallet_increment($user->id, $fromWallet->currency_id, $custom_cost+$transaction_custom_cost, 6);
-        }
 
         $toWallet->balance += $request->amount;
         $toWallet->update();

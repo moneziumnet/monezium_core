@@ -6,7 +6,7 @@
                             <input type="text" class="form-control" id="address" name="address" placeholder="{{ __('Enter Your Address') }}"   required>
 
                             <label >{{ __('Bank') }}</label>
-                            <input type="text" class="form-control" id="bank" name="bank" placeholder="{{ __('EnterBank') }}"   required>
+                            <input type="text" class="form-control" id="bank" name="bank" placeholder="{{ __('Enter Bank') }}"   required>
 
                             <label >{{ __('SWIFT') }} </label>
                             <input type="text" class="form-control" id="swift" name="swift" placeholder="{{ __('Enter Swift') }}"  required>
