@@ -17,10 +17,10 @@ class MerchantController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     public function generateQR()
     {
-        if(!check_user_type(4))
+        if(!check_user_type(3))
         {
             return redirect()->route('user.dashboard');
         }
@@ -31,19 +31,19 @@ class MerchantController extends Controller
 
     public function apiKeyForm()
     {
-        if(!check_user_type(4))
+        if(!check_user_type(3))
         {
             return redirect()->route('user.dashboard');
         }
         $user = Auth::user();
-        
+
         $cred = UserApiCred::where('user_id',$user->id)->first();
         if(!$cred){
             $userapicred = new UserApiCred();
             $userapicred->user_id = $user->id;
             $userapicred->access_key = (string) Str::uuid();
             $userapicred->mode = 0;
-            
+
             $userapicred->save();
             $cred = UserApiCred::where('user_id',$user->id)->first();
         }
@@ -52,7 +52,7 @@ class MerchantController extends Controller
 
     public function apiKeyGenerate()
     {
-        if(!check_user_type(4))
+        if(!check_user_type(3))
         {
             return redirect()->route('user.dashboard');
         }
@@ -63,7 +63,7 @@ class MerchantController extends Controller
                 'merchant_id' => $user->id,
                 'access_key'  => (string) Str::uuid(),
                 'mode'        => 0
-            ]); 
+            ]);
         }
         $cred->access_key = (string) Str::uuid();
         $cred->update();
@@ -72,7 +72,7 @@ class MerchantController extends Controller
 
     public function downloadQR($email)
     {
-        if(!check_user_type(4))
+        if(!check_user_type(3))
         {
             return redirect()->route('user.dashboard');
         }
@@ -83,7 +83,7 @@ class MerchantController extends Controller
         $filename = 'QrCode_'.$email.'_.'.$extension;
         $qrCode = $image->opacity(100)->fit(350,350);
         $qrCode->encode('jpg');
-    
+
         $headers = [
             'Content-Type' => $image->mime,
             'Content-Disposition' => 'attachment; filename='.$filename,

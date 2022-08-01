@@ -201,8 +201,8 @@
             @endif
 
             @if(check_user_type(4))
-            <li class="nav-item dropdown {{ request()->routeIs('user.referral.invite-user') || request()->routeIs('user.referral.index') || request()->routeIs('user.referral.commissions') || request()->routeIs('user-pricingplan') ? 'active' : '' }}">
-              <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
+            <li class="nav-item dropdown {{  request()->routeIs('user.referral.index') ? 'active' : '' }}">
+              <a class="nav-link" href="{{route('user.referral.index')}}" >
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                   <i class="fas fa-box"></i>
                 </span>
@@ -210,24 +210,6 @@
                   {{__('Supervisor')}}
                 </span>
               </a>
-              <div class="dropdown-menu">
-                <a class="dropdown-item" href="{{route('user.referral.invite-user')}}">
-                  {{__('Invite User')}}
-                </a>
-
-                <a class="dropdown-item" href="{{route('user.referral.index')}}">
-                  {{__('Referred Users')}}
-                </a>
-
-                <a class="dropdown-item" href="{{route('user.referral.commissions')}}">
-                  {{__('Referral Commissions')}}
-                </a>
-
-                <a class="dropdown-item" href="{{route('user-pricingplan')}}">
-                    {{__('Charge Fee')}}
-                </a>
-
-              </div>
             </li>
             @endif
 
@@ -456,8 +438,8 @@
             @endif
 
             @if(check_user_type(4))
-            <li class="nav-item dropdown {{ request()->routeIs('user.referral.invite-user') || request()->routeIs('user.referral.index') || request()->routeIs('user.referral.commissions') || request()->routeIs('user-pricingplan') ? 'active' : '' }}">
-              <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
+            <li class="nav-item dropdown {{  request()->routeIs('user.referral.index') ? 'active' : '' }}">
+              <a class="nav-link" href="{{route('user.referral.index')}}" >
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                   <i class="fas fa-box"></i>
                 </span>
@@ -465,24 +447,6 @@
                   {{__('Supervisor')}}
                 </span>
               </a>
-              <div class="dropdown-menu">
-                <a class="dropdown-item" href="{{route('user.referral.invite-user')}}">
-                  {{__('Invite User')}}
-                </a>
-
-                <a class="dropdown-item" href="{{route('user.referral.index')}}">
-                  {{__('Referred Users')}}
-                </a>
-
-                <a class="dropdown-item" href="{{route('user.referral.commissions')}}">
-                  {{__('Referral Commissions')}}
-                </a>
-
-                <a class="dropdown-item" href="{{route('user-pricingplan')}}">
-                    {{__('Charge Fee')}}
-                </a>
-
-              </div>
             </li>
             @endif
 

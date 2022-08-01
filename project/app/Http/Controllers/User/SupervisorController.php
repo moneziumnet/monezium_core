@@ -7,6 +7,7 @@ use Datatables;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\BankPlan;
+use App\Models\User;
 use App\Models\Charge;
 use Illuminate\Support\Facades\Validator;
 
@@ -18,9 +19,9 @@ class SupervisorController extends Controller
 
     }
 
-    public function index()
+    public function index($id)
     {
-        $data = auth()->user();
+        $data = User::findOrFail($id);
         $plans = BankPlan::where('id','!=',$data->bank_plan_id)->get();
         $plan = BankPlan::findOrFail($data->bank_plan_id);
         //dd($plan);

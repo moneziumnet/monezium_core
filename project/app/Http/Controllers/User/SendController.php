@@ -145,7 +145,7 @@ class SendController extends Controller
         }
         $custom_cost = 0;
         $transaction_custom_cost = 0;
-        if(check_user_type(3))
+        if(check_user_type(4))
         {
             $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user, 'send');
             if($transaction_custom_fee) {
@@ -206,7 +206,7 @@ class SendController extends Controller
 
             user_wallet_decrement($user->id, $currency_id, $finalamount, $wallet->wallet_type);
             user_wallet_increment($receiver->id, $currency_id, $request->amount, $wallet->wallet_type);
-            if(check_user_type(3)) {
+            if(check_user_type(4)) {
                 user_wallet_increment($user->id, $currency_id, $transaction_custom_cost, 6);
             }
             if(SaveAccount::whereUserId(auth()->id())->where('receiver_id',$receiver->id)->exists()){

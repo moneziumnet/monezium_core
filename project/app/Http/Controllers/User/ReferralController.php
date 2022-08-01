@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\ReferralBonus;
 use App\Models\InviteUser;
 use App\Models\User;
+use App\Models\Wallet;
 use App\Classes\GeniusMailer;
 use Illuminate\Support\Facades\Validator;
 
@@ -16,41 +17,25 @@ class ReferralController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        
+
     }
 
     public function referred(){
-        if(!check_user_type(3))
+        if(!check_user_type(4))
         {
             return redirect()->route('user.dashboard');
         }
         $data['referreds'] = User::where('referral_id',auth()->id())->orderBy('id','desc')->paginate(20);
+        $data['user'] = Auth::user();
+        $data['wallets'] = Wallet::where('user_id',auth()->id())->where('wallet_type',6)->with('currency')->get();
         return view('user.referral.index',$data);
     }
-    
-    public function commissions(){
-        if(!check_user_type(3))
-        {
-            return redirect()->route('user.dashboard');
-        }
-        $data['commissions'] = ReferralBonus::where('to_user_id',auth()->id())->orderBy('id','desc')->paginate(20);
-        return view('user.referral.commission',$data);
-    }
 
-    public function invite_user()
-    {
-        if(!check_user_type(3))
-        {
-            return redirect()->route('user.dashboard');
-        }
-        $data['user'] = Auth::user();  
-        return view('user.referral.invite-user', $data);
-    }
-    
-    
+
+
     public function invite_send(Request $request)
     {
-        if(!check_user_type(3))
+        if(!check_user_type(4))
         {
             return redirect()->route('user.dashboard');
         }
@@ -64,7 +49,7 @@ class ReferralController extends Controller
            // return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
         }
 
-        $user = Auth::user(); 
+        $user = Auth::user();
 
         $data['user']   = $user;
         $input = $request->all();
@@ -85,7 +70,7 @@ class ReferralController extends Controller
         $inviteUser->created_at = date('Y-m-d H:i:s');
 
 
-        
+
         $data = [
             'to' => $request->input('invite_email'),
             'type' => "invite email",
@@ -97,12 +82,12 @@ class ReferralController extends Controller
         ];
 
         $mailer = new GeniusMailer();
-        $mailer->sendAutoMail($data); 
+        $mailer->sendAutoMail($data);
 
         if($mailer->sendAutoMail($data))
         {
             $inviteUser->save();
-            
+
             return redirect()->back()->with('success', 'Invite sent successfully.');
         }else{
             return redirect()->back()->with('unsuccess', 'Email not send this time. Please check email address');

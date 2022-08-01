@@ -348,11 +348,9 @@ Route::prefix('user')->group(function() {
       Route::post('/subscription/authorize-submit', [SubAuthorizeController::class,'store'])->name('subscription.authorize.submit');
 
       Route::get('/referrals',[ReferralController::class,'referred'])->name('user.referral.index');
-      Route::get('/referral-commissions',[ReferralController::class,'commissions'])->name('user.referral.commissions');
-      Route::get('/invite-user',[ReferralController::class,'invite_user'])->name('user.referral.invite-user');
       Route::post('/invite-user',[ReferralController::class,'invite_send'])->name('user.referral.invite-user');
 
-      Route::get('/pricingplan', [SupervisorController::class, 'index'])->name('user-pricingplan');
+      Route::get('/pricingplan/{id}', [SupervisorController::class, 'index'])->name('user-pricingplan');
       Route::get('/pricingplan/edit/{id}', [SupervisorController::class, 'edit'])->name('user-pricingplan-edit');
       Route::get('/pricingplan/create/{id}/{charge_id}', [SupervisorController::class, 'create'])->name('user-pricingplan-create');
       Route::get('/pricingplan/datatables/{id}', [SupervisorController::class, 'datatables'])->name('user-pricingplan-datatables');

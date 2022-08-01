@@ -91,7 +91,7 @@ class MoneyRequestController extends Controller
         }
         $transaction_global_fee = check_global_transaction_fee($request->amount, $user, 'recieve');
         $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/100) * $transaction_global_fee->data->percent_charge;
-        if(check_user_type(3))
+        if(check_user_type(4))
         {
             $transaction_custom_cost = 0;
             $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user, 'recieve');
