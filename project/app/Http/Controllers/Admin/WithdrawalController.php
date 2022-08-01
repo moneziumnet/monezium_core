@@ -65,7 +65,7 @@ class WithdrawalController extends Controller
             user_wallet_increment($withdraw->user_id, $withdraw->currency_id, $withdraw->amount);
             $explode = explode(',',User::whereId($withdraw->user_id)->first()->user_type);
 
-            if(in_array(3,$explode))
+            if(in_array(4,$explode))
             {
                 $custom_cost = 0;
                 $transaction_custom_cost = 0;

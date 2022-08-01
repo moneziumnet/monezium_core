@@ -28,14 +28,14 @@ class UserWithdrawController extends Controller
     {
         try{
             $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
-            $data['withdaw'] = Withdrawals::whereUserId($user_id)->orderBy('id','desc')->paginate(10); 
+            $data['withdaw'] = Withdrawals::whereUserId($user_id)->orderBy('id','desc')->paginate(10);
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data'=> $data]);
         }catch(\Throwable $th){
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
         }
     }
-    
-    
+
+
     public function withdrawcreate(Request $request)
     {
         try{
@@ -49,7 +49,7 @@ class UserWithdrawController extends Controller
                 'details'                => 'required',
             ];
             $validator = Validator::make($request->all(), $rules);
-            
+
             if ($validator->fails()) {
                 return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
             }
@@ -63,7 +63,7 @@ class UserWithdrawController extends Controller
             if(strtotime($user->plan_end_date) < strtotime()){
                 return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Plan Date Expired.']);
             }
-            
+
             $withdraw_charge = Charge::where('plan_id',$user->bank_plan_id)->where('slug','transfer-money')->first()->value('data');
             $userBalance = user_wallet_balance($user->id,$request->currency_id,1);
 
@@ -99,7 +99,7 @@ class UserWithdrawController extends Controller
             $transaction_custom_cost = 0;
             $explode = explode(',',$user->user_type);
 
-            if(in_array(3,$explode))
+            if(in_array(4,$explode))
             {
                 $custom_charge = Charge::where('name', 'Transfer Money')->where('user_id', $user->id)->first();
                 if($custom_charge)
@@ -126,8 +126,8 @@ class UserWithdrawController extends Controller
 
 
             user_wallet_decrement($user->id, $currency->id, $request->amount);
-            if(in_array(3,$explode))
-            { 
+            if(in_array(4,$explode))
+            {
                 user_wallet_increment($user->id, $currency->id, $custom_cost + $transaction_custom_cost, 6);
             }
 
@@ -175,7 +175,7 @@ class UserWithdrawController extends Controller
             // $trans->txnid = $txnid;
             // $trans->user_id = $user->id;
             $trans->save();
-    
+
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Withdraw Request Amount : '.$request->amount.' Fee : '.$messagefee.' = '.$messagefinal.' ('.$currency->code.') Sent Successfully.']);
         }catch(\Throwable $th){
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
@@ -191,16 +191,16 @@ class UserWithdrawController extends Controller
                 'user_withdraw_id'        => 'required'
             ];
             $validator = Validator::make($request->all(), $rules);
-            
+
             if ($validator->fails()) {
                 return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
             }
 
-            
+
             $user_withdraw_id = $request->user_withdraw_id;
 
             $withdraw = Withdrawals::findOrFail($user_withdraw_id);
-            
+
             if($withdraw)
             {
                 $data['withdraws'] = $withdraw;

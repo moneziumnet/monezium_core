@@ -73,7 +73,7 @@ class ExchangeMoneyController extends Controller
                 'to_wallet_id'      => 'required|integer'
             ]);
             $validator = Validator::make($request->all(), $rules);
-            
+
             if ($validator->fails()) {
                 return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
             }
@@ -119,7 +119,7 @@ class ExchangeMoneyController extends Controller
 
         $explode = explode(',',$user->user_type);
 
-        if(in_array(3,$explode))
+        if(in_array(4,$explode))
         {
             $custom_charge = Charge::where('name', 'Exchange Money')->where('user_id', $user_id)->first();
 

@@ -90,7 +90,7 @@ class DepositBankController extends Controller
 
         $explode = explode(',',User::whereId($user->id)->first()->user_type);
 
-        if(in_array(3,$explode))
+        if(in_array(4,$explode))
         {
             $transaction_custom_fee = check_custom_transaction_fee($amount, $user, 'deposit');
             if($transaction_custom_fee) {

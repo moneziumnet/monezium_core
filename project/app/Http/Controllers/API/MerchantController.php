@@ -25,7 +25,7 @@ class MerchantController extends Controller
     public $successStatus = 200;
     /*********************START Merchant API******************************/
 
-    
+
     public function apikey(Request $request)
     {
         try {
@@ -33,18 +33,18 @@ class MerchantController extends Controller
             $user = User::whereId($user_id)->first();
             $explode = explode(',',$user->user_type);
 
-            if(!in_array(4,$explode))
+            if(!in_array(3,$explode))
             {
                 return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Your have not merchant access']);
             }
-            
+
             $cred = UserApiCred::where('user_id',$user->id)->first();
             if(!$cred){
                 $userapicred = new UserApiCred();
                 $userapicred->user_id = $user->id;
                 $userapicred->access_key = (string) Str::uuid();
                 $userapicred->mode = 0;
-                
+
                 $userapicred->save();
                 $cred = UserApiCred::where('user_id',$user->id)->first();
             }
@@ -66,7 +66,7 @@ class MerchantController extends Controller
                 'charge_pay'        => 'numeric'
             ];
             $validator = Validator::make($request->all(), $rules);
-            
+
             if ($validator->fails()) {
                 return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
             }

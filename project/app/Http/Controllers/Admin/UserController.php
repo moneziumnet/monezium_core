@@ -581,7 +581,7 @@ class UserController extends Controller
         public function profilePricingplandatatables($id)
         {
             $user = User::findOrFail($id);
-            $globals = Charge::where('plan_id', $user->bank_plan_id)->orderBy('name','desc')->get();
+            $globals = Charge::where('plan_id', $user->bank_plan_id)->whereIn('slug', ['deposit', 'send', 'recieve', 'escrow', 'withdraw'])->orderBy('name','desc')->get();
             $datas = $globals;
             return Datatables::of($datas)
                             ->editColumn('name', function(Charge $data) {
