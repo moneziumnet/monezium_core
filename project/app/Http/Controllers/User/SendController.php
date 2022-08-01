@@ -133,7 +133,6 @@ class SendController extends Controller
         if($request->amount > user_wallet_balance(auth()->id(), $currency_id, $wallet->wallet_type)){
             return redirect()->back()->with('unsuccess','Insufficient Balance.');
         }
-        $global_cost = 0;
         $transaction_global_cost = 0;
         if ($request->amount < $global_range->min || $request->amount > $global_range->max) {
             return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
@@ -143,14 +142,25 @@ class SendController extends Controller
         {
             $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/100) * $transaction_global_fee->data->percent_charge;
         }
-        $custom_cost = 0;
         $transaction_custom_cost = 0;
-        if(check_user_type(4))
+        if($user->referral_id != 0)
         {
             $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user, 'send');
             if($transaction_custom_fee) {
                 $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/100) * $transaction_custom_fee->data->percent_charge;
             }
+            user_wallet_increment($user->id, $currency_id, $transaction_custom_cost, 6);
+            $trans = new Transaction();
+            $trans->trnx = str_rand();
+            $trans->user_id     = $user->referral_id;
+            $trans->user_type   = 1;
+            $trans->currency_id = $currency_id;
+            $trans->amount      = $transaction_custom_cost;
+            $trans->charge      = 0;
+            $trans->type        = '+';
+            $trans->remark      = 'Send_money_supervisor_fee';
+            $trans->details     = trans('Send Money');
+            $trans->save();
         }
 
 
@@ -206,9 +216,6 @@ class SendController extends Controller
 
             user_wallet_decrement($user->id, $currency_id, $finalamount, $wallet->wallet_type);
             user_wallet_increment($receiver->id, $currency_id, $request->amount, $wallet->wallet_type);
-            if(check_user_type(4)) {
-                user_wallet_increment($user->id, $currency_id, $transaction_custom_cost, 6);
-            }
             if(SaveAccount::whereUserId(auth()->id())->where('receiver_id',$receiver->id)->exists()){
                 return redirect()->route('send.money.create')->with('success','Money Send Successfully');
             }
