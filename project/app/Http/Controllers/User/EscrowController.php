@@ -83,7 +83,7 @@ class EscrowController extends Controller
             $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/100) * $transaction_global_fee->data->percent_charge;
         }
         $transaction_custom_cost = 0;
-        if(check_user_type(4))
+        if($user->referral_id != 0)
         {
             $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user, 'escrow');
             if($transaction_custom_fee) {
@@ -99,8 +99,19 @@ class EscrowController extends Controller
 
         $senderWallet->balance -= $finalAmount;
         $senderWallet->update();
-        if(check_user_type(4)){
-            user_wallet_increment($user->id, $currency->id, $transaction_custom_cost, 6);
+        if($user->referral_id != 0){
+            user_wallet_increment($user->referral_id, $currency->id, $transaction_custom_cost, 6);
+            $trans = new Transaction();
+            $trans->trnx = str_rand();
+            $trans->user_id     = $user->referral_id;
+            $trans->user_type   = 1;
+            $trans->currency_id = $currency->id;
+            $trans->amount      = $transaction_custom_cost;
+            $trans->charge      = 0;
+            $trans->type        = '+';
+            $trans->remark      = 'Make_Escrow_supervisor_fee';
+            $trans->details     = trans('Make Escrow');
+            $trans->save();
         }
 
         $escrow               = new Escrow();

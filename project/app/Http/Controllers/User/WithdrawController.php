@@ -108,19 +108,6 @@ class WithdrawController extends Controller
             if($transaction_custom_fee) {
                 $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/100) * $transaction_custom_fee->data->percent_charge;
             }
-            user_wallet_increment($user->referral_id, $request->currency_id, $transaction_custom_cost, 6);
-
-            $trans = new Transaction();
-            $trans->trnx = str_rand();
-            $trans->user_id     = $user->referral_id;
-            $trans->user_type   = 1;
-            $trans->currency_id = $request->currency_id;
-            $trans->amount      = $transaction_custom_cost;
-            $trans->charge      = 0;
-            $trans->type        = '+';
-            $trans->remark      = 'withdraw_money_supervisor_fee';
-            $trans->details     = trans('Withdraw money');
-            $trans->save();
         }
 
 
@@ -136,6 +123,21 @@ class WithdrawController extends Controller
 
 
         user_wallet_decrement($user->id, $currency->id, $request->amount);
+        if($user->referral_id != 0) {
+            user_wallet_increment($user->referral_id, $request->currency_id, $transaction_custom_cost, 6);
+
+            $trans = new Transaction();
+            $trans->trnx = str_rand();
+            $trans->user_id     = $user->referral_id;
+            $trans->user_type   = 1;
+            $trans->currency_id = $request->currency_id;
+            $trans->amount      = $transaction_custom_cost;
+            $trans->charge      = 0;
+            $trans->type        = '+';
+            $trans->remark      = 'withdraw_money_supervisor_fee';
+            $trans->details     = trans('Withdraw money');
+            $trans->save();
+        }
 
         $txnid = Str::random(12);
         $newwithdrawal = new Withdrawals();
