@@ -219,6 +219,25 @@ class UserController extends Controller
                   $user_wallet->created_at = date('Y-m-d H:i:s');
                   $user_wallet->updated_at = date('Y-m-d H:i:s');
                   $user_wallet->save();
+
+                  $user = User::findOrFail($id);
+
+                  $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+
+                  $trans = new Transaction();
+                  $trans->trnx = str_rand();
+                  $trans->user_id     = $id;
+                  $trans->user_type   = 1;
+                  $trans->currency_id = 1;
+                  $trans->amount      = $chargefee->data->fixed_charge;
+                  $trans->charge      = 0;
+                  $trans->type        = '-';
+                  $trans->remark      = 'wallet_create';
+                  $trans->details     = trans('Wallet Create');
+                  $trans->save();
+
+                  user_wallet_decrement($id, 1, $chargefee->data->fixed_charge, 1);
+
                   $msg = __('Account New Wallet Updated Successfully.');
                   return response()->json($msg);
                 }
@@ -644,7 +663,19 @@ class UserController extends Controller
                 return redirect()->back()->with(array('warning' => 'Customer Balance not Available.'));
             }
             user_wallet_decrement($wallet->user_id, $wallet->currency->id,$manualfee->data->fixed_charge,$wallet->wallet_type);
-            return redirect()->back()->with(array('message' => 'Customer Plan Create Successfully'));
+
+            $trans = new Transaction();
+            $trans->trnx = str_rand();
+            $trans->user_id     = $wallet->user_id;
+            $trans->user_type   = 1;
+            $trans->currency_id = $wallet->currency->id;
+            $trans->amount      = $manualfee->data->fixed_charge;
+            $trans->charge      = 0;
+            $trans->type        = '-';
+            $trans->remark      = 'manual_fee_'.str_replace(' ', '_', $manualfee->name);
+            $trans->details     = trans('manual_fee');
+            $trans->save();
+            return redirect()->back()->with(array('message' => 'Done Manual fee successfully'));
 
         }
 

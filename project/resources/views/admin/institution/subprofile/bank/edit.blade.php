@@ -126,7 +126,7 @@
          <div class="lang-tag-top-filds" id="lang-section">
           <label for="instruction">{{ __("Required Information") }}</label>
 
-          @if ($informations == NULL | count($informations) == 0)
+          @if ($informations == NULL || count($informations) == 0)
               <p>{{ __('No field Added') }}</p>
 
             @else
@@ -137,7 +137,7 @@
                     <div class="col-md-6">
                       <input type="text" name="form_builder[{{ $key }}][field_name]" class="form-control" placeholder="{{ __('Field Name') }}" value="{{ $info['field_name'] }}">
                     </div>
-    
+
                     <div class="col-md-3">
                       <select name="form_builder[{{ $key }}][type]" class="form-control">
                           <option value="text" {{ $info['type'] == 'text' ? 'selected' : '' }}> {{__('Input')}} </option>
@@ -145,7 +145,7 @@
                           <option value="file" {{ $info['type'] == 'file' ? 'selected' : '' }}> {{__('File upload')}} </option>
                       </select>
                     </div>
-    
+
                     <div class="col-md-3">
                       <select name="form_builder[{{ $key }}][validation]" class="form-control">
                           <option value="required" {{ $info['validation'] == 'required' ? 'selected' : '' }}> {{__('Required')}} </option>
@@ -183,7 +183,7 @@
       return !$.trim(el.html())
   }
 
-  let id = '{{count($informations) == 0 ? 1 : count($informations) + 1}}';
+  let id = '{{$informations ? count($informations) == 0 ? 1 : count($informations) + 1 : 0}}';
 
 $("#lang-btn").on('click', function(){
 
