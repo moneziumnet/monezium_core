@@ -102,12 +102,25 @@ class WithdrawController extends Controller
             $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/100) * $transaction_global_fee->data->percent_charge;
         }
         $transaction_custom_cost = 0;
-        if(check_user_type(4))
+        if($user->referral_id != 0)
         {
             $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user, 'withdraw');
             if($transaction_custom_fee) {
                 $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/100) * $transaction_custom_fee->data->percent_charge;
             }
+            user_wallet_increment($user->referral_id, $request->currency_id, $transaction_custom_cost, 6);
+
+            $trans = new Transaction();
+            $trans->trnx = str_rand();
+            $trans->user_id     = $user->referral_id;
+            $trans->user_type   = 1;
+            $trans->currency_id = $request->currency_id;
+            $trans->amount      = $transaction_custom_cost;
+            $trans->charge      = 0;
+            $trans->type        = '+';
+            $trans->remark      = 'withdraw_money_supervisor_fee';
+            $trans->details     = trans('Withdraw money');
+            $trans->save();
         }
 
 
@@ -123,25 +136,12 @@ class WithdrawController extends Controller
 
 
         user_wallet_decrement($user->id, $currency->id, $request->amount);
-        if(check_user_type(4)) {
-            user_wallet_increment($user->id, $currency->id,  $transaction_custom_cost, 6);
-        }
 
         $txnid = Str::random(12);
         $newwithdrawal = new Withdrawals();
-        // $newwithdraw['user_id'] = auth()->id();
-        // $newwithdraw['method'] = $request->methods;
-        // $newwithdraw['txnid'] = $txnid;
-
-        // $newwithdraw['amount'] = $finalamount;
-        // $newwithdraw['fee'] = $fee;
-        // $newwithdraw['details'] = $request->details;
-        // $newwithdraw->save();
-
-        $newwithdrawal->trx         = Str::random(12);
+        $newwithdrawal->trx         = $txnid;
         $newwithdrawal->user_id = auth()->id();
         $newwithdrawal->method_id   = $request->methods;
-        // $newwithdrawal->method_id   = 1;
         $newwithdrawal->currency_id = $currency->id;
         $newwithdrawal->amount      = $request->amount;
         $newwithdrawal->charge      = $messagefee;
@@ -157,19 +157,12 @@ class WithdrawController extends Controller
         $trans->trnx = $txnid;
         $trans->user_id     = $user->id;
         $trans->user_type   = 1;
-        $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
+        $trans->currency_id = $currency->id;
         $trans->amount      = $request->amount;
         $trans->charge      = $messagefee;
         $trans->type        = '-';
-        $trans->remark      = 'Payout';
-        $trans->details     = trans('Payout created');
-
-        // $trans->email = $user->email;
-        // $trans->amount = $finalamount;
-        // $trans->type = "Payout";
-        // $trans->profit = "minus";
-        // $trans->txnid = $txnid;
-        // $trans->user_id = $user->id;
+        $trans->remark      = 'withdraw_money';
+        $trans->details     = trans('Withdraw money');
         $trans->save();
 
         return redirect()->back()->with('success','Withdraw Request Amount : '.$request->amount.' Fee : '.$messagefee.' = '.$messagefinal.' ('.$currency->code.') Sent Successfully.');

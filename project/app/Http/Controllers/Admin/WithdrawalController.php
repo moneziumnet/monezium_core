@@ -33,19 +33,8 @@ class WithdrawalController extends Controller
         $withdraw->status = 1;
         $withdraw->save();
 
-        $trnx              = new Transaction();
-        $trnx->trnx        = str_rand();
-        $trnx->user_id     = $withdraw->user_id ?? $withdraw->merchant_id;
-        $trnx->user_type   = 1;
-        $trnx->currency_id = $withdraw->currency->id;
-        $trnx->amount      = $withdraw->amount;
-        $trnx->charge      = $withdraw->charge;
-        $trnx->remark      = 'withdraw_money';
-        $trnx->type        = '-';
-        $trnx->details     = trans('Withdraw money');
-        $trnx->save();
 
-      @mailSend('accept_withdraw',['amount'=>amount($withdraw->amount,$withdraw->currency->type,2), 'method' => $withdraw->withdraw->name,'trnx'=> $trnx->trnx,'curr' => $withdraw->currency->code,'method'=>$withdraw->method->name,'charge'=> amount($withdraw->charge,$withdraw->currency->type,2),'data_time'=> dateFormat($trnx->created_at)], $withdraw->user);
+      @mailSend('accept_withdraw',['amount'=>amount($withdraw->amount,$withdraw->currency->type,2), 'method' => $withdraw->withdraw->name,'trnx'=> $withdraw->trx,'curr' => $withdraw->currency->code,'method'=>$withdraw->method->name,'charge'=> amount($withdraw->charge,$withdraw->currency->type,2),'data_time'=> dateFormat($withdraw->updated_at)], $withdraw->user);
 
         return back()->with('success','Withdraw Accepted Successfully');
     }
@@ -65,20 +54,26 @@ class WithdrawalController extends Controller
             user_wallet_increment($withdraw->user_id, $withdraw->currency_id, $withdraw->amount);
             $explode = explode(',',User::whereId($withdraw->user_id)->first()->user_type);
 
-            if(in_array(4,$explode))
+            if($user->referral_id != 0)
             {
-                $custom_cost = 0;
                 $transaction_custom_cost = 0;
-                $custom_charge = Charge::where('name', 'Transfer Money')->where('user_id', $withdraw->user_id)->first();
-                if($custom_charge)
-                {
-                    $custom_cost = $custom_charge->data->fixed_charge + ($withdraw->amount/100) * $custom_charge->data->percent_charge;
-                }
-                $transaction_custom_fee = check_custom_transaction_fee($withdraw->amount, User::whereId($withdraw->user_id)->first());
+                $transaction_custom_fee = check_custom_transaction_fee($withdraw->amount, User::whereId($withdraw->user_id)->first(), 'withdraw');
                 if($transaction_custom_fee) {
                     $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($withdraw->amount/100) * $transaction_custom_fee->data->percent_charge;
                 }
-                user_wallet_decrement($withdraw->user_id, $withdraw->currency_id, $custom_cost+$transaction_custom_cost, 6);
+                user_wallet_decrement($user->referral_id, $withdraw->currency_id, $transaction_custom_cost, 6);
+
+                $trans = new Transaction();
+                $trans->trnx = str_rand();
+                $trans->user_id     = $user->referral_id;
+                $trans->user_type   = 1;
+                $trans->currency_id = $withdraw->currency_id;
+                $trans->amount      = $transaction_custom_cost;
+                $trans->charge      = 0;
+                $trans->type        = '-';
+                $trans->remark      = 'withdraw_reject_supervisor_fee';
+                $trans->details     = trans('Withdraw request rejected');
+                $trans->save();
             }
             // $wallet->balance += $withdraw->total_amount;
             // $wallet->save();
