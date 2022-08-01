@@ -29,6 +29,7 @@
         <th>{{__('Customer Name')}}</th>
         <th>{{__('Amount')}}</th>
         <th>{{__('Status')}}</th>
+        <th>{{__('Action')}}</th>
 			</tr>
 		  </thead>
 		</table>
@@ -60,6 +61,35 @@
 	</div>
 </div>
 
+<div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-status bg-primary"></div>
+        <div class="modal-body text-center py-4">
+        <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+        <h3>@lang('Bank Details')</h3>
+        <p class="bank_details"></p>
+        <ul class="list-group mt-2">
+            <li class="list-group-item d-flex justify-content-between">@lang('Bank Name')<span id="bank_name"></span></li>
+            <li class="list-group-item d-flex justify-content-between">@lang('Bank Address')<span id="bank_address"></span></li>
+            <li class="list-group-item d-flex justify-content-between">@lang('Bank Iban')<span id="bank_iban"></span></li>
+            <li class="list-group-item d-flex justify-content-between">@lang('Bank Swift')<span id="bank_swift"></span></li>
+        </ul>
+        </div>
+        <div class="modal-footer">
+        <div class="w-100">
+            <div class="row">
+            <div class="col"><a href="javascript:;" class="btn w-100 closed" data-bs-dismiss="modal">
+                @lang('Close')
+                </a>
+              </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+</div>
+
 @endsection
 
 
@@ -82,14 +112,25 @@
                 { data: 'customer_email', name: 'customer_email' },
                 { data: 'amount', name: 'amount' },
                 { data: 'status', name: 'status' },
+                { data: 'action', name: 'action' },
             ],
             language : {
                 processing: '<img src="{{asset('assets/images/'.$gs->admin_loader)}}">'
             }
         });
 
+        function getDetails(res_data) {
+            $('#bank_name').text(res_data['name']);
+            $('#bank_address').text(res_data.address.replace(/-/gi, ' '));
+            $('#bank_iban').text(res_data.iban);
+            $('#bank_swift').text(res_data.swift);
+            $('#modal-success').modal('show');
+        }
+
+        $('.closed').click(function() {
+            $('#modal-success').modal('hide');
+        });
+
 </script>
 
 @endsection
-
-
