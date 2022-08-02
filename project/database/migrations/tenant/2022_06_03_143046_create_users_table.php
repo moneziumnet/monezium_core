@@ -23,7 +23,6 @@ class CreateUsersTable extends Migration
             $table->string('zip', 191)->nullable();
             $table->string('city', 191)->nullable();
             $table->string('address', 191)->nullable();
-            $table->string('street', 191)->nullable();
             $table->string('country')->nullable();
             $table->string('phone', 191)->nullable();
             $table->string('vat', 191)->nullable();
@@ -55,8 +54,6 @@ class CreateUsersTable extends Migration
             $table->timestamp('plan_end_date')->nullable();
             $table->string('tenant_id')->nullable();
             $table->string('user_type')->nullable();
-            $table->string('passpord')->nullable();
-            $table->string('passpord')->nullable();
             $table->text('section')->nullable();
         });
     }
