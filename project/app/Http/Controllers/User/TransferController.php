@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Models\User;
 use App\Models\Wallet;
+use App\Models\Charge;
 use App\Models\Currency;
 use App\Models\Transaction;
 use Illuminate\Http\Request;

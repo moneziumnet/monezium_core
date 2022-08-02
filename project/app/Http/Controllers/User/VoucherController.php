@@ -6,6 +6,7 @@ use App\Models\Wallet;
 use App\Models\Voucher;
 use App\Models\Transaction;
 use App\Models\Charge;
+use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;

@@ -7,6 +7,8 @@ use App\Models\Currency;
 use Illuminate\Http\Request;
 use App\Models\ExchangeMoney;
 use App\Models\Charge;
+use App\Models\User;
+use App\Models\Transaction;
 use App\Models\Generalsetting;
 use App\Models\PlanDetail;
 use App\Http\Controllers\Controller;
