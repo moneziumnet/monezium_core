@@ -52,22 +52,36 @@ class OwnTransferController extends Controller
                 'wallet_type' => $request->wallet_type,
                 'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
             ]);
+            if($request->wallet_type == 2) {
+                $chargefee = Charge::where('slug', 'card-issuance')->where('plan_id', $user->bank_plan_id)->first();
 
+                $trans = new Transaction();
+                $trans->trnx = str_rand();
+                $trans->user_id     = $user->id;
+                $trans->user_type   = 1;
+                $trans->currency_id = 1;
+                $trans->amount      = $chargefee->data->fixed_charge;
+                $trans->charge      = 0;
+                $trans->type        = '-';
+                $trans->remark      = 'card_issuance';
+                $trans->details     = trans('Card Issuance');
+                $trans->save();
+            }
+            else {
+                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
 
-            $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
-
-            $trans = new Transaction();
-            $trans->trnx = str_rand();
-            $trans->user_id     = $user->id;
-            $trans->user_type   = 1;
-            $trans->currency_id = 1;
-            $trans->amount      = $chargefee->data->fixed_charge;
-            $trans->charge      = 0;
-            $trans->type        = '-';
-            $trans->remark      = 'wallet_create';
-            $trans->details     = trans('Wallet Create');
-            $trans->save();
-
+                $trans = new Transaction();
+                $trans->trnx = str_rand();
+                $trans->user_id     = $user->id;
+                $trans->user_type   = 1;
+                $trans->currency_id = 1;
+                $trans->amount      = $chargefee->data->fixed_charge;
+                $trans->charge      = 0;
+                $trans->type        = '-';
+                $trans->remark      = 'wallet_create';
+                $trans->details     = trans('Wallet Create');
+                $trans->save();
+            }
             user_wallet_decrement($user->id, 1, $chargefee->data->fixed_charge, 1);
         }
 

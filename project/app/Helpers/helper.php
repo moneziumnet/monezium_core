@@ -380,21 +380,36 @@ if(!function_exists('getModule')){
           $user_wallet->save();
 
           $user = User::findOrFail($auth_id);
+          if ($wallet_type) {
+            $chargefee = Charge::where('slug', 'card-issuance')->where('plan_id', $user->bank_plan_id)->first();
 
-          $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+            $trans = new Transaction();
+            $trans->trnx = str_rand();
+            $trans->user_id     = $auth_id;
+            $trans->user_type   = 1;
+            $trans->currency_id = 1;
+            $trans->amount      = $chargefee->data->fixed_charge;
+            $trans->charge      = 0;
+            $trans->type        = '-';
+            $trans->remark      = 'card_issuance';
+            $trans->details     = trans('Card Issuance');
+            $trans->save();
+          }
+          else {
+            $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
 
-          $trans = new Transaction();
-          $trans->trnx = str_rand();
-          $trans->user_id     = $auth_id;
-          $trans->user_type   = 1;
-          $trans->currency_id = 1;
-          $trans->amount      = $chargefee->data->fixed_charge;
-          $trans->charge      = 0;
-          $trans->type        = '-';
-          $trans->remark      = 'wallet_create';
-          $trans->details     = trans('Wallet Create');
-          $trans->save();
-
+            $trans = new Transaction();
+            $trans->trnx = str_rand();
+            $trans->user_id     = $auth_id;
+            $trans->user_type   = 1;
+            $trans->currency_id = 1;
+            $trans->amount      = $chargefee->data->fixed_charge;
+            $trans->charge      = 0;
+            $trans->type        = '-';
+            $trans->remark      = 'wallet_create';
+            $trans->details     = trans('Wallet Create');
+            $trans->save();
+          }
           user_wallet_decrement($auth_id, 1, $chargefee->data->fixed_charge, 1);
 
 
