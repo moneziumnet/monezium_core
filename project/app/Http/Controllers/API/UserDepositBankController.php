@@ -35,7 +35,7 @@ class UserDepositBankController extends Controller
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
         }
     }
-    
+
     public function depositbankcreate(Request $request)
     {
         try{
@@ -49,7 +49,7 @@ class UserDepositBankController extends Controller
                 'amount'          => 'required'
             ];
             $validator = Validator::make($request->all(), $rules);
-            
+
             if ($validator->fails()) {
                 return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
             }
@@ -64,6 +64,7 @@ class UserDepositBankController extends Controller
             $deposit['currency_id'] = $request->currency_id;
             $deposit['amount'] = $amountToAdd;
             $deposit['method'] = $request->method_id;
+            $deposit['sub_bank_id'] = $request->bank;
             $deposit['txnid'] = $request->txnid;
             $deposit['status'] = "pending";
             $deposit->save();
@@ -100,14 +101,14 @@ class UserDepositBankController extends Controller
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
         }
     }
-    
-    
-    
+
+
+
     public function depositgateways(Request $request)
     {
         try{
             $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
-            $data['deposits'] = Deposit::whereUserId($user_id)->orderBy('id','desc')->paginate(10); 
+            $data['deposits'] = Deposit::whereUserId($user_id)->orderBy('id','desc')->paginate(10);
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data'=> $data]);
         }catch(\Throwable $th){
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);

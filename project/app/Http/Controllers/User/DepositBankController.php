@@ -64,6 +64,7 @@ class DepositBankController extends Controller
         $deposit['currency_id'] = $request->currency_id;
         $deposit['amount'] = $amountToAdd;
         $deposit['method'] = $request->method;
+        $deposit['sub_bank_id'] = $request->bank;
         $deposit['txnid'] = $request->txnid;
         $deposit['status'] = "pending";
         $deposit->save();

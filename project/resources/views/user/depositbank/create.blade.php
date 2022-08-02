@@ -80,6 +80,7 @@
                 <input type="hidden" name="method" id="modal_method" value="">
                 <input type="hidden" name="amount" id="modal_amount" value="">
                 <input type="hidden" name="details" id="modal_details" value="">
+                <input type="hidden" name="bank" id="modal_bank" value="">
               </div>
             </div>
 
@@ -106,6 +107,7 @@
         $('#bank_iban').text(JSON.parse(pos)['iban']);
         $('#bank_swift').text(JSON.parse(pos)['swift']);
         $('#modal_method').val(JSON.parse(pos)['name']);
+        $('#modal_bank').val(JSON.parse(pos)['id']);
         $('#modal_amount').val($('#amount').val());
         $('#modal_details').val($('#details').val());
         $('#modal-success').modal('show');

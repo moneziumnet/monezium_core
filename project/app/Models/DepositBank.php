@@ -13,7 +13,7 @@ class DepositBank extends Model
         'currency_id',
         'txnid',
         'method',
-        'charge_id',
+        'sub_bank_id',
         'status',
     ];
 

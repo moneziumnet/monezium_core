@@ -21,7 +21,7 @@ class CreateDepositBanks extends Migration
             $table->integer('currency_id')->nullable();
             $table->string('txnid')->nullable();
             $table->string('method')->nullable();
-            $table->string('charge_id')->nullable();
+            $table->string('sub_bank_id')->nullable();
             $table->enum('status', ['pending', 'complete'])->default('pending');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
