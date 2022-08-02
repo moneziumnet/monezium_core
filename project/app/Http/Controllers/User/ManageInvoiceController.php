@@ -317,6 +317,24 @@ class ManageInvoiceController extends Controller
                     'wallet_type' => 1,
                     'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
                 ]);
+
+                $user = User::findOrFail(auth()->id());
+
+                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+
+                $trans = new Transaction();
+                $trans->trnx = str_rand();
+                $trans->user_id     = $user->id;
+                $trans->user_type   = 1;
+                $trans->currency_id = 1;
+                $trans->amount      = $chargefee->data->fixed_charge;
+                $trans->charge      = 0;
+                $trans->type        = '-';
+                $trans->remark      = 'wallet_create';
+                $trans->details     = trans('Wallet Create');
+                $trans->save();
+
+                user_wallet_decrement($user->id, 1, $chargefee->data->fixed_charge, 1);
             }
 
             if($wallet->balance < $invoice->final_payment) {
@@ -352,6 +370,24 @@ class ManageInvoiceController extends Controller
                     'wallet_type' => 1,
                     'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
                 ]);
+
+                $user = User::findOrFail($invoice->user_id);
+
+                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+
+                $trans = new Transaction();
+                $trans->trnx = str_rand();
+                $trans->user_id     = $invoice->user_id;
+                $trans->user_type   = 1;
+                $trans->currency_id = 1;
+                $trans->amount      = $chargefee->data->fixed_charge;
+                $trans->charge      = 0;
+                $trans->type        = '-';
+                $trans->remark      = 'wallet_create';
+                $trans->details     = trans('Wallet Create');
+                $trans->save();
+
+                user_wallet_decrement($invoice->user_id, 1, $chargefee->data->fixed_charge, 1);
             }
 
             $rcvWallet->balance += $invoice->get_amount;

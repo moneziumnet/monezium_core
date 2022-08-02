@@ -14,7 +14,7 @@ class TransferController extends Controller
 {
     public function checkReceiver(Request $request){
         $receiver['data'] = User::where('email',$request->receiver)->first();
-        $user = auth()->user(); 
+        $user = auth()->user();
         if(@$receiver['data'] && $user->email == @$receiver['data']->email){
             return response()->json(['self'=>__('Can\'t transfer or request in self wallet.')]);
         }
@@ -34,17 +34,17 @@ class TransferController extends Controller
         $request->validate([
             'receiver'  => 'required|email',
             'wallet_id' => 'required|integer',
-            'amount'    => 'required|numeric|gt:0' 
+            'amount'    => 'required|numeric|gt:0'
         ],
         [
             'wallet_id.required' => 'Wallet is required'
         ]);
 
         if(auth()->user()->email == $request->receiver) return back()->with('error','Can\'t transfer to your own wallet');
-        
+
         $receiver = User::where('email',$request->receiver)->first();
         if(!$receiver) return back()->with('error','Receiver not found');
-        
+
         $senderWallet = Wallet::where('id',$request->wallet_id)->where('user_type',1)->where('user_id',auth()->id())->first();
         if(!$senderWallet) return back()->with('error','Your wallet not found');
 
@@ -76,15 +76,33 @@ class TransferController extends Controller
                 'wallet_type' => 1,
                 'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
             ]);
+
+            $user = User::findOrFail($receiver->id);
+
+            $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+
+            $trans = new Transaction();
+            $trans->trnx = str_rand();
+            $trans->user_id     = $receiver->id;
+            $trans->user_type   = 1;
+            $trans->currency_id = 1;
+            $trans->amount      = $chargefee->data->fixed_charge;
+            $trans->charge      = 0;
+            $trans->type        = '-';
+            $trans->remark      = 'wallet_create';
+            $trans->details     = trans('Wallet Create');
+            $trans->save();
+
+            user_wallet_decrement($receiver->id, 1, $chargefee->data->fixed_charge, 1);
         }
 
         $finalCharge = amount(chargeCalc($charge,$request->amount,$currency->rate),$currency->type);
         $finalAmount =  amount($request->amount + $finalCharge, $currency->type);
         $senderBalance = user_wallet_balance(auth()->id(), $currency->id);
         if($senderBalance < $finalAmount) return back()->with('error','Insufficient balance.');
-        
+
         user_wallet_decrement(auth()->id(), $currency->id, $finalAmount);
-        
+
 
         $trnx              = new Transaction();
         $trnx->trnx        = str_rand();
@@ -100,7 +118,7 @@ class TransferController extends Controller
         $trnx->save();
 
         user_wallet_increment($receiver->id, $currency->id, $request->amount);
-        
+
 
         $receiverTrnx              = new Transaction();
         $receiverTrnx->trnx        = $trnx->trnx;
@@ -120,7 +138,7 @@ class TransferController extends Controller
 
         //to receiver
         @mailSend('received_money',['trnx'=>$trnx->trnx,'amount'=> amount($request->amount,$currency->type,3),'curr'=>$currency->code,'charge'=> 0,'after_balance'=> amount($recieverWallet->balance,$currency->type,3),'trans_from'=> auth()->user()->email,'date_time'=> dateFormat($trnx->created_at)],$receiver);
-        
+
         return back()->with('success','Money has been transferred successfully');
 
     }

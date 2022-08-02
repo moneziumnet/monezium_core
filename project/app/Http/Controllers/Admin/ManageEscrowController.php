@@ -17,7 +17,7 @@ class ManageEscrowController extends Controller
     {
         $this->middleware('auth:admin');
     }
-    
+
     public function index()
     {
         $title = "Manage Escrow";
@@ -27,7 +27,7 @@ class ManageEscrowController extends Controller
 
     public function details($id)
     {
-        $escrow = Escrow::with(['user','recipient','currency'])->findOrFail($id); 
+        $escrow = Escrow::with(['user','recipient','currency'])->findOrFail($id);
         $messages = Dispute::where('escrow_id',$escrow->id)->with('user')->get();
         return view('admin.escrow.details',compact('escrow','messages'));
     }
@@ -95,10 +95,29 @@ class ManageEscrowController extends Controller
                 'wallet_type' => 1,
                 'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
             ]);
+
+            $user = User::findOrFail($request->id);
+
+            $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+
+            $trans = new Transaction();
+            $trans->trnx = str_rand();
+            $trans->user_id     = $request->id;
+            $trans->user_type   = 1;
+            $trans->currency_id = 1;
+            $trans->amount      = $chargefee->data->fixed_charge;
+            $trans->charge      = 0;
+            $trans->type        = '-';
+            $trans->remark      = 'wallet_create';
+            $trans->details     = trans('Wallet Create');
+            $trans->save();
+
+            user_wallet_decrement($request->id, 1, $chargefee->data->fixed_charge, 1);
         }
-        
+
         $wallet->balance += $escrow->amount;
         $wallet->update();
+
 
         $trnx              = new Transaction();
         $trnx->trnx        = str_rand();
