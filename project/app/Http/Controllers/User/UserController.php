@@ -32,6 +32,7 @@ class UserController extends Controller
 
     public function index()
     {
+        wallet_monthly_fee(auth()->id());
         $data['user'] = Auth::user();
         $wallets = Wallet::where('user_id',auth()->id())->where('user_type',1)->with('currency')->get();
         $data['wallets'] = $wallets;

@@ -10,6 +10,9 @@ use App\Models\EmailTemplate;
 use App\Models\Generalsetting;
 use PHPMailer\PHPMailer\PHPMailer;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon as Carbontime;
+use App\Models\User;
+use App\Models\Transaction;
 
 if(!function_exists('getModule')){
   function getModule($value)
@@ -452,6 +455,72 @@ if(!function_exists('getModule')){
             }
           }
       }
+  }
+  if(!function_exists('wallet_monthly_fee'))
+  {
+    function wallet_monthly_fee($user_id)
+    {
+        $now = Carbontime::now();
+        $user = User::findOrFail($user_id);
+        $wallets = Wallet::where('user_id', $user->id)->where('wallet_type', 1)->get();
+        if($wallets)
+        {
+            if($user->wallet_maintenance && $now->gt($user->wallet_maintenance)) {
+                $user->wallet_maintenance = Carbontime::now()->addDays(30);
+                $chargefee = Charge::where('slug', 'account-maintenance')->where('plan_id', $user->bank_plan_id)->first();
+
+                $trans = new Transaction();
+                $trans->trnx = str_rand();
+                $trans->user_id     = $user->id;
+                $trans->user_type   = 1;
+                $trans->currency_id = 1;
+                $trans->amount      = $chargefee->data->fixed_charge;
+                $trans->charge      = 0;
+                $trans->type        = '-';
+                $trans->remark      = 'wallet_monthly_fee';
+                $trans->details     = trans('Wallet Maintenance');
+                $trans->save();
+
+                user_wallet_decrement($user->id, 1, $chargefee->data->fixed_charge, 1);
+                $user->update();
+
+            }
+            elseif ( $user->wallet_maintenance == null) {
+                $user->wallet_maintenance = Carbontime::now()->addDays(30);
+                $user->update();
+
+            }
+        }
+        $cards = Wallet::where('user_id', $user->id)->where('wallet_type', 2)->get();
+        if($cards)
+        {
+            if($user->card_maintenance && $now->gt($user->card_maintenance)) {
+                $user->card_maintenance = Carbontime::now()->addDays(30);
+                $chargefee = Charge::where('slug', 'card-maintenance')->where('plan_id', $user->bank_plan_id)->first();
+
+                $trans = new Transaction();
+                $trans->trnx = str_rand();
+                $trans->user_id     = $user->id;
+                $trans->user_type   = 1;
+                $trans->currency_id = 1;
+                $trans->amount      = $chargefee->data->fixed_charge;
+                $trans->charge      = 0;
+                $trans->type        = '-';
+                $trans->remark      = 'card_monthly_fee';
+                $trans->details     = trans('Card Maintenance');
+                $trans->save();
+
+                user_wallet_decrement($user->id, 1, $chargefee->data->fixed_charge, 1);
+                $user->update();
+
+            }
+            elseif ( $user->card_maintenance == null) {
+                $user->card_maintenance = Carbontime::now()->addDays(30);
+                $user->update();
+
+            }
+        }
+    }
   }
 
 
