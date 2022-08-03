@@ -59,6 +59,7 @@ use App\Http\Controllers\User\UserRailsbankController;
 use App\Http\Controllers\User\SupervisorController;
 use App\Http\Controllers\User\OwnTransferController;
 use App\Http\Controllers\User\UserInvestmentController;
+use App\Http\Controllers\User\UserClearJunctionController;
 
 Route::prefix('user')->group(function() {
 
@@ -280,6 +281,9 @@ Route::prefix('user')->group(function() {
         Route::get('/railsbank/getbeneficiary/{id}', [UserRailsbankcontroller::class, 'GetBeneficiary'])->name('user.railsbank.api.getbeneficiary');
         Route::get('/railsbank/createtransfer', [UserRailsbankcontroller::class, 'CreateTransfer'])->name('user.railsbank.api.createtransfer');
 
+        Route::get('/clearjunction/bankwallet', [UserClearJunctionController::class, 'bankwallets'])->name('user.clearjunction.api.bankwallet');
+        Route::get('/clearjunction/walletstatement', [UserClearJunctionController::class, 'walletstatement'])->name('user.clearjunction.api.walletstatement');
+        Route::get('/clearjunction/ibanindividual', [UserClearJunctionController::class, 'ibanindividual'])->name('user.clearjunction.api.ibanindividual');
 
       });
 
