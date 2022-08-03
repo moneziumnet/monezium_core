@@ -25,8 +25,6 @@ class UserClearJunctionController extends Controller
     private $apiPassword = 'eydy8qv9ui0o';
     private $postbackUrl = 'http://iteverest.saas.test:8080/bankwallet/api/user';
     //private $apiPassword = hash("sha512", 'eydy8qv9ui0o');
-
-    
 	//echo $hashed = hash("sha512", $password);
 
     public function bankPayout(Request $request) {
