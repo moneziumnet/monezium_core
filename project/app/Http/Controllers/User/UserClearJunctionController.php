@@ -98,5 +98,117 @@ class UserClearJunctionController extends Controller
           ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
+    
+    public function AllocateBecsCreate(Request $request) {
+        $client = new  Client();
+        $param = $this->getToken(json_encode($request->all()));
+        $response = $client->request('POST',  $this->url.'gate/allocate/v2/create/becs', [
+            'body' => json_encode($request->all()),
+            'headers' => [
+               'Accept'=> '*/*',
+              'X-API-KEY' => $this->API_Key,
+              'Authorization' => 'Bearer '.$param[0],
+              'Date' => $param[1],
+              'Content-Type' => 'application/json',
+            ],
+          ]);
+        return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+    }
+
+    public function GetIbanStatusByClientOrder(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'gate/allocate/v2/status/iban/clientOrder/'.$request->get('client_order_id'), [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+    
+  public function GetIbanStatusByOrderRef(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'gate/allocate/v2/status/iban/orderReference/'.$request->get('order_ref'), [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+ 
+  public function GetIbanByIban(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'gate/allocate/v2/info/iban/'.$request->get('iban_no'), [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function IbanListByCid(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'gate/allocate/v2/list/iban/'.$request->get('customer_id'), [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function BecsByOrderRef(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'gate/allocate/v2/status/becs/orderReference/'.$request->get('order_ref'), [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function BecsByClientOrderid(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'gate/allocate/v2/status/becs/clientOrder/'.$request->get('client_order_id'), [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
 
 }

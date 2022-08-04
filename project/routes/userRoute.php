@@ -285,6 +285,12 @@ Route::prefix('user')->group(function() {
         Route::get('/clearjunction/walletstatement', [UserClearJunctionController::class, 'GetWalletStatement'])->name('user.clearjunction.api.walletstatement');
         Route::get('/clearjunction/ibanindividual', [UserClearJunctionController::class, 'AllocateIbanIndividual'])->name('user.clearjunction.api.ibanindividual');
         Route::get('/clearjunction/ibancreate', [UserClearJunctionController::class, 'AllocateIbanCreate'])->name('user.clearjunction.api.ibancreate');
+        Route::get('/clearjunction/becscreate', [UserClearJunctionController::class, 'AllocateBecsCreate'])->name('user.clearjunction.api.becscreate');
+        Route::get('/clearjunction/ibanstatusclientorder', [UserClearJunctionController::class, 'GetIbanStatusByClientOrder'])->name('user.clearjunction.api.ibanstatusclientorder');
+        Route::get('/clearjunction/ibanstatusorderref', [UserClearJunctionController::class, 'GetIbanStatusByOrderRef'])->name('user.clearjunction.api.ibanstatusorderref');
+        Route::get('/clearjunction/ibanlistbycid', [UserClearJunctionController::class, 'IbanListByCid'])->name('user.clearjunction.api.ibanlistbycid');
+        Route::get('/clearjunction/becsbyorderref', [UserClearJunctionController::class, 'BecsByOrderRef'])->name('user.clearjunction.api.becsbyorderref');
+        Route::get('/clearjunction/becsbyclientorderid', [UserClearJunctionController::class, 'BecsByClientOrderid'])->name('user.clearjunction.api.becsbyclientorderid');
 
       });
 
