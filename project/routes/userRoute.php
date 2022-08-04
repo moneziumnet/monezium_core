@@ -284,6 +284,7 @@ Route::prefix('user')->group(function() {
         Route::get('/clearjunction/bankwallet', [UserClearJunctionController::class, 'CheckBankWallet'])->name('user.clearjunction.api.bankwallet');
         Route::get('/clearjunction/walletstatement', [UserClearJunctionController::class, 'GetWalletStatement'])->name('user.clearjunction.api.walletstatement');
         Route::get('/clearjunction/ibanindividual', [UserClearJunctionController::class, 'AllocateIbanIndividual'])->name('user.clearjunction.api.ibanindividual');
+        Route::get('/clearjunction/ibancreate', [UserClearJunctionController::class, 'AllocateIbanCreate'])->name('user.clearjunction.api.ibancreate');
 
       });
 
