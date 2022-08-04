@@ -281,9 +281,9 @@ Route::prefix('user')->group(function() {
         Route::get('/railsbank/getbeneficiary/{id}', [UserRailsbankcontroller::class, 'GetBeneficiary'])->name('user.railsbank.api.getbeneficiary');
         Route::get('/railsbank/createtransfer', [UserRailsbankcontroller::class, 'CreateTransfer'])->name('user.railsbank.api.createtransfer');
 
-        Route::get('/clearjunction/bankwallet', [UserClearJunctionController::class, 'bankwallets'])->name('user.clearjunction.api.bankwallet');
-        Route::get('/clearjunction/walletstatement', [UserClearJunctionController::class, 'walletstatement'])->name('user.clearjunction.api.walletstatement');
-        Route::get('/clearjunction/ibanindividual', [UserClearJunctionController::class, 'ibanindividual'])->name('user.clearjunction.api.ibanindividual');
+        Route::get('/clearjunction/bankwallet', [UserClearJunctionController::class, 'CheckBankWallet'])->name('user.clearjunction.api.bankwallet');
+        Route::get('/clearjunction/walletstatement', [UserClearJunctionController::class, 'GetWalletStatement'])->name('user.clearjunction.api.walletstatement');
+        Route::get('/clearjunction/ibanindividual', [UserClearJunctionController::class, 'AllocateIbanIndividual'])->name('user.clearjunction.api.ibanindividual');
 
       });
 
