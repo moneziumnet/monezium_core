@@ -38,7 +38,7 @@ class UserClearJunctionController extends Controller
     public function bankwallets(Request $request) {
         $client = new  Client();
         $param = $this->gettoken(json_encode($request->all()));
-        $response = $client->request('GET',  $this->url.'bank/wallets/8f297da3-8838-437f-b4e1-ce9f7714c61b?returnPaymentMethods=true', [
+        $response = $client->request('GET',  $this->url.'bank/wallets/'.$this->wallet_uuid.'?returnPaymentMethods=true', [
             'body' => json_encode($request->all()),
             'headers' => [
                'Accept'=> '*/*',
