@@ -26,7 +26,7 @@ class UserClearJunctionController extends Controller
 
 
 	//echo $hashed = hash("sha512", $password);
-    public function gettoken($request) {
+    public function getToken($request) {
         $secret = hash('sha512', $this->apiPassword);
         $datetime = new DateTime();
         $now = $datetime->format(DateTime::ATOM);
@@ -35,9 +35,9 @@ class UserClearJunctionController extends Controller
         return array($signature, $now);
     }
 
-    public function bankwallets(Request $request) {
+    public function CheckBankWallet(Request $request) {
         $client = new  Client();
-        $param = $this->gettoken(json_encode($request->all()));
+        $param = $this->getToken(json_encode($request->all()));
         $response = $client->request('GET',  $this->url.'bank/wallets/'.$this->wallet_uuid.'?returnPaymentMethods=true', [
             'body' => json_encode($request->all()),
             'headers' => [
@@ -51,9 +51,9 @@ class UserClearJunctionController extends Controller
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function walletstatement(Request $request) {
+    public function GetWalletStatement(Request $request) {
         $client = new  Client();
-        $param = $this->gettoken(json_encode($request->all()));
+        $param = $this->getToken(json_encode($request->all()));
         $response = $client->request('POST',  $this->url.'gate/wallets/statement', [
             'body' => json_encode($request->all()),
             'headers' => [
@@ -67,9 +67,9 @@ class UserClearJunctionController extends Controller
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function ibanindividual(Request $request) {
+    public function AllocateIbanIndividual(Request $request) {
         $client = new  Client();
-        $param = $this->gettoken(json_encode($request->all()));
+        $param = $this->getToken(json_encode($request->all()));
         $response = $client->request('POST',  $this->url.'gate/iban/individual', [
             'body' => json_encode($request->all()),
             'headers' => [
