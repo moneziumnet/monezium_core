@@ -210,5 +210,215 @@ class UserClearJunctionController extends Controller
         ]);
       return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
   }
+  /*Payout Clear Junction API*/
+  public function ToUsBankSwift(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('POST',  $this->url.'gate/payout/bankTransfer/swift?checkOnly=true', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function ToUsBankFedwire(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('POST',  $this->url.'gate/payout/bankTransfer/fedwire?checkOnly=true', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+ 
+  public function ToUsBankSignet(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('POST',  $this->url.'gate/payout/signet?checkOnly=true', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function InternalPayment(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('POST',  $this->url.'gate/payout/internalPayment', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function EuBankInstant(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('POST',  $this->url.'gate/payout/bankTransfer/sepaInst?checkOnly=true', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function UkBankFaster(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('POST',  $this->url.'gate/payout/bankTransfer/fps?checkOnly=true', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function UkBankChaps(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('POST',  $this->url.'gate/payout/bankTransfer/chaps?checkOnly=true', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function AuBankBecs(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('POST',  $this->url.'gate/payout/bankTransfer/becs?checkOnly=ture', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function UaBankPayout(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('POST',  $this->url.'gate/payout/bankTransfer/ua?checkOnly=ture', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function MdBankPayout(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('POST',  $this->url.'gate/payout/bankTransfer/md?checkOnly=ture', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function CreditCardPayout(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('POST',  $this->url.'gate/payout/creditCardNonPc?checkOnly=ture', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function PayoutStatusOrderRef(Request $request) {
+      $client = new  Client();
+      //96ef417b-b026-4684-9873-77333a3712f7
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'gate/status/payout/orderReference/'.$request->input('order_ref'), [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function PayoutStatusClientOrder(Request $request) {
+      $client = new  Client();
+      //96ef417b-b026-4684-9873-77333a3712f7
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'gate/status/payout/clientOrder/'.$request->input('client_order'), [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
 
 }

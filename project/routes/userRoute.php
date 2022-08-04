@@ -291,6 +291,19 @@ Route::prefix('user')->group(function() {
         Route::get('/clearjunction/ibanlistbycid', [UserClearJunctionController::class, 'IbanListByCid'])->name('user.clearjunction.api.ibanlistbycid');
         Route::get('/clearjunction/becsbyorderref', [UserClearJunctionController::class, 'BecsByOrderRef'])->name('user.clearjunction.api.becsbyorderref');
         Route::get('/clearjunction/becsbyclientorderid', [UserClearJunctionController::class, 'BecsByClientOrderid'])->name('user.clearjunction.api.becsbyclientorderid');
+        Route::get('/clearjunction/tousbankswift', [UserClearJunctionController::class, 'ToUsBankSwift'])->name('user.clearjunction.api.tousbankswift');
+        Route::get('/clearjunction/tousbankfedwire', [UserClearJunctionController::class, 'ToUsBankFedwire'])->name('user.clearjunction.api.tousbankfedwire');
+        Route::get('/clearjunction/tousbanksignet', [UserClearJunctionController::class, 'ToUsBankSignet'])->name('user.clearjunction.api.tousbanksignet');
+        Route::get('/clearjunction/internalpayment', [UserClearJunctionController::class, 'InternalPayment'])->name('user.clearjunction.api.internalpayment');
+        Route::get('/clearjunction/eubanksct', [UserClearJunctionController::class, 'EuBankSCT'])->name('user.clearjunction.api.eubanksct');
+        Route::get('/clearjunction/eubankinstant', [UserClearJunctionController::class, 'EuBankInstant'])->name('user.clearjunction.api.eubankinstant');
+        Route::get('/clearjunction/ukbankfaster', [UserClearJunctionController::class, 'UkBankFaster'])->name('user.clearjunction.api.ukbankfaster');
+        Route::get('/clearjunction/ukbankchaps', [UserClearJunctionController::class, 'UkBankChaps'])->name('user.clearjunction.api.ukbankchaps');
+        Route::get('/clearjunction/aubankbecs', [UserClearJunctionController::class, 'AuBankBecs'])->name('user.clearjunction.api.aubankbecs');
+        Route::get('/clearjunction/uabankpayout', [UserClearJunctionController::class, 'UaBankPayout'])->name('user.clearjunction.api.uabankpayout');
+        Route::get('/clearjunction/mdbankpayout', [UserClearJunctionController::class, 'MdBankPayout'])->name('user.clearjunction.api.mdbankpayout');
+        Route::get('/clearjunction/creditcardpayout', [UserClearJunctionController::class, 'CreditCardPayout'])->name('user.clearjunction.api.creditcardpayout');
+        Route::get('/clearjunction/payoutstatusclientorder', [UserClearJunctionController::class, 'PayoutStatusClientOrder'])->name('user.clearjunction.api.payoutstatusclientorder');
 
       });
 
