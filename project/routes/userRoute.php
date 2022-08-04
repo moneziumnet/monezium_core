@@ -60,6 +60,7 @@ use App\Http\Controllers\User\SupervisorController;
 use App\Http\Controllers\User\OwnTransferController;
 use App\Http\Controllers\User\UserInvestmentController;
 use App\Http\Controllers\User\UserClearJunctionController;
+use App\Http\Controllers\User\UserGlobalPassController;
 
 Route::prefix('user')->group(function() {
 
@@ -305,7 +306,16 @@ Route::prefix('user')->group(function() {
         Route::get('/clearjunction/creditcardpayout', [UserClearJunctionController::class, 'CreditCardPayout'])->name('user.clearjunction.api.creditcardpayout');
         Route::get('/clearjunction/payoutstatusclientorder', [UserClearJunctionController::class, 'PayoutStatusClientOrder'])->name('user.clearjunction.api.payoutstatusclientorder');
 
-      });
+        Route::post('/globalpass/callback', [UserGlobalPassController::class, 'callback'])->name('user.globalpass.api.callback');
+        Route::get('/globalpass/getscreenidstatus/{screentoken}/{id}', [UserGlobalPassController::class, 'GetScreenIDStatus'])->name('user.globalpass.api.getscreenidstatus');
+        Route::get('/globalpass/getscreenaddressstatus/{screentoken}/{id}', [UserGlobalPassController::class, 'GetScreenAddressStatus'])->name('user.globalpass.api.getscreenaddressstatus');
+        Route::get('/globalpass/getscreeniddetails/{screentoken}', [UserGlobalPassController::class, 'GetScreenID'])->name('user.globalpass.api.getscreeniddetails');
+        Route::get('/globalpass/getscreenaddressdetails/{screentoken}', [UserGlobalPassController::class, 'GetScreenAddress'])->name('user.globalpass.api.getscreenaddressdetails');
+        Route::post('/globalpass/createforensicsanalysis/{screentoken}', [UserGlobalPassController::class, 'CreateForensicsAnalysis'])->name('user.globalpass.api.createforensicsanalysis');
+        Route::get('/globalpass/getforensicsstatus/{screentoken}/{id}', [UserGlobalPassController::class, 'GetForensicsStatus'])->name('user.globalpass.api.getforensicsstatus');
+        Route::post('/globalpass/createamlbusinessscreen/{screentoken}', [UserGlobalPassController::class, 'CreateAMLBusinessScreen'])->name('user.globalpass.api.createamlbusinessscreen');
+        Route::get('/globalpass/getamlbusinessscreen/{screentoken}', [UserGlobalPassController::class, 'GetAMLBusinessScreen'])->name('user.globalpass.api.getamlbusinessscreen');
+    });
 
       Route::get('/package',[PricingPlanController::class,'index'])->name('user.package.index');
       Route::get('/package/subscription/{id}',[PricingPlanController::class,'subscription'])->name('user.package.subscription');

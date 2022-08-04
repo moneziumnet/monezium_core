@@ -23,5 +23,6 @@ class VerifyCsrfToken extends Middleware
         '/user/subscription/paytm-callback',
         '/user/subscription/razorpay-notify',
         '/user/subscription/flutter/notify*',
+        '/user/globalpass/callback',
     ];
 }
