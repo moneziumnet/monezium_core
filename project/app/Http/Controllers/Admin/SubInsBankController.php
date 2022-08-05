@@ -6,6 +6,7 @@ use Datatables;
 use App\Models\Admin;
 use App\Models\Currency;
 use App\Models\SubInsBank;
+use App\Models\BankGateway;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\BankPoolAccount;
@@ -92,6 +93,7 @@ class SubInsBankController extends Controller
     public function create(Request $request){
         $data['currency'] = Currency::whereIsDefault(1)->first();
         $data['data'] = Admin::findOrFail($request->id);
+        $data['bank_gateways'] = BankGateway::where('subbank_id', '0')->get();
         return view('admin.institution.subprofile.bank.create',$data);
     }
 
@@ -99,14 +101,8 @@ class SubInsBankController extends Controller
         $rules = [
             'name' => 'required|max:255',
             'address' => 'required',
-            'min_limit' => 'required',
-            'max_limit' => 'required',
-            'daily_maximum_limit' => 'required',
-            'daily_total_transaction' => 'required',
-            'monthly_maximum_limit' => 'required',
-            'monthly_total_transaction' => 'required',
-            'fixed_charge' => 'required',
-            'percent_charge' => 'required',
+            'iban' => 'required',
+            'swift' => 'required',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -149,14 +145,8 @@ class SubInsBankController extends Controller
         $rules = [
             'name' => 'required|max:255',
             'address' => 'required',
-            'min_limit' => 'required',
-            'max_limit' => 'required',
-            'daily_maximum_limit' => 'required',
-            'daily_total_transaction' => 'required',
-            'monthly_maximum_limit' => 'required',
-            'monthly_total_transaction' => 'required',
-            'fixed_charge' => 'required',
-            'percent_charge' => 'required',
+            'iban' => 'required',
+            'swift' => 'required',
         ];
 
         $validator = Validator::make($request->all(), $rules);
