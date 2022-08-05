@@ -64,7 +64,7 @@
                 <h6 class="mt-2">@lang('Select Type:')</h4>
             </div>
             <div class="col-3 mr-3">
-                <select class="col-lg select mb-3 input-field" id="bankgateway">
+                <select class="col-lg select mb-3 input-field" id="bankgateway" name="bankgateway">
                     <option value=""> {{'Please select'}} </option>
                     @foreach ($bank_gateways as $gateway)
                         <option value="{{$gateway}}"> {{$gateway->name}} </option>
@@ -100,7 +100,7 @@
                 $('#gateway_detail').append(''+`<div class="col-md-6">
                     <div class="form-group">
                         <label for="iban">${key}</label>
-                        <input type="text" class="form-control" id="iban" name=""form_builder[${id}][key]"  min="1" value="${value}" required>
+                        <input type="text" class="form-control" id="iban" name="key[${key}]"  min="1" value="${value}" required>
                       </div>
                   </div>`+'');
                   id++;

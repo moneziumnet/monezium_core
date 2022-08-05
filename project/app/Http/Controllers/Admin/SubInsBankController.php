@@ -123,6 +123,16 @@ class SubInsBankController extends Controller
         }
         $data->fill($input)->save();
 
+        $bank_gateway = new BankGateway();
+        $info_data = $input['key'];
+        $bank_gateway->subbank_id = $data->id;
+        $request->bankgateway = json_decode($request->bankgateway);
+        $bank_gateway->name = $request->bankgateway->name;
+        $bank_gateway->currency_id = $request->bankgateway->currency_id;
+        $bank_gateway->keyword = $request->bankgateway->keyword;
+        $bank_gateway->information = $info_data;
+        $bank_gateway->save();
+
         $msg = 'New Bank Added Successfully.<a href="'.route('admin.subinstitution.banks',$data->ins_id).'">View Bank Lists.</a>';
         return response()->json($msg);
     }
@@ -130,7 +140,7 @@ class SubInsBankController extends Controller
     public function edit(Request $request, $id){
         $data['data'] = SubInsBank::findOrFail($id);
         $data['currency'] = Currency::whereIsDefault(1)->first();
-        $data['informations'] = json_decode($data['data']->required_information,true);
+        $data['bank_gateway'] = BankGateway::where('subbank_id', $id)->first();
 
         return view('admin.institution.subprofile.bank.edit',$data);
     }
@@ -162,6 +172,10 @@ class SubInsBankController extends Controller
             $input['required_information'] = json_encode(array_values($request->form_builder));
         }
         $data->update($input);
+        $info_data = $input['key'];
+        $bank_gateway = BankGateway::where('subbank_id', $id)->first();
+        $bank_gateway->information = $info_data;
+        $bank_gateway->update();
 
         $msg = 'Bank Updated Successfully.<a href="'.route('admin.subinstitution.banks',$data->ins_id).'">View Bank Lists.</a>';
         return response()->json($msg);

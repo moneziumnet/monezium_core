@@ -56,6 +56,18 @@
                   </div>
               </div>
           </div>
+          <hr>
+          <div class="row">
+            @foreach($bank_gateway->information as $key => $value)
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{__($key)}}">{{ __($key) }}</label>
+                        <input type="text" class="form-control" id="{{$key}}" name="key[{{__($key)}}]" placeholder="{{ __('Please input correct value') }}" value="{{$value}}" required>
+                    </div>
+                </div>
+            @endforeach
+
+          </div>
 
           <div class="row d-flex justify-content-center">
               <button type="submit" id="submit-btn" class="btn btn-primary w-100 mt-3">{{ __('Submit') }}</button>

@@ -20,6 +20,7 @@ class CreateBankGatewaysTable extends Migration
             $table->string('keyword', 255);
             $table->string('currency_id', 191)->default('["1"]');
             $table->integer('subbank_id');
+            $table->timestamps();
         });
     }
 
