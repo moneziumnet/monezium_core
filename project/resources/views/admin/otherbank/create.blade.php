@@ -110,29 +110,6 @@
 
          <div class="lang-tag-top-filds" id="lang-section">
           <label for="instruction">{{ __("Required Information") }}</label>
-          <div class="lang-area mb-3">
-            <span class="remove lang-remove"><i class="fas fa-times"></i></span>
-            <div class="row">
-              <div class="col-md-6">
-                <input type="text" name="form_builder[1][field_name]" class="form-control" placeholder="{{ __('Field Name') }}">
-              </div>
-
-              <div class="col-md-3">
-                <select name="form_builder[1][type]" class="form-control">
-                    <option value="text"> {{__('Input')}} </option>
-                    <option value="textarea"> {{__('Textarea')}} </option>
-                    <option value="file"> {{__('File upload')}} </option>
-                </select>
-              </div>
-
-              <div class="col-md-3">
-                <select name="form_builder[1][validation]" class="form-control">
-                    <option value="required"> {{__('Required')}} </option>
-                    <option value="nullable">  {{__('Optional')}} </option>
-                </select>
-              </div>
-            </div>
-          </div>
         </div>
 
 

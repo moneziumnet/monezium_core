@@ -16,7 +16,7 @@ class BeneficiaryController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     public function index(){
         $data['beneficiaries'] = Beneficiary::whereUserId(auth()->id())->orderBy('id','desc')->paginate(10);
         return view('user.beneficiaries.index',$data);
@@ -40,8 +40,11 @@ class BeneficiaryController extends Controller
         $bank = OtherBank::findOrFail($request->other_bank_id);
 
         $requireInformations = [];
-        foreach(json_decode($bank->required_information) as $key=>$value){
-            $requireInformations[$value->type] = str_replace(' ', '_', $value->field_name);
+        if($bank->required_information) {
+
+            foreach(json_decode($bank->required_information) as $key=>$value){
+                $requireInformations[$value->type] = str_replace(' ', '_', $value->field_name);
+            }
         }
 
         $details = [];
