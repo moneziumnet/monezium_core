@@ -59,6 +59,8 @@
               </div>
          </div>
          <hr>
+         <h6 class="m-0 font-weight-bold text-primary mb-3">{{ __('Gateway Details') }}</h6>
+
          <div class="row">
             <div class="ml-3">
                 <h6 class="mt-2">@lang('Select Type:')</h4>
