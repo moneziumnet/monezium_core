@@ -50,6 +50,38 @@ class UserClearJunctionController extends Controller
           ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
+    
+    public function CreateInvidualWallet(Request $request) {
+        $client = new  Client();
+        $param = $this->getToken(json_encode($request->all()));
+        $response = $client->request('POST',  $this->url.'bank/wallets/'.$this->wallet_uuid.'/individuals', [
+            'body' => json_encode($request->all()),
+            'headers' => [
+               'Accept'=> '*/*',
+              'X-API-KEY' => $this->API_Key,
+              'Authorization' => 'Bearer '.$param[0],
+              'Date' => $param[1],
+              'Content-Type' => 'application/json',
+            ],
+          ]);
+        return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+    }
+    
+    public function WalletTransfer(Request $request) {
+        $client = new  Client();
+        $param = $this->getToken(json_encode($request->all()));
+        $response = $client->request('POST',  $this->url.'gate/wallets/transfer', [
+            'body' => json_encode($request->all()),
+            'headers' => [
+               'Accept'=> '*/*',
+              'X-API-KEY' => $this->API_Key,
+              'Authorization' => 'Bearer '.$param[0],
+              'Date' => $param[1],
+              'Content-Type' => 'application/json',
+            ],
+          ]);
+        return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+    }
 
     public function GetWalletStatement(Request $request) {
         $client = new  Client();
@@ -409,6 +441,176 @@ class UserClearJunctionController extends Controller
       //96ef417b-b026-4684-9873-77333a3712f7
       $param = $this->getToken(json_encode($request->all()));
       $response = $client->request('GET',  $this->url.'gate/status/payout/clientOrder/'.$request->input('client_order'), [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function CreateInvoice(Request $request) {
+      $client = new  Client();
+      //96ef417b-b026-4684-9873-77333a3712f7
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('POST',  $this->url.'gate/invoice/creditCard', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function InvoiceStatusByRef(Request $request) {
+      $client = new  Client();
+      //96ef417b-b026-4684-9873-77333a3712f7
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'gate/status/invoice/orderReference/'.$request->input('order_ref'), [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function InvoiceStatusByOrder(Request $request) {
+      $client = new  Client();
+      //96ef417b-b026-4684-9873-77333a3712f7
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'gate/status/invoice/clientOrder/'.$request->input('client_order_id'), [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function TransactionApprove(Request $request) {
+      $client = new  Client();
+      //96ef417b-b026-4684-9873-77333a3712f7
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('POST',  $this->url.'gate/transactionAction/approve', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function TransactionCancel(Request $request) {
+      $client = new  Client();
+      //96ef417b-b026-4684-9873-77333a3712f7
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('POST',  $this->url.'gate/transactionAction/cancel', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function CreateToken(Request $request) {
+      $client = new  Client();
+      //96ef417b-b026-4684-9873-77333a3712f7
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('POST',  $this->url.'pci/createToken', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function CheckRequiByIBAN(Request $request) {
+      $client = new  Client();
+      //iban_no = ES9121000418450200051332
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'gate/checkRequisite/bankTransfer/eu/iban'.$request->input('iban_no'), [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function TransactionReport(Request $request) {
+      $client = new  Client();
+      //iban_no = ES9121000418450200051332
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('POST',  $this->url.'gate/reports/transactionReport', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function TransferStatusOrderRef(Request $request) {
+      $client = new  Client();
+      //iban_no = ES9121000418450200051332
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('POST',  $this->url.'gate/status/walletTransfer/orderReference/'.$request->input('order_ref'), [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function TransferStatusClientOrder(Request $request) {
+      $client = new  Client();
+      //iban_no = ES9121000418450200051332
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('POST',  $this->url.'gate/status/walletTransfer/clientOrder//'.$request->input('client_order_id'), [
           'body' => json_encode($request->all()),
           'headers' => [
              'Accept'=> '*/*',

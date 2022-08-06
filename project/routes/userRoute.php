@@ -306,6 +306,26 @@ Route::prefix('user')->group(function() {
         Route::get('/clearjunction/creditcardpayout', [UserClearJunctionController::class, 'CreditCardPayout'])->name('user.clearjunction.api.creditcardpayout');
         Route::get('/clearjunction/payoutstatusclientorder', [UserClearJunctionController::class, 'PayoutStatusClientOrder'])->name('user.clearjunction.api.payoutstatusclientorder');
 
+        //payin clear junction route
+        Route::get('/clearjunction/createinvoice', [UserClearJunctionController::class, 'CreateInvoice'])->name('user.clearjunction.api.createinvoice');
+        Route::get('/clearjunction/invoicestatusbyref', [UserClearJunctionController::class, 'InvoiceStatusByRef'])->name('user.clearjunction.api.invoicestatusbyref');
+        Route::get('/clearjunction/invoicestatusbyorder', [UserClearJunctionController::class, 'InvoiceStatusByOrder'])->name('user.clearjunction.api.invoicestatusbyorder');
+        //Transaction rote
+        Route::get('/clearjunction/transactionapprove', [UserClearJunctionController::class, 'TransactionApprove'])->name('user.clearjunction.api.transactionapprove');
+        Route::get('/clearjunction/transactioncancel', [UserClearJunctionController::class, 'TransactionCancel'])->name('user.clearjunction.api.transactioncancel');
+        //Tokenize
+        Route::get('/clearjunction/createtoken', [UserClearJunctionController::class, 'CreateToken'])->name('user.clearjunction.api.createtoken');
+        //Check Requisite
+        Route::get('/clearjunction/checkrequibyiban', [UserClearJunctionController::class, 'CheckRequiByIBAN'])->name('user.clearjunction.api.checkrequibyiban');
+        ///report
+        Route::get('/clearjunction/transactionreport', [UserClearJunctionController::class, 'TransactionReport'])->name('user.clearjunction.api.transactionreport');
+        // wallet
+        Route::get('/clearjunction/createinvidualwallet', [UserClearJunctionController::class, 'CreateInvidualWallet'])->name('user.clearjunction.api.createinvidualwallet');
+        Route::get('/clearjunction/wallettransfer', [UserClearJunctionController::class, 'WalletTransfer'])->name('user.clearjunction.api.wallettransfer');
+        Route::get('/clearjunction/transferstatusorderref', [UserClearJunctionController::class, 'TransferStatusOrderRef'])->name('user.clearjunction.api.transferstatusorderref');
+        Route::get('/clearjunction/transferstatusclientorder', [UserClearJunctionController::class, 'TransferStatusClientOrder'])->name('user.clearjunction.api.transferstatusclientorder');
+
+        
         Route::post('/globalpass/callback', [UserGlobalPassController::class, 'callback'])->name('user.globalpass.api.callback');
         Route::get('/globalpass/getscreenidstatus/{screentoken}/{id}', [UserGlobalPassController::class, 'GetScreenIDStatus'])->name('user.globalpass.api.getscreenidstatus');
         Route::get('/globalpass/getscreenaddressstatus/{screentoken}/{id}', [UserGlobalPassController::class, 'GetScreenAddressStatus'])->name('user.globalpass.api.getscreenaddressstatus');
