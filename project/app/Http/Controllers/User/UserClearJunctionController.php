@@ -50,6 +50,22 @@ class UserClearJunctionController extends Controller
           ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
+   
+    public function ClientWalletBalance(Request $request) {
+        $client = new  Client();
+        $param = $this->getToken(json_encode($request->all()));
+        $response = $client->request('GET',  $this->url.'bank/wallets/'.$this->wallet_uuid.'?returnPaymentMethods=true', [
+            'body' => json_encode($request->all()),
+            'headers' => [
+               'Accept'=> '*/*',
+              'X-API-KEY' => $this->API_Key,
+              'Authorization' => 'Bearer '.$param[0],
+              'Date' => $param[1],
+              'Content-Type' => 'application/json',
+            ],
+          ]);
+        return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+    }
     
     public function CreateInvidualWallet(Request $request) {
         $client = new  Client();
@@ -574,7 +590,7 @@ class UserClearJunctionController extends Controller
   
   public function TransactionReport(Request $request) {
       $client = new  Client();
-      //iban_no = ES9121000418450200051332
+      
       $param = $this->getToken(json_encode($request->all()));
       $response = $client->request('POST',  $this->url.'gate/reports/transactionReport', [
           'body' => json_encode($request->all()),
@@ -610,7 +626,475 @@ class UserClearJunctionController extends Controller
       $client = new  Client();
       //iban_no = ES9121000418450200051332
       $param = $this->getToken(json_encode($request->all()));
-      $response = $client->request('POST',  $this->url.'gate/status/walletTransfer/clientOrder//'.$request->input('client_order_id'), [
+      $response = $client->request('POST',  $this->url.'gate/status/walletTransfer/clientOrder/'.$request->input('client_order_id'), [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  //Reserve Individual Wallet
+  public function ReserveIndividualWallet(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('POST',  $this->url.'gate/wallets/individual', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  
+  public function ReserveCorporateWallet(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('POST',  $this->url.'gate/wallets/corporate', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function ReserveStatusByOrderRef(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'gate/wallets/status/orderReference/'.$request->input('order_ref'), [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function ReserveStatusByClientOrderID(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'gate/wallets/status/clientOrder/'.$request->input('client_order_id'), [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  // Entitty Partner
+  public function CorporateEntity(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'CorporateEntity', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function CorporateUaEntity(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'CorporateUaEntity', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function IndividualBecsEntity(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'IndividualBecsEntity', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function IndividualInternalPaymentEntity(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'IndividualInternalPaymentEntity', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function CorporateBecsEntity(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'CorporateBecsEntity', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function IndividualUsEntity(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'IndividualUsEntity', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function IndividualEuEntity(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'IndividualEuEntity', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function IndividualMdEntity(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'IndividualMdEntity', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  // Entity Payment Details
+  public function BankTransferSwiftPaymentDetailEntity(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'BankTransferSwiftPaymentDetailEntity', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function BankTransferFedwirePaymentDetailEntity(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'BankTransferFedwirePaymentDetailEntity', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+ 
+  public function SignetPaymentDetailEntity(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'SignetPaymentDetailEntity', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function InternalPaymentDetailEntity(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'InternalPaymentDetailEntity', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function BankTransferSepaInstPaymentDetailEntity(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'BankTransferSepaInstPaymentDetailEntity', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function BankTransferUkFpsPaymentDetailEntity(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'BankTransferUkFpsPaymentDetailEntity', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function BankTransferUkChapsPaymentDetailEntity(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'BankTransferUkChapsPaymentDetailEntity', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function BankTransferUkBacsPaymentDetailEntity(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'BankTransferUkBacsPaymentDetailEntity', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function BankTransferUkDefaultPaymentDetailEntity(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'BankTransferUkDefaultPaymentDetailEntity', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function BankTransferBecsPaymentDetailEntity(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'BankTransferBecsPaymentDetailEntity', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+ 
+  public function BankTransferMdPaymentDetailEntity(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'BankTransferMdPaymentDetailEntity', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function BankTransferUaPaymentDetailEntity(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'BankTransferUaPaymentDetailEntity', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function CreditCardPaymentDetailEntity(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'CreditCardPaymentDetailEntity', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+
+  //Entity Registrants
+  
+  public function AllocateIbanIndividualEntity(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'AllocateIbanIndividualEntity', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function AllocateIbanCorporateEntity(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'AllocateIbanCorporateEntity', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function AllocateBecsIndividual(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'AllocateBecsIndividual', [
+          'body' => json_encode($request->all()),
+          'headers' => [
+             'Accept'=> '*/*',
+            'X-API-KEY' => $this->API_Key,
+            'Authorization' => 'Bearer '.$param[0],
+            'Date' => $param[1],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+      return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+  }
+  
+  public function AllocateBecsCorporate(Request $request) {
+      $client = new  Client();
+      $param = $this->getToken(json_encode($request->all()));
+      $response = $client->request('GET',  $this->url.'AllocateBecsCorporate', [
           'body' => json_encode($request->all()),
           'headers' => [
              'Accept'=> '*/*',

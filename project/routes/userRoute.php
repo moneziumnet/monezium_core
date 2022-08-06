@@ -324,6 +324,42 @@ Route::prefix('user')->group(function() {
         Route::get('/clearjunction/wallettransfer', [UserClearJunctionController::class, 'WalletTransfer'])->name('user.clearjunction.api.wallettransfer');
         Route::get('/clearjunction/transferstatusorderref', [UserClearJunctionController::class, 'TransferStatusOrderRef'])->name('user.clearjunction.api.transferstatusorderref');
         Route::get('/clearjunction/transferstatusclientorder', [UserClearJunctionController::class, 'TransferStatusClientOrder'])->name('user.clearjunction.api.transferstatusclientorder');
+        Route::get('/clearjunction/clientwalletbalance', [UserClearJunctionController::class, 'clientwalletbalance'])->name('user.clearjunction.api.clientwalletbalance');
+        //Reserve Individual wallet
+        Route::get('/clearjunction/reserveindividualwallet', [UserClearJunctionController::class, 'ReserveIndividualWallet'])->name('user.clearjunction.api.reserveindividualwallet');
+        Route::get('/clearjunction/reservecorporatewallet', [UserClearJunctionController::class, 'ReserveCorporateWallet'])->name('user.clearjunction.api.reservecorporatewallet');
+        Route::get('/clearjunction/reservestatusbyorderref', [UserClearJunctionController::class, 'ReserveStatusByOrderRef'])->name('user.clearjunction.api.reservestatusbyorderref');
+        Route::get('/clearjunction/reservestatusbyclientorderid', [UserClearJunctionController::class, 'ReserveStatusByClientOrderID'])->name('user.clearjunction.api.reservestatusbyclientorderid');
+        //Entity Partner
+        Route::get('/clearjunction/corporateentity', [UserClearJunctionController::class, 'CorporateEntity'])->name('user.clearjunction.api.corporateentity');
+        Route::get('/clearjunction/corporateuaentity', [UserClearJunctionController::class, 'CorporateUaEntity'])->name('user.clearjunction.api.corporateuaentity');
+        Route::get('/clearjunction/individualbecsentity', [UserClearJunctionController::class, 'IndividualBecsEntity'])->name('user.clearjunction.api.individualbecsentity');
+        Route::get('/clearjunction/individualinternalpaymententity', [UserClearJunctionController::class, 'IndividualInternalPaymentEntity'])->name('user.clearjunction.api.individualinternalpaymententity');
+        Route::get('/clearjunction/corporatebecsentity', [UserClearJunctionController::class, 'CorporateBecsEntity'])->name('user.clearjunction.api.corporatebecsentity');
+        Route::get('/clearjunction/individualusentity', [UserClearJunctionController::class, 'IndividualUsEntity'])->name('user.clearjunction.api.individualusentity');
+        Route::get('/clearjunction/individualeuentity', [UserClearJunctionController::class, 'IndividualEuEntity'])->name('user.clearjunction.api.individualeuentity');
+        Route::get('/clearjunction/individualuaentity', [UserClearJunctionController::class, 'IndividualUaEntity'])->name('user.clearjunction.api.individualuaentity');
+        Route::get('/clearjunction/individualmdentity', [UserClearJunctionController::class, 'IndividualMdEntity'])->name('user.clearjunction.api.individualmdentity');
+        //Entity Payment Details
+        Route::get('/clearjunction/banktransferswiftpaymentdetailentity', [UserClearJunctionController::class, 'BankTransferSwiftPaymentDetailEntity'])->name('user.clearjunction.api.banktransferswiftpaymentdetailentity');
+        Route::get('/clearjunction/banktransferfedwirepaymentdetailentity', [UserClearJunctionController::class, 'BankTransferFedwirePaymentDetailEntity'])->name('user.clearjunction.api.banktransferfedwirepaymentdetailentity');
+        Route::get('/clearjunction/signetpaymentdetailentity', [UserClearJunctionController::class, 'SignetPaymentDetailEntity'])->name('user.clearjunction.api.signetpaymentdetailentity');
+        Route::get('/clearjunction/banktransfereupaymentdetailentity', [UserClearJunctionController::class, 'BankTransferEuPaymentDetailEntity'])->name('user.clearjunction.api.banktransfereupaymentdetailentity');
+        Route::get('/clearjunction/internalpaymentdetailentity', [UserClearJunctionController::class, 'InternalPaymentDetailEntity'])->name('user.clearjunction.api.internalpaymentdetailentity');
+        Route::get('/clearjunction/banktransfersepainstpaymentdetailentity', [UserClearJunctionController::class, 'BankTransferSepaInstPaymentDetailEntity'])->name('user.clearjunction.api.banktransfersepainstpaymentdetailentity');
+        Route::get('/clearjunction/banktransferukfpspaymentdetailentity', [UserClearJunctionController::class, 'BankTransferUkFpsPaymentDetailEntity'])->name('user.clearjunction.api.banktransferukfpspaymentdetailentity');
+        Route::get('/clearjunction/banktransferukchapspaymentdetailentity', [UserClearJunctionController::class, 'BankTransferUkChapsPaymentDetailEntity'])->name('user.clearjunction.api.banktransferukchapspaymentdetailentity');
+        Route::get('/clearjunction/banktransferukbacspaymentdetailentity', [UserClearJunctionController::class, 'BankTransferUkBacsPaymentDetailEntity'])->name('user.clearjunction.api.banktransferukbacspaymentdetailentity');
+        Route::get('/clearjunction/banktransferukdefaultpaymentdetailentity', [UserClearJunctionController::class, 'BankTransferUkDefaultPaymentDetailEntity'])->name('user.clearjunction.api.banktransferukdefaultpaymentdetailentity');
+        Route::get('/clearjunction/banktransferbecspaymentdetailentity', [UserClearJunctionController::class, 'BankTransferBecsPaymentDetailEntity'])->name('user.clearjunction.api.banktransferbecspaymentdetailentity');
+        Route::get('/clearjunction/banktransfermdpaymentdetailentity', [UserClearJunctionController::class, 'BankTransferMdPaymentDetailEntity'])->name('user.clearjunction.api.banktransfermdpaymentdetailentity');
+        Route::get('/clearjunction/banktransferuapaymentdetailentity', [UserClearJunctionController::class, 'BankTransferUaPaymentDetailEntity'])->name('user.clearjunction.api.banktransferuapaymentdetailentity');
+        Route::get('/clearjunction/creditcardpaymentdetailentity', [UserClearJunctionController::class, 'CreditCardPaymentDetailEntity'])->name('user.clearjunction.api.creditcardpaymentdetailentity');
+        //Entity Registrants
+        Route::get('/clearjunction/allocateibanindividualentity', [UserClearJunctionController::class, 'AllocateIbanIndividualEntity'])->name('user.clearjunction.api.allocateibanindividualentity');
+        Route::get('/clearjunction/allocateibancorporateentity', [UserClearJunctionController::class, 'AllocateIbanCorporateEntity'])->name('user.clearjunction.api.allocateibancorporateentity');
+        Route::get('/clearjunction/allocatebecsindividual', [UserClearJunctionController::class, 'AllocateBecsIndividual'])->name('user.clearjunction.api.allocatebecsindividual');
+        Route::get('/clearjunction/allocatebecscorporate', [UserClearJunctionController::class, 'AllocateBecsCorporate'])->name('user.clearjunction.api.allocatebecscorporate');
 
         
         Route::post('/globalpass/callback', [UserGlobalPassController::class, 'callback'])->name('user.globalpass.api.callback');
