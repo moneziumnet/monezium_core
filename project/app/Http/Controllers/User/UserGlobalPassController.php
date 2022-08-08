@@ -44,7 +44,7 @@ class UserGlobalPassController extends Controller
 
     public function GetScreenToken() {
         $client = new  Client();
-        GetAuth();
+        $this->GetAuth();
         $response = $client->request('POST',  $this->url.'/api/v2/screenings', [
             'headers' => [
               'Accept'=> '*/*',

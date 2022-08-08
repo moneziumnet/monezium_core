@@ -39,6 +39,22 @@
                             <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" step="any" value="{{ old('amount') }}" min="1" required>
                         </div>
 
+                        <div class="form-group mb-3 mt-3">
+                            <label class="form-label required">{{__('Your Bank Name')}}</label>
+                            <input  id="bname" class="form-control"  type="text" value="" required>
+                        </div>
+
+                        <div class="form-group mb-3 mt-3">
+                            <label class="form-label required">{{__('Bank Code')}}</label>
+                            <input  id="bcode" class="form-control"  type="text" value="" required>
+                        </div>
+
+                        <div class="form-group mb-3 mt-3">
+                            <label class="form-label required">{{__('Bank Account Number')}}</label>
+                            <input id="bnumber" class="form-control"  type="text" value=""  required>
+                        </div>
+
+
                         <div class="form-group mb-3 ">
                             <label class="form-label">{{__('Description')}}</label>
                             <textarea name="details" id="details" class="form-control nic-edit" cols="30" rows="5" placeholder="{{__('Receive account details')}}"></textarea>
@@ -80,6 +96,9 @@
                 <input type="hidden" name="method" id="modal_method" value="">
                 <input type="hidden" name="amount" id="modal_amount" value="">
                 <input type="hidden" name="details" id="modal_details" value="">
+                <input type="hidden" name="bankname" id="modal_bank_name" value="">
+                <input type="hidden" name="bankcode" id="modal_bank_code" value="">
+                <input type="hidden" name="banknumber" id="modal_bank_number" value="">
                 <input type="hidden" name="bank" id="modal_bank" value="">
               </div>
             </div>
@@ -110,6 +129,9 @@
         $('#modal_bank').val(JSON.parse(pos)['id']);
         $('#modal_amount').val($('#amount').val());
         $('#modal_details').val($('#details').val());
+        $('#modal_bank_name').val($('#bname').val());
+        $('#modal_bank_code').val($('#bcode').val());
+        $('#modal_bank_number').val($('#bnumber').val());
         $('#modal-success').modal('show');
 
     })

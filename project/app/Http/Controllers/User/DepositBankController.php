@@ -7,6 +7,7 @@ use App\Classes\GeniusMailer;
 use App\Models\Generalsetting;
 use App\Models\DepositBank;
 use App\Models\Currency;
+use App\Models\BankGateway;
 use App\Models\PlanDetail;
 use Illuminate\Http\Request;
 use App\Models\PaymentGateway;
@@ -15,7 +16,7 @@ use App\Models\Admin;
 use App\Models\SubInsBank;
 use Auth;
 use Illuminate\Support\Facades\DB;
-
+use GuzzleHttp\Client;
 
 
 class DepositBankController extends Controller
@@ -68,6 +69,100 @@ class DepositBankController extends Controller
         $deposit['txnid'] = $request->txnid;
         $deposit['status'] = "pending";
         $deposit->save();
+
+        $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->bank)->first();
+        $subbank = SubInsBank::where('id', $request->bank)->first();
+        $subuser = Admin::where('id', $subbank->ins_id)->first();
+        $response = $client->request('POST', 'https://play.railsbank.com/v1/customer/endusers', [
+            'body' => '{
+                "person": {
+                  "name": "'.$user->name.'",
+                  "email": "'.$user->email.'",
+                  "address": { "address_iso_country": "US" }
+                }
+            }',
+            'headers' => [
+                'Accept'=> 'application/json',
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
+                'Content-Type' => 'application/json',
+            ],
+        ]);
+        $enduser = json_decode($response->getBody())->enduser_id;
+        $response = $client->request('POST', 'https://play.railsbank.com/v1/customer/ledgers', [
+            'body' => '{
+                "holder_id": "'.$enduser.'",
+                "partner_product": "ExampleBank-USD-1",
+                "asset_class": "currency",
+                "asset_type": "usd",
+                "ledger-type": "ledger-type-single-user",
+                "ledger-who-owns-assets": "ledger-assets-owned-by-me",
+                "ledger-primary-use-types": ["ledger-primary-use-types-payments"],
+                "ledger-t-and-cs-country-of-jurisdiction": "US"
+              }',
+            'headers' => [
+                'Accept'=> 'application/json',
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
+                'Content-Type' => 'application/json',
+            ],
+        ]);
+        $ledger = json_decode($response->getBody())->ledger_id;
+        $response = $client->request('POST', 'https://play.railsbank.com/v1/customer/ledgers/'.$ledger.'/external-accounts', [
+            'body' => '{
+                "number": "'.$request->banknumber.'",
+                "bank_code": "'.$request->bankcode.'",
+                "name": "'.$user->name.'",
+                "account_type": "routing-number",
+                "bank_name": "'.$request->bankname.'",
+                "type": "",
+                "legal_type": "person",
+                "external_account_meta": {}
+              }'
+            ,
+            'headers' => [
+                'Accept'=> 'application/json',
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
+                'Content-Type' => 'application/json',
+                ],
+        ]);
+        $external_account = json_decode($response->getBody())->external_account_id;
+
+        $response = $client->request('POST','https://play.railsbank.com/v1/customer/beneficiaries', [
+            'body' => '{
+                holder_id: '.$enduser.',
+                asset_class: "currency",
+                asset_type: "usd",
+                iban: "'.$subbank->iban.'",
+                bic_swift: "'.$subbank->swift.'",
+                person: {
+                  name: "'.$subuser->name.'",
+                  address: { address_iso_country: "US" },
+                  email: "'.$request->email.'"
+                }
+              }',
+            'headers' => [
+                'Accept'=> 'application/json',
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
+                'Content-Type' => 'application/json',
+            ],
+        ]);
+        $beneficiary = json_decode($response->getBody())->beneficiary_id;
+
+        $response = $client->request('POST', 'https://play.railsbank.com/v1/customer/transactions', [
+            'body' => '{
+                "ledger_from_id": "'.$ledger.'",
+                "beneficiary_id": "'.$beneficiary.'",
+                "payment_type": "payment-type-Global-SWIFT",
+                "amount": "'.$request->amount.'"
+              }',
+            'headers' => [
+               'Accept'=> 'application/json',
+              'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
+              'Content-Type' => 'application/json',
+            ],
+          ]);
+        $transaction = json_decode($response->getBody())->transaction_id;
+
 
 
         $gs =  Generalsetting::findOrFail(1);
