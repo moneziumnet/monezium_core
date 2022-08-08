@@ -2,11 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Models\BankPlan;
-use App\Models\Currency;
-use App\Models\OtherBank;
-use App\Models\Beneficiary;
-use App\Models\Transaction;
+use App\Models\BankGateway;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
@@ -19,12 +15,13 @@ class UserRailsbankController extends Controller
     private $url = 'https://play.railsbank.com/v1/customer';
     private $API_Key = 'xt2siykg3y47yf6c1k7j96z2r6g0enox#jmg0hrwibt7nlrx1cf2m2wl1lkhinhw4kvge2tgl5jtjkhbrxfrrwm7o95leymlr';
 
-    public function GetEnduserList() {
+    public function GetEnduserList(Request $request) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/endusers', [
             'headers' => [
                'Accept'=> 'application/json',
-              'Authorization' => 'API-Key '.$this->API_Key,
+              'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
               'Content-Type' => 'application/json',
             ],
           ]);
@@ -33,6 +30,7 @@ class UserRailsbankController extends Controller
 
     public function CreateEnduser(Request $request) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/endusers', [
             'body' => '{
                 "person": {
@@ -43,19 +41,20 @@ class UserRailsbankController extends Controller
             }',
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function CheckEnduserStatus($id) {
+    public function CheckEnduserStatus(Request $request, $id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/endusers/'.$id.'/wait', [
             'headers' => [
                'Accept'=> 'application/json',
-              'Authorization' => 'API-Key '.$this->API_Key,
+              'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
               'Content-Type' => 'application/json',
             ],
           ]);
@@ -64,6 +63,7 @@ class UserRailsbankController extends Controller
 
     public function Createledger(Request $request) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/ledgers', [
             'body' => '{
                 "holder_id": "'.$request->enduserid.'",
@@ -77,68 +77,73 @@ class UserRailsbankController extends Controller
               }',
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetLegderList() {
+    public function GetLegderList(Request $request) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/ledgers', [
             'headers' => [
                'Accept'=> 'application/json',
-              'Authorization' => 'API-Key '.$this->API_Key,
+              'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
               'Content-Type' => 'application/json',
             ],
           ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetLegder($id) {
+    public function GetLegder(Request $request, $id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/ledgers/'.$id, [
             'headers' => [
                'Accept'=> 'application/json',
-              'Authorization' => 'API-Key '.$this->API_Key,
+              'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
               'Content-Type' => 'application/json',
             ],
           ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function Assigniban($id) {
+    public function Assigniban(Request $request, $id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/ledgers/'.$id.'/assign-iban', [
             'headers' => [
                'Accept'=> 'application/json',
-              'Authorization' => 'API-Key '.$this->API_Key,
+               'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
               'Content-Type' => 'application/json',
             ],
           ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetTransaction($id) {
+    public function GetTransaction(Request $request, $id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/transactions/'.$id, [
             'headers' => [
                'Accept'=> 'application/json',
-              'Authorization' => 'API-Key '.$this->API_Key,
-              'Content-Type' => 'application/json',
+               'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
+               'Content-Type' => 'application/json',
             ],
           ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetTransactionList() {
+    public function GetTransactionList(Request $request, $id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/transactions', [
             'headers' => [
                'Accept'=> 'application/json',
-              'Authorization' => 'API-Key '.$this->API_Key,
-              'Content-Type' => 'application/json',
+               'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
+               'Content-Type' => 'application/json',
             ],
           ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
@@ -146,6 +151,7 @@ class UserRailsbankController extends Controller
 
     public function CreateBeneficiary(Request $request) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/beneficiaries', [
             'body' => '{
                 holder_id: '.$request->enduserid.',
@@ -161,31 +167,33 @@ class UserRailsbankController extends Controller
               }',
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetBeneficiaryList() {
+    public function GetBeneficiaryList(Request $request) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/beneficiaries', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetBeneficiary($id) {
+    public function GetBeneficiary(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/beneficiaries/'.$id, [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
@@ -194,6 +202,7 @@ class UserRailsbankController extends Controller
 
     public function CreateTransfer(Request $request) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/transactions', [
             'body' => '{
                 "ledger_from_id": "'.$request->ledgerid.'",
@@ -203,7 +212,7 @@ class UserRailsbankController extends Controller
               }',
             'headers' => [
                'Accept'=> 'application/json',
-              'Authorization' => 'API-Key '.$this->API_Key,
+              'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
               'Content-Type' => 'application/json',
             ],
           ]);
@@ -216,6 +225,7 @@ class UserRailsbankController extends Controller
 //////////////////////////////////////////////////// Beneficiary /////////////////////////////////////////////////////////////////
     public function UpdateBeneficiary(Request $request, $id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('PUT', $this->url.'/beneficiaries/'.$id, [
             'body' => '{
                 "iban": "'.$request->ibanid.'",
@@ -223,7 +233,7 @@ class UserRailsbankController extends Controller
               }',
             'headers' => [
                'Accept'=> 'application/json',
-              'Authorization' => 'API-Key '.$this->API_Key,
+              'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
               'Content-Type' => 'application/json',
             ],
           ]);
@@ -232,6 +242,7 @@ class UserRailsbankController extends Controller
 
     public function CreateBeneficiaryAccount(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/beneficiaries/'.$id.'/accounts', [
             'body' => '{
                 "asset_type": "'.$request->asset_type.'",
@@ -239,31 +250,33 @@ class UserRailsbankController extends Controller
               }',
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetBeneficiaryAccountList($id) {
+    public function GetBeneficiaryAccountList(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/beneficiaries/'.$id.'/accounts', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetBeneficiaryAccount($id, $accountid) {
+    public function GetBeneficiaryAccount(Request $request, $id, $accountid) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/beneficiaries/'.$id.'/accounts/'.$accountid, [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
@@ -272,6 +285,7 @@ class UserRailsbankController extends Controller
 
     public function UpdateBeneficiaryAccount(Request $request, $id, $accountid) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('PUT', $this->url.'/beneficiaries/'.$id.'/accounts/'.$accountid, [
             'body' => '{
                 "bank_code_type": "'.$request->bankcode.'",
@@ -279,43 +293,46 @@ class UserRailsbankController extends Controller
               }',
             'headers' => [
                'Accept'=> 'application/json',
-              'Authorization' => 'API-Key '.$this->API_Key,
+              'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
               'Content-Type' => 'application/json',
             ],
           ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function ChangeBeneficiaryDefaultAccount($id, $accountid) {
+    public function ChangeBeneficiaryDefaultAccount(Request $request,$id, $accountid) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('PUT', $this->url.'/beneficiaries/'.$id.'/accounts/'.$accountid.'/make-default', [
             'headers' => [
                'Accept'=> 'application/json',
-              'Authorization' => 'API-Key '.$this->API_Key,
+              'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
               'Content-Type' => 'application/json',
             ],
           ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetBeneficiaryCal($id) {
+    public function GetBeneficiaryCal(Request $request, $id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/beneficiaries/'.$id.'/compliance-firewall-calculation', [
             'headers' => [
                'Accept'=> 'application/json',
-              'Authorization' => 'API-Key '.$this->API_Key,
+              'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
               'Content-Type' => 'application/json',
             ],
           ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetBeneficiaryStatus($id) {
+    public function GetBeneficiaryStatus(Request $request, $id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/beneficiaries/'.$id.'/wait', [
             'headers' => [
                'Accept'=> 'application/json',
-              'Authorization' => 'API-Key '.$this->API_Key,
+              'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
               'Content-Type' => 'application/json',
             ],
           ]);
@@ -323,12 +340,13 @@ class UserRailsbankController extends Controller
     }
 
 //////////////////////////////////////////////////// Card ////////////////////////////////////////////////////////////////////////
-    public function GetCardRuleCounter($id) {
+    public function GetCardRuleCounter(Request $request, $id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/card-rule-counters/'.$id, [
             'headers' => [
             'Accept'=> 'application/json',
-            'Authorization' => 'API-Key '.$this->API_Key,
+            'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
             'Content-Type' => 'application/json',
             ],
         ]);
@@ -337,6 +355,7 @@ class UserRailsbankController extends Controller
 
     public function CreateCard(Request $request) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/cards', [
             'body' => '{
                 "additional_ledgers":  [{
@@ -347,31 +366,33 @@ class UserRailsbankController extends Controller
               }',
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetCardList() {
+    public function GetCardList(Request $request) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/cards', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetCardTokenDetails($id) {
+    public function GetCardTokenDetails(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/cards/by-token/'.$id, [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
@@ -380,6 +401,7 @@ class UserRailsbankController extends Controller
 
     public function CreateCardRule(Request $request) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/cards/rules', [
             'body' => '{
                 "card_rule_type": "'.$request->type.'",
@@ -389,31 +411,33 @@ class UserRailsbankController extends Controller
               }',
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetCardRuleList() {
+    public function GetCardRuleList(Request $request) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/cards/rules', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetCardRule($id) {
+    public function GetCardRule(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/cards/rules/'.$id, [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
@@ -422,37 +446,40 @@ class UserRailsbankController extends Controller
 
     public function UpdateCardRule(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('PUT', $this->url.'/cards/rules/'.$id, [
             'body' => '{
                 "card_rule_name": "'.$request->cardrulename.'"
               }',
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function DisableCardRule($id) {
+    public function DisableCardRule(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/cards/rules/'.$id.'/disable', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetCard($id) {
+    public function GetCard(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/cards/'.$id, [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
@@ -461,6 +488,7 @@ class UserRailsbankController extends Controller
 
     public function UpdateCard(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('PUT', $this->url.'/cards/'.$id, [
             'body' => '{
                 "card_rules": [
@@ -470,19 +498,20 @@ class UserRailsbankController extends Controller
               }',
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function ActivateCard($id) {
+    public function ActivateCard(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/cards/'.$id.'/activate', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
@@ -491,13 +520,14 @@ class UserRailsbankController extends Controller
 
     public function AddLedgersToCard(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/cards/'.$id.'/additional-ledgers', [
             'body' => '{
                 "ledger_id": "'.$request->ledger_id.'"
               }',
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
@@ -506,6 +536,7 @@ class UserRailsbankController extends Controller
 
     public function UpdateCardholder(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('PUT', $this->url.'/cards/'.$id.'/cardholder-details', [
             'body' => '{
                 "email": "'.$request->email.'",
@@ -513,55 +544,59 @@ class UserRailsbankController extends Controller
               }',
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function CloseCard($id) {
+    public function CloseCard(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/cards/'.$id.'/close', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetCardImage($id) {
+    public function GetCardImage(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/cards/'.$id.'/image', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetCardPin($id) {
+    public function GetCardPin(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/cards/'.$id.'/pin', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function ResetCardPin($id) {
+    public function ResetCardPin(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/cards/'.$id.'/pin/reset', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
@@ -570,6 +605,7 @@ class UserRailsbankController extends Controller
 
     public function ReissueCard(Request $request ,$id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/cards/'.$id.'/reissue', [
             'body' => '{
                 "name_on_card": "string",
@@ -596,7 +632,7 @@ class UserRailsbankController extends Controller
               }',
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
@@ -605,6 +641,7 @@ class UserRailsbankController extends Controller
 
     public function ReplaceCard(Request $request ,$id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/cards/'.$id.'/replace', [
             'body' => '{
                 "name_on_card": "string",
@@ -631,85 +668,91 @@ class UserRailsbankController extends Controller
               }',
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function SuspendCard($id) {
+    public function SuspendCard(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/cards/'.$id.'/suspend', [
             'body' => '{
                 "suspend_reason": "card-lost"
               }',
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetPaymentTokenDetail($id) {
+    public function GetPaymentTokenDetail(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/payment-tokens/by-token/'.$id, [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetPaymentTokenIdDetail($id) {
+    public function GetPaymentTokenIdDetail(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/payment-tokens/'.$id, [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function ActivatePaymentToken($id) {
+    public function ActivatePaymentToken(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/payment-tokens/'.$id.'/activate', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetPaymentTokenActivationCode($id) {
+    public function GetPaymentTokenActivationCode(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/payment-tokens/'.$id.'/activation-code', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function ClosePaymentToken($id) {
+    public function ClosePaymentToken(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/payment-tokens/'.$id.'/close', [
             'body' => '{
                 "close_reason": "payment-token-stolen"
               }',
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
@@ -718,13 +761,14 @@ class UserRailsbankController extends Controller
 
     public function SuspendPaymentToken(Request $request,$id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/payment-tokens/'.$id.'/suspend', [
             'body' => '{
                 "suspend_reason": "'.$request->reason.'"
               }',
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
@@ -735,6 +779,7 @@ class UserRailsbankController extends Controller
 
     public function CreateComplianceContact(Request $request) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/compliance-contact', [
             'body' => '{
                 "email": "'.$request->email.'",
@@ -743,15 +788,16 @@ class UserRailsbankController extends Controller
             }',
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetComplianceContact() {
+    public function GetComplianceContact(Request $request) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/compliance-contact', [
             'body' => '{
                 "email": "'.$request->email.'",
@@ -760,7 +806,7 @@ class UserRailsbankController extends Controller
             }',
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
@@ -769,49 +815,40 @@ class UserRailsbankController extends Controller
 
     public function FirewallRules(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/compliance-firewall-rules/'.$id, [
             'body' => '{
                 "compliance_firewall_rules": "'.$request->firewall_rules.'"
             }',
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetFirewallRules($id) {
+    public function GetFirewallRules(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/compliance-firewall-rules/'.$id, [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetFirewallRulesHistory($id) {
+    public function GetFirewallRulesHistory(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/compliance-firewall-rules/'.$id.'/history', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
-                'Content-Type' => 'application/json',
-            ],
-        ]);
-        return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
-    }
-
-    public function ReloadRules($id) {
-        $client = new Client();
-        $response = $client->request('POST', $this->url.'/compliance-firewall-rules/'.$id.'/reload', [
-            'headers' => [
-                'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
@@ -820,6 +857,20 @@ class UserRailsbankController extends Controller
 
     public function ReloadRules(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
+        $response = $client->request('POST', $this->url.'/compliance-firewall-rules/'.$id.'/reload', [
+            'headers' => [
+                'Accept'=> 'application/json',
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
+                'Content-Type' => 'application/json',
+            ],
+        ]);
+        return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+    }
+
+    public function ReloadRulesTest(Request $request, $id) {
+        $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/compliance-firewall-rules/'.$id.'/test', [
             'body' => '{
                 "compliance_firewall_rules": "'.$request->firewall_rules.'",
@@ -827,7 +878,7 @@ class UserRailsbankController extends Controller
             }',
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
@@ -836,6 +887,7 @@ class UserRailsbankController extends Controller
 
     public function CreateFirewallDataset(Request $request) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/compliance-firewall-static-data', [
             'body' => '{
                 "dataset_data": "'.$request->dataset_data.'",
@@ -843,67 +895,72 @@ class UserRailsbankController extends Controller
             }',
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetFirewallDataset($id) {
+    public function GetFirewallDataset(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/compliance-firewall-static-data/'.$id, [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetAllFirewallDataset() {
+    public function GetAllFirewallDataset(Request $request) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/compliance-manual', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetAllQuarantine() {
+    public function GetAllQuarantine(Request $request) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/quarantine', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetQuarantinedBeneficiaryList() {
+    public function GetQuarantinedBeneficiaryList(Request $request) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/quarantine/beneficiaries', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetQuarantinedBeneficiary($id) {
+    public function GetQuarantinedBeneficiary(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/quarantine/beneficiaries/'.$id, [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
@@ -912,6 +969,7 @@ class UserRailsbankController extends Controller
 
     public function AddCommentBeneficiary(Request $request,$id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/quarantine/beneficiaries/'.$id.'/comments', [
             'body' => '{
                 "comment": "'.$request->comment.'"
@@ -919,7 +977,7 @@ class UserRailsbankController extends Controller
             ,
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
@@ -928,6 +986,7 @@ class UserRailsbankController extends Controller
 
     public function ResolveQuarantinedBeneficiary(Request $request,$id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/quarantine/beneficiaries/'.$id.'/resolve', [
             'body' => '{
                 "comment": "'.$request->comment.'",
@@ -936,31 +995,33 @@ class UserRailsbankController extends Controller
             ,
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetQuarantinedEnduserList($counter, $position) {
+    public function GetQuarantinedEnduserList(Request $request, $counter, $position) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/quarantine/endusers?items_per_page='.$counter.'&offset='.$position, [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetQuarantinedEnduser($id) {
+    public function GetQuarantinedEnduser(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/quarantine/endusers/'.$id, [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
@@ -969,6 +1030,7 @@ class UserRailsbankController extends Controller
 
     public function AddCommentEnduser(Request $request,$id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/quarantine/endusers/'.$id.'/comments', [
             'body' => '{
                 "comment": "'.$request->comment.'"
@@ -976,7 +1038,7 @@ class UserRailsbankController extends Controller
             ,
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
@@ -985,6 +1047,7 @@ class UserRailsbankController extends Controller
 
     public function ResolveQuarantinedEnduser(Request $request,$id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/quarantine/endusers/'.$id.'/resolve', [
             'body' => '{
                 "comment": "'.$request->comment.'",
@@ -993,31 +1056,33 @@ class UserRailsbankController extends Controller
             ,
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetQuarantinedTransactionList($counter, $position) {
+    public function GetQuarantinedTransactionList(Request $request, $counter, $position) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/quarantine/transactions?items_per_page='.$counter.'&offset='.$position, [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetQuarantinedTransaction($id) {
+    public function GetQuarantinedTransaction(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/quarantine/transactions/'.$id, [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
@@ -1026,6 +1091,7 @@ class UserRailsbankController extends Controller
 
     public function AddCommentTransaction(Request $request,$id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/quarantine/transactions/'.$id.'/comments', [
             'body' => '{
                 "comment": "'.$request->comment.'"
@@ -1033,7 +1099,7 @@ class UserRailsbankController extends Controller
             ,
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
@@ -1042,6 +1108,7 @@ class UserRailsbankController extends Controller
 
     public function ResolveQuarantinedTransaction(Request $request,$id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/quarantine/transactions/'.$id.'/resolve', [
             'body' => '{
                 "comment": "'.$request->comment.'",
@@ -1050,7 +1117,7 @@ class UserRailsbankController extends Controller
             ,
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
@@ -1059,12 +1126,13 @@ class UserRailsbankController extends Controller
 
 //////////////////////////////////////////////////// EndUsers ////////////////////////////////////////////////////////////////////
 
-    public function GetEnduser($id) {
+    public function GetEnduser(Request $request, $id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/endusers/'.$id, [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
@@ -1073,6 +1141,7 @@ class UserRailsbankController extends Controller
 
     public function UpdateEnduser(Request $request, $id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('PUT', $this->url.'/endusers/'.$id, [
             'body' => '{
                 "email": "'.$request->email.'",
@@ -1081,7 +1150,7 @@ class UserRailsbankController extends Controller
             ,
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
@@ -1090,6 +1159,7 @@ class UserRailsbankController extends Controller
 
     public function CreateEnduserAgreement(Request $request, $id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/endusers/'.$id.'/agreements', [
             'body' => '{
                 "agreement_type": "'.$request->type.'",
@@ -1100,39 +1170,42 @@ class UserRailsbankController extends Controller
             ,
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetEnduserAgreementList($id) {
+    public function GetEnduserAgreementList(Request $request, $id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/endusers/'.$id.'/agreements', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetEnduserCal($id) {
+    public function GetEnduserCal(Request $request, $id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/endusers/'.$id.'/compliance-firewall-calculation', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function CreateEnduserAgreement(Request $request, $id) {
+    public function CreateEnduserCredit(Request $request, $id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/endusers/'.$id.'/credit-checks', [
             'body' => '{
                 "partner_product": "'.$request->product.'"
@@ -1140,31 +1213,33 @@ class UserRailsbankController extends Controller
             ,
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetEnduserCreditDetails($id, $credit_id) {
+    public function GetEnduserCreditDetails(Request $request, $id, $credit_id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/endusers/'.$id.'/credit-checks/'.$credit_id, [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function CreateCreditOfferAcceptance($id, $credit_id) {
+    public function CreateCreditOfferAcceptance(Request $request, $id, $credit_id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/endusers/'.$id.'/credit-checks/'.$credit_id.'/accept', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
@@ -1173,6 +1248,7 @@ class UserRailsbankController extends Controller
 
     public function CreateEnduserKYCCheck(Request $request, $id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/endusers/'.$id.'/kyc-checks', [
             'body' => '{
                 "trusted_bureau_result": {
@@ -1219,31 +1295,33 @@ class UserRailsbankController extends Controller
             ,
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetEnduserKYCCheckList($id) {
+    public function GetEnduserKYCCheckList(Request $request, $id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/endusers/'.$id.'/kyc-checks', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetEnduserKYCCheck($id, $kycid) {
+    public function GetEnduserKYCCheck(Request $request, $id, $kycid) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/endusers/'.$id.'/kyc-checks/'.$kycid, [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
@@ -1252,6 +1330,7 @@ class UserRailsbankController extends Controller
 
     public function AddEnduserKYCFiles(Request $request ,$id, $kycid) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/endusers/'.$id.'/kyc-checks/'.$kycid.'/files', [
             'body' => '{
                 "file": "'.$request->file.'"
@@ -1260,19 +1339,20 @@ class UserRailsbankController extends Controller
             ,
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetEnduserKYCFilesList($id, $kycid) {
+    public function GetEnduserKYCFilesList(Request $request, $id, $kycid) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('Get', $this->url.'/endusers/'.$id.'/kyc-checks/'.$kycid.'/files', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
@@ -1281,6 +1361,7 @@ class UserRailsbankController extends Controller
 
     public function CreateKYCCheck(Request $request ,$id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/endusers/'.$id.'/kyc-initiate-check', [
             'body' => '{
                 "kyc_id": "'.$request->kyc_id.'"
@@ -1288,19 +1369,20 @@ class UserRailsbankController extends Controller
             ,
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function ReapplyEnduserfirewall($id) {
+    public function ReapplyEnduserfirewall(Request $request, $id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/endusers/'.$id.'/rerun-firewall', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
@@ -1309,6 +1391,7 @@ class UserRailsbankController extends Controller
 
     public function CreateVirtualLedger(Request $request) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/ledgers/virtual', [
             'body' => '{
                 "asset_class": "'.$request->asset_class.'",
@@ -1322,7 +1405,7 @@ class UserRailsbankController extends Controller
             ,
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
@@ -1331,6 +1414,7 @@ class UserRailsbankController extends Controller
 
     public function Updateledger(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('PUT', $this->url.'/ledgers/'.$id, [
             'body' => '{
                 "ledger_meta": {
@@ -1339,31 +1423,33 @@ class UserRailsbankController extends Controller
               }',
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function CloseLedger($id) {
+    public function CloseLedger(Request $request,$id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/ledgers/'.$id.'/close', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetLedgerHistory($id) {
+    public function GetLedgerHistory(Request $request, $id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/ledgers/'.$id.'/entries', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
@@ -1372,48 +1458,52 @@ class UserRailsbankController extends Controller
 
 //////////////////////////////////////////////////// Customer Configuration //////////////////////////////////////////////////////
 
-    public function GetMeInformation() {
+    public function GetMeInformation(Request $request) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/me', [
             'headers' => [
             'Accept'=> 'application/json',
-            'Authorization' => 'API-Key '.$this->API_Key,
+            'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
             'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetMyBankList() {
+    public function GetMyBankList(Request $request) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/my/partners', [
             'headers' => [
             'Accept'=> 'application/json',
-            'Authorization' => 'API-Key '.$this->API_Key,
+            'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
             'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetEnabledProductList() {
+    public function GetEnabledProductList(Request $request) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/my/products', [
             'headers' => [
             'Accept'=> 'application/json',
-            'Authorization' => 'API-Key '.$this->API_Key,
+            'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
             'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetAssignedCardList($id) {
+    public function GetAssignedCardList(Request $request, $id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/my/products/'.$id.'/card-programmes', [
             'headers' => [
             'Accept'=> 'application/json',
-            'Authorization' => 'API-Key '.$this->API_Key,
+            'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
             'Content-Type' => 'application/json',
             ],
         ]);
@@ -1422,12 +1512,13 @@ class UserRailsbankController extends Controller
 
 //////////////////////////////////////////////////// WebHooks ////////////////////////////////////////////////////////////////////
 
-    public function GetWebhookHistory($counter, $position) {
+    public function GetWebhookHistory(Request $request, $counter, $position) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/notifications?items_per_page='.$counter.'&offset='.$position, [
             'headers' => [
             'Accept'=> 'application/json',
-            'Authorization' => 'API-Key '.$this->API_Key,
+            'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
             'Content-Type' => 'application/json',
             ],
         ]);
@@ -1436,6 +1527,7 @@ class UserRailsbankController extends Controller
 
     public function CreateWebhook(Request $request) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/webhook', [
             'body' => '{
                 "webhook_secret": "'.$request->secret.'",
@@ -1444,43 +1536,46 @@ class UserRailsbankController extends Controller
             ,
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function DeleteWebhook() {
+    public function DeleteWebhook(Request $request) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('DELETE', $this->url.'/webhook', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetWebhook() {
+    public function GetWebhook(Request $request) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/webhook', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetFailedWebhook() {
+    public function GetFailedWebhook(Request $request) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/webhook/failed-to-deliver', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
@@ -1489,6 +1584,7 @@ class UserRailsbankController extends Controller
 
     public function UpdateWebhook(Request $request) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/webhook/update-secret', [
             'body' => '{
                 "webhook_secret": "'.$request->secret.'"
@@ -1496,7 +1592,7 @@ class UserRailsbankController extends Controller
             ,
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
@@ -1506,6 +1602,7 @@ class UserRailsbankController extends Controller
 //////////////////////////////////////////////////// Transactions ////////////////////////////////////////////////////////////////
     public function ConvertSendTransaction(Request $request) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/transactions/fx', [
             'body' => '{
                 "payment_method": "'.$request->method.'",
@@ -1523,7 +1620,7 @@ class UserRailsbankController extends Controller
             }',
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
@@ -1532,6 +1629,7 @@ class UserRailsbankController extends Controller
 
     public function GetExchangeRates(Request $request) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('PUT', $this->url.'/transactions/fx/quote', [
             'body' => '{
                 "sender_asset_type": "'.$request->sendertype.'",
@@ -1541,7 +1639,7 @@ class UserRailsbankController extends Controller
             }',
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
@@ -1550,6 +1648,7 @@ class UserRailsbankController extends Controller
 
     public function CreateInterTransaction(Request $request) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/transactions/inter-ledger', [
             'body' => '{
                 "ledger_to_id": "'.$request->toid.'",
@@ -1561,7 +1660,7 @@ class UserRailsbankController extends Controller
             }',
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
@@ -1570,6 +1669,7 @@ class UserRailsbankController extends Controller
 
     public function TestInterledger(Request $request) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/transactions/inter-ledger/try', [
             'body' => '{
                 "ledger_to_id": "'.$request->toid.'",
@@ -1581,7 +1681,7 @@ class UserRailsbankController extends Controller
             }',
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
@@ -1590,6 +1690,7 @@ class UserRailsbankController extends Controller
 
     public function CreditVirtualLedger(Request $request) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/transactions/manual-credit', [
             'body' => '{
                 "transaction_meta": {
@@ -1600,7 +1701,7 @@ class UserRailsbankController extends Controller
             }',
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
@@ -1609,6 +1710,7 @@ class UserRailsbankController extends Controller
 
     public function DebitVirtualLedger(Request $request) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/transactions/manual-debit', [
             'body' => '{
                 "transaction_meta": {
@@ -1619,7 +1721,7 @@ class UserRailsbankController extends Controller
             }',
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
@@ -1628,6 +1730,7 @@ class UserRailsbankController extends Controller
 
     public function TestTransaction(Request $request) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/transactions/try', [
             'body' => '{
                   "amount": "'.$request->amount.'",
@@ -1635,7 +1738,7 @@ class UserRailsbankController extends Controller
             }',
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
@@ -1644,6 +1747,7 @@ class UserRailsbankController extends Controller
 
     public function UpdateTransactionMetadata(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('PUT', $this->url.'/transactions/'.$id, [
             'body' => '{
                 "transaction_meta": {
@@ -1652,31 +1756,33 @@ class UserRailsbankController extends Controller
             }',
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetTransactionCal($id) {
+    public function GetTransactionCal(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('PUT', $this->url.'/transactions/'.$id.'/compliance-firewall-calculation', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function RerunTransaction($id) {
+    public function RerunTransaction(Request $request, $id) {
         $client = new Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/transactions/'.$id.'/rerun-firewall', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
             ],
         ]);
@@ -1687,6 +1793,7 @@ class UserRailsbankController extends Controller
 
     public function CreateLinkExternalBank(Request $request,$id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/ledgers/'.$id.'/external-accounts', [
             'body' => '{
                 "number": "'.$request->number.'",
@@ -1701,19 +1808,20 @@ class UserRailsbankController extends Controller
             ,
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetLinkExternalBankList($id) {
+    public function GetLinkExternalBankList(Request $request, $id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/ledgers/'.$id.'/external-accounts', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
@@ -1722,6 +1830,7 @@ class UserRailsbankController extends Controller
 
     public function CreateScheduleCredit(Request $request,$id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/ledgers/'.$id.'/scheduled-credit-payments', [
             'body' => '{
                 "external_account_id": "'.$request->external_id.'",
@@ -1734,19 +1843,20 @@ class UserRailsbankController extends Controller
             ,
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetScheduleCreditList($id) {
+    public function GetScheduleCreditList(Request $request, $id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/ledgers/'.$id.'/scheduled-credit-payments', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
@@ -1755,6 +1865,7 @@ class UserRailsbankController extends Controller
 
     public function CreateScheduleCreditAutoPay(Request $request,$id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/ledgers/'.$id.'/scheduled-credit-payments/autopay', [
             'body' => '{
                 "external_account_id": "'.$request->external_id.'",
@@ -1766,19 +1877,20 @@ class UserRailsbankController extends Controller
             ,
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function CancelCreditPayment($id,$schedule_id) {
+    public function CancelCreditPayment(Request $request, $id,$schedule_id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/ledgers/'.$id.'/scheduled-credit-payments/'.$schedule_id.'/cancel', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
@@ -1787,6 +1899,7 @@ class UserRailsbankController extends Controller
 
     public function ApplyCreditLedger(Request $request,$id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/ledgers/'.$id.'/credit-adjustments', [
             'body' => '{
                 "amount": '.$request->amount.',
@@ -1796,67 +1909,72 @@ class UserRailsbankController extends Controller
             ,
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function GetCreditAdjustmentList($id) {
+    public function GetCreditAdjustmentList(Request $request, $id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/ledgers/'.$id.'/credit-adjustments', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function FetchLinkedExternalAccount($id,$account_id) {
+    public function FetchLinkedExternalAccount(Request $request, $id,$account_id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/ledgers/'.$id.'/external-accounts/'.$account_id, [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function DeleteLinkedExternalAccount($id,$account_id) {
+    public function DeleteLinkedExternalAccount(Request $request, $id,$account_id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('DELETE', $this->url.'/ledgers/'.$id.'/external-accounts/'.$account_id, [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function FetchCreditStatement($id,$detail_id) {
+    public function FetchCreditStatement(Request $request, $id,$detail_id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('GET', $this->url.'/ledgers/'.$id.'/credit-details/'.$detail_id.'/credit-statements', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function ReverseCreditAdjustment($id,$adjustment_id) {
+    public function ReverseCreditAdjustment(Request $request, $id,$adjustment_id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/ledgers/'.$id.'/credit-adjustments/'.$adjustment_id.'/reversal', [
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);
@@ -1865,6 +1983,7 @@ class UserRailsbankController extends Controller
 
     public function ApplyFeeDebit(Request $request,$id) {
         $client = new  Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
         $response = $client->request('POST', $this->url.'/ledgers/'.$id.'/debit-adjustments', [
             'body' => '{
                 "amount": '.$request->amount.',
@@ -1874,7 +1993,7 @@ class UserRailsbankController extends Controller
             ,
             'headers' => [
                 'Accept'=> 'application/json',
-                'Authorization' => 'API-Key '.$this->API_Key,
+                'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
                 'Content-Type' => 'application/json',
                 ],
         ]);

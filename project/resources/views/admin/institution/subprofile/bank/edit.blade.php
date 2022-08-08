@@ -57,7 +57,7 @@
               </div>
           </div>
           <hr>
-          <h6 class="m-0 font-weight-bold text-primary mb-3">{{ __('Gateway Details') }}</h6>
+          <h6 class="m-0 font-weight-bold text-primary mb-3">{{ __('Gateway Details') }} ( {{$bank_gateway->name}} )</h6>
           <div class="row">
             @foreach($bank_gateway->information as $key => $value)
                 <div class="col-md-6">
