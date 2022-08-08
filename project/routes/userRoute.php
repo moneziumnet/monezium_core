@@ -60,6 +60,7 @@ use App\Http\Controllers\User\SupervisorController;
 use App\Http\Controllers\User\OwnTransferController;
 use App\Http\Controllers\User\UserInvestmentController;
 use App\Http\Controllers\User\UserClearJunctionController;
+use App\Http\Controllers\User\UserEMbankController;
 use App\Http\Controllers\User\UserGlobalPassController;
 
 Route::prefix('user')->group(function() {
@@ -360,6 +361,10 @@ Route::prefix('user')->group(function() {
         Route::get('/clearjunction/allocateibancorporateentity', [UserClearJunctionController::class, 'AllocateIbanCorporateEntity'])->name('user.clearjunction.api.allocateibancorporateentity');
         Route::get('/clearjunction/allocatebecsindividual', [UserClearJunctionController::class, 'AllocateBecsIndividual'])->name('user.clearjunction.api.allocatebecsindividual');
         Route::get('/clearjunction/allocatebecscorporate', [UserClearJunctionController::class, 'AllocateBecsCorporate'])->name('user.clearjunction.api.allocatebecscorporate');
+
+
+        /// EM Bank API
+        Route::get('/embank/accounts', [UserEMbankController::class, 'Accounts'])->name('user.embank.api.accounts');
 
         
         Route::post('/globalpass/callback', [UserGlobalPassController::class, 'callback'])->name('user.globalpass.api.callback');
