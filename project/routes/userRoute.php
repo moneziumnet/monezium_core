@@ -62,6 +62,7 @@ use App\Http\Controllers\User\UserInvestmentController;
 use App\Http\Controllers\User\UserClearJunctionController;
 use App\Http\Controllers\User\UserEMbankController;
 use App\Http\Controllers\User\UserGlobalPassController;
+use App\Http\Controllers\Deposit\RailsBankController;
 
 Route::prefix('user')->group(function() {
 
@@ -366,7 +367,7 @@ Route::prefix('user')->group(function() {
         /// EM Bank API
         Route::get('/embank/accounts', [UserEMbankController::class, 'Accounts'])->name('user.embank.api.accounts');
 
-        
+
         Route::post('/globalpass/callback', [UserGlobalPassController::class, 'callback'])->name('user.globalpass.api.callback');
         Route::get('/globalpass/getscreenidstatus/{screentoken}/{id}', [UserGlobalPassController::class, 'GetScreenIDStatus'])->name('user.globalpass.api.getscreenidstatus');
         Route::get('/globalpass/getscreenaddressstatus/{screentoken}/{id}', [UserGlobalPassController::class, 'GetScreenAddressStatus'])->name('user.globalpass.api.getscreenaddressstatus');
@@ -390,6 +391,8 @@ Route::prefix('user')->group(function() {
       Route::get('/bank/deposits',[DepositBankController::class,'index'])->name('user.depositbank.index');
       Route::get('/bank/deposit/create',[DepositBankController::class,'create'])->name('user.depositbank.create');
       Route::POST('/bank/deposit/store',[DepositBankController::class,'store'])->name('user.depositbank.store');
+      Route::POST('/bank/deposit/gateway',[DepositBankController::class,'gateway'])->name('user.depositbank.gateway');
+      Route::POST('/bank/deposit/railsbank',[RailsBankController::class,'store'])->name('user.depositbank.railsbank');
 
       Route::post('/deposit/stripe-submit', [StripeController::class,'store'])->name('deposit.stripe.submit');
 

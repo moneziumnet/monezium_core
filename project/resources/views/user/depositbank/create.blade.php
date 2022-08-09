@@ -86,7 +86,7 @@
             <li class="list-group-item d-flex justify-content-between">@lang('Bank Swift')<span id="bank_swift"></span></li>
         </ul>
         </div>
-        <form action="{{ route('user.depositbank.store') }}" method="post">
+        <form id="depositbank_gateway" action="" method="post">
             @csrf
             <div class="modal-body">
               <div class="form-group mt-3">
@@ -120,7 +120,6 @@
   'use strict';
     $('#submit').on('click', function() {
         var pos = $('#withmethod').val();
-        console.log(JSON.parse(pos));
         $('#bank_name').text(JSON.parse(pos)['name']);
         $('#bank_address').text(JSON.parse(pos)['address']);
         $('#bank_iban').text(JSON.parse(pos)['iban']);
@@ -132,9 +131,17 @@
         $('#modal_bank_name').val($('#bname').val());
         $('#modal_bank_code').val($('#bcode').val());
         $('#modal_bank_number').val($('#bnumber').val());
-        $('#modal-success').modal('show');
+        $.post("{{ route('user.depositbank.gateway') }}",{id:JSON.parse(pos)['id'],_token:'{{csrf_token()}}'},function (res) {
+            console.log(res);
+            if(res.keyword == 'railsbank')
+                {
+                    $('#depositbank_gateway').prop('action','{{ route('user.depositbank.railsbank') }}');
+                }
 
-    })
+             });
+             $('#modal-success').modal('show');
+        })
+
   </script>
 
 @endpush
