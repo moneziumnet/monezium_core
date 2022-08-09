@@ -107,6 +107,29 @@
         @endforeach
     </div>
     <hr>
+    <div class="row justify-content-center">
+        <h1>@lang('Bank Account list')</h1>
+    </div>
+
+    <div class="row justify-content " style="max-height: 368px;overflow-y: scroll;">
+        @foreach ($bankaccountlist as $item)
+        <div class="col-sm-6 col-md-4 mb-3">
+            <div class="card h-100 card--info-item">
+              <div class="text-end icon">
+                <i class="fas ">
+                    $
+                </i>
+              </div>
+              <div class="card-body">
+                <div class="h3 m-0 text-uppercase"> {{$item->iban}}</div>
+                <div class="h4 m-0 text-uppercase"> {{ $item->swift }}</div>
+                <div class="text-muted">{{ __($item->subbank->name) }} </div>
+              </div>
+            </div>
+        </div>
+        @endforeach
+    </div>
+    <hr>
 
     <div class="row justify-content-center">
       <div class="col-sm-6 col-md-4 mb-3">

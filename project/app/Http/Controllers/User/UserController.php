@@ -12,6 +12,7 @@ use App\Models\Wallet;
 use App\Traits\Payout;
 use App\Models\Currency;
 use App\Models\Transaction;
+use App\Models\BankAccount;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
@@ -37,6 +38,7 @@ class UserController extends Controller
         $wallets = Wallet::where('user_id',auth()->id())->where('user_type',1)->with('currency')->get();
         $data['wallets'] = $wallets;
         $data['transactions'] = Transaction::whereUserId(auth()->id())->orderBy('id','desc')->limit(5)->get();
+        $data['bankaccountlist'] = BankAccount::whereUserId(auth()->id())->get();
         foreach ($data['transactions'] as $key => $transaction) {
             $transaction->currency = Currency::whereId($transaction->currency_id)->first();
         }
