@@ -19,6 +19,9 @@ use App\Models\Withdraw;
 use App\Models\OrderedItem;
 use App\Models\Transaction;
 use App\Models\Withdrawals;
+use App\Models\SubInsBank;
+use App\Models\BankGateway;
+use App\Models\BankAccount;
 use Illuminate\Support\Str;
 use App\Models\UserDocument;
 use Illuminate\Http\Request;
@@ -440,7 +443,15 @@ class UserController extends Controller
         {
             $data = User::findOrFail($id);
             $data['data'] = $data;
+            $data['subbank'] = SubInsBank::wherestatus(1)->get();
+            $data['currencylist'] = Currency::wherestatus(1)->where('type', 1)->get();
+            $data['bankaccount'] = BankAccount::where('user_id', $id)->get();
             return view('admin.user.profilebanks',$data);
+        }
+
+        public function gateway(Request $request) {
+            $bankgateway = BankGateway::where('subbank_id', $request->id)->first();
+            return $bankgateway;
         }
 
         public function transctionEdit($id)
