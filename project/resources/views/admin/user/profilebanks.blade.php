@@ -27,56 +27,39 @@
             <div class="card-body mt-3">
                 <div class="card">
                     <div class="row mb-3">
-                        <div class="col-8 ">
-                            <div class = "row mt-3 ml-2">
-                                @foreach ($bankaccount as $value )
-                                <div class="col-xl-4 col-md-6 mb-4">
-                                    <div class="card h-100" >
-                                    <div class="card-body">
-                                        <div class="row align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="row mb-1 mr-1">
-                                                <div class='col font-weight-bold text-gray-900'>{{__($value->iban)}}</div>
-                                                <div class='col font-weight-bold text-gray-900'>{{__($value->swift)}}</div>
+                        <div class=" ml-5 text-right mt-3">
+                            <button class="btn btn-primary" id="create_account" onclick="CreateAccount()" ><i class="fas fa-plus"></i> {{__('Add New Bank Account')}} </button>
+                        </div>
+                        <div class="col-12 ">
+                            <div class = "row mt-3 ml-2 mr-2">
+                                @if (count($bankaccount) != 0)
+
+                                    @foreach ($bankaccount as $value )
+                                    <div class="col-xl-3 col-md-6 mb-4">
+                                        <div class="card h-100" >
+                                        <div class="card-body">
+                                            <div class="row align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="row mb-1 mr-1">
+                                                    <div class='col font-weight-bold text-gray-900'>{{__($value->iban)}}</div>
+                                                    <div class='col font-weight-bold text-gray-900'>{{__($value->swift)}}</div>
+                                                </div>
+                                                <div class="row mb-1 mr-1">
+                                                    <div class="col font-weight-bold text-gray-800"> {{__($value->subbank->name)}} </div>
+                                                    <div class='col font-weight-bold text-gray-900'>{{__($value->currency->code)}}</div>
+                                                </div>
                                             </div>
-                                            <div class="text-xs font-weight-bold text-uppercase mb-1"> {{__($value->subbank->name)}} </div>
+                                            </div>
                                         </div>
                                         </div>
                                     </div>
-                                    </div>
-                                </div>
-                                @endforeach
+                                    @endforeach
+                                @else
+                                    <h4 class="ml-3 text-center py-5">{{__('No Bank Account')}}</h3>
+                                @endif
 
 
                             </div>
-                        </div>
-
-                        <div class="col-4">
-                            <form class="bankaccount  mt-4 mr-3" action="" method="POST" >
-
-                                {{ csrf_field() }}
-
-                                    <div class="form-group">
-                                    <label for="inp-name">{{ __('SubInstitions Bank') }}</label>
-                                        <select class="form-control" name="subbank" id="subbank" required>
-                                        <option value="">{{ __('Select SubInstitions Bank') }}</option>
-                                        @foreach ($subbank as $bank )
-                                            <option value="{{$bank->id}}">{{ __($bank->name) }}</option>
-                                        @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="inp-name">{{ __('Currency') }}</label>
-                                            <select class="form-control" name="currency" id="currency" required>
-                                            <option value="">{{ __('Select Currency') }}</option>
-                                            @foreach ($currencylist as $value )
-                                                <option value="{{$value->id}}">{{ __($value->code) }}</option>
-                                            @endforeach
-                                            </select>
-                                    </div>
-                                    <input type="hidden" name="user" value="{{$data->id}}">
-                                <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Upgrade') }}</button>
-                                </form>
                         </div>
                     </div>
 
@@ -131,6 +114,45 @@
       </div>
       {{-- STATUS MODAL ENDS --}}
 
+        {{-- Account MODAL --}}
+        <div class="modal modal-blur fade" id="modal-success-2" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-status bg-primary"></div>
+                <div class="modal-body text-center py-4">
+                <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+                <h3>@lang('Bank Account')</h3>
+                <form class="bankaccount  mt-4 mr-3" action="" method="POST" >
+
+                    {{ csrf_field() }}
+
+                        <div class="form-group">
+                        <label for="inp-name">{{ __('SubInstitions Bank') }}</label>
+                            <select class="form-control" name="subbank" id="subbank" required>
+                            <option value="">{{ __('Select SubInstitions Bank') }}</option>
+                            @foreach ($subbank as $bank )
+                                <option value="{{$bank->id}}">{{ __($bank->name) }}</option>
+                            @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="inp-name">{{ __('Currency') }}</label>
+                                <select class="form-control" name="currency" id="currency" required>
+                                <option value="">{{ __('Select Currency') }}</option>
+                                @foreach ($currencylist as $value )
+                                    <option value="{{$value->id}}">{{ __($value->code) }}</option>
+                                @endforeach
+                                </select>
+                        </div>
+                        <input type="hidden" name="user" value="{{$data->id}}">
+                        <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Create') }}</button>
+                    </form>
+                </div>
+            </div>
+            </div>
+          </div>
+        {{-- Account MODAL ENDS --}}
+
 
       @endsection
 
@@ -173,6 +195,10 @@
                     }
              });
         })
+        function CreateAccount() {
+            $('#modal-success-2').modal('show')
+        }
+
 
       </script>
 
