@@ -64,6 +64,7 @@ use App\Http\Controllers\Admin\ReferralController as AdminReferralController;
 use App\Http\Controllers\Admin\DepositBankController as AppDepositBankController;
 use App\Http\Controllers\Admin\WireTransferController as AdminWireTransferController;
 use App\Http\Controllers\Deposit\RailsBankController;
+use App\Http\Controllers\Deposit\OpenPaydController;
 
 
 Route::prefix('admin')->group(function () {
@@ -223,6 +224,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/user/{id}/transactions', [UserController::class, 'profileTransctions'])->name('admin-user-transactions');
     Route::get('/user/{id}/banks', [UserController::class, 'profileBanks'])->name('admin-user-banks');
     Route::POST('/user/bank/railsbank',[RailsBankController::class,'store'])->name('admin.user.bank.railsbank');
+    Route::POST('/user/bank/openpayd',[OpenPaydController::class,'store'])->name('admin.user.bank.openpayd');
     Route::POST('/user/bank/gateway',[UserController::class,'gateway'])->name('admin-user-bank-gateway');
     Route::get('/user/{id}/modules', [UserController::class, 'profileModules'])->name('admin-user-modules');
     Route::post('/users/{id}/changepassword', [UserController::class, 'changePassword'])->name('admin-user-changepassword');

@@ -18,7 +18,7 @@ class RailsBankController extends Controller
         $client = New Client();
         $user = User::findOrFail($request->user);
         $bankgateway = BankGateway::where('subbank_id', $request->subbank)->first();
-        $bankaccount = BankAccount::where('user_id', $request->user)->where('subbank_id', $request->subbank)->first();
+        $bankaccount = BankAccount::where('user_id', $request->user)->where('subbank_id', $request->subbank)->where('currency_id', $request->currency)->first();
         if ($bankaccount){
             return redirect()->back()->with(array('warning' => 'This bank account already exists.'));
 
@@ -70,6 +70,7 @@ class RailsBankController extends Controller
         $data->subbank_id = $request->subbank;
         $data->iban = $iban;
         $data->swift = $bic_swift;
+        $data->currency_id = $request->currency;
         $data->save();
         return redirect()->back()->with(array('message' => 'Bank Account has been created successfully'));
 

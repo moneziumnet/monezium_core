@@ -17,6 +17,7 @@ class CreateBankAccountsTable extends Migration
             $table->id();
             $table->integer('subbank_id');
             $table->integer('user_id');
+            $table->integer('currency_id');
             $table->string('iban', 255);
             $table->string('swift', 255);
             $table->timestamps();

@@ -162,10 +162,15 @@
         $('#subbank').on('change', function() {
             $.post("{{ route('admin-user-bank-gateway') }}",{id:$('#subbank').val(),_token:'{{csrf_token()}}'},function (res) {
             console.log(res);
-            if(res.keyword == 'railsbank')
-                {
-                    $('.bankaccount').prop('action','{{ route('admin.user.bank.railsbank') }}');
-                }
+                if(res.keyword == 'railsbank')
+                    {
+                        $('.bankaccount').prop('action','{{ route('admin.user.bank.railsbank') }}');
+                    }
+
+                if(res.keyword == 'openpayd')
+                    {
+                        $('.bankaccount').prop('action','{{ route('admin.user.bank.openpayd') }}');
+                    }
              });
         })
 

@@ -11,6 +11,7 @@ class BankAccount extends Model
         'subbank_id',
         'iban',
         'swift',
+        'currency_id',
     ];
 
     public function user(){
@@ -20,5 +21,10 @@ class BankAccount extends Model
     public function subbank()
     {
         return $this->belongsTo(SubInsBank::class,'subbank_id')->withDefault();
+    }
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class,'currency_id')->withDefault();
     }
 }
