@@ -34,26 +34,17 @@
                             </select>
                         </div>
 
+                        <div class="form-group mt-3">
+                            <label class="form-label required">{{__('Currency')}}</label>
+                            <select name="currency" id="currency" class="form-select" required>
+                                <option value="">{{ __('Select Currency') }}</option>
+                            </select>
+                        </div>
+
                         <div class="form-group mb-3 mt-3">
                             <label class="form-label required">{{__('Incoming Amount (USD)')}}</label>
                             <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" step="any" value="{{ old('amount') }}" min="1" required>
                         </div>
-
-                        <div class="form-group mb-3 mt-3">
-                            <label class="form-label required">{{__('Your Bank Name')}}</label>
-                            <input  id="bname" class="form-control"  type="text" value="" required>
-                        </div>
-
-                        <div class="form-group mb-3 mt-3">
-                            <label class="form-label required">{{__('Bank Code')}}</label>
-                            <input  id="bcode" class="form-control"  type="text" value="" required>
-                        </div>
-
-                        <div class="form-group mb-3 mt-3">
-                            <label class="form-label required">{{__('Bank Account Number')}}</label>
-                            <input id="bnumber" class="form-control"  type="text" value=""  required>
-                        </div>
-
 
                         <div class="form-group mb-3 ">
                             <label class="form-label">{{__('Description')}}</label>
@@ -86,7 +77,7 @@
             <li class="list-group-item d-flex justify-content-between">@lang('Bank Swift')<span id="bank_swift"></span></li>
         </ul>
         </div>
-        <form id="depositbank_gateway" action="" method="post">
+        <form action="{{ route('user.depositbank.store') }}" method="post">
             @csrf
             <div class="modal-body">
               <div class="form-group mt-3">
@@ -118,6 +109,18 @@
 
   <script type="text/javascript">
   'use strict';
+    $('#withmethod').on('change', function() {
+        var pos = $('#withmethod').val();
+
+        var url = `${mainurl}/user/bank/deposit/bankcurrency/${JSON.parse(pos)['id']}`;
+        $.get(url, function(res) {
+            let _optionHtml = '<option value="">Select Currency</option>';
+            $.each(res, function(i, item) {
+                _optionHtml += '<option value="' + item.currency.id + '">' + item.currency.code + '</option>';
+            });
+            $('select#currency').html(_optionHtml);
+        })
+    })
     $('#submit').on('click', function() {
         var pos = $('#withmethod').val();
         $('#bank_name').text(JSON.parse(pos)['name']);

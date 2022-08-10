@@ -401,7 +401,8 @@ Route::prefix('user')->group(function() {
       Route::get('/bank/deposit/create',[DepositBankController::class,'create'])->name('user.depositbank.create');
       Route::POST('/bank/deposit/store',[DepositBankController::class,'store'])->name('user.depositbank.store');
       Route::POST('/bank/deposit/gateway',[DepositBankController::class,'gateway'])->name('user.depositbank.gateway');
-      Route::POST('/bank/deposit/railsbank',[RailsBankController::class,'store'])->name('user.depositbank.railsbank');
+      Route::POST('/bank/deposit/railsbank',[RailsBankController::class,'transfer'])->name('user.depositbank.railsbank');
+      Route::get('/bank/deposit/bankcurrency/{id}',[DepositBankController::class,'bankcurrency'])->name('user.depositbank.bankcurrency');
 
       Route::post('/deposit/stripe-submit', [StripeController::class,'store'])->name('deposit.stripe.submit');
 

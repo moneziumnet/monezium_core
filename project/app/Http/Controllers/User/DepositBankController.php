@@ -8,6 +8,7 @@ use App\Models\Generalsetting;
 use App\Models\DepositBank;
 use App\Models\Currency;
 use App\Models\BankGateway;
+use App\Models\BankAccount;
 use App\Models\PlanDetail;
 use Illuminate\Http\Request;
 use App\Models\PaymentGateway;
@@ -31,8 +32,13 @@ class DepositBankController extends Controller
     }
 
     public function create(){
-        $data['banks'] = SubInsBank::get();
+        $data['bankaccounts'] = BankAccount::whereUserId(auth()->id())->pluck('subbank_id');
+        $data['banks'] = SubInsBank::whereIn('id', $data['bankaccounts'])->get();
         return view('user.depositbank.create',$data);
+    }
+
+    public function bankcurrency($id) {
+        return BankAccount::whereUserId(auth()->id())->where('subbank_id', $id)->with('currency')->get();
     }
 
     public function store(Request $request){
