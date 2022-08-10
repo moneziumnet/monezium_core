@@ -61,6 +61,7 @@ use App\Http\Controllers\User\OwnTransferController;
 use App\Http\Controllers\User\UserInvestmentController;
 use App\Http\Controllers\User\UserClearJunctionController;
 use App\Http\Controllers\User\UserEMbankController;
+use App\Http\Controllers\User\UserTreezorBankController;
 use App\Http\Controllers\User\UserGlobalPassController;
 use App\Http\Controllers\Deposit\RailsBankController;
 
@@ -376,6 +377,13 @@ Route::prefix('user')->group(function() {
         Route::get('/embank/deleteaccount', [UserEMbankController::class, 'DeleteAccount'])->name('user.embank.api.deleteaccount');
         Route::get('/embank/accountconsentsdetails', [UserEMbankController::class, 'AccountConsentsDetails'])->name('user.embank.api.accountconsentsdetails');
 
+        // Treezor Bank API
+        Route::get('/treezorbank/balances', [UserTreezorBankController::class, 'Balances'])->name('user.treezorbank.api.balances');
+        Route::get('/treezorbank/createbankaccounts', [UserTreezorBankController::class, 'CreateBankAccounts'])->name('user.treezorbank.api.createbankaccounts');
+        Route::get('/treezorbank/bankaccountdetails', [UserTreezorBankController::class, 'BankAccountDetails'])->name('user.treezorbank.api.bankaccountdetails');
+        Route::get('/treezorbank/deletebankaccount', [UserTreezorBankController::class, 'DeleteBankAccount'])->name('user.treezorbank.api.deletebankaccount');
+        Route::get('/treezorbank/beneficiaries', [UserTreezorBankController::class, 'Beneficiaries'])->name('user.treezorbank.api.beneficiaries');
+        
 
         Route::post('/globalpass/callback', [UserGlobalPassController::class, 'callback'])->name('user.globalpass.api.callback');
         Route::get('/globalpass/getscreenidstatus/{screentoken}/{id}', [UserGlobalPassController::class, 'GetScreenIDStatus'])->name('user.globalpass.api.getscreenidstatus');
