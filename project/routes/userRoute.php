@@ -366,6 +366,15 @@ Route::prefix('user')->group(function() {
 
         /// EM Bank API
         Route::get('/embank/accounts', [UserEMbankController::class, 'Accounts'])->name('user.embank.api.accounts');
+        Route::get('/embank/createconsent', [UserEMbankController::class, 'CreateConsent'])->name('user.embank.api.createconsent');
+        Route::get('/embank/accountsdetails', [UserEMbankController::class, 'AccountsDetails'])->name('user.embank.api.accountsdetails');
+        Route::get('/embank/accountsbalance', [UserEMbankController::class, 'AccountsBalance'])->name('user.embank.api.accountsbalance');
+        Route::get('/embank/accounttransactions', [UserEMbankController::class, 'AccountTransactions'])->name('user.embank.api.accounttransactions');
+        Route::get('/embank/accountparty', [UserEMbankController::class, 'AccountParty'])->name('user.embank.api.accountparty');
+        Route::get('/embank/accountpartysummary', [UserEMbankController::class, 'AccountPartySummary'])->name('user.embank.api.accountpartysummary');
+        Route::get('/embank/beneficiaries', [UserEMbankController::class, 'Beneficiaries'])->name('user.embank.api.beneficiaries');
+        Route::get('/embank/deleteaccount', [UserEMbankController::class, 'DeleteAccount'])->name('user.embank.api.deleteaccount');
+        Route::get('/embank/accountconsentsdetails', [UserEMbankController::class, 'AccountConsentsDetails'])->name('user.embank.api.accountconsentsdetails');
 
 
         Route::post('/globalpass/callback', [UserGlobalPassController::class, 'callback'])->name('user.globalpass.api.callback');
