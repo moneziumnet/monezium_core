@@ -42,7 +42,7 @@
                         </div>
 
                         <div class="form-group mb-3 mt-3">
-                            <label class="form-label required">{{__('Incoming Amount (USD)')}}</label>
+                            <label class="form-label required">{{__('Incoming Amount')}}</label>
                             <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" step="any" value="{{ old('amount') }}" min="1" required>
                         </div>
 
@@ -132,14 +132,14 @@
         $('#modal_amount').val($('#amount').val());
         $('#modal_currency').val($('#currency').val());
         $('#modal_details').val($('#details').val());
-        $.post("{{ route('user.depositbank.gateway') }}",{id:JSON.parse(pos)['id'],_token:'{{csrf_token()}}'},function (res) {
-            console.log(res);
-            if(res.keyword == 'railsbank')
-                {
-                    $('#depositbank_gateway').prop('action','{{ route('user.depositbank.railsbank') }}');
-                }
+        // $.post("{{ route('user.depositbank.gateway') }}",{id:JSON.parse(pos)['id'],_token:'{{csrf_token()}}'},function (res) {
+        //     console.log(res);
+        //     if(res.keyword == 'railsbank')
+        //         {
+        //             $('#depositbank_gateway').prop('action','{{ route('user.depositbank.railsbank') }}');
+        //         }
 
-             });
+        //      });
              $('#modal-success').modal('show');
         })
 

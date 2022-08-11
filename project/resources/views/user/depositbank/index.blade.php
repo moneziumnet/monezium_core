@@ -84,7 +84,7 @@
                                             @php
                                                 $data = DB::table('sub_ins_banks')->where('name', $deposit->method)->first();
                                             @endphp
-                                            <button class="btn btn-primary btn-sm details" data-data="{{json_encode($data)}}">@lang('Details')</button>
+                                            <button class="btn btn-primary btn-sm details" data-data="{{json_encode($data)}}" data-description="{{$deposit->details}}">@lang('Details')</button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -113,6 +113,7 @@
             <li class="list-group-item d-flex justify-content-between">@lang('Bank Iban')<span id="bank_iban"></span></li>
             <li class="list-group-item d-flex justify-content-between">@lang('Bank Swift')<span id="bank_swift"></span></li>
             <li class="list-group-item d-flex justify-content-between">@lang('Amount')<span id="amount"></span></li>
+            <li class="list-group-item d-flex justify-content-between">@lang('Description')<span id="bank_details"></span></li>
         </ul>
         </div>
     </div>
@@ -130,6 +131,7 @@
           $('#bank_address').text($(this).data('data').address);
           $('#bank_iban').text($(this).data('data').iban);
           $('#bank_swift').text($(this).data('data').swift);
+          $('#bank_details').text($(this).data('description'));
           $('#amount').text($('#li_amount').text());
           $('#modal-success').modal('show');
 
