@@ -25,7 +25,6 @@
                   <thead class="thead-light">
                     <tr>
                       <th>{{__('Bank')}}</th>
-                      <th>{{__('Account')}}</th>
                       <th>{{__('Transfer Limit')}}</th>
                       <th>{{__('Transfer Charge')}}</th>
                       <th>{{__('Status')}}</th>
@@ -106,7 +105,6 @@
            ajax: '{{ route('admin.subinstitution.banks.datatables', ['id' => $data->id]) }}',
            columns: [
               { data: 'name', name: 'name' },
-              { data: 'account', name: 'account' },
               { data: 'min_limit', name: 'min_limit' },
               { data: 'fixed_charge', name: 'fixed_charge' },
               { data: 'status', name: 'status' },

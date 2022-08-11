@@ -12,8 +12,6 @@ class SubInsBank extends Model
         'ins_id',
         'name',
         'address',
-        'swift',
-        'iban',
         'status',
     ];
 

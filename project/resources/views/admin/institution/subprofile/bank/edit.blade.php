@@ -42,19 +42,6 @@
                   </div>
               </div>
 
-              <div class="col-md-6">
-                <div class="form-group">
-                    <label for="swift">{{ __('SWIFT/BIC') }}</label>
-                    <input type="text" class="form-control" id="swift" name="swift" placeholder="{{ __('SWIFT/BIC') }}" min="1" value="{{$data->swift}}" required>
-                  </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="form-group">
-                    <label for="iban">{{ __('Account/IBAN') }}</label>
-                    <input type="text" class="form-control" id="iban" name="iban" placeholder="{{ __('Account/IBAN') }}" min="1" value="{{$data->iban}}" required>
-                  </div>
-              </div>
           </div>
           <hr>
 

@@ -44,7 +44,7 @@
                   </div>
               </div>
 
-              <div class="col-md-6">
+              {{-- <div class="col-md-6">
                 <div class="form-group">
                     <label for="swift">{{ __('SWIFT/BIC') }}</label>
                     <input type="text" class="form-control" id="swift" name="swift" placeholder="{{ __('SWIFT/BIC') }}" min="1" value="" required>
@@ -56,7 +56,7 @@
                     <label for="iban">{{ __('Account/IBAN') }}</label>
                     <input type="text" class="form-control" id="iban" name="iban" placeholder="{{ __('Account/IBAN') }}" min="1" value="" required>
                   </div>
-              </div>
+              </div> --}}
          </div>
          <hr>
          <h6 class="m-0 font-weight-bold text-primary mb-3">{{ __('Gateway Details') }}</h6>

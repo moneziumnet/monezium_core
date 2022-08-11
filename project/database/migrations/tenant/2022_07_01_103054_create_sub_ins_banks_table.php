@@ -18,8 +18,6 @@ class CreateSubInsBanksTable extends Migration
             $table->integer('ins_id');
             $table->string('name', 255);
             $table->string('address', 255);
-            $table->string('swift', 100);
-            $table->string('iban', 100);
             $table->boolean('status')->default(true)->comment('0 == \'pending\'
 1 == \'completed\'
 2 == \'reject\'');
