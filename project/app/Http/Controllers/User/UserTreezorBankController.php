@@ -94,7 +94,7 @@ class UserTreezorBankController extends Controller
     
     public function Beneficiaries(Request $request) {
         $client = new  Client();
-        $response = $client->request('DELETE', $this->url.'beneficiaries', [
+        $response = $client->request('GET', $this->url.'beneficiaries', [
             'body' => json_encode($request->all()),
             'headers' => [
                 'Accept'=> 'application/json',
