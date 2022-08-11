@@ -10,6 +10,7 @@ use App\Models\Currency;
 use App\Models\PlanDetail;
 use App\Models\DepositBank;
 use App\Models\Admin;
+use App\Models\Generalsetting;
 use App\Models\SubInsBank;
 use App\Models\BankPoolAccount;
 use App\Models\User;
@@ -98,78 +99,7 @@ class RailsBankController extends Controller
         $data->save();
         return redirect()->back()->with(array('message' => 'Bank Account has been created successfully'));
 
-        // return response()->json('Bank Account has been created successfully');
-        // $response = $client->request('POST', 'https://play.railsbank.com/dev/customer/transactions/receive', [
-        //     'body' => '{
-        //         "iban": "'.$iban.'",
-        //         "bic-swift": "'.$bic_swift.'",
-        //         "amount": 10
-        //       }'
-        //     ,
-        //     'headers' => [
-        //         'Accept'=> 'application/json',
-        //         'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
-        //         'Content-Type' => 'application/json',
-        //         ],
-        // ]);
-////////////////////////////// test mode end /////////////////////////////////////////////////////
-        // $response = $client->request('POST', 'https://play.railsbank.com/v1/customer/ledgers/'.$ledger.'/external-accounts', [
-        //     'body' => '{
-        //         "number": "'.$request->banknumber.'",
-        //         "bank_code": "'.$request->bankcode.'",
-        //         "name": "'.$user->name.'",
-        //         "account_type": "routing-number",
-        //         "bank_name": "'.$request->bankname.'",
-        //         "type": "",
-        //         "legal_type": "person",
-        //         "external_account_meta": {}
-        //       }'
-        //     ,
-        //     'headers' => [
-        //         'Accept'=> 'application/json',
-        //         'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
-        //         'Content-Type' => 'application/json',
-        //         ],
-        // ]);
-        // $external_account = json_decode($response->getBody())->external_account_id;
 
-        // $response = $client->request('POST','https://play.railsbank.com/v1/customer/beneficiaries', [
-        //     'body' => '{
-        //         "holder_id": "'.$enduser.'",
-        //         "asset_class": "currency",
-        //         "asset_type": "eur",
-        //         "iban": "'.$subbank->iban.'",
-        //         "bic_swift": "'.$subbank->swift.'",
-        //         "person": {
-        //           "name": "'.$subuser->name.'",
-        //           "email": "'.$subuser->email.'",
-        //           "address": { "address_iso_country": "US" }
-        //         }
-        //       }',
-        //     'headers' => [
-        //         'Accept'=> 'application/json',
-        //         'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
-        //         'Content-Type' => 'application/json',
-        //     ],
-        // ]);
-        // $beneficiary = json_decode($response->getBody())->beneficiary_id;
-
-        // $response = $client->request('POST', 'https://play.railsbank.com/v1/customer/transactions', [
-        //     'body' => '{
-        //         "ledger_from_id": "'.$ledger.'",
-        //         "beneficiary_id": "'.$beneficiary.'",
-        //         "payment_type": "payment-type-EU-SEPA-Step2",
-        //         "amount": "'.$request->amount.'"
-        //       }',
-        //     'headers' => [
-        //        'Accept'=> 'application/json',
-        //       'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
-        //       'Content-Type' => 'application/json',
-        //     ],
-        //   ]);
-        // $transaction = json_decode($response->getBody())->transaction_id;
-
-        // return redirect()->route('user.depositbank.create')->with('success','Deposit amount '.$request->amount.' ('.$currency->code.') successfully!');
     }
     public function transfer(Request $request) {
         $currency = Currency::where('id',$request->currency_id)->first();

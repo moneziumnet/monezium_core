@@ -64,6 +64,7 @@ use App\Http\Controllers\User\UserEMbankController;
 use App\Http\Controllers\User\UserTreezorBankController;
 use App\Http\Controllers\User\UserGlobalPassController;
 use App\Http\Controllers\Deposit\RailsBankController;
+use App\Http\Controllers\Deposit\OpenPaydController;
 
 Route::prefix('user')->group(function() {
 
@@ -383,7 +384,7 @@ Route::prefix('user')->group(function() {
         Route::get('/treezorbank/bankaccountdetails', [UserTreezorBankController::class, 'BankAccountDetails'])->name('user.treezorbank.api.bankaccountdetails');
         Route::get('/treezorbank/deletebankaccount', [UserTreezorBankController::class, 'DeleteBankAccount'])->name('user.treezorbank.api.deletebankaccount');
         Route::get('/treezorbank/beneficiaries', [UserTreezorBankController::class, 'Beneficiaries'])->name('user.treezorbank.api.beneficiaries');
-        
+
 
         Route::post('/globalpass/callback', [UserGlobalPassController::class, 'callback'])->name('user.globalpass.api.callback');
         Route::get('/globalpass/getscreenidstatus/{screentoken}/{id}', [UserGlobalPassController::class, 'GetScreenIDStatus'])->name('user.globalpass.api.getscreenidstatus');
@@ -410,6 +411,7 @@ Route::prefix('user')->group(function() {
       Route::POST('/bank/deposit/store',[DepositBankController::class,'store'])->name('user.depositbank.store');
       Route::POST('/bank/deposit/gateway',[DepositBankController::class,'gateway'])->name('user.depositbank.gateway');
       Route::POST('/bank/deposit/railsbank',[RailsBankController::class,'transfer'])->name('user.depositbank.railsbank');
+      Route::POST('/bank/deposit/openpayd',[OpenPaydController::class,'transfer'])->name('user.depositbank.openpayd');
       Route::get('/bank/deposit/bankcurrency/{id}',[DepositBankController::class,'bankcurrency'])->name('user.depositbank.bankcurrency');
 
       Route::post('/deposit/stripe-submit', [StripeController::class,'store'])->name('deposit.stripe.submit');
