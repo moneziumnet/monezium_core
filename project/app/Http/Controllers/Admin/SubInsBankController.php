@@ -75,7 +75,7 @@ class SubInsBankController extends Controller
                                     '.'Actions' .'
                                   </button>
                                   <div class="dropdown-menu" x-placement="bottom-start">
-                                    <a href="' . route('admin.subinstitution.banks.balance',$data->id) . '"  class="dropdown-item">'.__("balance").'</a>
+                                    <a href="' . route('admin.subinstitution.banks.account',$data->id) . '"  class="dropdown-item">'.__("Account").'</a>
                                     <a href="' . route('admin.subinstitution.banks.edit',$data->id) . '"  class="dropdown-item">'.__("Edit").'</a>
                                     <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.  route('admin.subinstitution.banks.delete',$data->id).'">'.__("Delete").'</a>
                                   </div>
@@ -145,10 +145,10 @@ class SubInsBankController extends Controller
         return view('admin.institution.subprofile.bank.edit',$data);
     }
 
-    public function balance(Request $request, $id){
+    public function account(Request $request, $id){
         $data['data'] = SubInsBank::findOrFail($id);
-        $data['bank_balance'] = BankPoolAccount::where('bank_id', $id)->get();
-        return view('admin.institution.subprofile.bank.balance',$data);
+        $data['bank_account'] = BankPoolAccount::where('bank_id', $id)->get();
+        return view('admin.institution.subprofile.bank.account',$data);
     }
 
     public function update(Request $request, $id){

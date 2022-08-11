@@ -17,6 +17,8 @@ class CreateBankPoolAccounts extends Migration
             $table->bigIncrements('id');
             $table->integer('bank_id');
             $table->integer('currency_id');
+            $table->string('iban');
+            $table->string('swift');
             $table->decimal('balance', 20, 10)->default(0);
             $table->timestamps();
         });

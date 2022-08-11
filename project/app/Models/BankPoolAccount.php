@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class BankPoolAccount extends Model
 {
     use HasFactory;
-    protected $fillable = ['bank_id','currency_id','balance'];
+    protected $fillable = ['bank_id','currency_id','iban','swift','balance'];
 
     public function bank()
     {

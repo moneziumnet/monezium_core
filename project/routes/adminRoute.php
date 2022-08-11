@@ -169,7 +169,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/banks/create', [SubInsBankController::class, 'create'])->name('admin.subinstitution.banks.create');
     Route::post('/banks/store', [SubInsBankController::class, 'store'])->name('admin.subinstitution.banks.store');
     Route::get('/banks/edit/{id}', [SubInsBankController::class, 'edit'])->name('admin.subinstitution.banks.edit');
-    Route::get('/banks/balance/{id}', [SubInsBankController::class, 'balance'])->name('admin.subinstitution.banks.balance');
+    Route::get('/banks/account/{id}', [SubInsBankController::class, 'account'])->name('admin.subinstitution.banks.account');
 
     Route::post('/banks/update/{id}', [SubInsBankController::class, 'update'])->name('admin.subinstitution.banks.update');
     Route::get('/banks/delete/{id}', [SubInsBankController::class, 'destroy'])->name('admin.subinstitution.banks.delete');
