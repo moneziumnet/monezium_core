@@ -75,9 +75,10 @@
             <li class="list-group-item d-flex justify-content-between">@lang('Bank Address')<span id="bank_address"></span></li>
             <li class="list-group-item d-flex justify-content-between">@lang('Bank Iban')<span id="bank_iban"></span></li>
             <li class="list-group-item d-flex justify-content-between">@lang('Bank Swift')<span id="bank_swift"></span></li>
+            <li class="list-group-item d-flex justify-content-between">@lang('Description')<span id="bank_description"></span></li>
         </ul>
         </div>
-        <form action="{{ route('user.depositbank.store') }}" method="post">
+        <form id="depositbank_gateway" action="{{ route('user.depositbank.store') }}" method="post">
             @csrf
             <div class="modal-body">
               <div class="form-group mt-3">
@@ -86,10 +87,8 @@
                 <input type="hidden" name="currency_id" value="1">
                 <input type="hidden" name="method" id="modal_method" value="">
                 <input type="hidden" name="amount" id="modal_amount" value="">
+                <input type="hidden" name="currency" id="modal_currency" value="">
                 <input type="hidden" name="details" id="modal_details" value="">
-                <input type="hidden" name="bankname" id="modal_bank_name" value="">
-                <input type="hidden" name="bankcode" id="modal_bank_code" value="">
-                <input type="hidden" name="banknumber" id="modal_bank_number" value="">
                 <input type="hidden" name="bank" id="modal_bank" value="">
               </div>
             </div>
@@ -127,13 +126,12 @@
         $('#bank_address').text(JSON.parse(pos)['address']);
         $('#bank_iban').text(JSON.parse(pos)['iban']);
         $('#bank_swift').text(JSON.parse(pos)['swift']);
+        $('#bank_description').text($('#details').val());
         $('#modal_method').val(JSON.parse(pos)['name']);
         $('#modal_bank').val(JSON.parse(pos)['id']);
         $('#modal_amount').val($('#amount').val());
+        $('#modal_currency').val($('#currency').val());
         $('#modal_details').val($('#details').val());
-        $('#modal_bank_name').val($('#bname').val());
-        $('#modal_bank_code').val($('#bcode').val());
-        $('#modal_bank_number').val($('#bnumber').val());
         $.post("{{ route('user.depositbank.gateway') }}",{id:JSON.parse(pos)['id'],_token:'{{csrf_token()}}'},function (res) {
             console.log(res);
             if(res.keyword == 'railsbank')
