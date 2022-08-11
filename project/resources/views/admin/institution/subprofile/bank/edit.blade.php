@@ -57,6 +57,8 @@
               </div>
           </div>
           <hr>
+
+          @if($bank_gateway)
           <h6 class="m-0 font-weight-bold text-primary mb-3">{{ __('Gateway Details') }} ( {{$bank_gateway->name}} )</h6>
           <div class="row">
             @foreach($bank_gateway->information as $key => $value)
@@ -67,8 +69,8 @@
                     </div>
                 </div>
             @endforeach
-
           </div>
+          @endif
 
           <div class="row d-flex justify-content-center">
               <button type="submit" id="submit-btn" class="btn btn-primary w-100 mt-3">{{ __('Submit') }}</button>
