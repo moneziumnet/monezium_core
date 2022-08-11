@@ -140,7 +140,35 @@ class SubInsBankController extends Controller
     public function account(Request $request, $id){
         $data['data'] = SubInsBank::findOrFail($id);
         $data['bank_account'] = BankPoolAccount::where('bank_id', $id)->get();
+        $data['currencylist'] = Currency::wherestatus(1)->where('type', 1)->get();
+
         return view('admin.institution.subprofile.bank.account',$data);
+    }
+
+    public function subbank_account_create(Request $request) {
+        $rules = [
+            'swift' => 'required',
+            'iban' => 'required',
+            'bank_id' => 'required',
+            'currency_id' => 'required',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return redirect()->back()->with(array('errors' => $validator->getMessageBag()->toArray()));
+        }
+
+        $bankaccount = BankPoolAccount::where('bank_id', $request->bank_id)->where('currency_id', $request->currency_id)->first();
+        if ($bankaccount){
+            return redirect()->back()->with(array('warning' => 'This bank account already exists.'));
+
+        }
+
+        $data = new BankPoolAccount();
+        $input = $request->all();
+        $data->fill($input)->save();
+        return redirect()->back()->with(array('message' => 'Bank Account has been created successfully'));
     }
 
     public function update(Request $request, $id){
