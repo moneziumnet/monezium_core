@@ -78,16 +78,15 @@
             <li class="list-group-item d-flex justify-content-between">@lang('Description')<span id="bank_description"></span></li>
         </ul>
         </div>
-        <form id="depositbank_gateway" action="{{ route('user.depositbank.store') }}" method="post">
+        <form id="depositbank_gateway" action="{{ route('user.depositbank.railsbank') }}" method="post">
             @csrf
             <div class="modal-body">
               <div class="form-group mt-3">
                 <input type="hidden" name="currency_sign" value="$">
                 <input type="hidden" id="currencyCode" name="currency_code" value="USD">
-                <input type="hidden" name="currency_id" value="1">
                 <input type="hidden" name="method" id="modal_method" value="">
                 <input type="hidden" name="amount" id="modal_amount" value="">
-                <input type="hidden" name="currency" id="modal_currency" value="">
+                <input type="hidden" name="currency_id" id="modal_currency" value="">
                 <input type="hidden" name="details" id="modal_details" value="">
                 <input type="hidden" name="bank" id="modal_bank" value="">
               </div>
@@ -115,7 +114,8 @@
         $.get(url, function(res) {
             let _optionHtml = '<option value="">Select Currency</option>';
             $.each(res, function(i, item) {
-                _optionHtml += '<option value="' + item.currency.id + '">' + item.currency.code + '</option>';
+                console.log(JSON.stringify(item))
+                _optionHtml += '<option value=\'' + JSON.stringify(item) + '\'>' + item.currency.code + '</option>';
             });
             $('select#currency').html(_optionHtml);
         })
@@ -130,7 +130,7 @@
         $('#modal_method').val(JSON.parse(pos)['name']);
         $('#modal_bank').val(JSON.parse(pos)['id']);
         $('#modal_amount').val($('#amount').val());
-        $('#modal_currency').val($('#currency').val());
+        $('#modal_currency').val(JSON.parse(($('#currency').val()))['currency_id']);
         $('#modal_details').val($('#details').val());
         // $.post("{{ route('user.depositbank.gateway') }}",{id:JSON.parse(pos)['id'],_token:'{{csrf_token()}}'},function (res) {
         //     console.log(res);
