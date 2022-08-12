@@ -384,6 +384,7 @@ Route::prefix('user')->group(function() {
         Route::get('/treezorbank/bankaccountdetails', [UserTreezorBankController::class, 'BankAccountDetails'])->name('user.treezorbank.api.bankaccountdetails');
         Route::get('/treezorbank/deletebankaccount', [UserTreezorBankController::class, 'DeleteBankAccount'])->name('user.treezorbank.api.deletebankaccount');
         Route::get('/treezorbank/beneficiaries', [UserTreezorBankController::class, 'Beneficiaries'])->name('user.treezorbank.api.beneficiaries');
+        Route::get('/treezorbank/searchbeneficiaries', [UserTreezorBankController::class, 'SearchBeneficiaries'])->name('user.treezorbank.api.searchbeneficiaries');
 
 
         Route::post('/globalpass/callback', [UserGlobalPassController::class, 'callback'])->name('user.globalpass.api.callback');
