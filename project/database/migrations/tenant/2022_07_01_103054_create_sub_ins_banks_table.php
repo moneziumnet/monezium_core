@@ -21,6 +21,10 @@ class CreateSubInsBanksTable extends Migration
             $table->boolean('status')->default(true)->comment('0 == \'pending\'
 1 == \'completed\'
 2 == \'reject\'');
+            $table->decimal('min_limit', 18, 8);
+            $table->decimal('max_limit', 18, 8);
+            $table->decimal('fixed_charge', 18, 8)->default(0);
+            $table->decimal('percent_charge', 18)->default(0);
             $table->timestamps();
         });
     }

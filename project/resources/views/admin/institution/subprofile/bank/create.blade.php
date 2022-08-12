@@ -44,6 +44,34 @@
                   </div>
               </div>
 
+              <div class="col-md-6">
+                <div class="form-group">
+                    <label for="min_limit">{{ __('Minimum Amount') }} </label>
+                    <input type="number" class="form-control" id="min_limit" name="min_limit" placeholder="{{ __('0') }}" min="1" value="" required>
+                  </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                    <label for="max_limit">{{ __('Maximum Amount') }} </label>
+                    <input type="number" class="form-control" id="max_limit" name="max_limit" placeholder="{{ __('0') }}" min="1" value="" required>
+                  </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                    <label for="fixed_charge">{{ __('Fixed Charge') }}</label>
+                    <input type="number" class="form-control" id="fixed_charge" name="fixed_charge" placeholder="{{ __('0') }}" min="1" value="" required>
+                  </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                    <label for="percent_charge">{{ __('Percent Charge') }} (%)</label>
+                    <input type="number" class="form-control" id="percent_charge" name="percent_charge" placeholder="{{ __('0') }}" min="1" value="" required>
+                  </div>
+              </div>
+
          </div>
          <hr>
          <h6 class="m-0 font-weight-bold text-primary mb-3">{{ __('Gateway Details') }}</h6>

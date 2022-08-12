@@ -13,6 +13,10 @@ class SubInsBank extends Model
         'name',
         'address',
         'status',
+        'min_limit',
+        'max_limit',
+        'fixed_charge',
+        'percent_charge',
     ];
 
     public function transfers(){

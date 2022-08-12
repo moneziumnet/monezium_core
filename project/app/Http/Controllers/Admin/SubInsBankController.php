@@ -95,6 +95,10 @@ class SubInsBankController extends Controller
         $rules = [
             'name' => 'required|max:255',
             'address' => 'required',
+            'min_limit' => 'required',
+            'max_limit' => 'required',
+            'fixed_charge' => 'required',
+            'percent_charge' => 'required',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -175,6 +179,10 @@ class SubInsBankController extends Controller
         $rules = [
             'name' => 'required|max:255',
             'address' => 'required',
+            'min_limit' => 'required',
+            'max_limit' => 'required',
+            'fixed_charge' => 'required',
+            'percent_charge' => 'required',
         ];
 
         $validator = Validator::make($request->all(), $rules);
