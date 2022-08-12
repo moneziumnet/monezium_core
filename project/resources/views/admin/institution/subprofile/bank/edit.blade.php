@@ -51,8 +51,8 @@
             @foreach($bank_gateway->information as $key => $value)
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="{{__($key)}}">{{ __($key) }}</label>
-                        <input type="text" class="form-control" id="{{$key}}" name="key[{{__($key)}}]" placeholder="{{ __('Please input correct value') }}" value="{{$value}}" required>
+                        <label for="{{strval($key)}}">{{ strval($key) }}</label>
+                        <input type="text" class="form-control" id="{{$key}}" name="key[{{strval($key)}}]" placeholder="{{ __('Please input correct value') }}" value="{{$value}}" required>
                     </div>
                 </div>
             @endforeach
