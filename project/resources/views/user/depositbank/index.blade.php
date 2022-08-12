@@ -71,7 +71,7 @@
 
                                         <td data-label="{{ __('Amount') }}">
                                           <div id="li_amount">
-                                            {{ showprice($deposit->amount,$currency) }}
+                                            {{ showprice($deposit->amount,$deposit->currency) }}
                                           </div>
                                         </td>
 
@@ -82,9 +82,10 @@
                                         </td>
                                         <td data-label="@lang('Details')" class="text-end">
                                             @php
-                                                $data = DB::table('sub_ins_banks')->where('name', $deposit->method)->first();
+                                                $subbank = DB::table('sub_ins_banks')->where('name', $deposit->method)->first();
+                                                $data = DB::table('bank_accounts')->whereUserId(auth()->id())->where('subbank_id', $subbank->id)->where('currency_id', $deposit->currency_id)->first();
                                             @endphp
-                                            <button class="btn btn-primary btn-sm details" data-data="{{json_encode($data)}}" data-description="{{$deposit->details}}">@lang('Details')</button>
+                                            <button class="btn btn-primary btn-sm details" data-data="{{json_encode($data)}}" data-subbank="{{json_encode($subbank)}}" data-description="{{$deposit->details}}">@lang('Details')</button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -127,8 +128,8 @@
 <script type="text/javascript">
     'use strict';
       $('.details').on('click', function() {
-          $('#bank_name').text($(this).data('data').name);
-          $('#bank_address').text($(this).data('data').address);
+          $('#bank_name').text($(this).data('subbank').name);
+          $('#bank_address').text($(this).data('subbank').address);
           $('#bank_iban').text($(this).data('data').iban);
           $('#bank_swift').text($(this).data('data').swift);
           $('#bank_details').text($(this).data('description'));

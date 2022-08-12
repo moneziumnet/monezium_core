@@ -124,8 +124,8 @@
         var pos = $('#withmethod').val();
         $('#bank_name').text(JSON.parse(pos)['name']);
         $('#bank_address').text(JSON.parse(pos)['address']);
-        $('#bank_iban').text(JSON.parse(pos)['iban']);
-        $('#bank_swift').text(JSON.parse(pos)['swift']);
+        $('#bank_iban').text(JSON.parse(($('#currency').val()))['iban']);
+        $('#bank_swift').text(JSON.parse(($('#currency').val()))['swift']);
         $('#bank_description').text($('#details').val());
         $('#modal_method').val(JSON.parse(pos)['name']);
         $('#modal_bank').val(JSON.parse(pos)['id']);

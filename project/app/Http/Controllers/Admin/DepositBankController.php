@@ -8,6 +8,7 @@ use App\Models\Currency;
 use App\Models\DepositBank;
 use App\Models\PlanDetail;
 use App\Models\SubInsBank;
+use App\Models\BankAccount;
 use App\Models\Generalsetting;
 use App\Models\Transaction;
 use App\Models\User;
@@ -58,9 +59,10 @@ class DepositBankController extends Controller
                         })
                         ->editColumn('action', function(DepositBank $data) {
                             $detail = SubInsBank::where('name', $data->method)->first();
+                            $bankaccount = BankAccount::whereUserId($data->user_id)->where('subbank_id', $detail->id)->where('currency_id', $data->currency_id)->first();
                             $detail->address = str_replace(' ', '-', $detail->address);
                             $detail->name = str_replace(' ', '-', $detail->name);
-                            return '<input type="hidden", id="sub_data", value ='.json_encode($detail).'>'.' <a href="javascript:;"   onclick=getDetails('.json_encode($detail).') class="detailsBtn" >
+                            return '<input type="hidden", id="sub_data", value ='.json_encode($detail).'>'.' <a href="javascript:;"   onclick=getDetails('.json_encode($detail).','.json_encode($bankaccount).') class="detailsBtn" >
                             ' . __("Details") . '</a>';
                         })
                         ->rawColumns(['created_at','customer_name','customer_email','amount','status', 'action'])

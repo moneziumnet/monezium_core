@@ -119,11 +119,11 @@
             }
         });
 
-        function getDetails(res_data) {
+        function getDetails(res_data, bankaccount) {
             $('#bank_name').text(res_data.name.replace(/-/gi, ' '));
             $('#bank_address').text(res_data.address.replace(/-/gi, ' '));
-            $('#bank_iban').text(res_data.iban);
-            $('#bank_swift').text(res_data.swift);
+            $('#bank_iban').text(bankaccount.iban);
+            $('#bank_swift').text(bankaccount.swift);
             $('#modal-success').modal('show');
         }
 
