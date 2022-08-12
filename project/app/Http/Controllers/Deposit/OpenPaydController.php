@@ -135,7 +135,7 @@ class OpenPaydController extends Controller
             $auth_token = $res_body->access_token;
             $accounter_id = $res_body->accountHolderId;
         } catch (\Throwable $th) {
-             return redirect()->back()->with(array('warning' => '1Some Value is incorrect'));
+             return redirect()->back()->with(array('warning' => 'Some Valuen is incorrect '));
         }
 
 
@@ -156,7 +156,7 @@ class OpenPaydController extends Controller
                 return redirect()->back()->with(array('warning' => 'Insufficient Balance.'));
             }
         } catch (\Throwable $th) {
-             return redirect()->back()->with(array('warning' => '3Some Value is incorrect'));
+             return redirect()->back()->with(array('warning' => 'Some Value is incorrect'));
         }
 
         try {
@@ -176,7 +176,7 @@ class OpenPaydController extends Controller
             $res_body = json_decode($response->getBody());
             $beneficiary_id = $res_body->id;
         } catch (\Throwable $th) {
-             return redirect()->back()->with(array('warning' => '3Some Value is incorrect'));
+             return redirect()->back()->with(array('warning' => 'Some Value is incorrect'));
         }
 
         try {
@@ -202,7 +202,7 @@ class OpenPaydController extends Controller
             $res_body = json_decode($response->getBody());
             $beneficiary_id = $res_body->id;
         } catch (\Throwable $th) {
-             return redirect()->back()->with(array('warning' => $th->getMessage()));
+             return redirect()->back()->with(array('warning' => 'Some Value is incorrect'));
         }
 
         try {
@@ -225,7 +225,7 @@ class OpenPaydController extends Controller
             $res_body = json_decode($response->getBody());
             $transaction_id = $res_body->id;
         } catch (\Throwable $th) {
-             return redirect()->back()->with(array('warning' => $th->getMessage()));
+             return redirect()->back()->with(array('warning' => 'Some Value is incorrect'));
         }
 
 

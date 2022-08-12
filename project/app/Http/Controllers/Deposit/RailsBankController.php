@@ -147,8 +147,7 @@ class RailsBankController extends Controller
                 return redirect()->back()->with(array('warning' => 'Insufficient Balance.'));
             }
         } catch (\Throwable $th) {
-            // return $th->getMessage();
-            return redirect()->back()->with(array('warning' => $th->getMessage()));
+            return redirect()->back()->with(array('warning' => 'Some Value is incorrect'));
         }
 
 
@@ -176,8 +175,7 @@ class RailsBankController extends Controller
 
             $beneficiary = json_decode($response->getBody())->beneficiary_id;
         } catch (\Throwable $th) {
-                    // return $th->getMessage();
-            return redirect()->back()->with(array('warning' => '1:'.$th->getMessage()));
+            return redirect()->back()->with(array('warning' => 'Some Value is incorrect'));
         }
         try {
             $response = $client->request('POST', 'https://play.railsbank.com/v1/customer/transactions', [
@@ -195,7 +193,7 @@ class RailsBankController extends Controller
               ]);
             $transaction = json_decode($response->getBody())->transaction_id;
         } catch (\Throwable $th) {
-            return redirect()->back()->with(array('warning' => $th->getMessage()));
+            return redirect()->back()->with(array('warning' => 'Some Value is incorrect'));
         }
 
         return $transaction;
