@@ -159,6 +159,40 @@ class UserTreezorBankController extends Controller
           ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
+    
+    public function Businesssearchs(Request $request) {
+        $client = new  Client();
+        $response = $client->request('GET', $this->url.'businesssearchs', [
+            'body' => json_encode($request->all()),
+            'headers' => [
+                'Accept'=> 'application/json',
+                'Authorization' => 'API-Key '.$this->API_Key,
+                'accessSignature' => $this->accessSignature,
+                'accessTag' => $this->accessTag,
+                'accessUserId' => $this->accessUserId,
+                'accessUserIp' => $this->accessUserIp,
+                'Content-Type' => 'application/json',
+            ],
+          ]);
+        return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+    }
+    
+    public function Businessinformations(Request $request) {
+        $client = new  Client();
+        $response = $client->request('GET', $this->url.'businessinformations', [
+            'body' => json_encode($request->all()),
+            'headers' => [
+                'Accept'=> 'application/json',
+                'Authorization' => 'API-Key '.$this->API_Key,
+                'accessSignature' => $this->accessSignature,
+                'accessTag' => $this->accessTag,
+                'accessUserId' => $this->accessUserId,
+                'accessUserIp' => $this->accessUserIp,
+                'Content-Type' => 'application/json',
+            ],
+          ]);
+        return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+    }
 
     
     
