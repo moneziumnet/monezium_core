@@ -95,6 +95,7 @@ class OpenPaydController extends Controller
         $currency = Currency::where('id',$request->currency_id)->first();
         $amountToAdd = $request->amount/$currency->rate;
         $user = auth()->user();
+        $subbank = SubInsBank::where('id', $request->bank)->first();
         $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'deposit')->first();
         $dailydeposit = DepositBank::where('user_id', $user->id)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus('complete')->sum('amount');
         $monthlydeposit = DepositBank::where('user_id', $user->id)->whereMonth('created_at', '=', date('m'))->whereStatus('complete')->sum('amount');
@@ -103,6 +104,11 @@ class OpenPaydController extends Controller
            return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
 
         }
+
+        if ( $request->amount < $subbank->min_limit ||  $request->amount > $subbank->max_limit) {
+            return redirect()->back()->with('unsuccess','Your amount is not in defined bank limit range. Max value is '.$subbank->max_limit.' and Min value is '.$subbank->min_limit );
+
+         }
 
         if($dailydeposit > $global_range->daily_limit){
             return redirect()->back()->with('unsuccess','Daily deposit limit over.');
