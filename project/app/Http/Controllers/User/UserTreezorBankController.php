@@ -125,6 +125,40 @@ class UserTreezorBankController extends Controller
           ]);
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
+    
+    public function GetBeneficiaries(Request $request) {
+        $client = new  Client();
+        $response = $client->request('GET', $this->url.'beneficiaries/'.$request->input('id'), [
+            'body' => json_encode($request->all()),
+            'headers' => [
+                'Accept'=> 'application/json',
+                'Authorization' => 'API-Key '.$this->API_Key,
+                'accessSignature' => $this->accessSignature,
+                'accessTag' => $this->accessTag,
+                'accessUserId' => $this->accessUserId,
+                'accessUserIp' => $this->accessUserIp,
+                'Content-Type' => 'application/json',
+            ],
+          ]);
+        return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+    }
+    
+    public function UpdateBeneficiaries(Request $request) {
+        $client = new  Client();
+        $response = $client->request('PUT', $this->url.'beneficiaries/'.$request->input('id'), [
+            'body' => json_encode($request->all()),
+            'headers' => [
+                'Accept'=> 'application/json',
+                'Authorization' => 'API-Key '.$this->API_Key,
+                'accessSignature' => $this->accessSignature,
+                'accessTag' => $this->accessTag,
+                'accessUserId' => $this->accessUserId,
+                'accessUserIp' => $this->accessUserIp,
+                'Content-Type' => 'application/json',
+            ],
+          ]);
+        return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+    }
 
     
     
