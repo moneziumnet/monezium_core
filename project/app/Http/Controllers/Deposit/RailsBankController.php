@@ -209,7 +209,7 @@ class RailsBankController extends Controller
         $deposit['amount'] = $amountToAdd;
         $deposit['method'] = $request->method;
         $deposit['sub_bank_id'] = $request->bank;
-        $deposit['txnid'] = $request->txnid;
+        $deposit['txnid'] = $transaction;
         $deposit['details'] = $request->details;
         $deposit['status'] = "pending";
         $deposit->save();

@@ -150,7 +150,7 @@ class OpenPaydController extends Controller
               ]);
               $res_body = json_decode($response->getBody())->content[0];
 
-            $account_id = $res_body->internalAccountId;
+            $account_id = $res_body->id;
             $amount = $res_body->availableBalance->value;
             if ($amount < $request->amount) {
                 return redirect()->back()->with(array('warning' => 'Insufficient Balance.'));
@@ -227,8 +227,6 @@ class OpenPaydController extends Controller
         } catch (\Throwable $th) {
              return redirect()->back()->with(array('warning' => $th->getMessage()));
         }
-        return $transaction_id;
-
 
 
         $txnid = Str::random(4).time();
@@ -239,7 +237,7 @@ class OpenPaydController extends Controller
         $deposit['amount'] = $amountToAdd;
         $deposit['method'] = $request->method;
         $deposit['sub_bank_id'] = $request->bank;
-        $deposit['txnid'] = $request->txnid;
+        $deposit['txnid'] = $transaction_id;
         $deposit['details'] = $request->details;
         $deposit['status'] = "pending";
         $deposit->save();

@@ -78,7 +78,7 @@
             <li class="list-group-item d-flex justify-content-between">@lang('Description')<span id="bank_description"></span></li>
         </ul>
         </div>
-        <form id="depositbank_gateway" action="{{ route('user.depositbank.railsbank') }}" method="post">
+        <form id="depositbank_gateway" action="{{ route('user.depositbank.store') }}" method="post">
             @csrf
             <div class="modal-body">
               <div class="form-group mt-3">
@@ -132,14 +132,18 @@
         $('#modal_amount').val($('#amount').val());
         $('#modal_currency').val(JSON.parse(($('#currency').val()))['currency_id']);
         $('#modal_details').val($('#details').val());
-        // $.post("{{ route('user.depositbank.gateway') }}",{id:JSON.parse(pos)['id'],_token:'{{csrf_token()}}'},function (res) {
-        //     console.log(res);
-        //     if(res.keyword == 'railsbank')
-        //         {
-        //             $('#depositbank_gateway').prop('action','{{ route('user.depositbank.railsbank') }}');
-        //         }
+        $.post("{{ route('user.depositbank.gateway') }}",{id:JSON.parse(pos)['id'],_token:'{{csrf_token()}}'},function (res) {
+            console.log(res);
+            if(res.keyword == 'railsbank')
+                {
+                    $('#depositbank_gateway').prop('action','{{ route('user.depositbank.railsbank') }}');
+                }
+            if(res.keyword == 'openpayd')
+                {
+                    $('#depositbank_gateway').prop('action','{{ route('user.depositbank.openpayd') }}');
+                }
 
-        //      });
+             });
              $('#modal-success').modal('show');
         })
 
