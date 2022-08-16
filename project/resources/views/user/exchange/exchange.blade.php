@@ -43,7 +43,7 @@
                                 $userType = explode(',', auth()->user()->user_type);
                                 $supervisor = DB::table('customer_types')->where('type_name', 'Supervisors')->first()->id;
                                 $merchant = DB::table('customer_types')->where('type_name', 'Merchants')->first()->id;
-                                $wallet_type_list = array('0'=>'All', '1'=>'Current', '2'=>'Card', '3'=>'Deposit', '4'=>'Loan', '5'=>'Escrow');
+                                $wallet_type_list = array('0'=>'All', '1'=>'Current', '2'=>'Card', '3'=>'Deposit', '4'=>'Loan', '5'=>'Escrow', '8'=>'Crypto');
                                 if(in_array($supervisor, $userType)) {
                                     $wallet_type_list['6'] = 'Supervisor';
                                 }

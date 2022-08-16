@@ -27,7 +27,7 @@
                 $userType = explode(',', $data->user_type);
                 $supervisor = DB::table('customer_types')->where('type_name', 'Supervisors')->first()->id;
                 $merchant = DB::table('customer_types')->where('type_name', 'Merchants')->first()->id;
-                $accounttype = array('0'=>'All', '1'=>'Current', '2'=>'Card', '3'=>'Deposit', '4'=>'Loan', '5'=>'Escrow');
+                $accounttype = array('0'=>'All', '1'=>'Current', '2'=>'Card', '3'=>'Deposit', '4'=>'Loan', '5'=>'Escrow', '8'=>'Crypto');
                 if(in_array($supervisor, $userType)) {
                     $accounttype['6'] = 'Supervisor';
                 }
@@ -35,7 +35,7 @@
                 if(in_array($merchant, $userType)) {
                     $accounttype['7'] = 'Merchant';
                 }
-                $curlist = DB::table('currencies')->get();
+                $curlist = DB::table('currencies')->whereType('1')->get();
             @endphp
 
           <div class="card-body">
@@ -46,11 +46,12 @@
                 <div class="col-3 mr-3">
                     <select class="col-lg select mb-3 input-field" id="wallet_type">
                         <option value="0"> {{'All'}} </option>
-                        <option value="1"> {{'Curreny'}} </option>
+                        <option value="1"> {{'Current'}} </option>
                         <option value="2"> {{'Card'}} </option>
                         <option value="3"> {{'Deposit'}} </option>
                         <option value="4"> {{'Loan'}} </option>
                         <option value="5"> {{'Escrow'}} </option>
+                        <option value="8"> {{'Crypto'}} </option>
                         @if (isset($accounttype['6']))
                         <option value="6"> {{'Supervisor'}} </option>
                         @endif
@@ -64,11 +65,11 @@
 
             <div class="row mb-3" id="walletlist">
             @foreach ($accounttype as $i=>$value)
-              @foreach (DB::table('currencies')->get() as $dcurr)
+              @foreach (DB::table('currencies')->whereType('1')->get() as $dcurr)
               @php
                   $wallet = DB::table('wallets')->where('user_id', $data->id)->where('wallet_type',$i)->where('currency_id',$dcurr->id)->first();
               @endphp
-              @if ($i != '0')
+              @if ($i > '0' && $i != '8')
                 @if ($wallet != null)
                     <div class="col-xl-3 col-md-6 mb-4">
                         <div class="card h-100" >
@@ -112,6 +113,51 @@
 
               @endforeach
             @endforeach
+            @foreach (DB::table('currencies')->whereType('2')->get() as $dcurr)
+              @php
+                  $wallet = DB::table('wallets')->where('user_id', $data->id)->where('wallet_type',8)->where('currency_id',$dcurr->id)->first();
+              @endphp
+                @if ($wallet != null)
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card h-100" >
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                            <div class="col mr-2">
+                                <div class="row mb-1 mr-1">
+                                    <div class='col font-weight-bold text-gray-900'>{{'Crypto'}}</div>
+                                    <div class='col font-weight-bold text-gray-900'>{{$wallet->wallet_no}}</div>
+                                </div>
+                                <div class="text-xs font-weight-bold text-uppercase mb-1"> {{$dcurr->curr_name}}</div>
+                                <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{amount($wallet->balance,$dcurr->type,2)}} {{$dcurr->code}} ({{$dcurr->symbol}}) </div>
+                                <div class="row mb-1 mr-1">
+                                    <button class="col btn btn-primary ml-2 w-25 mt-2" onclick="getDetails({{$wallet->id}})">{{ __('Fee') }}</button>
+                                    <button class="col btn btn-primary ml-1 w-25 mt-2" onclick="Deposit({{$wallet->id}})">{{ __('Deposit') }}</button>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    @else
+                    <a href="javascript:;" data-toggle="modal" data-target="#statusModal" data-href="{{ route('admin-user-wallet-create',['id' => $data->id, 'wallet_type' => $i, 'currency_id' =>$dcurr->id ]) }}" class = "col-xl-3 col-md-6 mb-4" style="text-decoration: none;">
+                        <div class="card h-100" style="background-color: #a2b2c5;">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                            <div class="col mr-2">
+                                <div class="row mb-1 mr-1">
+                                    <div class='col font-weight-bold text-gray-900'>{{'Crypto'}}</div>
+                                    <div class='col font-weight-bold text-gray-900'></div>
+                                </div>
+                                <div class="text-xs font-weight-bold text-uppercase mb-1"> {{$dcurr->curr_name}}</div>
+                                <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{'xxx'}} {{$dcurr->code}} ({{$dcurr->symbol}}) </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    </a>
+              @endif
+
+              @endforeach
             </div>
             <div class="card-header">
               <h5>@lang('Transaction Type')</h5>
