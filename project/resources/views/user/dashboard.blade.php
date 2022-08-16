@@ -87,24 +87,29 @@
     @endphp
 
     <div class="row justify-content " style="max-height: 368px;overflow-y: scroll;">
-        @foreach ($wallets as $item)
-        @if (isset($wallet_type[$item->wallet_type]))
-        <div class="col-sm-6 col-md-4 mb-3">
-            <div class="card h-100 card--info-item">
-              <div class="text-end icon">
-                <i class="fas ">
-                    {{$item->currency->symbol}}
-                </i>
-              </div>
-              <div class="card-body">
-                <div class="h3 m-0 text-uppercase"> {{$wallet_type[$item->wallet_type]}}</div>
-                <div class="h4 m-0 text-uppercase"> {{ $item->wallet_no }}</div>
-                <div class="text-muted">{{ amount($item->balance,$item->currency->type,2) }}  {{$item->currency->code}}</div>
-              </div>
-            </div>
-        </div>
+        @if (count($wallets) != 0)
+            @foreach ($wallets as $item)
+                @if (isset($wallet_type[$item->wallet_type]))
+                    <div class="col-sm-6 col-md-4 mb-3">
+                        <div class="card h-100 card--info-item">
+                        <div class="text-end icon">
+                            <i class="fas ">
+                                {{$item->currency->symbol}}
+                            </i>
+                        </div>
+                        <div class="card-body">
+                            <div class="h3 m-0 text-uppercase"> {{$wallet_type[$item->wallet_type]}}</div>
+                            <div class="h4 m-0 text-uppercase"> {{ $item->wallet_no }}</div>
+                            <div class="text-muted">{{ amount($item->balance,$item->currency->type,2) }}  {{$item->currency->code}}</div>
+                        </div>
+                        </div>
+                    </div>
+                @endif
+            @endforeach
+        @else
+            <p class="text-center">@lang('NO Wallet FOUND')</p>
         @endif
-        @endforeach
+
     </div>
     <hr>
     <div class="row justify-content-center">
@@ -112,22 +117,27 @@
     </div>
 
     <div class="row justify-content " style="max-height: 368px;overflow-y: scroll;">
-        @foreach ($bankaccountlist as $item)
-        <div class="col-sm-6 col-md-4 mb-3">
-            <div class="card h-100 card--info-item">
-              <div class="text-end icon">
-                <i class="fas ">
-                    $
-                </i>
-              </div>
-              <div class="card-body">
-                <div class="h3 m-0 text-uppercase"> {{$item->iban}}</div>
-                <div class="h4 m-0 text-uppercase"> {{ $item->swift }}</div>
-                <div class="text-muted">{{ __($item->subbank->name) }} </div>
-              </div>
-            </div>
-        </div>
-        @endforeach
+        @if (count($bankaccountlist) != 0)
+            @foreach ($bankaccountlist as $item)
+                <div class="col-sm-6 col-md-4 mb-3">
+                    <div class="card h-100 card--info-item">
+                    <div class="text-end icon">
+                        <i class="fas ">
+                            $
+                        </i>
+                    </div>
+                    <div class="card-body">
+                        <div class="h3 m-0 text-uppercase"> {{$item->iban}}</div>
+                        <div class="h4 m-0 text-uppercase"> {{ $item->swift }}</div>
+                        <div class="text-muted">{{ __($item->subbank->name) }} </div>
+                    </div>
+                    </div>
+                </div>
+            @endforeach
+        @else
+            <p class="text-center">@lang('NO Back Account FOUND')</p>
+        @endif
+
     </div>
     <hr>
 
