@@ -42,7 +42,7 @@
                     </div>
                   </div>
                 </div>
-
+{{--
                 <div class="col-md-6">
                     <div class="form-group">
                       <div class="custom-control custom-switch">
@@ -50,7 +50,7 @@
                         <label class="custom-control-label" for="contract_management">{{__('Contract Management')}}</label>
                       </div>
                     </div>
-                  </div>
+                  </div> --}}
 
                 <div class="col-md-6">
                   <div class="form-group">

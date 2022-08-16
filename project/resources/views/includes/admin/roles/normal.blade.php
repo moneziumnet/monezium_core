@@ -31,14 +31,14 @@
   </li>
   @endif
 
-  @if(getModule('Contract Management'))
+  {{-- @if(getModule('Contract Management'))
     <li class="nav-item">
     <a class="nav-link" href="{{route('admin.contract.management')}}">
         <i class="fas fa-chart-line"></i>
         <span>{{ __('Manage Contract') }}</span>
     </a>
     </li>
-   @endif
+   @endif --}}
 
   @if(getModule('Loan Management'))
   <li class="nav-item">
