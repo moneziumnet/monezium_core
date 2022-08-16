@@ -65,6 +65,7 @@ use App\Http\Controllers\Admin\DepositBankController as AppDepositBankController
 use App\Http\Controllers\Admin\WireTransferController as AdminWireTransferController;
 use App\Http\Controllers\Deposit\RailsBankController;
 use App\Http\Controllers\Deposit\OpenPaydController;
+use App\Http\Controllers\Admin\ContractManageController;
 
 
 Route::prefix('admin')->group(function () {
@@ -186,6 +187,15 @@ Route::prefix('admin')->group(function () {
     Route::post('/documents/create-document', [DocumentsController::class, 'store'])->name('admin.document.add-document');
     Route::get('/documents/download/{id}', [DocumentsController::class, 'getDownload'])->name('admin.documents.download');
     Route::get('/documents/delete/{id}', [DocumentsController::class, 'destroy'])->name('admin.documents.document-delete');
+  });
+
+  Route::group(['middleware' => 'permissions:Contract Management'], function () {
+    Route::get('/contract/management', [ContractManageController::class, 'index'])->name('admin.contract.management');
+    Route::get('/contract/datatables', [ContractManageController::class, 'datatables'])->name('admin.contract.datatables');
+    Route::get('/contract/create', [ContractManageController::class, 'create'])->name('admin.contract.create');
+    Route::post('/contract/store', [ContractManageController::class, 'store'])->name('admin.contract.store');
+    Route::get('/contract/edit/{id}', [ContractManageController::class, 'edit'])->name('admin.contract.edit');
+    Route::post('/contract/update/{id}', [ContractManageController::class, 'update'])->name('admin.contract.update');
   });
 
   Route::group(['middleware' => 'permissions:Manage Customers'], function () {
