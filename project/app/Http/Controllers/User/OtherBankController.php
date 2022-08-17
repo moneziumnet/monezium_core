@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\Generalsetting;
 use App\Models\BalanceTransfer;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class OtherBankController extends Controller
 {
@@ -27,13 +28,21 @@ class OtherBankController extends Controller
 
     public function othersend($id){
         $data['data'] = Beneficiary::findOrFail($id);
+        $data['other_bank_limit'] = Generalsetting::first()->other_bank_limit;
         return view('user.otherbank.send',$data);
     }
 
     public function store(Request $request){
-        $request->validate([
-            'amount' => 'required|numeric|min:0'
-        ]);
+        $rules = [
+            'document' => 'mimes:xls,xlsx,pdf'
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return redirect()->back()->with('unsuccess',$validator->getMessageBag()->toArray()['document'][0]);
+        }
+
 
         $user = auth()->user();
         if($user->bank_plan_id === null){
@@ -106,6 +115,11 @@ class OtherBankController extends Controller
             }
 
             $txnid = Str::random(4).time();
+            if ($file = $request->file('document'))
+            {
+                $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
+                $file->move('assets/images',$name);
+            }
 
             $data = new BalanceTransfer();
             $data->user_id = auth()->user()->id;
@@ -117,6 +131,7 @@ class OtherBankController extends Controller
             $data->amount = $request->amount;
             $data->final_amount = $finalAmount;
             $data->description = $request->des;
+            $data->document = $name;
             $data->status = 0;
             $data->save();
 

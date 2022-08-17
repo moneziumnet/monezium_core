@@ -93,6 +93,7 @@ class Generalsetting extends Model
             'nexmo_status',
             'module_section',
             'user_module',
+            'other_bank_limit',
         ];
 
     public $timestamps = false;

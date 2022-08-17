@@ -108,6 +108,7 @@ class CreateGeneralsettingsTable extends Migration
             $table->mediumText('user_module')->nullable();
             $table->tinyInteger('is_verify')->nullable()->default(0);
             $table->boolean('two_fa')->default(true);
+            $table->double('other_bank_limit')->nullable();
         });
     }
 

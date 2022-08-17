@@ -1,7 +1,12 @@
 @extends('layouts.user')
 
 @push('css')
+<style>
+.document {
+    display:none;
+    }
 
+    </style>
 @endpush
 
 @section('contents')
@@ -124,6 +129,11 @@
                             <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" step="any" value="{{ old('amount') }}" min="1" required>
                         </div>
 
+                        <div class="form-group mb-3 mt-3">
+                            <label class="form-label document" id="document_label">{{__('Document')}}</label>
+                            <input class= "document" name="document" id="document" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="file" accept=".xls,.xlsx,.pdf">
+                        </div>
+
                         <div class="form-group mt-3">
                             <label class="form-label required">{{__('Description')}}</label>
                             <textarea name="des" id="des" class="form-control" autocomplete="off" placeholder="{{__('Please input description')}}" type="text" required></textarea>
@@ -143,6 +153,20 @@
 @endsection
 
 @push('js')
+<script type="text/javascript">
+    'use strict';
+    $('#amount').on('change', function() {
+
+        if ($('#amount').val() >= '{{$other_bank_limit}}') {
+            document.getElementById("document").style.display = "block";
+            document.getElementById("document_label").style.display = "block";
+        }
+        else {
+            document.getElementById("document").style.display = "none";
+            document.getElementById("document_label").style.display = "none";
+        }
+    })
+</script>
 
 @endpush
 

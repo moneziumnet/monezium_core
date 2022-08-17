@@ -66,7 +66,13 @@
                                     <td width="10%">:</td>
                                     <td width="45%">{{$data->beneficiary->swift_bic}}</td>
                                 </tr>
-
+                                @if ($data->document)
+                                    <tr>
+                                        <th width="45%">{{__('Document')}}</th>
+                                        <td width="10%">:</td>
+                                        <td width="45%"><a href ="{{asset('assets/images/'.$data->document)}}" attributes-list download > Download Document </a>  </td>
+                                    </tr>
+                                @endif
 
                                 @foreach (json_decode($data->beneficiary->details,true) as $key=>$value)
                                     @if ($value[1] == 'file')
