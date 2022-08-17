@@ -27,8 +27,8 @@
                         @csrf
 
                         <div class="form-group mb-3 mt-3">
-                            <label class="form-label required">{{__('Account Number')}}</label>
-                            <input name="account_number" id="account_number" class="form-control" autocomplete="off" placeholder="{{__('000.000.0000')}}" type="text" value="{{ old('account_number') }}" min="1" required>
+                            <label class="form-label required">{{__('Account Email')}}</label>
+                            <input name="account_email" id="account_email" class="form-control" autocomplete="off" placeholder="{{__('user@gmail.com')}}" type="text" value="{{ old('account_email') }}" min="1" required>
                         </div>
 
                         <div class="form-group mb-3 mt-3">
@@ -44,7 +44,7 @@
 
                         <div class="form-group mb-3 mt-3">
                             <label class="form-label required">{{__('Account Name')}}</label>
-                            <input name="account_name" id="account_name" class="form-control" autocomplete="off" placeholder="{{__('Jhon Doe')}}" type="text" value="{{ old('account_name') }}" min="1" required readonly>
+                            <input name="account_name" id="account_name" class="form-control" autocomplete="off" placeholder="{{__('Jhon Doe')}}" type="text" value="{{ old('account_name') }}" min="1" required >
                         </div>
 
                         <div class="form-group mb-3">
@@ -58,7 +58,7 @@
                         </div>
 
                         <div class="form-footer">
-                            <button type="submit" class="btn btn-primary submit-btn w-100" disabled>{{__('Submit')}}</button>
+                            <button type="submit" class="btn btn-primary submit-btn w-100" >{{__('Submit')}}</button>
                         </div>
 
 
@@ -75,15 +75,5 @@
 @push('js')
 <script>
   'use strict';
-    $("#account_name").on('click',function(){
-      let accountNumber = $("#account_number").val();
-
-      let url = `${mainurl}/user/username/${accountNumber}`;
-
-      $.get(url, function(data){
-        $("#account_name").val(data);
-        $(".submit-btn").prop( "disabled", false );
-      });
-    })
-  </script>
+</script>
 @endpush

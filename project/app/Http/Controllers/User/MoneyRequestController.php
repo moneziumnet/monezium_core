@@ -69,14 +69,11 @@ class MoneyRequestController extends Controller
 
         $gs = Generalsetting::first();
 
-        if($request->account_number == $user->account_number){
+        if($request->account_email == $user->email){
             return redirect()->back()->with('unsuccess','You can not send money yourself!');
         }
 
-        $receiver = User::where('account_number',$request->account_number)->first();
-        if($receiver === null){
-            return redirect()->back()->with('unsuccess','No register user with this email!');
-        }
+        $receiver = User::where('email',$request->account_email)->first();
 
         if($dailyRequests > $global_range->daily_limit){
             return redirect()->back()->with('unsuccess','Daily request limit over.');
@@ -105,8 +102,8 @@ class MoneyRequestController extends Controller
 
         $data = new MoneyRequest();
         $data->user_id = auth()->user()->id;
-        $data->receiver_id = $receiver->id;
-        $data->receiver_name = $receiver->name;
+        $data->receiver_id = $receiver === null ? 0 : $receiver->id;
+        $data->receiver_name = $request->account_name;
         $data->transaction_no = $txnid;
         $data->currency_id = $request->wallet_id;
         $data->cost = $transaction_global_cost;
@@ -117,7 +114,19 @@ class MoneyRequestController extends Controller
         $data->user_type = 1;
         $data->save();
 
-        return redirect()->back()->with('success','Request Money Send Successfully.');
+
+        if($receiver === null){
+            $gs = Generalsetting::first();
+            $to = $request->account_email;
+            $subject = " Money Request";
+            $msg = "Hello ".$request->account_name."!\nYou received request money.\nPlease confirm current.\n".route('user.money.request.store')."\n Thank you.";
+            $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
+            mail($to,$subject,$msg,$headers);
+            return redirect()->back()->with('success','Request Money Send to unregisted user('.$request->account_email.') Successfully.');
+        }
+        else {
+            return redirect()->back()->with('success','Request Money Send Successfully.');
+        }
 
     }
 
