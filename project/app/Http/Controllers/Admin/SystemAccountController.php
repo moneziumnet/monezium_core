@@ -3,36 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use Datatables;
-use App\Models\User;
-use App\Models\Order;
-use App\Models\Follow;
-use App\Models\Rating;
+
 use App\Models\Wallet;
-use App\Models\Plan;
-use App\Models\Charge;
-use App\Models\UserDps;
-use App\Models\UserFdr;
-use App\Models\Currency;
-use App\Models\UserLoan;
-use App\Models\Wishlist;
-use App\Models\Withdraw;
-use App\Models\OrderedItem;
-use App\Models\Transaction;
-use App\Models\Withdrawals;
-use App\Models\SubInsBank;
-use App\Models\BankGateway;
-use App\Models\BankAccount;
 use Illuminate\Support\Str;
-use App\Models\UserDocument;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Exports\AdminExportTransaction;
-use App\Models\BankPlan;
-use Illuminate\Support\Facades\Hash;
-use Maatwebsite\Excel\Facades\Excel;
 
 
 class SystemAccountController extends Controller
