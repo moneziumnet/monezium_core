@@ -39,10 +39,8 @@ class ContractManageController extends Controller
                             '.'Actions' .'
                             </button>
                             <div class="dropdown-menu" x-placement="bottom-start">
-                            <a href="' . route('admin.contract.edit',$data->id) . '"  class="dropdown-item">'.__("Edit").'</a>
-                            <a href="#" class="dropdown-item" >'.__("View").'</a>
-                            <a href="#" class="dropdown-item" >'.__("Delete").'</a>
-                            <a href="#" class="dropdown-item" >'.__("Manage AoA").'</a>
+                            <a href="' . route('admin.contract.view',$data->id) . '"  class="dropdown-item">'.__("View").'</a>
+                            <a href="#" class="dropdown-item" >'.__("View AoA").'</a>
                             </div>
                         </div>';
                         })
@@ -54,46 +52,9 @@ class ContractManageController extends Controller
         return view('admin.contract.index');
     }
 
-    public function create() {
-        return view('admin.contract.create');
-    }
-
-    public function store(Request $request) {
-        $rules = ['title' => 'required'];
-
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
-          return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
-        }
-
-        $data = new Contract();
-        $input = $request->all();
-        $data->fill($input)->save();
-
-        $msg = __('New Contract Added Successfully.').' '.'<a href="'.route("admin.contract.management").'">'.__('View Lists.').'</a>';
-        return response()->json($msg);
-    }
-
-    public function edit($id) {
+    public function view($id) {
         $data = Contract::findOrFail($id);
-        return view('admin.contract.edit', compact('data'));
+        return view('admin.contract.view', compact('data'));
     }
-
-    public function update(Request $request, $id) {
-        $rules = ['title' => 'required'];
-
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
-          return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
-        }
-
-        $data = Contract::findOrFail($id);
-        $input = $request->all();
-        $data->update($input);
-        $msg = __('A Contract Updated Successfully.').' '.'<a href="'.route("admin.contract.management").'">'.__('View Lists.').'</a>';
-        return response()->json($msg);
-    }
-
-
 }
 
