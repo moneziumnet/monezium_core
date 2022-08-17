@@ -66,6 +66,7 @@ use App\Http\Controllers\Admin\WireTransferController as AdminWireTransferContro
 use App\Http\Controllers\Deposit\RailsBankController;
 use App\Http\Controllers\Deposit\OpenPaydController;
 use App\Http\Controllers\Admin\ContractManageController;
+use App\Http\Controllers\Admin\SystemAccountController;
 
 
 Route::prefix('admin')->group(function () {
@@ -442,7 +443,8 @@ Route::prefix('admin')->group(function () {
     Route::post('/blog/category/edit/{id}', [BlogCategoryController::class, 'update'])->name('admin.cblog.update');
     Route::get('/blog/category/delete/{id}', [BlogCategoryController::class, 'destroy'])->name('admin.cblog.delete');
   });
-
+  Route::get('/system-settings', [SystemAccountController::class, 'systemAccounts'])->name('admin.system.accounts');
+  Route::get('/system-settings/create//{currency_id}', [SystemAccountController::class, 'create'])->name('admin.system.account.create');
   Route::group(['middleware' => 'permissions:General Setting'], function () {
     Route::get('/general-settings/logo', [GeneralSettingController::class, 'logo'])->name('admin.gs.logo');
     Route::get('/general-settings/favicon', [GeneralSettingController::class, 'fav'])->name('admin.gs.fav');

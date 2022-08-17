@@ -216,27 +216,6 @@
   </li>
   @endif -->
 
-  @if(getModule('General Setting'))
-  <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTable1" aria-expanded="true"
-      aria-controls="collapseTable">
-      <i class="fas fa-fw fa-cogs"></i>
-      <span>{{  __('General Settings') }}</span>
-    </a>
-    <div id="collapseTable1" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
-      <div class="bg-white py-2 collapse-inner rounded">
-        <a class="collapse-item" href="{{ route('admin.gs.logo') }}">{{ __('Logo') }}</a>
-        <a class="collapse-item" href="{{ route('admin.gs.fav') }}">{{ __('Favicon') }}</a>
-        <a class="collapse-item" href="{{ route('admin.gs.load') }}">{{ __('Loader') }}</a>
-        <a class="collapse-item" href="{{ route('admin.gs.breadcumb') }}">{{ __('Breadcumb Banner') }}</a>
-        <a class="collapse-item" href="{{ route('admin.gs.contents') }}">{{ __('Website Contents') }}</a>
-        <a class="collapse-item" href="{{ route('admin.gs.footer') }}">{{ __('Footer') }}</a>
-        <a class="collapse-item" href="{{ route('admin.gs.error.banner') }}">{{ __('Error Banner') }}</a>
-      </div>
-    </div>
-  </li>
-  @endif
-
   @if(getModule('Homepage Manage'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#homepage" aria-expanded="true"
@@ -262,43 +241,11 @@
   </li>
   @endif
 
-  @if(getModule('Email Setting'))
-  <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#email_settings" aria-expanded="true"
-      aria-controls="collapseTable">
-      <i class="fa fa-envelope"></i>
-      <span>{{  __('Email Settings') }}</span>
-    </a>
-    <div id="email_settings" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
-      <div class="bg-white py-2 collapse-inner rounded">
-        <a class="collapse-item" href="{{ route('admin.mail.index') }}">{{ __('Email Template') }}</a>
-        <a class="collapse-item" href="{{ route('admin.mail.config') }}">{{ __('Email Configurations') }}</a>
-        <a class="collapse-item" href="{{ route('admin.group.show') }}">{{ __('Group Email') }}</a>
-      </div>
-    </div>
-  </li>
-  @endif
-
   @if(getModule('Message'))
   <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.user.message') }}">
       <i class="fas fa-comment-alt"></i>
       <span>{{ __('Messages') }}</span></a>
-  </li>
-  @endif
-
-  @if(getModule('Currency Setting'))
-  <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#payment_gateways" aria-expanded="true"
-      aria-controls="collapseTable">
-      <i class="fas fa-fw fa-newspaper"></i>
-      <span>{{  __('Currency Settings') }}</span>
-    </a>
-    <div id="payment_gateways" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
-      <div class="bg-white py-2 collapse-inner rounded">
-        <a class="collapse-item" href="{{ route('admin.currency.index') }}">{{ __('Currencies') }}</a>
-      </div>
-    </div>
   </li>
   @endif
 
@@ -311,21 +258,79 @@
   </li>
   @endif
 
-  @if(getModule('Language Manage'))
   <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#langs" aria-expanded="true"
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#system_setting" aria-expanded="true"
       aria-controls="collapseTable">
-      <i class="fas fa-language"></i>
-      <span>{{  __('Language Settings') }}</span>
+      <i class="fas fa-fw fa-cogs"></i>
+      <span>{{  __('System Settings') }}</span>
     </a>
-    <div id="langs" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
+    <div id="system_setting" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
-        <a class="collapse-item" href="{{route('admin.lang.index')}}">{{ __('Website Language') }}</a>
-        <a class="collapse-item" href="{{route('admin.tlang.index')}}">{{ __('Admin Panel Language') }}</a>
+        @if(getModule('General Setting'))
+          <a class="nav-link collapsed collapse-item sub-nav-link" href="#" data-toggle="collapse" data-target="#collapseTable1" aria-expanded="true"
+            aria-controls="collapseTable">
+            <span>{{  __('General Settings') }}</span>
+          </a>
+          <div id="collapseTable1" class="collapse" aria-labelledby="headingTable" data-parent="#system_setting">
+            <div class="bg-white py-2 collapse-inner rounded">
+              <a class="collapse-item" href="{{ route('admin.gs.logo') }}">{{ __('Logo') }}</a>
+              <a class="collapse-item" href="{{ route('admin.gs.fav') }}">{{ __('Favicon') }}</a>
+              <a class="collapse-item" href="{{ route('admin.gs.load') }}">{{ __('Loader') }}</a>
+              <a class="collapse-item" href="{{ route('admin.gs.breadcumb') }}">{{ __('Breadcumb Banner') }}</a>
+              <a class="collapse-item" href="{{ route('admin.gs.contents') }}">{{ __('Website Contents') }}</a>
+              <a class="collapse-item" href="{{ route('admin.gs.footer') }}">{{ __('Footer') }}</a>
+              <a class="collapse-item" href="{{ route('admin.gs.error.banner') }}">{{ __('Error Banner') }}</a>
+            </div>
+          </div>
+        @endif
+
+        @if(getModule('Email Setting'))
+          <a class="nav-link collapsed collapse-item sub-nav-link " href="#" data-toggle="collapse" data-target="#email_settings" aria-expanded="true"
+            aria-controls="collapseTable">
+            <span>{{  __('Email Settings') }}</span>
+          </a>
+          <div id="email_settings" class="collapse" aria-labelledby="headingTable" data-parent="#system_setting">
+            <div class="bg-white py-2 collapse-inner rounded">
+              <a class="collapse-item" href="{{ route('admin.mail.index') }}">{{ __('Email Template') }}</a>
+              <a class="collapse-item" href="{{ route('admin.mail.config') }}">{{ __('Email Configurations') }}</a>
+              <a class="collapse-item" href="{{ route('admin.group.show') }}">{{ __('Group Email') }}</a>
+            </div>
+          </div>
+        @endif
+
+        <a class="collapse-item" href="{{ route('admin.system.accounts') }}">{{ __('System Accounts') }}</a>
+
+        @if(getModule('Currency Setting'))
+          <a class="collapse-item nav-link sub-nav-link collapsed" href="#" data-toggle="collapse" data-target="#payment_gateways" aria-expanded="true"
+            aria-controls="collapseTable">
+            <span>{{  __('Currency Settings') }}</span>
+          </a>
+          <div id="payment_gateways" class="collapse" aria-labelledby="headingTable" data-parent="#system_setting">
+            <div class="bg-white py-2 collapse-inner rounded">
+              <a class="collapse-item" href="{{ route('admin.currency.index') }}">{{ __('Currencies') }}</a>
+            </div>
+          </div>
+        @endif
+
+        @if(getModule('Language Manage'))
+          <a class="collapse-item nav-link sub-nav-link collapsed" href="#" data-toggle="collapse" data-target="#langs" aria-expanded="true"
+            aria-controls="collapseTable">
+            <span>{{  __('Language Settings') }}</span>
+          </a>
+          <div id="langs" class="collapse" aria-labelledby="headingTable" data-parent="#system_setting">
+            <div class="bg-white py-2 collapse-inner rounded">
+              <a class="collapse-item" href="{{route('admin.lang.index')}}">{{ __('Website Language') }}</a>
+              <a class="collapse-item" href="{{route('admin.tlang.index')}}">{{ __('Admin Panel Language') }}</a>
+            </div>
+          </div>
+        @endif
+
+
+
       </div>
     </div>
   </li>
-  @endif
+
 
   @if(getModule('Fonts'))
   <li class="nav-item">

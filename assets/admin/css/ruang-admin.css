@@ -695,6 +695,13 @@ a:focus {
 	width: 14rem;
 }
 
+.sub-nav-link {
+	display: block;
+	width: 100% !important; 
+	text-align: left;
+	padding: 1rem;
+}
+
 .sidebar .nav-item .nav-link i {
 	font-size: 0.85rem;
 	margin-right: 0.25rem;
