@@ -94,7 +94,7 @@
                             <tr>
                                 <th class="45%" width="45%">{{__('Request To')}}</th>
                                 <td width="10%">:</td>
-                                <td class="45%" width="45%">{{ $to->name }}</td>
+                                <td class="45%" width="45%">{{$to ? $to->name : $data->receiver_name }}</td>
                             </tr>
 
                             <tr>

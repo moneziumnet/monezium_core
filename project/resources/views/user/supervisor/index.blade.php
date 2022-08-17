@@ -38,10 +38,13 @@
                              <tr>
                               <th rowspan="2" >{{__('Fee Type')}}</th>
                               <th colspan="2" >{{__('Golbal')}}</th>
-                              <th colspan="2" >{{__('Customer')}}</th>
+                              <th colspan="2" >{{__('Supervisor')}}</th>
+                              <th colspan="2" >{{__('Manage')}}</th>
                               <th rowspan="2">{{__('Action')}}</th>
                              </tr>
                              <tr>
+                                <th >{{__('Percent')}}</th>
+                                <th>{{__('Fixed')}}</th>
                                 <th >{{__('Percent')}}</th>
                                 <th>{{__('Fixed')}}</th>
                                 <th >{{__('Percent')}}</th>
@@ -96,6 +99,8 @@
                 { data: 'fixed', name:'fixed' },
                 { data: 'percent_customer', name: 'percent_customer' },
                 { data: 'fixed_customer', name:'fixed_customer' },
+                { data: ' ', name:'' },
+                { data: ' ', name:'' },
                 { data: 'action', name: 'action' },
             ],
         });
