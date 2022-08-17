@@ -19,6 +19,27 @@
 			</div>
 		  </div> -->
       </div>
+      <div class="col-auto ms-auto d-print-none">
+
+        <div class="btn-list">
+            <form action=""  class="d-flex justify-content-end">
+                <div class="form-group me-3">
+                    <select  class="form-control me-2 shadow-none" onChange="window.location.href=this.value">
+                        <option value="{{filter('remark','')}}">@lang('All Remark')</option>
+                        @foreach ($remark_list as $value)
+                            <option value="{{filter('remark',$value)}}" {{request('remark') == $value ? 'selected':''}}>@lang(ucwords(str_replace('_',' ',$value)))</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <input class="form-control shadow-none" type="text" placeholder="{{__('Transaction Id')}}" name="search" value="{{$search ?? ''}}">
+                        <button type="submit" class="input-group-text bg-primary text-white border-0"><i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+      </div>
     </div>
 </div>
 
@@ -37,7 +58,7 @@
                 <div class="card">
 
 					<div class="table-responsive">
-              
+
 						<table class="table card-table table-vcenter text-nowrap datatable">
 						  <thead>
 							<tr>

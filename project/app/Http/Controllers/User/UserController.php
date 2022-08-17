@@ -49,12 +49,19 @@ class UserController extends Controller
     public function transaction()
     {
         $user = Auth::user();
-        $transactions = Transaction::whereUserId(auth()->id())->orderBy('id','desc')->paginate(20);
-        foreach ($transactions as $key => $transaction) {
-            $transaction->currency = Currency::whereId($transaction->currency_id)->first();
-        }
-
-        return view('user.transactions',compact('user','transactions'));
+        $search = request('search');
+        $remark = request('remark');
+        $transactions = Transaction::where('user_id',auth()->id())->where('user_type',1)
+        ->when($remark,function($q) use($remark){
+            return $q->where('remark',$remark);
+        })
+        ->when($search,function($q) use($search){
+            return $q->where('trnx','LIKE',"%{$search}%");
+        })
+        ->with('currency')->latest()->paginate(20);
+        $remark_list = Transaction::where('user_id',auth()->id())->pluck('remark');
+        $remark_list = array_unique($remark_list->all());
+        return view('user.transactions',compact('user','transactions', 'search', 'remark_list'));
     }
 
     public function transactionExport()
