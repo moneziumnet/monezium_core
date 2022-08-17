@@ -36,6 +36,7 @@
                     $accounttype['7'] = 'Merchant';
                 }
                 $curlist = DB::table('currencies')->whereType('1')->get();
+                $cryptolist = DB::table('currencies')->whereType('2')->get();
             @endphp
 
           <div class="card-body">
@@ -267,12 +268,12 @@ function Deposit(id) {
 $('#addpayment').on('click', function() {
     window.location.reload();
 });
-    let accounttype = {'0':'All', '1':'Current', '2':'Card', '3':'Deposit', '4':'Loan', '5':'Escrow', '6':'Supervisor', '7':'Merchant'};
+    let accounttype = {'0':'All', '1':'Current', '2':'Card', '3':'Deposit', '4':'Loan', '5':'Escrow', '6':'Supervisor', '7':'Merchant', '8':'Crypto'};
     let _orignhtml = $('div#walletlist').html();
     $('#wallet_type').on('change', function() {
         let wallet_type = $("#wallet_type").val();
         let data ="{{$data->id }}";
-        let curlist = '{{$curlist}}';
+        let curlist = wallet_type == '8' ? '{{$cryptolist}}' : '{{$curlist}}';
         const obj = curlist.replace(/&quot;/g, '"');
         let _divhtml = "" ;
         $.each(JSON.parse(obj), function(key, value) {
