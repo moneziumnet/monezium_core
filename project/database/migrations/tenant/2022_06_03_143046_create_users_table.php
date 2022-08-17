@@ -45,7 +45,7 @@ class CreateUsersTable extends Migration
             $table->text('details')->nullable();
             $table->tinyInteger('kyc_status')->default(0)->comment('0 == \'pending\'
 1 == \'approve\'
-2 == \'rejected\'');
+2 == \'rejected\''); 
             $table->string('kyc_photo', 191)->nullable();
             $table->mediumText('kyc_info')->nullable();
             $table->text('kyc_reject_reason')->nullable();
