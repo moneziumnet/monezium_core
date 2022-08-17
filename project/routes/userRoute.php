@@ -62,6 +62,7 @@ use App\Http\Controllers\User\UserInvestmentController;
 use App\Http\Controllers\User\UserClearJunctionController;
 use App\Http\Controllers\User\UserEMbankController;
 use App\Http\Controllers\User\UserTreezorBankController;
+use App\Http\Controllers\User\UserBankableController;
 use App\Http\Controllers\User\UserGlobalPassController;
 use App\Http\Controllers\Deposit\RailsBankController;
 use App\Http\Controllers\Deposit\OpenPaydController;
@@ -389,6 +390,18 @@ Route::prefix('user')->group(function() {
         Route::get('/treezorbank/updatebeneficiaries', [UserTreezorBankController::class, 'UpdateBeneficiaries'])->name('user.treezorbank.api.updatebeneficiaries');
         Route::get('/treezorbank/businesssearchs', [UserTreezorBankController::class, 'Businesssearchs'])->name('user.treezorbank.api.businesssearchs');
         Route::get('/treezorbank/businessinformations', [UserTreezorBankController::class, 'Businessinformations'])->name('user.treezorbank.api.businessinformations');
+       
+        // Bankable API
+        Route::get('/bankable/balances', [UserBankableController::class, 'Balances'])->name('user.bankable.api.balances');
+        Route::get('/bankable/createbankaccounts', [UserBankableController::class, 'CreateBankAccounts'])->name('user.bankable.api.createbankaccounts');
+        Route::get('/bankable/bankaccountdetails', [UserBankableController::class, 'BankAccountDetails'])->name('user.bankable.api.bankaccountdetails');
+        Route::get('/bankable/deletebankaccount', [UserBankableController::class, 'DeleteBankAccount'])->name('user.bankable.api.deletebankaccount');
+        Route::get('/bankable/beneficiaries', [UserBankableController::class, 'Beneficiaries'])->name('user.bankable.api.beneficiaries');
+        Route::get('/bankable/searchbeneficiaries', [UserBankableController::class, 'SearchBeneficiaries'])->name('user.bankable.api.searchbeneficiaries');
+        Route::get('/bankable/getbeneficiaries', [UserBankableController::class, 'GetBeneficiaries'])->name('user.bankable.api.getbeneficiaries');
+        Route::get('/bankable/updatebeneficiaries', [UserBankableController::class, 'UpdateBeneficiaries'])->name('user.bankable.api.updatebeneficiaries');
+        Route::get('/bankable/businesssearchs', [UserBankableController::class, 'Businesssearchs'])->name('user.bankable.api.businesssearchs');
+        Route::get('/bankable/businessinformations', [UserBankableController::class, 'Businessinformations'])->name('user.bankable.api.businessinformations');
 
 
         Route::post('/globalpass/callback', [UserGlobalPassController::class, 'callback'])->name('user.globalpass.api.callback');
