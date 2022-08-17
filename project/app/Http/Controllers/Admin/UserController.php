@@ -443,10 +443,16 @@ class UserController extends Controller
         {
             $data = User::findOrFail($id);
             $data['data'] = $data;
+            return view('admin.user.profilebanks',$data);
+        }
+
+        public function profileBankAccount($id) {
+            $data = User::findOrFail($id);
+            $data['data'] = $data;
             $data['subbank'] = SubInsBank::wherestatus(1)->get();
             $data['currencylist'] = Currency::wherestatus(1)->where('type', 1)->get();
             $data['bankaccount'] = BankAccount::where('user_id', $id)->get();
-            return view('admin.user.profilebanks',$data);
+            return view('admin.user.profilebankaccount',$data);
         }
 
         public function gateway(Request $request) {

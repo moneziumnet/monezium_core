@@ -24,5 +24,8 @@
         <li class="nav-item">
             <a class="nav-link {{menu('admin-user-modules')}}" id="modules" href="{{route('admin-user-modules',$data->id) }}" role="button" >Modules</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link {{menu('admin-user-bank-account')}}" id="modules" href="{{route('admin-user-bank-account',$data->id) }}" role="button" >Bank Account</a>
+        </li>
     </ul>
 </div>
