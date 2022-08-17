@@ -23,9 +23,10 @@ class ExchangeMoneyController extends Controller
     public function exchangeForm()
     {
         $wallets = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('balance', '>', 0)->get();
-        $currencies = Currency::where('status',1)->get();
+        $currencies = Currency::where('status',1)->whereType('1')->get();
+        $crypto_currencies = Currency::where('status',1)->whereType('2')->get();
         $recentExchanges = ExchangeMoney::where('user_id',auth()->id())->with(['fromCurr','toCurr'])->latest()->take(7)->get();
-        return view('user.exchange.exchange',compact('wallets','currencies','recentExchanges'));
+        return view('user.exchange.exchange',compact('wallets','currencies','recentExchanges', 'crypto_currencies'));
     }
 
     public function submitExchange(Request $request)

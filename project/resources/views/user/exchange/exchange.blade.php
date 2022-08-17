@@ -76,9 +76,6 @@
                                 <div class="form-label">@lang('To Currency')</div>
                                 <select class="form-select to shadow-none" name="to_wallet_id" disabled>
                                     <option value="" selected>@lang('Select')</option>
-                                    @foreach ($currencies as $curr)
-                                    <option value="{{$curr->id}}" data-rate="{{$curr->rate}}" data-code="{{$curr->code}}"  data-type="{{$curr->type}}">{{$curr->code}}</option>
-                                    @endforeach
                                 </select>
                             </div>
 
@@ -187,20 +184,10 @@
     <script>
         'use strict';
         $('.from').on('change',function () {
-            if($('.amount').val() == ''){
-                toast('error','@lang('Please provide the amount first')')
-                return false
-            }
-            else if($('.amount').val() < 0){
-                toast('error','@lang('Please provide the valid amount')')
-                return false
-            }
-
             var from = $('.from option:selected');
             var to = $('.to option:selected');
 
             if(from.data('curr') ==  to.val()){
-                toast('error','@lang('Exchange can not be possible within same currency.')')
                 $('.info').addClass('d-none')
                 return false
             }else{
@@ -215,6 +202,18 @@
 
         $('.amount').on('keyup',function () {
             exchange();
+        })
+
+        $('.wallet').on('change', function () {
+            var wtype = $('.wallet').val();
+
+            let _optionHtml = '<option value="" selected>@lang("Select")</option>';
+            let curlist = wtype == '8' ? '{{$crypto_currencies}}' : '{{$currencies}}';
+            const obj = curlist.replace(/&quot;/g, '"');
+            $.each(JSON.parse(obj), function(key, value) {
+                 _optionHtml += '<option value="' + value.id + '" data-rate="' + value.rate + '" data-code="' + value.code + '" data-type="'+ value.type +'">' + value.code + '</option>';
+            })
+            $('.to').html(_optionHtml);
         })
 
         function exchange() {
@@ -246,7 +245,6 @@
             var to = $('.to option:selected');
 
             if(from.data('curr') ==  to.val()){
-                toast('error','@lang('Exchange can not be possible within same currency.')')
                 $('.info').addClass('d-none')
                 return false
             }
@@ -264,14 +262,6 @@
             var to = $('.to option:selected').val();
             var amount = $('.amount').val()
 
-            if(from.val() == '' || to == '' || amount == '' ){
-                toast('error','@lang('Please provide the necessary informations')')
-                return false
-            }
-            if(from.data('curr') ==  to){
-                toast('error','@lang('Exchange can not be possible within same currency.')')
-                return false
-            }
             $('#modal-success').modal('show')
         })
 

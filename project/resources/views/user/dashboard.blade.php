@@ -77,7 +77,7 @@
     $userType = explode(',', auth()->user()->user_type);
     $supervisor = DB::table('customer_types')->where('type_name', 'Supervisors')->first()->id;
     $merchant = DB::table('customer_types')->where('type_name', 'Merchants')->first()->id;
-    $wallet_type = array('0'=>'All', '1'=>'Current', '2'=>'Card', '3'=>'Deposit', '4'=>'Loan', '5'=>'Escrow', '8'=>'Crypto');
+    $wallet_type = array('0'=>'All', '1'=>'Current', '2'=>'Card', '3'=>'Deposit', '4'=>'Loan', '5'=>'Escrow');
     if(in_array($supervisor, $userType)) {
         $wallet_type['6'] = 'Supervisor';
     }
@@ -108,6 +108,34 @@
             @endforeach
         @else
             <p class="text-center">@lang('NO Wallet FOUND')</p>
+        @endif
+
+    </div>
+    <hr>
+    <div class="row justify-content-center">
+        <h1>@lang('Crypto Wallet list')</h1>
+    </div>
+
+    <div class="row justify-content " style="max-height: 368px;overflow-y: scroll;">
+        @if (count($cryptowallets) != 0)
+            @foreach ($cryptowallets as $item)
+                    <div class="col-sm-6 col-md-4 mb-3">
+                        <div class="card h-100 card--info-item">
+                        <div class="text-end icon">
+                            <i class="fas ">
+                                {{$item->currency->symbol}}
+                            </i>
+                        </div>
+                        <div class="card-body">
+                            <div class="h3 m-0 text-uppercase"> {{__('Crypto')}}</div>
+                            <div class="h4 m-0 text-uppercase"> {{ $item->wallet_no }}</div>
+                            <div class="text-muted">{{ amount($item->balance,$item->currency->type,2) }}  {{$item->currency->code}}</div>
+                        </div>
+                        </div>
+                    </div>
+            @endforeach
+        @else
+            <p class="text-center">@lang('NO Crypto Wallet FOUND')</p>
         @endif
 
     </div>
