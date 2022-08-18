@@ -218,6 +218,13 @@ Route::prefix('user')->group(function() {
       Route::post('contract/store',   [UserContractManageController::class,'store'])->name('user.contract.store');
       Route::get('contract/edit/{id}',   [UserContractManageController::class,'edit'])->name('user.contract.edit');
       Route::post('contract/update/{id}',   [UserContractManageController::class,'update'])->name('user.contract.update');
+      Route::get('contract/delete/{id}',   [UserContractManageController::class,'delete'])->name('user.contract.delete');
+      Route::get('contract/aoa/{id}',   [UserContractManageController::class,'aoa_index'])->name('user.contract.aoa');
+      Route::get('contract/aoa/create/{id}',   [UserContractManageController::class,'aoa_create'])->name('user.contract.aoa.create');
+      Route::post('contract/aoa/store/{id}',   [UserContractManageController::class,'aoa_store'])->name('user.contract.aoa.store');
+      Route::get('contract/aoa/edit/{id}',   [UserContractManageController::class,'aoa_edit'])->name('user.contract.aoa.edit');
+      Route::post('contract/aoa/update/{id}',   [UserContractManageController::class,'aoa_update'])->name('user.contract.aoa.update');
+      Route::get('contract/aoa/delete/{id}',   [UserContractManageController::class,'aoa_delete'])->name('user.contract.aoa.delete');
       Route::get('pay-invoice',   [DepositController::class,'invoicePayment'])->name('user.pay.invoice');
 
       //escrow

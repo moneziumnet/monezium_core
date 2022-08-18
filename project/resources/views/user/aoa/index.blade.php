@@ -15,16 +15,20 @@
           {{__('Overview')}}
         </div>
         <h2 class="page-title">
-          {{__('Contract')}}
+          {{__('AoA')}}
         </h2>
       </div>
       <div class="col-auto ms-auto d-print-none">
         <div class="btn-list">
 
-          <a href="{{ route('user.contract.create') }}" class="btn btn-primary d-none d-sm-inline-block">
+          <a href="{{ route('user.contract.aoa.create', $id) }}" class="btn btn-primary d-none d-sm-inline-block">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
-            {{__('Create Contract')}}
+            {{__('Create AoA')}}
           </a>
+          <a href="{{ route('user.contract.index') }}" class="btn btn-primary d-none d-sm-inline-block">
+            <i class="fas fa-backward me-1"></i> {{__('Contract List')}}
+          </a>
+
         </div>
       </div>
     </div>
@@ -38,8 +42,8 @@
           <div class="col-12">
               <div class="card">
                 @includeIf('includes.flash')
-                  @if (count($contracts) == 0)
-                      <h3 class="text-center py-5">{{__('No Contract Data Found')}}</h3>
+                  @if (count($aoa_list) == 0)
+                      <h3 class="text-center py-5">{{__('No AoA Data Found')}}</h3>
                   @else
                       <div class="table-responsive">
                           <table class="table table-vcenter table-mobile-md card-table">
@@ -56,7 +60,7 @@
                                 @php
                                     $counter = 1;
                                 @endphp
-                              @foreach($contracts as $item)
+                              @foreach($aoa_list as $item)
 
                                   <tr>
                                       <td data-label="{{ __('No') }}">
@@ -94,12 +98,12 @@
                                         <div>
 
                                             @if ($item->status == 0)
-                                            <a href="{{route('user.contract.edit',$item->id)}}" class="btn btn-primary btn-sm edit-{{$item->id}}" data-bs-toggle="tooltip" data-bs-original-title="@lang('edit')"><i class="fas fa-edit"></i></a>
+                                            <a href="{{route('user.contract.aoa.edit',$item->id)}}" class="btn btn-primary btn-sm edit-{{$item->id}}" data-bs-toggle="tooltip" data-bs-original-title="@lang('edit')"><i class="fas fa-edit"></i></a>
                                             @else
                                             <a href="javascript:void(0)" class="btn btn-primary btn-sm disabled" data-bs-toggle="tooltip" data-bs-original-title="@lang('edit')"><i class="fas fa-edit"></i></a>
                                             @endif
-                                            <a href="{{route('user.contract.delete',$item->id)}}" class="btn btn-dark btn-sm" data-bs-toggle="tooltip" data-bs-original-title="@lang('delete')"><i class="fas fa-eraser"></i></a>
-                                            <a href="{{route('user.contract.aoa',$item->id)}}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-original-title="@lang('Manage AoA(Act of Acceptance)')"><i class="fas fa-file-contract"></i></a>
+                                            <a href="{{route('user.contract.aoa.delete',$item->id)}}" class="btn btn-dark btn-sm" data-bs-toggle="tooltip" data-bs-original-title="@lang('delete')"><i class="fas fa-eraser"></i></a>
+
 
                                           {{-- <a href="javascript:void(0)" class="btn btn-secondary btn-sm copy" data-clipboard-text="{{route('contract.view',encrypt($item->number))}}" title="{{__('Copy Invoice URL')}}"><i class="fas fa-copy"></i></a> --}}
                                         </div>

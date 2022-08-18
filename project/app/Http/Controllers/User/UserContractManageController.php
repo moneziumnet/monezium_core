@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Classes\GeniusMailer;
 use App\Http\Controllers\Controller;
 use App\Models\Contract;
+use App\Models\ContractAoa;
 use App\Models\Generalsetting;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -23,7 +24,7 @@ class UserContractManageController extends Controller
     }
 
     public function store(Request $request){
-        $rules = ['title' => 'required'];
+        $rules = ['title' => 'required', 'description' => 'required'];
         $request->validate($rules);
 
         $data = new Contract();
@@ -44,7 +45,7 @@ class UserContractManageController extends Controller
     }
 
     public function update(Request $request, $id) {
-        $rules = ['title' => 'required'];
+        $rules = ['title' => 'required', 'description' => 'required'];
         $request->validate($rules);
 
         $data = Contract::findOrFail($id);
@@ -52,6 +53,54 @@ class UserContractManageController extends Controller
         $data->update($input);
 
         return redirect()->back()->with('success','Contract has been updated successfully');
+    }
+    public function delete($id) {
+        $data = Contract::findOrFail($id);
+        $data->delete();
+        return  redirect()->back()->with('success','Contract has been updated successfully');
+    }
+
+    public function aoa_index($id){
+        $data['aoa_list'] = ContractAoa::where('contract_id',$id)->latest()->paginate(15);
+        $data['id'] = $id;
+        return view('user.aoa.index', $data);
+    }
+
+    public function aoa_create($id){
+        return view('user.aoa.create',compact('id'));
+    }
+
+    public function aoa_store(Request $request, $id){
+        $rules = ['title' => 'required', 'description' => 'required'];
+        $request->validate($rules);
+
+        $data = new ContractAoa();
+        $input = $request->all();
+        $data->fill($input)->save();
+
+        return redirect()->back()->with('success','AoA has been created successfully');
+    }
+
+    public function aoa_edit($id) {
+        $data = ContractAoa::findOrFail($id);
+        return view('user.aoa.edit', compact('data'));
+    }
+
+    public function aoa_update(Request $request, $id) {
+        $rules = ['title' => 'required', 'description' => 'required'];
+        $request->validate($rules);
+
+        $data = ContractAoa::findOrFail($id);
+        $input = $request->all();
+        $data->update($input);
+
+        return redirect()->back()->with('success','AoA has been updated successfully');
+    }
+
+    public function aoa_delete($id) {
+        $data = ContractAoa::findOrFail($id);
+        $data->delete();
+        return  redirect()->back()->with('success','AoA has been updated successfully');
     }
 }
 
