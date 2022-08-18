@@ -200,7 +200,7 @@
             </li>
             @endif
 
-            @if(check_user_type(4))
+            @if(check_user_type(4) || DB::table('managers')->where('manager_id', auth()->id())->first())
             <li class="nav-item dropdown {{  request()->routeIs('user.referral.index') ? 'active' : '' }}">
               <a class="nav-link" href="{{route('user.referral.index')}}" >
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -440,7 +440,7 @@
             </li>
             @endif
 
-            @if(check_user_type(4))
+            @if(check_user_type(4) || DB::table('managers')->where('manager_id', auth()->id())->first())
             <li class="nav-item dropdown {{  request()->routeIs('user.referral.index') ? 'active' : '' }}">
               <a class="nav-link" href="{{route('user.referral.index')}}" >
                 <span class="nav-link-icon d-md-none d-lg-inline-block">

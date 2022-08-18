@@ -228,7 +228,6 @@
                                 </tbody>
                             </table>
                         </div>
-                        {{ $managers->links() }}
                     @endif
                 </div>
             </div>
