@@ -505,6 +505,8 @@ Route::prefix('user')->group(function() {
       Route::get('/pricingplan/datatables/{id}', [SupervisorController::class, 'datatables'])->name('user-pricingplan-datatables');
       Route::post('/pricingplan/updatecharge/{id}', [SupervisorController::class, 'updateCharge'])->name('user-pricingplan-update-charge');
       Route::post('/pricingplan/createcharge', [SupervisorController::class, 'createCharge'])->name('user-pricingplan-create-charge');
+      Route::get('/manager/create', [SupervisorController::class, 'createmanager'])->name('user.manager.create');
+      Route::post('/manager/create', [SupervisorController::class, 'storemanager'])->name('user.manager.store');
 
     //   Route::get('/own/money',[OwnTransferContoller::class, 'index'])->name('user.ownaccounttransfer.index');
       Route::get('/own', [OwnTransferController::class, 'index'])->name('ownaccounttransfer-index');

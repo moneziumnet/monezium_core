@@ -9,6 +9,7 @@ use App\Models\ReferralBonus;
 use App\Models\InviteUser;
 use App\Models\User;
 use App\Models\Wallet;
+use App\Models\Manager;
 use App\Classes\GeniusMailer;
 use Illuminate\Support\Facades\Validator;
 
@@ -28,6 +29,7 @@ class ReferralController extends Controller
         $data['referreds'] = User::where('referral_id',auth()->id())->orderBy('id','desc')->paginate(20);
         $data['user'] = Auth::user();
         $data['wallets'] = Wallet::where('user_id',auth()->id())->where('wallet_type',6)->with('currency')->get();
+        $data['managers'] = Manager::where('supervisor_id',auth()->id())->get();
         return view('user.referral.index',$data);
     }
 

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\BankPlan;
 use App\Models\User;
 use App\Models\Charge;
+use App\Models\Manager;
 use Illuminate\Support\Facades\Validator;
 
 class SupervisorController extends Controller
@@ -147,5 +148,32 @@ class SupervisorController extends Controller
 
         $data->save();
         return redirect()->back()->with(array('message' => 'Customer Plan Create Successfully'));
+    }
+
+    public function createmanager() {
+        return view('user.supervisor.manager');
+    }
+
+    public function storemanager(Request $request) {
+        $rules = ['email' => 'required'];
+        $request->validate($rules);
+        $manager = User::where('email', $request->email)->first();
+        if (!$manager) {
+            return back()->with('error','The user of this email('.$request->email.') is not registered. Please add other manager.');
+        }
+        $premanager = Manager::where('manager_id', $manager->id)->first();
+
+        if ($manager->id == $request->supervisor_id) {
+            return back()->with('error','You can not add your email as manager.');
+        }
+
+        if ($premanager) {
+            return back()->with('error','You already add this user as manager.');
+        }
+        $data = new Manager();
+        $data->supervisor_id = $request->supervisor_id;
+        $data->manager_id = $manager->id;
+        $data->save();
+        return back()->with('message','Manager has been added successfully.');
     }
 }
