@@ -66,6 +66,7 @@ use App\Http\Controllers\User\UserBankableController;
 use App\Http\Controllers\User\UserGlobalPassController;
 use App\Http\Controllers\Deposit\RailsBankController;
 use App\Http\Controllers\Deposit\OpenPaydController;
+use App\Http\Controllers\User\UserContractManageController;
 
 Route::prefix('user')->group(function() {
 
@@ -212,6 +213,11 @@ Route::prefix('user')->group(function() {
 
       Route::get('invoices-payment/{number}',   [ManageInvoiceController::class,'invoicePayment'])->name('user.invoice.payment');
       Route::post('invoices-payment/{number}',   [ManageInvoiceController::class,'invoicePaymentSubmit']);
+      Route::get('contract',   [UserContractManageController::class,'index'])->name('user.contract.index');
+      Route::get('contract/create',   [UserContractManageController::class,'create'])->name('user.contract.create');
+      Route::post('contract/store',   [UserContractManageController::class,'store'])->name('user.contract.store');
+      Route::get('contract/edit/{id}',   [UserContractManageController::class,'edit'])->name('user.contract.edit');
+      Route::post('contract/update/{id}',   [UserContractManageController::class,'update'])->name('user.contract.update');
       Route::get('pay-invoice',   [DepositController::class,'invoicePayment'])->name('user.pay.invoice');
 
       //escrow
@@ -390,7 +396,7 @@ Route::prefix('user')->group(function() {
         Route::get('/treezorbank/updatebeneficiaries', [UserTreezorBankController::class, 'UpdateBeneficiaries'])->name('user.treezorbank.api.updatebeneficiaries');
         Route::get('/treezorbank/businesssearchs', [UserTreezorBankController::class, 'Businesssearchs'])->name('user.treezorbank.api.businesssearchs');
         Route::get('/treezorbank/businessinformations', [UserTreezorBankController::class, 'Businessinformations'])->name('user.treezorbank.api.businessinformations');
-       
+
         // Bankable API
         Route::get('/bankable/balances', [UserBankableController::class, 'Balances'])->name('user.bankable.api.balances');
         Route::get('/bankable/createbankaccounts', [UserBankableController::class, 'CreateBankAccounts'])->name('user.bankable.api.createbankaccounts');
