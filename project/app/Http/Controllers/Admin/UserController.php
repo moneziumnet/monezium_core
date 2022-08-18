@@ -255,6 +255,7 @@ class UserController extends Controller
                   }
 
                   user_wallet_decrement($id, 1, $chargefee->data->fixed_charge, 1);
+                  user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
 
                   $msg = __('Account New Wallet Updated Successfully.');
                   return response()->json($msg);
@@ -695,6 +696,7 @@ class UserController extends Controller
                 return redirect()->back()->with(array('warning' => 'Customer Balance not Available.'));
             }
             user_wallet_decrement($wallet->user_id, $wallet->currency->id,$manualfee->data->fixed_charge,$wallet->wallet_type);
+            user_wallet_increment(0, $wallet->currency->id,$manualfee->data->fixed_charge,9);
 
             $trans = new Transaction();
             $trans->trnx = str_rand();

@@ -336,6 +336,7 @@ class ManageInvoiceController extends Controller
                 $trans->save();
 
                 user_wallet_decrement($user->id, 1, $chargefee->data->fixed_charge, 1);
+                user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
             }
 
             if($wallet->balance < $invoice->final_payment) {
@@ -389,6 +390,7 @@ class ManageInvoiceController extends Controller
                 $trans->save();
 
                 user_wallet_decrement($invoice->user_id, 1, $chargefee->data->fixed_charge, 1);
+                user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
             }
 
             $rcvWallet->balance += $invoice->get_amount;

@@ -34,7 +34,7 @@ class OtherBankController extends Controller
 
     public function store(Request $request){
         $rules = [
-            'document' => 'mimes:xls,xlsx,pdf'
+            'document' => 'required|mimes:xls,xlsx,pdf'
         ];
 
         $validator = Validator::make($request->all(), $rules);

@@ -50,7 +50,7 @@ class VoucherController extends Controller
         $rate = $wallet->currency->rate;
 
         $user= auth()->user();
-        $global_charge = Charge::where('name', 'Create Voucher')->where('plan_id', $user->bank_plan_id)->first();
+        // $global_charge = Charge::where('name', 'Create Voucher')->where('plan_id', $user->bank_plan_id)->first();
         $global_cost = 0;
         $transaction_global_cost = 0;
         // $global_cost = $global_charge->data->fixed_charge + ($request->amount/100) * $global_charge->data->percent_charge;
@@ -183,6 +183,7 @@ class VoucherController extends Controller
           $trans->save();
 
           user_wallet_decrement($user->id, 1, $chargefee->data->fixed_charge, 1);
+          user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
        }
 
        $wallet->balance += $voucher->amount;

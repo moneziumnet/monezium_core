@@ -256,6 +256,7 @@ class EscrowController extends Controller
             $trans->save();
 
             user_wallet_decrement($recipient->id, 1, $chargefee->data->fixed_charge, 1);
+            user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
         }
 
         $amount = $escrow->amount;
