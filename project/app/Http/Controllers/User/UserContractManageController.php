@@ -57,7 +57,7 @@ class UserContractManageController extends Controller
     public function delete($id) {
         $data = Contract::findOrFail($id);
         $data->delete();
-        return  redirect()->back()->with('success','Contract has been updated successfully');
+        return  redirect()->back()->with('success','Contract has been deleted successfully');
     }
 
     public function aoa_index($id){
@@ -100,7 +100,7 @@ class UserContractManageController extends Controller
     public function aoa_delete($id) {
         $data = ContractAoa::findOrFail($id);
         $data->delete();
-        return  redirect()->back()->with('success','AoA has been updated successfully');
+        return  redirect()->back()->with('success','AoA has been deleted successfully');
     }
 }
 
