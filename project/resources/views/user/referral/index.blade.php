@@ -160,6 +160,7 @@
     </div>
 </div>
 
+@if ((check_user_type(4)))
 
 <div class="container-xl">
     <div class="page-header d-print-none">
@@ -234,6 +235,7 @@
         </div>
     </div>
 </div>
+@endif
 
 
 @endsection

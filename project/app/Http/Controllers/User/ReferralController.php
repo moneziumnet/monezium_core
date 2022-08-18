@@ -22,9 +22,13 @@ class ReferralController extends Controller
     }
 
     public function referred(){
-        if(!check_user_type(4))
+        if(!(check_user_type(4)))
         {
-            return redirect()->route('user.dashboard');
+            if (!(Manager::where('manager_id', auth()->id())->first())) {
+                # code...
+                return redirect()->route('user.dashboard');
+            }
+
         }
         $data['referreds'] = User::where('referral_id',auth()->id())->orderBy('id','desc')->paginate(20);
         $data['user'] = Auth::user();
@@ -39,7 +43,10 @@ class ReferralController extends Controller
     {
         if(!check_user_type(4))
         {
-            return redirect()->route('user.dashboard');
+            if (!(Manager::where('manager_id', auth()->id())->first())) {
+                # code...
+                return redirect()->route('user.dashboard');
+            }
         }
         $rules = [
             'invite_email'  => 'required|email'

@@ -207,7 +207,11 @@
                   <i class="fas fa-box"></i>
                 </span>
                 <span class="nav-link-title">
-                  {{__('Supervisor')}}
+                    @if(check_user_type(4))
+                        {{__('Supervisor')}}
+                    @elseif(DB::table('managers')->where('manager_id', auth()->id())->first())
+                        {{__('Manager')}}
+                    @endif
                 </span>
               </a>
             </li>
@@ -447,7 +451,11 @@
                   <i class="fas fa-box"></i>
                 </span>
                 <span class="nav-link-title">
-                  {{__('Supervisor')}}
+                    @if(check_user_type(4))
+                        {{__('Supervisor')}}
+                    @elseif(DB::table('managers')->where('manager_id', auth()->id())->first())
+                        {{__('Manager')}}
+                    @endif
                 </span>
               </a>
             </li>
