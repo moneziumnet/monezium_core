@@ -114,12 +114,12 @@ class MoneyRequestController extends Controller
         $data->user_type = 1;
         $data->save();
 
-
+        $currency = Currency::findOrFail($request->wallet_id);
         if($receiver === null){
             $gs = Generalsetting::first();
             $to = $request->account_email;
             $subject = " Money Request";
-            $msg = "Hello ".$request->account_name."!\nYou received request money.\nPlease confirm current.\n".route('user.money.request.store')."\n Thank you.";
+            $msg = "Hello ".$request->account_name."!\nYou received request money (".$request->amount.$currency->symbol.").\nPlease confirm current.\n".route('user.request.money.receive')."\n Thank you.";
             $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
             mail($to,$subject,$msg,$headers);
             return redirect()->back()->with('success','Request Money Send to unregisted user('.$request->account_email.') Successfully.');
