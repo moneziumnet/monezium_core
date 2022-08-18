@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 
@@ -39,7 +39,7 @@
               <div class="card">
                   @if (count($invoices) == 0)
                       <h3 class="text-center py-5">{{__('No Invoice Data Found')}}</h3>
-                  @else 
+                  @else
                       <div class="table-responsive">
                           <table class="table table-vcenter table-mobile-md card-table">
                               <thead>
@@ -60,7 +60,7 @@
                                       <td data-label="{{ __('Item Number') }}">
                                       <div>
                                         {{$item->number}}
-                                      </div>    
+                                      </div>
                                     </td>
                                       <td data-label="{{ __('Invoice To') }}">
                                         <div>
@@ -72,13 +72,17 @@
                                           {{$item->email}}
                                         </div>
                                       </td>
-
+                                      <td data-label="{{ __('Type') }}">
+                                        <div>
+                                          {{$item->type}}
+                                        </div>
+                                      </td>
                                       <td data-label="{{ __('Amount') }}">
                                         <div>
                                           {{amount($item->final_amount,$item->currency->type,2)}} {{$item->currency->code}}
                                         </div>
                                       </td>
-  
+
                                       <td data-label="{{ __('Pay Status') }}">
                                         <div>
                                           @if ($item->status != 2)
@@ -91,7 +95,7 @@
                                           @endif
                                         </div>
                                       </td>
-                                      
+
                                       <td data-label="{{ __('Publish Status') }}">
                                         <div>
                                           @if (($item->status == 1 || $item->status == 0) && $item->payment_status != 1)
@@ -106,17 +110,17 @@
                                           @endif
                                         </div>
                                       </td>
-                                      
+
                                       <td data-label="{{ __('Date') }}">
                                         <div>
                                           {{dateFormat($item->created_at,'d M Y')}}
                                         </div>
                                       </td>
-                                     
+
                                       <td data-label="{{ __('Action') }}">
                                         <div>
                                           <a href="{{route('user.invoice.view',$item->number)}}" class="btn btn-dark btn-sm"><i class="fas fa-eye"></i></a>
-                         
+
                                           @if ($item->status == 0)
                                             <a href="{{route('user.invoice.edit',$item->id)}}" class="btn btn-primary btn-sm edit-{{$item->id}}"><i class="fas fa-edit"></i></a>
                                           @else
@@ -147,11 +151,11 @@
    <script src="{{asset('assets/user/js/clipboard.min.js')}}"></script>
     <script>
         'use strict';
-        $('.pay_status').on('change',function () { 
-         
+        $('.pay_status').on('change',function () {
+
             var url = "{{route('user.invoice.pay.status')}}"
             var id = $(this).data('id')
-            $.post(url,{id:id,_token:'{{csrf_token()}}'},function (res) { 
+            $.post(url,{id:id,_token:'{{csrf_token()}}'},function (res) {
                 if(res.paid){
                   //  toast('success',res.paid)
                     $('.pay-status-'+id).addClass('bg-success').text('Paid')
@@ -168,10 +172,10 @@
                 }
             })
         })
-        $('.status').on('change',function () { 
+        $('.status').on('change',function () {
             var url = "{{route('user.invoice.publish.status')}}"
             var id = $(this).data('id')
-            $.post(url,{id:id,_token:'{{csrf_token()}}'},function (res) { 
+            $.post(url,{id:id,_token:'{{csrf_token()}}'},function (res) {
                 if(res.unpublish){
                   //  toast('success',res.unpublish)
                     $('.status-text-'+id).removeClass('bg-success').addClass('bg-secondary').text('Un-published')
@@ -196,5 +200,5 @@
            toast('success','Invoice URL Copied')
         });
     </script>
-       
+
 @endpush

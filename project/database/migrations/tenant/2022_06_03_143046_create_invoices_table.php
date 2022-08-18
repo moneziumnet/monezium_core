@@ -21,6 +21,7 @@ class CreateInvoicesTable extends Migration
             $table->string('invoice_to');
             $table->string('email');
             $table->string('address');
+            $table->string('type');
             $table->decimal('charge', 20, 10);
             $table->decimal('final_amount', 20, 10);
             $table->decimal('get_amount', 20, 10);

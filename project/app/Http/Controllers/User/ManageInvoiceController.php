@@ -72,6 +72,7 @@ class ManageInvoiceController extends Controller
         $invoice->address      = $request->address;
         $invoice->currency_id  = $currency->id;
         $invoice->charge       = $finalCharge;
+        $invoice->type       = $request->type;
         $invoice->final_amount = $amount;
         $invoice->get_amount   = $willGetAmount;
         $invoice->save();
@@ -167,6 +168,7 @@ class ManageInvoiceController extends Controller
         $invoice->email        = $request->email;
         $invoice->address      = $request->address;
         $invoice->currency_id  = $currency->id;
+        $invoice->type       = $request->type;
         $invoice->charge       = $finalCharge;
         $invoice->final_amount = array_sum($request->amount);
         $invoice->get_amount   = $willGetAmount;
