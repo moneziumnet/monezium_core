@@ -81,6 +81,9 @@
     if(in_array($supervisor, $userType)) {
         $wallet_type['6'] = 'Supervisor';
     }
+    elseif (DB::table('managers')->where('manager_id', auth()->id())->first()) {
+        $wallet_type['10'] = 'Manager';
+    }
     if(in_array($merchant, $userType)) {
         $wallet_type['7'] = 'Merchant';
     }

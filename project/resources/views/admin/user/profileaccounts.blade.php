@@ -31,6 +31,9 @@
                 if(in_array($supervisor, $userType)) {
                     $accounttype['6'] = 'Supervisor';
                 }
+                elseif (DB::table('managers')->where('manager_id', $data->id)->first()) {
+                    $accounttype['10'] = 'Manager';
+                }
 
                 if(in_array($merchant, $userType)) {
                     $accounttype['7'] = 'Merchant';
@@ -58,6 +61,9 @@
                         @endif
                         @if (isset($accounttype['7']))
                         <option value="7"> {{'Merchant'}} </option>
+                        @endif
+                        @if (isset($accounttype['10']))
+                        <option value="10"> {{'Manager'}} </option>
                         @endif
                     </select>
                 </div>
@@ -268,7 +274,7 @@ function Deposit(id) {
 $('#addpayment').on('click', function() {
     window.location.reload();
 });
-    let accounttype = {'0':'All', '1':'Current', '2':'Card', '3':'Deposit', '4':'Loan', '5':'Escrow', '6':'Supervisor', '7':'Merchant', '8':'Crypto'};
+    let accounttype = {'0':'All', '1':'Current', '2':'Card', '3':'Deposit', '4':'Loan', '5':'Escrow', '6':'Supervisor', '7':'Merchant', '8':'Crypto', '10':'Manager'};
     let _orignhtml = $('div#walletlist').html();
     $('#wallet_type').on('change', function() {
         let wallet_type = $("#wallet_type").val();
