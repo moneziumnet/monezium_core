@@ -406,7 +406,7 @@ class UserController extends Controller
 
             if($plan->amount > $userBalance)
             {
-                return response()->json(array('errors' => 'Customer Balance not Available.'));
+                return response()->json(array('errors' =>[ 'Customer Balance not Available.']));
             }
 
             $trnx              = new Transaction();
@@ -430,7 +430,7 @@ class UserController extends Controller
                 $user->update();
             }
 
-            return response()->json(array('success' => 'Customer\'s Plan Upgrade Successfully.'));
+            return response()->json('Customer\'s Plan Upgrade Successfully.');
         }
 
         public function profileTransctions($id)
