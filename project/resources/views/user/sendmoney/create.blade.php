@@ -56,7 +56,7 @@
 
                                 <div class="form-group mb-3 mt-3">
                                     <label class="form-label required">{{__('Account Number')}}</label>
-                                    <input name="account_number" id="account_number" class="form-control" autocomplete="off" placeholder="{{__('000.000.0000')}}" type="text" value="{{ $savedUser ? $savedUser->account_number : '' }}" min="1" required>
+                                    <input name="email" id="email" class="form-control" autocomplete="off" placeholder="{{__('user@email.com')}}" type="email" value="{{ $savedUser ? $savedUser->email : '' }}" min="1" required>
                                 </div>
 
                                 <div class="form-group mb-3 mt-3">
@@ -112,7 +112,7 @@
                               @endphp
                                 @if ($reciver)
                                   <div class="col-6">
-                                    <a href="{{ route('send.money.savedUser',$reciver->account_number) }}">
+                                    <a href="{{ route('send.money.savedUser',$reciver->email) }}">
                                       <div class="row g-3 align-items-center">
                                         <span class="col-auto">
                                           <span class="avatar" style="background-image: url({{ asset('assets/images/'.$reciver->photo) }})">
@@ -121,7 +121,7 @@
                                         <div class="col text-truncate">
                                           <span>{{$reciver->name}}</span>
                                           <br>
-                                          <small class="text-muted text-truncate mt-n1">{{ $reciver->account_number }}</small>
+                                          <small class="text-muted text-truncate mt-n1">{{ $reciver->email }}</small>
                                         </div>
                                       </div>
                                     </a>
@@ -148,12 +148,12 @@
   'use strict';
 
   $("#account_name").on('click',function(){
-    let accountNumber = $("#account_number").val();
+    let accountemail = $("#email").val();
 
-    let url = `${mainurl}/user/username/${accountNumber}`;
+    let url = `${mainurl}/user/username-by-email/${accountemail}`;
 
     $.get(url, function(data){
-      $("#account_name").val(data);
+      $("#account_name").val(data['name']);
     });
   })
 </script>

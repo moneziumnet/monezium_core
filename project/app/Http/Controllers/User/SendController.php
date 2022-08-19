@@ -51,7 +51,7 @@ class SendController extends Controller
             $data['secret'] = $ga->createSecret();
             $wallets = Wallet::where('user_id',auth()->id())->with('currency')->get();
             $data['wallets'] = $wallets;
-            $data['savedUser'] = User::whereAccountNumber($no)->first();
+            $data['savedUser'] = User::whereEmail($no)->first();
             $data['saveAccounts'] = SaveAccount::whereUserId(auth()->id())->orderBy('id','desc')->get();
 
             return view('user.sendmoney.create',$data);
@@ -80,7 +80,7 @@ class SendController extends Controller
     public function store(Request $request){
 
         $request->validate([
-            'account_number'    => 'required',
+            'email'    => 'required',
             'wallet_id'         => 'required',
             'account_name'      => 'required',
             'amount'            => 'required|numeric|min:0',
@@ -93,9 +93,9 @@ class SendController extends Controller
         $secret = $user->go;
         $oneCode = $ga->getCode($secret);
 
-        if ($oneCode != $request->code) {
-            return redirect()->back()->with('unsuccess','Two factor authentication code is wrong');
-        }
+        // if ($oneCode != $request->code) {
+        //     return redirect()->back()->with('unsuccess','Two factor authentication code is wrong');
+        // }
 
         if($user->bank_plan_id === null){
             return redirect()->back()->with('unsuccess','You have to buy a plan to withdraw.');
@@ -122,7 +122,7 @@ class SendController extends Controller
 
         $gs = Generalsetting::first();
 
-        if($request->account_number == $user->account_number){
+        if($request->email == $user->email){
             return redirect()->back()->with('unsuccess','You can not send money yourself!!');
         }
 
@@ -173,7 +173,7 @@ class SendController extends Controller
         $finalCharge = amount($transaction_global_cost+$transaction_custom_cost, $wallet->currency->type);
         $finalamount = amount( $request->amount + $finalCharge, $wallet->currency->type);
 
-        if($receiver = User::where('account_number',$request->account_number)->first()){
+        if($receiver = User::where('email',$request->email)->first()){
             $txnid = Str::random(4).time();
             $data = new BalanceTransfer();
             $data->user_id = auth()->user()->id;
