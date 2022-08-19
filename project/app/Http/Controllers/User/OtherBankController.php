@@ -118,7 +118,7 @@ class OtherBankController extends Controller
             if ($file = $request->file('document'))
             {
                 $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
-                $file->move('assets/images',$name);
+                $file->move('assets/doc',$name);
             }
 
             $data = new BalanceTransfer();

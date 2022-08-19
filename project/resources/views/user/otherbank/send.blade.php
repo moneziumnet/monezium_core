@@ -131,7 +131,7 @@
 
                         <div class="form-group mb-3 mt-3">
                             <label class="form-label document" id="document_label">{{__('Document')}}</label>
-                            <input class= "document" name="document" id="document" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="file" accept=".xls,.xlsx,.pdf">
+                            <input class= "document" name="document" id="document" class="form-control" autocomplete="off" type="file" accept=".xls,.xlsx,.pdf">
                         </div>
 
                         <div class="form-group mt-3">

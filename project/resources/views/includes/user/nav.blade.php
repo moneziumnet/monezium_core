@@ -165,7 +165,7 @@
             @endif
 
             @if(check_user_type(3))
-            <li class="nav-item dropdown {{ request()->routeIs('user.merchant.qr') || request()->routeIs('user.merchant.api.key.form') || request()->routeIs('user.merchant.send.money.create') || request()->routeIs('user.merchant.money.request.index') || request()->routeIs('user.merchant.other.bank') ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ request()->routeIs('user.merchant.qr') || request()->routeIs('user.merchant.api.key.form') || request()->routeIs('user.merchant.send.money.create') || request()->routeIs('user.merchant.money.request.index') || request()->routeIs('user.merchant.other.bank') || request()->routeIs('user.merchant.shop.index') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                   <i class="fas fa-users"></i>
@@ -182,6 +182,10 @@
                 <a class="dropdown-item" href="{{route('user.merchant.api.key.form')}}">
                   {{__('API Access Key')}}
                 </a>
+
+                <a class="dropdown-item" href="{{route('user.merchant.shop.index')}}">
+                    {{__('Merchant Shop')}}
+                  </a>
 
                 <a class="dropdown-item" href="{{route('user.merchant.send.money.create')}}">
                     {{__('Send Money')}}
@@ -409,7 +413,7 @@
             @endif
 
             @if(check_user_type(3))
-            <li class="nav-item dropdown {{ request()->routeIs('user.merchant.qr') || request()->routeIs('user.merchant.api.key.form') || request()->routeIs('user.merchant.send.money.create') || request()->routeIs('user.merchant.money.request.index') || request()->routeIs('user.merchant.other.bank') ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ request()->routeIs('user.merchant.qr') || request()->routeIs('user.merchant.api.key.form') || request()->routeIs('user.merchant.send.money.create') || request()->routeIs('user.merchant.money.request.index') || request()->routeIs('user.merchant.other.bank') || request()->routeIs('user.merchant.shop.index') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                   <i class="fas fa-users"></i>
@@ -426,6 +430,10 @@
                 <a class="dropdown-item" href="{{route('user.merchant.api.key.form')}}">
                   {{__('API Access Key')}}
                 </a>
+
+                <a class="dropdown-item" href="{{route('user.merchant.shop.index')}}">
+                    {{__('Merchant Shop')}}
+                  </a>
 
                 <a class="dropdown-item" href="{{route('user.merchant.send.money.create')}}">
                     {{__('Send Money')}}

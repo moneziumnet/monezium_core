@@ -70,7 +70,7 @@
                                     <tr>
                                         <th width="45%">{{__('Document')}}</th>
                                         <td width="10%">:</td>
-                                        <td width="45%"><a href ="{{asset('assets/images/'.$data->document)}}" attributes-list download > Download Document </a>  </td>
+                                        <td width="45%"><a href ="{{asset('assets/doc/'.$data->document)}}" attributes-list download > Download Document </a>  </td>
                                     </tr>
                                 @endif
 

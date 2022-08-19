@@ -51,6 +51,7 @@ use App\Http\Controllers\User\EscrowController;
 use App\Http\Controllers\User\TransferController;
 use App\Http\Controllers\User\ExchangeMoneyController;
 use App\Http\Controllers\User\MerchantController;
+use App\Http\Controllers\User\MerchantShopController;
 use App\Http\Controllers\User\MerchantSendController;
 use App\Http\Controllers\User\MerchantMoneyRequestController;
 use App\Http\Controllers\User\MerchantOtherBankController;
@@ -153,6 +154,14 @@ Route::prefix('user')->group(function() {
       Route::get('/merchant/other-bank',[MerchantOtherBankController::class,'index'])->name('user.merchant.other.bank');
       Route::get('/merchant/other-bank/{id}',[MerchantOtherBankController::class,'othersend'])->name('user.merchant.other.send');
       Route::post('/merchant/other-bank/store', [MerchantOtherBankController::class,'store'])->name('user.merchant.other.send.store');
+
+      Route::get('/merchant/shop', [MerchantShopController::class,'index'])->name('user.merchant.shop.index');
+      Route::get('/merchant/shop/create', [MerchantShopController::class,'create'])->name('user.merchant.shop.create');
+      Route::post('/merchant/shop/store', [MerchantShopController::class,'store'])->name('user.merchant.shop.store');
+      Route::get('/merchant/shop/edit/{id}', [MerchantShopController::class,'edit'])->name('user.merchant.shop.edit');
+      Route::post('/merchant/shop/update/{id}', [MerchantShopController::class,'update'])->name('user.merchant.shop.update');
+      Route::get('/merchant/shop/delete/{id}', [MerchantShopController::class,'delete'])->name('user.merchant.shop.delete');
+
 
 
       Route::group(['middleware'=>'kyc:Request Money'],function(){
