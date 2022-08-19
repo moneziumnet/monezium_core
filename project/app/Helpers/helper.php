@@ -443,6 +443,25 @@ if(!function_exists('getModule')){
       }
   }
 
+  if(!function_exists('check_user_type_by_id'))
+  {
+      function check_user_type_by_id($type_id, $user_id)
+      {
+          $user = User::findOrFail($user_id);
+          if(!$user) {
+            return false;
+          }
+          $explode = explode(',',$user->user_type);
+
+          if(in_array($type_id,$explode))
+          {
+              return true;
+          }else{
+              return false;
+          }
+      }
+  }
+
   if(!function_exists('check_custom_transaction_fee'))
   {
       function check_custom_transaction_fee($amount, $user, $slug)

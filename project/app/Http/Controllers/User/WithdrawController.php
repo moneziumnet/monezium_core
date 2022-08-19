@@ -124,8 +124,12 @@ class WithdrawController extends Controller
 
         user_wallet_decrement($user->id, $currency->id, $request->amount);
         if($user->referral_id != 0) {
-            user_wallet_increment($user->referral_id, $request->currency_id, $transaction_custom_cost, 6);
-
+            if (check_user_type_by_id(4, $user->referral_id)) {
+                user_wallet_increment($user->referral_id, $request->currency_id, $transaction_custom_cost, 6);
+            }
+            elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
+                user_wallet_increment($user->referral_id, $request->currency_id, $transaction_custom_cost, 10);
+            }
             $trans = new Transaction();
             $trans->trnx = str_rand();
             $trans->user_id     = $user->referral_id;

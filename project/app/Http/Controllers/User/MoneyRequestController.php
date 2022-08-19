@@ -176,8 +176,12 @@ class MoneyRequestController extends Controller
         user_wallet_decrement($sender->id, $currency_id, $data->amount);
         if ($receiver->referral_id != 0) {
 
-            user_wallet_increment($receiver->referral_id, $currency_id, $data->supervisor_cost,6);
-
+            if (check_user_type_by_id(4, $receiver->referral_id)) {
+                user_wallet_increment($receiver->referral_id, $currency_id, $data->supervisor_cost,6);
+            }
+            elseif (DB::table('managers')->where('manager_id', $receiver->referral_id)->first()) {
+                user_wallet_increment($receiver->referral_id, $currency_id, $data->supervisor_cost,10);
+            }
             $trans = new Transaction();
             $trans->trnx = str_rand();
             $trans->user_id     = $receiver->referral_id;
