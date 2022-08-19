@@ -47,6 +47,7 @@
                                   <th>{{__('Invoice')}}</th>
                                   <th>{{__('Invoice To')}}</th>
                                   <th>{{__('Email')}}</th>
+                                  <th>{{__('Type')}}</th>
                                   <th>{{__('Amount')}}</th>
                                   <th>{{__('Pay Status')}}</th>
                                   <th>{{__('Publish Status')}}</th>
