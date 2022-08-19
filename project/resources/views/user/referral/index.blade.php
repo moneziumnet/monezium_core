@@ -199,6 +199,7 @@
                                     <th>{{ __('Name') }}</th>
                                     <th>{{ __('Email') }}</th>
                                     <th>{{ __('Joined At') }}</th>
+                                    <th>{{ __('Action') }}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -222,6 +223,11 @@
                                             <td data-label="{{ __('Joined At') }}">
                                                 <div>
                                                     {{ $data->created_at->diffForHumans() }}
+                                                </div>
+                                            </td>
+                                            <td data-label="{{ __('Action') }}" >
+                                                <div>
+                                                    <a class="btn btn-danger btn-sm details" href="{{route('user.manager.delete',$data->id)}}">@lang('Delete')</a>
                                                 </div>
                                             </td>
                                         </tr>

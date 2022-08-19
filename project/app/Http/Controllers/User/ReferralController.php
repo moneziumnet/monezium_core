@@ -33,7 +33,7 @@ class ReferralController extends Controller
         $data['referreds'] = User::where('referral_id',auth()->id())->orderBy('id','desc')->paginate(20);
         $data['user'] = Auth::user();
         $data['wallets'] = Wallet::where('user_id',auth()->id())->where('wallet_type',6)->with('currency')->get();
-        $data['managers'] = Manager::where('supervisor_id',auth()->id())->get();
+        $data['managers'] = Manager::where('supervisor_id',auth()->id())->orderBy('id','desc')->get();
         return view('user.referral.index',$data);
     }
 

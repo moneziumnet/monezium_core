@@ -38,13 +38,15 @@
                              <tr>
                               <th rowspan="2" >{{__('Fee Type')}}</th>
                               <th colspan="2" >{{__('Golbal')}}</th>
-                              <th colspan="2" >{{__('Supervisor')}}</th>
-                              <th colspan="2" >{{__('Manage')}}</th>
+                              <th colspan="2" >
+                                @if (check_user_type(4))
+                                {{__('Supervisor')}}</th>
+                                @elseif (DB::table('managers')->where('manager_id', auth()->id())->first())
+                                {{__('Manager')}}</th>
+                                @endif
                               <th rowspan="2">{{__('Action')}}</th>
                              </tr>
                              <tr>
-                                <th >{{__('Percent')}}</th>
-                                <th>{{__('Fixed')}}</th>
                                 <th >{{__('Percent')}}</th>
                                 <th>{{__('Fixed')}}</th>
                                 <th >{{__('Percent')}}</th>
@@ -99,8 +101,6 @@
                 { data: 'fixed', name:'fixed' },
                 { data: 'percent_customer', name: 'percent_customer' },
                 { data: 'fixed_customer', name:'fixed_customer' },
-                { data: ' ', name:'' },
-                { data: ' ', name:'' },
                 { data: 'action', name: 'action' },
             ],
         });

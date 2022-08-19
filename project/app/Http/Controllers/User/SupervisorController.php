@@ -23,19 +23,13 @@ class SupervisorController extends Controller
     public function index($id)
     {
         $data = User::findOrFail($id);
-        $plans = BankPlan::where('id','!=',$data->bank_plan_id)->get();
-        $plan = BankPlan::findOrFail($data->bank_plan_id);
-        //dd($plan);
-        // $data['globals'] = Charge::where('plan_id', $user->bank_plan_id)->get();
         $data['data'] = $data;
-        $data['plan'] = $plan;
-        $data['plans'] = $plans;
         return view('user.supervisor.index',$data);
     }
 
     public function datatables($id)
     {
-        $user = auth()->user();
+        $user = User::findOrFail($id);
         $globals = Charge::where('plan_id', $user->bank_plan_id)->whereIn('slug', ['deposit', 'send', 'recieve', 'escrow', 'withdraw'])->get();
         $datas = $globals;
         return Datatables::of($datas)
@@ -175,5 +169,15 @@ class SupervisorController extends Controller
         $data->manager_id = $manager->id;
         $data->save();
         return back()->with('message','Manager has been added successfully.');
+    }
+
+    public function deletemanager($id) {
+        $manager = Manager::where('id', $id)->first();
+        if (!$manager) {
+            return back()->with('error','You already add this user as manager.');
+        }
+        $manager->delete();
+        return back()->with('message','Manager has been deleted successfully.');
+
     }
 }
