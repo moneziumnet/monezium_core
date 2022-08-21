@@ -67,7 +67,7 @@
                                       </td>
                                       <td data-label="{{ __('Document') }}">
                                         <div>
-                                            <a href ="{{asset('assets/doc/'.$item->document)}}" attributes-list download > Download Document
+                                            <a href ="{{asset('assets/doc/'.$item->document)}}" attributes-list download > Download Document </a>
                                         </div>
                                       </td>
 

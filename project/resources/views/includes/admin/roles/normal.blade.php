@@ -25,6 +25,7 @@
          <a class="collapse-item" href="{{route('admin.kyc.info','user')}}">{{ __('User KYC Info') }}</a>
         <a class="collapse-item" href="{{route('admin.manage.module')}}">{{ __('User KYC Modules') }}</a>
         <a class="collapse-item" href="{{ route('admin.other.banks.index') }}">{{ __('Other Banks') }}</a>
+        <a class="collapse-item" href="{{ route('admin.merchant.shop.index') }}">{{ __('Merchant Shop') }}</a>
         <!-- <a class="collapse-item" href="{{ route('admin.user.bonus') }}">{{ __('Supervisor Fee') }}</a> -->
       </div>
     </div>

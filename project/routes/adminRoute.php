@@ -67,6 +67,7 @@ use App\Http\Controllers\Deposit\RailsBankController;
 use App\Http\Controllers\Deposit\OpenPaydController;
 use App\Http\Controllers\Admin\ContractManageController;
 use App\Http\Controllers\Admin\SystemAccountController;
+use App\Http\Controllers\Admin\MerchantShopController;
 
 
 Route::prefix('admin')->group(function () {
@@ -271,6 +272,11 @@ Route::prefix('admin')->group(function () {
     Route::get('/plan/delete/{id}', [PlanController::class, 'destroy'])->name('admin.plan.delete');
     Route::post('/plan/store', [PlanController::class, 'store'])->name('admin.plan.store');
     Route::post('/plan/update/{id}', [PlanController::class, 'update'])->name('admin.plan.update');
+
+    Route::get('/merchant/shop', [MerchantShopController::class, 'index'])->name('admin.merchant.shop.index');
+    Route::get('/merchant/shop/datatables', [MerchantShopController::class, 'datatables'])->name('admin.merchant.shop.datatables');
+    Route::get('/merchant/shop/status/{id1}/{id2}', [MerchantShopController::class, 'status'])->name('admin.merchant.shop.status');
+
   });
 
   Route::group(['middleware' => 'permissions:Loan Management'], function () {
