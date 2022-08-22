@@ -165,7 +165,6 @@ Route::prefix('user')->group(function() {
 
       Route::group(['middleware'=>'kyc:Request Money'],function(){
         Route::get('/money-request', [MoneyRequestController::class,'index'])->name('user.money.request.index');
-        Route::get('/request-money/receive',[MoneyRequestController::class,'receive'])->name('user.request.money.receive');
         Route::get('/money-request/create', [MoneyRequestController::class,'create'])->name('user.money.request.create');
         Route::post('/money-request/store', [MoneyRequestController::class,'store'])->name('user.money.request.store');
         Route::get('/request/money/verify/{id}', [MoneyRequestController::class,'verify'])->name('user.request.money.verify');
@@ -222,6 +221,7 @@ Route::prefix('user')->group(function() {
       Route::get('invoices-payment/{number}',   [ManageInvoiceController::class,'invoicePayment'])->name('user.invoice.payment');
       Route::post('invoices-payment/{number}',   [ManageInvoiceController::class,'invoicePaymentSubmit']);
       Route::get('contract',   [UserContractManageController::class,'index'])->name('user.contract.index');
+      Route::get('contract/view/{id}',   [UserContractManageController::class,'view'])->name('user.contract.view');
       Route::get('contract/create',   [UserContractManageController::class,'create'])->name('user.contract.create');
       Route::post('contract/store',   [UserContractManageController::class,'store'])->name('user.contract.store');
       Route::get('contract/edit/{id}',   [UserContractManageController::class,'edit'])->name('user.contract.edit');
