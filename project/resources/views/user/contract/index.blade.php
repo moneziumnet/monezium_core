@@ -92,7 +92,7 @@
 
                                       <td data-label="{{ __('Action') }}">
                                         <div>
-
+                                            <a href="{{route('user.contract.view',$item->id)}}" class="btn btn-dark btn-sm" data-bs-toggle="tooltip" data-bs-original-title="@lang('view')"><i class="fas fa-eye"></i></a>
                                             @if ($item->status == 0)
                                             <a href="{{route('user.contract.edit',$item->id)}}" class="btn btn-primary btn-sm edit-{{$item->id}}" data-bs-toggle="tooltip" data-bs-original-title="@lang('edit')"><i class="fas fa-edit"></i></a>
                                             @else
@@ -100,8 +100,8 @@
                                             @endif
                                             <a href="{{route('user.contract.delete',$item->id)}}" class="btn btn-dark btn-sm" data-bs-toggle="tooltip" data-bs-original-title="@lang('delete')"><i class="fas fa-eraser"></i></a>
                                             <a href="{{route('user.contract.aoa',$item->id)}}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-original-title="@lang('Manage AoA(Act of Acceptance)')"><i class="fas fa-file-contract"></i></a>
+                                            <a href="javascript:void(0)" class="btn btn-secondary btn-sm copy" data-clipboard-text="{{route('contract.view',encrypt($item->id))}}" title="{{__('Copy Contract URL')}}"><i class="fas fa-copy"></i></a>
 
-                                          {{-- <a href="javascript:void(0)" class="btn btn-secondary btn-sm copy" data-clipboard-text="{{route('contract.view',encrypt($item->number))}}" title="{{__('Copy Invoice URL')}}"><i class="fas fa-copy"></i></a> --}}
                                         </div>
                                       </td>
                                   </tr>
@@ -124,57 +124,13 @@
 @push('js')
 
 
-   {{-- <script src="{{asset('assets/user/js/clipboard.min.js')}}"></script>
+   <script src="{{asset('assets/user/js/clipboard.min.js')}}"></script>
     <script>
         'use strict';
-        $('.pay_status').on('change',function () {
-
-            var url = "{{route('user.invoice.pay.status')}}"
-            var id = $(this).data('id')
-            $.post(url,{id:id,_token:'{{csrf_token()}}'},function (res) {
-                if(res.paid){
-                  //  toast('success',res.paid)
-                    $('.pay-status-'+id).addClass('bg-success').text('Paid')
-                    return false
-                }
-                if(res.unpaid){
-                   // toast('success',res.unpaid)
-                    $('.pay-status-'+id).removeClass('bg-success').addClass('bg-secondary').text('Unpaid')
-                    return false
-                }
-                if(res.error){
-                    //toast('error',res.error)
-                    return false
-                }
-            })
-        })
-        $('.status').on('change',function () {
-            var url = "{{route('user.invoice.publish.status')}}"
-            var id = $(this).data('id')
-            $.post(url,{id:id,_token:'{{csrf_token()}}'},function (res) {
-                if(res.unpublish){
-                  //  toast('success',res.unpublish)
-                    $('.status-text-'+id).removeClass('bg-success').addClass('bg-secondary').text('Un-published')
-                    $('.edit-'+id).removeClass('disabled')
-                    return false
-                }
-                if(res.publish){
-                  //  toast('success',res.publish)
-                    $('.status-text-'+id).addClass('bg-success').text('Published')
-                    $('.edit-'+id).addClass('disabled')
-                    return false
-                }
-                if(res.error){
-                   // toast('error',res.error)
-                    return false
-                }
-            })
-        })
-
         var clipboard = new ClipboardJS('.copy');
         clipboard.on('success', function(e) {
-           toast('success','Invoice URL Copied')
+           console.log('success','Contract URL Copied')
         });
-    </script> --}}
+    </script>
 
 @endpush

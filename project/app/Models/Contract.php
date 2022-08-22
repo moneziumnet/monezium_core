@@ -11,6 +11,7 @@ class Contract extends Model
         'title',
         'description',
         'amount',
+        'image_path',
         'status',
     ];
 

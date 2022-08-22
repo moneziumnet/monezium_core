@@ -36,7 +36,38 @@ class UserContractManageController extends Controller
 
     public function view($id) {
         $data = Contract::findOrFail($id);
-        return view('user.contract.view', compact('data'));
+        $description = $data->description;
+        if(strpos($data->description,"{amount}" ) !== false) {
+            $description = preg_replace("/{amount}/", $data->amount ,$data->description);
+        }
+
+        return view('user.contract.view', compact('data', 'description'));
+    }
+
+    public function contract_view($id) {
+        $data = Contract::findOrFail(decrypt($id));
+        $description = $data->description;
+        if(strpos($data->description,"{amount}" ) !== false) {
+            $description = preg_replace("/{amount}/", $data->amount ,$data->description);
+        }
+        return view('user.contract.contract', compact('data', 'description'));
+    }
+
+    public function contract_sign(Request $request, $id) {
+        $data = Contract::findOrFail($id);
+
+        $folderPath ='assets/images/';
+        $image_parts = explode(";base64,", $request->signed);
+        $image_type_aux = explode("image/", $image_parts[0]);
+        $image_type = $image_type_aux[1];
+        $image_base64 = base64_decode($image_parts[1]);
+        $filename = uniqid() . '.'.$image_type;
+        $file = $folderPath . $filename;
+        file_put_contents($file, $image_base64);
+        $data->status = 1;
+        $data->image_path = $filename;
+        $data->update();
+        return back()->with('success', 'You have signed successfully');
     }
 
     public function edit($id) {

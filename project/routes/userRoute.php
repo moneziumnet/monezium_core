@@ -226,6 +226,7 @@ Route::prefix('user')->group(function() {
       Route::get('contract/view/{id}',   [UserContractManageController::class,'view'])->name('user.contract.view');
       Route::get('contract/create',   [UserContractManageController::class,'create'])->name('user.contract.create');
       Route::post('contract/store',   [UserContractManageController::class,'store'])->name('user.contract.store');
+      Route::post('contract/sign/{id}',   [UserContractManageController::class,'contract_sign'])->name('user.contract.sign');
       Route::get('contract/edit/{id}',   [UserContractManageController::class,'edit'])->name('user.contract.edit');
       Route::post('contract/update/{id}',   [UserContractManageController::class,'update'])->name('user.contract.update');
       Route::get('contract/delete/{id}',   [UserContractManageController::class,'delete'])->name('user.contract.delete');

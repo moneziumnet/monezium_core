@@ -6,67 +6,67 @@
 
 @section('contents')
 <div class="container-xl">
-    <div class="page-header d-print-none">
-      <div class="row align-items-center">
-        <div class="col">
-          <h2 class="page-title">
-            {{__('Edit Contract')}}
-          </h2>
+  <div class="page-header d-print-none">
+    <div class="row align-items-center">
+      <div class="col">
+        <div class="page-pretitle">
+          {{__('Overview')}}
         </div>
-        <div class="col-auto ms-auto d-print-none">
-            <div class="btn-list">
+        <h2 class="page-title">
+          {{__('Contract')}}
+        </h2>
+      </div>
+      <div class="col-auto ms-auto d-print-none">
+        <div class="btn-list">
 
-              <a href="{{ route('user.contract.index') }}" class="btn btn-primary d-none d-sm-inline-block">
-                  <i class="fas fa-backward me-1"></i> {{__('Contract List')}}
-              </a>
+          <a href="{{route('user.contract.index')}}" class="btn btn-primary"><i class="fas fa-backward me-1"></i> {{__(' Back')}}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-xl mt-3 mb-3">
+    <div class="card card-lg">
+      <div class="card-body">
+        <div class="row">
+            <div class="text-center">
+                <h1>
+                    {{__($data->title)}}
+                </h1>
             </div>
-          </div>
+            <div class="text-center mt-5">
+                <p>
+                    {{__($description)}}
+                </p>
+            </div>
+            @if ($data->status == 1)
+
+                <div class="wrapper-image-preview">
+                    <div class="box full-width">
+                        <div class="back-preview-image" style="background-image: url({{ $data->image_path ? asset('assets/images/'.$data->image_path) : '' }});"></div>
+                    </div>
+                </div>
+            @else
+                <p class="text-muted text-center mt-5">{{__('You did not signed')}}</p>
+            @endif
+
+        </div>
+        <p class="text-muted text-center mt-5">{{__('Thank you very much for doing new contract. We look forward to working with
+            you again!')}} <br> <small class="mt-5">{{__('All right reserved ')}} <a href="{{url('/')}}">{{$gs->title}}</a></small></p>
+
       </div>
     </div>
 </div>
-
-<div class="page-body">
-    <div class="container-xl">
-        <div class="row row-cards">
-            <div class="col-12">
-                <div class="card p-5">
-                    @includeIf('includes.flash')
-                    <form id="contract-form" action="{{ route('user.contract.update', $data->id) }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-
-                        <div class="form-group mb-3 mt-3">
-                            <label class="form-label required">{{__('Title')}}</label>
-                            <input name="title" id="title" class="form-control" autocomplete="off" placeholder="{{__('Enter Title')}}" type="text" value="{{$data->title}}" required>
-                        </div>
-
-                        <div class="form-group mb-3 mt-3">
-                            <label class="form-label required">{{__('amount')}}</label>
-                            <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number"  value="{{$data->amount}}" step="any" min="1" required>
-                        </div>
-
-                        <div class="form-group mb-3 mt-3">
-                            <label class="form-label required">{{__('Description')}}</label>
-                            <textarea name="description" class="form-control" id="inp-details" cols="30" rows="10" placeholder="{{__('Description')}}"  required>{{__($data->description)}}</textarea>
-                        </div>
-                        <input name="user_id" type="hidden" class="form-control" value="{{$data->user_id}}">
-
-                        <div class="form-footer">
-                            <button type="submit" class="btn btn-primary submit-btn w-100" >{{__('Update')}}</button>
-                        </div>
-
-
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
 @endsection
 
 @push('js')
-<script>
-  'use strict';
-</script>
+
+
+
+    <script type="text/javascript">
+        'use strict';
+    </script>
+
 @endpush
+
