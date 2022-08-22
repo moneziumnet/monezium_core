@@ -55,8 +55,10 @@ class LoginController extends Controller
             }
             $gs = Generalsetting::first();
             $user = auth()->user();
-            if($gs->two_factor && $user->twofa){
+            if($user->two_fa_email || $user->two_fa_phone){
               return response()->json(route('user.otp'));
+            }elseif($user->two_fa_google){
+              return response()->json(route('user.googleotp'));
             }else{
                 $user->update(['verified'=>1]);
                 return response()->json(route('user.dashboard'));

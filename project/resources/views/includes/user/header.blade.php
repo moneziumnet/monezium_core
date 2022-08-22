@@ -44,6 +44,9 @@
           <a class="dropdown-item" href="{{route('user.package.index')}}">
             {{__('Pricing Plan')}}
           </a>
+          <a class="dropdown-item" href="{{route('user.securityform')}}">
+            {{__('Security')}}
+          </a>
           <a class="dropdown-item" href="{{route('user.show2faForm')}}">
             {{__('2FA Security')}}
           </a>
