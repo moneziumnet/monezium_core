@@ -96,7 +96,7 @@
 
                         <div class="form-group mb-3 mt-3">
                             <label class="form-label required">{{__('Beneficiary Name')}}</label>
-                            <input name="beneficiary_name" id="beneficiary_name" class="form-control" autocomplete="off" placeholder="{{__('Jhon Doe')}}" type="text" value="{{ $data->beneficiary_name }}" required readonly>
+                            <input name="account_name" id="account_name" class="form-control" autocomplete="off" placeholder="{{__('Jhon Doe')}}" type="text" value="{{ $data->account_name }}" required readonly>
                         </div>
 
                         <div class="form-group mb-3 mt-3">

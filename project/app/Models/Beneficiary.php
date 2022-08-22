@@ -12,7 +12,7 @@ class Beneficiary extends Model
     protected $fillable = [
         'user_id',
         'other_bank_id',
-        'beneficiary_name',
+        'account_name',
         'address',
         'bank_address',
         'swift_bic',

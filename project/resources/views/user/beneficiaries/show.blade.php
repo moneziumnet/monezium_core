@@ -35,7 +35,7 @@
                             <tr>
                             <th class="45%" width="45%">@lang('Beneficiary Name')</th>
                             <td width="10%">:</td>
-                            <td class="45%" width="45%">{{ $data->beneficiary_name }}</td>
+                            <td class="45%" width="45%">{{ $data->account_name }}</td>
                           </tr>
                             <tr>
                               <th class="45%" width="45%">{{__('Beneficiary Address')}}</th>
