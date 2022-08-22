@@ -193,7 +193,7 @@
 
                 @if (in_array('Bank Transfer',$modules))
                 <a class="dropdown-item" href="{{route('user.merchant.other.bank')}}">
-                  {{__('External Payments')}}
+                  {{__('Other Bank Transfer')}}
                 </a>
                 @endif
               </div>
@@ -437,7 +437,7 @@
 
                 @if (in_array('Bank Transfer',$modules))
                 <a class="dropdown-item" href="{{route('user.merchant.other.bank')}}">
-                  {{__('External Payments')}}
+                  {{__('Other Bank Transfer')}}
                 </a>
                 @endif
               </div>
