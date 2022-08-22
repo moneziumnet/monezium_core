@@ -27,7 +27,7 @@
                         <form action="{{route('user.beneficiaries.store')}}" method="POST" enctype="multipart/form-data">
                             @csrf
 
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label class="form-label required">{{__('Others Bank')}}</label>
                                 <select name="other_bank_id" class="form-select bankId" required>
                                     <option value="">{{ __('Select Bank') }}</option>
@@ -35,26 +35,31 @@
                                         <option value="{{$data->id}}" data-requirements="{{ json_decode(json_encode($data->required_information,true)) }}">{{$data->title}}</option>
                                     @endforeach                    
                                 </select>
-                            </div>
+                            </div> -->
 
-                            <div class="form-group mb-3 mt-3">
+                            <!-- <div class="form-group mb-3 mt-3">
                                 <label class="form-label required">{{__('Account Number')}}</label>
                                 <input name="account_number" id="account_number" class="form-control" autocomplete="off" placeholder="{{__('000.000.0000')}}" type="text" value="{{ old('account_number') }}" min="1" required>
-                            </div>
+                            </div> -->
 
                             <div class="form-group mb-3 mt-3">
-                                <label class="form-label required">{{__('Account Name')}}</label>
+                                <label class="form-label required">{{__('Beneficiary Name')}}</label>
                                 <input name="account_name" id="account_name" class="form-control" autocomplete="off" placeholder="{{__('Jhon Doe')}}" type="text" value="{{ old('account_name') }}" min="1" required>
                             </div>
 
-                            <div class="form-group mb-3 mt-3">
+                            <!-- <div class="form-group mb-3 mt-3">
                                 <label class="form-label required">{{__('Nick Name')}}</label>
                                 <input name="nick_name" id="nick_name" class="form-control" autocomplete="off" placeholder="{{__('Doe')}}" type="text" value="{{ old('nick_name') }}" min="1" required>
+                            </div> -->
+
+                            <div class="form-group mb-3 mt-3">
+                                <label class="form-label required">{{__('Beneficiary Address')}}</label>
+                                <input name="address" id="address" class="form-control" autocomplete="off" placeholder="{{__('Enter Beneficiary Address')}}" type="text" value="{{ old('address') }}" min="1" required>
                             </div>
 
                             <div class="form-group mb-3 mt-3">
-                                <label class="form-label required">{{__('Address')}}</label>
-                                <input name="address" id="address" class="form-control" autocomplete="off" placeholder="{{__('Enter Beneficiary Address')}}" type="text" value="{{ old('address') }}" min="1" required>
+                                <label class="form-label required">{{__('Bank Name')}}</label>
+                                <input name="bank_name" id="bank_name" class="form-control" autocomplete="off" placeholder="{{__('Enter Bank Name')}}" type="text" value="{{ old('bank_name') }}" min="1" required>
                             </div>
 
                             <div class="form-group mb-3 mt-3">
