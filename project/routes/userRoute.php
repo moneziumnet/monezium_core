@@ -98,6 +98,7 @@ Route::prefix('user')->group(function() {
       Route::get('/export-pdf', [UserController::class,'generatePDF'])->name('user.export.pdf');
 
       Route::get('/security', [UserController::class,'securityform'])->name('user.securityform');
+      Route::post('/security', [UserController::class,'securityform'])->name('user.securityform');
 
       Route::get('/two-factor', [UserController::class,'showTwoFactorForm'])->name('user.show2faForm');
       Route::post('/createTwoFactor', [UserController::class,'createTwoFactor'])->name('user.createTwoFactor');
