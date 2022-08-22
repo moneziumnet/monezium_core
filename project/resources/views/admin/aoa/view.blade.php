@@ -8,6 +8,7 @@
     <ol class="breadcrumb m-0 py-0">
         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
         <li class="breadcrumb-item"><a href="{{ route('admin.contract.management') }}">{{ __('Contracts') }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.aoa.index', $data->contract_id) }}">{{ __('AoA') }}</a></li>
     </ol>
     </div>
 </div>
