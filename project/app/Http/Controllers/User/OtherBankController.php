@@ -33,9 +33,18 @@ class OtherBankController extends Controller
     }
 
     public function store(Request $request){
-        $rules = [
-            'document' => 'required|mimes:xls,xlsx,pdf'
-        ];
+        $other_bank_limit =Generalsetting::first()->other_bank_limit;
+        if ($request->amount > $other_bank_limit) {
+            $rules = [
+                'document' => 'required|mimes:xls,xlsx,pdf'
+            ];
+        }
+        else {
+            $rules = [
+                'document' => 'mimes:xls,xlsx,pdf'
+            ];
+        }
+
 
         $validator = Validator::make($request->all(), $rules);
 
