@@ -19,6 +19,8 @@ class CreateContractAoasTable extends Migration
             $table->string('title', 255);
             $table->text('description');
             $table->text('amount')->nullable();
+            $table->string('contracter_image_path', 255)->nullable();
+            $table->string('customer_image_path', 255)->nullable();
             $table->unsignedInteger('status')->default(0)->comment('1 => active, 0 => inactive');
             $table->timestamps();
         });

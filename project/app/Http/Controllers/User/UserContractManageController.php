@@ -112,6 +112,41 @@ class UserContractManageController extends Controller
         return redirect()->back()->with('success','AoA has been created successfully');
     }
 
+    public function aoa_view($id) {
+        $data = ContractAoa::findOrFail($id);
+        $description = $data->description;
+        if(strpos($data->description,"{amount}" ) !== false) {
+            $description = preg_replace("/{amount}/", $data->amount ,$data->description);
+        }
+        return view('user.aoa.view', compact('data', 'description'));
+    }
+
+    public function aoa_sign_view($id) {
+        $data = ContractAoa::findOrFail(decrypt($id));
+        $description = $data->description;
+        if(strpos($data->description,"{amount}" ) !== false) {
+            $description = preg_replace("/{amount}/", $data->amount ,$data->description);
+        }
+        return view('user.aoa.aoa', compact('data', 'description'));
+    }
+
+    public function aoa_sign(Request $request, $id) {
+        $data = ContractAoa::findOrFail($id);
+
+        $folderPath ='assets/images/';
+        $image_parts = explode(";base64,", $request->signed);
+        $image_type_aux = explode("image/", $image_parts[0]);
+        $image_type = $image_type_aux[1];
+        $image_base64 = base64_decode($image_parts[1]);
+        $filename = uniqid() . '.'.$image_type;
+        $file = $folderPath . $filename;
+        file_put_contents($file, $image_base64);
+        $data->status = 1;
+        $data->customer_image_path = $filename;
+        $data->update();
+        return back()->with('success', 'You have signed successfully');
+    }
+
     public function aoa_edit($id) {
         $data = ContractAoa::findOrFail($id);
         return view('user.aoa.edit', compact('data'));
