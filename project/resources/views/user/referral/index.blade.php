@@ -227,7 +227,7 @@
                                             </td>
                                             <td data-label="{{ __('Action') }}" >
                                                 <div>
-                                                    <a class="btn btn-danger btn-sm details" href="{{route('user.manager.delete',$data->id)}}">@lang('Delete')</a>
+                                                    <a class="btn btn-danger btn-sm details" href="javascript:;" id="delete" data-bs-toggle="modal" data-bs-target="#modal-delete" data-href="{{route('user.manager.delete',$data->id)}}">@lang('Delete')</a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -241,6 +241,30 @@
         </div>
     </div>
 </div>
+
+
+<div class="modal modal-blur confirm-modal fade" id="modal-delete" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <form id="deletemanager" action="" method="get">
+          @csrf
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-status bg-success"></div>
+
+          <div class="modal-body text-center py-4">
+            <p class="text-center">{{ __("You want to delete this manager.") }}</p>
+            <p class="text-center">{{ __("Do you want to proceed?") }}</p>
+          </div>
+
+          <div class="modal-footer">
+            <a href="javascript:;" class="btn btn-secondary" data-bs-dismiss="modal">{{ __("Cancel") }}</a>
+            <button type="submit" class="btn shadow-none btn--success" id="cancelprocess" data-bs-dismiss="modal">@lang('Ok')</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
 @endif
 
 
@@ -257,6 +281,9 @@
       document.execCommand("copy");
       alert('copied');
     }
+    $("#delete").on('click',function(){
+      $("#deletemanager").prop("action",$(this).data('href'))
+    })
   </script>
 @endpush
 
