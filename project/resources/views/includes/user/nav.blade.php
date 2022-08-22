@@ -53,7 +53,7 @@
             @endif
 
             @if (in_array('Payments',$modules) && !(auth()->user()->kyc_status != 1 && in_array('Payments',$kyc_modules)))
-            <li class="nav-item dropdown {{ request()->routeIs('user.depositbank.index', 'user.wire.transfer.index', 'user.other.bank', 'user.beneficiaries.index', 'tranfer.logs.index','user.withdraw.index') ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ request()->routeIs('user.depositbank.index','user.deposit.index', 'user.wire.transfer.index', 'user.other.bank', 'user.beneficiaries.index', 'tranfer.logs.index','user.withdraw.index') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                   <i class="fas fa-hand-holding-usd"></i>
@@ -68,11 +68,6 @@
                     {{__('Incoming')}}
                 </a>
                 @endif
-                @if (in_array('Withdraw',$modules))
-                <a class="dropdown-item" href="{{route('user.withdraw.index')}}">
-                  {{__('Withdraw')}}
-                </a>
-                @endif
                 @if (in_array('Wire Transfer',$modules))
                 <a class="dropdown-item" href="{{route('user.wire.transfer.index')}}">
                   {{__('Wire Transfer')}}
@@ -81,9 +76,6 @@
                 @if (in_array('Bank Transfer',$modules))
                 <a class="dropdown-item" href="{{route('user.other.bank')}}">
                   {{__('External Payments')}}
-                </a>
-                <a class="dropdown-item" href="{{route('user.beneficiaries.index')}}">
-                  {{__('Beneficiary Manage')}}
                 </a>
                 <a class="dropdown-item" href="{{ route('tranfer.logs.index') }}">
                   {{__('Transfer History')}}
@@ -308,7 +300,7 @@
             @endif
 
             @if (in_array('Payments',$modules) && !(auth()->user()->kyc_status != 1 && in_array('Payments',$kyc_modules)))
-            <li class="nav-item dropdown {{ request()->routeIs('user.depositbank.index', 'user.wire.transfer.index', 'user.other.bank', 'user.beneficiaries.index', 'tranfer.logs.index','user.withdraw.index') ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ request()->routeIs('user.depositbank.index','user.deposit.index', 'user.wire.transfer.index', 'user.other.bank', 'user.beneficiaries.index', 'tranfer.logs.index','user.withdraw.index') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                   <i class="fas fa-hand-holding-usd"></i>
@@ -323,11 +315,6 @@
                     {{__('Incoming')}}
                 </a>
                 @endif
-                @if (in_array('Withdraw',$modules))
-                <a class="dropdown-item" href="{{route('user.withdraw.index')}}">
-                  {{__('Withdraw')}}
-                </a>
-                @endif
                 @if (in_array('Wire Transfer',$modules))
                 <a class="dropdown-item" href="{{route('user.wire.transfer.index')}}">
                   {{__('Wire Transfer')}}
@@ -336,9 +323,6 @@
                 @if (in_array('Bank Transfer',$modules))
                 <a class="dropdown-item" href="{{route('user.other.bank')}}">
                   {{__('External Payments')}}
-                </a>
-                <a class="dropdown-item" href="{{route('user.beneficiaries.index')}}">
-                  {{__('Beneficiary Manage')}}
                 </a>
                 <a class="dropdown-item" href="{{ route('tranfer.logs.index') }}">
                   {{__('Transfer History')}}

@@ -7,7 +7,8 @@
 @section('contents')
 <div class="container-xl">
     <div class="page-header d-print-none">
-      <div class="row align-items-center">
+        @include('user.ex_payment_tab')
+        <div class="row align-items-center mt-3">
         <div class="col">
           <div class="page-pretitle">
             {{__('Overview')}}

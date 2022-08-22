@@ -7,7 +7,8 @@
 @section('contents')
 <div class="container-xl">
     <div class="page-header d-print-none">
-      <div class="d-flex flex-wrap justify-content-between">
+        @include('user.ex_payment_tab')
+        <div class="d-flex flex-wrap justify-content-between mt-3">
         <div class="me-3">
           <div class="page-pretitle">
             {{__('Overview')}}

@@ -1,13 +1,14 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
 <div class="container-xl">
     <div class="page-header d-print-none">
-      <div class="row align-items-center">
+    @include('user.ex_payment_tab')
+      <div class="row align-items-center mt-3">
         <div class="col">
           <h2 class="page-title">
             {{__('Withdraw Details')}}
@@ -58,7 +59,7 @@
                                     <span class="badge bg-success">{{__('Completed')}}</span>
                                   @elseif($data->status == '0')
                                     <span class="badge bg-warning">{{__('Pending')}}</span>
-                                  @else 
+                                  @else
                                     <span class="badge bg-danger">{{__('Rejected')}}</span>
                                   @endif
                                 </td>
