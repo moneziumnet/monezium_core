@@ -1,7 +1,15 @@
 @extends('layouts.user')
 
 @push('css')
+<link rel="stylesheet" type="text/css" href="http://keith-wood.name/css/jquery.signature.css">
 
+<style>
+    .kbw-signature { width: 100%; height: 200px;}
+    #sig canvas{
+        width: 100% !important;
+        height: auto;
+    }
+</style>
 @endpush
 
 @section('contents')
@@ -48,6 +56,17 @@
                             <label class="form-label required">{{__('Description')}}</label>
                             <textarea name="description" class="form-control" id="inp-details" cols="30" rows="10" placeholder="{{__('Description')}}"  required>{{__($data->description)}}</textarea>
                         </div>
+
+                        <div class="form-group mb-3 mt-3">
+                            <div class="col-md-12">
+                                <label class="" for="">{{__('Signature:')}}</label>
+                                <br/>
+                                <div id="sig" ></div>
+                                <br/>
+                                <div  id="clear" class="btn btn-primary btn-sm mt-2">{{__('Clear Signature')}}</div>
+                                <textarea id="signature64" name="signed" style="display: none" required></textarea>
+                            </div>
+                        </div>
                         <input name="contract_id" type="hidden" class="form-control" value="{{$data->contract_id}}">
 
                         <div class="form-footer">
@@ -66,7 +85,16 @@
 @endsection
 
 @push('js')
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script type="text/javascript" src="http://keith-wood.name/js/jquery.signature.js"></script>
 <script>
   'use strict';
+  var sig = $('#sig').signature({syncField: '#signature64', syncFormat: 'PNG'});
+            $('#clear').click(function(e) {
+                e.preventDefault();
+                sig.signature('clear');
+                $("#signature64").val('');
+            });
 </script>
 @endpush

@@ -10,6 +10,7 @@ use App\Models\Generalsetting;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\File;
 use Datatables;
 
 class UserContractManageController extends Controller
@@ -88,6 +89,7 @@ class UserContractManageController extends Controller
     public function delete($id) {
         $data = Contract::findOrFail($id);
         $data->delete();
+        File::delete('assets/images/'.$data->image_path);
         return  redirect()->back()->with('success','Contract has been deleted successfully');
     }
 
@@ -106,7 +108,17 @@ class UserContractManageController extends Controller
         $request->validate($rules);
 
         $data = new ContractAoa();
+        $folderPath ='assets/images/';
+        $image_parts = explode(";base64,", $request->signed);
+        $image_type_aux = explode("image/", $image_parts[0]);
+        $image_type = $image_type_aux[1];
+        $image_base64 = base64_decode($image_parts[1]);
+        $filename = uniqid() . '.'.$image_type;
+        $file = $folderPath . $filename;
+        file_put_contents($file, $image_base64);
+
         $input = $request->all();
+        $input['contracter_image_path'] = $filename;
         $data->fill($input)->save();
 
         return redirect()->back()->with('success','AoA has been created successfully');
@@ -157,7 +169,20 @@ class UserContractManageController extends Controller
         $request->validate($rules);
 
         $data = ContractAoa::findOrFail($id);
+
+        $folderPath ='assets/images/';
+        $image_parts = explode(";base64,", $request->signed);
+        $image_type_aux = explode("image/", $image_parts[0]);
+        $image_type = $image_type_aux[1];
+        $image_base64 = base64_decode($image_parts[1]);
+        $filename = uniqid() . '.'.$image_type;
+        $file = $folderPath . $filename;
+        file_put_contents($file, $image_base64);
+
         $input = $request->all();
+        File::delete('assets/images/'.$data->contracter_image_path);
+
+        $input['contracter_image_path'] = $filename;
         $data->update($input);
 
         return redirect()->back()->with('success','AoA has been updated successfully');
@@ -166,6 +191,9 @@ class UserContractManageController extends Controller
     public function aoa_delete($id) {
         $data = ContractAoa::findOrFail($id);
         $data->delete();
+        File::delete('assets/images/'.$data->contracter_image_path);
+        File::delete('assets/images/'.$data->customer_image_path);
+
         return  redirect()->back()->with('success','AoA has been deleted successfully');
     }
 }
