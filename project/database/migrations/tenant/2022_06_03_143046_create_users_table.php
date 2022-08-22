@@ -40,6 +40,9 @@ class CreateUsersTable extends Migration
             $table->tinyInteger('twofa')->default(0);
             $table->boolean('two_fa_status')->default(false);
             $table->integer('two_fa_code')->nullable();
+            $table->integer('two_fa_email')->nullable()->default(0);
+            $table->integer('two_fa_phone')->nullable()->default(0);
+            $table->integer('two_fa_google')->nullable()->default(0);
             $table->string('go')->nullable();
             $table->tinyInteger('verified')->default(0);
             $table->text('details')->nullable();

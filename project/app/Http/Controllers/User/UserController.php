@@ -245,5 +245,12 @@ class UserController extends Controller
         return view('user.affilate_code',compact('user'));
     }
 
+    public function securityform()
+    {
+        $user = auth()->user();
+        
+        return view('user.security.index', compact('user'));
+    }
+
 
 }
