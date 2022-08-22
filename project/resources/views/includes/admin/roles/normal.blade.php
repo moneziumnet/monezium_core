@@ -25,21 +25,13 @@
          <a class="collapse-item" href="{{route('admin.kyc.info','user')}}">{{ __('User KYC Info') }}</a>
         <a class="collapse-item" href="{{route('admin.manage.module')}}">{{ __('User KYC Modules') }}</a>
         <a class="collapse-item" href="{{ route('admin.other.banks.index') }}">{{ __('Other Banks') }}</a>
+        <a class="collapse-item" href="{{ route('admin.contract.management') }}">{{ __('View Contract') }}</a>
         <a class="collapse-item" href="{{ route('admin.merchant.shop.index') }}">{{ __('Merchant Shop') }}</a>
         <!-- <a class="collapse-item" href="{{ route('admin.user.bonus') }}">{{ __('Supervisor Fee') }}</a> -->
       </div>
     </div>
   </li>
   @endif
-
-  @if(getModule('View Management'))
-    <li class="nav-item">
-    <a class="nav-link" href="{{route('admin.contract.management')}}">
-        <i class="fas fa-file-contract"></i>
-        <span>{{ __('View Contract') }}</span>
-    </a>
-    </li>
-   @endif
 
   @if(getModule('Loan Management'))
   <li class="nav-item">
