@@ -53,7 +53,7 @@
             @endif
 
             @if (in_array('Payments',$modules) && !(auth()->user()->kyc_status != 1 && in_array('Payments',$kyc_modules)))
-            <li class="nav-item dropdown {{ request()->routeIs('user.deposit.index', 'user.wire.transfer.index', 'user.other.bank', 'user.beneficiaries.index', 'tranfer.logs.index','user.withdraw.index') ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ request()->routeIs('user.depositbank.index', 'user.wire.transfer.index', 'user.other.bank', 'user.beneficiaries.index', 'tranfer.logs.index','user.withdraw.index') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                   <i class="fas fa-hand-holding-usd"></i>
@@ -89,32 +89,29 @@
                   {{__('Transfer History')}}
                 </a>
                 @endif
-                <a class="dropdown-item" href="{{ route('ownaccounttransfer-index') }}">
-                    {{__('Own Money Transfer')}}
-                </a>
               </div>
             </li>
             @endif
 
             @if (in_array('Request Money',$modules) && !(auth()->user()->kyc_status != 1 && in_array('Request Money',$kyc_modules)))
-            <li class="nav-item dropdown {{ request()->routeIs('user.money.request.index','user.request.money.receive', 'send.money.create') ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ request()->routeIs('user.money.request.index', 'send.money.create', 'ownaccounttransfer-index') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                   <i class="fas fa-file-signature"></i>
                 </span>
                 <span class="nav-link-title">
-                  {{__('Request Money')}}
+                  {{__('Internal Payment')}}
                 </span>
               </a>
               <div class="dropdown-menu">
+                <a class="dropdown-item" href="{{ route('ownaccounttransfer-index') }}">
+                    {{__('Payment between accounts')}}
+                </a>
                 <a class="dropdown-item" href="{{route('send.money.create')}}">
-                  {{__('Send Money')}}
+                  {{__('Internal Payment')}}
                 </a>
                 <a class="dropdown-item" href="{{route('user.money.request.index')}}">
-                  {{__('Send Request Money')}}
-                </a>
-                <a class="dropdown-item" href="{{route('user.request.money.receive')}}">
-                  {{__('Receive Request Money')}}
+                  {{__('Request Money')}}
                 </a>
               </div>
             </li>
@@ -184,11 +181,11 @@
                   </a>
 
                 <a class="dropdown-item" href="{{route('user.merchant.send.money.create')}}">
-                    {{__('Send Money')}}
+                    {{__('Internal Payment')}}
                 </a>
 
                 <a class="dropdown-item" href="{{route('user.merchant.money.request.index')}}">
-                    {{__('Send Request Money')}}
+                    {{__('Request Money')}}
                 </a>
 
                 @if (in_array('Bank Transfer',$modules))
@@ -311,7 +308,7 @@
             @endif
 
             @if (in_array('Payments',$modules) && !(auth()->user()->kyc_status != 1 && in_array('Payments',$kyc_modules)))
-            <li class="nav-item dropdown {{ request()->routeIs('user.deposit.index', 'user.wire.transfer.index', 'user.other.bank', 'user.beneficiaries.index', 'tranfer.logs.index','user.withdraw.index') ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ request()->routeIs('user.depositbank.index', 'user.wire.transfer.index', 'user.other.bank', 'user.beneficiaries.index', 'tranfer.logs.index','user.withdraw.index') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                   <i class="fas fa-hand-holding-usd"></i>
@@ -347,32 +344,29 @@
                   {{__('Transfer History')}}
                 </a>
                 @endif
-                <a class="dropdown-item" href="{{ route('ownaccounttransfer-index') }}">
-                    {{__('Own Money Transfer')}}
-                </a>
               </div>
             </li>
             @endif
 
             @if (in_array('Request Money',$modules)&& !(auth()->user()->kyc_status != 1 && in_array('Request Money',$kyc_modules)))
-            <li class="nav-item dropdown {{ request()->routeIs('user.money.request.index','user.request.money.receive', 'send.money.create') ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ request()->routeIs('user.money.request.index', 'send.money.create', 'ownaccounttransfer-index') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                   <i class="fas fa-file-signature"></i>
                 </span>
                 <span class="nav-link-title">
-                  {{__('Request')}}
+                  {{__('Internal Payment')}}
                 </span>
               </a>
               <div class="dropdown-menu">
+                <a class="dropdown-item" href="{{ route('ownaccounttransfer-index') }}">
+                    {{__('Payment between accounts')}}
+                </a>
                 <a class="dropdown-item" href="{{route('send.money.create')}}">
-                  {{__('Send Money')}}
+                  {{__('Internal Payment')}}
                 </a>
                 <a class="dropdown-item" href="{{route('user.money.request.index')}}">
-                  {{__('Send Request Money')}}
-                </a>
-                <a class="dropdown-item" href="{{route('user.request.money.receive')}}">
-                  {{__('Receive Request Money')}}
+                  {{__('Request Money')}}
                 </a>
               </div>
             </li>
@@ -428,11 +422,11 @@
                   </a>
 
                 <a class="dropdown-item" href="{{route('user.merchant.send.money.create')}}">
-                    {{__('Send Money')}}
+                    {{__('Internal Payment')}}
                 </a>
 
                 <a class="dropdown-item" href="{{route('user.merchant.money.request.index')}}">
-                    {{__('Send Request Money')}}
+                    {{__('Request Money')}}
                 </a>
 
                 @if (in_array('Bank Transfer',$modules))

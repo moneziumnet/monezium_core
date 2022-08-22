@@ -25,17 +25,13 @@ class MoneyRequestController extends Controller
 
     public function index(){
         $data['requests'] = MoneyRequest::orderby('id','desc')->whereUserId(auth()->id())->where('user_type', 1)->paginate(10);
-        return view('user.requestmoney.index',$data);
-    }
-
-    public function receive(){
         if(auth()->user()->twofa)
         {
-            $data['requests'] = MoneyRequest::orderby('id','desc')->whereReceiverId(auth()->id())->paginate(10);
-            return view('user.requestmoney.receive',$data);
+            $data['receives'] = MoneyRequest::orderby('id','desc')->whereReceiverId(auth()->id())->paginate(10);
         }else{
             return redirect()->route('user.show2faForm')->with('unsuccess','You must be enable 2FA Security');
         }
+        return view('user.requestmoney.index',$data);
     }
 
     public function create(){
