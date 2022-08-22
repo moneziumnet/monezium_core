@@ -115,10 +115,6 @@
     </div>
 </div>
 
-<div class="row justify-content-center">
-    <h1>@lang('Wallet list')</h1>
-</div>
-
 @endsection
 
 @push('js')

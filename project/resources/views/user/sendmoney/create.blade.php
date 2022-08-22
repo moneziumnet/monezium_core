@@ -55,7 +55,7 @@
                                 @csrf
 
                                 <div class="form-group mb-3 mt-3">
-                                    <label class="form-label required">{{__('Account Number')}}</label>
+                                    <label class="form-label required">{{__('Account Email')}}</label>
                                     <input name="email" id="email" class="form-control" autocomplete="off" placeholder="{{__('user@email.com')}}" type="email" value="{{ $savedUser ? $savedUser->email : '' }}" min="1" required>
                                 </div>
 
