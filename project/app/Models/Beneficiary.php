@@ -12,9 +12,7 @@ class Beneficiary extends Model
     protected $fillable = [
         'user_id',
         'other_bank_id',
-        'account_number',
-        'account_name',
-        'nick_name',
+        'beneficiary_name',
         'address',
         'bank_address',
         'swift_bic',
@@ -29,5 +27,5 @@ class Beneficiary extends Model
     public function transfers(){
         return $this->hasMany(BalanceTransfer::class);
     }
-    
+
 }

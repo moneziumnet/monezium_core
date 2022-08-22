@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -32,26 +32,13 @@
                               <td width="10%">:</td>
                               <td class="45%" width="45%">{{ $data->bank->title }}</td>
                             </tr>
-
                             <tr>
-                              <th class="45%" width="45%">@lang('Account Name')</th>
-                              <td width="10%">:</td>
-                              <td class="45%" width="45%">{{ $data->account_name }}</td>
-                            </tr>
-
+                            <th class="45%" width="45%">@lang('Beneficiary Name')</th>
+                            <td width="10%">:</td>
+                            <td class="45%" width="45%">{{ $data->beneficiary_name }}</td>
+                          </tr>
                             <tr>
-                              <th class="45%" width="45%">@lang('Account Number')</th>
-                              <td width="10%">:</td>
-                              <td class="45%" width="45%">{{ $data->account_number }}</td>
-                            </tr>
-
-                            <tr>
-                              <th class="45%" width="45%">{{__('Nick Name')}}</th>
-                              <td width="10%">:</td>
-                              <td class="45%" width="45%">{{ $data->nick_name }}</td>
-                            </tr>
-                            <tr>
-                              <th class="45%" width="45%">{{__('Address')}}</th>
+                              <th class="45%" width="45%">{{__('Beneficiary Address')}}</th>
                               <td width="10%">:</td>
                               <td class="45%" width="45%">{{ $data->address }}</td>
                             </tr>
@@ -70,7 +57,7 @@
                               <td width="10%">:</td>
                               <td class="45%" width="45%">{{ $data->account_iban }}</td>
                             </tr>
-                            
+
                             @foreach (json_decode($data->details,true) as $key=>$value)
                               @if ($value[1] == 'file')
                               <tr>
@@ -78,7 +65,7 @@
                                   <td width="10%">:</td>
                                   <td width="45%"><a href="{{asset('assets/images/'.$value[0])}}" download=""><img src="{{asset('assets/images/'.$value[0])}}" class="img-thumbnail"></a></td>
                               </tr>
-                              @else 
+                              @else
                                   <tr>
                                       <th width="45%">{{$key}}</th>
                                       <td width="10%">:</td>

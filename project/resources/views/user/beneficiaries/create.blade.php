@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -27,15 +27,7 @@
                         <form action="{{route('user.beneficiaries.store')}}" method="POST" enctype="multipart/form-data">
                             @csrf
 
-                            <!-- <div class="form-group">
-                                <label class="form-label required">{{__('Others Bank')}}</label>
-                                <select name="other_bank_id" class="form-select bankId" required>
-                                    <option value="">{{ __('Select Bank') }}</option>
-                                    @foreach ($othersBank as $key=>$data)
-                                        <option value="{{$data->id}}" data-requirements="{{ json_decode(json_encode($data->required_information,true)) }}">{{$data->title}}</option>
-                                    @endforeach                    
-                                </select>
-                            </div> -->
+
 
                             <!-- <div class="form-group mb-3 mt-3">
                                 <label class="form-label required">{{__('Account Number')}}</label>
@@ -44,7 +36,7 @@
 
                             <div class="form-group mb-3 mt-3">
                                 <label class="form-label required">{{__('Beneficiary Name')}}</label>
-                                <input name="account_name" id="account_name" class="form-control" autocomplete="off" placeholder="{{__('Jhon Doe')}}" type="text" value="{{ old('account_name') }}" min="1" required>
+                                <input name="beneficiary_name" id="beneficiary_name" class="form-control" autocomplete="off" placeholder="{{__('Jhon Doe')}}" type="text" value="{{ old('account_name') }}" min="1" required>
                             </div>
 
                             <!-- <div class="form-group mb-3 mt-3">
@@ -57,9 +49,14 @@
                                 <input name="address" id="address" class="form-control" autocomplete="off" placeholder="{{__('Enter Beneficiary Address')}}" type="text" value="{{ old('address') }}" min="1" required>
                             </div>
 
-                            <div class="form-group mb-3 mt-3">
+                            <div class="form-group">
                                 <label class="form-label required">{{__('Bank Name')}}</label>
-                                <input name="bank_name" id="bank_name" class="form-control" autocomplete="off" placeholder="{{__('Enter Bank Name')}}" type="text" value="{{ old('bank_name') }}" min="1" required>
+                                <select name="other_bank_id" class="form-select bankId" required>
+                                    <option value="">{{ __('Select Bank') }}</option>
+                                    @foreach ($othersBank as $key=>$data)
+                                        <option value="{{$data->id}}" data-requirements="{{ json_decode(json_encode($data->required_information,true)) }}">{{$data->title}}</option>
+                                    @endforeach
+                                </select>
                             </div>
 
                             <div class="form-group mb-3 mt-3">
@@ -101,7 +98,7 @@
 
             let output = ``;
             requirements.forEach(element => {
-            
+
                     if(element.type == 'text') {
                         output +=
                         `

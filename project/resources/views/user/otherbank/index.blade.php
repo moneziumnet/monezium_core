@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -27,15 +27,13 @@
                 <div class="card">
                     @if (count($beneficiaries) == 0)
                         <h3 class="text-center py-5">{{__('No Beneficiary Data Found')}}</h3>
-                    @else 
+                    @else
                         <div class="table-responsive">
                             <table class="table table-vcenter table-mobile-md card-table">
                                 <thead>
                                 <tr>
                                     <th>{{ __('Bank') }}</th>
-                                    <th>{{ __('Account No') }}</th>
-                                    <th>{{ __('Account Name') }}</th>
-                                    <th>{{ __('Nick Name') }}</th>
+                                    <th>{{ __('Beneficiary Name') }}</th>
                                     <th>{{ __('Options') }}</th>
                                 </tr>
                                 </thead>
@@ -47,19 +45,9 @@
                                               {{ $data->bank->title}}
                                             </div>
                                           </td>
-                                          <td data-label="{{ __('Account No') }}">
+                                          <td data-label="{{ __('Beneficiary Name') }}">
                                             <div>
-                                              {{$data->account_number}}
-                                            </div>
-                                          </td>
-                                          <td data-label="{{ __('Account Name') }}">
-                                            <div>
-                                              {{$data->account_name}}
-                                            </div>
-                                          </td>
-                                          <td data-label="{{ __('Nick Name') }}">
-                                            <div>
-                                              {{ucfirst($data->nick_name)}}
+                                              {{$data->beneficiary_name}}
                                             </div>
                                           </td>
                                           <td data-label="{{ __('Options') }}">

@@ -122,15 +122,16 @@ class OtherBankController extends Controller
             if($request->amount > $balance){
                 return redirect()->back()->with('unsuccess','Insufficient Account Balance.');
             }
+            $data = new BalanceTransfer();
 
             $txnid = Str::random(4).time();
             if ($file = $request->file('document'))
             {
                 $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
                 $file->move('assets/doc',$name);
+                $data->document = $name;
             }
 
-            $data = new BalanceTransfer();
             $data->user_id = auth()->user()->id;
             $data->transaction_no = $txnid;
             $data->other_bank_id = $request->other_bank_id;
@@ -140,7 +141,6 @@ class OtherBankController extends Controller
             $data->amount = $request->amount;
             $data->final_amount = $finalAmount;
             $data->description = $request->des;
-            $data->document = $name;
             $data->status = 0;
             $data->save();
 

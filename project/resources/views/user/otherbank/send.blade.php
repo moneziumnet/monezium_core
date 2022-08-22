@@ -95,17 +95,12 @@
                         </div>
 
                         <div class="form-group mb-3 mt-3">
-                            <label class="form-label required">{{__('Name')}}</label>
-                            <input name="account_name" id="account_name" class="form-control" autocomplete="off" placeholder="{{__('Jhon Doe')}}" type="text" value="{{ $data->account_name }}" min="1" required readonly>
+                            <label class="form-label required">{{__('Beneficiary Name')}}</label>
+                            <input name="beneficiary_name" id="beneficiary_name" class="form-control" autocomplete="off" placeholder="{{__('Jhon Doe')}}" type="text" value="{{ $data->beneficiary_name }}" required readonly>
                         </div>
 
                         <div class="form-group mb-3 mt-3">
-                            <label class="form-label required">{{__('Account Number')}}</label>
-                            <input name="account_number" id="account_number" class="form-control" autocomplete="off" placeholder="{{__('Account Number')}}" type="text" value="{{ $data->account_number }}" min="1" required readonly>
-                        </div>
-
-                        <div class="form-group mb-3 mt-3">
-                            <label class="form-label required">{{__('Address')}}</label>
+                            <label class="form-label required">{{__('Beneficiary Address')}}</label>
                             <input name="address" id="address" class="form-control" autocomplete="off" placeholder="{{__('Beneficiary Address')}}" type="text" value="{{ $data->address }}" min="1" required readonly>
                         </div>
 

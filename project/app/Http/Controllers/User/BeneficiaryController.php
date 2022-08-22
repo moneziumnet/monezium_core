@@ -29,9 +29,7 @@ class BeneficiaryController extends Controller
 
     public function store(Request $request){
         $request->validate([
-            'account_number' => 'required',
-            'account_name' => 'required',
-            'nick_name' => 'required',
+            'beneficiary_name' => 'required',
         ]);
 
         $data = new Beneficiary();
