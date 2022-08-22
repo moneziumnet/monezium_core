@@ -245,9 +245,44 @@ class UserController extends Controller
         return view('user.affilate_code',compact('user'));
     }
 
-    public function securityform()
+    public function securityform(Request $request)
     {
         $user = auth()->user();
+
+        if($request->isMethod('post'))
+        {
+            
+            $login_fa_yn = 'N';
+            $login_fa = '';
+            if($request->input('login_fa_yn') == 'Y')
+            {
+                $rules = [
+                    'login_fa'   => 'required'
+                ];
+                $validator = Validator::make($request->all(), $rules);
+    
+                if ($validator->fails()) {
+                    return redirect()->back()->with('unsuccess','Select 2FA Option for Login');
+                }
+                $login_fa_yn = 'Y';
+                $login_fa = $request->input('login_fa');
+            }
+
+            $update = User::where('id', $user->id)->update([
+                'login_fa_yn'  => $login_fa_yn,
+                'login_fa'     => $login_fa,
+                'payment_fa_yn'=> $request->input('payment_fa_yn'),
+                'payment_fa'=> $request->input('payment_fa')
+            ]);
+
+            if($update)
+            {
+                return redirect()->back()->with('success','2FA Features Successfully Updated');
+            }else{
+                return redirect()->back()->with('unsuccess','2FA Features Not Updated');
+            }
+            
+        }
         
         return view('user.security.index', compact('user'));
     }

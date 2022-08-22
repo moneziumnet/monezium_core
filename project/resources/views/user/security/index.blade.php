@@ -21,7 +21,7 @@
     <div class="container-xl">
         <div class="row">
             <div class="col-lg-12 col-md-12">
-                @if(Auth::user()->twofa)
+                {{-- @if(Auth::user()->twofa) --}}
                     {{-- <div class="card border-0 shadow-sm">
                         <div class="card-header">
                             <h5 class="card-title text-dark text-center">@lang('Two Factor Authenticator')</h5>
@@ -33,31 +33,51 @@
                             </div>
                         </div>
                     </div> --}}
-                @else
-                    {{-- <div class="card border-0 shadow-sm">
+                {{-- @else --}}
+                    <div class="card border-0 shadow-sm">
                         <div class="card-header">
                             <h5 class="card-title text-dark text-center">@lang('Two Factor Authenticator')</h5>
                         </div>
                         <div class="card-body">
-                            <div class="form-group mx-auto text-center">
-                                <div class="input-group input--group">
-                                    <input type="text" name="key" value="{{$secret}}" class="form-control" id="referralURL" readonly>
-                                    <button class="btn input-group-text btn--secondary btn-sm copytext" id="copyBoard" onclick="myFunction()"> <i class="fa fa-copy"></i> </button>
+                            @includeIf('includes.flash')
+                            {{-- <form action="{{route('send.money.store-two-auth')}}" method="POST" enctype="multipart/form-data"> --}}
+                            <form action="{{route('user.securityform')}}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <div class="form-group mb-3 mt-3">
+                                    <input type="checkbox" name="login_fa_yn" id="login_fa_yn" value="Y" @if($user->login_fa_yn == "Y") checked @endif> {{__('Login With 2FA Authorization')}}
                                 </div>
-                            </div>
-                            <div class="form-group mx-auto text-center mt-3">
-                                <img class="mx-auto" src="{{$qrCodeUrl}}">
-                            </div>
-                            <div class="form-group mx-auto text-center">
-                                <a href="javascript:void(0)" class="btn btn--base btn-md mt-3 mb-1" data-bs-toggle="modal" data-bs-target="#enableModal">@lang('Enable Two Factor Authenticator')</a>
-                            </div> 
+                                <div class="form-group mb-3 mt-3">
+                                    <label class="form-label">{{__('Select 2FA Option')}}</label>
+                                    <select name="login_fa" id="login_fa" class="form-control">
+                                      <option value="">Select</option>
+                                        <option value="two_fa_email" @if($user->login_fa == "two_fa_email") selected @endif>Two FA by Email</option>
+                                        <option value="two_fa_phone" @if($user->login_fa == "two_fa_phone") selected @endif>Two FA by Phone</option>
+                                        <option value="two_fa_google" @if($user->login_fa == "two_fa_google") selected @endif>Two FA by Google</option>
+                                    </select>
 
-                            <div class="form-group mx-auto text-center">
-                                <a class="btn btn--base btn-md mt-3" href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en" target="_blank">@lang('DOWNLOAD APP')</a>
-                            </div>
+                                </div>
+                               
+                                <div class="form-group mb-3 mt-3">
+                                    <input type="checkbox" name="payment_fa_yn" id="payment_fa_yn" value="Y"  @if($user->payment_fa_yn == "Y") checked @endif required> {{__('Payments with 2FA Authorization')}}
+                                </div>
+                                <div class="form-group mb-3 mt-3">
+                                    <label class="form-label required">{{__('Select 2FA Option')}}</label>
+                                    <select name="payment_fa" id="payment_fa" class="form-control" required>
+                                      <option value="">Select</option>
+                                        <option value="two_fa_email" @if($user->payment_fa == "two_fa_email") selected @endif>Two FA by Email</option>
+                                        <option value="two_fa_phone" @if($user->payment_fa == "two_fa_phone") selected @endif>Two FA by Phone</option>
+                                        <option value="two_fa_google" @if($user->payment_fa == "two_fa_google") selected @endif>Two FA by Google</option>
+                                    </select>
+
+                                </div>
+
+                                <div class="form-footer">
+                                    <button type="submit" class="btn btn-primary w-100">{{__('Submit')}}</button>
+                                </div>
+                            </form>
                         </div>
-                    </div> --}}
-                @endif
+                    </div>
+                {{-- @endif --}}
             </div>
         </div>
 

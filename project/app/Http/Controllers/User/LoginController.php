@@ -53,12 +53,16 @@ class LoginController extends Controller
             if(session()->get('setredirectroute') != NULL){
               return response()->json(session()->get('setredirectroute'));
             }
-            $gs = Generalsetting::first();
+           // $gs = Generalsetting::first();
             $user = auth()->user();
-            if($user->two_fa_email || $user->two_fa_phone){
-              return response()->json(route('user.otp'));
-            }elseif($user->two_fa_google){
-              return response()->json(route('user.googleotp'));
+            if($user->login_fa_yn =="Y"){
+                if($user->login_fa == "two_fa_email" || $user->login_fa == "two_fa_phone")
+                {
+                    return response()->json(route('user.otp'));
+                }else{
+                    return response()->json(route('user.googleotp'));
+                }
+              
             }else{
                 $user->update(['verified'=>1]);
                 return response()->json(route('user.dashboard'));
