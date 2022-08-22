@@ -7,7 +7,7 @@
 	<h5 class=" mb-0 text-gray-800 pl-3">{{ __('Wire Transfer') }} <a class="btn btn-primary btn-rounded btn-sm" href="{{route('admin.wire.transfer.index')}}"><i class="fas fa-arrow-left"></i> {{ __('Back') }}</a></h5>
 	<ol class="breadcrumb m-0 py-0">
 		<li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
-		<li class="breadcrumb-item"><a href="{{ route('admin.wire.transfer.show',$data->id) }}">{{ __('Other Bank Transfer Details') }}</a></li>
+		<li class="breadcrumb-item"><a href="{{ route('admin.wire.transfer.show',$data->id) }}">{{ __('External Payments Details') }}</a></li>
 	</ol>
 	</div>
 </div>

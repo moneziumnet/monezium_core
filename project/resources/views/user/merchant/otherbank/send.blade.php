@@ -13,7 +13,7 @@
             {{__('Overview')}}
           </div>
           <h2 class="page-title">
-            {{__('Other Bank Transfer')}}
+            {{__('External Payments')}}
           </h2>
         </div>
       </div>
