@@ -12,6 +12,8 @@ class ContractAoa extends Model
         'description',
         'amount',
         'status',
+        'contracter_image_path',
+        'customer_image_path',
     ];
 
 }

@@ -232,6 +232,8 @@ Route::prefix('user')->group(function() {
       Route::post('contract/update/{id}',   [UserContractManageController::class,'update'])->name('user.contract.update');
       Route::get('contract/delete/{id}',   [UserContractManageController::class,'delete'])->name('user.contract.delete');
       Route::get('contract/aoa/{id}',   [UserContractManageController::class,'aoa_index'])->name('user.contract.aoa');
+      Route::get('contract/aoa/view/{id}',   [UserContractManageController::class,'aoa_view'])->name('user.contract.aoa.view');
+      Route::post('contract/aoa/sign/{id}',   [UserContractManageController::class,'aoa_sign'])->name('user.aoa.sign');
       Route::get('contract/aoa/create/{id}',   [UserContractManageController::class,'aoa_create'])->name('user.contract.aoa.create');
       Route::post('contract/aoa/store/{id}',   [UserContractManageController::class,'aoa_store'])->name('user.contract.aoa.store');
       Route::get('contract/aoa/edit/{id}',   [UserContractManageController::class,'aoa_edit'])->name('user.contract.aoa.edit');

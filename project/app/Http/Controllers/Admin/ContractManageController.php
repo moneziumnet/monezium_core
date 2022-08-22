@@ -29,6 +29,14 @@ class ContractManageController extends Controller
                                 return htmlentities($data->description);
                             }
                         })
+                        ->editColumn('image_path', function(Contract $data){
+                            if (isset($data->image_path)) {
+                                return '<a href ="'.asset('assets/images/'.$data->image_path).'" attributes-list download > Download E-Sign </a>';
+                            }
+                            else {
+                                return 'Not Signed';
+                            }
+                        })
                         ->editColumn('status', function(Contract $data) {
                             $status = $data->status == 0 ? '<span class="badge badge-warning">Not Signed</span>' : '<span class="badge badge-success">Signed</span>';
                             return $status;
@@ -44,7 +52,7 @@ class ContractManageController extends Controller
                             </div>
                         </div>';
                         })
-                        ->rawColumns(['title','description','status', 'action'])
+                        ->rawColumns(['title','description','status', 'action', 'image_path'])
                         ->toJson();
     }
 
