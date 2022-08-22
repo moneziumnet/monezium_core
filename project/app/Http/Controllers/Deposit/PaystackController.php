@@ -64,7 +64,7 @@ class PaystackController extends Controller
         {
             $data = [
                 'to' => $user->email,
-                'type' => "Deposti",
+                'type' => "Deposit",
                 'cname' => $user->name,
                 'aname' => "",
                 'aemail' => "",

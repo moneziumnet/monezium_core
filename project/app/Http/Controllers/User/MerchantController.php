@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Helpers\MediaHelper;
 use App\Models\UserApiCred;
+use App\Models\MerchantWallet;
 use Auth;
 
 class MerchantController extends Controller
@@ -18,18 +19,7 @@ class MerchantController extends Controller
         $this->middleware('auth');
     }
 
-    public function generateQR()
-    {
-        if(!check_user_type(3))
-        {
-            return redirect()->route('user.dashboard');
-        }
-        $user = Auth::user();
-        return view('user.merchant.qr',compact('user'));
-
-    }
-
-    public function apiKeyForm()
+    public function index()
     {
         if(!check_user_type(3))
         {
@@ -47,7 +37,10 @@ class MerchantController extends Controller
             $userapicred->save();
             $cred = UserApiCred::where('user_id',$user->id)->first();
         }
-        return view('user.merchant.api_key_form',compact('cred'));
+
+        $wallets = MerchantWallet::where('merchant_id', auth()->id())->with('currency')->with('shop')->get();
+
+        return view('user.merchant.index',compact('cred', 'user', 'wallets'));
     }
 
     public function apiKeyGenerate()

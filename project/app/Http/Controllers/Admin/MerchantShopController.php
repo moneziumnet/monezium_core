@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use Datatables;
 use App\Models\MerchantShop;
 use App\Models\User;
+use App\Models\Currency;
+use App\Models\Generalsetting;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -72,6 +75,16 @@ class MerchantShopController extends Controller
             return response()->json($msg);
         }
         $data->update(['status' => $id2]);
+        $currencies = $data['currencylist'] = Currency::wherestatus(1)->where('type', 1)->get();
+        $gs = Generalsetting::first();
+        foreach ($currencies as $key => $value) {
+            DB::table('merchant_wallets')->insert([
+                'merchant_id' => $data->merchant_id,
+                'currency_id' => $value->id,
+                'shop_id' => $data->id,
+                'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999),
+            ]);
+        }
         $msg = __('Data Updated Successfully.');
         return ($msg);
     }

@@ -135,9 +135,8 @@ Route::prefix('user')->group(function() {
       Route::post('/fdr-request', [UserFdrController::class,'fdrRequest'])->name('user.fdr.request');
       Route::post('/fdr/finish', [UserFdrController::class,'finish'])->name('user.fdr.finish');
 
-      Route::get('/merchant/generate-qrcode', [MerchantController::class,'generateQR'])->name('user.merchant.qr');
+      Route::get('/merchant/index', [MerchantController::class,'index'])->name('user.merchant.index');
       Route::get('/merchant/download-qr/{email}',  [MerchantController::class,'downloadQR'])->name('user.merchant.download.qr');
-      Route::get('/merchant/api-key',  [MerchantController::class,'apiKeyForm'])->name('user.merchant.api.key.form');
       Route::get('/merchant/send-money',[MerchantSendController::class,'create'])->name('user.merchant.send.money.create');
       Route::post('/merchant/send-money',[MerchantSendController::class,'store'])->name('user.merchant.send.money.store');
       Route::get('/merchant/send/money/success',[MerchantSendController::class,'success'])->name('user.merchant.send.money.success');
