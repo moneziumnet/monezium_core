@@ -10,7 +10,7 @@
       <div class="row align-items-center">
         <div class="col">
           <h2 class="page-title">
-            {{__('Send Money')}}
+            {{__('Internal Payment')}}
           </h2>
         </div>
       </div>

@@ -9,7 +9,7 @@
             {{__('Overview')}}
           </div>
           <h2 class="page-title">
-            {{__('Own Money Transfer')}}
+            {{__('Payment between accounts')}}
           </h2>
         </div>
       </div>
@@ -31,7 +31,7 @@
                                 $userType = explode(',', auth()->user()->user_type);
                                 $supervisor = DB::table('customer_types')->where('type_name', 'Supervisors')->first()->id;
                                 $merchant = DB::table('customer_types')->where('type_name', 'Merchants')->first()->id;
-                                $wallet_type_list = array('0'=>'All', '1'=>'Current', '2'=>'Card', '3'=>'Deposit', '4'=>'Loan', '5'=>'Escrow', '8'=>'Crypto');
+                                $wallet_type_list = array( '1'=>'Current', '2'=>'Card', '3'=>'Deposit', '4'=>'Loan', '5'=>'Escrow', '8'=>'Crypto');
                                 if(in_array($supervisor, $userType)) {
                                     $wallet_type_list['6'] = 'Supervisor';
                                 }
@@ -44,7 +44,7 @@
                                 @endphp
                             <div class="col-md-6 mb-3">
                                 <div class="form-label">@lang('From Currency')</div>
-                                <select class="form-select from shadow-none" name="from_wallet_id">
+                                <select class="form-select from shadow-none" name="from_wallet_id" required>
                                     <option value="" selected>@lang('Select')</option>
                                     @foreach ($wallets as $wallet)
                                     @if (isset($wallet_type_list[$wallet->wallet_type]))
@@ -56,12 +56,13 @@
 
                             <div class="col-md-6 mb-3">
                                 <div class="form-label">@lang('Amount')</div>
-                                <input type="text" name="amount" class="form-control amount shadow-none" required>
+                                <input type="number" step="any" name="amount" class="form-control amount shadow-none" required>
                             </div>
 
                             <div class="col-md-6 mb-3">
                                 <div class="form-label">@lang('To Wallet')</div>
-                                <select class="form-select wallet" name="wallet_type" >
+                                <select class="form-select wallet" name="wallet_type" required>
+                                    <option value="" selected>@lang('Select')</option>
                                     @foreach ($wallet_type_list as $key=>$wallet)
                                     <option value="{{$key}}" >{{$wallet}}</option>
                                     @endforeach

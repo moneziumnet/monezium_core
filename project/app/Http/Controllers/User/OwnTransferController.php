@@ -30,12 +30,16 @@ class OwnTransferController extends Controller
 
     public function transfer(Request $request)
     {
-        $request->validate([
-            'amount' => 'required|gt:0',
-            'from_wallet_id' => 'required|integer'
-        ],[
-            'from_wallet_id.required' => 'From currency is required',
-        ]);
+
+        if(!isset($request->from_wallet_id)) {
+            return back()->with('error','Please select Currency');
+        }
+        if(!isset($request->amount)) {
+            return back()->with('error','Please input amount');
+        }
+        if(!isset($request->wallet_type)) {
+            return back()->with('error','Please select Wallet');
+        }
         $user= auth()->user();
 
         $fromWallet = Wallet::where('id',$request->from_wallet_id)->where('user_id',auth()->id())->where('user_type',1)->firstOrFail();
@@ -123,6 +127,6 @@ class OwnTransferController extends Controller
 
         @mailSend('exchange_money',['from_curr'=>$fromWallet->currency->code,'to_curr'=>$toWallet->currency->code,'charge'=> amount($charge,$fromWallet->currency->type,3),'from_amount'=> amount($request->amount,$fromWallet->currency->type,3),'to_amount'=> amount($finalAmount,$toWallet->currency->type,3),'date_time'=> dateFormat($trnx->created_at)],auth()->user());
 
-        return back()->with('success','Money exchanged successfully.');
+        return back()->with('message','Money exchanged successfully.');
     }
 }
