@@ -6,7 +6,7 @@
 
 @section('contents')
 <div class="row container-xl" style="margin-left: auto; margin-right:auto;">
-    <div class="col-9">
+    <div class="col-md-9">
         <div class="container-xl">
             <div class="page-header d-print-none">
                 <div class="row align-items-center">
@@ -47,7 +47,7 @@
         </div>
     </div>
 
-    <div class="col-3">
+    <div class="col-md-3">
         <div class="container-xl">
             <div class="page-header d-print-none">
               <div class="row align-items-center">
