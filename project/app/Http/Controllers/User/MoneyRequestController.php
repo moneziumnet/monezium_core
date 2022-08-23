@@ -115,7 +115,7 @@ class MoneyRequestController extends Controller
             $gs = Generalsetting::first();
             $to = $request->account_email;
             $subject = " Money Request";
-            $msg = "Hello ".$request->account_name."!\nYou received request money (".$request->amount.$currency->symbol.").\nPlease confirm current.\n".route('user.money.request.index')."\n Thank you.";
+            $msg = "Hello ".$request->account_name."!\nYou received request money (".$request->amount.$currency->symbol.").\nPlease confirm current.\n".route('user.money.request.new', encrypt($txnid))."\n Thank you.";
             $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
             mail($to,$subject,$msg,$headers);
             return redirect()->back()->with('success','Request Money Send to unregisted user('.$request->account_email.') Successfully.');
@@ -258,6 +258,15 @@ class MoneyRequestController extends Controller
         $data = MoneyRequest::findOrFail($id);
         $data->update(['status'=>2]);
         return back()->with('message','Successfully Money Request Cancelled.');
+    }
+
+    public function request_user($id) {
+        $data = MoneyRequest::where('transaction_no', decrypt($id))->first();
+        if($data) {
+            $data->receiver_id = auth()->id();
+            $data->update();
+        }
+        return redirect()->route('user.money.request.index');
     }
 
     public function details($id){
