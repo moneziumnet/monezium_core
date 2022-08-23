@@ -27,6 +27,7 @@ class CreateMoneyRequestsTable extends Migration
 0 == pending');
             $table->tinyInteger('user_type');
             $table->text('details')->nullable();
+            $table->integer('shop_id')->nullable();
             $table->timestamps();
         });
     }

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class MoneyRequest extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'transaction_no',
         'user_id',
@@ -16,6 +16,7 @@ class MoneyRequest extends Model
         'receiver_name',
         'cost',
         'amount',
+        'shop_id',
         'status',
     ];
 

@@ -75,7 +75,7 @@ class MerchantShopController extends Controller
             return response()->json($msg);
         }
         $data->update(['status' => $id2]);
-        $currencies = $data['currencylist'] = Currency::wherestatus(1)->where('type', 1)->get();
+        $currencies = $data['currencylist'] = Currency::wherestatus(1)->get();
         $gs = Generalsetting::first();
         foreach ($currencies as $key => $value) {
             DB::table('merchant_wallets')->insert([

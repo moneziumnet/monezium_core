@@ -8,6 +8,7 @@ use App\Models\Currency;
 use Illuminate\Support\Str;
 use App\Models\EmailTemplate;
 use App\Models\Generalsetting;
+use App\Models\MerchantWallet;
 use PHPMailer\PHPMailer\PHPMailer;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon as Carbontime;
@@ -425,6 +426,33 @@ if(!function_exists('getModule')){
       }
   }
 
+  if(!function_exists('merchant_shop_wallet_increment'))
+  {
+    function merchant_shop_wallet_increment($auth_id, $currency_id, $amount, $shop_id)
+    {
+      $gs = Generalsetting::first();
+      $wallet = MerchantWallet::where('merchant_id', $auth_id)->where('shop_id', $shop_id)
+          ->where('currency_id',$currency_id)->first();
+      if(!$wallet)
+      {
+        $shop_wallet = new MerchantWallet();
+        $shop_wallet->merchant_id = $auth_id;
+        $shop_wallet->currency_id = $currency_id;
+        $shop_wallet->balance = $amount;
+        $shop_wallet->shop_id = $shop_id;
+        $shop_wallet->wallet_no =$gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
+        $shop_wallet->created_at = date('Y-m-d H:i:s');
+        $shop_wallet->updated_at = date('Y-m-d H:i:s');
+        $shop_wallet->save();
+      }
+      else {
+        $wallet->balance += $amount;
+        $wallet->update();
+        return $wallet->balance;
+      }
+
+    }
+}
 
 
 

@@ -13,6 +13,7 @@ use App\Models\MoneyRequest;
 use Illuminate\Http\Request;
 use App\Classes\GeniusMailer;
 use App\Models\Generalsetting;
+use App\Models\MerchantShop;
 use App\Http\Controllers\Controller;
 
 class MerchantMoneyRequestController extends Controller
@@ -30,6 +31,7 @@ class MerchantMoneyRequestController extends Controller
 
     public function create(){
         $wallets = Wallet::where('user_id',auth()->id())->with('currency')->get();
+        $data['shop_list'] = MerchantShop::whereStatus(1)->where('merchant_id', auth()->id())->get();
         $data['wallets'] = $wallets;
         return view('user.merchant.requestmoney.create', $data);
     }
@@ -54,7 +56,7 @@ class MerchantMoneyRequestController extends Controller
         $bank_plan = BankPlan::whereId($user->bank_plan_id)->first();
         $dailyRequests = MoneyRequest::whereUserId(auth()->id())->whereDate('created_at', '=', date('Y-m-d'))->whereStatus('success')->sum('amount');
         $monthlyRequests = MoneyRequest::whereUserId(auth()->id())->whereMonth('created_at', '=', date('m'))->whereStatus('success')->sum('amount');
-
+        $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'recieve')->first();
         $gs = Generalsetting::first();
 
         if($request->email == $user->email){
@@ -66,16 +68,31 @@ class MerchantMoneyRequestController extends Controller
             return redirect()->back()->with('unsuccess','No register user with this email!');
         }
 
-        if($dailyRequests > $bank_plan->daily_receive){
+        if($dailyRequests > $global_range->daily_limit){
             return redirect()->back()->with('unsuccess','Daily request limit over.');
         }
 
-        if($monthlyRequests > $bank_plan->monthly_receive){
+        if($monthlyRequests > $global_range->monthly_limit){
             return redirect()->back()->with('unsuccess','Monthly request limit over.');
         }
 
-        $cost = $gs->fixed_request_charge + ($request->amount/100) * $gs->percentage_request_charge;
-        $finalAmount = $request->amount + $cost;
+        if ($request->amount < $global_range->min || $request->amount > $global_range->max) {
+            return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
+        }
+
+        $transaction_global_fee = check_global_transaction_fee($request->amount, $user, 'recieve');
+        $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/100) * $transaction_global_fee->data->percent_charge;
+
+        if($user->referral_id != 0)
+        {
+            $transaction_custom_cost = 0;
+            $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user, 'recieve');
+            if($transaction_custom_fee) {
+                $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/100) * $transaction_custom_fee->data->percent_charge;
+            }
+        }
+
+
 
         $txnid = Str::random(4).time();
 
@@ -85,11 +102,13 @@ class MerchantMoneyRequestController extends Controller
         $data->receiver_name = $receiver->name;
         $data->transaction_no = $txnid;
         $data->currency_id = $request->wallet_id;
-        $data->cost = $cost;
+        $data->cost = $transaction_global_cost;
+        $data->supervisor_cost = $user->referral_id != 0 ? $transaction_custom_cost : 0 ;
         $data->amount = $request->amount;
         $data->status = 0;
         $data->details = $request->details;
         $data->user_type = 2;
+        $data->shop_id = $request->shop_id;
         $data->save();
 
         return redirect()->back()->with('success','Request Money Send Successfully.');

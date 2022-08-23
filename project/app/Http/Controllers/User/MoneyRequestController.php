@@ -115,7 +115,7 @@ class MoneyRequestController extends Controller
             $gs = Generalsetting::first();
             $to = $request->account_email;
             $subject = " Money Request";
-            $msg = "Hello ".$request->account_name."!\nYou received request money (".$request->amount.$currency->symbol.").\nPlease confirm current.\n".route('user.request.money.receive')."\n Thank you.";
+            $msg = "Hello ".$request->account_name."!\nYou received request money (".$request->amount.$currency->symbol.").\nPlease confirm current.\n".route('user.money.request.index')."\n Thank you.";
             $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
             mail($to,$subject,$msg,$headers);
             return redirect()->back()->with('success','Request Money Send to unregisted user('.$request->account_email.') Successfully.');
@@ -190,7 +190,12 @@ class MoneyRequestController extends Controller
             $trans->details     = trans('Request Money');
             $trans->save();
         }
-        user_wallet_increment($receiver->id, $currency_id, $finalAmount);
+        if (isset($data->shop_id)) {
+            merchant_shop_wallet_increment($receiver->id, $currency_id, $finalAmount, $data->shop_id);
+        }
+        else {
+            user_wallet_increment($receiver->id, $currency_id, $finalAmount);
+        }
 
 
         $data->update(['status'=>1]);
@@ -244,7 +249,7 @@ class MoneyRequestController extends Controller
             $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
             mail($to,$subject,$msg,$headers);
         }
-        return redirect()->route('user.request.money.receive')->with('message','Successfully Money Send.');
+        return redirect()->route('user.money.request.index')->with('message','Successfully Money Send.');
         //return back()->with('message','Successfully Money Send.');
     }
 
