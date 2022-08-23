@@ -47,6 +47,17 @@ class UserController extends Controller
         return view('user.dashboard',$data);
     }
 
+    public function scanQR($email)
+    {
+        $user = User::where('email',$email)->first();
+        if(!$user){
+             return NULL;
+        }
+        else {
+            return $user->email;
+        }
+    }
+
     public function transaction()
     {
         $user = Auth::user();
@@ -251,7 +262,7 @@ class UserController extends Controller
 
         if($request->isMethod('post'))
         {
-            
+
             $login_fa_yn = 'N';
             $login_fa = '';
             if($request->input('login_fa_yn') == 'Y')
@@ -260,7 +271,7 @@ class UserController extends Controller
                     'login_fa'   => 'required'
                 ];
                 $validator = Validator::make($request->all(), $rules);
-    
+
                 if ($validator->fails()) {
                     return redirect()->back()->with('unsuccess','Select 2FA Option for Login');
                 }
@@ -281,9 +292,9 @@ class UserController extends Controller
             }else{
                 return redirect()->back()->with('unsuccess','2FA Features Not Updated');
             }
-            
+
         }
-        
+
         return view('user.security.index', compact('user'));
     }
 

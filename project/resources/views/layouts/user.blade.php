@@ -17,7 +17,7 @@
     <link href="{{asset('assets/user/css/custom.css')}}" rel="stylesheet"/>
     @stack('css')
   </head>
-  
+
   <body >
     <div class="wrapper">
       @includeIf('includes.user.header')
@@ -29,7 +29,18 @@
         @includeIf('includes.user.footer')
       </div>
     </div>
-
+    <div class="modal fade" id="cameraModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+                <div class="modal-body text-center">
+                    <video id="preview" class="p-1 border" style="width:400px;"></video>
+                </div>
+                <div class="modal-footer justify-content-center">
+                  <button type="button" class="btn btn-dark" data-bs-dismiss="modal">@lang('close')</button>
+                </div>
+          </div>
+        </div>
+      </div>
 	<script>
 		let mainurl = '{{ url('/') }}';
 	</script>
@@ -40,6 +51,36 @@
     <script src="{{asset('assets/user/js/notify.min.js')}}"></script>
     <script src="{{asset('assets/user/js/webcam.min.js')}}"></script>
     <script src="{{asset('assets/front/js/toastr.min.js')}}"></script>
+    <script src="{{asset('assets/user/')}}/js/instascan.min.js"></script>
+    <script>
+      'use strict';
+      $('.scan').click(function(){
+          var scanner = new Instascan.Scanner({ video: document.getElementById('preview'), scanPeriod: 5, mirror: false });
+          scanner.addListener('scan',function(content){
+              var route = "{{url('user/qr-code-scan')}}"+'/'+content
+              $.get(route, function( data ) {
+                  if(data.error){
+                      alert(data.error)
+                  } else {
+                      $(".camera_value").val(data);
+                      $(".camera_value").focusout()
+                  }
+                  $('#cameraModal').modal('hide')
+              });
+          });
+          Instascan.Camera.getCameras().then(function (cameras){
+              if(cameras.length>0){
+                  $('#cameraModal').modal('show')
+                      scanner.start(cameras[0]);
+              } else{
+                  alert('No cameras found.');
+              }
+          }).catch(function(e){
+              alert('No cameras found.');
+          });
+      });
+
+    </script>
     @stack('js')
 
 
@@ -54,7 +95,7 @@
 	}
 		toastr.success("{{ session('message') }}");
 	@endif
-  
+
 	@if(Session::has('error'))
 	toastr.options =
 	{
@@ -63,7 +104,7 @@
 	}
 		toastr.error("{{ session('error') }}");
 	@endif
-  
+
 	@if(Session::has('info'))
 	toastr.options =
 	{
@@ -72,7 +113,7 @@
 	}
 		toastr.info("{{ session('info') }}");
 	@endif
-  
+
 	@if(Session::has('warning'))
 	toastr.options =
 	{

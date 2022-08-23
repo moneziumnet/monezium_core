@@ -28,7 +28,10 @@
 
                         <div class="form-group mb-3 mt-3">
                             <label class="form-label required">{{__('Account Email')}}</label>
-                            <input name="account_email" id="account_email" class="form-control" autocomplete="off" placeholder="{{__('user@gmail.com')}}" type="text" value="{{ old('account_email') }}" min="1" required>
+                            <div class="input-group">
+                                <input name="account_email" id="account_email" class="form-control camera_value" autocomplete="off" placeholder="{{__('user@gmail.com')}}" type="text" value="{{ old('account_email') }}" min="1" required>
+                                <button type="button"  data-bs-toggle="tooltip" data-bs-original-title="@lang('Scan QR code')" class="input-group-text scan"><i class="fas fa-qrcode"></i></button>
+                            </div>
                         </div>
 
                         <div class="form-group mb-3 mt-3">

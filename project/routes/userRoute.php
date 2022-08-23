@@ -549,6 +549,7 @@ Route::prefix('user')->group(function() {
 
       Route::get('/change-password', [UserController::class,'changePasswordForm'])->name('user.change.password.form');
       Route::post('/change-password', [UserController::class,'changePassword'])->name('user.change.password');
+      Route::get('qr-code-scan/{email}',   [UserController::class,'scanQR'])->name('scan.qr');
     });
 
 
