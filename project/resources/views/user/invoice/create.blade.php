@@ -39,7 +39,10 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <div class="form-label">{{__('Recipient Email')}}</div>
-                            <input type="email" name="email" class="form-control shadow-none" value="{{old('email')}}" required>
+                            <div class="input-group">
+                                <input type="email" name="email" class="form-control shadow-none camera_value" value="{{old('email')}}" required>
+                                <button type="button"  data-bs-toggle="tooltip" data-bs-original-title="@lang('Scan QR code')" class="input-group-text scan"><i class="fas fa-qrcode"></i></button>
+                            </div>
                         </div>
                         <div class="col-md-6 mb-3">
                             <div class="form-label">{{__('Address')}}</div>

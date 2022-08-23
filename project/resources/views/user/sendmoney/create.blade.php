@@ -56,7 +56,10 @@
 
                                 <div class="form-group mb-3 mt-3">
                                     <label class="form-label required">{{__('Account Email')}}</label>
-                                    <input name="email" id="email" class="form-control" autocomplete="off" placeholder="{{__('user@email.com')}}" type="email" value="{{ $savedUser ? $savedUser->email : '' }}" min="1" required>
+                                    <div class="input-group">
+                                        <input name="email" id="email" class="form-control camera_value" autocomplete="off" placeholder="{{__('user@email.com')}}" type="email" value="{{ $savedUser ? $savedUser->email : '' }}" min="1" required>
+                                        <button type="button"  data-bs-toggle="tooltip" data-bs-original-title="@lang('Scan QR code')" class="input-group-text scan"><i class="fas fa-qrcode"></i></button>
+                                    </div>
                                 </div>
 
                                 <div class="form-group mb-3 mt-3">
