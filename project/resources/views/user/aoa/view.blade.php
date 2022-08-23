@@ -22,6 +22,11 @@
           <a href="{{route('user.contract.aoa', $data->contract_id)}}" class="btn btn-primary"><i class="fas fa-backward me-1"></i> {{__(' Back')}}</a>
         </div>
       </div>
+      <div class="col-sm-12 text-right" style="text-align: right">
+        <a href="{{route('user.aoa-pdf', $data->id)}}">
+          <i class="fas fa-file-pdf" aria-hidden="true"></i> {{__('PDF')}}
+        </a> &nbsp;
+      </div>
     </div>
   </div>
 </div>

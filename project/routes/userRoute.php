@@ -231,6 +231,7 @@ Route::prefix('user')->group(function() {
       Route::get('contract/edit/{id}',   [UserContractManageController::class,'edit'])->name('user.contract.edit');
       Route::post('contract/update/{id}',   [UserContractManageController::class,'update'])->name('user.contract.update');
       Route::get('contract/delete/{id}',   [UserContractManageController::class,'delete'])->name('user.contract.delete');
+      Route::get('contract/pdf/{id}',   [UserContractManageController::class,'export_pdf'])->name('user.contract-pdf');
       Route::get('contract/aoa/{id}',   [UserContractManageController::class,'aoa_index'])->name('user.contract.aoa');
       Route::get('contract/aoa/view/{id}',   [UserContractManageController::class,'aoa_view'])->name('user.contract.aoa.view');
       Route::post('contract/aoa/sign/{id}',   [UserContractManageController::class,'aoa_sign'])->name('user.aoa.sign');
@@ -239,6 +240,7 @@ Route::prefix('user')->group(function() {
       Route::get('contract/aoa/edit/{id}',   [UserContractManageController::class,'aoa_edit'])->name('user.contract.aoa.edit');
       Route::post('contract/aoa/update/{id}',   [UserContractManageController::class,'aoa_update'])->name('user.contract.aoa.update');
       Route::get('contract/aoa/delete/{id}',   [UserContractManageController::class,'aoa_delete'])->name('user.contract.aoa.delete');
+      Route::get('contract/aoa/pdf/{id}',   [UserContractManageController::class,'export_aoa_pdf'])->name('user.aoa-pdf');
       Route::get('pay-invoice',   [DepositController::class,'invoicePayment'])->name('user.pay.invoice');
 
       //escrow

@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
+use Barryvdh\DomPDF\Facade\PDF;
 use Datatables;
 
 class UserContractManageController extends Controller
@@ -92,6 +93,38 @@ class UserContractManageController extends Controller
         File::delete('assets/images/'.$data->image_path);
         return  redirect()->back()->with('success','Contract has been deleted successfully');
     }
+
+    public function export_pdf($id) {
+        $contract = Contract::where('id', $id)->first();
+        $description = $contract->description;
+        if(strpos($contract->description,"{amount}" ) !== false) {
+            $description = preg_replace("/{amount}/", $contract->amount ,$contract->description);
+        }
+
+        $pdf = Pdf::loadView('user.export.contract', [
+            'data' => $contract,
+            'description' => $description
+        ]);
+        return $pdf->download('contract.pdf');
+    }
+
+    public function export_aoa_pdf($id) {
+        $contract = ContractAoa::where('id', $id)->first();
+        $description = $contract->description;
+        if(strpos($contract->description,"{amount}" ) !== false) {
+            $description = preg_replace("/{amount}/", $contract->amount ,$contract->description);
+        }
+
+        $pdf = Pdf::loadView('user.export.aoa', [
+            'data' => $contract,
+            'description' => $description
+        ]);
+        return $pdf->download('aoa.pdf');
+    }
+
+
+
+
 
     public function aoa_index($id){
         $data['aoa_list'] = ContractAoa::where('contract_id',$id)->latest()->paginate(15);

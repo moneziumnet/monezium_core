@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="{{asset('assets/admin/css/font-awsome.min.css')}}">
 
     <link href="{{asset('assets/user/')}}/css/tabler.min.css" rel="stylesheet"/>
-    <link href="{{asset('assets/user/')}}/fontawesome-free/css/all.min.css" rel="stylesheet"/>
     <link href="{{asset('assets/user/')}}/css/tabler-flags.min.css" rel="stylesheet"/>
     <link href="{{asset('assets/user/')}}/css/tabler-payments.min.css" rel="stylesheet"/>
     <link href="{{asset('assets/user/')}}/css/tabler-vendors.min.css" rel="stylesheet"/>
@@ -37,16 +36,10 @@
   </head>
 
   <body>
-      <div class="wrapper mb-3 mt-5">
-
+    <div class="wrapper mb-3 mt-5">
           <div class="page-wrapper">
             <div class="page-body">
                 <div class="container-xl">
-                    <div class="col-sm-12 text-right" style="text-align: right">
-                        <a href="{{route('user.aoa-pdf', $data->id)}}">
-                          <i class="fas fa-file-pdf" aria-hidden="true"></i> {{__('PDF')}}
-                        </a> &nbsp;
-                      </div>
                     <div class="card card-lg">
                       <div class="card-body">
                         @include('includes.flash')
@@ -61,38 +54,22 @@
                                     {{__($description)}}
                                 </p>
                             </div>
-                            @if ($data->status == 1)
+                            <div class = "row">
+
                                 <div class="wrapper-image-preview col-6">
                                     <p class="text-muted text-center"> {{__('Contracter')}} </p>
                                     <div class="box full-width">
                                         <div class="back-preview-image" style="background-image: url({{ $data->contracter_image_path ? asset('assets/images/'.$data->contracter_image_path) : '' }});"></div>
                                     </div>
                                 </div>
+
                                 <div class="wrapper-image-preview col-6">
-                                    <p class="text-muted text-center">{{__('You already signed')}}</p>
+                                    <p class="text-muted text-center"> {{__('Customer')}} </p>
                                     <div class="box full-width">
                                         <div class="back-preview-image" style="background-image: url({{ $data->customer_image_path ? asset('assets/images/'.$data->customer_image_path) : '' }});"></div>
                                     </div>
                                 </div>
-                            @else
-                                <form method="POST" action="{{route('user.aoa.sign', $data->id)}}">
-                                    @csrf
-                                    <div class="col-md-12">
-                                        <label class="" for="">{{__('Signature:')}}</label>
-                                        <br/>
-                                        <div id="sig" ></div>
-                                        <br/>
-                                        <button id="clear" class="btn btn-primary btn-sm mt-2">{{__('Clear Signature')}}</button>
-                                        <textarea id="signature64" name="signed" style="display: none"></textarea>
-                                    </div>
-                                    <input type="hidden" name="contract_id" value="{{$data->contract_id}}">
-                                    <br/>
-                                    <div class="text-center">
-                                    <button class="btn btn-primary ">{{__('SIGN')}}</button>
-                                    </div>
-                                </form>
-                            @endif
-
+                            </div>
 
                         </div>
                         <p class="text-muted text-center mt-5">{{__('Thank you very much for doing new Aoa. We look forward to working with
@@ -105,18 +82,8 @@
           </div>
       </div>
       <script src="{{asset('assets/admin/js/jquery.min.js')}}"></script>
-      <!-- Tabler Core -->
       <script src="{{asset('assets/user/')}}/js/tabler.min.js"></script>
       <script src="{{asset('assets/user/')}}/js/demo.min.js"></script>
-        <script type="text/javascript">
-            var sig = $('#sig').signature({syncField: '#signature64', syncFormat: 'PNG'});
-            $('#clear').click(function(e) {
-                e.preventDefault();
-                sig.signature('clear');
-                $("#signature64").val('');
-            });
-        </script>
-      {{-- @include('notify.alert') --}}
       @stack('script')
 
 </body>

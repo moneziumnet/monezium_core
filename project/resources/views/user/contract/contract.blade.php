@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{{asset('assets/admin/css/font-awsome.min.css')}}">
 
     <link href="{{asset('assets/user/')}}/css/tabler.min.css" rel="stylesheet"/>
+    <link href="{{asset('assets/user/')}}/fontawesome-free/css/all.min.css" rel="stylesheet"/>
     <link href="{{asset('assets/user/')}}/css/tabler-flags.min.css" rel="stylesheet"/>
     <link href="{{asset('assets/user/')}}/css/tabler-payments.min.css" rel="stylesheet"/>
     <link href="{{asset('assets/user/')}}/css/tabler-vendors.min.css" rel="stylesheet"/>
@@ -40,6 +41,11 @@
           <div class="page-wrapper">
             <div class="page-body">
                 <div class="container-xl">
+                    <div class="col-sm-12 text-right" style="text-align: right">
+                        <a href="{{route('user.contract-pdf', $data->id)}}">
+                          <i class="fas fa-file-pdf" aria-hidden="true"></i> {{__('PDF')}}
+                        </a> &nbsp;
+                      </div>
                     <div class="card card-lg">
                       <div class="card-body">
                         @include('includes.flash')
