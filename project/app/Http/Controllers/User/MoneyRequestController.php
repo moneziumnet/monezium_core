@@ -115,7 +115,8 @@ class MoneyRequestController extends Controller
             $gs = Generalsetting::first();
             $to = $request->account_email;
             $subject = " Money Request";
-            $msg = "Hello ".$request->account_name."!\nYou received request money (".$request->amount.$currency->symbol.").\nPlease confirm current.\n".route('user.money.request.new', encrypt($txnid))."\n Thank you.";
+            $url =     "<button style='height: 50;width: 200px;' ><a href='".route('user.money.request.new', encrypt($txnid))."' target='_blank' type='button' style='color: #2C729E; font-weight: bold; text-decoration: none; '>Confirm</a></button>";
+            $msg = "Hello ".$request->account_name."!\nYou received request money (".$request->amount.$currency->symbol.").\nPlease confirm current.\n".$url."\n Thank you.";
             $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
             mail($to,$subject,$msg,$headers);
             return redirect()->back()->with('success','Request Money Send to unregisted user('.$request->account_email.') Successfully.');
