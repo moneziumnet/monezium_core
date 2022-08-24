@@ -143,8 +143,6 @@
         $('#modal_amount').val($('#amount').val());
         if ($('#amount').val() >= '{{$other_bank_limit}}') {
             $('#modal_document')[0].files = $('#document')[0].files;
-        } else {
-            $('#modal_document').remove();
         }
         $('#modal_currency').val(JSON.parse(($('#currency').val()))['currency_id']);
         $('#modal_details').val($('#details').val());

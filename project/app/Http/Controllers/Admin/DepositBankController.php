@@ -62,7 +62,8 @@ class DepositBankController extends Controller
                             $bankaccount = BankAccount::whereUserId($data->user_id)->where('subbank_id', $detail->id)->where('currency_id', $data->currency_id)->first();
                             $detail->address = str_replace(' ', '-', $detail->address);
                             $detail->name = str_replace(' ', '-', $detail->name);
-                            return '<input type="hidden", id="sub_data", value ='.json_encode($detail).'>'.' <a href="javascript:;"   onclick=getDetails('.json_encode($detail).','.json_encode($bankaccount).') class="detailsBtn" >
+                            $doc_url = $data->document ? $data->document : null;
+                            return '<input type="hidden", id="sub_data", value ='.json_encode($detail).'>'.' <a href="javascript:;"   onclick=getDetails('.json_encode($detail).','.json_encode($bankaccount).',"'.$doc_url.'") class="detailsBtn" >
                             ' . __("Details") . '</a>';
                         })
                         ->rawColumns(['created_at','customer_name','customer_email','amount','status', 'action'])
