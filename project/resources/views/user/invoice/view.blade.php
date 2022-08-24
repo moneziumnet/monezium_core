@@ -17,6 +17,9 @@
   </head>
 
   <body>
+    @php
+        $type = $invoice->type ? $invoice->type : 'Invoice';
+    @endphp
     <div class="wrapper mb-3">
           <div class="page-wrapper">
             <div class="container-xl">
@@ -63,7 +66,7 @@
                             </address>
                           </div>
                           <div class="col-12 my-5">
-                            <h1>@lang('Invoice : ') {{$invoice->number}}</h1>
+                            <h1>{{__($type)}}: {{$invoice->number}}</h1>
                           </div>
                         </div>
                         <table class="table table-transparent table-responsive">

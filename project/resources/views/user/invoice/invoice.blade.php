@@ -1,6 +1,9 @@
 @extends('layouts.user')
 
 @section('contents')
+@php
+    $type = $invoice->type ? $invoice->type : 'Invoice';
+@endphp
 <div class="container-xl">
   <div class="page-header d-print-none">
     <div class="row align-items-center">
@@ -9,7 +12,7 @@
           {{__('Overview')}}
         </div>
         <h2 class="page-title">
-          {{__('Invoice:')}} {{$invoice->number}}
+            {{__($type)}} : {{$invoice->number}}
         </h2>
       </div>
       <div class="col-auto ms-auto d-print-none">
@@ -42,7 +45,7 @@
             </address>
           </div>
           <div class="col-12 my-5">
-            <h1>{{__('Invoice : ')}} {{$invoice->number}}</h1>
+            <h1>{{__($type)}} : {{$invoice->number}}</h1>
           </div>
         </div>
         <table class="table table-transparent table-responsive">
