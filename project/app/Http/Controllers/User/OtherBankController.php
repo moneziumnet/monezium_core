@@ -34,7 +34,7 @@ class OtherBankController extends Controller
 
     public function store(Request $request){
         $other_bank_limit =Generalsetting::first()->other_bank_limit;
-        if ($request->amount > $other_bank_limit) {
+        if ($request->amount >= $other_bank_limit) {
             $rules = [
                 'document' => 'required|mimes:xls,xlsx,pdf'
             ];

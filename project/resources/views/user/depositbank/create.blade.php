@@ -1,7 +1,12 @@
 @extends('layouts.user')
 
 @push('css')
+<style>
+    .document {
+        display:none;
+        }
 
+        </style>
 @endpush
 
 @section('contents')
@@ -46,6 +51,11 @@
                             <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" step="any" value="{{ old('amount') }}" min="1" required>
                         </div>
 
+                        <div class="form-group mb-3 mt-3">
+                            <label class="form-label document" id="document_label">{{__('Document')}}</label>
+                            <input class= "document" name="document" id="document" class="form-control" autocomplete="off" type="file" accept=".xls,.xlsx,.pdf">
+                        </div>
+
                         <div class="form-group mb-3 ">
                             <label class="form-label">{{__('Description')}}</label>
                             <textarea name="details" id="details" class="form-control nic-edit" cols="30" rows="5" placeholder="{{__('Receive account details')}}"></textarea>
@@ -78,7 +88,7 @@
             <li class="list-group-item d-flex justify-content-between">@lang('Description')<span id="bank_description"></span></li>
         </ul>
         </div>
-        <form id="depositbank_gateway" action="{{ route('user.depositbank.store') }}" method="post">
+        <form id="depositbank_gateway" action="{{ route('user.depositbank.store') }}" method="post"  enctype="multipart/form-data">
             @csrf
             <div class="modal-body">
               <div class="form-group mt-3">
@@ -89,7 +99,8 @@
                 <input type="hidden" name="currency_id" id="modal_currency" value="">
                 <input type="hidden" name="details" id="modal_details" value="">
                 <input type="hidden" name="bank" id="modal_bank" value="">
-              </div>
+                <input name="document" id="modal_document" type="file" style="display: none;" accept=".xls,.xlsx,.pdf">
+               </div>
             </div>
 
             <div class="modal-footer">
@@ -130,10 +141,14 @@
         $('#modal_method').val(JSON.parse(pos)['name']);
         $('#modal_bank').val(JSON.parse(pos)['id']);
         $('#modal_amount').val($('#amount').val());
+        if ($('#amount').val() >= '{{$other_bank_limit}}') {
+            $('#modal_document')[0].files = $('#document')[0].files;
+        } else {
+            $('#modal_document').remove();
+        }
         $('#modal_currency').val(JSON.parse(($('#currency').val()))['currency_id']);
         $('#modal_details').val($('#details').val());
         $.post("{{ route('user.depositbank.gateway') }}",{id:JSON.parse(pos)['id'],_token:'{{csrf_token()}}'},function (res) {
-            console.log(res);
             if(res.keyword == 'railsbank')
                 {
                     $('#depositbank_gateway').prop('action','{{ route('user.depositbank.railsbank') }}');
@@ -146,6 +161,17 @@
              });
              $('#modal-success').modal('show');
         })
+        $('#amount').on('change', function() {
+
+            if ($('#amount').val() >= '{{$other_bank_limit}}') {
+                document.getElementById("document").style.display = "block";
+                document.getElementById("document_label").style.display = "block";
+            }
+            else {
+                document.getElementById("document").style.display = "none";
+                document.getElementById("document_label").style.display = "none";
+            }
+    })
 
   </script>
 

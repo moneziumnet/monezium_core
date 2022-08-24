@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Validator;
 
 class OpenPaydController extends Controller
 {
@@ -92,6 +93,25 @@ class OpenPaydController extends Controller
     }
 
     public function transfer(Request $request) {
+        $other_bank_limit =Generalsetting::first()->other_bank_limit;
+        if ($request->amount >= $other_bank_limit) {
+            $rules = [
+                'document' => 'required|mimes:xls,xlsx,pdf'
+            ];
+        }
+        else {
+            $rules = [
+                'document' => 'mimes:xls,xlsx,pdf'
+            ];
+        }
+
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return redirect()->back()->with('unsuccess',$validator->getMessageBag()->toArray()['document'][0]);
+        }
+
         $currency = Currency::where('id',$request->currency_id)->first();
         $amountToAdd = $request->amount/$currency->rate;
         $user = auth()->user();
@@ -237,6 +257,14 @@ class OpenPaydController extends Controller
 
         $txnid = Str::random(4).time();
         $deposit = new DepositBank();
+
+        if ($file = $request->file('document'))
+        {
+            $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
+            $file->move('assets/doc',$name);
+            $deposit['document'] = $name;
+        }
+
         $deposit['deposit_number'] = Str::random(12);
         $deposit['user_id'] = auth()->id();
         $deposit['currency_id'] = $request->currency_id;

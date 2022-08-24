@@ -14,6 +14,7 @@ class DepositBank extends Model
         'txnid',
         'method',
         'details',
+        'document',
         'sub_bank_id',
         'status',
     ];

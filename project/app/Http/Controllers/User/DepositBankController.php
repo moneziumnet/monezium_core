@@ -17,6 +17,7 @@ use App\Models\Admin;
 use App\Models\SubInsBank;
 use Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 
 class DepositBankController extends Controller
@@ -34,6 +35,7 @@ class DepositBankController extends Controller
     public function create(){
         $data['bankaccounts'] = BankAccount::whereUserId(auth()->id())->pluck('subbank_id');
         $data['banks'] = SubInsBank::whereIn('id', $data['bankaccounts'])->get();
+        $data['other_bank_limit'] = Generalsetting::first()->other_bank_limit;
         return view('user.depositbank.create',$data);
     }
 
@@ -42,6 +44,24 @@ class DepositBankController extends Controller
     }
 
     public function store(Request $request){
+        $other_bank_limit =Generalsetting::first()->other_bank_limit;
+        if ($request->amount >= $other_bank_limit) {
+            $rules = [
+                'document' => 'required|mimes:xls,xlsx,pdf'
+            ];
+        }
+        else {
+            $rules = [
+                'document' => 'mimes:xls,xlsx,pdf'
+            ];
+        }
+
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return redirect()->back()->with('unsuccess',$validator->getMessageBag()->toArray()['document'][0]);
+        }
 
         $currency = Currency::where('id',$request->currency_id)->first();
         $amountToAdd = $request->amount/$currency->rate;
@@ -69,8 +89,18 @@ class DepositBankController extends Controller
             return redirect()->back()->with('unsuccess','Monthly deposit limit over.');
         }
 
+
+
         $txnid = Str::random(4).time();
         $deposit = new DepositBank();
+
+        if ($file = $request->file('document'))
+        {
+            $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
+            $file->move('assets/doc',$name);
+            $deposit['document'] = $name;
+        }
+
         $deposit['deposit_number'] = Str::random(12);
         $deposit['user_id'] = auth()->id();
         $deposit['currency_id'] = $request->currency_id;
