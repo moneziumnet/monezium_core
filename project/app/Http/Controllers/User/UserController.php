@@ -23,6 +23,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Input;
 use App\Exports\ExportTransaction;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Carbon as Carbontime;
+
 
 class UserController extends Controller
 {
@@ -63,17 +65,22 @@ class UserController extends Controller
         $user = Auth::user();
         $search = request('search');
         $remark = request('remark');
-        $transactions = Transaction::where('user_id',auth()->id())->where('user_type',1)
+        $s_time = request('s_time');
+        $e_time = request('e_time');
+        $s_time = $s_time ? $s_time : '';
+        $e_time = $e_time ? $e_time : Carbontime::now()->format('Y-m-d');
+        $transactions = Transaction::where('user_id',auth()->id())
         ->when($remark,function($q) use($remark){
             return $q->where('remark',$remark);
         })
         ->when($search,function($q) use($search){
             return $q->where('trnx','LIKE',"%{$search}%");
         })
+        ->whereBetween('created_at', [$s_time, $e_time])
         ->with('currency')->latest()->paginate(20);
         $remark_list = Transaction::where('user_id',auth()->id())->pluck('remark');
         $remark_list = array_unique($remark_list->all());
-        return view('user.transactions',compact('user','transactions', 'search', 'remark_list'));
+        return view('user.transactions',compact('user','transactions', 'search', 'remark_list', 's_time', 'e_time'));
     }
 
     public function transactionExport()
@@ -247,7 +254,11 @@ class UserController extends Controller
 
     public function transactionPDF()
     {
-        return Excel::download( new ExportTransaction, 'transaction.pdf',\Maatwebsite\Excel\Excel::DOMPDF);
+        $search = request('search');
+        $remark = request('remark');
+        $s_time = request('s_time');
+        $e_time = request('e_time');
+        return Excel::download( new ExportTransaction($search, $remark, $s_time, $e_time), 'transaction.pdf',\Maatwebsite\Excel\Excel::DOMPDF);
     }
 
     public function affilate_code()

@@ -21,8 +21,19 @@
       </div>
       <div class="col-auto ms-auto d-print-none">
 
-        <div class="btn-list">
+        <div class="btn-list align-items-center">
             <form action=""  class="d-flex justify-content-end">
+                <div class="form-group">
+                    <div class="input-group">
+                        <input class="form-control shadow-none me-2" type="date" placeholder="{{__('Start Time')}}" name="s_time" value="{{$s_time ?? ''}}">
+                    </div>
+                </div>
+                <p class="me-2">{{__(' : ')}}</p>
+                <div class="form-group">
+                    <div class="input-group">
+                        <input class="form-control shadow-none me-2" type="date" placeholder="{{__('End Time')}}" name="e_time" value="{{$e_time ?? ''}}">
+                    </div>
+                </div>
                 <div class="form-group me-3">
                     <select  class="form-control me-2 shadow-none" onChange="window.location.href=this.value">
                         <option value="{{filter('remark','')}}">@lang('All Remark')</option>
@@ -34,9 +45,9 @@
                 <div class="form-group">
                     <div class="input-group">
                         <input class="form-control shadow-none" type="text" placeholder="{{__('Transaction Id')}}" name="search" value="{{$search ?? ''}}">
-                        <button type="submit" class="input-group-text bg-primary text-white border-0"><i class="fas fa-search"></i></button>
                     </div>
                 </div>
+                <button type="submit" class="input-group-text bg-primary text-white border-0"><i class="fas fa-search"></i></button>
             </form>
         </div>
       </div>
@@ -47,7 +58,7 @@
     <div class="container-xl">
         <div class="row row-cards">
           <div class="col-sm-12 text-right" style="text-align: right">
-            <a href="{{route('user.transaction-pdf')}}">
+            <a href="{{url('user/transactions-pdf?search='.request('search').'&remark='.request('remark').'&s_time='.request('s_time').'&e_time='.request('e_time'))}}" id="download_pdf">
               <i class="fas fa-file-pdf" aria-hidden="true"></i> {{__('PDF')}}
             </a> &nbsp;
             <a href="{{route('user.transaction-export')}}">
