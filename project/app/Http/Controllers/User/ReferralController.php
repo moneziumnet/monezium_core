@@ -10,6 +10,7 @@ use App\Models\InviteUser;
 use App\Models\User;
 use App\Models\Wallet;
 use App\Models\Manager;
+use App\Models\Generalsetting;
 use App\Classes\GeniusMailer;
 use Illuminate\Support\Facades\Validator;
 
@@ -78,28 +79,17 @@ class ReferralController extends Controller
         $inviteUser->status = 'Not Send';
         $inviteUser->created_at = date('Y-m-d H:i:s');
 
+        $gs = Generalsetting::first();
+        $to = $request->invite_email;
+        $subject = " Invite you";
+        $msg = "Hello!\nYou has been invited from ".$user->name." in ".$gs->from_name." .\nPlease confirm current.\n".url('/')."?reff=".$user->affilate_code."\n Thank you.";
+        $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
+        mail($to,$subject,$msg,$headers);
+        $inviteUser->save();
 
 
-        $data = [
-            'to' => $request->input('invite_email'),
-            'type' => "invite email",
-            'cname' => $user->name,
-            'oamount' => '',
-            'aname' => "",
-            'aemail' =>  $user->email,
-            'wtitle' => "",
-        ];
 
-        $mailer = new GeniusMailer();
-        $mailer->sendAutoMail($data);
 
-        if($mailer->sendAutoMail($data))
-        {
-            $inviteUser->save();
-
-            return redirect()->back()->with('success', 'Invite sent successfully.');
-        }else{
-            return redirect()->back()->with('unsuccess', 'Email not send this time. Please check email address');
-        }
+        return redirect()->back()->with('success', 'Invite sent successfully.');
     }
 }
