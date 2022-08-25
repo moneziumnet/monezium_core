@@ -38,6 +38,7 @@ class WithdrawController extends Controller
     {
         // $data['methods'] = WithdrawMethod::whereStatus(1)->orderBy('id','desc')->get();
         $data['subinstitude'] = Admin::where('id', '!=', 1)->orderBy('id')->get();
+        $data['user'] = auth()->user();
 
         return view('user.withdraw.create' ,$data);
     }
@@ -63,7 +64,9 @@ class WithdrawController extends Controller
         ]);
 
         $user = auth()->user();
-
+        if ($user->two_fa_code != $request->otp) {
+            return redirect()->back()->with('unsuccess','Verification code is not matched.');
+        }
         if($user->bank_plan_id === null){
             return redirect()->back()->with('unsuccess','You have to buy a plan to withdraw.');
         }

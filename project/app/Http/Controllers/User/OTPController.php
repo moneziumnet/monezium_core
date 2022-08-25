@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
+use App\Models\Pagesetting;
+use App\Models\Generalsetting;
 use Validator;
 
 class OTPController extends Controller
@@ -70,5 +72,41 @@ class OTPController extends Controller
         }
     }
 
-
+    public function sendotp() {
+        $user = auth()->user();
+        try {
+            if($user->payment_fa == 'two_fa_gmail') {
+                $verification_code = rand(100000, 999999);
+                $gs = Generalsetting::first();
+                $to = $user->email;
+                $subject = "Verify your email address";
+                $msg_body = "To verify your email address use this security code: ".$verification_code;
+                $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
+                $headers .= "MIME-Version: 1.0" . "\r\n";
+                $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+                mail($to,$subject,$msg_body,$headers);
+                $user->two_fa_code = $verification_code;
+                $user->save();
+                return 'success';
+            }
+            elseif ($user->payment_fa == 'two_fa_phone') {
+                $verification_code = rand(100000, 999999);
+                sendSMS($user->phone,'To verify your email address use this security code: '.$verification_code,Pagesetting::value('phone'));
+                $user->two_fa_code = $verification_code;
+                $user->save();
+                return 'success';
+            }
+            elseif ($user->payment_fa == 'two_fa_google') {
+                $googleAuth = new GoogleAuthenticator();
+                $secret = $user->go;
+                $oneCode = $googleAuth->getCode($secret);
+                $user->two_fa_code = $oneCode;
+                $user->save();
+                return 'success';
+            }
+        } catch (\Throwable $th) {
+            return 'fail';
+        }
+        return 'fail';
+    }
 }
