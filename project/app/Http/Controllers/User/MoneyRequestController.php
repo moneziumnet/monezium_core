@@ -125,7 +125,7 @@ class MoneyRequestController extends Controller
                     <meta charset="utf-8"><title>Request Money</title>
                 </head>
                 <body>
-                    <p> Hello'.$request->account_name.'.</p>
+                    <p> Hello '.$request->account_name.'.</p>
                     <p> You received request money ('.$request->amount.$currency->symbol.').</p>
                     <p> Please confirm current.</p>
                     '.$url.'
