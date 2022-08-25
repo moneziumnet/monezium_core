@@ -75,7 +75,9 @@ Route::prefix('user')->group(function() {
     Route::post('/login', [UserLoginController::class,'login'])->name('user.login.submit');
 
     Route::get('/otp', [OTPController::class,'showotpForm'])->name('user.otp');
+    Route::get('/googleotp', [OTPController::class,'showgoogleotpForm'])->name('user.googleotp');
     Route::post('/otp', [OTPController::class,'otp'])->name('user.otp.submit');
+    Route::post('/googleotp', [OTPController::class,'otp'])->name('user.googleotp.submit');
 
     Route::get('/register', [RegisterController::class,'showRegisterForm'])->name('user.register');
     Route::post('/register', [RegisterController::class,'register'])->name('user.register.submit');

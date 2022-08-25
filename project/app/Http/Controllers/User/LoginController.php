@@ -31,7 +31,7 @@ class LoginController extends Controller
             ];
 
         $validator = Validator::make($request->all(), $rules);
-        
+
         if ($validator->fails()) {
           return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
         }
@@ -41,13 +41,13 @@ class LoginController extends Controller
             if(Auth::guard('web')->user()->is_banned == 1)
             {
               Auth::guard('web')->logout();
-              return response()->json(array('errors' => [ 0 => 'You are Banned From this system!' ]));   
+              return response()->json(array('errors' => [ 0 => 'You are Banned From this system!' ]));
             }
 
             if(Auth::guard('web')->user()->email_verified == 'No')
             {
               Auth::guard('web')->logout();
-              return response()->json(array('errors' => [ 0 => 'Your Email is not Verified!' ]));   
+              return response()->json(array('errors' => [ 0 => 'Your Email is not Verified!' ]));
             }
 
             if(session()->get('setredirectroute') != NULL){
@@ -55,18 +55,18 @@ class LoginController extends Controller
             }
            // $gs = Generalsetting::first();
             $user = auth()->user();
-            if($user->login_fa_yn =="Y"){
-                if($user->login_fa == "two_fa_email" || $user->login_fa == "two_fa_phone")
-                {
-                    return response()->json(route('user.otp'));
-                }else{
-                    return response()->json(route('user.googleotp'));
-                }
-              
-            }else{
-                $user->update(['verified'=>1]);
+            // if($user->login_fa_yn =="Y"){
+            //     if($user->login_fa == "two_fa_email" || $user->login_fa == "two_fa_phone")
+            //     {
+            //         return response()->json(route('user.otp'));
+            //     }else{
+            //         return response()->json(route('user.googleotp'));
+            //     }
+
+            // }else{
+            //     $user->update(['verified'=>1]);
                 return response()->json(route('user.dashboard'));
-            }
+            // }
         }
 
         return response()->json(array('errors' => [ 0 => "Credentials Doesn't Match !" ]));
@@ -74,6 +74,9 @@ class LoginController extends Controller
 
     public function logout()
     {
+        $user = auth()->user();
+        $user->verified = 0;
+        $user->save();
         Auth::guard('web')->logout();
         session()->forget('setredirectroute');
         session()->forget('affilate');

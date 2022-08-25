@@ -262,6 +262,30 @@ if(!function_exists('getModule')){
     }
   }
 
+  if(!function_exists('sendSMS')) {
+    function sendSMS($recipient,$message,$from){
+        try {
+            nexmo($recipient,$message,$from);
+        } catch (\Throwable $th) {
+
+        }
+
+    }
+
+  }
+
+  if(!function_exists('nexmo')) {
+    function nexmo(string $recipient,$message,$from){
+        $config = array('api_key'=>'', 'api_secret'=>'');
+        $basic  = new \Vonage\Client\Credentials\Basic($config->api_key, $config->api_secret);
+        $client = new \Vonage\Client($basic);
+        $client->sms()->send(
+            new \Vonage\SMS\Message\SMS($recipient, $from, $message)
+        );
+
+    }
+  }
+
   if(!function_exists('userBalance')){
     function userBalance($user_id){
       $sql = "SELECT
