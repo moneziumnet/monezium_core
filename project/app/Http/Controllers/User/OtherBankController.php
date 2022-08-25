@@ -29,10 +29,15 @@ class OtherBankController extends Controller
     public function othersend($id){
         $data['data'] = Beneficiary::findOrFail($id);
         $data['other_bank_limit'] = Generalsetting::first()->other_bank_limit;
+        $data['user'] = auth()->user();
         return view('user.otherbank.send',$data);
     }
 
     public function store(Request $request){
+        $user = auth()->user();
+        if ($user->two_fa_code != $request->otp) {
+            return redirect()->back()->with('unsuccess','Verification code is not matched.');
+        }
         $other_bank_limit =Generalsetting::first()->other_bank_limit;
         if ($request->amount >= $other_bank_limit) {
             $rules = [
@@ -53,7 +58,6 @@ class OtherBankController extends Controller
         }
 
 
-        $user = auth()->user();
         if($user->bank_plan_id === null){
             return redirect()->back()->with('unsuccess','You have to buy a plan to withdraw.');
         }
