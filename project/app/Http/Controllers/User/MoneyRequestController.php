@@ -108,7 +108,7 @@ class MoneyRequestController extends Controller
         $data->status = 0;
         $data->details = $request->details;
         $data->user_type = 1;
-        $data->save();
+
 
         $currency = Currency::findOrFail($request->wallet_id);
         if($receiver === null){
@@ -143,9 +143,12 @@ class MoneyRequestController extends Controller
 
             $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
             mail($to,$subject,$msg_body,$headers);
+            $data->save();
             return redirect()->back()->with('success','Request Money Send to unregisted user('.$request->account_email.') Successfully.');
+
         }
         else {
+            $data->save();
             return redirect()->back()->with('success','Request Money Send Successfully.');
         }
 
