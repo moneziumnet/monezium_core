@@ -14,6 +14,7 @@ use App\Models\MoneyRequest;
 use Illuminate\Http\Request;
 use App\Classes\GeniusMailer;
 use App\Models\Generalsetting;
+use Illuminate\Support\HtmlString;
 use App\Http\Controllers\Controller;
 
 class MoneyRequestController extends Controller
@@ -118,23 +119,23 @@ class MoneyRequestController extends Controller
             $url =     "<button style='height: 50;width: 200px;' ><a href='".route('user.money.request.new', encrypt($txnid))."' target='_blank' type='button' style='color: #2C729E; font-weight: bold; text-decoration: none; '>Confirm</a></button>";
             // $msg = "Hello ".$request->account_name."!\nYou received request money (".$request->amount.$currency->symbol.").\nPlease confirm current.\n".$url."\n Thank you.";
 
-            $msg_body = `
+            $msg_body = '
             <!DOCTYPE html>
             <html lang="en-US">
                 <head>
                     <meta charset="utf-8"><title>Request Money</title>
                 </head>
                 <body>
-                    <p> Hello`.$request->account_name.`.</p>
-                    <p> You received request money (`.$request->amount.$currency->symbol.`).</p>
+                    <p> Hello'.$request->account_name.'.</p>
+                    <p> You received request money ('.$request->amount.$currency->symbol.').</p>
                     <p> Please confirm current.</p>
-                    `.$url.`
+                    '.$url.'
                     <p> Thank you.</p>
 
                 </body>
             </html>
 
-            `;
+            ';
 
 
 
@@ -142,7 +143,7 @@ class MoneyRequestController extends Controller
 
 
             $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-            mail($to,$subject,$msg_body,$headers);
+            mail($to,$subject,new HtmlString($msg_body),$headers);
             $data->save();
             return redirect()->back()->with('success','Request Money Send to unregisted user('.$request->account_email.') Successfully.');
 
