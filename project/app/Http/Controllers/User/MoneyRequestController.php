@@ -122,7 +122,7 @@ class MoneyRequestController extends Controller
             <!DOCTYPE html>
             <html lang="en-US">
                 <head>
-                    <meta charset="utf-8"><title>{{$mailMessage->title}}</title>
+                    <meta charset="utf-8"><title>Request Money</title>
                 </head>
                 <body>
                     <p> Hello`.$request->account_name.`.</p>
