@@ -61,7 +61,7 @@
             <a href="{{url('user/transactions-pdf?search='.request('search').'&remark='.request('remark').'&s_time='.request('s_time').'&e_time='.request('e_time'))}}" id="download_pdf">
               <i class="fas fa-file-pdf" aria-hidden="true"></i> {{__('PDF')}}
             </a> &nbsp;
-            <a href="{{route('user.transaction-export')}}">
+            <a href="{{url('user/transactions-export?search='.request('search').'&remark='.request('remark').'&s_time='.request('s_time').'&e_time='.request('e_time'))}}">
               <i class="fas fa-file-excel" aria-hidden="true"></i> {{__('Export')}}
             </a>
           </div>
@@ -99,7 +99,7 @@
 								<td data-label="@lang('Remark')">
 								<span class="badge badge-dark">{{ucwords(str_replace('_',' ',$data->remark))}}</span>
 								</td>
-								<td data-label="@lang('Amoun6t')">
+								<td data-label="@lang('Amount')">
 									<span class="{{$data->type == '+' ? 'text-success':'text-danger'}}">{{$data->type}} {{amount($data->amount,$data->currency->type,2)}} {{$data->currency->code}}</span>
 								</td>
 								<td data-label="@lang('Details')" class="text-end">

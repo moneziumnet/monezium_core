@@ -24,7 +24,7 @@ class ExportTransaction implements FromView,ShouldAutoSize
     {
         $this->search = $search;
         $this->remark = $remark;
-        $this->s_time = $s_time;
+        $this->s_time = $s_time ? $s_time : '';
         $this->e_time = $e_time;
     }
     // public function headings():array{

@@ -85,8 +85,12 @@ class UserController extends Controller
 
     public function transactionExport()
     {
+        $search = request('search');
+        $remark = request('remark');
+        $s_time = request('s_time');
+        $e_time = request('e_time');
 
-        return Excel::download( new ExportTransaction, 'transaction.xlsx');
+        return Excel::download( new ExportTransaction($search, $remark, $s_time, $e_time), 'transaction.xlsx');
         // foreach ($transactions as $key => $transaction) {
         //     $transaction->currency = Currency::whereId($transaction->currency_id)->first();
         // }
