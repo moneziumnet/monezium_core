@@ -14,7 +14,6 @@ use App\Models\MoneyRequest;
 use Illuminate\Http\Request;
 use App\Classes\GeniusMailer;
 use App\Models\Generalsetting;
-use Illuminate\Support\HtmlString;
 use App\Http\Controllers\Controller;
 
 class MoneyRequestController extends Controller
@@ -143,7 +142,12 @@ class MoneyRequestController extends Controller
 
 
             $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-            mail($to,$subject,new HtmlString($msg_body),$headers);
+            $headers .= "MIME-Version: 1.0" . "\r\n";
+            $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+
+            // More headers
+
+            mail($to,$subject,$msg_body,$headers);
             $data->save();
             return redirect()->back()->with('success','Request Money Send to unregisted user('.$request->account_email.') Successfully.');
 
