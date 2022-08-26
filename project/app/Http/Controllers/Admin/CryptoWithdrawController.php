@@ -5,32 +5,32 @@ namespace App\Http\Controllers\Admin;
 use App\Classes\GeniusMailer;
 use App\Http\Controllers\Controller;
 use App\Models\Currency;
-use App\Models\CryptoDeposit;
+use App\Models\CryptoWithdraw;
 use App\Models\Generalsetting;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Datatables;
 
-class CryptoDepositController extends Controller
+class CryptoWithdrawController extends Controller
 {
     public function datatables()
     {
-        $datas = CryptoDeposit::orderBy('id','desc');
+        $datas = CryptoWithdraw::orderBy('id','desc');
 
         return Datatables::of($datas)
-                        ->editColumn('created_at', function(CryptoDeposit $data) {
+                        ->editColumn('created_at', function(CryptoWithdraw $data) {
                             $date = date('d-m-Y',strtotime($data->created_at));
                             return $date;
                         })
-                        ->addColumn('customer_name',function(CryptoDeposit $data){
+                        ->addColumn('customer_name',function(CryptoWithdraw $data){
                             $data = User::where('id',$data->user_id)->first();
                             return $data->name;
                         })
-                        ->editColumn('amount', function(CryptoDeposit $data) {
+                        ->editColumn('amount', function(CryptoWithdraw $data) {
                             return $data->currency->symbol.$data->amount;
                         })
-                        ->editColumn('status', function(CryptoDeposit $data) {
+                        ->editColumn('status', function(CryptoWithdraw $data) {
                             if ($data->status == 1) {
                                 $status  = __('Completed');
                               } elseif ($data->status == 2) {
@@ -52,12 +52,12 @@ class CryptoDepositController extends Controller
                                                         ' . $status . '
                                                       </button>
                                                       <div class="dropdown-menu" x-placement="bottom-start">
-                                                        <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="' . route('admin.deposits.crypto.status', ['id1' => $data->id, 'status' => 1]) . '">' . __("completed") . '</a>
-                                                        <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="' . route('admin.deposits.crypto.status', ['id1' => $data->id, 'status' => 2]) . '">' . __("rejected") . '</a>
+                                                        <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="' . route('admin.withdraws.crypto.status', ['id1' => $data->id, 'status' => 1]) . '">' . __("completed") . '</a>
+                                                        <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="' . route('admin.withdraws.crypto.status', ['id1' => $data->id, 'status' => 2]) . '">' . __("rejected") . '</a>
                                                       </div>
                                                     </div>';
                             })
-                        ->editColumn('action', function(CryptoDeposit $data) {
+                        ->editColumn('action', function(CryptoWithdraw $data) {
                             // $detail = SubInsBank::where('name', $data->method)->first();
                             // $bankaccount = BankAccount::whereUserId($data->user_id)->where('subbank_id', $detail->id)->where('currency_id', $data->currency_id)->first();
                             // $detail->address = str_replace(' ', '-', $detail->address);
@@ -72,11 +72,11 @@ class CryptoDepositController extends Controller
     }
 
     public function index(){
-        return view('admin.cryptodeposit.index');
+        return view('admin.cryptowithdraw.index');
     }
 
     public function status($id1,$id2){
-        $data = CryptoDeposit::findOrFail($id1);
+        $data = CryptoWithdraw::findOrFail($id1);
 
         if($data->status == 'complete'){
           $msg = 'Deposits already completed';

@@ -9,6 +9,7 @@ class CryptoWithdraw extends Model
     protected $fillable = [
         'currency_id',
         'user_id',
+        'sender_address',
         'amount',
         'hash',
         'status'
