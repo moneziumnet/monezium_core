@@ -25,6 +25,7 @@ class CreateTransactionsTable extends Migration
             $table->string('remark');
             $table->string('type', 10)->nullable();
             $table->string('details');
+            $table->text('data');
             $table->string('invoice_num')->nullable();
             $table->timestamps();
         });
