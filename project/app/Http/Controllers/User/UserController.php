@@ -278,8 +278,8 @@ class UserController extends Controller
         if($request->isMethod('post'))
         {
 
-            $login_fa_yn = 'N';
-            $login_fa = '';
+            $login_fa_yn = $payment_fa_yn = 'N';
+            $login_fa = $payment_fa = '';
             if($request->input('login_fa_yn') == 'Y')
             {
                 $rules = [
@@ -294,11 +294,25 @@ class UserController extends Controller
                 $login_fa = $request->input('login_fa');
             }
 
+            if($request->input('payment_fa_yn') == 'Y')
+            {
+                $rules = [
+                    'payment_fa'   => 'required'
+                ];
+                $validator = Validator::make($request->all(), $rules);
+
+                if ($validator->fails()) {
+                    return redirect()->back()->with('unsuccess','Select 2FA Option for Payments');
+                }
+                $payment_fa_yn = 'Y';
+                $payment_fa = $request->input('login_fa');
+            }
+
             $update = User::where('id', $user->id)->update([
                 'login_fa_yn'  => $login_fa_yn,
                 'login_fa'     => $login_fa,
-                'payment_fa_yn'=> $request->input('payment_fa_yn'),
-                'payment_fa'=> $request->input('payment_fa')
+                'payment_fa_yn'=> $payment_fa_yn,
+                'payment_fa'=> $payment_fa
             ]);
 
             if($update)

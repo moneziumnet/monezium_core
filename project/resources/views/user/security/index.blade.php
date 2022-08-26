@@ -58,11 +58,11 @@
                                 </div>
                                
                                 <div class="form-group mb-3 mt-3">
-                                    <input type="checkbox" name="payment_fa_yn" id="payment_fa_yn" value="Y"  @if($user->payment_fa_yn == "Y") checked @endif required> {{__('Payments with 2FA Authorization')}}
+                                    <input type="checkbox" name="payment_fa_yn" id="payment_fa_yn" value="Y"  @if($user->payment_fa_yn == "Y") checked @endif> {{__('Payments with 2FA Authorization')}}
                                 </div>
                                 <div class="form-group mb-3 mt-3">
-                                    <label class="form-label required">{{__('Select 2FA Option')}}</label>
-                                    <select name="payment_fa" id="payment_fa" class="form-control" required>
+                                    <label class="form-label">{{__('Select 2FA Option')}}</label>
+                                    <select name="payment_fa" id="payment_fa" class="form-control">
                                       <option value="">Select</option>
                                         <option value="two_fa_email" @if($user->payment_fa == "two_fa_email") selected @endif>Two FA by Email</option>
                                         <option value="two_fa_phone" @if($user->payment_fa == "two_fa_phone") selected @endif>Two FA by Phone</option>
