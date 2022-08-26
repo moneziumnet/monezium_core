@@ -35,6 +35,11 @@
           </div>
 
           <div class="form-group">
+            <label for="address">{{ __('Address') }}</label>
+            <input type="text" class="form-control" name="address" placeholder="{{ __('Enter Crypto Address') }}" required="" value="">
+          </div>
+
+          <div class="form-group">
             <label for="inp-code">{{ __('Code') }}</label>
             <input type="text" class="form-control" id="inp-code" name="code" placeholder="{{ __('Enter Currency code') }}" required="" value="">
           </div>

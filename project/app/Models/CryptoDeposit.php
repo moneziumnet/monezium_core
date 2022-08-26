@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Deposit extends Model
+class CryptoDeposit extends Model
 {
     protected $fillable = [
         'currency_id',
@@ -23,6 +23,6 @@ class Deposit extends Model
 
     public function currency()
     {
-        return $this->belongsTo(CryptoCurrency::class,'currency_id')->withDefault();
+        return $this->belongsTo(Currency::class,'currency_id')->withDefault();
     }
 }

@@ -34,6 +34,11 @@
           </div>
 
           <div class="form-group">
+            <label for="address">{{ __('Address') }}</label>
+            <input type="text" class="form-control" name="address" placeholder="{{ __('Enter Crypto Address') }}" required="" value="{{ $data->address }}">
+          </div>
+
+          <div class="form-group">
             <label for="inp-code">{{ __('Currency Code') }}</label>
             <input type="text" class="form-control" id="inp-code" name="code" placeholder="{{ __('Enter Currency Code') }}" required="" value="{{ $data->code }}">
           </div>

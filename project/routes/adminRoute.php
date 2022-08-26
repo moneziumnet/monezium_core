@@ -30,6 +30,7 @@ use App\Http\Controllers\Admin\BankPlanController;
 use App\Http\Controllers\Admin\ContactsController;
 use App\Http\Controllers\Admin\CurrencyController;
 use App\Http\Controllers\Admin\CryptoCurrencyController;
+use App\Http\Controllers\Admin\CryptoDepositController;
 use App\Http\Controllers\Admin\LanguageController;
 use App\Http\Controllers\Admin\LoanPlanController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -578,6 +579,10 @@ Route::prefix('admin')->group(function () {
     Route::get('/crypto/currency/edit/{id}', [CryptoCurrencyController::class, 'edit'])->name('admin.crypto.currency.edit');
     Route::post('/crypto/currency/update/{id}', [CryptoCurrencyController::class, 'update'])->name('admin.crypto.currency.update');
     Route::get('/crypto/currency/delete/{id}', [CryptoCurrencyController::class, 'destroy'])->name('admin.crypto.currency.delete');
+
+    Route::get('/deposits/crypto/datatables', [CryptoDepositController::class, 'datatables'])->name('admin.deposits.crypto.datatables');
+    Route::get('/deposits/crypto', [CryptoDepositController::class, 'index'])->name('admin.deposits.crypto.index');
+    Route::get('/deposits/crypto/status/{id1}/{id2}', [CryptoDepositController::class, 'status'])->name('admin.deposits.crypto.status');
   });
 
   Route::group(['middleware' => 'permissions:Manage KYC Form'], function () {

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use Datatables;
-use App\Models\CryptoCurrency;
+use App\Models\Currency;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -19,10 +19,10 @@ class CryptoCurrencyController extends Controller
 
     public function datatables()
     {
-        $datas = CryptoCurrency::orderBy('id','desc');
+        $datas = Currency::orderBy('id','desc')->where('type', 2);
          return Datatables::of($datas)
-                            ->addColumn('action', function(CryptoCurrency $data) {
-                                $delete = $data->is_default == 1 ? '':'<a href="javascript:;" data-href="' . route('admin.crypto.currency.delete',$data->id) . '" data-toggle="modal" data-target="#deleteModal" class="dropdown-item">'.__("Delete").'</a>';
+                            ->addColumn('action', function(Currency $data) {
+                                $delete = '<a href="javascript:;" data-href="' . route('admin.crypto.currency.delete',$data->id) . '" data-toggle="modal" data-target="#deleteModal" class="dropdown-item">'.__("Delete").'</a>';
                                 return '<div class="btn-group mb-1">
                               <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 '.'Actions' .'
@@ -50,7 +50,7 @@ class CryptoCurrencyController extends Controller
     public function store(Request $request)
     {
 
-        $data = new CryptoCurrency();
+        $data = new Currency();
         $input = $request->all();
 
         $data->fill($input)->save();
@@ -63,13 +63,13 @@ class CryptoCurrencyController extends Controller
 
     public function edit($id)
     {
-        $data = CryptoCurrency::findOrFail($id);
+        $data = Currency::findOrFail($id);
         return view('admin.cryptocurrency.edit',compact('data'));
     }
 
     public function update(Request $request, $id)
     {
-        $data = CryptoCurrency::findOrFail($id);
+        $data = Currency::findOrFail($id);
         $input = $request->all();
         $data->update($input);
         $msg = __('Data Updated Successfully.').' '.'<a href="'.route('admin.crypto.currency.index').'"> '.__('View Lists.').'</a>';
@@ -82,7 +82,7 @@ class CryptoCurrencyController extends Controller
         {
         return __("You cant't remove the main currency.");
         }
-        $data = CryptoCurrency::findOrFail($id);
+        $data = Currency::findOrFail($id);
         $data->delete();
         $msg = __('Data Deleted Successfully.');
         return response()->json($msg);

@@ -35,9 +35,7 @@ class DepositBankController extends Controller
                             return $data->email;
                         })
                         ->editColumn('amount', function(DepositBank $data) {
-                            $gs = Generalsetting::find(1);
-                            $defaultCurrency = Currency::where('is_default',1)->first();
-                            return $defaultCurrency->symbol.round($data->amount*$defaultCurrency->rate);
+                            return $data->currency->symbol.round($data->amount*$data->currency->rate);
                         })
                         ->editColumn('status', function(DepositBank $data) {
                             $status = $data->status == 'pending' ? '<span class="badge badge-warning">pending</span>' : '<span class="badge badge-success">completed</span>';

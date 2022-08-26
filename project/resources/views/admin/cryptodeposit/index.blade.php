@@ -4,11 +4,11 @@
 
 <div class="card">
 	<div class="d-sm-flex align-items-center justify-content-between">
-	<h5 class=" mb-0 text-gray-800 pl-3">{{ __('Deposits(Bank)') }}</h5>
+	<h5 class=" mb-0 text-gray-800 pl-3">{{ __('Crypto Deposits') }}</h5>
 	<ol class="breadcrumb">
 		<li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
 
-		<li class="breadcrumb-item"><a href="{{ route('admin.deposits.bank.index') }}">{{ __('Deposits(Bank)') }}</a></li>
+		<li class="breadcrumb-item"><a href="{{ route('admin.deposits.crypto.index') }}">{{ __('Crypto Deposits') }}</a></li>
 	</ol>
 	</div>
 </div>
@@ -24,9 +24,10 @@
 		  <thead class="thead-light">
 			<tr>
         <th>{{__('Date')}}</th>
-        <th>{{__('Deposit Number')}}</th>
+        <th>{{__('Hash')}}</th>
+        <th>{{__('Crypto Address')}}</th>
         <th>{{__('Customer Name')}}</th>
-        <th>{{__('Customer Email')}}</th>
+        <th>{{__('Customer Crypto Address')}}</th>
         <th>{{__('Amount')}}</th>
         <th>{{__('Status')}}</th>
         <th>{{__('Action')}}</th>
@@ -105,12 +106,13 @@
            processing: true,
            serverSide: true,
            searching: true,
-           ajax: '{{ route('admin.deposits.bank.datatables') }}',
+           ajax: '{{ route('admin.deposits.crypto.datatables') }}',
            columns: [
                 { data: 'created_at', name: 'created_at' },
-                { data: 'deposit_number', name: 'deposit_number' },
+                { data: 'hash', name: 'hash' },
+                { data: 'address', name: 'address' },
                 { data: 'customer_name', name: 'customer_name' },
-                { data: 'customer_email', name: 'customer_email' },
+                { data: 'sender_address', name: 'sender_address' },
                 { data: 'amount', name: 'amount' },
                 { data: 'status', name: 'status' },
                 { data: 'action', name: 'action' },

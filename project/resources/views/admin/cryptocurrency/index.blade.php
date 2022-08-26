@@ -22,6 +22,7 @@
 				<thead class="thead-light">
 				  <tr>
 					<th>{{ __('Name') }}</th>
+					<th>{{ __('Address') }}</th>
 					<th>{{ __('Code') }}</th>
 					<th>{{ __('Symbol') }}</th>
 					<th>{{ __('Rate') }}</th>
@@ -73,6 +74,7 @@
                ajax: '{{ route('admin.crypto.currency.datatables') }}',
                columns: [
                         { data: 'curr_name', name: 'curr_name' },
+						{ data: 'address', name: 'address' },
 						{ data: 'code', name: 'code' },
                         { data: 'symbol', name: 'symbol' },
 						{ data: 'rate', name: 'rate' },

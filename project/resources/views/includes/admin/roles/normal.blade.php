@@ -43,7 +43,7 @@
     <div id="crypto_manage" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         <a class="collapse-item" href="{{ route('admin.crypto.currency.index') }}">{{ __('Currencies') }}</a>
-        <a class="collapse-item" href="">{{ __('Crypto Deposits') }}</a>
+        <a class="collapse-item" href="{{ route('admin.deposits.crypto.index') }}">{{ __('Crypto Deposits') }}</a>
         <a class="collapse-item" href="">{{ __('Crypto Withdraws') }}</a>
       </div>
     </div>
