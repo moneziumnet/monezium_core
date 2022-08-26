@@ -16,7 +16,7 @@
         <div class="col-auto ms-auto d-print-none">
             <div class="btn-list">
 
-              <a href="{{ route('user.contract.index') }}" class="btn btn-primary d-none d-sm-inline-block">
+              <a href="{{ route('user.contract.index') }}" class="btn btn-primary d-sm-inline-block">
                   <i class="fas fa-backward me-1"></i> {{__('Contract List')}}
               </a>
             </div>
