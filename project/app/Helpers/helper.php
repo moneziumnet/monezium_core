@@ -419,6 +419,7 @@ if(!function_exists('getModule')){
                 $trans->type        = '-';
                 $trans->remark      = 'card_issuance';
                 $trans->details     = trans('Card Issuance');
+                $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
                 $trans->save();
               }
               else {
@@ -434,6 +435,7 @@ if(!function_exists('getModule')){
                 $trans->type        = '-';
                 $trans->remark      = 'wallet_create';
                 $trans->details     = trans('Wallet Create');
+                $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
                 $trans->save();
               }
               user_wallet_decrement($auth_id, 1, $chargefee->data->fixed_charge, 1);
@@ -566,6 +568,7 @@ if(!function_exists('getModule')){
                 $trans->type        = '-';
                 $trans->remark      = 'wallet_monthly_fee';
                 $trans->details     = trans('Wallet Maintenance');
+                $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
                 $trans->save();
 
                 user_wallet_decrement($user->id, 1, $chargefee->data->fixed_charge, 1);
@@ -596,6 +599,7 @@ if(!function_exists('getModule')){
                 $trans->type        = '-';
                 $trans->remark      = 'card_monthly_fee';
                 $trans->details     = trans('Card Maintenance');
+                $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
                 $trans->save();
 
                 user_wallet_decrement($user->id, 1, $chargefee->data->fixed_charge, 1);

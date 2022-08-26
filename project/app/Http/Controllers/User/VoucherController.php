@@ -109,6 +109,7 @@ class VoucherController extends Controller
         $trnx->remark      = 'create_voucher';
         $trnx->type        = '-';
         $trnx->details     = trans('Voucher created');
+        $trnx->data        = '{"sender":"'.$user->name.'", "receiver":"Vocher System"}';
         $trnx->save();
 
         // user_wallet_increment(auth()->id(),$wallet->currency_id,$commission);
@@ -118,17 +119,18 @@ class VoucherController extends Controller
         // $wallet->balance +=  $commission;
         // $wallet->save();
 
-        $commissionTrnx              = new Transaction();
-        $commissionTrnx->trnx        = $trnx->trnx;
-        $commissionTrnx->user_id     = auth()->id();
-        $commissionTrnx->user_type   = 1;
-        $commissionTrnx->currency_id = $wallet->currency->id;
-        $commissionTrnx->amount      = 0;
-        $commissionTrnx->charge      = 0;
-        $commissionTrnx->remark      = 'voucher_commission';
-        $commissionTrnx->type        = '+';
-        $commissionTrnx->details     = trans('Voucher commission');
-        $commissionTrnx->save();
+        // $commissionTrnx              = new Transaction();
+        // $commissionTrnx->trnx        = $trnx->trnx;
+        // $commissionTrnx->user_id     = auth()->id();
+        // $commissionTrnx->user_type   = 1;
+        // $commissionTrnx->currency_id = $wallet->currency->id;
+        // $commissionTrnx->amount      = 0;
+        // $commissionTrnx->charge      = 0;
+        // $commissionTrnx->remark      = 'voucher_commission';
+        // $commissionTrnx->type        = '+';
+        // $commissionTrnx->details     = trans('Voucher commission');
+        // $commissionTrnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.auth()->user()->name.'"}';
+        // $commissionTrnx->save();
 
         return back()->with('success','Voucher has been created successfully');
 
@@ -180,6 +182,7 @@ class VoucherController extends Controller
           $trans->type        = '-';
           $trans->remark      = 'wallet_create';
           $trans->details     = trans('Wallet Create');
+          $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
           $trans->save();
 
           user_wallet_decrement($user->id, 1, $chargefee->data->fixed_charge, 1);
@@ -199,6 +202,7 @@ class VoucherController extends Controller
        $trnx->type        = '+';
        $trnx->remark      = 'reedem_voucher';
        $trnx->details     = trans('Voucher reedemed');
+       $trnx->data        = '{"sender":"Vocher System", "receiver":"'.$user->name.'"}';
        $trnx->save();
 
        $voucher->status = 1;

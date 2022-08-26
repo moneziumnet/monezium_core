@@ -129,6 +129,7 @@ class MerchantOtherBankController extends Controller
             $trans->charge      = $cost;
             $trans->type        = '-';
             $trans->remark      = 'Send_Money';
+            $trans->data        = '{"sender":"'.$user->name.'", "receiver":"Other Bank"}';
             $trans->details     = trans('Send Money');
 
             // $trans->email = $user->email;

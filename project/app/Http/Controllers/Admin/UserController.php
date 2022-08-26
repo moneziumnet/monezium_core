@@ -238,6 +238,7 @@ class UserController extends Controller
                     $trans->type        = '-';
                     $trans->remark      = 'card_issuance';
                     $trans->details     = trans('Card Issuance');
+                    $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
                     $trans->save();
                   }
                   else {
@@ -252,6 +253,7 @@ class UserController extends Controller
                     $trans->type        = '-';
                     $trans->remark      = 'wallet_create';
                     $trans->details     = trans('Wallet Create');
+                    $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
                     $trans->save();
                   }
 
@@ -420,6 +422,7 @@ class UserController extends Controller
             $trnx->remark      = 'upgrade_plan';
             $trnx->type        = '-';
             $trnx->details     = trans('Upgrade Plan');
+            $trnx->data        = '{"sender":"'.User::findOrFail($id)->name.'", "receiver":"System Account"}';
             $trnx->save();
             user_wallet_decrement($id, $currency_id, $plan->amount);
 
@@ -702,6 +705,7 @@ class UserController extends Controller
             $trans->charge      = 0;
             $trans->type        = '-';
             $trans->remark      = 'manual_fee_'.str_replace(' ', '_', $manualfee->name);
+            $trans->data        = '{"sender":"'.User::findOrFail($wallet->user_id)->name.'", "receiver":"System Account"}';
             $trans->details     = trans('manual_fee');
             $trans->save();
             return redirect()->back()->with(array('message' => 'Done Manual fee successfully'));

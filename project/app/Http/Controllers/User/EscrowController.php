@@ -116,6 +116,7 @@ class EscrowController extends Controller
             $trans->type        = '+';
             $trans->remark      = 'Make_Escrow_supervisor_fee';
             $trans->details     = trans('Make Escrow');
+            $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($user->referral_id)->name.'"}';
             $trans->save();
         }
 
@@ -141,6 +142,7 @@ class EscrowController extends Controller
         $trnx->remark      = 'make_escrow';
         $trnx->type        = '-';
         $trnx->details     = trans('Made escrow to '). $receiver->email;
+        $trnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.$receiver->name.'"}';
         $trnx->save();
 
         return back()->with('message','Escrow has been created successfully');
@@ -258,6 +260,7 @@ class EscrowController extends Controller
             $trans->type        = '-';
             $trans->remark      = 'wallet_create';
             $trans->details     = trans('Wallet Create');
+            $trans->data        = '{"sender":"'.$recipient->name.'", "receiver":"System Account"}';
             $trans->save();
 
             user_wallet_decrement($recipient->id, 1, $chargefee->data->fixed_charge, 1);
@@ -280,6 +283,7 @@ class EscrowController extends Controller
         $trnx->remark      = 'make_escrow';
         $trnx->type        = '+';
         $trnx->details     = trans('Received escrow money '). $recipient->email;
+        $trnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.$recipient->name.'"}';
         $trnx->save();
 
         $escrow->status = 1;

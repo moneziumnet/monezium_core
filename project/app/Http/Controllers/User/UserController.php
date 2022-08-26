@@ -68,7 +68,7 @@ class UserController extends Controller
         $s_time = request('s_time');
         $e_time = request('e_time');
         $s_time = $s_time ? $s_time : '';
-        $e_time = $e_time ? $e_time : Carbontime::now()->format('Y-m-d');
+        $e_time = $e_time ? $e_time : Carbontime::now()->addDays(1)->format('Y-m-d');
         $transactions = Transaction::where('user_id',auth()->id())
         ->when($remark,function($q) use($remark){
             return $q->where('remark',$remark);

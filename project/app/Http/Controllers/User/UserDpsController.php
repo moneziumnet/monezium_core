@@ -87,6 +87,7 @@ class UserDpsController extends Controller
             $trans->charge      = 0;
             $trans->type        = '-';
             $trans->remark      = 'Dps_create';
+            $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"System Account"}';
             $trans->details     = trans('Dps created');
 
             // $trans->email = auth()->user()->email;

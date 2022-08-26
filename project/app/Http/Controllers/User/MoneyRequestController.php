@@ -221,6 +221,7 @@ class MoneyRequestController extends Controller
             $trans->type        = '+';
             $trans->remark      = 'Request_money_supervisor_fee';
             $trans->details     = trans('Request Money');
+            $trans->data        = '{"sender":"'.$sender->name.'", "receiver":"'.$receiver->name.'"}';
             $trans->save();
         }
         if (isset($data->shop_id)) {
@@ -242,6 +243,7 @@ class MoneyRequestController extends Controller
         $trans->charge      = 0;
         $trans->type        = '-';
         $trans->remark      = 'Request_Money';
+        $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.$receiver->name.'"}';
         $trans->details     = trans('Request Money');
 
         $trans->save();
@@ -255,6 +257,7 @@ class MoneyRequestController extends Controller
         $trans->charge      = $data->cost + $data->supervisor_cost;
         $trans->type        = '+';
         $trans->remark      = 'Request_Money';
+        $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.$receiver->name.'"}';
         $trans->details     = trans('Request Money');
 
         $trans->save();

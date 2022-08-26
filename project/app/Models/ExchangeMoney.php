@@ -34,6 +34,7 @@ class ExchangeMoney extends Model
             $trnx->remark      = 'money_exchange';
             $trnx->type        = '-';
             $trnx->details     = trans('Exchanged money from '.$exchange->fromCurr->code.' to '.$exchange->toCurr->code);
+            $trnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.auth()->user()->name.'"}';
             $trnx->save();
 
             $toTrnx              = new Transaction();
@@ -46,6 +47,7 @@ class ExchangeMoney extends Model
             $toTrnx->remark      = 'money_exchange';
             $toTrnx->type          = '+';
             $toTrnx->details     = trans('Exchanged money from '.$exchange->fromCurr->code.' to '.$exchange->toCurr->code);
+            $toTrnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.auth()->user()->name.'"}';
             $toTrnx->save();
         });
     }

@@ -49,7 +49,7 @@ class UserLoanController extends Controller
         $data['plans'] = LoanPlan::orderBy('id','desc')->whereStatus(1)->paginate(12);
         $data['currencylist'] = Currency::whereStatus(1)->where('type', 1)->get();
         $data['loans'] = UserLoan::whereUserId(auth()->id())->orderby('id','desc')->paginate(10);
-        
+
         $wallets = Wallet::where('user_id',auth()->id())->where('wallet_type',4)->with('currency')->get();
         $data['wallets'] = $wallets;
 
@@ -162,6 +162,7 @@ class UserLoanController extends Controller
         $trans->type        = '+';
         $trans->remark      = 'loan_create';
         $trans->details     = trans('loan requesting');
+        $trans->data        = '{"sender":"System Account", "receiver":"'.auth()->user()->name.'"}';
         $trans->save();
 
         return redirect()->route('user.loans.index')->with('message','Loan Requesting Successfully');

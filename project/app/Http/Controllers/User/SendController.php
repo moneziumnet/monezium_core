@@ -165,6 +165,7 @@ class SendController extends Controller
             $trans->type        = '+';
             $trans->remark      = 'Send_money_supervisor_fee';
             $trans->details     = trans('Send Money');
+            $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($user->referral_id)->name.'"}';
             $trans->save();
         }
 
@@ -200,6 +201,7 @@ class SendController extends Controller
             $trans->type        = '-';
             $trans->remark      = 'Send_Money';
             $trans->details     = trans('Send Money');
+            $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.$receiver->name.'"}';
             $trans->save();
 
 
@@ -213,6 +215,7 @@ class SendController extends Controller
             $trans->type        = '+';
             $trans->remark      = 'Recieve_Money';
             $trans->details     = trans('Send Money');
+            $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.$receiver->name.'"}';
             $trans->save();
 
             session(['sendstatus'=>1, 'saveData'=>$trans]);

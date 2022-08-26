@@ -196,6 +196,7 @@ class RegisterController extends Controller
                     $mainUserTrans->charge      = 0;
                     $mainUserTrans->type        = '+';
                     $mainUserTrans->remark      = 'Referral Bonus';
+                    $mainUserTrans->data        = '{"sender":"System Account", "receiver":"'.$mainUser->name.'"}';
                     $mainUserTrans->details     = trans('Referral Bonus');
 
                     // $mainUserTrans->email = $mainUser->email;
@@ -217,6 +218,7 @@ class RegisterController extends Controller
                     $newUserTrans->charge      = 0;
                     $newUserTrans->type        = '+';
                     $newUserTrans->remark      = 'Referral Bonus';
+                    $newUserTrans->data        = '{"sender":"System Account", "receiver":"'.$user->name.'"}';
                     $newUserTrans->details     = trans('Referral Bonus');
 
                     // $newUserTrans->email = $user->email;

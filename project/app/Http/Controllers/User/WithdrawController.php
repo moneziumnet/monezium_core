@@ -143,6 +143,7 @@ class WithdrawController extends Controller
             $trans->type        = '+';
             $trans->remark      = 'withdraw_money_supervisor_fee';
             $trans->details     = trans('Withdraw money');
+            $trans->data        = '{"sender":"'.$user->name.'", "receiver":"'.User::findOrFail($user->referral_id)->name.'"}';
             $trans->save();
         }
 
@@ -172,6 +173,7 @@ class WithdrawController extends Controller
         $trans->type        = '-';
         $trans->remark      = 'withdraw_money';
         $trans->details     = trans('Withdraw money');
+        $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
         $trans->save();
 
         return redirect()->back()->with('success','Withdraw Request Amount : '.$request->amount.' Fee : '.$messagefee.' = '.$messagefinal.' ('.$currency->code.') Sent Successfully.');

@@ -159,6 +159,7 @@ class MerchantSendController extends Controller
             $trans->type        = '-';
             $trans->remark      = 'Send_Money';
             $trans->details     = trans('Send Money');
+            $trans->data         = '{"sender":"'.$user->name.'", "receiver":"'.$receiver->name.'"}';
             $trans->save();
 
 
@@ -172,6 +173,7 @@ class MerchantSendController extends Controller
             $trans->type        = '+';
             $trans->remark      = 'Recieve_Money';
             $trans->details     = trans('Send Money');
+            $trans->data        = '{"sender":"'.$user->name.'", "receiver":"'.$receiver->name.'"}';
             $trans->save();
 
             session(['sendstatus'=>1, 'saveData'=>$trans]);

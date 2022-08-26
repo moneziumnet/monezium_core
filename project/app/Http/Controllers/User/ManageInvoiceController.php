@@ -335,6 +335,7 @@ class ManageInvoiceController extends Controller
                 $trans->type        = '-';
                 $trans->remark      = 'wallet_create';
                 $trans->details     = trans('Wallet Create');
+                $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
                 $trans->save();
 
                 user_wallet_decrement($user->id, 1, $chargefee->data->fixed_charge, 1);
@@ -360,6 +361,7 @@ class ManageInvoiceController extends Controller
             $trnx->invoice_num = $invoice->number;
             $trnx->type        = '-';
             $trnx->details     = trans('Payemnt to invoice : '). $invoice->number;
+            $trnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($invoice->user_id)->name.'"}';
             $trnx->save();
 
             $rcvWallet = Wallet::where('user_id',$invoice->user_id)->where('user_type',1)->where('currency_id',$invoice->currency_id)->where('wallet_type', 1)->first();
@@ -389,6 +391,7 @@ class ManageInvoiceController extends Controller
                 $trans->type        = '-';
                 $trans->remark      = 'wallet_create';
                 $trans->details     = trans('Wallet Create');
+                $trans->data        = '{"sender":"'.User::findOrFail($invoice->user_id)->name.'", "receiver":"System Account"}';
                 $trans->save();
 
                 user_wallet_decrement($invoice->user_id, 1, $chargefee->data->fixed_charge, 1);
@@ -410,6 +413,7 @@ class ManageInvoiceController extends Controller
             $rcvTrnx->invoice_num = $invoice->number;
             $rcvTrnx->type        = '+';
             $rcvTrnx->details     = trans('Receive Payemnt from invoice : '). $invoice->number;
+            $rcvTrnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($invoice->user_id)->name.'"}';
             $rcvTrnx->save();
 
             $invoice->payment_status = 1;

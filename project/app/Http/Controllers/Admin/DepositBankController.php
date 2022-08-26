@@ -117,6 +117,7 @@ class DepositBankController extends Controller
             $trans->type        = '+';
             $trans->remark      = 'Deposit_create_supervisor_fee';
             $trans->details     = trans('Deposit complete');
+            $trans->data        = '{"sender":"System Account", "receiver":"'.$user->name.'"}';
             $trans->save();
         }
         $final_chargefee = $transaction_global_cost + $transaction_custom_cost;
@@ -137,6 +138,7 @@ class DepositBankController extends Controller
         $trans->type        = '+';
         $trans->remark      = 'Deposit_create';
         $trans->details     = trans('Deposit complete');
+        $trans->data        = '{"sender":"System Account", "receiver":"'.$user->name.'"}';
         $trans->save();
 
         $data->update(['status' => 'complete']);
