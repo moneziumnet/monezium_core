@@ -25,12 +25,12 @@ class MoneyRequestController extends Controller
 
     public function index(){
         $data['requests'] = MoneyRequest::orderby('id','desc')->whereUserId(auth()->id())->where('user_type', 1)->paginate(10);
-        if(auth()->user()->twofa)
-        {
+        // if(auth()->user()->twofa)
+        // {
             $data['receives'] = MoneyRequest::orderby('id','desc')->whereReceiverId(auth()->id())->paginate(10);
-        }else{
-            return redirect()->route('user.show2faForm')->with('unsuccess','You must be enable 2FA Security');
-        }
+        // }else{
+        //     return redirect()->route('user.show2faForm')->with('unsuccess','You must be enable 2FA Security');
+        // }
         return view('user.requestmoney.index',$data);
     }
 
@@ -161,13 +161,13 @@ class MoneyRequestController extends Controller
 
     public function verify($id)
     {
-        if(auth()->user()->twofa)
-        {
+        // if(auth()->user()->twofa)
+        // {
             $data['id'] = $id;
             return view('user.requestmoney.verify', $data);
-        }else{
-            return redirect()->route('user.show2faForm')->with('unsuccess','You must be enable 2FA Security');
-        }
+        // }else{
+        //     return redirect()->route('user.show2faForm')->with('unsuccess','You must be enable 2FA Security');
+        // }
     }
 
     public function send(Request $request, $id){

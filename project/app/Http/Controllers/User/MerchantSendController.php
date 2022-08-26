@@ -26,8 +26,8 @@ class MerchantSendController extends Controller
 
     public function create(){
 
-        if(auth()->user()->twofa)
-        {
+        // if(auth()->user()->twofa)
+        // {
             $ga = new GoogleAuthenticator();
             $data['secret'] = $ga->createSecret();
             $wallets = Wallet::where('user_id',auth()->id())->where('balance','>',0)->with('currency')->get();
@@ -36,16 +36,16 @@ class MerchantSendController extends Controller
             $data['savedUser'] = NULL;
 
             return view('user.merchant.sendmoney.create',$data);
-        }else{
-            return redirect()->route('user.show2faForm')->with('unsuccess','You must be enable 2FA Security');
-        }
+        // }else{
+        //     return redirect()->route('user.show2faForm')->with('unsuccess','You must be enable 2FA Security');
+        // }
 
     }
 
     public function savedUser($no){
-        if(auth()->user()->twofa)
-        {
-            $ga = new GoogleAuthenticator();
+        // if(auth()->user()->twofa)
+        // {
+        //     $ga = new GoogleAuthenticator();
             $data['secret'] = $ga->createSecret();
             $wallets = Wallet::where('user_id',auth()->id())->with('currency')->get();
             $data['wallets'] = $wallets;
@@ -53,9 +53,9 @@ class MerchantSendController extends Controller
             $data['saveAccounts'] = SaveAccount::whereUserId(auth()->id())->orderBy('id','desc')->get();
 
             return view('user.merchant.sendmoney.create',$data);
-        }else{
-            return redirect()->route('user.show2faForm')->with('unsuccess','You must be enable 2FA Security');
-        }
+        // }else{
+        //     return redirect()->route('user.show2faForm')->with('unsuccess','You must be enable 2FA Security');
+        // }
     }
 
     public function success(){

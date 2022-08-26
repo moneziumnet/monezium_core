@@ -47,9 +47,9 @@
           <a class="dropdown-item" href="{{route('user.securityform')}}">
             {{__('Security')}}
           </a>
-          <a class="dropdown-item" href="{{route('user.show2faForm')}}">
+          {{-- <a class="dropdown-item" href="{{route('user.show2faForm')}}">
             {{__('2FA Security')}}
-          </a>
+          </a> --}}
           <a class="dropdown-item" href="{{route('user.message.index')}}">
             {{__('Support Tickets')}}
           </a>

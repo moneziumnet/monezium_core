@@ -13,8 +13,8 @@ class TransactionController extends Controller
 
     public function datatables()
     {
-        $datas = Transaction::orderBy('id','desc')->get();  
-        
+        $datas = Transaction::orderBy('id','desc')->get();
+
         return Datatables::of($datas)
                         ->editColumn('amount', function(Transaction $data) {
                             $currency = Currency::whereId($data->currency_id)->first();
@@ -35,8 +35,12 @@ class TransactionController extends Controller
                             $currency = Currency::whereId($data->currency_id)->first();
                             return $data->type.amount($data->charge,$currency->type,2).$currency->code;
                         })
-                        
-                        ->rawColumns([''])
+                        ->addColumn('action', function (Transaction $data) {
+                            return ' <a href="javascript:;"  data-href="" onclick="getDetails('.$data->id.')" class="detailsBtn" >
+                            ' . __("Details") . '</a>';
+                        })
+
+                        ->rawColumns(['action'])
                         ->toJson();
     }
 
