@@ -186,6 +186,7 @@ class UserController extends Controller
             $trans->type        = '+';
             $trans->remark      = 'Deposit_create';
             $trans->details     = trans('Deposit complete');
+            $trans->data        = json_encode($request->except('_token', 'wallet_id'), True);
             $trans->save();
             return redirect()->back()->with(array('message' => 'Deposit Create Successfully'));
         }
@@ -549,12 +550,6 @@ class UserController extends Controller
 
         }
 
-        public function profileTransctionsDetails($id)
-        {
-            $user = User::findOrFail($id);
-            $data['data'] = $user;
-            return view('admin.user.profiletransactions',$data);
-        }
 
         public function trxDetails($id)
         {
