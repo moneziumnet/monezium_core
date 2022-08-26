@@ -29,6 +29,7 @@ use App\Http\Controllers\Admin\SitemapController;
 use App\Http\Controllers\Admin\BankPlanController;
 use App\Http\Controllers\Admin\ContactsController;
 use App\Http\Controllers\Admin\CurrencyController;
+use App\Http\Controllers\Admin\CryptoCurrencyController;
 use App\Http\Controllers\Admin\LanguageController;
 use App\Http\Controllers\Admin\LoanPlanController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -567,6 +568,16 @@ Route::prefix('admin')->group(function () {
     Route::post('/currency/update/{id}', [CurrencyController::class, 'update'])->name('admin.currency.update');
     Route::get('/currency/delete/{id}', [CurrencyController::class, 'destroy'])->name('admin.currency.delete');
     Route::get('/currency/status/{id1}/{id2}', [CurrencyController::class, 'status'])->name('admin.currency.status');
+  });
+
+  Route::group(['middleware' => 'permissions:Crypto Management'], function () {
+    Route::get('/crypto/currency/datatables', [CryptoCurrencyController::class, 'datatables'])->name('admin.crypto.currency.datatables'); //JSON REQUEST
+    Route::get('/crypto/currency', [CryptoCurrencyController::class, 'index'])->name('admin.crypto.currency.index');
+    Route::get('/crypto/currency/create', [CryptoCurrencyController::class, 'create'])->name('admin.crypto.currency.create');
+    Route::post('/crypto/currency/create', [CryptoCurrencyController::class, 'store'])->name('admin.crypto.currency.store');
+    Route::get('/crypto/currency/edit/{id}', [CryptoCurrencyController::class, 'edit'])->name('admin.crypto.currency.edit');
+    Route::post('/crypto/currency/update/{id}', [CryptoCurrencyController::class, 'update'])->name('admin.crypto.currency.update');
+    Route::get('/crypto/currency/delete/{id}', [CryptoCurrencyController::class, 'destroy'])->name('admin.crypto.currency.delete');
   });
 
   Route::group(['middleware' => 'permissions:Manage KYC Form'], function () {

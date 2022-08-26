@@ -4,12 +4,11 @@
 
 <div class="card">
   <div class="d-sm-flex align-items-center justify-content-between">
-    <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Edit Currency') }} <a class="btn btn-primary btn-rounded btn-sm" href="{{route('admin.currency.index')}}"><i class="fas fa-arrow-left"></i> {{ __('Back') }}</a></h5>
+    <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Edit Crypto Currency') }} <a class="btn btn-primary btn-rounded btn-sm" href="{{route('admin.crypto.currency.index')}}"><i class="fas fa-arrow-left"></i> {{ __('Back') }}</a></h5>
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
-      <li class="breadcrumb-item"><a href="javascript:;">{{ __('Payment Settings') }}</a></li>
-      <li class="breadcrumb-item"><a href="{{ route('admin.currency.index') }}">{{ __('Currencies') }}</a></li>
-      <li class="breadcrumb-item"><a href="{{route('admin.currency.edit',$data->id)}}">{{ __('Edit Currency') }}</a></li>
+      <li class="breadcrumb-item"><a href="{{ route('admin.crypto.currency.index') }}">{{ __('Crypto Currencies') }}</a></li>
+      <li class="breadcrumb-item"><a href="{{route('admin.crypto.currency.edit',$data->id)}}">{{ __('Edit Currency') }}</a></li>
     </ol>
   </div>
 </div>
@@ -18,12 +17,12 @@
   <div class="col-md-10">
     <div class="card mb-4">
       <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold text-primary">{{ __('Edit Currency Form') }}</h6>
+        <h6 class="m-0 font-weight-bold text-primary">{{ __('Edit Crypto Currency Form') }}</h6>
       </div>
 
       <div class="card-body">
 
-        <form class="geniusform" action="{{route('admin.currency.update',$data->id)}}" method="POST" enctype="multipart/form-data">
+        <form class="geniusform" action="{{route('admin.crypto.currency.update',$data->id)}}" method="POST" enctype="multipart/form-data">
 
           @include('includes.admin.form-both')
 
@@ -47,15 +46,6 @@
           <div class="form-group">
             <label for="inp-rate">{{ __('Rate') }}</label>
             <input type="text" class="form-control" id="inp-rate" name="rate" placeholder="{{ __('Enter Currency Rate 0') }}" required="" value="{{ numFormat($data->rate,8) }}">
-          </div>
-
-          <div class="form-group">
-            <label>@lang('Currency Type')</label>
-            <select class="form-control" name="type" required>
-              <option value="">--@lang('Select Type')--</option>
-              <option value="1" {{$data->type == 1 ? 'selected':''}}>@lang('FIAT')</option>
-              <option value="2" {{$data->type == 2 ? 'selected':''}}>@lang('CRYPTO')</option>
-            </select>
           </div>
 
           <div class="form-group">

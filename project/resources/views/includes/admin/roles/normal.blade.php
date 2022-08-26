@@ -33,6 +33,23 @@
   </li>
   @endif
 
+  @if(getModule('Crypto Management'))
+  <li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#crypto_manage" aria-expanded="true"
+      aria-controls="collapseTable">
+      <i class="fas fa-user"></i>
+      <span>{{  __('Crypto Management') }}</span>
+    </a>
+    <div id="crypto_manage" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+        <a class="collapse-item" href="{{ route('admin.crypto.currency.index') }}">{{ __('Currencies') }}</a>
+        <a class="collapse-item" href="">{{ __('Crypto Deposits') }}</a>
+        <a class="collapse-item" href="">{{ __('Crypto Withdraws') }}</a>
+      </div>
+    </div>
+  </li>
+  @endif
+
   @if(getModule('Loan Management'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#loan" aria-expanded="true" aria-controls="collapseTable">
