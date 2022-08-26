@@ -276,8 +276,8 @@ if(!function_exists('getModule')){
 
   if(!function_exists('nexmo')) {
     function nexmo(string $recipient,$message,$from){
-        $config = array('api_key'=>'', 'api_secret'=>'');
-        $basic  = new \Vonage\Client\Credentials\Basic($config->api_key, $config->api_secret);
+        $config = array('api_key'=>'bcd5c114', 'api_secret'=>'RCpy6PaQRspb4fdi');
+        $basic  = new \Vonage\Client\Credentials\Basic($config['api_key'], $config['api_secret']);
         $client = new \Vonage\Client($basic);
         $client->sms()->send(
             new \Vonage\SMS\Message\SMS($recipient, $from, $message)
