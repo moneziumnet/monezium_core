@@ -70,11 +70,9 @@
         <h3>@lang('Bank Details')</h3>
         <p class="bank_details"></p>
         <ul class="list-group mt-2">
-            <li class="list-group-item d-flex justify-content-between">@lang('Bank Name')<span id="bank_name"></span></li>
-            <li class="list-group-item d-flex justify-content-between">@lang('Bank Address')<span id="bank_address"></span></li>
-            <li class="list-group-item d-flex justify-content-between">@lang('Bank Iban')<span id="bank_iban"></span></li>
-            <li class="list-group-item d-flex justify-content-between">@lang('Bank Swift')<span id="bank_swift"></span></li>
-            <li class="list-group-item d-flex justify-content-between" id="li_document" >@lang('Document')<span > <a id="document" attributes-list download > {{__('Download Document')}} </a> </span></li>
+            <li class="list-group-item d-flex justify-content-between">@lang('Hash')<span id="hash"></span></li>
+            <li class="list-group-item d-flex justify-content-between">@lang('Customer Crypto Address')<span id="sender_address"></span></li>
+            <li class="list-group-item d-flex justify-content-between">@lang('Amount')<span id="amount"></span></li>
         </ul>
         </div>
         <div class="modal-footer">
@@ -120,19 +118,11 @@
             }
         });
 
-        function getDetails(res_data, bankaccount, document_url) {
-            $('#bank_name').text(res_data.name.replace(/-/gi, ' '));
-            $('#bank_address').text(res_data.address.replace(/-/gi, ' '));
-            $('#bank_iban').text(bankaccount.iban);
-            $('#bank_swift').text(bankaccount.swift);
-            if(document_url) {
-                $("#li_document").attr("style","display: block");
-                $("#document").attr("href", `{{asset('assets/doc/${document_url}')}}`);
-            }
-            else{
-                $("#li_document").attr("style","display: none!important");
-                $("#document").attr("href", `#`);
-            }
+        function getDetails(res_data) {
+            $('#hash').text(res_data.hash);
+            $('#sender_address').text(res_data.sender_address);
+            $('#amount').text(res_data.amount + res_data.currency.code);
+
             $('#modal-success').modal('show');
         }
 
