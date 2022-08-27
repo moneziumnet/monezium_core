@@ -7,7 +7,7 @@
             <a class="nav-link {{menu('user.deposit.index')}} {{menu('user.deposit.create')}}" id="accounts" href="{{route('user.deposit.index') }}" role="button">Payment Gateway</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{menu('user.cryptodeposit.index')}} " id="accounts" href="{{route('user.cryptodeposit.index') }}" role="button">Crypto</a>
+            <a class="nav-link {{menu('user.cryptodeposit.index')}} {{menu('user.cryptodeposit.create')}}" id="accounts" href="{{route('user.cryptodeposit.index') }}" role="button">Crypto</a>
         </li>
     </ul>
 </div>
