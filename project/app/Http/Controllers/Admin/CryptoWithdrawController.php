@@ -125,5 +125,18 @@ class CryptoWithdrawController extends Controller
         $msg = 'Data Updated Successfully.';
         return response()->json($msg);
       }
+
+    public function edit($id) {
+        $data['withdraw'] = CryptoWithdraw::findOrFail($id);
+        return view('admin.cryptowithdraw.edit', $data);
+    }
+
+    public function update(Request $request, $id) {
+        $data = CryptoWithdraw::findOrFail($id);
+        $data->hash = $request->hash;
+        $data->update();
+        return response()->json('You have added hash value successfully. '.'<a href="'.route('admin.withdraws.crypto.index').'"> '.__('View Lists.').'</a>');
+
+    }
 }
 

@@ -73,6 +73,7 @@
             <li class="list-group-item d-flex justify-content-between">@lang('Hash')<span id="hash"></span></li>
             <li class="list-group-item d-flex justify-content-between">@lang('Customer Crypto Address')<span id="sender_address"></span></li>
             <li class="list-group-item d-flex justify-content-between">@lang('Amount')<span id="amount"></span></li>
+            <li class="list-group-item justify-content-between text-center"><a href="" id="trans_id">@lang('Add Hash Value')</a></li>
         </ul>
         </div>
         <div class="modal-footer">
@@ -122,6 +123,8 @@
             $('#hash').text(res_data.hash);
             $('#sender_address').text(res_data.sender_address);
             $('#amount').text(res_data.amount + res_data.currency.code);
+            var url = `${mainurl}/admin/withdraws/crypto/transaction/edit/${res_data.id}`;
+            $('#trans_id').attr("href", url);
 
             $('#modal-success').modal('show');
         }

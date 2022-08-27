@@ -588,6 +588,8 @@ Route::prefix('admin')->group(function () {
     Route::get('/withdraws/crypto/datatables', [CryptoWithdrawController::class, 'datatables'])->name('admin.withdraws.crypto.datatables');
     Route::get('/withdraws/crypto', [CryptoWithdrawController::class, 'index'])->name('admin.withdraws.crypto.index');
     Route::get('/withdraws/crypto/status/{id1}/{id2}', [CryptoWithdrawController::class, 'status'])->name('admin.withdraws.crypto.status');
+    Route::get('/withdraws/crypto/transaction/edit/{id}', [CryptoWithdrawController::class, 'edit'])->name('admin.withdraws.crypto.edit');
+    Route::post('/withdraws/crypto/transaction/update/{id}', [CryptoWithdrawController::class, 'update'])->name('admin.withdraws.crypto.update');
   });
 
   Route::group(['middleware' => 'permissions:Manage KYC Form'], function () {
