@@ -68,6 +68,7 @@ use App\Http\Controllers\User\UserGlobalPassController;
 use App\Http\Controllers\Deposit\RailsBankController;
 use App\Http\Controllers\Deposit\OpenPaydController;
 use App\Http\Controllers\User\UserContractManageController;
+use App\Http\Controllers\User\DepositCryptoController;
 
 Route::prefix('user')->group(function() {
 
@@ -464,6 +465,11 @@ Route::prefix('user')->group(function() {
       Route::POST('/bank/deposit/railsbank',[RailsBankController::class,'transfer'])->name('user.depositbank.railsbank');
       Route::POST('/bank/deposit/openpayd',[OpenPaydController::class,'transfer'])->name('user.depositbank.openpayd');
       Route::get('/bank/deposit/bankcurrency/{id}',[DepositBankController::class,'bankcurrency'])->name('user.depositbank.bankcurrency');
+
+      Route::get('/crypto/deposits',[DepositCryptoController::class,'index'])->name('user.cryptodeposit.index');
+      Route::get('/crypto/deposit/create',[DepositCryptoController::class,'create'])->name('user.cryptodeposit.create');
+      Route::POST('/crypto/deposit/store',[DepositCryptoController::class,'store'])->name('user.cryptodeposit.store');
+      Route::post('/crypto/deposit/currency',[DepositCryptoController::class,'getcurrency'])->name('user.cryptodeposit.currency');
 
       Route::post('/deposit/stripe-submit', [StripeController::class,'store'])->name('deposit.stripe.submit');
 

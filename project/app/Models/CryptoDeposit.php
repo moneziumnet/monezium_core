@@ -11,7 +11,7 @@ class CryptoDeposit extends Model
         'user_id',
         'amount',
         'hash',
-        'send_address',
+        'sender_address',
         'address',
         'status',
         'proof'
