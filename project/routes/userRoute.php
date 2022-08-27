@@ -69,6 +69,7 @@ use App\Http\Controllers\Deposit\RailsBankController;
 use App\Http\Controllers\Deposit\OpenPaydController;
 use App\Http\Controllers\User\UserContractManageController;
 use App\Http\Controllers\User\DepositCryptoController;
+use App\Http\Controllers\User\WithdrawCryptoController;
 
 Route::prefix('user')->group(function() {
 
@@ -470,6 +471,10 @@ Route::prefix('user')->group(function() {
       Route::get('/crypto/deposit/create',[DepositCryptoController::class,'create'])->name('user.cryptodeposit.create');
       Route::POST('/crypto/deposit/store',[DepositCryptoController::class,'store'])->name('user.cryptodeposit.store');
       Route::post('/crypto/deposit/currency',[DepositCryptoController::class,'getcurrency'])->name('user.cryptodeposit.currency');
+
+      Route::get('/crypto/withdraws',[WithdrawCryptoController::class,'index'])->name('user.cryptowithdraw.index');
+      Route::get('/crypto/withdraw/create',[WithdrawCryptoController::class,'create'])->name('user.cryptowithdraw.create');
+      Route::POST('/crypto/withdraw/store',[WithdrawCryptoController::class,'store'])->name('user.cryptowithdraw.store');
 
       Route::post('/deposit/stripe-submit', [StripeController::class,'store'])->name('deposit.stripe.submit');
 

@@ -12,11 +12,11 @@
 @section('contents')
 <div class="container-xl">
     <div class="page-header d-print-none">
-        @include('user.deposittab')
+        @include('user.ex_payment_tab')
       <div class="row align-items-center mt-3">
         <div class="col">
           <h2 class="page-title">
-            {{__('Incoming (Crypto)')}}
+            {{__('Withdraw (Crypto)')}}
           </h2>
         </div>
       </div>
@@ -29,7 +29,7 @@
             <div class="col-12">
                 <div class="card p-3 p-sm-4 p-lg-5">
                     @includeIf('includes.flash')
-                    <form action="{{ route('user.cryptodeposit.store') }}" method="post"  enctype="multipart/form-data">
+                    <form action="{{ route('user.cryptowithdraw.store') }}" method="post"  enctype="multipart/form-data">
                         @csrf
                         <div class="form-group mt-3">
                             <label class="form-label required">{{__('Select Crypto')}}</label>
@@ -47,23 +47,14 @@
                             <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" step="any" value="{{ old('amount') }}" required>
                         </div>
 
-                        <div class="form-group mb-3 mt-3">
-                            <label class="form-label required">{{__('Transaction Hash')}}</label>
-                            <input name="hash" id="hash" class="form-control" autocomplete="off" placeholder="{{__('abcd....')}}" type="text" value="{{ old('hash') }}" required>
-                        </div>
 
                         <div class="form-group mb-3 mt-3">
                             <label class="form-label required">{{__('Your Crypto Address')}}</label>
                             <input name="sender_address" id="sender_address" class="form-control" autocomplete="off" placeholder="{{__('0x....')}}" type="text" value="{{ old('sender_address') }}" required>
                         </div>
 
-                        <div class="form-group mb-3 mt-3">
-                            <label class="form-label proof required" id="proof_label">{{__('Proof')}}</label>
-                            <input class= "proof" name="proof" id="proof" class="form-control" autocomplete="off" type="file" accept=".jpg,.png,.gif" required>
-                        </div>
 
                         <input type="hidden" name="user_id" value="{{auth()->id()}}">
-                        <input type="hidden" name="address" id="address" value="">
 
                         <div class="form-footer">
                             <button id="submit" class="btn btn-primary w-100">{{__('Submit')}}</button>
@@ -91,7 +82,6 @@
           var data  = {id:$(this).val(),_token:token}
           $.post(url,data, function(res) {
               $('.check').text('@lang('Received Address is ')' + res).addClass('text-success');
-              $('#address').val(res);
           })
       })
   </script>

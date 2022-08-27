@@ -9,5 +9,8 @@
         <li class="nav-item">
             <a class="nav-link {{menu('user.beneficiaries.index')}} {{menu('user.beneficiaries.create')}} {{menu('user.beneficiaries.show')}}"   href="{{route('user.beneficiaries.index') }}" role="button">Beneficiaries</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link {{menu('user.cryptowithdraw.index')}} {{menu('user.cryptowithdraw.create')}} "   href="{{route('user.cryptowithdraw.index') }}" role="button">Withdraw Crypto</a>
+        </li>
     </ul>
 </div>

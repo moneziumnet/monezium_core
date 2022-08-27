@@ -49,13 +49,12 @@ class DepositCryptoController extends Controller
         $currency = Currency::where('id',$request->currency_id)->first();
         $amountToAdd = $request->amount/$currency->rate;
         $user = auth()->user();
-        $subbank = SubInsBank::where('id', $request->bank)->first();
         $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'deposit')->first();
         $dailydeposit = CryptoDeposit::where('user_id', $user->id)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus('complete')->sum('amount');
         $monthlydeposit = CryptoDeposit::where('user_id', $user->id)->whereMonth('created_at', '=', date('m'))->whereStatus('complete')->sum('amount');
 
         if ( $amountToAdd < $global_range->min ||  $amountToAdd > $global_range->max) {
-           return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
+           return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value(USD) is '.$global_range->max.' and Min value(USD) is '.$global_range->min );
 
         }
 
@@ -70,7 +69,6 @@ class DepositCryptoController extends Controller
 
 
 
-        $txnid = Str::random(4).time();
         $deposit = new CryptoDeposit();
         $input = $request->all();
         if ($file = $request->file('proof'))

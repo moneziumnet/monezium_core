@@ -18,7 +18,7 @@ class CreateCryptoWithdrawsTable extends Migration
             $table->integer('currency_id');
             $table->integer('user_id');
             $table->double('amount');
-            $table->string('hash');
+            $table->string('hash')->nullable();
             $table->string('sender_address');
             $table->tinyInteger('status')->default(0)->comment('0 == pending , 1 == approve , 2 == rejected');
             $table->timestamps();
