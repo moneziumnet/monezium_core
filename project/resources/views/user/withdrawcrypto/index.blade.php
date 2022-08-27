@@ -132,7 +132,7 @@
       $('.details').on('click', function() {
           $('#hash').text($(this).data('data').hash);
           $('#sender_address').text($(this).data('data').sender_address);
-          $('#amount').text($(this).data('data').amount);
+          $('#amount').text($(this).data('data').amount + $(this).data('data').currency.code);
           $('#modal-success').modal('show');
 
       })

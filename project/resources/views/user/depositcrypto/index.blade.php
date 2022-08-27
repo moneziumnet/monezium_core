@@ -140,7 +140,7 @@
           $('#hash').text($(this).data('data').hash);
           $('#address').text($(this).data('data').address);
           $('#sender_address').text($(this).data('data').sender_address);
-          $('#amount').text($(this).data('data').amount);
+          $('#amount').text($(this).data('data').amount+ $(this).data('data').currency.code);
           $('#modal-success').modal('show');
 
       })
