@@ -236,8 +236,8 @@ class UserController extends Controller
        }
     }
 
-    public function username_by_email($email){
-        if($data = User::where('email',$email)->first()){
+    public function username_by_email(Request $request){
+        if($data = User::where('email',$request->email)->first()){
             return $data;
         }else{
             return false;

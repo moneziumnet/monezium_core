@@ -151,11 +151,7 @@
   'use strict';
 
   $("#account_name").on('click',function(){
-    let accountemail = $("#email").val();
-
-    let url = `${mainurl}/user/username-by-email/${accountemail}`;
-
-    $.get(url, function(data){
+    $.post("{{ route(''user.username.email') }}",{email: $("#email").val(),_token:'{{csrf_token()}}'}, function(data){
       $("#account_name").val(data['name']);
     });
   })

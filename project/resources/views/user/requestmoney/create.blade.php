@@ -79,11 +79,7 @@
 <script>
   'use strict';
   $("#account_email").on('change',function(){
-      let accountEmail = $("#account_email").val();
-
-      let url = `${mainurl}/user/username-by-email/${accountEmail}`;
-
-      $.get(url, function(data){
+      $.post("{{ route(''user.username.email') }}",{email: $("#account_email").val(),_token:'{{csrf_token()}}'}, function(data){
         $("#account_name").val(data['name']);
       });
     })
