@@ -98,7 +98,7 @@
   'use strict';
     $("#account_name").on('click',function(){
 
-      $.post("{{ route(''user.username.email') }}",{email: $("#email").val(),_token:'{{csrf_token()}}'}, function(data){
+      $.post("{{ route('user.username.email') }}",{email: $("#email").val(),_token:'{{csrf_token()}}'}, function(data){
         $("#account_name").val(data['name']);
         $("#account_phone").val(data['phone']);
         $(".submit-btn").prop( "disabled", false );

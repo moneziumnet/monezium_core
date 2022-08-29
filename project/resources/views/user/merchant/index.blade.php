@@ -68,13 +68,17 @@
                       <div class="qr--code">
                         <div class="card">
                             <div class="card-body text-center">
-                                <div >
-                                    <img src="{{generateQR($user->email)}}" class="" alt="">
-                                </div>
-                                <h6 class="mt-4">{{$user->email}}</h6>
-                                <div class="mt-3">
-                                    <a href="{{route('user.merchant.download.qr',$user->email)}}" class="btn btn-primary btn-lg btn-download">@lang('Download')</a>
-                                </div>
+                                <form action="{{route('user.merchant.download.qr')}}" method="POST" enctype="multipart/form-data">
+                                {{ csrf_field() }}
+                                    <div >
+                                        <img src="{{generateQR($user->email)}}" class="" alt="">
+                                    </div>
+                                    <h6 class="mt-4">{{$user->email}}</h6>
+                                    <input type="hidden" name="email" value="{{$user->email}}">
+                                    <div class="mt-3">
+                                        <button type="submit" class="btn btn-primary btn-lg">@lang('Download')</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>

@@ -63,17 +63,17 @@ class MerchantController extends Controller
         return back()->with('success','New api key has been generated');
     }
 
-    public function downloadQR($email)
+    public function downloadQR(Request $request)
     {
         if(!check_user_type(3))
         {
             return redirect()->route('user.dashboard');
         }
-        $file = generateQR($email);
+        $file = generateQR($request->email);
         $file = file_get_contents($file);
         $image = Image::make($file);
         $extension = str_replace('image/','',$image->mime);
-        $filename = 'QrCode_'.$email.'_.'.$extension;
+        $filename = 'QrCode_'.$request->email.'_.'.$extension;
         $qrCode = $image->opacity(100)->fit(350,350);
         $qrCode->encode('jpg');
 

@@ -49,9 +49,9 @@ class UserController extends Controller
         return view('user.dashboard',$data);
     }
 
-    public function scanQR($email)
+    public function scanQR(Request $request)
     {
-        $user = User::where('email',$email)->first();
+        $user = User::where('email',$request->email)->first();
         if(!$user){
              return NULL;
         }

@@ -144,7 +144,7 @@ Route::prefix('user')->group(function() {
       Route::post('/fdr/finish', [UserFdrController::class,'finish'])->name('user.fdr.finish');
 
       Route::get('/merchant/index', [MerchantController::class,'index'])->name('user.merchant.index');
-      Route::get('/merchant/download-qr/{email}',  [MerchantController::class,'downloadQR'])->name('user.merchant.download.qr');
+      Route::post('/merchant/download-qr',  [MerchantController::class,'downloadQR'])->name('user.merchant.download.qr');
       Route::get('/merchant/send-money',[MerchantSendController::class,'create'])->name('user.merchant.send.money.create');
       Route::post('/merchant/send-money',[MerchantSendController::class,'store'])->name('user.merchant.send.money.store');
       Route::get('/merchant/send/money/success',[MerchantSendController::class,'success'])->name('user.merchant.send.money.success');
@@ -564,7 +564,7 @@ Route::prefix('user')->group(function() {
 
       Route::get('/change-password', [UserController::class,'changePasswordForm'])->name('user.change.password.form');
       Route::post('/change-password', [UserController::class,'changePassword'])->name('user.change.password');
-      Route::get('qr-code-scan/{email}',   [UserController::class,'scanQR'])->name('scan.qr');
+      Route::post('qr-code-scan',   [UserController::class,'scanQR'])->name('scan.qr');
     });
 
 

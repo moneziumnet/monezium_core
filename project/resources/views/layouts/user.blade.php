@@ -57,8 +57,7 @@
       $('.scan').click(function(){
           var scanner = new Instascan.Scanner({ video: document.getElementById('preview'), scanPeriod: 5, mirror: false });
           scanner.addListener('scan',function(content){
-              var route = "{{url('user/qr-code-scan')}}"+'/'+content
-              $.get(route, function( data ) {
+              $.post("{{ route('scan.qr') }}",{email: content,_token:'{{csrf_token()}}'}, function( data ) {
                   if(data.error){
                       alert(data.error)
                   } else {
