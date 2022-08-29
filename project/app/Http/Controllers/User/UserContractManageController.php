@@ -16,6 +16,10 @@ use Datatables;
 
 class UserContractManageController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth', ['except' => ['contract_view', 'aoa_sign_view', 'contract_sign','aoa_sign', 'export_pdf','export_aoa_pdf']]);
+    }
     public function index(){
         $data['contracts'] = Contract::where('user_id',auth()->id())->latest()->paginate(15);
         return view('user.contract.index', $data);
