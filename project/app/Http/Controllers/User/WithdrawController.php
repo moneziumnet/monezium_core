@@ -126,6 +126,7 @@ class WithdrawController extends Controller
 
 
         user_wallet_decrement($user->id, $currency->id, $request->amount);
+        user_wallet_increment(0, $currency->id, $transaction_global_cost, 9);
         if($user->referral_id != 0) {
             if (check_user_type_by_id(4, $user->referral_id)) {
                 user_wallet_increment($user->referral_id, $request->currency_id, $transaction_custom_cost, 6);

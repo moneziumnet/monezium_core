@@ -52,7 +52,13 @@ class WithdrawalController extends Controller
             $user = $withdraw->user;
             //$wallet = Wallet::where('user_id',$withdraw->user_id)->where('user_type',1)->where('currency_id',$withdraw->currency_id)->firstOrFail();
             user_wallet_increment($withdraw->user_id, $withdraw->currency_id, $withdraw->amount);
-            $explode = explode(',',User::whereId($withdraw->user_id)->first()->user_type);
+            $transaction_global_cost = 0;
+            $transaction_global_fee = check_global_transaction_fee($withdraw->amount, $user, 'withdraw');
+            if($transaction_global_fee)
+            {
+                $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($withdraw->amount/100) * $transaction_global_fee->data->percent_charge;
+            }
+            user_wallet_decrement(0, $withdraw->currency_id, $transaction_global_cost, 9);
 
             if($user->referral_id != 0)
             {

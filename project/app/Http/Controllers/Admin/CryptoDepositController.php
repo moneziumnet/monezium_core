@@ -78,10 +78,52 @@ class CryptoDepositController extends Controller
           return response()->json($msg);
         }
 
+        if($data->status == 2){
+            $msg = 'Deposits already rejected';
+            return response()->json($msg);
+          }
+
         $user = User::findOrFail($data->user_id);
+        $amount = $data->amount/$data->currency->rate;
+        $transaction_global_cost = 0;
+        $transaction_global_fee = check_global_transaction_fee($amount, $user, 'deposit');
+        if($transaction_global_fee)
+        {
+            $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($amount/100) * $transaction_global_fee->data->percent_charge;
+        }
+        $transaction_custom_cost = 0;
+
+        if($user->referral_id != 0)
+        {
+            $transaction_custom_fee = check_custom_transaction_fee($amount, $user, 'deposit');
+            if($transaction_custom_fee) {
+                $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($amount/100) * $transaction_custom_fee->data->percent_charge;
+            }
+            if (check_user_type_by_id(4, $user->referral_id)) {
+                user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost*$data->currency->rate, 6);
+            }
+            elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
+                user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost*$data->currency->rate, 10);
+            }
+
+            $trans = new Transaction();
+            $trans->trnx = str_rand();
+            $trans->user_id     = $user->referral_id;
+            $trans->user_type   = 1;
+            $trans->currency_id = $data->currency_id;
+            $trans->amount      = $transaction_custom_cost*$data->currency->rate;
+            $trans->charge      = 0;
+            $trans->type        = '+';
+            $trans->remark      = 'Deposit_create_supervisor_fee';
+            $trans->details     = trans('Deposit complete');
+            $trans->data        = '{"sender":"System Account", "receiver":"'.$user->name.'"}';
+            $trans->save();
+        }
         if ($id2 == 1) {
 
-            user_wallet_increment($user->id, $data->currency_id, $data->amount, 8);
+            $final_amount = $amount - $transaction_custom_cost - $transaction_global_cost;
+            user_wallet_increment($user->id, $data->currency_id, $final_amount*$data->currency->rate, 8);
+            user_wallet_increment(0, $data->currency_id, $transaction_global_cost*$data->currency->rate, 9);
 
 
 
@@ -90,8 +132,8 @@ class CryptoDepositController extends Controller
             $trans->user_id     = $user->id;
             $trans->user_type   = 1;
             $trans->currency_id = $data->currency_id;
-            $trans->amount      = $data->amount;
-            $trans->charge      = 0;
+            $trans->amount      = $final_amount*$data->currency->rate;
+            $trans->charge      = ($transaction_custom_cost + $transaction_global_cost)*$data->currency->rate;
             $trans->type        = '+';
             $trans->remark      = 'Deposit_create';
             $trans->details     = trans('Deposit complete');

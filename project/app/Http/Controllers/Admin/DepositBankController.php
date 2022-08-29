@@ -123,6 +123,8 @@ class DepositBankController extends Controller
 
 
         user_wallet_increment($user->id, $data->currency_id, $final_amount, 1);
+        user_wallet_increment(0, 1, $transaction_global_cost, 9);
+
 
 
 

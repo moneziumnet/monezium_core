@@ -572,7 +572,7 @@ if(!function_exists('getModule')){
                 $trans->save();
 
                 user_wallet_decrement($user->id, 1, $chargefee->data->fixed_charge, 1);
-                user_wallet_decrement(0, 1, $chargefee->data->fixed_charge, 9);
+                user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
                 $user->update();
 
             }
