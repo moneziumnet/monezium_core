@@ -96,7 +96,7 @@
 								</td>
 								<td data-label="@lang('Date')">{{dateFormat($data->created_at,'d-M-Y')}}</td>
 								<td data-label="@lang('Transaction ID')">
-								{{__($data->trnx)}}
+								{{__(str_dis($data->trnx))}}
 								</td>
                                 <td data-label="@lang('Sender')">
                                     {{__(json_decode($data->data)->sender ?? "")}}
