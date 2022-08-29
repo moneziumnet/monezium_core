@@ -18,7 +18,7 @@ class CreateContractsTable extends Migration
             $table->integer('user_id');
             $table->string('title', 255);
             $table->text('description');
-            $table->text('amount')->nullable();
+            $table->double('amount')->nullable();
             $table->string('image_path')->nullable();
             $table->unsignedInteger('status')->default(0)->comment('1 => active, 0 => inactive');
             $table->timestamps();
