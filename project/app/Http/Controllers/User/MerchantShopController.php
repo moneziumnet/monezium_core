@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Classes\GeniusMailer;
 use App\Http\Controllers\Controller;
 use App\Models\MerchantShop;
+use App\Models\MerchantWallet;
 use App\Models\Generalsetting;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -89,6 +90,10 @@ class MerchantShopController extends Controller
         $data = MerchantShop::findOrFail($id);
         $data->delete();
         File::delete('assets/doc/'.$data->document);
+        $wallets = MerchantWallet::where('shop_id', $id)->get();
+        foreach ($wallets as $wallet) {
+            $wallet->delete();
+        }
         return  redirect()->back()->with('message','Merchant Shop has been deleted successfully');
     }
 }
