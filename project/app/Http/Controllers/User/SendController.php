@@ -85,17 +85,9 @@ class SendController extends Controller
             'account_name'      => 'required',
             'amount'            => 'required|numeric|min:0',
             'description'       => 'required',
-            'code'              => 'required'
         ]);
 
         $user = auth()->user();
-        $ga = new GoogleAuthenticator();
-        $secret = $user->go;
-        $oneCode = $ga->getCode($secret);
-
-        if ($oneCode != $request->code) {
-            return redirect()->back()->with('unsuccess','Two factor authentication code is wrong');
-        }
 
         if($user->bank_plan_id === null){
             return redirect()->back()->with('unsuccess','You have to buy a plan to withdraw.');

@@ -93,11 +93,6 @@
                                     <textarea name="description" id="description" class="form-control" placeholder="{{__('Enter description')}}" rows="5" required></textarea>
                                 </div>
 
-                                <div class="form-group mt-3">
-                                    <label class="form-label required">{{__('Google Authenticator Code')}}</label>
-                                    <input type="hidden" name="key" value="{{$secret}}">
-                                    <input type="text" class="form-control" name="code" required placeholder="@lang('Enter Google Authenticator Code')">
-                                </div>
 
                                 <div class="form-footer">
                                     <button type="submit" class="btn btn-primary w-100">{{__('Submit')}}</button>
