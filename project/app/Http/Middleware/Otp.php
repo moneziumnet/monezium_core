@@ -21,6 +21,9 @@ class Otp
         $gs = Generalsetting::first();
 
         $user = auth()->user();
+        if(!$user) {
+            return $next($request);
+        }
         if($user->login_fa_yn =="Y"){
             if($user->login_fa == "two_fa_email" || $user->login_fa == "two_fa_phone"){
                 if($user->verified == 0){
