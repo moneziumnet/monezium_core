@@ -71,10 +71,10 @@
         <h3>@lang('Bank Details')</h3>
         <p class="bank_details"></p>
         <ul class="list-group mt-2">
-            <li class="list-group-item d-flex justify-content-between">@lang('Hash')<span id="hash"></span></li>
-            <li class="list-group-item d-flex justify-content-between">@lang('Receiver Crypto Address')<span id="address"></span></li>
-            <li class="list-group-item d-flex justify-content-between">@lang('Customer Crypto Address')<span id="sender_address"></span></li>
-            <li class="list-group-item d-flex justify-content-between">@lang('Amount')<span id="amount"></span></li>
+            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Hash')<span id="hash" style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Receiver Crypto Address')<span id="address" style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Customer Crypto Address')<span id="sender_address" style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Amount')<span id="amount" style="margin-left: 60px"></span></li>
             <li class="list-group-item d-flex justify-content-between" id="li_document" >@lang('Proof')<span > <a id="proof" attributes-list download > {{__('Download Proof')}} </a> </span></li>
         </ul>
         </div>

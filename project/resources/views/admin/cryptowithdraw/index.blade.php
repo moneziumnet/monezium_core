@@ -70,10 +70,10 @@
         <h3>@lang('Bank Details')</h3>
         <p class="bank_details"></p>
         <ul class="list-group mt-2">
-            <li class="list-group-item d-flex justify-content-between">@lang('Hash')<span id="hash"></span></li>
-            <li class="list-group-item d-flex justify-content-between">@lang('Customer Crypto Address')<span id="sender_address"></span></li>
-            <li class="list-group-item d-flex justify-content-between">@lang('Amount')<span id="amount"></span></li>
-            <li class="list-group-item justify-content-between text-center"><a href="" id="trans_id">@lang('Add Hash Value')</a></li>
+            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Hash')<span id="hash" style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Customer Crypto Address')<span id="sender_address" style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Amount')<span id="amount" style="margin-left: 60px"></span></li>
+            <li class="list-group-item justify-content-between text-center" style="word-break:break-all;"><a href="" id="trans_id">@lang('Add Hash Value')</a></li>
         </ul>
         </div>
         <div class="modal-footer">

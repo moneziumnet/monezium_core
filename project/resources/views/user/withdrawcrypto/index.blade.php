@@ -114,9 +114,9 @@
         <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
         <h3>@lang('Bank Details')</h3>
         <ul class="list-group mt-2">
-            <li class="list-group-item d-flex justify-content-between">@lang('Hash')<span id="hash"></span></li>
-            <li class="list-group-item d-flex justify-content-between">@lang('Your Crypto Address')<span id="sender_address"></span></li>
-            <li class="list-group-item d-flex justify-content-between">@lang('Amount')<span id="amount"></span></li>
+            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Hash')<span id="hash" style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Your Crypto Address')<span id="sender_address" style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Amount')<span id="amount" style="margin-left: 60px"></span></li>
         </ul>
         </div>
     </div>
