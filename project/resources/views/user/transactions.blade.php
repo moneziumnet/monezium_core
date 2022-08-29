@@ -137,7 +137,6 @@
             <h3>@lang('Transaction Details')</h3>
             <p class="trx_details"></p>
             <ul class="list-group mt-2">
-
             </ul>
             </div>
             <div class="modal-footer">

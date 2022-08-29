@@ -44,7 +44,7 @@
                                 @endphp
                             <div class="col-md-6 mb-3">
                                 <div class="form-label">@lang('From Currency')</div>
-                                <select class="form-select from shadow-none" name="from_wallet_id" required>
+                                <select class="form-select from shadow-none" name="from_wallet_id" id="from_wallet_id" required>
                                     <option value="" selected>@lang('Select')</option>
                                     @foreach ($wallets as $wallet)
                                     @if (isset($wallet_type_list[$wallet->wallet_type]))
@@ -56,28 +56,18 @@
 
                             <div class="col-md-6 mb-3">
                                 <div class="form-label">@lang('Amount')</div>
-                                <input type="number" step="any" name="amount" class="form-control amount shadow-none" required>
+                                <input type="number" step="any" name="amount" id="amount" class="form-control amount shadow-none" required>
                             </div>
 
                             <div class="col-md-6 mb-3">
                                 <div class="form-label">@lang('To Wallet')</div>
-                                <select class="form-select wallet" name="wallet_type" required>
+                                <select class="form-select wallet" name="wallet_type" id="wallet_type" required>
                                     <option value="" selected>@lang('Select')</option>
                                     @foreach ($wallet_type_list as $key=>$wallet)
                                     <option value="{{$key}}" >{{$wallet}}</option>
                                     @endforeach
                                 </select>
                             </div>
-
-                            {{-- <div class="col-md-6 mb-3">
-                                <div class="form-label">@lang('To Currency')</div>
-                                <select class="form-select to shadow-none" name="to_wallet_id" >
-                                    <option value="" selected>@lang('Select')</option>
-                                    @foreach ($currencies as $curr)
-                                    <option value="{{$curr->id}}" data-rate="{{$curr->rate}}" data-code="{{$curr->code}}"  data-type="{{$curr->type}}">{{$curr->code}}</option>
-                                    @endforeach
-                                </select>
-                            </div> --}}
 
                             <div class="col-md-12 mb-3">
                                 <div class="form-label">&nbsp;</div>
@@ -95,6 +85,12 @@
                                     <div class="modal-body text-center py-4">
                                         <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
                                         <h3>@lang('Are you sure to transfer?')</h3>
+                                        <ul class="list-group mt-2">
+                                            <li class="list-group-item d-flex justify-content-between" style="word-break: break-all;">@lang('From Wallet')<span style="margin-left: 60px" id="modal_from_wallet"></span></li>
+                                            <li class="list-group-item d-flex justify-content-between" style="word-break: break-all;">@lang('To Wallet')<span style="margin-left: 60px" id="modal_to_wallet"></span></li>
+                                            <li class="list-group-item d-flex justify-content-between" style="word-break: break-all;">@lang('Currency')<span style="margin-left: 60px" id="modal_currency"></span></li>
+                                            <li class="list-group-item d-flex justify-content-between" style="word-break: break-all;">@lang('Amount')<span style="margin-left: 60px" id="modal_amount"></span></li>
+                                        </ul>
                                     </div>
                                     <div class="modal-footer">
                                         <div class="w-100">
@@ -128,6 +124,10 @@
         'use strict';
 
         $('.exchange').on('click',function () {
+            $('#modal_from_wallet').text($('#from_wallet_id  option:selected').text().split('--')[2])
+            $('#modal_currency').text($('#from_wallet_id  option:selected').text().split('--')[0])
+            $('#modal_to_wallet').text($('#wallet_type  option:selected').text())
+            $('#modal_amount').text($('#amount').val())
             $('#modal-success').modal('show')
         })
 
