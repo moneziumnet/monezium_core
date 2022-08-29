@@ -24,6 +24,8 @@
        <tr>
         <th>{{__('Date')}}</th>
         <th>{{__('Transaction ID')}}</th>
+        <th>{{__('Sender')}}</th>
+        <th>{{__('Receiver')}}</th>
         <th>{{__('Description')}}</th>
         <th>{{__('Remark')}}</th>
         <th>{{__('Amount')}}</th>
@@ -83,6 +85,8 @@
            columns: [
                 { data: 'created_at', name: 'created_at' },
                 { data: 'trnx', name: 'trnx' },
+                { data: 'sender', name: 'sender' },
+                { data: 'receiver', name: 'receiver' },
                 { data: 'details', name: 'details' },
                 { data: 'remark', name:'remark' },
                 { data: 'amount', name: 'amount' },

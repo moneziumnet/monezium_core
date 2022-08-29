@@ -588,6 +588,12 @@ class UserController extends Controller
                                 $trnx = $data->trnx;
                                 return $trnx;
                             })
+                            ->editColumn('sender', function(Transaction $data) {
+                                return ucwords(json_decode($data->data)->sender ?? "");
+                            })
+                            ->editColumn('receiver', function(Transaction $data) {
+                                return ucwords(json_decode($data->data)->receiver ?? "");
+                            })
                             ->editColumn('created_at', function(Transaction $data) {
                                 $date = date('d-m-Y',strtotime($data->created_at));
                                 return $date;

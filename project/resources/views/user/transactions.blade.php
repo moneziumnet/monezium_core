@@ -78,6 +78,8 @@
 							  </th>
 								<th>@lang('Date')</th>
 								<th>@lang('Transaction ID')</th>
+								<th>@lang('Sender')</th>
+								<th>@lang('Receiver')</th>
 								<th>@lang('Remark')</th>
 								<th>@lang('Amount')</th>
 								<th class="text-end"  style="padding-right: 28px;">@lang('Details')</th>
@@ -96,6 +98,12 @@
 								<td data-label="@lang('Transaction ID')">
 								{{__($data->trnx)}}
 								</td>
+                                <td data-label="@lang('Sender')">
+                                    {{__(json_decode($data->data)->sender ?? "")}}
+                                </td>
+                                <td data-label="@lang('Receiver')">
+                                    {{__(json_decode($data->data)->receiver ?? "")}}
+                                </td>
 								<td data-label="@lang('Remark')">
 								<span class="badge badge-dark">{{ucwords(str_replace('_',' ',$data->remark))}}</span>
 								</td>

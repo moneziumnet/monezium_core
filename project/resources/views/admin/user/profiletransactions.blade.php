@@ -38,12 +38,14 @@
                <tr>
                 <th>{{__('Date')}}</th>
                 <th>{{__('Transaction ID')}}</th>
+                <th>{{__('Sender')}}</th>
+                <th>{{__('Receiver')}}</th>
                 <th>{{__('Description')}}</th>
                 <th>{{__('Remark')}}</th>
                 <th>{{__('Amount')}}</th>
                 <th>{{__('Charge')}}</th>
                 <th>{{__('Action')}}</th>
-               </tr>      
+               </tr>
               </thead>
             </table>
             </div>
@@ -65,7 +67,7 @@
       <h3>@lang('Transaction Details')</h3>
       <p class="trx_details"></p>
       <ul class="list-group mt-2">
-         
+
       </ul>
       </div>
       <div class="modal-footer">
@@ -87,7 +89,7 @@
 
 <script type="text/javascript">
 	"use strict";
-  
+
     var table = $('#geniustable').DataTable({
            ordering: false,
            processing: true,
@@ -97,6 +99,8 @@
            columns: [
                 { data: 'created_at', name: 'created_at' },
                 { data: 'trnx', name: 'trnx' },
+                { data: 'sender', name: 'sender' },
+                { data: 'receiver', name: 'receiver' },
                 { data: 'details', name: 'details' },
                 { data: 'remark', name:'remark' },
                 { data: 'amount', name: 'amount' },
@@ -113,7 +117,7 @@
             var url = "{{url('admin/user/transaction/details/')}}"+'/'+id
             //alert(url); return false;
             // $('.trx_details').text($(this).data('data').details)
-            $.get(url,function (res) { 
+            $.get(url,function (res) {
               if(res == 'empty'){
                 $('.list-group').html('<p>@lang('No details found!')</p>')
               }else{

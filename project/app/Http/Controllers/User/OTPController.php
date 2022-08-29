@@ -75,7 +75,7 @@ class OTPController extends Controller
     public function sendotp() {
         $user = auth()->user();
         try {
-            if($user->payment_fa == 'two_fa_gmail') {
+            if($user->payment_fa == 'two_fa_email') {
                 $verification_code = rand(100000, 999999);
                 $gs = Generalsetting::first();
                 $to = $user->email;
@@ -86,14 +86,14 @@ class OTPController extends Controller
                 $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
                 mail($to,$subject,$msg_body,$headers);
                 $user->two_fa_code = $verification_code;
-                $user->save();
+                $user->update();
                 return 'success';
             }
             elseif ($user->payment_fa == 'two_fa_phone') {
                 $verification_code = rand(100000, 999999);
                 sendSMS($user->phone,'To verify your email address use this security code: '.$verification_code,Pagesetting::value('phone'));
                 $user->two_fa_code = $verification_code;
-                $user->save();
+                $user->update();
                 return 'success';
             }
             elseif ($user->payment_fa == 'two_fa_google') {
@@ -101,7 +101,7 @@ class OTPController extends Controller
                 $secret = $user->go;
                 $oneCode = $googleAuth->getCode($secret);
                 $user->two_fa_code = $oneCode;
-                $user->save();
+                $user->update();
                 return 'success';
             }
         } catch (\Throwable $th) {
