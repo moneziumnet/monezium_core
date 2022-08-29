@@ -26,19 +26,18 @@ class CreateVirtualCardsTable extends Migration
             $table->string('expiration');
             $table->string('card_type');
             $table->text('name_on_card');
-            $table->text('callback');
+            $table->text('callback')->nullable();
             $table->string('secret')->nullable();
             $table->double('amount');
             $table->string('rate')->nullable();
             $table->integer('currency_id')->nullable();
-            $table->string('charge');
+            $table->integer('charge');
             $table->integer('status')->default(1);
             $table->string('ref_id')->nullable();
             $table->text('city')->nullable();
             $table->text('state')->nullable();
             $table->text('address')->nullable();
             $table->text('zip_code')->nullable();
-            $table->string('bg')->nullable();
             $table->timestamps();
         });
     }

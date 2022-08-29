@@ -70,6 +70,7 @@ use App\Http\Controllers\Deposit\OpenPaydController;
 use App\Http\Controllers\User\UserContractManageController;
 use App\Http\Controllers\User\DepositCryptoController;
 use App\Http\Controllers\User\WithdrawCryptoController;
+use App\Http\Controllers\User\VirtualCardController;
 
 Route::prefix('user')->group(function() {
 
@@ -475,6 +476,11 @@ Route::prefix('user')->group(function() {
       Route::get('/crypto/withdraws',[WithdrawCryptoController::class,'index'])->name('user.cryptowithdraw.index');
       Route::get('/crypto/withdraw/create',[WithdrawCryptoController::class,'create'])->name('user.cryptowithdraw.create');
       Route::POST('/crypto/withdraw/store',[WithdrawCryptoController::class,'store'])->name('user.cryptowithdraw.store');
+
+      Route::get('/card',[VirtualCardController::class,'index'])->name('user.card.index');
+      Route::get('/card/create',[VirtualCardController::class,'create'])->name('user.card.create');
+      Route::post('/card/store',[VirtualCardController::class,'store'])->name('user.card.store');
+
 
       Route::post('/deposit/stripe-submit', [StripeController::class,'store'])->name('deposit.stripe.submit');
 
