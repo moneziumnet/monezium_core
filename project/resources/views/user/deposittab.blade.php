@@ -6,8 +6,13 @@
         <li class="nav-item">
             <a class="nav-link {{menu('user.deposit.index')}} {{menu('user.deposit.create')}}" id="accounts" href="{{route('user.deposit.index') }}" role="button">Payment Gateway</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link {{menu('user.cryptodeposit.index')}} {{menu('user.cryptodeposit.create')}}" id="accounts" href="{{route('user.cryptodeposit.index') }}" role="button">Crypto</a>
-        </li>
+        @php
+            $modules = explode(" , ", auth()->user()->section);
+        @endphp
+        @if (in_array('Crypto',$modules))
+            <li class="nav-item">
+                <a class="nav-link {{menu('user.cryptodeposit.index')}} {{menu('user.cryptodeposit.create')}}" id="accounts" href="{{route('user.cryptodeposit.index') }}" role="button">Crypto</a>
+            </li>
+        @endif
     </ul>
 </div>
