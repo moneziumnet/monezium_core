@@ -6,6 +6,8 @@ use Illuminate\Support\Str;
 use App\Classes\GeniusMailer;
 use App\Models\Generalsetting;
 use App\Models\CryptoWithdraw;
+use App\Models\Transaction;
+use App\Models\User;
 use App\Models\Currency;
 use App\Models\PlanDetail;
 use Illuminate\Http\Request;
@@ -114,7 +116,6 @@ class WithdrawCryptoController extends Controller
         $withdraw->fill($input)->save();
 
 
-        $total_amount = $newwithdrawal->amount + $newwithdrawal->fee;
         $txnid = Str::random(12);
 
 
@@ -123,7 +124,7 @@ class WithdrawCryptoController extends Controller
         $trans->user_id     = $user->id;
         $trans->user_type   = 1;
         $trans->currency_id = $request->currency_id;
-        $trans->amount      = $amountToAdd*$currency->rate;
+        $trans->amount      = $request->amount;
         $trans->charge      = $messagefee*$currency->rate;
         $trans->type        = '-';
         $trans->remark      = 'withdraw_money';

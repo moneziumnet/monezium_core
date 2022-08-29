@@ -132,7 +132,7 @@ class CryptoDepositController extends Controller
             $trans->user_id     = $user->id;
             $trans->user_type   = 1;
             $trans->currency_id = $data->currency_id;
-            $trans->amount      = $final_amount*$data->currency->rate;
+            $trans->amount      = $data->amount;
             $trans->charge      = ($transaction_custom_cost + $transaction_global_cost)*$data->currency->rate;
             $trans->type        = '+';
             $trans->remark      = 'Deposit_create';
