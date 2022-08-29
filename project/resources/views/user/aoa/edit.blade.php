@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-<link rel="stylesheet" type="text/css" href="http://keith-wood.name/css/jquery.signature.css">
+<link rel="stylesheet" type="text/css" href="{{asset('assets/user/')}}/css/jquery.signature.css">
 
 <style>
     .kbw-signature { width: 100%; height: 200px;}
@@ -85,9 +85,9 @@
 @endsection
 
 @push('js')
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-<script type="text/javascript" src="http://keith-wood.name/js/jquery.signature.js"></script>
+<script type="text/javascript" src="{{asset('assets/user/')}}/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="{{asset('assets/user/')}}/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="{{asset('assets/user/')}}/js/jquery.signature.js"></script>
 <script>
   'use strict';
   var sig = $('#sig').signature({syncField: '#signature64', syncFormat: 'PNG'});
