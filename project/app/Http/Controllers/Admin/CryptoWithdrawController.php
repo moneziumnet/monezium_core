@@ -25,7 +25,13 @@ class CryptoWithdrawController extends Controller
                         })
                         ->addColumn('customer_name',function(CryptoWithdraw $data){
                             $data = User::where('id',$data->user_id)->first();
-                            return $data->name;
+                            return str_dis($data->name);
+                        })
+                        ->editColumn('hash',function(CryptoWithdraw $data){
+                            return str_dis($data->hash);
+                        })
+                        ->editColumn('sender_address',function(CryptoWithdraw $data){
+                            return str_dis($data->sender_address);
                         })
                         ->editColumn('amount', function(CryptoWithdraw $data) {
                             return $data->currency->symbol.$data->amount;

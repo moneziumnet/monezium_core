@@ -25,10 +25,19 @@ class CryptoDepositController extends Controller
                         })
                         ->addColumn('customer_name',function(CryptoDeposit $data){
                             $data = User::where('id',$data->user_id)->first();
-                            return $data->name;
+                            return str_dis($data->name);
                         })
                         ->editColumn('amount', function(CryptoDeposit $data) {
                             return $data->currency->symbol.$data->amount;
+                        })
+                        ->editColumn('address', function(CryptoDeposit $data) {
+                            return str_dis($data->address);
+                        })
+                        ->editColumn('sender_address', function(CryptoDeposit $data) {
+                            return str_dis($data->sender_address);
+                        })
+                        ->editColumn('hash', function(CryptoDeposit $data) {
+                            return str_dis($data->hash);
                         })
                         ->editColumn('status', function(CryptoDeposit $data) {
                             if ($data->status == 1) {

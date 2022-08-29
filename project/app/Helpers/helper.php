@@ -616,7 +616,18 @@ if(!function_exists('getModule')){
     }
   }
 
-
+  if(!function_exists('str_dis'))
+  {
+      function str_dis($dis_string)
+      {
+        if (strlen($dis_string) >20 ) {
+            return substr($dis_string, 0, 15).'  ...';
+        }
+        else {
+            return $dis_string;
+        }
+      }
+  }
 
 
 ?>

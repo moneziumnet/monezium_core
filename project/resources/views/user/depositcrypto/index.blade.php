@@ -61,17 +61,17 @@
                                       </td>
                                       <td data-label="{{ __('Hash') }}">
                                         <div>
-                                          {{$deposit->hash}}
+                                          {{str_dis($deposit->hash)}}
                                         </div>
                                       </td>
                                         <td data-label="{{ __('Crypto Address') }}">
                                           <div>
-                                            {{$deposit->address}}
+                                            {{str_dis($deposit->address)}}
                                           </div>
                                         </td>
                                         <td data-label="{{ __('Your Crypto Address') }}">
                                           <div>
-                                            {{ $deposit->sender_address }}
+                                            {{ str_dis($deposit->sender_address) }}
                                           </div>
                                         </td>
 

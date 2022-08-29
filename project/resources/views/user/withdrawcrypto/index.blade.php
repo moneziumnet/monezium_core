@@ -60,12 +60,12 @@
                                       </td>
                                       <td data-label="{{ __('Hash') }}">
                                         <div>
-                                          {{$withdraw->hash}}
+                                          {{str_dis($withdraw->hash)}}
                                         </div>
                                       </td>
                                         <td data-label="{{ __('Your Crypto Address') }}">
                                           <div>
-                                            {{ $withdraw->sender_address }}
+                                            {{ str_dis($withdraw->sender_address) }}
                                           </div>
                                         </td>
 

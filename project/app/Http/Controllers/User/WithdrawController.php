@@ -20,6 +20,7 @@ use Illuminate\Support\Str;
 use Validator;
 use Illuminate\Support\Facades\DB;
 use App\Models\PlanDetail;
+use App\Models\Wallet;
 
 class WithdrawController extends Controller
 {
@@ -51,8 +52,10 @@ class WithdrawController extends Controller
         $currency['id'] = PaymentGateway::whereId($request->id)->whereStatus(1)->first();
         $res = [];
         foreach (json_decode($currency['id']->currency_id) as $value) {
-            $code =  Currency::where('id',$value)->first();
-            array_push($res,$code);
+            $code = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('wallet_type', 1)->where('currency_id', $value)->with('currency')->first();
+            if($code) {
+                array_push($res,$code);
+            }
         }
         return $res;
     }

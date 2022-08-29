@@ -12,7 +12,7 @@ use App\Models\Currency;
 use App\Models\PlanDetail;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\SubInsBank;
+use App\Models\Wallet;
 use Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -32,6 +32,7 @@ class WithdrawCryptoController extends Controller
 
     public function create(){
         $data['cryptocurrencies'] = Currency::whereType(2)->get();
+        $data['wallets'] = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('wallet_type', 8)->with('currency')->get();
         return view('user.withdrawcrypto.create',$data);
     }
 

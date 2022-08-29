@@ -35,8 +35,8 @@
                             <label class="form-label required">{{__('Select Crypto')}}</label>
                             <select name="currency_id" id="currency_id" class="form-select" required>
                                 <option value="">{{ __('Select Crypto Currency') }}</option>
-                                @foreach ($cryptocurrencies as $key => $currency)
-                                        <option value="{{$currency->id}}">{{$currency->code}}</option>
+                                @foreach ($wallets as $key => $wallet)
+                                        <option value="{{$wallet->currency->id}}">{{$wallet->currency->code}} -- ({{amount($wallet->balance,$wallet->currency->type,8)}})</option>
                                 @endforeach
                             </select>
                             <span class="ms-2 check"></span>

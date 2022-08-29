@@ -124,7 +124,8 @@
         $.post("{{ route('user.withdraw.gatewaycurrency') }}",{id:paymentid,_token:'{{csrf_token()}}'},function (res) {
             let _optionHtml = '<option value="">Select Payment Currency</option>';
             $.each(res, function(i,item) {
-                _optionHtml += '<option value="' + item.id + '">' + item.code + '</option>';
+                console.log(item)
+                _optionHtml += '<option value="' + item.currency.id + '">' + item.currency.code + '  --  (' + parseFloat(item.balance).toFixed(2) + ')' + '</option>';
             });
             $('select#withcurrency').html(_optionHtml);
         })
