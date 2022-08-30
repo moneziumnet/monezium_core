@@ -37,7 +37,7 @@ class UserController extends Controller
     {
         wallet_monthly_fee(auth()->id());
         $data['user'] = Auth::user();
-        $wallets = Wallet::where('user_id',auth()->id())->where('user_type',1)->with('currency')->get();
+        $wallets = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('wallet_type', 1)->with('currency')->get();
         $data['wallets'] = $wallets;
         $data['cryptowallets'] = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('wallet_type', 8)->with('currency')->get();
         $data['transactions'] = Transaction::whereUserId(auth()->id())->orderBy('id','desc')->limit(5)->get();

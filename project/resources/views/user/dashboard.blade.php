@@ -42,26 +42,24 @@
           <div class="card-body p-3 p-md-4">
             <div class="balence--item">
               <div class="icon">
-                <i class="fas fa-wallet"></i>
-              </div>
-              <div class="content">
-                <div class="subheader">{{__('Account Number')}}</div>
-                <div class="h1 mb-0 mt-2">{{ $user->account_number }}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-sm-6 col-md-6">
-        <div class="card mb-2">
-          <div class="card-body p-3 p-md-4">
-            <div class="balence--item">
-              <div class="icon">
                 <i class="fas fa-money-bill-wave"></i>
               </div>
               <div class="content">
-                <div class="subheader">{{__('Available Balance')}}</div>
+                <div class="subheader row align-items-center">
+                    <div class="col-md-8 ">
+                        {{__('Available Balance')}}
+
+                    </div>
+                    <div class="col-md-4 change-language">
+                        <select name="currency" class="currency selectors nice language-bar">
+                            @foreach(DB::table('currencies')->where('type', 1)->get() as $value)
+                            <option value="{{route('front.currency',$value->id)}}" {{ Session::has('currency') ? ( Session::get('currency') == $value->id ? 'selected' : '' ) : (DB::table('currencies')->where('is_default','=',1)->first()->id == $value->id ? 'selected' : '') }}>
+                              {{$value->code}}
+                            </option>
+                            @endforeach
+                          </select>
+                    </div>
+                </div>
                 <div class="h1 mb-0 mt-2">{{ showprice($userBalance->total_amount,$currency) }}</div>
               </div>
             </div>
