@@ -49,7 +49,7 @@ class UserContractManageController extends Controller
         $description = $data->description;
         foreach (json_decode($data->pattern, True) as $key => $value) {
             if(strpos($description, "{".$key."}" ) != false) {
-                $description = preg_replace("/{".$key."/}", $value ,$description);
+                $description = preg_replace("/{".$key."}/", $value ,$description);
             }
         }
 
@@ -61,7 +61,7 @@ class UserContractManageController extends Controller
         $description = $data->description;
         foreach (json_decode($data->pattern, True) as $key => $value) {
             if(strpos($description, "{".$key."}" ) != false) {
-                $description = preg_replace("/{".$key."/}", $value ,$description);
+                $description = preg_replace("/{".$key."}/", $value ,$description);
             }
         }
         return view('user.contract.contract', compact('data', 'description'));
@@ -115,7 +115,7 @@ class UserContractManageController extends Controller
         $description = $contract->description;
         foreach (json_decode($contract->pattern, True) as $key => $value) {
             if(strpos($description, "{".$key."}" ) != false) {
-                $description = preg_replace("/{".$key."/}", $value ,$description);
+                $description = preg_replace("/{".$key."}/", $value ,$description);
             }
         }
 
@@ -131,7 +131,7 @@ class UserContractManageController extends Controller
         $description = $contract->description;
         foreach (json_decode($contract->pattern, True) as $key => $value) {
             if(strpos($description, "{".$key."}" ) != false) {
-                $description = preg_replace("/{".$key."/}", $value ,$description);
+                $description = preg_replace("/{".$key."}/", $value ,$description);
             }
         }
 
@@ -186,7 +186,7 @@ class UserContractManageController extends Controller
         $description = $data->description;
         foreach (json_decode($data->pattern, True) as $key => $value) {
             if(strpos($description, "{".$key."}" ) != false) {
-                $description = preg_replace("/{".$key."/}", $value ,$description);
+                $description = preg_replace("/{".$key."}/", $value ,$description);
             }
         }
         return view('user.aoa.view', compact('data', 'description'));
@@ -197,7 +197,7 @@ class UserContractManageController extends Controller
         $description = $data->description;
         foreach (json_decode($data->pattern, True) as $key => $value) {
             if(strpos($description, "{".$key."}" ) != false) {
-                $description = preg_replace("/{".$key."/}", $value ,$description);
+                $description = preg_replace("/{".$key."}/", $value ,$description);
             }
         }
         return view('user.aoa.aoa', compact('data', 'description'));
