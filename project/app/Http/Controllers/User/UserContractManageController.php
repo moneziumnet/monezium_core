@@ -48,8 +48,8 @@ class UserContractManageController extends Controller
         $data = Contract::findOrFail($id);
         $description = $data->description;
         foreach (json_decode($data->pattern, True) as $key => $value) {
-            if(strpos($description, $key ) != false) {
-                $description = preg_replace("/".$key."/", $value ,$description);
+            if(strpos($description, "{".$key."}" ) != false) {
+                $description = preg_replace("/{".$key."/}", $value ,$description);
             }
         }
 
@@ -60,8 +60,8 @@ class UserContractManageController extends Controller
         $data = Contract::findOrFail(decrypt($id));
         $description = $data->description;
         foreach (json_decode($data->pattern, True) as $key => $value) {
-            if(strpos($description, $key ) != false) {
-                $description = preg_replace("/".$key."/", $value ,$description);
+            if(strpos($description, "{".$key."}" ) != false) {
+                $description = preg_replace("/{".$key."/}", $value ,$description);
             }
         }
         return view('user.contract.contract', compact('data', 'description'));
@@ -114,8 +114,8 @@ class UserContractManageController extends Controller
         $contract = Contract::where('id', $id)->first();
         $description = $contract->description;
         foreach (json_decode($contract->pattern, True) as $key => $value) {
-            if(strpos($description, $key ) != false) {
-                $description = preg_replace("/".$key."/", $value ,$description);
+            if(strpos($description, "{".$key."}" ) != false) {
+                $description = preg_replace("/{".$key."/}", $value ,$description);
             }
         }
 
@@ -130,8 +130,8 @@ class UserContractManageController extends Controller
         $contract = ContractAoa::where('id', $id)->first();
         $description = $contract->description;
         foreach (json_decode($contract->pattern, True) as $key => $value) {
-            if(strpos($description, $key ) != false) {
-                $description = preg_replace("/".$key."/", $value ,$description);
+            if(strpos($description, "{".$key."}" ) != false) {
+                $description = preg_replace("/{".$key."/}", $value ,$description);
             }
         }
 
@@ -185,8 +185,8 @@ class UserContractManageController extends Controller
         $data = ContractAoa::findOrFail($id);
         $description = $data->description;
         foreach (json_decode($data->pattern, True) as $key => $value) {
-            if(strpos($description, $key ) != false) {
-                $description = preg_replace("/".$key."/", $value ,$description);
+            if(strpos($description, "{".$key."}" ) != false) {
+                $description = preg_replace("/{".$key."/}", $value ,$description);
             }
         }
         return view('user.aoa.view', compact('data', 'description'));
@@ -196,8 +196,8 @@ class UserContractManageController extends Controller
         $data = ContractAoa::findOrFail(decrypt($id));
         $description = $data->description;
         foreach (json_decode($data->pattern, True) as $key => $value) {
-            if(strpos($description, $key ) != false) {
-                $description = preg_replace("/".$key."/", $value ,$description);
+            if(strpos($description, "{".$key."}" ) != false) {
+                $description = preg_replace("/{".$key."/}", $value ,$description);
             }
         }
         return view('user.aoa.aoa', compact('data', 'description'));
