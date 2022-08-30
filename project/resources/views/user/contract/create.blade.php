@@ -39,10 +39,22 @@
                             <input name="title" id="title" class="form-control" autocomplete="off" placeholder="{{__('Enter Title')}}" type="text" required>
                         </div>
 
-                        <div class="form-group mb-3 mt-3">
-                            <label class="form-label required">{{__('amount')}}</label>
-                            <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" step="any" min="1" required>
+                        <div class="row form-group mb-3 mt-3">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-label">{{__('Pattern name')}}</div>
+                                <input type="text" name="item[]" class="form-control shadow-none itemname"  >
+                            </div>
+                            <div class="col-md-5 mb-3">
+                                <div class="form-label">{{__('Value')}}</div>
+                                <input type="text" name="value[]" class="form-control shadow-none itemvalue"  >
+                            </div>
+                            <div class="col-md-1 mb-3">
+                                <div class="form-label">&nbsp;</div>
+                                <button type="button" class="btn btn-primary w-100 add"><i class="fas fa-plus"></i></button>
+                            </div>
                         </div>
+                        <div class="extra-container"></div>
+
 
                         <div class="form-group mb-3 mt-3">
                             <label class="form-label required">{{__('Description')}}</label>
@@ -68,5 +80,26 @@
 @push('js')
 <script>
   'use strict';
+  $('.add').on('click',function(){
+            $('.extra-container').append(`
+
+                   <div class="row form-group mb-3 mt-3">
+                        <div class="col-md-6 mb-3">
+                            <input type="text" name="item[]" class="form-control shadow-none itemname" required>
+                        </div>
+                        <div class="col-md-5 mb-3">
+                            <input type="text" name="value[]" class="form-control shadow-none itemvalue" required>
+                        </div>
+                        <div class="col-md-1 mb-3">
+                            <button type="button" class="btn btn-danger w-100 remove"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>
+
+            `);
+        })
+
+        $(document).on('click','.remove',function () {
+            $(this).closest('.row').remove()
+        })
 </script>
 @endpush

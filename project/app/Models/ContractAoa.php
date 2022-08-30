@@ -10,7 +10,6 @@ class ContractAoa extends Model
         'contract_id',
         'title',
         'description',
-        'amount',
         'status',
         'contracter_image_path',
         'customer_image_path',

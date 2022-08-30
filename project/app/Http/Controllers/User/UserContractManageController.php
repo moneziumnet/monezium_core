@@ -34,8 +34,12 @@ class UserContractManageController extends Controller
         $request->validate($rules);
 
         $data = new Contract();
-        $input = $request->all();
-        $data->fill($input)->save();
+        $data->title = $request->title;
+        $data->description = $request->description;
+        $data->user_id = $request->user_id;
+        $items = array_combine($request->item,$request->value);
+        $data->pattern = json_encode($items);
+        $data->save();
 
         return redirect()->back()->with('success','Contract has been created successfully');
     }
@@ -43,8 +47,10 @@ class UserContractManageController extends Controller
     public function view($id) {
         $data = Contract::findOrFail($id);
         $description = $data->description;
-        if(strpos($data->description,"{amount}" ) !== false) {
-            $description = preg_replace("/{amount}/", $data->amount ,$data->description);
+        foreach (json_decode($data->pattern, True) as $key => $value) {
+            if(strpos($description, $key ) != false) {
+                $description = preg_replace("/".$key."/", $value ,$description);
+            }
         }
 
         return view('user.contract.view', compact('data', 'description'));
@@ -53,8 +59,10 @@ class UserContractManageController extends Controller
     public function contract_view($id) {
         $data = Contract::findOrFail(decrypt($id));
         $description = $data->description;
-        if(strpos($data->description,"{amount}" ) !== false) {
-            $description = preg_replace("/{amount}/", $data->amount ,$data->description);
+        foreach (json_decode($data->pattern, True) as $key => $value) {
+            if(strpos($description, $key ) != false) {
+                $description = preg_replace("/".$key."/", $value ,$description);
+            }
         }
         return view('user.contract.contract', compact('data', 'description'));
     }
@@ -86,8 +94,12 @@ class UserContractManageController extends Controller
         $request->validate($rules);
 
         $data = Contract::findOrFail($id);
-        $input = $request->all();
-        $data->update($input);
+        $data->title = $request->title;
+        $data->description = $request->description;
+        $data->user_id = $request->user_id;
+        $items = array_combine($request->item,$request->value);
+        $data->pattern = json_encode($items);
+        $data->update();
 
         return redirect()->back()->with('success','Contract has been updated successfully');
     }
@@ -101,8 +113,10 @@ class UserContractManageController extends Controller
     public function export_pdf($id) {
         $contract = Contract::where('id', $id)->first();
         $description = $contract->description;
-        if(strpos($contract->description,"{amount}" ) !== false) {
-            $description = preg_replace("/{amount}/", $contract->amount ,$contract->description);
+        foreach (json_decode($contract->pattern, True) as $key => $value) {
+            if(strpos($description, $key ) != false) {
+                $description = preg_replace("/".$key."/", $value ,$description);
+            }
         }
 
         $pdf = Pdf::loadView('user.export.contract', [
@@ -115,8 +129,10 @@ class UserContractManageController extends Controller
     public function export_aoa_pdf($id) {
         $contract = ContractAoa::where('id', $id)->first();
         $description = $contract->description;
-        if(strpos($contract->description,"{amount}" ) !== false) {
-            $description = preg_replace("/{amount}/", $contract->amount ,$contract->description);
+        foreach (json_decode($contract->pattern, True) as $key => $value) {
+            if(strpos($description, $key ) != false) {
+                $description = preg_replace("/".$key."/", $value ,$description);
+            }
         }
 
         $pdf = Pdf::loadView('user.export.aoa', [
@@ -154,9 +170,13 @@ class UserContractManageController extends Controller
         $file = $folderPath . $filename;
         file_put_contents($file, $image_base64);
 
-        $input = $request->all();
-        $input['contracter_image_path'] = $filename;
-        $data->fill($input)->save();
+        $data->title = $request->title;
+        $data->description = $request->description;
+        $data->contract_id = $request->contract_id;
+        $items = array_combine($request->item,$request->value);
+        $data->pattern = json_encode($items);
+        $data->contracter_image_path = $filename;
+        $data->save();
 
         return redirect()->back()->with('success','AoA has been created successfully');
     }
@@ -164,8 +184,10 @@ class UserContractManageController extends Controller
     public function aoa_view($id) {
         $data = ContractAoa::findOrFail($id);
         $description = $data->description;
-        if(strpos($data->description,"{amount}" ) !== false) {
-            $description = preg_replace("/{amount}/", $data->amount ,$data->description);
+        foreach (json_decode($data->pattern, True) as $key => $value) {
+            if(strpos($description, $key ) != false) {
+                $description = preg_replace("/".$key."/", $value ,$description);
+            }
         }
         return view('user.aoa.view', compact('data', 'description'));
     }
@@ -173,8 +195,10 @@ class UserContractManageController extends Controller
     public function aoa_sign_view($id) {
         $data = ContractAoa::findOrFail(decrypt($id));
         $description = $data->description;
-        if(strpos($data->description,"{amount}" ) !== false) {
-            $description = preg_replace("/{amount}/", $data->amount ,$data->description);
+        foreach (json_decode($data->pattern, True) as $key => $value) {
+            if(strpos($description, $key ) != false) {
+                $description = preg_replace("/".$key."/", $value ,$description);
+            }
         }
         return view('user.aoa.aoa', compact('data', 'description'));
     }
@@ -216,11 +240,17 @@ class UserContractManageController extends Controller
         $file = $folderPath . $filename;
         file_put_contents($file, $image_base64);
 
-        $input = $request->all();
         File::delete('assets/images/'.$data->contracter_image_path);
 
-        $input['contracter_image_path'] = $filename;
-        $data->update($input);
+
+        $data->title = $request->title;
+        $data->description = $request->description;
+        $data->contract_id = $request->contract_id;
+        $items = array_combine($request->item,$request->value);
+        $data->pattern = json_encode($items);
+        $data->contracter_image_path = $filename;
+        $data->update();
+
 
         return redirect()->back()->with('success','AoA has been updated successfully');
     }

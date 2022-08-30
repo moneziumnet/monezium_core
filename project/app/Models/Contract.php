@@ -10,7 +10,6 @@ class Contract extends Model
         'user_id',
         'title',
         'description',
-        'amount',
         'image_path',
         'status',
     ];
