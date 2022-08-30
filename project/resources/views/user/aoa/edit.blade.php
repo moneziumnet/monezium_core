@@ -77,7 +77,7 @@
                     <div class="extra-container"></div>
 
                         <div class="form-group mb-3 mt-3">
-                            <label class="form-label required">{{__('Description')}}</label>
+                            <label class="form-label required">{{__('Description')}} {{__('(i.e: if patten is amount, and value is 500,  {amount} is 500)')}}</label>
                             <textarea name="description" class="form-control" id="inp-details" cols="30" rows="10" placeholder="{{__('Description')}}"  required>{{__($data->description)}}</textarea>
                         </div>
 
