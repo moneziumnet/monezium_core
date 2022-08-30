@@ -21,11 +21,6 @@ class OtherBankController extends Controller
         $this->middleware('auth');
     }
 
-    public function index(){
-        $data['beneficiaries'] = Beneficiary::where('user_id',auth()->user()->id)->orderBy('id','desc')->paginate(10);
-        return view('user.otherbank.index',$data);
-    }
-
     public function othersend($id){
         $data['data'] = Beneficiary::findOrFail($id);
         $data['other_bank_limit'] = Generalsetting::first()->other_bank_limit;

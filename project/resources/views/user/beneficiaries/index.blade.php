@@ -14,7 +14,7 @@
             {{__('Overview')}}
           </div>
           <h2 class="page-title">
-            {{__('Beneficiaries')}}
+            {{__('External Payments')}}
           </h2>
         </div>
         <div class="col-auto ms-auto d-print-none">
@@ -44,6 +44,7 @@
                                     <th>{{ __('Bank') }}</th>
                                     <th>{{ __('Beneficiary Name') }}</th>
                                     <th>{{ __('Details') }}</th>
+                                    <th>{{ __('Action') }}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -65,6 +66,13 @@
                                             <div class="btn-list">
                                                 <a href="{{route('user.beneficiaries.show',$data->id)}}" class="btn btn-primary">
                                                   {{__('Details')}}
+                                                </a>
+                                            </div>
+                                          </td>
+                                          <td data-label="{{ __('Action') }}">
+                                            <div class="btn-list">
+                                                <a href="{{route('user.other.send',$data->id)}}" class="btn btn-primary">
+                                                  {{__('Send')}}
                                                 </a>
                                             </div>
                                           </td>

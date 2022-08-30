@@ -285,7 +285,6 @@ Route::prefix('user')->group(function() {
 
         Route::get('tranfer-logs',[TransferLogController::class,'index'])->name('tranfer.logs.index');
 
-        Route::get('/other-bank',[UserOtherBankController::class,'index'])->name('user.other.bank');
         Route::get('/other-bank/{id}',[UserOtherBankController::class,'othersend'])->name('user.other.send');
         Route::post('/other-bank/store', [UserOtherBankController::class,'store'])->name('user.other.send.store');
 
