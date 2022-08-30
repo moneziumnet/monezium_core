@@ -76,16 +76,7 @@
                 </div>
             </div>
             @endif
-            @if(Auth::guard('admin')->user()->sectionCheck('Wire Transfer'))
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="user_module[]" value="Wire Transfer" {{ $data->moduleCheck('Wire Transfer') ? 'checked' : '' }} class="custom-control-input" id="Wire Transfer">
-                  <label class="custom-control-label" for="Wire Transfer">{{__('Wire Transfer')}}</label>
-                  </div>
-              </div>
-            </div>
-            @endif
+
             @if(Auth::guard('admin')->user()->sectionCheck('Money Transfer'))
             <div class="col-md-6">
               <div class="form-group">
