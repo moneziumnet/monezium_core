@@ -52,7 +52,7 @@
             @endif
 
             @if (in_array('Payments',$modules) && !(auth()->user()->kyc_status != 1 && in_array('Payments',$kyc_modules)))
-            <li class="nav-item dropdown {{ request()->routeIs('user.depositbank.index','user.deposit.index', 'user.wire.transfer.index', 'user.other.bank', 'user.beneficiaries.index', 'tranfer.logs.index','user.withdraw.index', 'user.card.index', 'user.money.request.index', 'send.money.create', 'ownaccounttransfer-index', 'user.exchange.money', 'user.transaction') ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ request()->routeIs('user.depositbank.index','user.deposit.index', 'user.wire.transfer.index', 'user.beneficiaries.index', 'tranfer.logs.index','user.withdraw.index', 'user.card.index', 'user.money.request.index', 'send.money.create', 'ownaccounttransfer-index', 'user.exchange.money', 'user.transaction') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                   <i class="fas fa-hand-holding-usd"></i>
