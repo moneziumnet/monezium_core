@@ -8,6 +8,8 @@ use Validator;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Order;
+use App\Models\InstallmentLog;
+use App\Models\UserLoan;
 use App\Models\Wallet;
 use App\Traits\Payout;
 use App\Models\Currency;
@@ -326,6 +328,58 @@ class UserController extends Controller
 
         return view('user.security.index', compact('user'));
     }
+
+    public function installmentCheck(){
+        $loans = UserLoan::whereStatus(1)->get();
+        $now = Carbontime::now();
+
+        foreach($loans as $key=>$data){
+          if($data->given_installment == $data->total_installment){
+            return false;
+          }
+          if($now->gt($data->next_installment)){
+            $this->takeLoanAmount($data->user_id,$data->per_installment_amount, $data);
+            $this->logCreate($data->transaction_no,$data->per_installment_amount,$data->user_id);
+
+            $data->next_installment = Carbontime::now()->addDays($data->plan->installment_interval);
+            $data->given_installment += 1;
+            $data->paid_amount += $data->per_installment_amount;
+            $data->update();
+
+            if($data->given_installment == $data->total_installment){
+              $this->paid($data);
+            }
+          }
+        }
+      }
+
+      public function takeLoanAmount($userId,$installment, $data){
+        $user = User::whereId($userId)->first();
+        $currency = $data->currency->id;
+        $userBalance = user_wallet_balance($user->id, $currency, 4);
+        if($user && $userBalance>=$installment){
+          user_wallet_decrement($user->id, $currency, $installment, 4);
+        }
+      }
+
+      public function paid($loan){
+        $loan = UserLoan::whereId($loan->id)->first();
+        if($loan){
+            $loan->status = 3;
+            $loan->next_installment = NULL;
+            $loan->update();
+        }
+      }
+
+
+      public function logCreate($transactionNo,$amount,$userId){
+        $data = new InstallmentLog();
+        $data->user_id = $userId;
+        $data->transaction_no = $transactionNo;
+        $data->type = 'loan';
+        $data->amount = $amount;
+        $data->save();
+      }
 
 
 }
