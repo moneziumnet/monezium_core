@@ -11,7 +11,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
-use Barryvdh\DomPDF\Facade\PDF;
+use \PDF;
 use Datatables;
 
 class UserContractManageController extends Controller
