@@ -123,10 +123,6 @@
                   {{__('My Vouchers')}}
                 </a>
 
-                <a class="dropdown-item" href="{{route('user.create.voucher')}}">
-                  {{__('Create Voucher')}}
-                </a>
-
                 <a class="dropdown-item" href="{{route('user.reedem.voucher')}}">
                   {{__('Redeem Voucher')}}
                 </a>
