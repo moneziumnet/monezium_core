@@ -6,6 +6,17 @@
 
 @section('contents')
 <div class="container-xl">
+    <div class="page-header d-print-none">
+      <div class="row align-items-center">
+        <div class="col">
+          <h2 class="page-title">
+            {{__('Redeem Voucher')}}
+          </h2>
+    </div>
+</div>
+
+<div class="page-body">
+  <div class="container-xl">
     <div class="row row-deck row-cards">
         <div class="col-12">
             <div class="card">
@@ -59,7 +70,8 @@
             </div>
         </div>
     </div>
-
+  </div>
+  <div class="container-xl">
     <div class="row row-deck row-cards mt-3">
         <div class="col-md-12">
             <h2> @lang('Recent Reedemed Vouchers')</h2>
@@ -94,6 +106,7 @@
             </div>
         </div>
     </div>
+  </div>
 </div>
 
 @endsection
