@@ -34,22 +34,53 @@
     <div class="row justify-content " style="max-height: 800px;overflow-y: scroll;">
         @if (count($virtualcards) != 0)
             @foreach ($virtualcards as $item)
-                @if (isset($wallet_type[$item->wallet_type]))
-                    <div class="col-sm-6 col-md-4 mb-3">
-                        <div class="card h-100 card--info-item">
-                        <div class="text-end icon">
-                            <i class="fas ">
-                                {{$item->currency->symbol}}
-                            </i>
+            <div class="col-lg-4 mb-2">
+                <div class="card">
+                  <!-- Card body -->
+                  <div class="card-body">
+                    <div class="row justify-content-between align-items-center">
+                      <div class="col">
+                        <span class="text-primary ">{{$currency->symbol.number_format($item->amount, 2, '.', '')}}</span> @if($item->status==0) <span class="badge badge-pill badge-danger">Terminated</span> @elseif($item->status==1) <span class="badge badge-pill badge-success">Active</span> @elseif($item->status==2) <span class="badge badge-pill badge-danger">Blocked</span>@endif
+                      </div>
+                      <div class="col-auto">
+                        <a class="mr-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <i class="fad fa-chevron-circle-down text-dark "></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-left">
+                          {{-- <a href="{{route('transactions.virtual', ['id'=>$item->id])}}" class="dropdown-item"><i class="fad fa-sync"></i>{{__('Transactions')}}</a>
+                          <a data-toggle="modal" data-target="#modal-more{{$item->id}}" href="" class="dropdown-item"><i class="fad fa-credit-card"></i>{{__('Card Details')}}</a>
+                            @if($item->status==1)
+                              <a data-toggle="modal" data-target="#modal-formfund{{$item->id}}" href="" class="dropdown-item"><i class="fad fa-money-bill-wave-alt"></i>{{__('Fund Card')}}</a>
+                              <a data-toggle="modal" data-target="#modal-formwithdraw{{$item->id}}" href="" class="dropdown-item"><i class="fad fa-arrow-circle-down"></i>{{__('Withdraw Money')}}</a>
+                              <a href="{{route('terminate.virtual', ['id'=>$item->id])}}" class="dropdown-item"><i class="fad fa-ban"></i>{{__('Terminate')}}</a>
+                              <a href="{{route('block.virtual', ['id'=>$item->id])}}" class="dropdown-item"><i class="fad fa-sad-tear text-danger"></i>{{__('Freeze')}}</a>
+                            @elseif($item->status==2)
+                              <a href="{{route('unblock.virtual', ['id'=>$item->id])}}" class="dropdown-item"><i class="fad fa-smile text-success"></i>{{__('Unfreeze')}}</a>
+                            @endif --}}
                         </div>
-                        <div class="card-body">
-                            <div class="h3 m-0 text-uppercase"> {{$wallet_type[$item->wallet_type]}}</div>
-                            <div class="h4 m-0 text-uppercase"> {{ $item->wallet_no }}</div>
-                            <div class="text-muted">{{ amount($item->balance,$item->currency->type,2) }}  {{$item->currency->code}}</div>
-                        </div>
-                        </div>
+                      </div>
                     </div>
-                @endif
+                    <div class="my-2">
+                      <span class="h6 surtitle text-gray  mb-2">
+                      {{$item->first_name}} {{$item->last_name}}- {{$item->card_type}}
+                      </span>
+                      <div class="card-serial-number h1 text-primary ">
+                        <div>{{$item->card_pan}}</div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">
+                        <span class="h6 surtitle text-gray ">Expiry date</span>
+                        <span class="d-block h3 text-primary ">{{$item->expiration}}</span>
+                      </div>
+                      <div class="col">
+                        <span class="h6 surtitle text-gray ">CVV</span>
+                        <span class="d-block h3 text-primary ">{{$item->cvv}}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             @endforeach
         @else
             <p class="text-center">@lang('NO Card FOUND')</p>
