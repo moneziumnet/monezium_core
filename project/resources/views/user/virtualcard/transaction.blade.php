@@ -19,7 +19,7 @@
                 $item=array();
                 $item=json_decode($transactions, true);
               @endphp
-              @if (count($item) == 0)
+              @if ($item['data'] == null)
               <p class="text-center p-2">@lang('NO DATA FOUND')</p>
               @else
               <div class="table-responsive">
