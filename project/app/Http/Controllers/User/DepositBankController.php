@@ -76,10 +76,19 @@ class DepositBankController extends Controller
 
         }
 
-        if ( $request->amount < $subbank->min_limit ||  $request->amount > $subbank->max_limit) {
-            return redirect()->back()->with('unsuccess','Your amount is not in defined bank limit range. Max value is '.$subbank->max_limit.' and Min value is '.$subbank->min_limit );
+         if ($subbank->max_limit == 0) {
+            if ( $request->amount < $subbank->min_limit ) {
+                return redirect()->back()->with('unsuccess','Your amount is not in defined bank limit range.  Min value is '.$subbank->min_limit );
 
-         }
+             }
+        }
+        else {
+
+            if ( $request->amount < $subbank->min_limit ||  $request->amount > $subbank->max_limit) {
+                return redirect()->back()->with('unsuccess','Your amount is not in defined bank limit range. Max value is '.$subbank->max_limit.' and Min value is '.$subbank->min_limit );
+
+             }
+        }
 
         if($dailydeposit > $global_range->daily_limit){
             return redirect()->back()->with('unsuccess','Daily deposit limit over.');
