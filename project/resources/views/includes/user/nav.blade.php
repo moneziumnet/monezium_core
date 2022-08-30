@@ -76,7 +76,7 @@
                     {{__('Card')}}
                   </a>
                 @if (in_array('Bank Transfer',$modules))
-                <a class="dropdown-item" href="{{route('user.other.bank')}}">
+                <a class="dropdown-item" href="{{route('user.beneficiaries.index')}}">
                   {{__('External Payments')}}
                 </a>
                 <!-- <a class="dropdown-item" href="{{ route('tranfer.logs.index') }}">

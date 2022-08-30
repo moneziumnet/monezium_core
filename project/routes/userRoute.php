@@ -285,7 +285,6 @@ Route::prefix('user')->group(function() {
 
         Route::get('tranfer-logs',[TransferLogController::class,'index'])->name('tranfer.logs.index');
 
-        Route::get('/other-bank',[UserOtherBankController::class,'index'])->name('user.other.bank');
         Route::get('/other-bank/{id}',[UserOtherBankController::class,'othersend'])->name('user.other.send');
         Route::post('/other-bank/store', [UserOtherBankController::class,'store'])->name('user.other.send.store');
 
@@ -481,7 +480,7 @@ Route::prefix('user')->group(function() {
       Route::get('/card/create',[VirtualCardController::class,'create'])->name('user.card.create');
       Route::post('/card/store',[VirtualCardController::class,'store'])->name('user.card.store');
       Route::get('/card/transaction/{id}',[VirtualCardController::class,'transaction'])->name('user.card.transaction');
-
+      Route::post('/card/withdraw',[VirtualCardController::class,'withdraw'])->name('user.card.withdraw');
 
       Route::post('/deposit/stripe-submit', [StripeController::class,'store'])->name('deposit.stripe.submit');
 
