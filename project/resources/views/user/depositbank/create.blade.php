@@ -53,7 +53,7 @@
 
                         <div class="form-group mb-3 mt-3">
                             <label class="form-label document" id="document_label">{{__('Document')}}</label>
-                            <input class= "document" name="document" id="document" class="form-control" autocomplete="off" type="file" accept=".xls,.xlsx,.pdf">
+                            <input class= "document" name="document" id="document" class="form-control" autocomplete="off" type="file" accept=".xls,.xlsx,.pdf,.jpg,.png ">
                         </div>
 
                         <div class="form-group mb-3 ">
@@ -99,7 +99,7 @@
                 <input type="hidden" name="currency_id" id="modal_currency" value="">
                 <input type="hidden" name="details" id="modal_details" value="">
                 <input type="hidden" name="bank" id="modal_bank" value="">
-                <input name="document" id="modal_document" type="file" style="display: none;" accept=".xls,.xlsx,.pdf">
+                <input name="document" id="modal_document" type="file" style="display: none;" accept=".xls,.xlsx,.pdf,.jpg,.png">
                </div>
             </div>
 

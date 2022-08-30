@@ -106,12 +106,12 @@ class RailsBankController extends Controller
         $other_bank_limit =Generalsetting::first()->other_bank_limit;
         if ($request->amount >= $other_bank_limit) {
             $rules = [
-                'document' => 'required|mimes:xls,xlsx,pdf'
+                'document' => 'required|mimes:xls,xlsx,pdf,jpg,png'
             ];
         }
         else {
             $rules = [
-                'document' => 'mimes:xls,xlsx,pdf'
+                'document' => 'mimes:xls,xlsx,pdf,jpg,png'
             ];
         }
 
