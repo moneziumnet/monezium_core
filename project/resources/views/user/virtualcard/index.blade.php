@@ -5,16 +5,10 @@
 @endpush
 
 @section('contents')
-<div class="container-xl">
-
-  <div class="page-header d-print-none">
-
-  </div>
-</div>
 <div class="page-body">
   <div class="container-xl">
 
-    <div class="row align-items-center mb-2">
+    <div class="row align-items-center mb-2 mt-3">
     <div class="col">
 
         <div class="row justify-content-center">
@@ -42,13 +36,14 @@
                       <div class="col">
                         <span class="text-primary ">{{$currency->symbol.number_format($item->amount, 2, '.', '')}}</span> @if($item->status==0) <span class="badge badge-pill badge-danger">Terminated</span> @elseif($item->status==1) <span class="badge badge-pill badge-success">Active</span> @elseif($item->status==2) <span class="badge badge-pill badge-danger">Blocked</span>@endif
                       </div>
-                      <div class="col-auto">
+                      <div class="col-auto dropdown">
                         <a class="mr-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          <i class="fad fa-chevron-circle-down text-dark "></i>
+                          <i class="fas fa-chevron-circle-down "></i>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-left">
-                          {{-- <a href="{{route('transactions.virtual', ['id'=>$item->id])}}" class="dropdown-item"><i class="fad fa-sync"></i>{{__('Transactions')}}</a>
-                          <a data-toggle="modal" data-target="#modal-more{{$item->id}}" href="" class="dropdown-item"><i class="fad fa-credit-card"></i>{{__('Card Details')}}</a>
+                        <div class="dropdown-menu">
+                          <a href="{{route('user.card.transaction', ['id'=>$item->id])}}" class="dropdown-item"><i class="fad fa-sync"></i>{{__('Transactions')}}</a>
+                          <a href="{{route('user.card.transaction', ['id'=>$item->id])}}" class="dropdown-item"><i class="fad fa-sync"></i>{{__('Transactions')}}</a>
+                          {{-- <a data-toggle="modal" data-target="#modal-more{{$item->id}}" href="" class="dropdown-item"><i class="fad fa-credit-card"></i>{{__('Card Details')}}</a>
                             @if($item->status==1)
                               <a data-toggle="modal" data-target="#modal-formfund{{$item->id}}" href="" class="dropdown-item"><i class="fad fa-money-bill-wave-alt"></i>{{__('Fund Card')}}</a>
                               <a data-toggle="modal" data-target="#modal-formwithdraw{{$item->id}}" href="" class="dropdown-item"><i class="fad fa-arrow-circle-down"></i>{{__('Withdraw Money')}}</a>
@@ -127,7 +122,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button  id="submit-btn" class="btn btn-primary">{{ __('Verify') }}</button>
+                    <button  id="submit-btn" class="btn btn-primary">{{ __('Create') }}</button>
                 </div>
             </form>
         </div>

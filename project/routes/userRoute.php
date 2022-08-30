@@ -480,6 +480,7 @@ Route::prefix('user')->group(function() {
       Route::get('/card',[VirtualCardController::class,'index'])->name('user.card.index');
       Route::get('/card/create',[VirtualCardController::class,'create'])->name('user.card.create');
       Route::post('/card/store',[VirtualCardController::class,'store'])->name('user.card.store');
+      Route::get('/card/transaction/{id}',[VirtualCardController::class,'transaction'])->name('user.card.transaction');
 
 
       Route::post('/deposit/stripe-submit', [StripeController::class,'store'])->name('deposit.stripe.submit');
