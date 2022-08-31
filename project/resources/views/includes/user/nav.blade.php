@@ -73,7 +73,7 @@
                 </a>
                 @endif
                 <a class="dropdown-item" href="{{route('user.card.index')}}">
-                    {{__('Card')}}
+                    {{__('Cards')}}
                   </a>
                 @if (in_array('Bank Transfer',$modules))
                 <a class="dropdown-item" href="{{route('user.beneficiaries.index')}}">
@@ -200,9 +200,6 @@
               <div class="dropdown-menu">
                 <a class="dropdown-item" href="{{route('user.invoice.index')}}">
                   {{__('Invoices')}}
-                </a>
-                <a class="dropdown-item" href="{{route('user.invoice.create')}}">
-                  {{__('Create Invoice')}}
                 </a>
                 <a class="dropdown-item" href="{{route('user.contract.index')}}">
                     {{__('Contracts')}}
