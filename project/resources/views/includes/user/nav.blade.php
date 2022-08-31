@@ -221,11 +221,8 @@
                 </span>
               </a>
               <div class="dropdown-menu">
-                <a class="dropdown-item" href="{{route('user.escrow.create')}}">
-                  {{__('Make Escrow')}}
-                </a>
                 <a class="dropdown-item" href="{{route('user.escrow.index')}}">
-                  {{__('My Escrow')}}
+                  {{__('My Escrows')}}
                 </a>
 
                 <a class="dropdown-item" href="{{route('user.escrow.pending')}}">

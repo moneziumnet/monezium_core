@@ -10,6 +10,29 @@
 
 @section('contents')
 <div class="container-xl">
+    <div class="page-header d-print-none">
+      <div class="row align-items-center">
+        <div class="col">
+          <div class="page-pretitle">
+            {{__('Overview')}}
+          </div>
+          <h2 class="page-title">
+            {{__('Make Escrow')}}
+          </h2>
+        </div>
+        <div class="col-auto ms-auto d-print-none">
+          <div class="btn-list">
+
+            <a href="{{ route('user.escrow.index') }}" class="btn btn-primary d-sm-inline-block">
+                <i class="fas fa-backward me-1"></i> {{__('Escrow List')}}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+<div class="page-body">
+<div class="container-xl">
     <div class="row row-deck row-cards">
         <div class="col-12">
             <div class="card">
@@ -96,7 +119,7 @@
     </div>
 
 </div>
-
+</div>
 @endsection
 
 @push('js')
