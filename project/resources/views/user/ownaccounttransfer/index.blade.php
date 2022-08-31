@@ -82,15 +82,22 @@
                                 <div class="modal-content">
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     <div class="modal-status bg-primary"></div>
-                                    <div class="modal-body text-center py-4">
-                                        <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
-                                        <h3>@lang('Are you sure to transfer?')</h3>
-                                        <ul class="list-group mt-2">
-                                            <li class="list-group-item d-flex justify-content-between" style="word-break: break-all;">@lang('From Wallet')<span style="margin-left: 60px" id="modal_from_wallet"></span></li>
-                                            <li class="list-group-item d-flex justify-content-between" style="word-break: break-all;">@lang('To Wallet')<span style="margin-left: 60px" id="modal_to_wallet"></span></li>
-                                            <li class="list-group-item d-flex justify-content-between" style="word-break: break-all;">@lang('Currency')<span style="margin-left: 60px" id="modal_currency"></span></li>
-                                            <li class="list-group-item d-flex justify-content-between" style="word-break: break-all;">@lang('Amount')<span style="margin-left: 60px" id="modal_amount"></span></li>
-                                        </ul>
+                                    <div class="modal-body py-4">
+                                        <div class="text-center">
+                                            <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+                                            <h3>@lang('Are you sure to transfer?')</h3>
+                                            <ul class="list-group mt-2">
+                                                <li class="list-group-item d-flex justify-content-between" style="word-break: break-all;">@lang('From Wallet')<span style="margin-left: 60px" id="modal_from_wallet"></span></li>
+                                                <li class="list-group-item d-flex justify-content-between" style="word-break: break-all;">@lang('To Wallet')<span style="margin-left: 60px" id="modal_to_wallet"></span></li>
+                                                <li class="list-group-item d-flex justify-content-between" style="word-break: break-all;">@lang('Currency')<span style="margin-left: 60px" id="modal_currency"></span></li>
+                                                <li class="list-group-item d-flex justify-content-between" style="word-break: break-all;">@lang('Amount')<span style="margin-left: 60px" id="modal_amount"></span></li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="form-group mt-2" id="otp_body">
+                                            <label class="form-label required">{{__('OTP Code')}}</label>
+                                            <input name="otp_code" id="otp_code" class="form-control" placeholder="{{__('OTP Code')}}" type="text" step="any" value="{{ old('opt_code') }}" required>
+                                        </div>
                                     </div>
                                     <div class="modal-footer">
                                         <div class="w-100">
@@ -99,7 +106,7 @@
                                                 @lang('Cancel')
                                                 </a></div>
                                             <div class="col">
-                                                <button type="button" class="btn btn-primary w-100 confirm">
+                                                <button type="submit" class="btn btn-primary w-100 confirm">
                                                 @lang('Confirm')
                                                 </button>
                                             </div>
@@ -124,17 +131,34 @@
         'use strict';
 
         $('.exchange').on('click',function () {
+            var verify = "{{$user->payment_fa_yn}}";
+
             $('#modal_from_wallet').text($('#from_wallet_id  option:selected').text().split('--')[2])
             $('#modal_currency').text($('#from_wallet_id  option:selected').text().split('--')[0])
             $('#modal_to_wallet').text($('#wallet_type  option:selected').text())
             $('#modal_amount').text($('#amount').val())
-            $('#modal-success').modal('show')
+            if (verify == 'Y') {
+                var url = "{{url('user/sendotp')}}";
+                $.get(url,function (res) {
+                    console.log(res)
+                    if(res=='success') {
+                        $('#modal-success').modal('show');
+                    }
+                    else {
+                        alert('The OTP code can not be sent to you.')
+                    }
+                });
+            } else {
+                $('#otp_body').remove();
+                $('#modal-success').modal('show');
+            }
+             $('#modal-success').modal('show');
         })
 
-        $('.confirm').on('click',function () {
-            $('#form').submit()
-            $(this).attr('disabled',true)
-        })
+        // $('.confirm').on('click',function () {
+        //     $('#form').submit()
+        //     $(this).attr('disabled',true)
+        // })
 
     </script>
 @endpush

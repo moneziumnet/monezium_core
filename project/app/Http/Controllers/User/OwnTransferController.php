@@ -25,11 +25,18 @@ class OwnTransferController extends Controller
     {
         $wallets = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('balance', '>', 0)->get();
         $currencies = Currency::where('status',1)->get();
-        return view('user.ownaccounttransfer.index',compact('wallets','currencies'));
+        $user = auth()->user();
+        return view('user.ownaccounttransfer.index',compact('wallets','currencies', 'user'));
     }
 
     public function transfer(Request $request)
     {
+        $user = auth()->user();
+        if($user->payment_fa_yn == 'Y') {
+            if ($user->two_fa_code != $request->otp_code) {
+                return redirect()->back()->with('unsuccess','Verification code is not matched.');
+            }
+        }
 
         if(!isset($request->from_wallet_id)) {
             return back()->with('error','Please select Currency');
@@ -40,7 +47,6 @@ class OwnTransferController extends Controller
         if(!isset($request->wallet_type)) {
             return back()->with('error','Please select Wallet');
         }
-        $user= auth()->user();
 
         $fromWallet = Wallet::where('id',$request->from_wallet_id)->where('user_id',auth()->id())->where('user_type',1)->firstOrFail();
 
