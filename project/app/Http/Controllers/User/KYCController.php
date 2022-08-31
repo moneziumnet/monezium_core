@@ -69,7 +69,7 @@ class KYCController extends Controller
         $gs = Generalsetting::first();
         $to = $user->email;
         $subject = " Online Selfie Link";
-        $msg = "Hello ".$user->name."!\nThis is the link of online Selfie for Aleksandar.\nLink is \n".url('/user/kyc-take-selfie')." \n Thank you.";
+        $msg = "Hello ".$user->name."!\nThis is the link of online Selfie for you.\nLink is \n".url('/user/kyc-take-selfie')." \n Thank you.";
         $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
         mail($to,$subject,$msg,$headers);
     }
@@ -83,7 +83,7 @@ class KYCController extends Controller
         if($request->sendlink) {            
             $to = $user->email;
             $subject = " Online Selfie Link";
-            $msg = "Hello ".$user->name."!\nThis is the link of online Selfie for Aleksandar.\nLink is \n".url('/')."?reff=".$user->affilate_code."\n Thank you.";
+            $msg = "Hello ".$user->name."!\nThis is the link of online Selfie for you.\nLink is \n".url('/user/kyc-take-selfie')." \n Thank you.";
             $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
             mail($to,$subject,$msg,$headers);
         }
