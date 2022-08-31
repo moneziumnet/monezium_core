@@ -28,7 +28,7 @@
                               <label class="form-label required">@lang('Own Photo')</label>
                               <div id="my_camera"></div>
                               <br/>
-                              <input type=button value="Take Snapshot" onClick="take_snapshot()">
+                              <input type=button value="Take a Photo" onClick="take_snapshot()">
                               <input type="hidden" name="image" class="image-tag">
                           </div>
                           <div class="form-group mb-3 mt-3">
