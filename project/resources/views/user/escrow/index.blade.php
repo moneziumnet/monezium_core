@@ -17,22 +17,28 @@
     <div class="page-body">
       <div class="container-xl">
       <div class="row justify-content " style="max-height: 368px;">
-        @foreach ($wallets as $item)
-        <div class="col-sm-6 col-md-4 mb-3">
-            <div class="card h-100 card--info-item">
-              <div class="text-end icon">
-                <i class="fas ">
-                    {{$item->currency->symbol}}
-                </i>
-              </div>
-              <div class="card-body">
-                <div class="h3 m-0 text-uppercase"> {{__('Escrow')}}</div>
-                <div class="h4 m-0 text-uppercase"> {{ $item->wallet_no }}</div>
-                <div class="text-muted">{{ amount($item->balance,$item->currency->type,2) }}  {{$item->currency->code}}</div>
-              </div>
-            </div>
-        </div>
-        @endforeach
+        @if (count($wallets) != 0)
+            @foreach ($wallets as $item)
+                <div class="col-sm-6 col-md-4 mb-3">
+                    <div class="card h-100 card--info-item">
+                    <div class="text-end icon">
+                        <i class="fas ">
+                            {{$item->currency->symbol}}
+                        </i>
+                    </div>
+                    <div class="card-body">
+                        <div class="h3 m-0 text-uppercase"> {{__('Escrow')}}</div>
+                        <div class="h4 m-0 text-uppercase"> {{ $item->wallet_no }}</div>
+                        <div class="text-muted">{{ amount($item->balance,$item->currency->type,2) }}  {{$item->currency->code}}</div>
+                    </div>
+                    </div>
+                </div>
+
+            @endforeach
+        @else
+            <p class="text-center">@lang('NO Wallet FOUND')</p>
+        @endif
+
       </div>
       </div>
     </div>
