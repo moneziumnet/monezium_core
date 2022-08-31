@@ -91,6 +91,10 @@
         <form id="depositbank_gateway" action="{{ route('user.depositbank.store') }}" method="post"  enctype="multipart/form-data">
             @csrf
             <div class="modal-body">
+                <div class="form-group" id="otp_body">
+                    <label class="form-label required">{{__('OTP Code')}}</label>
+                    <input name="otp_code" id="otp_code" class="form-control" placeholder="{{__('OTP Code')}}" type="text" step="any" value="{{ old('opt_code') }}" required>
+                </div>
               <div class="form-group mt-3">
                 <input type="hidden" name="currency_sign" value="$">
                 <input type="hidden" id="currencyCode" name="currency_code" value="USD">
@@ -132,6 +136,8 @@
         })
     })
     $('#submit').on('click', function() {
+        var verify = "{{$user->payment_fa_yn}}";
+
         var pos = $('#withmethod').val();
         $('#bank_name').text(JSON.parse(pos)['name']);
         $('#bank_address').text(JSON.parse(pos)['address']);
@@ -157,8 +163,23 @@
                 }
 
              });
+             if (verify == 'Y') {
+                var url = "{{url('user/sendotp')}}";
+                $.get(url,function (res) {
+                    console.log(res)
+                    if(res=='success') {
+                        $('#modal-success').modal('show');
+                    }
+                    else {
+                        alert('The OTP code can not be sent to you.')
+                    }
+                });
+            } else {
+                $('#otp_body').remove();
+                $('#modal-success').modal('show');
+            }
              $('#modal-success').modal('show');
-        })
+        });
         $('#amount').on('change', function() {
 
             if ($('#amount').val() >= '{{$other_bank_limit}}') {
@@ -169,7 +190,7 @@
                 document.getElementById("document").style.display = "none";
                 document.getElementById("document_label").style.display = "none";
             }
-    })
+    });
 
   </script>
 

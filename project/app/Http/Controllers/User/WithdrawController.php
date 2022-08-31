@@ -62,14 +62,16 @@ class WithdrawController extends Controller
 
     public function store(Request $request)
     {
+        $user = auth()->user();
+        if($user->payment_fa_yn == 'Y') {
+            if ($user->two_fa_code != $request->otp) {
+                return redirect()->back()->with('unsuccess','Verification code is not matched.');
+            }
+        }
         $request->validate([
             'amount' => 'required|gt:0',
         ]);
 
-        $user = auth()->user();
-        if ($user->two_fa_code != $request->otp) {
-            return redirect()->back()->with('unsuccess','Verification code is not matched.');
-        }
         if($user->bank_plan_id === null){
             return redirect()->back()->with('unsuccess','You have to buy a plan to withdraw.');
         }

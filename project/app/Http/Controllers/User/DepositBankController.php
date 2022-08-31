@@ -36,6 +36,7 @@ class DepositBankController extends Controller
         $data['bankaccounts'] = BankAccount::whereUserId(auth()->id())->pluck('subbank_id');
         $data['banks'] = SubInsBank::whereIn('id', $data['bankaccounts'])->get();
         $data['other_bank_limit'] = Generalsetting::first()->other_bank_limit;
+        $data['user'] = auth()->user();
         return view('user.depositbank.create',$data);
     }
 
@@ -44,6 +45,12 @@ class DepositBankController extends Controller
     }
 
     public function store(Request $request){
+        $user = auth()->user();
+        if($user->payment_fa_yn == 'Y') {
+            if ($user->two_fa_code != $request->otp_code) {
+                return redirect()->back()->with('unsuccess','Verification code is not matched.');
+            }
+        }
         $other_bank_limit =Generalsetting::first()->other_bank_limit;
         if ($request->amount >= $other_bank_limit) {
             $rules = [
