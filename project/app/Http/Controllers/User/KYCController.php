@@ -79,7 +79,7 @@ class KYCController extends Controller
         $userType = 'user';
         $userForms = KycForm::where('user_type',$userType == 'user' ? 1 : 2)->get();
 
-        $user = auth()->user();
+        $user = User::findOrFail($request->user_id);
         $gs = Generalsetting::first();
         $route = route('user.kyc.selfie',encrypt($user->id));
         if($request->sendlink) {
@@ -130,7 +130,6 @@ class KYCController extends Controller
             $user->kyc_status = 3;
         }
         $user->save();
-
-        return redirect()->route('user.dashboard')->with('message','KYC submitted successfully');
+        return back()->with('success', 'KYC submitted successfully');
     }
 }
