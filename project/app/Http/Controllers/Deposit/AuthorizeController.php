@@ -19,6 +19,12 @@ use net\authorize\api\controller as AnetController;
 class AuthorizeController extends Controller
 {
     public function store(Request $request){
+        $user = auth()->user();
+        if($user->payment_fa_yn == 'Y') {
+            if ($user->two_fa_code != $request->otp_code) {
+                return redirect()->back()->with('unsuccess','Verification code is not matched.');
+            }
+        }
         $settings = Generalsetting::find(1);
 
         $authorizeinfo    = PaymentGateway::whereKeyword('authorize.net')->first();
@@ -29,7 +35,6 @@ class AuthorizeController extends Controller
         $item_amount = $request->amount;
         $currency_code = Currency::where('id',$request->currency_id)->first()->code;
 
-        $user = auth()->user();
         $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'deposit')->first();
         $dailydeposit = Deposit::where('user_id', $user->id)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus('complete')->sum('amount');
         $monthlydeposit = Deposit::where('user_id', $user->id)->whereMonth('created_at', '=', date('m'))->whereStatus('complete')->sum('amount');

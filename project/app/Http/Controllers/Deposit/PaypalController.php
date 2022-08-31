@@ -51,7 +51,12 @@ class PaypalController extends Controller
     }
 
     public function store(Request $request){
-
+        $user = auth()->user();
+        if($user->payment_fa_yn == 'Y') {
+            if ($user->two_fa_code != $request->otp_code) {
+                return redirect()->back()->with('unsuccess','Verification code is not matched.');
+            }
+        }
         $settings = Generalsetting::findOrFail(1);
         $deposit = new Deposit();
         $cancel_url = action('Deposit\PaypalController@cancle');

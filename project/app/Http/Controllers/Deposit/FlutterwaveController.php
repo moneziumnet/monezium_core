@@ -27,6 +27,12 @@ class FlutterwaveController extends Controller
     }
 
     public function store(Request $request) {
+        $user = auth()->user();
+        if($user->payment_fa_yn == 'Y') {
+            if ($user->two_fa_code != $request->otp_code) {
+                return redirect()->back()->with('unsuccess','Verification code is not matched.');
+            }
+        }
         $curl = curl_init();
 
         $customer_email =  auth()->user()->email;
@@ -42,7 +48,6 @@ class FlutterwaveController extends Controller
         $txref = $item_number;
         $item_amount = $request->amount;
 
-        $user = auth()->user();
         $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'deposit')->first();
         $dailydeposit = Deposit::where('user_id', $user->id)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus('complete')->sum('amount');
         $monthlydeposit = Deposit::where('user_id', $user->id)->whereMonth('created_at', '=', date('m'))->whereStatus('complete')->sum('amount');

@@ -51,12 +51,17 @@ class MollieController extends Controller
             'USD',
             'ZAR'
         ];
+        $user = auth()->user();
+        if($user->payment_fa_yn == 'Y') {
+            if ($user->two_fa_code != $request->otp_code) {
+                return redirect()->back()->with('unsuccess','Verification code is not matched.');
+            }
+        }
         $currency_code = Currency::where('id',$request->currency_id)->first()->code;
         if(!in_array($currency_code,$support)){
             return redirect()->back()->with('warning','Please Select USD Or EUR Currency For Paypal.');
         }
 
-        $input = $request->all();
         $item_amount = $request->amount;
         $user = auth()->user();
         $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'deposit')->first();

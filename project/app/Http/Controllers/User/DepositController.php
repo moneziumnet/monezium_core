@@ -30,6 +30,7 @@ class DepositController extends Controller
         $data['availableGatways'] = ['flutterwave','authorize.net','razorpay','mollie','paytm','instamojo','stripe','paypal'];
         $data['gateways'] = PaymentGateway::OrderBy('id','desc')->whereStatus(1)->get();
         $data['defaultCurrency'] = Currency::where('is_default',1)->first();
+        $data['user'] = auth()->user();
 
         return view('user.deposit.create',$data);
     }

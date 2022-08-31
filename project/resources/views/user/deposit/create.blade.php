@@ -119,7 +119,49 @@
                         </div>
 
                         <div class="form-footer">
-                            <button type="submit" class="btn btn-primary w-100">{{__('Submit')}}</button>
+                            <button type="submit" id="submit" class="btn btn-primary w-100">{{__('Submit')}}</button>
+                        </div>
+
+                        <div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <div class="modal-status bg-primary"></div>
+                                <div class="modal-body py-4">
+                                    <div class="text-center">
+
+                                        <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+                                        <h3>@lang('Deposit Details')</h3>
+                                    </div>
+                                    <ul class="list-group mt-2">
+                                        <li class="list-group-item d-flex justify-content-between">@lang('Institution Name')<span id="institution_name"></span></li>
+                                        <li class="list-group-item d-flex justify-content-between">@lang('Payment Method')<span id="py_method"></span></li>
+                                        <li class="list-group-item d-flex justify-content-between">@lang('Currency')<span id="py_currency"></span></li>
+                                        <li class="list-group-item d-flex justify-content-between">@lang('Amount')<span id="py_amount"></span></li>
+                                        <li class="list-group-item d-flex justify-content-between">@lang('Description')<span id="py_description"></span></li>
+                                    </ul>
+
+                                    <div class="form-group" id="otp_body">
+                                        <label class="form-label required">{{__('OTP Code')}}</label>
+                                        <input name="otp_code" id="otp_code" class="form-control" placeholder="{{__('OTP Code')}}" type="text" step="any" value="{{ old('opt_code') }}" required>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                <div class="w-100">
+                                    <div class="row">
+                                    <div class="col"><a href="#" class="btn w-100" data-bs-dismiss="modal">
+                                        @lang('Cancel')
+                                        </a></div>
+                                    <div class="col">
+                                        <button type="submit" class="btn btn-primary w-100 confirm">
+                                           @lang('Confirm')
+                                        </button>
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
                         </div>
 
 
@@ -233,6 +275,34 @@ $(document).on('change','#withmethod',function(){
     }
 
 });
+
+$('#submit').on('click', function() {
+        if (($('#subinstitude').val().length != 0) && ($('#withmethod').val().length != 0) && ($('#withcurrency').val().length != 0) && ($('#amount').val().length != 0)) {
+            var verify = "{{$user->payment_fa_yn}}";
+            event.preventDefault();
+            $('#institution_name').text($('#subinstitude option:selected').text());
+            $('#py_method').text($('#withmethod option:selected').text());
+            $('#py_currency').text($('#withcurrency option:selected').text());
+            $('#py_amount').text($('#amount').val());
+            $('#py_description').text($('#description').text());
+            if (verify == 'Y') {
+                var url = "{{url('user/sendotp')}}";
+                $.get(url,function (res) {
+                    console.log(res)
+                    if(res=='success') {
+                        $('#modal-success').modal('show');
+                    }
+                    else {
+                        alert('The OTP code can not be sent to you.')
+                    }
+                });
+            } else {
+                $('#otp_body').remove();
+                $('#modal-success').modal('show');
+            }
+            $('#modal-success').modal('show')
+        }
+      })
 
 $(document).on('submit','.step1-form',function(){
     var val = $('#sub').val();
