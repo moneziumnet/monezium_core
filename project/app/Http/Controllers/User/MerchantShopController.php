@@ -16,6 +16,12 @@ use Datatables;
 
 class MerchantShopController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index(){
         $data['shoplist'] = MerchantShop::where('merchant_id',auth()->id())->latest()->paginate(15);
         return view('user.merchant.shop.index', $data);

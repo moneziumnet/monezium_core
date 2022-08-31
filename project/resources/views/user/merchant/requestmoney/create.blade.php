@@ -62,6 +62,7 @@
                               <option value="{{$shop->id}}">{{$shop->name}}</option>
                               @endforeach
                             </select>
+                        </div>
 
 
                         <div class="form-group mb-3 mt-3">
