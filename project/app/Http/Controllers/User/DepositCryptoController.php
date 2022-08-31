@@ -30,11 +30,18 @@ class DepositCryptoController extends Controller
 
     public function create(){
         $data['cryptocurrencies'] = Currency::whereType(2)->get();
+        $data['user'] = auth()->user();
         return view('user.depositcrypto.create',$data);
     }
 
 
     public function store(Request $request){
+        $user = auth()->user();
+        if($user->payment_fa_yn == 'Y') {
+            if ($user->two_fa_code != $request->otp_code) {
+                return redirect()->back()->with('unsuccess','Verification code is not matched.');
+            }
+        }
         $rules = [
             'proof' => 'required|mimes:png,jpg,gif'
         ];

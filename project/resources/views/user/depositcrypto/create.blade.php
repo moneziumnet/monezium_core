@@ -83,6 +83,11 @@
                                         <label class="form-label proof required" id="proof_label">{{__('Proof')}}</label>
                                         <input class= "proof" name="proof" id="proof" class="form-control" autocomplete="off" type="file" accept=".jpg,.png,.gif" required>
                                     </div>
+
+                                    <div class="form-group mt-3" id="otp_body">
+                                        <label class="form-label required">{{__('OTP Code')}}</label>
+                                        <input name="otp_code" id="otp_code" class="form-control" placeholder="{{__('OTP Code')}}" type="text" step="any" value="{{ old('opt_code') }}" required>
+                                    </div>
                                 </div>
                                 <div class="modal-footer">
                                 <div class="w-100">
@@ -131,7 +136,23 @@
       })
       $('#submit').on('click', function() {
         if (($('#currency_id').val().length != 0) && ($('#amount').val().length != 0)) {
+            var verify = "{{$user->payment_fa_yn}}";
             event.preventDefault();
+            if (verify == 'Y') {
+                var url = "{{url('user/sendotp')}}";
+                $.get(url,function (res) {
+                    console.log(res)
+                    if(res=='success') {
+                        $('#modal-success').modal('show');
+                    }
+                    else {
+                        alert('The OTP code can not be sent to you.')
+                    }
+                });
+            } else {
+                $('#otp_body').remove();
+                $('#modal-success').modal('show');
+            }
             $('#modal-success').modal('show')
         }
       })
