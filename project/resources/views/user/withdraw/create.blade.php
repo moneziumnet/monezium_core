@@ -63,7 +63,7 @@
 
                                 <div class="form-group mb-3 ">
                                     <label class="form-label required">{{__('Description')}}</label>
-                                    <textarea name="details" class="form-control nic-edit" cols="30" rows="5" placeholder="{{__('Receive account details')}}" required></textarea>
+                                    <textarea name="details" id="details" class="form-control nic-edit" cols="30" rows="5" placeholder="{{__('Receive account details')}}" required></textarea>
                                 </div>
                                 <input name="otp" id="otp" type="hidden" value="">
 
@@ -83,12 +83,23 @@
 <div class="modal modal-blur fade" id="modal-verify" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">{{('OTP')}}</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-status bg-primary"></div>
+        <div class="modal-body py-4">
+            <div class="text-center">
+
+                <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+                <h3>@lang('Withdraw Details')</h3>
+            </div>
+            <ul class="list-group mt-2">
+                <li class="list-group-item d-flex justify-content-between">@lang('Institution Name')<span id="institution_name"></span></li>
+                <li class="list-group-item d-flex justify-content-between">@lang('Payment Method')<span id="py_method"></span></li>
+                <li class="list-group-item d-flex justify-content-between">@lang('Currency')<span id="py_currency"></span></li>
+                <li class="list-group-item d-flex justify-content-between">@lang('Amount')<span id="py_amount"></span></li>
+                <li class="list-group-item d-flex justify-content-between">@lang('Description')<span id="py_description"></span></li>
+            </ul>
             <div class="modal-body">
-              <div class="form-group">
+              <div class="form-group" id="otp_body">
                 <label class="form-label required">{{__('OTP Code')}}</label>
                 <input name="otp_code" id="otp_code" class="form-control" placeholder="{{__('OTP Code')}}" type="text" step="any" value="{{ old('opt_code') }}" required>
               </div>
@@ -98,6 +109,7 @@
             <div class="modal-footer">
                 <button  id="submit-btn" class="btn btn-primary">{{ __('Verify') }}</button>
             </div>
+      </div>
       </div>
     </div>
   </div>
@@ -124,7 +136,6 @@
         $.post("{{ route('user.withdraw.gatewaycurrency') }}",{id:paymentid,_token:'{{csrf_token()}}'},function (res) {
             let _optionHtml = '<option value="">Select Payment Currency</option>';
             $.each(res, function(i,item) {
-                console.log(item)
                 _optionHtml += '<option value="' + item.currency.id + '">' + item.currency.code + '  --  (' + parseFloat(item.balance).toFixed(2) + ')' + '</option>';
             });
             $('select#withcurrency').html(_optionHtml);
@@ -134,10 +145,14 @@
         $('#form_submit').on('click', function(event){
             var verify = "{{$user->payment_fa_yn}}";
             event.preventDefault();
+            $('#institution_name').text($('#subinstitude option:selected').text());
+            $('#py_method').text($('#withmethod option:selected').text());
+            $('#py_currency').text($('#withcurrency option:selected').text());
+            $('#py_amount').text($('#amount').val());
+            $('#py_description').text($('#details').val());
             if (verify == 'Y') {
                 var url = "{{url('user/sendotp')}}";
                 $.get(url,function (res) {
-                    console.log(res)
                     if(res=='success') {
                         $('#modal-verify').modal('show');
                     }
@@ -146,15 +161,26 @@
                     }
                 });
             } else {
-                $("#withdraw_form").submit();
+                $('#otp_body').remove();
+                $('#modal-verify').modal('show');
             }
         })
         $('#submit-btn').on('click', function(){
-            if($('#otp_code').val()) {
+            var verify = "{{$user->payment_fa_yn}}";
+            if(verify == 'Y') {
+                if($('#otp_code').val()) {
 
-                $('#otp').val($('#otp_code').val());
+                    $('#otp').val($('#otp_code').val());
+                    $("#withdraw_form").submit();
+                }
+                else {
+                    alert('Please input OTP code.');
+                }
+            }
+            else {
                 $("#withdraw_form").submit();
             }
+
         })
     });
 

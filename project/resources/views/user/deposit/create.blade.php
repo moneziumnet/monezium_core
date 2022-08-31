@@ -115,7 +115,7 @@
 
                         <div class="form-group mb-3 ">
                             <label class="form-label">{{__('Description')}}</label>
-                            <textarea name="details" class="form-control nic-edit" cols="30" rows="5" placeholder="{{__('Receive account details')}}"></textarea>
+                            <textarea name="details" id="details" class="form-control nic-edit" cols="30" rows="5" placeholder="{{__('Receive account details')}}"></textarea>
                         </div>
 
                         <div class="form-footer">
@@ -141,7 +141,7 @@
                                         <li class="list-group-item d-flex justify-content-between">@lang('Description')<span id="py_description"></span></li>
                                     </ul>
 
-                                    <div class="form-group" id="otp_body">
+                                    <div class="form-group mt-3" id="otp_body">
                                         <label class="form-label required">{{__('OTP Code')}}</label>
                                         <input name="otp_code" id="otp_code" class="form-control" placeholder="{{__('OTP Code')}}" type="text" step="any" value="{{ old('opt_code') }}" required>
                                     </div>
@@ -284,7 +284,7 @@ $('#submit').on('click', function() {
             $('#py_method').text($('#withmethod option:selected').text());
             $('#py_currency').text($('#withcurrency option:selected').text());
             $('#py_amount').text($('#amount').val());
-            $('#py_description').text($('#description').text());
+            $('#py_description').text($('#details').val());
             if (verify == 'Y') {
                 var url = "{{url('user/sendotp')}}";
                 $.get(url,function (res) {
