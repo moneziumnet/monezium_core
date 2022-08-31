@@ -10,7 +10,7 @@
     <div class="row align-items-center">
       <div class="col">
         <h2 class="page-title">
-          {{__('KYC Form')}}
+          {{__('KYC Selfie')}}
         </h2>
       </div>
     </div>
