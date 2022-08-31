@@ -1,6 +1,42 @@
 @extends('layouts.user')
 
 @section('contents')
+
+<div class="container-xl">
+    <div class="page-header d-print-none">
+      <div class="row align-items-center">
+        <div class="col">
+          </div>
+          <h2 class="page-title">
+            {{__('Escrow Account')}}
+          </h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-body">
+      <div class="container-xl">
+      <div class="row justify-content " style="max-height: 368px;">
+        @foreach ($wallets as $item)
+        <div class="col-sm-6 col-md-4 mb-3">
+            <div class="card h-100 card--info-item">
+              <div class="text-end icon">
+                <i class="fas ">
+                    {{$item->currency->symbol}}
+                </i>
+              </div>
+              <div class="card-body">
+                <div class="h3 m-0 text-uppercase"> {{__('Escrow')}}</div>
+                <div class="h4 m-0 text-uppercase"> {{ $item->wallet_no }}</div>
+                <div class="text-muted">{{ amount($item->balance,$item->currency->type,2) }}  {{$item->currency->code}}</div>
+              </div>
+            </div>
+        </div>
+        @endforeach
+      </div>
+      </div>
+    </div>
+
 <div class="container-xl">
     <div class="page-header d-print-none">
       <div class="row align-items-center">
@@ -32,7 +68,7 @@
                 <div class="card">
                     @if (count($escrows) == 0)
                         <h3 class="text-center py-5">{{__('No Escrow Data Found')}}</h3>
-                    @else 
+                    @else
                         <div class="table-responsive">
                             <table class="table table-vcenter table-mobile-lg card-table">
                                 <thead>
@@ -66,14 +102,14 @@
                                                 {{amount($item->charge,$item->currency->type,2)}} {{$item->currency->code}}
                                             </div>
                                           </td>
-                                          
+
                                           <td data-label="{{ __('Details') }}">
                                               <div>
                                                 {{Str::limit($item->description,80)}}
                                               </div>
                                           </td>
 
-                                         
+
                                           <td data-label="{{ __('Status') }}">
                                             <div>
                                                 @if ($item->status == 1)
@@ -88,7 +124,7 @@
                                             </div>
                                           </td>
 
-                                          <td data-label="{{ __('Date') }}"> 
+                                          <td data-label="{{ __('Date') }}">
                                             <div>
                                                 {{dateFormat($item->created_at)}}
                                             </div>
@@ -98,7 +134,7 @@
                                             <div class="btn-list flex-nowrap">
                                                 @if ($item->status != 1 && $item->status != 4)
                                                 <a href="javascript:void(0)" data-route="{{route('user.escrow.release',$item->id)}}" class="btn btn-primary btn-sm release">@lang('Release')</a>
-            
+
                                                   <a href="{{route('user.escrow.dispute',$item->id)}}" class="btn btn-warning btn-sm">@lang('Dispute')</a>
                                                 @else
                                                   @lang('N/A')
@@ -147,13 +183,13 @@
     </div>
 </div>
 
-    
+
 @endsection
 
 @push('js')
     <script>
         'use strict';
-        $('.release').on('click',function() { 
+        $('.release').on('click',function() {
             $('#modal-success').find('form').attr('action',$(this).data('route'))
             $('#modal-success').modal('show')
         })

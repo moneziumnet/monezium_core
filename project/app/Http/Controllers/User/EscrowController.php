@@ -28,7 +28,8 @@ class EscrowController extends Controller
      */
     public function index()
     {
-        $data['escrows'] = Escrow::where('user_id',auth()->id())->paginate(15);
+        $data['escrows'] = Escrow::where('user_id',auth()->id())->latest()->paginate(15);
+        $data['wallets'] = Wallet::where('user_id',auth()->id())->where('wallet_type',5)->with('currency')->get();
         return view('user.escrow.index',$data);
     }
 
@@ -39,7 +40,7 @@ class EscrowController extends Controller
      */
     public function create()
     {
-        $data['wallets'] = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('balance', '>', 0)->where('wallet_type',1)->get();
+        $data['wallets'] = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('balance', '>', 0)->where('wallet_type',5)->get();
         return view('user.escrow.create',$data);
     }
 
@@ -98,6 +99,7 @@ class EscrowController extends Controller
         if($senderWallet->balance < $finalAmount) return back()->with('error','Insufficient balance.');
 
         $senderWallet->balance -= $finalAmount;
+        user_wallet_increment(0, $currency->id, $transaction_global_cost, 9);
         $senderWallet->update();
         if($user->referral_id != 0){
             if (check_user_type_by_id(4, $user->referral_id)) {
@@ -231,7 +233,7 @@ class EscrowController extends Controller
         $recipientWallet = Wallet::where('user_id',$recipient->id)
                             ->where('user_type',1)
                             ->where('currency_id',$escrow->currency_id)
-                            ->where('wallet_type', 1)
+                            ->where('wallet_type', 5)
                             ->first();
 
         if(!$recipientWallet){
@@ -242,7 +244,7 @@ class EscrowController extends Controller
                     'user_type'    => 1,
                     'currency_id'  => $escrow->currency_id,
                     'balance'      => 0,
-                    'wallet_type' => 1,
+                    'wallet_type' => 5,
                     'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
                 ]
             );
