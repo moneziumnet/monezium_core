@@ -33,16 +33,22 @@ class WithdrawCryptoController extends Controller
     public function create(){
         $data['cryptocurrencies'] = Currency::whereType(2)->get();
         $data['wallets'] = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('wallet_type', 8)->with('currency')->get();
+        $data['user'] = auth()->user();
         return view('user.withdrawcrypto.create',$data);
     }
 
 
     public function store(Request $request){
+        $user = auth()->user();
+        if($user->payment_fa_yn == 'Y') {
+            if ($user->two_fa_code != $request->otp_code) {
+                return redirect()->back()->with('unsuccess','Verification code is not matched.');
+            }
+        }
 
         $currency = Currency::where('id',$request->currency_id)->first();
         $userBalance = user_wallet_balance($request->user_id,$request->currency_id,8);
         $amountToAdd = $request->amount/$currency->rate;
-        $user = auth()->user();
         $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'withdraw')->first();
         $dailywithdraw = CryptoWithdraw::where('user_id', $user->id)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus('complete')->sum('amount');
         $monthlywithdraw = CryptoWithdraw::where('user_id', $user->id)->whereMonth('created_at', '=', date('m'))->whereStatus('complete')->sum('amount');
