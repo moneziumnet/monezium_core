@@ -47,26 +47,59 @@
                             <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" step="any" value="{{ old('amount') }}" required>
                         </div>
 
-                        <div class="form-group mb-3 mt-3">
-                            <label class="form-label required">{{__('Transaction Hash')}}</label>
-                            <input name="hash" id="hash" class="form-control" autocomplete="off" placeholder="{{__('abcd....')}}" type="text" value="{{ old('hash') }}" required>
-                        </div>
-
-                        <div class="form-group mb-3 mt-3">
-                            <label class="form-label required">{{__('Your Crypto Address')}}</label>
-                            <input name="sender_address" id="sender_address" class="form-control" autocomplete="off" placeholder="{{__('0x....')}}" type="text" value="{{ old('sender_address') }}" required>
-                        </div>
-
-                        <div class="form-group mb-3 mt-3">
-                            <label class="form-label proof required" id="proof_label">{{__('Proof')}}</label>
-                            <input class= "proof" name="proof" id="proof" class="form-control" autocomplete="off" type="file" accept=".jpg,.png,.gif" required>
-                        </div>
-
                         <input type="hidden" name="user_id" value="{{auth()->id()}}">
                         <input type="hidden" name="address" id="address" value="">
 
                         <div class="form-footer">
                             <button id="submit" class="btn btn-primary w-100">{{__('Submit')}}</button>
+                        </div>
+                        <div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <div class="modal-status bg-primary"></div>
+                                <div class="modal-body py-4">
+                                    <div class="text-center">
+
+                                        <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+                                        <h3>@lang('Deposit Details')</h3>
+                                        <img id="qrcode" src="" class="" alt="">
+                                    </div>
+                                    <div class="text-center mt-2">
+                                        <span id="qrdetails" class="ms-2 check"></span>
+                                    </div>
+
+                                    <div class="form-group mb-3 mt-3">
+                                        <label class="form-label required">{{__('Transaction Hash')}}</label>
+                                        <input name="hash" id="hash" class="form-control" autocomplete="off" placeholder="{{__('abcd....')}}" type="text" value="{{ old('hash') }}" required>
+                                    </div>
+
+                                    <div class="form-group mb-3 mt-3">
+                                        <label class="form-label required">{{__('Your Crypto Address')}}</label>
+                                        <input name="sender_address" id="sender_address" class="form-control" autocomplete="off" placeholder="{{__('0x....')}}" type="text" value="{{ old('sender_address') }}" required>
+                                    </div>
+
+                                    <div class="form-group mb-3 mt-3">
+                                        <label class="form-label proof required" id="proof_label">{{__('Proof')}}</label>
+                                        <input class= "proof" name="proof" id="proof" class="form-control" autocomplete="off" type="file" accept=".jpg,.png,.gif" required>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                <div class="w-100">
+                                    <div class="row">
+                                    <div class="col"><a href="#" class="btn w-100" data-bs-dismiss="modal">
+                                        @lang('Cancel')
+                                        </a></div>
+                                    <div class="col">
+                                        <button type="submit" class="btn btn-primary w-100 confirm">
+                                           @lang('Confirm')
+                                        </button>
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
                         </div>
                     </form>
 
@@ -92,7 +125,15 @@
           $.post(url,data, function(res) {
               $('.check').text('@lang('Received Address is ')' + res).addClass('text-success');
               $('#address').val(res);
+              $('#qrdetails').text(res);
+              $('#qrcode').attr('src', `https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=${res}&choe=UTF-8`)
           })
+      })
+      $('#submit').on('click', function() {
+        if (($('#currency_id').val().length != 0) && ($('#amount').val().length != 0)) {
+            event.preventDefault();
+            $('#modal-success').modal('show')
+        }
       })
   </script>
 

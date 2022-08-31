@@ -124,6 +124,7 @@
             <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Receiver Crypto Address')<span id="address"  style="margin-left: 60px"></span></li>
             <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Your Crypto Address')<span id="sender_address" style="margin-left: 60px"></span></li>
             <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Amount')<span id="amount" style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-center" style="word-break:break-all;"><img id="qrcode"></li>
         </ul>
         </div>
     </div>
@@ -141,6 +142,7 @@
           $('#address').text($(this).data('data').address);
           $('#sender_address').text($(this).data('data').sender_address);
           $('#amount').text($(this).data('data').amount+ $(this).data('data').currency.code);
+          $('#qrcode').attr('src', `https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=${$(this).data('data').address}&choe=UTF-8`);
           $('#modal-success').modal('show');
 
       })
