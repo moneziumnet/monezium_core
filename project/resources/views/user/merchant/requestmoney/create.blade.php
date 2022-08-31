@@ -13,6 +13,14 @@
             {{__('Request Now')}}
           </h2>
         </div>
+        <div class="col-auto ms-auto d-print-none">
+          <div class="btn-list">
+
+            <a href="{{ route('user.merchant.money.request.index') }}" class="btn btn-primary d-sm-inline-block">
+                <i class="fas fa-backward me-1"></i> {{__('Request List')}}
+            </a>
+          </div>
+        </div>
       </div>
     </div>
 </div>
