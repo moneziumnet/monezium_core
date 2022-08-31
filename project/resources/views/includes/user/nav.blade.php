@@ -201,9 +201,6 @@
                 <a class="dropdown-item" href="{{route('user.invoice.index')}}">
                   {{__('Invoices')}}
                 </a>
-                <a class="dropdown-item" href="{{route('user.invoice.create')}}">
-                  {{__('Create Invoice')}}
-                </a>
                 <a class="dropdown-item" href="{{route('user.contract.index')}}">
                     {{__('Contracts')}}
                 </a>
