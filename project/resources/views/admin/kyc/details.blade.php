@@ -34,7 +34,7 @@
                                             <td width="10%">:</td>
                                             <td width="45%"><a href="{{asset('assets/images/'.$value[0])}}" download><img src="{{asset('assets/images/'.$value[0])}}" class="img-thumbnail"></a></td>
                                         </tr>
-                                        @else 
+                                        @else
                                             <tr>
                                                 <th width="45%">{{$key}}</th>
                                                 <td width="10%">:</td>
@@ -42,8 +42,17 @@
                                             </tr>
                                         @endif
                                     @endforeach
-                                @else 
+                                @else
                                     <p class="text-center mt-5">@lang('KYC NOT SUBMITTTED')</p>
+                                @endif
+                                @if (isset($user->kyc_photo))
+
+
+                                    <tr>
+                                        <th width="45%">{{__('Selfie')}}</th>
+                                        <td width="10%">:</td>
+                                        <td width="45%"><a href="{{asset('assets/images/'.$user->kyc_photo)}}" download><img src="{{asset('assets/images/'.$user->kyc_photo)}}" class="img-thumbnail"></a></td></td>
+                                    </tr>
                                 @endif
 
 

@@ -43,7 +43,7 @@ class KYCController extends Controller
         /** Direct Photo upload**/
         $img = $request->image;
 
-        $folderPath = "uploads/";
+        $folderPath = asset('assets/images');
 
         $image_parts = explode(";base64,", $img);
         $image_type_aux = explode("image/", $image_parts[0]);
@@ -56,13 +56,13 @@ class KYCController extends Controller
 
         Storage::put($file, $image_base64);
 
-        $user = auth()->user();
+        $user = User::findOrFail($request->user_id);
         if(!empty($details)){
             $user->kyc_photo = $fileName;
         }
         $user->save();
 
-        return redirect()->route('user.dashboard')->with('message','KYC submitted successfully');
+        return back()->with('success', 'KYC submitted successfully');
     }
 
     public function sendSelfieLink(){
@@ -79,7 +79,7 @@ class KYCController extends Controller
         $userType = 'user';
         $userForms = KycForm::where('user_type',$userType == 'user' ? 1 : 2)->get();
 
-        $user = User::findOrFail($request->user_id);
+        $user = auth()->user();
         $gs = Generalsetting::first();
         $route = route('user.kyc.selfie',encrypt($user->id));
         if($request->sendlink) {
@@ -130,6 +130,6 @@ class KYCController extends Controller
             $user->kyc_status = 3;
         }
         $user->save();
-        return back()->with('success', 'KYC submitted successfully');
+        return redirect()->route('user.dashboard')->with('message','KYC submitted successfully');
     }
 }
