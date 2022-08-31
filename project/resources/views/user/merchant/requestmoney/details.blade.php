@@ -38,6 +38,12 @@
                             </tr>
 
                             <tr>
+                                <th class="45%" width="45%">{{__('Shop')}}</th>
+                                <td width="10%">:</td>
+                                <td class="45%" width="45%">{{ $data->merchant_shop->name }}</td>
+                            </tr>
+
+                            <tr>
                                 <th class="45%" width="45%">{{__('Request To')}}</th>
                                 <td width="10%">:</td>
                                 <td class="45%" width="45%">{{ $to->name }}</td>

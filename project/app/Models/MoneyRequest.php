@@ -24,4 +24,9 @@ class MoneyRequest extends Model
     {
         return $this->belongsTo(Currency::class,'currency_id');
     }
+
+    public function merchant_shop()
+    {
+        return $this->belongsTo(MerchantShop::class,'shop_id')->withdefault();
+    }
 }
