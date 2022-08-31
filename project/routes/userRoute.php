@@ -120,6 +120,8 @@ Route::prefix('user')->group(function() {
 
       Route::get('/kyc-form', [KYCController::class,'kycform'])->name('user.kyc.form');
       Route::post('/kyc-form', [KYCController::class,'kyc'])->name('user.kyc.submit');
+      Route::get('/kyc-take-selfie', [KYCController::class,'onlineSelfie'])->name('user.kyc.selfie');
+      Route::post('/kyc-take-selfie', [KYCController::class,'takeOnlineSelfie'])->name('user.kyc.selfie');
 
       Route::group(['middleware'=>'kyc:Loan'],function(){
         Route::get('/loans', [UserLoanController::class,'index'])->name('user.loans.index');

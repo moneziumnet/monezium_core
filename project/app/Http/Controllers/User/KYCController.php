@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\User;
 
-use Illuminate\Http\Request;
-use App\Models\Product;
-use App\Http\Controllers\Controller;
 use App\Models\KycForm;
-use Illuminate\Support\Facades\Validator;
+use App\Models\Product;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Models\Generalsetting;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class KYCController extends Controller
 {
@@ -33,9 +34,11 @@ class KYCController extends Controller
         
     }
 
-    public function kyc(Request $request){
-        $userType = 'user';
-        $userForms = KycForm::where('user_type',$userType == 'user' ? 1 : 2)->get();
+    public function onlineSelfie(){
+        return view('user.kyc.selfie');
+    }
+
+    public function takeOnlineSelfie(Request $request){
         /** Direct Photo upload**/
         $img = $request->image;
 
@@ -50,6 +53,41 @@ class KYCController extends Controller
         
         $file = $folderPath . $fileName;
         
+        Storage::put($file, $image_base64);
+
+        $user = auth()->user();
+        if(!empty($details)){
+            $user->kyc_photo = $fileName;
+        }
+        $user->save();
+
+        return redirect()->route('user.dashboard')->with('message','KYC submitted successfully');
+    }
+
+    public function sendSelfieLink(){
+        $user = auth()->user();
+        $gs = Generalsetting::first();
+        $to = $user->email;
+        $subject = " Online Selfie Link";
+        $msg = "Hello ".$user->name."!\nThis is the link of online Selfie for Aleksandar.\nLink is \n".url('/user/kyc-take-selfie')." \n Thank you.";
+        $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
+        mail($to,$subject,$msg,$headers);
+    }
+
+    public function kyc(Request $request){
+        $userType = 'user';
+        $userForms = KycForm::where('user_type',$userType == 'user' ? 1 : 2)->get();
+
+        $user = auth()->user();
+        $gs = Generalsetting::first();
+        if($request->sendlink) {            
+            $to = $user->email;
+            $subject = " Online Selfie Link";
+            $msg = "Hello ".$user->name."!\nThis is the link of online Selfie for Aleksandar.\nLink is \n".url('/')."?reff=".$user->affilate_code."\n Thank you.";
+            $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
+            mail($to,$subject,$msg,$headers);
+        }
+        
         $requireInformations = [];
         if($userForms){
             foreach($userForms as $key=>$value){
@@ -62,7 +100,6 @@ class KYCController extends Controller
                     $requireInformations['file'][$key] = strtolower(str_replace(' ', '_', $value->label));
                 }
             }
-            Storage::put($file, $image_base64);
         }
 
 
@@ -88,7 +125,6 @@ class KYCController extends Controller
         $user = auth()->user();
         if(!empty($details)){
             $user->kyc_info = json_encode($details,true);
-            $user->kyc_photo = $fileName;
             $user->kyc_status = 3;
         }
         $user->save();
