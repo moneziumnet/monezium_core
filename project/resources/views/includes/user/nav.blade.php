@@ -135,7 +135,7 @@
             @endif
 
             @if(check_user_type(3))
-            <li class="nav-item dropdown {{ request()->routeIs('user.merchant.index', 'user.merchant.send.money.create', 'user.merchant.money.request.index', 'user.merchant.other.bank', 'user.merchant.shop.index') ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ request()->routeIs('user.merchant.index', 'user.merchant.send.money.create', 'user.merchant.money.request.index', 'user.merchant.other.bank', 'user.merchant.shop.index', 'user.merchant.checkout.index') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                   <i class="fas fa-users"></i>
@@ -151,8 +151,11 @@
 
                 <a class="dropdown-item" href="{{route('user.merchant.shop.index')}}">
                     {{__('Merchant Shop')}}
-                  </a>
+                </a>
 
+                <a class="dropdown-item" href="{{route('user.merchant.checkout.index')}}">
+                {{__('Merchant Checkout')}}
+                </a>
                 <a class="dropdown-item" href="{{route('user.merchant.send.money.create')}}">
                     {{__('Internal Payment')}}
                 </a>

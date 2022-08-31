@@ -7,6 +7,7 @@ use App\Http\Controllers\Frontend\FrontendController;
 use App\Http\Controllers\User\ManageInvoiceController;
 use App\Http\Controllers\User\UserContractManageController;
 use App\Http\Controllers\User\KYCController;
+use App\Http\Controllers\User\MerchantCheckoutController;
 
 Route::redirect('admin', 'admin/login');
 Route::post('the/genius/ocean/2441139', [FrontendController::class, 'subscription']);
@@ -35,4 +36,5 @@ Route::get('view-contract/{id}',   [UserContractManageController::class,'contrac
 Route::get('view-aoa/{id}',   [UserContractManageController::class,'aoa_sign_view'])->name('aoa.view');
 Route::get('/currency/{id}', [FrontendController::class, 'currency'])->name('front.currency');
 Route::get('/language/{id}', [FrontendController::class, 'language'])->name('front.language');
+Route::get('/merchant/checkout/link/{id}',[MerchantCheckoutController::class,'link'])->name('user.merchant.checkout.link');
 Route::get('kyc-take-selfie/{id}', [KYCController::class,'onlineSelfie'])->name('user.kyc.selfie');

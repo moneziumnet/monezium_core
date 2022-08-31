@@ -55,6 +55,7 @@ use App\Http\Controllers\User\MerchantShopController;
 use App\Http\Controllers\User\MerchantSendController;
 use App\Http\Controllers\User\MerchantMoneyRequestController;
 use App\Http\Controllers\User\MerchantOtherBankController;
+use App\Http\Controllers\User\MerchantCheckoutController;
 use App\Http\Controllers\User\UserOpenPaydController;
 use App\Http\Controllers\User\UserRailsbankController;
 use App\Http\Controllers\User\SupervisorController;
@@ -170,6 +171,15 @@ Route::prefix('user')->group(function() {
       Route::get('/merchant/shop/edit/{id}', [MerchantShopController::class,'edit'])->name('user.merchant.shop.edit');
       Route::post('/merchant/shop/update/{id}', [MerchantShopController::class,'update'])->name('user.merchant.shop.update');
       Route::get('/merchant/shop/delete/{id}', [MerchantShopController::class,'delete'])->name('user.merchant.shop.delete');
+
+
+      Route::get('/merchant/checkout',[MerchantCheckoutController::class,'index'])->name('user.merchant.checkout.index');
+      Route::get('/merchant/checkout/edit/{id}',[MerchantCheckoutController::class,'edit'])->name('user.merchant.checkout.edit');
+      Route::post('/merchant/checkout/create', [MerchantCheckoutController::class,'store'])->name('user.merchant.checkout.store');
+      Route::post('/merchant/checkout/update/{id}', [MerchantCheckoutController::class,'update'])->name('user.merchant.checkout.update');
+      Route::get('/merchant/checkout/status/{id}', [MerchantCheckoutController::class,'status'])->name('user.merchant.checkout.status');
+      Route::get('/merchant/checkout/delete/{id}', [MerchantCheckoutController::class,'delete'])->name('user.merchant.checkout.delete');
+      Route::post('/merchant/checkout/transaction', [MerchantCheckoutController::class,'transaction'])->name('user.merchant.checkout.transaction');
 
 
 
