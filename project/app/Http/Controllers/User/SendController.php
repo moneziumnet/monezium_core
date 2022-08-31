@@ -36,6 +36,7 @@ class SendController extends Controller
             $data['wallets'] = $wallets;
             $data['saveAccounts'] = SaveAccount::whereUserId(auth()->id())->orderBy('id','desc')->get();
             $data['savedUser'] = NULL;
+            $data['user'] = auth()->user();
 
             return view('user.sendmoney.create',$data);
         // }else{
@@ -53,6 +54,7 @@ class SendController extends Controller
             $data['wallets'] = $wallets;
             $data['savedUser'] = User::whereEmail($no)->first();
             $data['saveAccounts'] = SaveAccount::whereUserId(auth()->id())->orderBy('id','desc')->get();
+            $data['user'] = auth()->user();
 
             return view('user.sendmoney.create',$data);
         // }else{
@@ -78,7 +80,12 @@ class SendController extends Controller
 
 
     public function store(Request $request){
-
+        $user = auth()->user();
+        if($user->payment_fa_yn == 'Y') {
+            if ($user->two_fa_code != $request->otp_code) {
+                return redirect()->back()->with('unsuccess','Verification code is not matched.');
+            }
+        }
         $request->validate([
             'email'    => 'required',
             'wallet_id'         => 'required',
@@ -87,7 +94,6 @@ class SendController extends Controller
             'description'       => 'required',
         ]);
 
-        $user = auth()->user();
 
         if($user->bank_plan_id === null){
             return redirect()->back()->with('unsuccess','You have to buy a plan to withdraw.');
