@@ -37,10 +37,17 @@ class MoneyRequestController extends Controller
     public function create(){
         $wallets = Wallet::where('user_id',auth()->id())->with('currency')->get();
         $data['wallets'] = $wallets;
+        $data['user'] = auth()->user();
         return view('user.requestmoney.create', $data);
     }
 
     public function store(Request $request){
+        $user = auth()->user();
+        if($user->payment_fa_yn == 'Y') {
+            if ($user->two_fa_code != $request->otp_code) {
+                return redirect()->back()->with('unsuccess','Verification code is not matched.');
+            }
+        }
         $request->validate([
             'account_name' => 'required',
             'wallet_id' => 'required',

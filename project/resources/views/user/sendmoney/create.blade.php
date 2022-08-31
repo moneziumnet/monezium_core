@@ -108,7 +108,7 @@
                                             <div class="text-center">
 
                                                 <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
-                                                <h3>@lang('Deposit Details')</h3>
+                                                <h3>@lang('Details')</h3>
                                             </div>
                                             <ul class="list-group mt-2">
                                                 <li class="list-group-item d-flex justify-content-between">@lang('Receiver Name')<span id="receiver_name"></span></li>
