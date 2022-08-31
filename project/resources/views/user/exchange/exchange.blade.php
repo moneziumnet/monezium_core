@@ -37,7 +37,7 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <div class="form-label">@lang('Amount')</div>
-                                <input type="text" name="amount" class="form-control amount shadow-none" required>
+                                <input type="text" name="amount" id="amount" class="form-control amount shadow-none" required>
                             </div>
                             @php
                                 $userType = explode(',', auth()->user()->user_type);
@@ -56,7 +56,7 @@
                             @endphp
                             <div class="col-md-6 mb-3">
                                 <div class="form-label">@lang('From Currency')</div>
-                                <select class="form-select from shadow-none" name="from_wallet_id">
+                                <select class="form-select from shadow-none" name="from_wallet_id" id="from_wallet_id">
                                     <option value="" selected>@lang('Select')</option>
                                     @foreach ($wallets as $wallet)
                                     @if (isset($wallet_type_list[$wallet->wallet_type]))
@@ -68,7 +68,7 @@
 
                             <div class="col-md-6 mb-3">
                                 <div class="form-label">@lang('To Wallet')</div>
-                                <select class="form-select wallet" name="wallet_type" disabled>
+                                <select class="form-select wallet" name="wallet_type" id="wallet_type" disabled>
                                     @foreach ($wallet_type_list as $key=>$wallet)
                                     <option value="{{$key}}" >{{$wallet}}</option>
                                     @endforeach
@@ -77,7 +77,7 @@
 
                             <div class="col-md-6 mb-3">
                                 <div class="form-label">@lang('To Currency')</div>
-                                <select class="form-select to shadow-none" name="to_wallet_id" disabled>
+                                <select class="form-select to shadow-none" name="to_wallet_id" id="to_wallet_id" disabled>
                                     <option value="" selected>@lang('Select')</option>
                                 </select>
                             </div>
@@ -107,13 +107,27 @@
 
 
                             <div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
-                                <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+                                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                 <div class="modal-content">
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     <div class="modal-status bg-primary"></div>
-                                    <div class="modal-body text-center py-4">
-                                        <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
-                                        <h3>@lang('Are you sure to exchange?')</h3>
+                                    <div class="modal-bodypy-4">
+                                        <div class="text-center">
+
+                                            <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+                                            <h3>@lang('Are you sure to exchange?')</h3>
+                                        </div>
+                                        <ul class="list-group mt-2">
+                                            <li class="list-group-item d-flex justify-content-between" style="word-break: break-all;">@lang('From Currency')<span style="margin-left: 60px" id="modal_from_currency"></span></li>
+                                            <li class="list-group-item d-flex justify-content-between" style="word-break: break-all;">@lang('To Wallet')<span style="margin-left: 60px" id="modal_to_wallet"></span></li>
+                                            <li class="list-group-item d-flex justify-content-between" style="word-break: break-all;">@lang('To Currency')<span style="margin-left: 60px" id="modal_to_currency"></span></li>
+                                            <li class="list-group-item d-flex justify-content-between" style="word-break: break-all;">@lang('Amount')<span style="margin-left: 60px" id="modal_amount"></span></li>
+                                        </ul>
+
+                                        <div class="form-group mt-3 mb-3" id="otp_body">
+                                            <label class="form-label required">{{__('OTP Code')}}</label>
+                                            <input name="otp_code" id="otp_code" class="form-control" placeholder="{{__('OTP Code')}}" type="text" step="any" value="{{ old('opt_code') }}" required>
+                                        </div>
                                     </div>
                                     <div class="modal-footer">
                                         <div class="w-100">
@@ -122,7 +136,7 @@
                                                 @lang('Cancel')
                                                 </a></div>
                                             <div class="col">
-                                                <button type="button" class="btn btn-primary w-100 confirm">
+                                                <button type="submit" class="btn btn-primary w-100 confirm">
                                                 @lang('Confirm')
                                                 </button>
                                             </div>
@@ -265,13 +279,35 @@
             var to = $('.to option:selected').val();
             var amount = $('.amount').val()
 
+            var verify = "{{$user->payment_fa_yn}}";
+
+            $('#modal_from_currency').text($('#from_wallet_id  option:selected').text().split('--')[0])
+            $('#modal_to_currency').text($('#to_wallet_id  option:selected').text())
+            $('#modal_to_wallet').text($('#wallet_type  option:selected').text())
+            $('#modal_amount').text($('#amount').val())
+            if (verify == 'Y') {
+                var url = "{{url('user/sendotp')}}";
+                $.get(url,function (res) {
+                    console.log(res)
+                    if(res=='success') {
+                        $('#modal-success').modal('show');
+                    }
+                    else {
+                        alert('The OTP code can not be sent to you.')
+                    }
+                });
+            } else {
+                $('#otp_body').remove();
+                $('#modal-success').modal('show');
+            }
+
             $('#modal-success').modal('show')
         })
 
-        $('.confirm').on('click',function () {
-            $('#form').submit()
-            $(this).attr('disabled',true)
-        })
+        // $('.confirm').on('click',function () {
+        //     $('#form').submit()
+        //     $(this).attr('disabled',true)
+        // })
 
     </script>
 @endpush

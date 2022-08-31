@@ -26,11 +26,18 @@ class ExchangeMoneyController extends Controller
         $currencies = Currency::where('status',1)->whereType('1')->get();
         $crypto_currencies = Currency::where('status',1)->whereType('2')->get();
         $recentExchanges = ExchangeMoney::where('user_id',auth()->id())->with(['fromCurr','toCurr'])->latest()->take(7)->get();
-        return view('user.exchange.exchange',compact('wallets','currencies','recentExchanges', 'crypto_currencies'));
+        $user = auth()->user();
+        return view('user.exchange.exchange',compact('wallets','currencies','recentExchanges', 'crypto_currencies', 'user'));
     }
 
     public function submitExchange(Request $request)
     {
+        $user = auth()->user();
+        if($user->payment_fa_yn == 'Y') {
+            if ($user->two_fa_code != $request->otp_code) {
+                return redirect()->back()->with('unsuccess','Verification code is not matched.');
+            }
+        }
         $request->validate([
             'amount' => 'required|gt:0',
             'from_wallet_id' => 'required|integer',
