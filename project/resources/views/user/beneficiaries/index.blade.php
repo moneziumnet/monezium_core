@@ -44,6 +44,7 @@
                                     <th>{{ __('Bank') }}</th>
                                     <th>{{ __('Beneficiary Name') }}</th>
                                     <th>{{ __('Details') }}</th>
+                                    <th>{{ __('Edit') }}</th>
                                     <th>{{ __('Action') }}</th>
                                 </tr>
                                 </thead>
@@ -69,6 +70,15 @@
                                                 </a>
                                             </div>
                                           </td>
+
+                                          <td data-label="{{ __('Edit') }}">
+                                            <div class="btn-list">
+                                                <a href="{{route('user.beneficiaries.edit',$data->id)}}" class="btn btn-primary">
+                                                  {{__('Edit')}}
+                                                </a>
+                                            </div>
+                                          </td>
+
                                           <td data-label="{{ __('Action') }}">
                                             <div class="btn-list">
                                                 <a href="{{route('user.other.send',$data->id)}}" class="btn btn-primary">
