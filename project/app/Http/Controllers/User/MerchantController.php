@@ -43,6 +43,13 @@ class MerchantController extends Controller
         return view('user.merchant.index',compact('cred', 'user', 'wallets'));
     }
 
+    public function address_edit(Request $request){
+        $wallet = MerchantWallet::where('id',$request->wallet_id)->first();
+        $wallet->wallet_no =  $request->address;
+        $wallet->update();
+        return back()->with('message', 'You have updated the crypto wallet address successfully.');
+    }
+
     public function apiKeyGenerate()
     {
         if(!check_user_type(3))

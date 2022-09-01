@@ -4,7 +4,7 @@
             <a class="nav-link {{menu('user.withdraw.index')}} {{menu('user.withdraw.create')}} {{menu('user.withdraw.details')}}"  href="{{route('user.withdraw.index') }}" role="button" >Withdrawal</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{menu('user.beneficiaries.index')}} {{menu('user.beneficiaries.create')}} {{menu('user.beneficiaries.show')}} {{menu('user.other.send')}}"   href="{{route('user.beneficiaries.index') }}" role="button">External Payments</a>
+            <a class="nav-link {{menu('user.beneficiaries.index')}} {{menu('user.beneficiaries.create')}} {{menu('user.beneficiaries.show')}} {{menu('user.other.send')}} {{menu('user.beneficiaries.edit')}}"   href="{{route('user.beneficiaries.index') }}" role="button">External Payments</a>
         </li>
         @php
             $modules = explode(" , ", auth()->user()->section);
