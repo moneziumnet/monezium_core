@@ -24,8 +24,8 @@
             <div class="page-header d-print-none">
                 <div class="row align-items-center">
                 <div class="col">
-                    <h2 class="page-title">
-                    {{__('KYC Selfie')}}
+                    <h2 class="text-center">
+                    {{__('Send payment')}}
                     </h2>
                 </div>
                 </div>
@@ -41,9 +41,16 @@
                                 <form action="{{route('user.merchant.checkout.transaction')}}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     <div class="text-center">
-
                                         <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
-                                        <h3>@lang('Details')</h3>
+                                        <div class="col">
+                                            <h2>{{$checkout->name}}
+                                            </h2>
+                                            <div class="page-pretitle">
+                                            {{$checkout->description}}
+                                            </div>
+                                        </div>
+                                        <h3></h3>
+
                                         <img id="qrcode" src="{{'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl='.$checkout->currency->address.'&choe=UTF-8'}}" class="" alt="">
                                     </div>
                                     <div class="text-center mt-2">
@@ -51,7 +58,7 @@
                                     </div>
 
                                     <div class="form-group mb-3 mt-3">
-                                        <label class="form-label required">{{__('Address')}}</label>
+                                        <label class="form-label required">{{$checkout->currency->code}} {{__('Address')}}</label>
                                         <input name="address" id="address" class="form-control" autocomplete="off"  type="text" value="{{ $checkout->currency->address }}" readonly required>
                                     </div>
 
