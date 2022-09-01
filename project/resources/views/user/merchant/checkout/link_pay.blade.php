@@ -58,15 +58,15 @@
                                     </div>
                                     <h3></h3>
 
-                                    <img id="qrcode" src="{{'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl='.$checkout->merchantwallet->wallet_no.'&choe=UTF-8'}}" class="" alt="">
+                                    <img id="qrcode" src="{{'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl='.$merchantwallet->wallet_no.'&choe=UTF-8'}}" class="" alt="">
                                 </div>
                                 <div class="text-center mt-2">
-                                    <span id="qrdetails" class="ms-2 check">{{__($checkout->merchantwallet->wallet_no)}}</span>
+                                    <span id="qrdetails" class="ms-2 check">{{__($merchantwallet->wallet_no)}}</span>
                                 </div>
 
                                 <div class="form-group mb-3 mt-3">
-                                    <label class="form-label required">{{$merchantwallet->code}} {{__('Address')}}</label>
-                                    <input name="address" id="address" class="form-control" autocomplete="off"  type="text" value="{{ $checkout->merchantwallet->wallet_no }}" readonly required>
+                                    <label class="form-label required">{{$merchantwallet->currency->code}} {{__('Address')}}</label>
+                                    <input name="address" id="address" class="form-control" autocomplete="off"  type="text" value="{{ $merchantwallet->wallet_no }}" readonly required>
                                 </div>
 
                                 <div class="form-group mb-3 mt-3">

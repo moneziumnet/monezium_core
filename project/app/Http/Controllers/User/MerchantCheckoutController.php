@@ -28,7 +28,7 @@ class MerchantCheckoutController extends Controller
     public function index(){
         $data['checkouts'] = MerchantCheckout::where('user_id',auth()->id())->get();
         $data['shops'] = MerchantShop::where('merchant_id', auth()->id())->whereStatus(1)->get();
-        $data['currencylist'] = Currency::whereStatus(1)->where('type', 1)->get();
+        $data['currencylist'] = Currency::whereStatus(1)->get();
         return view('user.merchant.checkout.index', $data);
     }
 
@@ -37,7 +37,7 @@ class MerchantCheckoutController extends Controller
         $data = new MerchantCheckout();
         $input = $request->all();
         $input['ref_id'] = 'MC-'.Str::random(6);
-        $input['currency_id'] = MerchantWallet::where('merchant_id', $request->user_id)->where('shop_id', $request->shop_id)->where('currency_id', $request->currency_id)->first()->id;
+        // $input['currency_id'] = MerchantWallet::where('merchant_id', $request->user_id)->where('shop_id', $request->shop_id)->where('currency_id', $request->currency_id)->first()->id;
         $data->fill($input)->save();
         return back()->with('message','Merchant Checkout has been created successfully');
     }
@@ -50,6 +50,7 @@ class MerchantCheckoutController extends Controller
 
     public function link_pay($id) {
         $data['checkout'] = MerchantCheckout::where('ref_id', $id)->first();
+        $data['merchantwallet'] =  MerchantWallet::where('merchant_id', $data['checkout']->user_id)->where('shop_id', $data['checkout']->shop_id)->where('currency_id', $data['checkout']->currency_id)->first();
         return view('user.merchant.checkout.link_pay', $data);
     }
 
@@ -61,7 +62,7 @@ class MerchantCheckoutController extends Controller
         $trans->trnx = str_rand();
         $trans->user_id     = $check->user_id;
         $trans->user_type   = 1;
-        $trans->currency_id = $check->merchantwallet->currency_id;
+        $trans->currency_id = $check->currency_id;
         $trans->amount      = $check->amount;
         $trans->charge      = 0;
         $trans->type        = '+';
@@ -93,7 +94,7 @@ class MerchantCheckoutController extends Controller
     public function edit($id) {
         $data['data'] = MerchantCheckout::findOrFail($id);
         $data['shops'] = MerchantShop::where('merchant_id', auth()->id())->get();
-        $data['currencylist'] = Currency::whereStatus(1)->where('type', 1)->get();
+        $data['currencylist'] = Currency::whereStatus(1)->get();
         return view('user.merchant.checkout.edit', $data);
     }
 
@@ -102,7 +103,7 @@ class MerchantCheckoutController extends Controller
         $data = MerchantCheckout::findOrFail($id);
 
         $input = $request->all();
-        $input['currency_id'] = MerchantWallet::where('merchant_id', $request->user_id)->where('shop_id', $request->shop_id)->where('currency_id', $request->currency_id)->first()->id;
+        // $input['currency_id'] = MerchantWallet::where('merchant_id', $request->user_id)->where('shop_id', $request->shop_id)->where('currency_id', $request->currency_id)->first()->id;
         $data->fill($input)->update();
 
         return redirect()->route('user.merchant.checkout.index')->with('message','Merchant Checkout has been updated successfully');
