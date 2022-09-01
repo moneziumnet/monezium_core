@@ -32,4 +32,8 @@ class MerchantCheckout extends Model
     {
         return $this->belongsTo(MerchantShop::class,'shop_id')->withDefault();
     }
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class)->withDefault();
+    }
 }
