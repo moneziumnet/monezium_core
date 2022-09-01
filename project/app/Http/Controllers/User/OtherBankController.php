@@ -5,6 +5,8 @@ namespace App\Http\Controllers\User;
 use App\Models\BankPlan;
 use App\Models\Currency;
 use App\Models\OtherBank;
+use App\Models\BankAccount;
+use App\Models\SubInsBank;
 use App\Models\Beneficiary;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
@@ -22,6 +24,8 @@ class OtherBankController extends Controller
     }
 
     public function othersend($id){
+        $data['bankaccounts'] = BankAccount::whereUserId(auth()->id())->pluck('subbank_id');
+        $data['banks'] = SubInsBank::whereIn('id', $data['bankaccounts'])->get();
         $data['data'] = Beneficiary::findOrFail($id);
         $data['other_bank_limit'] = Generalsetting::first()->other_bank_limit;
         $data['user'] = auth()->user();
@@ -96,9 +100,9 @@ class OtherBankController extends Controller
             $currency = defaultCurr();
             $balance = user_wallet_balance(auth()->id(), $currency->id);
 
-            if($balance<0 && $finalAmount > $balance){
-                return redirect()->back()->with('unsuccess','Insufficient Balance!');
-            }
+            // if($balance<0 && $finalAmount > $balance){
+            //     return redirect()->back()->with('unsuccess','Insufficient Balance!');
+            // }
 
             if($otherBank->daily_maximum_limit <= $finalAmount){
                 return redirect()->back()->with('unsuccess','Your daily limitation of transaction is over.');
@@ -120,9 +124,9 @@ class OtherBankController extends Controller
                 return redirect()->back()->with('unsuccess','Your monthly number of transaction is over!');
             }
 
-            if($request->amount > $balance){
-                return redirect()->back()->with('unsuccess','Insufficient Account Balance.');
-            }
+            // if($request->amount > $balance){
+            //     return redirect()->back()->with('unsuccess','Insufficient Account Balance.');
+            // }
             $data = new BalanceTransfer();
 
             $txnid = Str::random(4).time();
@@ -135,6 +139,10 @@ class OtherBankController extends Controller
 
             $data->user_id = auth()->user()->id;
             $data->transaction_no = $txnid;
+            $data->currency_id = $request->currency_id;
+            $data->subbank = $request->subbank;
+            $data->iban = $request->account_iban;
+            $data->swift_bic = $request->swift_bic;
             $data->other_bank_id = $request->other_bank_id;
             $data->beneficiary_id = $request->beneficiary_id;
             $data->type = 'other';
@@ -145,29 +153,29 @@ class OtherBankController extends Controller
             $data->status = 0;
             $data->save();
 
-            $trans = new Transaction();
-            $trans->trnx = $txnid;
-            $trans->user_id     = $user->id;
-            $trans->user_type   = 1;
-            $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
-            $trans->amount      = $finalAmount;
-            $trans->charge      = $cost;
-            $trans->type        = '-';
-            $trans->remark      = 'Send_Money';
-            $trans->data        = '{"sender":"'.$user->name.'", "receiver":"Other Bank"}';
-            $trans->details     = trans('Send Money');
+            // $trans = new Transaction();
+            // $trans->trnx = $txnid;
+            // $trans->user_id     = $user->id;
+            // $trans->user_type   = 1;
+            // $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
+            // $trans->amount      = $finalAmount;
+            // $trans->charge      = $cost;
+            // $trans->type        = '-';
+            // $trans->remark      = 'Send_Money';
+            // $trans->data        = '{"sender":"'.$user->name.'", "receiver":"Other Bank"}';
+            // $trans->details     = trans('Send Money');
 
-            // $trans->email = $user->email;
-            // $trans->amount = $finalAmount;
-            // $trans->type = "Send Money";
-            // $trans->profit = "minus";
-            // $trans->txnid = $txnid;
-            // $trans->user_id = $user->id;
-            $trans->save();
+            // // $trans->email = $user->email;
+            // // $trans->amount = $finalAmount;
+            // // $trans->type = "Send Money";
+            // // $trans->profit = "minus";
+            // // $trans->txnid = $txnid;
+            // // $trans->user_id = $user->id;
+            // $trans->save();
 
             // $user->decrement('balance',$finalAmount);
             // $currency = defaultCurr();
-            user_wallet_decrement(auth()->id(),$currency->id,$finalAmount);
+            // user_wallet_decrement(auth()->id(),$currency->id,$finalAmount);
 
             return redirect()->back()->with('success','Money Send successfully.');
 

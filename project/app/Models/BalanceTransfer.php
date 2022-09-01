@@ -15,6 +15,10 @@ class BalanceTransfer extends Model
         'beneficiary_id',
         'transaction_no',
         'cost',
+        'subbank',
+        'iban',
+        'currency_id',
+        'swift_bic',
         'amount',
         'final_amount',
         'type',
@@ -33,5 +37,9 @@ class BalanceTransfer extends Model
 
     public function beneficiary(){
         return $this->belongsTo(Beneficiary::class,'beneficiary_id')->withDefault();
+    }
+
+    public function subbank(){
+        return $this->belongsTo(SubInsBank::class,'subbank')->withDefault();
     }
 }

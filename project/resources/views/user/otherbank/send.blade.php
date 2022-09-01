@@ -120,6 +120,23 @@
                             <input name="account_iban" id="account_iban" class="form-control" autocomplete="off" placeholder="{{__('Jhon Doe')}}" type="text" value="{{ $data->account_iban }}" min="1" required readonly>
                         </div>
 
+                        <div class="form-group mt-3">
+                            <label class="form-label required">{{__('Your Bank Account')}}</label>
+                            <select name="subbank" id="withmethod" class="form-select" required>
+                                <option value="">{{ __('Select Bank') }}</option>
+                                @foreach ($banks as $key => $bank)
+                                        <option value="{{$bank->id}}">{{$bank->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label class="form-label required">{{__('Currency')}}</label>
+                            <select name="currency_id" id="currency" class="form-select" required>
+                                <option value="">{{ __('Select Currency') }}</option>
+                            </select>
+                        </div>
+
                         <div class="form-group mb-3 mt-3">
                             <label class="form-label required">{{__('Amount')}}</label>
                             <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" step="any" value="{{ old('amount') }}" min="1" required>
@@ -183,6 +200,20 @@
             document.getElementById("document").style.display = "none";
             document.getElementById("document_label").style.display = "none";
         }
+    })
+
+    $('#withmethod').on('change', function() {
+        var pos = $('#withmethod').val();
+
+        var url = `${mainurl}/user/bank/deposit/bankcurrency/${pos}`;
+        $.get(url, function(res) {
+            let _optionHtml = '<option value="">Select Currency</option>';
+            $.each(res, function(i, item) {
+                console.log(JSON.stringify(item))
+                _optionHtml += '<option value=\'' + item.currency.id + '\'>' + item.currency.code + '</option>';
+            });
+            $('select#currency').html(_optionHtml);
+        })
     })
 
     $(document).ready(function(){

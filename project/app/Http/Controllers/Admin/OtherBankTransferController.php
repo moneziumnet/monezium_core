@@ -7,8 +7,14 @@ use App\Models\BalanceTransfer;
 use App\Models\Beneficiary;
 use App\Models\Currency;
 use App\Models\OtherBank;
+use App\Models\BankAccount;
+use App\Models\BankGateway;
+use App\Models\SubInsBank;
+use App\Models\Transaction;
+use GuzzleHttp\Client;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Datatables;
 
 class OtherBankTransferController extends Controller
@@ -209,13 +215,145 @@ class OtherBankTransferController extends Controller
       $msg = __('Status already Completed.');
       return response()->json($msg);
     }
-    if ($id2 == 2) {
+    if ($data->status == 2) {
+        $msg = __('Status already Rejected.');
+        return response()->json($msg);
+      }
       $user = User::whereId($data->user_id)->first();
+    if ($id2 == 2) {
       if ($user) {
         // $user->increment('balance', $data->final_amount);
         $currency_id = Currency::whereIsDefault(1)->first()->id;
-        user_wallet_increment($user->id, $currency_id, $data->final_amount);
+        // user_wallet_increment($user->id, $currency_id, $data->final_amount);
       }
+    }
+    if ($id2 == 1) {
+        $currency = Currency::where('id',$data->currency_id)->first();
+        $customer_bank = BankAccount::whereUserId($user->id)->where('subbank_id',$data->subbank)->where('currency_id', $data->currency_id)->first();
+        $bankgateway = BankGateway::where('subbank_id', $data->subbank)->first();
+
+        $subbank = SubInsBank::where('id', $data->subbank)->first();
+        $client = New Client();
+
+        try {
+            $response = $client->request('POST', 'https://sandbox.openpayd.com/api/oauth/token?grant_type=client_credentials', [
+                'headers' => [
+                   'Accept'=> 'application/json',
+                  'Authorization' => 'Basic '.$bankgateway->information->Auth,
+                  'Content-Type' => 'application/x-www-form-urlencoded',
+                ],
+              ]);
+            $res_body = json_decode($response->getBody());
+            $auth_token = $res_body->access_token;
+            $accounter_id = $res_body->accountHolderId;
+        } catch (\Throwable $th) {
+             return redirect()->back()->with(array('warning' => 'Some Valuen is incorrect '));
+        }
+
+
+        try {
+            $response = $client->request('GET', 'https://sandbox.openpayd.com/api/accounts?iban='.$customer_bank->iban, [
+                'headers' => [
+                  'Accept' => 'application/json',
+                  'Authorization' => 'Bearer '.$auth_token,
+                  'Content-Type' => 'application/json',
+                  'x-account-holder-id' => $accounter_id,
+                ],
+              ]);
+              $res_body = json_decode($response->getBody())->content[0];
+
+            $account_id = $res_body->id;
+            $amount = $res_body->availableBalance->value;
+            if ($amount < $data->amount) {
+                return redirect()->back()->with(array('warning' => 'Insufficient Balance.'));
+            }
+        } catch (\Throwable $th) {
+             return redirect()->back()->with(array('warning' => 'Some Value is incorrect'));
+        }
+
+        try {
+            $response = $client->request('POST', 'https://sandbox.openpayd.com/api/beneficiaries', [
+                'body' => '{
+                    "beneficiaryType":"CORPORATE",
+                    "friendlyName":"'.$data->beneficiary->account_name.'",
+                    "companyName":"'.$data->beneficiary->account_name.'"
+                }',
+                'headers' => [
+                  'Accept' => 'application/json',
+                  'Authorization' => 'Bearer '.$auth_token,
+                  'Content-Type' => 'application/json',
+                  'x-account-holder-id' => $accounter_id,
+                ],
+            ]);
+            $res_body = json_decode($response->getBody());
+            $beneficiary_id = $res_body->id;
+        } catch (\Throwable $th) {
+             return redirect()->back()->with(array('warning' => 'Some Value is incorrect'));
+        }
+
+        try {
+            $response = $client->request('POST', 'https://sandbox.openpayd.com/api/beneficiaries/'.$beneficiary_id.'/bank-beneficiaries', [
+                'body' => '{
+                    "paymentTypes":["SWIFT"],
+                    "bankAccountCurrency":"'.$currency->code.'",
+                    "beneficiaryType":"CORPORATE",
+                    "beneficiaryCountry":"'.substr($data->iban, 0,2).'",
+                    "bankAccountCountry":"'.substr($data->iban, 0,2).'",
+                    "iban":"'.$data->iban.'",
+                    "bic":"'.$data->swift_bic.'",
+                    "bankAccountHolderName":"'.$subbank->name.'",
+                    "companyName":"'.$subbank->name.'"
+                }',
+                'headers' => [
+                  'Accept' => 'application/json',
+                  'Authorization' => 'Bearer '.$auth_token,
+                  'Content-Type' => 'application/json',
+                  'x-account-holder-id' => $accounter_id,
+                ],
+            ]);
+            $res_body = json_decode($response->getBody());
+            $beneficiary_id = $res_body->id;
+        } catch (\Throwable $th) {
+             return redirect()->back()->with(array('warning' => 'Some Value is incorrect'));
+        }
+
+        try {
+            $response = $client->request('POST', 'https://sandbox.openpayd.com/api/transactions/bank-payouts', [
+                'body' => '{
+                    "accountId":"'.$account_id.'",
+                    "beneficiaryId":"'.$beneficiary_id.'",
+                    "paymentType":"SWIFT",
+                    "amount":
+                    {"currency":"'.$currency->code.'","value":"'.$data->amount.'"},
+                    "reference":"'. $data->description.'"
+                }',
+                'headers' => [
+                  'Accept' => 'application/json',
+                  'Authorization' => 'Bearer '.$auth_token,
+                  'Content-Type' => 'application/json',
+                  'x-account-holder-id' => $accounter_id,
+                ],
+            ]);
+            $res_body = json_decode($response->getBody());
+            $transaction_id = $res_body->id;
+        } catch (\Throwable $th) {
+             return redirect()->back()->with(array('warning' => 'Some Value is incorrect'));
+        }
+
+
+
+            $trans = new Transaction();
+            $trans->trnx = Str::random(4).time();
+            $trans->user_id     = $data->user_id;
+            $trans->user_type   = 1;
+            $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
+            $trans->amount      = $data->final_amount;
+            $trans->charge      = $data->cost;
+            $trans->type        = '-';
+            $trans->remark      = 'Send_Money';
+            $trans->data        = '{"sender":"'.$user->name.'", "receiver":"Other Bank"}';
+            $trans->details     = trans('Send Money');
+            $trans->save();
     }
 
     $data->status = $id2;

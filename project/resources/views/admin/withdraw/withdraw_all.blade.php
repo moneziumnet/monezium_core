@@ -58,10 +58,10 @@
 
 <div class="row mt-3">
     <div class="col-lg-12">
-  
+
       @include('includes.admin.form-success')
             <div class="card">
-               
+
                 <div class="card-body text-center">
                     <div class="table-responsive">
                         <table class="table table-striped">
@@ -76,16 +76,16 @@
                             @forelse ($withdrawlogs as $key => $withdrawlog)
                                 <tr>
                                     <td data-label="@lang('Sl')">{{$key + $withdrawlogs->firstItem()}}</td>
-                        
+
                                     <td data-label="@lang('User')">
                                         {{$withdrawlog->user ? $withdrawlog->user->email.'(user)' : $withdrawlog->merchant->email.' (merchant)'}}
                                      </td>
                                     <td data-label="@lang('Withdraw Amount')">{{ __(amount($withdrawlog->amount,$withdrawlog->currency->type,2).' '.$withdrawlog->currency->code) }}</td>
-                               
+
                                     <td data-label="@lang('Charge')">
                                        {{amount($withdrawlog->charge,$withdrawlog->currency->type,2)}}
-                                    </td> 
-                                
+                                    </td>
+
 
                                     <td data-label="@lang('status')">
 
@@ -98,12 +98,12 @@
                                         @endif
                                     </td>
 
-                                    <td data-label="@lang('Action')">                                    
+                                    <td data-label="@lang('Action')">
                                         <div class="d-flex flex-wrap align-items-center justify-content-end justify-content-lg-center">
                                             <button class="btn btn-info details m-2" data-user_data="{{$withdrawlog->user_data}}" data-transaction="{{$withdrawlog->trx}}" data-provider="{{$withdrawlog->user ? $withdrawlog->user->email : $withdrawlog->merchant->email}}" data-method_name="{{$withdrawlog->method->method}}" data-date="{{ __($withdrawlog->created_at->format('d F Y')) }}">@lang('Details')</button>
                                             @if($withdrawlog->status == 0)
                                                 <button class="btn btn-primary accept ml-1" data-url="{{route('admin.withdraw.accept', $withdrawlog)}}" >@lang('Accept')</button>
-                                            
+
                                                 <button class="btn btn-danger reject ml-3" data-url="{{route('admin.withdraw.reject',$withdrawlog)}}">@lang('Reject')</button>
                                             @endif
                                         </div>
@@ -121,7 +121,7 @@
                 </div>
                 @if ($withdrawlogs->hasPages())
                 <div class="card-footer">
-                    {{ $withdrawlogs->links('admin.partials.paginate') }}
+                    {{-- {{ $withdrawlogs->links('admin.partials.paginate') }} --}}
                 </div>
                 @endif
             </div>
@@ -129,12 +129,12 @@
     </div>
 
 
-    
+
     <!-- Modal -->
     <div class="modal fade" id="details" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
         <div class="modal-dialog" role="document">
 
-           
+
             <div class="modal-content">
                     <div class="modal-header">
                             <h5 class="modal-title">@lang('Withdraw Details')</h5>
@@ -144,18 +144,18 @@
                     </div>
                 <div class="modal-body">
                     <div class="container-fluid withdraw-details">
-                        
+
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-dark" data-dismiss="modal">@lang('Close')</button>
-                    
+
                 </div>
             </div>
-           
+
         </div>
     </div>
-    
+
     <!-- Modal -->
     <div class="modal fade" id="accept" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -177,13 +177,13 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-dark" data-dismiss="modal">@lang('Close')</button>
                     <button type="submit" class="btn btn-primary" >@lang('Accept')</button>
-                    
+
                 </div>
             </div>
            </form>
         </div>
     </div>
-    
+
     <!-- Modal -->
     <div class="modal fade" id="reject" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
@@ -203,20 +203,20 @@
 
                             <label for="">@lang('Reason Of Reject')</label>
                             <textarea name="reason_of_reject" id="" cols="30" rows="10" class="form-control"> </textarea>
-                        
+
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-dark" data-dismiss="modal">@lang('Close')</button>
                     <button type="submit" class="btn btn-danger" >@lang('Reject')</button>
-                    
+
                 </div>
             </div>
            </form>
         </div>
     </div>
-    
+
 
 
 @endsection
@@ -224,7 +224,7 @@
 
 @section('scripts')
     <script>
-    
+
         $(function(){
             'use strict';
 
@@ -232,33 +232,33 @@
                 const modal = $('#details');
 
                 let html = `
-                
+
                     <ul class="list-group">
-                           
+
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 @lang('Transaction Id')
                                 <span>${$(this).data('transaction')}</span>
-                            </li>  
-                            
+                            </li>
+
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 @lang('User Name')
                                 <span>${$(this).data('provider')}</span>
-                            </li> 
-                            
+                            </li>
+
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 @lang('Withdraw Method')
                                 <span>${$(this).data('method_name')}</span>
-                            </li> 
+                            </li>
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 @lang('Withdraw Date')
                                 <span>${$(this).data('date')}</span>
-                            </li> 
+                            </li>
                         </ul>
                         <hr>
                         <h6>@lang('User Data For Withdraw : ')</h6>
                         <textarea class="form-control" rows="5" disabled>${$(this).data('user_data')}</textarea>
-                
-                
+
+
                 `;
 
                 modal.find('.withdraw-details').html(html);
@@ -271,7 +271,7 @@
                  modal.find('form').attr('action', $(this).data('url'));
                  modal.modal('show');
             })
-            
+
             $('.reject').on('click',function(){
                  const modal = $('#reject');
 
@@ -280,9 +280,9 @@
             })
 
         })
-    
-    
+
+
     </script>
-    
+
 @endsection
 
