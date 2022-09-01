@@ -354,7 +354,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/other-banks/{id1}/status/{status}', [OtherBankController::class, 'status'])->name('admin.other.banks.status');
   });
 
-  Route::group(['middleware' => 'permissions:Management Withdraw'], function () {
+  Route::group(['middleware' => 'permissions:Withdraw'], function () {
     Route::get('withdraw/method/datatables', [WithdrawMethodController::class, 'datatables'])->name('admin.withdraw.method.datatables'); //->middleware('permission:withdraw method');
     // Route::get('withdraw/method', [WithdrawMethodController::class, 'index'])->name('admin.withdraw'); //->middleware('permission:withdraw method');
     Route::get('withdraw/method-create', [WithdrawMethodController::class, 'create'])->name('admin.withdraw.create'); //->middleware('permission:withdraw method create');
@@ -392,7 +392,7 @@ Route::prefix('admin')->group(function () {
     Route::get('escrow-close/{id}', [ManageEscrowController::class, 'close'])->name('admin.escrow.close');
   });
 
-  Route::group(['middleware' => 'permissions:Money Transfer'], function () {
+  Route::group(['middleware' => 'permissions:Bank Transfer'], function () {
     Route::get('/own-banks/transfer/datatables', [OwnBankTransferController::class, 'datatables'])->name('admin.own.banks.transfer.datatables');
     Route::get('/own-banks/transfer', [OwnBankTransferController::class, 'index'])->name('admin.own.banks.transfer.index');
 
@@ -481,7 +481,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/nexmo-sms-settings', [GeneralSettingController::class, 'nexmo'])->name('admin.gs.nexmo');
   });
 
-  Route::group(['middleware' => 'permissions:Homepage Manage'], function () {
+  Route::group(['middleware' => 'permissions:Home page Setting'], function () {
     //------------ ADMIN FEATURE SECTION ------------
     Route::get('/feature/datatables', [FeatureController::class, 'datatables'])->name('admin.feature.datatables'); //JSON REQUEST
     Route::get('/feature', [FeatureController::class, 'index'])->name('admin.feature.index');
@@ -592,7 +592,7 @@ Route::prefix('admin')->group(function () {
     Route::post('/withdraws/crypto/transaction/update/{id}', [CryptoWithdrawController::class, 'update'])->name('admin.withdraws.crypto.update');
   });
 
-  Route::group(['middleware' => 'permissions:Manage KYC Form'], function () {
+  Route::group(['middleware' => 'permissions:KYC Management'], function () {
     Route::get('/manage-kyc/datatables', [KycManageController::class, 'datatables'])->name('admin.manage.kyc.datatables');
     Route::get('/manage-kyc-form', [KycManageController::class, 'index'])->name('admin.manage.kyc');
     Route::get('/manage-kyc-module', [KycManageController::class, 'module'])->name('admin.manage.module');

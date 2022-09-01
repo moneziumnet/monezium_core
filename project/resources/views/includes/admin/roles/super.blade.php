@@ -120,7 +120,7 @@
   <!-- <li class="nav-item">
     <a class="nav-link" href="{{route('admin.manage.kyc.user','user')}}">
       <i class="fas fa-child"></i>
-      <span>{{ __('Manage KYC Form') }}</span></a>
+      <span>{{ __('KYC Management') }}</span></a>
   </li> -->
 
 

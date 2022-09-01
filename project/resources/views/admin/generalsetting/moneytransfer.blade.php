@@ -5,17 +5,17 @@
 
 <div class="card">
     <div class="d-sm-flex align-items-center justify-content-between py-3">
-    <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Money Transfer Settings') }}</h5>
+    <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Bank Transfer Settings') }}</h5>
     <ol class="breadcrumb m-0 py-0">
         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
-        <li class="breadcrumb-item"><a href="{{ route('admin.gs.moneytransfer') }}">{{ __('Money Transfer Settings') }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.gs.moneytransfer') }}">{{ __('Bank Transfer Settings') }}</a></li>
     </ol>
     </div>
 </div>
 
   <div class="card mb-4 mt-3">
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-      <h6 class="m-0 font-weight-bold text-primary">{{ __('Money Transfer Form') }}</h6>
+      <h6 class="m-0 font-weight-bold text-primary">{{ __('Bank Transfer Form') }}</h6>
     </div>
 
     <div class="card-body">

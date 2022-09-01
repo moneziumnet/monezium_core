@@ -77,7 +77,7 @@
             </div>
             @endif
 
-            @if(Auth::guard('admin')->user()->sectionCheck('Money Transfer'))
+            @if(Auth::guard('admin')->user()->sectionCheck('Bank Transfer'))
             <div class="col-md-6">
               <div class="form-group">
                 <div class="custom-control custom-switch">
@@ -87,7 +87,7 @@
               </div>
             </div>
             @endif
-            @if(Auth::guard('admin')->user()->sectionCheck('Management Withdraw'))
+            @if(Auth::guard('admin')->user()->sectionCheck('Withdraw'))
             <div class="col-md-6">
               <div class="form-group">
                 <div class="custom-control custom-switch">

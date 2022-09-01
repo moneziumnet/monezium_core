@@ -22,12 +22,27 @@
         <a class="collapse-item" href="{{ route('admin.user.index') }}">{{ __('User List') }}</a>
         <a class="collapse-item" href="{{ route('admin.bank.plan.index') }}">{{ __('Pricing Plan') }}</a>
         <!-- <a class="collapse-item" href="{{ route('admin.gs.user.modules') }}">{{ __('User Modules') }}</a> -->
-         <a class="collapse-item" href="{{route('admin.kyc.info','user')}}">{{ __('User KYC Info') }}</a>
-        <a class="collapse-item" href="{{route('admin.manage.module')}}">{{ __('User KYC Modules') }}</a>
         <a class="collapse-item" href="{{ route('admin.other.banks.index') }}">{{ __('Other Banks') }}</a>
         <a class="collapse-item" href="{{ route('admin.contract.management') }}">{{ __('View Contract') }}</a>
         <a class="collapse-item" href="{{ route('admin.merchant.shop.index') }}">{{ __('Merchant Shop') }}</a>
         <!-- <a class="collapse-item" href="{{ route('admin.user.bonus') }}">{{ __('Supervisor Fee') }}</a> -->
+      </div>
+    </div>
+  </li>
+  @endif
+
+  @if(getModule('KYC Management'))
+  <li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#kyc_manage" aria-expanded="true"
+      aria-controls="collapseTable">
+      <i class="fas fa-child"></i>
+      <span>{{  __('KYC Management') }}</span>
+    </a>
+    <div id="kyc_manage" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+        <a class="collapse-item" href="{{route('admin.manage.kyc.user','user')}}">{{ __('KYC Form') }}</a>
+        <a class="collapse-item" href="{{ route('admin.manage.module') }}">{{ __('KYC Modules') }}</a>
+        <a class="collapse-item" href="{{ route('admin.kyc.info','user') }}">{{ __('User KYC Info') }}</a>
       </div>
     </div>
   </li>
@@ -103,12 +118,27 @@
   </li>
   @endif
 
+  
+  @if(getModule('Deposits'))
+  <li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#bank" aria-expanded="true" aria-controls="collapseTable">
+      <i class="fas fa-piggy-bank"></i>
+      <span>{{ __('Deposits') }}</span>
+    </a>
+    <div id="bank" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+          <a class="collapse-item" href="{{ route('admin.deposits.bank.index') }}">{{ __('Bank Deposit') }}</a>
+          <a class="collapse-item" href="{{ route('admin.deposits.index') }}">{{ __('Gateway Deposit') }}</a>
+        </div>
+    </div>
+  </li>
+  @endif
 
-  @if(getModule('Management Withdraw'))
+  @if(getModule('Withdraw'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#withdraw" aria-expanded="true" aria-controls="collapseTable">
       <i class="fas fa-user"></i>
-    <span>{{ __('Management Withdraw') }}</span>
+    <span>{{ __('Withdraw') }}</span>
   </a>
     <div id="withdraw" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
@@ -146,16 +176,7 @@
   </li>
   @endif
 
-  @if(getModule('Money Transfer'))
-  <li class="nav-item">
-    <a class="nav-link " href="{{ route('admin.other.banks.transfer.index') }}" >
-      <i class="fas fa-exchange-alt"></i>
-    <span>{{ __('Bank Transfer') }}</span>
-  </a>
-  </li>
-  @endif
-
-  @if(getModule('Wire Transfer'))
+  <!-- @if(getModule('Wire Transfer'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#wiretransfer" aria-expanded="true" aria-controls="collapseTable">
       <i class="fas fa-wallet"></i>
@@ -168,23 +189,26 @@
       </div>
     </div>
   </li>
-  @endif
+  @endif -->
 
   @if(getModule('Request Money'))
   <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#requestmoney" aria-expanded="true" aria-controls="collapseTable">
+    <a class="nav-link" href="{{ route('admin.request.money') }}">
       <i class="fas fa-donate"></i>
-    <span>{{ __('Request Money') }}</span>
-  </a>
-    <div id="requestmoney" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
-      <div class="bg-white py-2 collapse-inner rounded">
-        <a class="collapse-item" href="{{ route('admin.request.money') }}">{{ __('All Money Request') }}</a>
-        <a class="collapse-item" href="{{ route('admin.request.setting.create') }}">{{ __('Money Request Setting') }}</a>
-      </div>
-    </div>
+      <span>{{ __('Request Money') }}</span>
+    </a>
   </li>
   @endif
 
+
+@if(getModule('Bank Transfer'))
+  <li class="nav-item">
+    <a class="nav-link " href="{{ route('admin.other.banks.transfer.index') }}" >
+      <i class="fas fa-exchange-alt"></i>
+    <span>{{ __('Bank Transfer') }}</span>
+    </a>
+  </li>
+@endif
 
 @if(getModule('Transactions'))
   <li class="nav-item">
@@ -193,22 +217,7 @@
       <span>{{ __('Transactions') }}</span>
     </a>
   </li>
-  @endif
-
-  @if(getModule('Deposits'))
-  <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#bank" aria-expanded="true" aria-controls="collapseTable">
-      <i class="fas fa-piggy-bank"></i>
-      <span>{{ __('Deposits') }}</span>
-    </a>
-    <div id="bank" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
-        <div class="bg-white py-2 collapse-inner rounded">
-          <a class="collapse-item" href="{{ route('admin.deposits.bank.index') }}">{{ __('Bank Deposit') }}</a>
-          <a class="collapse-item" href="{{ route('admin.deposits.index') }}">{{ __('Gateway Deposit') }}</a>
-        </div>
-    </div>
-  </li>
-  @endif
+@endif
 
   <!-- @if(getModule('Manage Blog'))
   <li class="nav-item">
@@ -226,45 +235,11 @@
   </li>
   @endif -->
 
-  @if(getModule('Homepage Manage'))
-  <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#homepage" aria-expanded="true"
-    aria-controls="collapseTable">
-    <i class="fas fa-igloo"></i>
-    <span>{{ __('Home Page Manage') }}</span>
-  </a>
-    <div id="homepage" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
-      <div class="bg-white py-2 collapse-inner rounded">
-        <a class="collapse-item" href="{{ route('admin.ps.hero') }}">{{ __('Hero Section') }}</a>
-        <a class="collapse-item" href="{{ route('admin.feature.index') }}">{{ __('Feature Section') }}</a>
-        <a class="collapse-item" href="{{ route('admin.ps.about') }}">{{ __('About Us Section') }}</a>
-        <a class="collapse-item" href="{{ route('admin.service.index') }}">{{ __('Service Section') }}</a>
-        <a class="collapse-item" href="{{ route('admin.account.process.index') }}">{{ __('Account Register Process') }}</a>
-        <a class="collapse-item" href="{{ route('admin.ps.account') }}">{{ __('Strategy Section') }}</a>
-        <a class="collapse-item" href="{{ route('admin.ps.apps') }}">{{ __('Apps Section') }}</a>
-        <a class="collapse-item" href="{{ route('admin.review.index') }}">{{ __('Testimonial Section') }}</a>
-        <a class="collapse-item" href="{{ route('admin.counter.index') }}">{{ __('Counter Section') }}</a>
-        <a class="collapse-item" href="{{ route('admin.ps.quick') }}">{{ __('Quick Start Section') }}</a>
-        <a class="collapse-item" href="{{ route('admin.ps.heading') }}">{{ __('Section Heading') }}</a>
-      </div>
-    </div>
-  </li>
-  @endif
-
   @if(getModule('Message'))
   <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.user.message') }}">
       <i class="fas fa-comment-alt"></i>
       <span>{{ __('Messages') }}</span></a>
-  </li>
-  @endif
-
-
-  @if(getModule('Manage KYC Form'))
-  <li class="nav-item">
-    <a class="nav-link" href="{{route('admin.manage.kyc.user','user')}}">
-      <i class="fas fa-child"></i>
-      <span>{{ __('Manage KYC Form') }}</span></a>
   </li>
   @endif
 
@@ -276,24 +251,6 @@
     </a>
     <div id="system_setting" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
-        @if(getModule('General Setting'))
-          <a class="nav-link collapsed collapse-item sub-nav-link" href="#" data-toggle="collapse" data-target="#collapseTable1" aria-expanded="true"
-            aria-controls="collapseTable">
-            <span>{{  __('General Settings') }}</span>
-          </a>
-          <div id="collapseTable1" class="collapse" aria-labelledby="headingTable" data-parent="#system_setting">
-            <div class="bg-white py-2 collapse-inner rounded">
-              <a class="collapse-item" href="{{ route('admin.gs.logo') }}">{{ __('Logo') }}</a>
-              <a class="collapse-item" href="{{ route('admin.gs.fav') }}">{{ __('Favicon') }}</a>
-              <a class="collapse-item" href="{{ route('admin.gs.load') }}">{{ __('Loader') }}</a>
-              <a class="collapse-item" href="{{ route('admin.gs.breadcumb') }}">{{ __('Breadcumb Banner') }}</a>
-              <a class="collapse-item" href="{{ route('admin.gs.contents') }}">{{ __('Website Contents') }}</a>
-              <a class="collapse-item" href="{{ route('admin.gs.footer') }}">{{ __('Footer') }}</a>
-              <a class="collapse-item" href="{{ route('admin.gs.error.banner') }}">{{ __('Error Banner') }}</a>
-            </div>
-          </div>
-        @endif
-
         @if(getModule('Email Setting'))
           <a class="nav-link collapsed collapse-item sub-nav-link " href="#" data-toggle="collapse" data-target="#email_settings" aria-expanded="true"
             aria-controls="collapseTable">
@@ -334,13 +291,56 @@
             </div>
           </div>
         @endif
-
-
-
       </div>
     </div>
   </li>
 
+  @if(getModule('General Setting'))
+  <li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#general" aria-expanded="true"
+    aria-controls="collapseTable">
+    <i class="fas fa-igloo"></i>
+    <span>{{ __('General Settings') }}</span>
+  </a>
+    <div id="general" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+        <a class="collapse-item" href="{{ route('admin.gs.logo') }}">{{ __('Logo') }}</a>
+        <a class="collapse-item" href="{{ route('admin.gs.fav') }}">{{ __('Favicon') }}</a>
+        <a class="collapse-item" href="{{ route('admin.gs.load') }}">{{ __('Loader') }}</a>
+        <a class="collapse-item" href="{{ route('admin.gs.breadcumb') }}">{{ __('Breadcumb Banner') }}</a>
+        <a class="collapse-item" href="{{ route('admin.gs.contents') }}">{{ __('Website Contents') }}</a>
+        <a class="collapse-item" href="{{ route('admin.gs.footer') }}">{{ __('Footer') }}</a>
+        <a class="collapse-item" href="{{ route('admin.gs.error.banner') }}">{{ __('Error Banner') }}</a>
+      </div>
+    </div>
+  </li>
+  @endif
+
+  
+  @if(getModule('Home page Setting'))
+  <li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#homepage" aria-expanded="true"
+    aria-controls="collapseTable">
+    <i class="fas fa-igloo"></i>
+    <span>{{ __('Home Page Setting') }}</span>
+  </a>
+    <div id="homepage" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+        <a class="collapse-item" href="{{ route('admin.ps.hero') }}">{{ __('Hero Section') }}</a>
+        <a class="collapse-item" href="{{ route('admin.feature.index') }}">{{ __('Feature Section') }}</a>
+        <a class="collapse-item" href="{{ route('admin.ps.about') }}">{{ __('About Us Section') }}</a>
+        <a class="collapse-item" href="{{ route('admin.service.index') }}">{{ __('Service Section') }}</a>
+        <a class="collapse-item" href="{{ route('admin.account.process.index') }}">{{ __('Account Register Process') }}</a>
+        <a class="collapse-item" href="{{ route('admin.ps.account') }}">{{ __('Strategy Section') }}</a>
+        <a class="collapse-item" href="{{ route('admin.ps.apps') }}">{{ __('Apps Section') }}</a>
+        <a class="collapse-item" href="{{ route('admin.review.index') }}">{{ __('Testimonial Section') }}</a>
+        <a class="collapse-item" href="{{ route('admin.counter.index') }}">{{ __('Counter Section') }}</a>
+        <a class="collapse-item" href="{{ route('admin.ps.quick') }}">{{ __('Quick Start Section') }}</a>
+        <a class="collapse-item" href="{{ route('admin.ps.heading') }}">{{ __('Section Heading') }}</a>
+      </div>
+    </div>
+  </li>
+  @endif
 
   @if(getModule('Fonts'))
   <li class="nav-item">
