@@ -247,7 +247,7 @@ class OtherBankTransferController extends Controller
             $auth_token = $res_body->access_token;
             $accounter_id = $res_body->accountHolderId;
         } catch (\Throwable $th) {
-             return response()->json('Some Valuen is incorrect');
+             return response()->json($th->getMessage());
         }
 
 
@@ -265,10 +265,10 @@ class OtherBankTransferController extends Controller
             $account_id = $res_body->id;
             $amount = $res_body->availableBalance->value;
             if ($amount < $data->amount) {
-                return response()->json(('Some Valuen is incorrect'));
+                return response()->json(('Your balance is Insufficient '));
             }
         } catch (\Throwable $th) {
-             return response()->json(('Some Valuen is incorrect'));
+             return response()->json($th->getMessage());
         }
 
         try {
@@ -288,7 +288,7 @@ class OtherBankTransferController extends Controller
             $res_body = json_decode($response->getBody());
             $beneficiary_id = $res_body->id;
         } catch (\Throwable $th) {
-             return response()->json(('Some Valuen is incorrect'));
+             return response()->json($th->getMessage());
         }
 
         try {
@@ -314,7 +314,7 @@ class OtherBankTransferController extends Controller
             $res_body = json_decode($response->getBody());
             $beneficiary_id = $res_body->id;
         } catch (\Throwable $th) {
-             return response()->json(('Some Valuen is incorrect'));
+             return response()->json($th->getMessage());
         }
 
         try {
@@ -337,7 +337,7 @@ class OtherBankTransferController extends Controller
             $res_body = json_decode($response->getBody());
             $transaction_id = $res_body->id;
         } catch (\Throwable $th) {
-             return response()->json(('Some Valuen is incorrect'));
+             return response()->json($th->getMessage());
         }
 
 
