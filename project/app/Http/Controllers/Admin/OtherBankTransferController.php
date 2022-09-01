@@ -346,7 +346,7 @@ class OtherBankTransferController extends Controller
             $trans->trnx = Str::random(4).time();
             $trans->user_id     = $data->user_id;
             $trans->user_type   = 1;
-            $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
+            $trans->currency_id = $data->currency_id;
             $trans->amount      = $data->final_amount;
             $trans->charge      = $data->cost;
             $trans->type        = '-';
