@@ -23,7 +23,7 @@ class MerchantWallet extends Model
 
     public function currency()
     {
-        return $this->belongsTo(Currency::class);
+        return $this->belongsTo(Currency::class, 'currency_id')->withDefault();
     }
 
     protected static function boot()

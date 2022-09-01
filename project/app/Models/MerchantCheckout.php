@@ -18,9 +18,9 @@ class MerchantCheckout extends Model
         'status',
     ];
 
-    public function currency()
+    public function merchantwallet()
     {
-        return $this->belongsTo(Currency::class,'currency_id')->withDefault();
+        return $this->belongsTo(MerchantWallet::class,'currency_id')->withDefault();
     }
 
     public function user()

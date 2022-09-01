@@ -152,17 +152,17 @@
         }
         $('#modal_currency').val(JSON.parse(($('#currency').val()))['currency_id']);
         $('#modal_details').val($('#details').val());
-        $.post("{{ route('user.depositbank.gateway') }}",{id:JSON.parse(pos)['id'],_token:'{{csrf_token()}}'},function (res) {
-            if(res.keyword == 'railsbank')
-                {
-                    $('#depositbank_gateway').prop('action','{{ route('user.depositbank.railsbank') }}');
-                }
-            if(res.keyword == 'openpayd')
-                {
-                    $('#depositbank_gateway').prop('action','{{ route('user.depositbank.openpayd') }}');
-                }
+        // $.post("{{ route('user.depositbank.gateway') }}",{id:JSON.parse(pos)['id'],_token:'{{csrf_token()}}'},function (res) {
+        //     if(res.keyword == 'railsbank')
+        //         {
+        //             $('#depositbank_gateway').prop('action','{{ route('user.depositbank.railsbank') }}');
+        //         }
+        //     if(res.keyword == 'openpayd')
+        //         {
+        //             $('#depositbank_gateway').prop('action','{{ route('user.depositbank.openpayd') }}');
+        //         }
 
-             });
+        //      });
              if (verify == 'Y') {
                 var url = "{{url('user/sendotp')}}";
                 $.get(url,function (res) {
