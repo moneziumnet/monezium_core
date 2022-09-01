@@ -37,4 +37,5 @@ Route::get('view-aoa/{id}',   [UserContractManageController::class,'aoa_sign_vie
 Route::get('/currency/{id}', [FrontendController::class, 'currency'])->name('front.currency');
 Route::get('/language/{id}', [FrontendController::class, 'language'])->name('front.language');
 Route::get('/merchant/checkout/link/{id}',[MerchantCheckoutController::class,'link'])->name('user.merchant.checkout.link');
+Route::get('/merchant/checkout/link_pay/{id}',[MerchantCheckoutController::class,'link_pay'])->name('user.merchant.checkout.link_pay');
 Route::get('kyc-take-selfie/{id}', [KYCController::class,'onlineSelfie'])->name('user.kyc.selfie');

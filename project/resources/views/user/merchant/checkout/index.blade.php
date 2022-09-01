@@ -7,26 +7,34 @@
 
 
 @section('contents')
-<div class="page-body">
-    <div class="container-xl">
 
-      <div class="row align-items-center mb-2 mt-3">
+<div class="container-xl">
+  <div class="page-header d-print-none">
+    <div class="row align-items-center">
       <div class="col">
-
-          <div class="row justify-content-center">
-              <h1>@lang('Checkout list')</h1>
-          </div>
+        <div class="page-pretitle">
+          {{__('Overview')}}
+        </div>
+        <h2 class="page-title">
+          {{__('Checkout list')}}
+        </h2>
       </div>
       <div class="col-auto ms-auto d-print-none">
-          <div class="btn-list">
+        <div class="btn-list">
 
-            <a id="create_form" class="btn btn-primary">
-              <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
-              {{__('Create Checkout')}}
-            </a>
-          </div>
+          <a id="create_form" class="btn btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+            {{__('Create Checkout')}}
+          </a>
+        </div>
       </div>
-      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page-body">
+  <div class="container-xl">
+    <div class="row row-cards">
       <div class="row justify-content " style="max-height: 800px;overflow-y: scroll;">
           @if (count($checkouts) != 0)
               @foreach ($checkouts as $item)
@@ -74,11 +82,6 @@
           @endif
 
       </div>
-
-      <hr>
-
-
-
     </div>
   </div>
 
@@ -115,8 +118,7 @@
                     <div class="form-group mb-3 mt-3">
                         <label class="form-label required">{{__('Select Currency')}}</label>
                         <select name="currency_id" id="currency_id" class="form-control" required>
-                            <option value="">Select</option>
-                            @foreach($cryptolist as $currency)
+                            @foreach($currencylist as $currency)
                             <option value="{{$currency->id}}">{{$currency->code}}</option>
                             @endforeach
                         </select>
@@ -124,8 +126,8 @@
                 </div>
 
                   <div class="form-group mb-3">
-                    <label class="form-label required">{{__('Amount')}}</label>
-                    <input name="amount" id="amount" class="form-control" placeholder="{{__('Amount')}}" type="text"  required>
+                    <label class="form-label">{{__('Amount')}}</label>
+                    <input name="amount" id="amount" class="form-control" placeholder="{{__('Amount')}}" type="text" >
                   </div>
 
                   <div class="form-group mb-3">
@@ -143,7 +145,7 @@
         </div>
       </div>
   </div>
-
+</div>
 @endsection
 
 @push('js')

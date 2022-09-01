@@ -17,7 +17,7 @@ class CreateMerchantCheckoutsTable extends Migration
             $table->id();
             $table->integer('user_id');
             $table->string('ref_id');
-            $table->double('amount');
+            $table->double('amount')->nullbale();
             $table->integer('currency_id');
             $table->string('name');
             $table->text('description')->nullbale();

@@ -21,13 +21,13 @@ class MerchantCheckoutController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['link', 'transaction']]);
+        $this->middleware('auth', ['except' => ['link', 'link_pay', 'transaction']]);
     }
 
     public function index(){
         $data['checkouts'] = MerchantCheckout::where('user_id',auth()->id())->get();
         $data['shops'] = MerchantShop::where('merchant_id', auth()->id())->get();
-        $data['cryptolist'] = Currency::whereStatus(1)->where('type', 2)->get();
+        $data['currencylist'] = Currency::whereStatus(1)->where('type', 1)->get();
         return view('user.merchant.checkout.index', $data);
     }
 
@@ -36,9 +36,6 @@ class MerchantCheckoutController extends Controller
     }
 
     public function store(Request $request){
-
-
-
         $data = new MerchantCheckout();
         $input = $request->all();
         $input['ref_id'] = 'MC-'.Str::random(6);
@@ -48,7 +45,13 @@ class MerchantCheckoutController extends Controller
 
     Public function link($id) {
         $data['checkout'] = MerchantCheckout::where('ref_id', $id)->first();
-        return view('user.merchant.checkout.view', $data);
+        $data['cryptolist'] = Currency::whereStatus(1)->where('type', 2)->get();
+        return view('user.merchant.checkout.link', $data);
+    }
+
+    public function link_pay($id) {
+        $data['checkout'] = MerchantCheckout::where('ref_id', $id)->first();
+        return view('user.merchant.checkout.link_pay', $data);
     }
 
     public function transaction(Request $request) {
@@ -72,7 +75,7 @@ class MerchantCheckoutController extends Controller
     public function edit($id) {
         $data['data'] = MerchantCheckout::findOrFail($id);
         $data['shops'] = MerchantShop::where('merchant_id', auth()->id())->get();
-        $data['cryptolist'] = Currency::whereStatus(1)->where('type', 2)->get();
+        $data['currencylist'] = Currency::whereStatus(1)->where('type', 1)->get();
         return view('user.merchant.checkout.edit', $data);
     }
 

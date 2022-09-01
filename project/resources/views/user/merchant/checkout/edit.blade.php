@@ -57,7 +57,7 @@
                               <label class="form-label required">{{__('Select Currency')}}</label>
                               <select name="currency_id" id="currency_id" class="form-control" required>
                                   <option value="">Select</option>
-                                  @foreach($cryptolist as $currency)
+                                  @foreach($currencylist as $currency)
                                   <option value="{{$currency->id}}" {{$data->currency_id == $currency->id ? 'selected' : ''}}>{{$currency->code}}</option>
                                   @endforeach
                               </select>
@@ -65,20 +65,14 @@
 
 
                         <div class="form-group mb-3">
-                          <label class="form-label required">{{__('Amount')}}</label>
-                          <input name="amount" id="amount" class="form-control" placeholder="{{__('Amount')}}" value="{{$data->amount}}" type="text"  required>
+                          <label class="form-label">{{__('Amount')}}</label>
+                          <input name="amount" id="amount" class="form-control" placeholder="{{__('Amount')}}" value="{{$data->amount}}" type="text" >
                         </div>
 
                         <div class="form-group mb-3">
                           <label class="form-label ">{{__('Payment Link')}}</label>
-                          <input name="ref_id" id="ref_id" class="form-control" placeholder="{{__('abc.....')}}" value="{{$data->ref_id}}" type="text" >
+                          <input name="ref_id" id="ref_id" class="form-control" placeholder="{{__('abc.....')}}" value="{{$data->ref_id}}" type="text" readonly>
                         </div>
-
-                        <div class="form-group mb-3">
-                            <label class="form-label required">{{__('Amount')}}</label>
-                            <input name="amount" id="amount" class="form-control" placeholder="{{__('Amount')}}" value="{{$data->amount}}" type="text"  required>
-                        </div>
-
                         <input type="hidden" name="user_id" value="{{auth()->id()}}">
 
                         <div class="modal-footer">
