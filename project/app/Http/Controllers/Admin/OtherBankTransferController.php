@@ -56,12 +56,12 @@ class OtherBankTransferController extends Controller
       })
 
       ->editColumn('amount', function (BalanceTransfer $data) {
-        $curr = Currency::where('is_default', '=', 1)->first();
+        $curr = Currency::where('id', $data->currency_id)->first();
         return $curr->symbol . $data->amount;
       })
 
       ->editColumn('cost', function (BalanceTransfer $data) {
-        $curr = Currency::where('is_default', '=', 1)->first();
+        $curr = Currency::where('id', $data->currency_id)->first();
         return $curr->symbol . $data->cost;
       })
 
@@ -142,12 +142,12 @@ class OtherBankTransferController extends Controller
       })
 
       ->editColumn('amount', function (BalanceTransfer $data) {
-        $curr = Currency::where('is_default', '=', 1)->first();
+        $curr = Currency::where('id', $data->currency_id)->first();
         return $curr->symbol . $data->amount;
       })
 
       ->editColumn('cost', function (BalanceTransfer $data) {
-        $curr = Currency::where('is_default', '=', 1)->first();
+        $curr = Currency::where('id', $data->currency_id)->first();
         return $curr->symbol . $data->cost;
       })
 
