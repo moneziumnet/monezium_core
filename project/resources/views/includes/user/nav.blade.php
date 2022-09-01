@@ -72,9 +72,11 @@
                   {{__('Wire Transfer')}}
                 </a>
                 @endif
+                @if (in_array('Cards',$modules))
                 <a class="dropdown-item" href="{{route('user.card.index')}}">
                     {{__('Cards')}}
-                  </a>
+                </a>
+                @endif
                 @if (in_array('Bank Transfer',$modules))
                 <a class="dropdown-item" href="{{route('user.beneficiaries.index')}}">
                   {{__('External Payments')}}
