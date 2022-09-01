@@ -71,7 +71,7 @@
 
                                 <div class="form-group mb-3 mt-3">
                                     <label class="form-label required">{{__('Amount')}}</label>
-                                    <input name="amount" id="amount" class="form-control" autocomplete="off"  type="text" value="{{ $checkout->amount }}" readonly required>
+                                    <input name="amount" id="amount" class="form-control" autocomplete="off"  type="text" value="{{ $checkout->amount/$cal_amount }}" readonly required>
                                 </div>
 
                                 <div class="form-group mb-3 mt-3">
@@ -79,6 +79,7 @@
                                     <input name="hash" id="hash" class="form-control" autocomplete="off"  type="text" placeholder="0x...." required>
                                 </div>
                                 <input type="hidden" name="id" value="{{$checkout->id}}">
+                                <input type="hidden" name="currency_id" value="{{$merchantwallet->currency->id}}">
 
                                 <div class="form-footer">
                                     <button type="submit" class="btn btn-primary w-100">{{__('Done')}}</button>

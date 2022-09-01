@@ -16,6 +16,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Carbon as Carbontime;
+use GuzzleHttp\Client;
 use Datatables;
 
 class MerchantCheckoutController extends Controller
@@ -48,9 +49,16 @@ class MerchantCheckoutController extends Controller
         return view('user.merchant.checkout.link', $data);
     }
 
-    public function link_pay($id) {
+    public function link_pay(Request $request, $id) {
         $data['checkout'] = MerchantCheckout::where('ref_id', $id)->first();
-        $data['merchantwallet'] =  MerchantWallet::where('merchant_id', $data['checkout']->user_id)->where('shop_id', $data['checkout']->shop_id)->where('currency_id', $data['checkout']->currency_id)->first();
+        $pre_currency = Currency::findOrFail($data['checkout']->currency_id)->code;
+        $select_currency = Currency::findOrFail($request->link_pay_submit);
+        $client = New Client();
+        $code = $select_currency->code;
+        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency='.$code);
+        $result = json_decode($response->getBody());
+        $data['cal_amount'] = floatval($result->data->rates->$pre_currency);
+        $data['merchantwallet'] =  MerchantWallet::where('merchant_id', $data['checkout']->user_id)->where('shop_id', $data['checkout']->shop_id)->where('currency_id', $select_currency->id)->first();
         return view('user.merchant.checkout.link_pay', $data);
     }
 
@@ -62,15 +70,15 @@ class MerchantCheckoutController extends Controller
         $trans->trnx = str_rand();
         $trans->user_id     = $check->user_id;
         $trans->user_type   = 1;
-        $trans->currency_id = $check->currency_id;
-        $trans->amount      = $check->amount;
+        $trans->currency_id = $request->currency_id;
+        $trans->amount      = $request->amount;
         $trans->charge      = 0;
         $trans->type        = '+';
         $trans->remark      = 'merchant_checkout';
         $trans->details     = trans('Merchant Checkout');
         $trans->data        = '{"hash":"'.$request->hash.'","status":"0","shop":"'.$check->shop_id.'", "receiver":"'.$user->name.'"}';
         $trans->save();
-    return back()->with('success', 'You have done successfully');
+        return back()->with('success', 'You have done successfully');
     }
 
     public function transactionhistory() {

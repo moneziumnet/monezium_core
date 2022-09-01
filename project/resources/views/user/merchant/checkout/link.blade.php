@@ -38,7 +38,7 @@
                     <div class="col-12">
                         <div class="card p-5">
                                 @includeIf('includes.flash')
-                                <form action="{{route('user.merchant.checkout.link_pay', $checkout->ref_id)}}" method="GET" enctype="multipart/form-data">
+                                <form action="{{route('user.merchant.checkout.link_pay', $checkout->ref_id)}}" method="GET" id="pay_form" enctype="multipart/form-data">
                                     @csrf
                                     <div class="text-center">
                                         <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
@@ -59,10 +59,10 @@
                                         <input name="amount" id="amount" class="form-control" autocomplete="off"  type="text" value="{{ $checkout->amount }}" readonly required>
                                         @endif
                                     </div>
-                                    <input type="hidden" name="id" value="{{$checkout->id}}">                                    
+                                    <input type="hidden" name="id" value="{{$checkout->id}}">
                                     <div class="form-footer">
-                                    @foreach($cryptolist as $currency)
-                                        <button type="submit" class="btn btn-primary w-100">{{$currency->curr_name}} - {{$currency->code}}</button>
+                                        @foreach($cryptolist as $currency)
+                                        <button type="submit" id="submit" name="link_pay_submit" value="{{$currency->id}}" class="btn btn-primary w-100">{{$currency->curr_name}} - {{$currency->code}}</button>
                                         <h3></h3>
                                     @endforeach
                                     </div>
