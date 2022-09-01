@@ -65,7 +65,7 @@ class MerchantCheckoutController extends Controller
         $trans->type        = '+';
         $trans->remark      = 'merchant_checkout';
         $trans->details     = trans('Merchant Checkout');
-        $trans->data        = '{"hash":"'.$request->hash.'","status":"0", "receiver":"'.$user->name.'"}';
+        $trans->data        = '{"hash":"'.$request->hash.'","status":"0","shop":"'.$check->shop_id.'", "receiver":"'.$user->name.'"}';
         $trans->save();
     return back()->with('success', 'You have done successfully');
     }
@@ -123,15 +123,20 @@ class MerchantCheckoutController extends Controller
     public function transaction_status($id) {
 
         $data = Transaction::findOrFail($id);
-        if(json_decode($data->data,true)->status == 1) {
-            $data->data['status'] = 0;
+        $tran_status = json_decode($data->data,true);
+        if($tran_status['status'] == 1) {
+            $tran_status['status'] = 0;
         }
         else {
-            $data->data['status'] = 1;
+            $tran_status['status'] = 1;
+            $cryptowallet = MerchantWallet::where('merchant_id', $data->user_id)->where('shop_id', $tran_status['shop'])->where('currency_id', $data->currency_id)->first();
+            $cryptowallet->balance += $data->amount;
+            $cryptowallet->save();
         }
+        $data->data = json_encode($tran_status);
         $data->update();
 
-        return redirect()->route('user.merchant.checkout.transaction')->with('message','Merchant Checkout transaction status has been changed successfully');
+        return redirect()->route('user.merchant.checkout.transactionhistory')->with('message','Merchant Checkout transaction status has been changed successfully');
     }
 
     public function delete($id) {
