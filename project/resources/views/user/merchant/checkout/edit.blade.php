@@ -58,7 +58,7 @@
                               <select name="currency_id" id="currency_id" class="form-control" required>
                                   <option value="">Select</option>
                                   @foreach($currencylist as $currency)
-                                  <option value="{{$currency->id}}" {{$data->currency_id == $currency->id ? 'selected' : ''}}>{{$currency->code}}</option>
+                                  <option value="{{$currency->id}}" {{$data->merchantwallet->currency_id == $currency->id ? 'selected' : ''}}>{{$currency->code}}</option>
                                   @endforeach
                               </select>
                           </div>
