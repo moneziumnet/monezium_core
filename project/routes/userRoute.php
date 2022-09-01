@@ -180,7 +180,7 @@ Route::prefix('user')->group(function() {
       Route::get('/merchant/checkout/status/{id}', [MerchantCheckoutController::class,'status'])->name('user.merchant.checkout.status');
       Route::get('/merchant/checkout/delete/{id}', [MerchantCheckoutController::class,'delete'])->name('user.merchant.checkout.delete');
       Route::get('/merchant/checkout/transaction/history', [MerchantCheckoutController::class,'transactionhistory'])->name('user.merchant.checkout.transactionhistory');
-      Route::get('/merchant/checkout/transaction/status/{id}', [MerchantCheckoutController::class,'transaction_status'])->name('user.merchant.checkout.transaction.status');
+      Route::get('/merchant/checkout/transaction/status/{id}/{status}', [MerchantCheckoutController::class,'transaction_status'])->name('user.merchant.checkout.transaction.status');
       Route::post('/merchant/checkout/transaction', [MerchantCheckoutController::class,'transaction'])->name('user.merchant.checkout.transaction');
 
 

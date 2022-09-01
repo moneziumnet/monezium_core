@@ -88,7 +88,50 @@
 									<span class="{{$data->type == '+' ? 'text-success':'text-danger'}}">{{$data->type}} {{amount($data->amount,$data->currency->type,2)}} {{$data->currency->code}}</span>
 								</td>
                                 <td data-label="@lang('Action')">
-                                    <a href="{{route('user.merchant.checkout.transaction.status', $data->id)}}" class="btn btn-sm btn-primary">{{json_decode($data->data,true)['status'] == 1 ? __('Reject') :__('Complete')}}</a>
+                                    @php
+                                        if (json_decode($data->data)->status == 1) {
+                                        $status  = __('Completed');
+                                        $css = 'btn-primary';
+                                        } elseif (json_decode($data->data)->status == 2) {
+                                        $status  = __('Rejected');
+                                        $css = 'btn-danger';
+                                        } else {
+                                        $status  = __('Pending');
+                                        $css = 'btn-primary';
+                                        }
+                                    @endphp
+                                    <a class="btn {{$css}} btn-sm status" data-bs-toggle="modal" data-bs-target="#modal-success-confirm{{$data->id}}" data-data="{{json_decode($data->data)->status}}">{{$status}}</a>
+                                    <div class="modal modal-blur fade" id="modal-success-confirm{{$data->id}}" tabindex="-1" role="dialog" aria-hidden="true">
+                                        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            <div class="modal-status bg-primary"></div>
+                                            <div class="modal-body text-center py-4">
+                                            <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+                                            <h3>@lang('Do you want to update the status?')</h3>
+                                            <p class="trx_details"></p>
+                                            <ul class="list-group mt-2">
+                                            </ul>
+                                            </div>
+                                            <div class="modal-footer text-center">
+                                            <div class="w-100">
+                                                <div class="row justify-content-between">
+                                                    <div class="col-md-6">
+                                                        <a href="{{route('user.merchant.checkout.transaction.status', ['id' => $data->id, 'status' => 1])}}" class="btn btn-primary" >
+                                                            @lang('Complete')
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <a href="{{route('user.merchant.checkout.transaction.status', ['id' => $data->id, 'status' => 2])}}" class="btn btn-danger" >
+                                                            @lang('Reject')
+                                                        </a>
+                                                    </div>
+                                                    </div>
+                                            </div>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
                                 </td>
 								<td data-label="@lang('Details')" class="text-end">
 									<button class="btn btn-primary btn-sm details" data-data="{{$data}}">@lang('Details')</button>
@@ -136,7 +179,6 @@
 @push('js')
 <script>
       'use strict';
-
       $('.details').on('click',function () {
         var url = "{{url('user/transaction/details/')}}"+'/'+$(this).data('data').id
         $('.trx_details').text($(this).data('data').details)
