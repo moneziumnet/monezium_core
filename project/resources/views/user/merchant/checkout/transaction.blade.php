@@ -88,7 +88,7 @@
 									<span class="{{$data->type == '+' ? 'text-success':'text-danger'}}">{{$data->type}} {{amount($data->amount,$data->currency->type,2)}} {{$data->currency->code}}</span>
 								</td>
                                 <td data-label="@lang('Action')">
-                                    <a href="{{route('user.merchant.checkout.transaction.status', $data->id)}}" class="btn btn-sm btn-primary">{{json_decode($data->data,true)['status'] == 1 ? __('Disable') :__('Enable')}}</a>
+                                    <a href="{{route('user.merchant.checkout.transaction.status', $data->id)}}" class="btn btn-sm btn-primary">{{json_decode($data->data,true)['status'] == 1 ? __('Reject') :__('Complete')}}</a>
                                 </td>
 								<td data-label="@lang('Details')" class="text-end">
 									<button class="btn btn-primary btn-sm details" data-data="{{$data}}">@lang('Details')</button>
