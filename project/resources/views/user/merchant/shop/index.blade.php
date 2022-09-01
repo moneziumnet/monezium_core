@@ -89,7 +89,7 @@
                                             @else
                                             <a href="javascript:void(0)" class="btn btn-primary btn-sm disabled" data-bs-toggle="tooltip" data-bs-original-title="@lang('edit')"><i class="fas fa-edit"></i></a>
                                             @endif
-                                            <a href="{{route('user.merchant.shop.delete',$item->id)}}" class="btn btn-dark btn-sm" data-bs-toggle="tooltip" data-bs-original-title="@lang('delete')"><i class="fas fa-eraser"></i></a>
+                                            <a href="javascript:void(0)" data-route="{{route('user.merchant.shop.delete',$item->id)}}" class="btn btn-dark btn-sm delete" data-bs-toggle="tooltip" data-bs-original-title="@lang('delete')"><i class="fas fa-eraser"></i></a>
                                         </div>
                                       </td>
                                   </tr>
@@ -104,6 +104,34 @@
           </div>
       </div>
   </div>
+  <div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-status bg-primary"></div>
+            <div class="modal-body text-center py-4">
+                <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+                <h3>{{__('Confirm Delete?')}}</h3>
+            </div>
+            <div class="modal-footer">
+                <div class="w-100">
+                    <div class="row">
+                    <div class="col"><a href="#" class="btn w-100" data-bs-dismiss="modal">
+                        {{__('Cancel')}}
+                        </a></div>
+                    <div class="col">
+                        <form action="" method="get">
+                            <button type="submit" class="btn btn-primary w-100 confirm">
+                            {{__('Confirm')}}
+                            </button>
+                        </form>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
 </div>
 
 @endsection
@@ -111,7 +139,10 @@
 @push('js')
     <script>
         'use strict';
-
+        $('.delete').on('click',function() {
+            $('#modal-success').find('form').attr('action',$(this).data('route'))
+            $('#modal-success').modal('show')
+        })
     </script>
-
 @endpush
+
