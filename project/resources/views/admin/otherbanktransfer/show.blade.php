@@ -4,7 +4,7 @@
 
 <div class="card">
 	<div class="d-sm-flex align-items-center justify-content-between py-3">
-	<h5 class=" mb-0 text-gray-800 pl-3">{{ __(' Bank Transfer') }} <a class="btn btn-primary btn-rounded btn-sm" href="{{route('admin-user-banks',$data->user_id)}}"><i class="fas fa-arrow-left"></i> {{ __('Back') }}</a></h5>
+	<h5 class=" mb-0 text-gray-800 pl-3">{{ __(' Bank Transfer') }} <a class="btn btn-primary btn-rounded btn-sm" href="{{route('admin.other.banks.transfer.index')}}"><i class="fas fa-arrow-left"></i> {{ __('Back') }}</a></h5>
 	<ol class="breadcrumb m-0 py-0">
 		<li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
 		<li class="breadcrumb-item"><a href="{{ route('admin-user-banks',$data->user_id) }}">{{ __('Bank Transfer Details') }}</a></li>
