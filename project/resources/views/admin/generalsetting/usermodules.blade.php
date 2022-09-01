@@ -81,8 +81,8 @@
             <div class="col-md-6">
               <div class="form-group">
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" name="user_module[]" value="Transfer" {{ $data->moduleCheck('Transfer') ? 'checked' : '' }} class="custom-control-input" id="Transfer">
-                  <label class="custom-control-label" for="Transfer">{{__('Transfer')}}</label>
+                  <input type="checkbox" name="user_module[]" value="Bank Transfer" {{ $data->moduleCheck('Bank Transfer') ? 'checked' : '' }} class="custom-control-input" id="Bank Transfer">
+                  <label class="custom-control-label" for="Transfer">{{__('Bank Transfer')}}</label>
                   </div>
               </div>
             </div>
