@@ -294,15 +294,15 @@ class OtherBankTransferController extends Controller
         try {
             $response = $client->request('POST', 'https://sandbox.openpayd.com/api/beneficiaries/'.$beneficiary_id.'/bank-beneficiaries', [
                 'body' => '{
-                    "paymentTypes":["SWIFT"],
+                    "paymentTypes":["'.$data->payment_type.'"],
                     "bankAccountCurrency":"'.$currency->code.'",
                     "beneficiaryType":"CORPORATE",
                     "beneficiaryCountry":"'.substr($data->iban, 0,2).'",
                     "bankAccountCountry":"'.substr($data->iban, 0,2).'",
                     "iban":"'.$data->iban.'",
                     "bic":"'.$data->swift_bic.'",
-                    "bankAccountHolderName":"'.$subbank->name.'",
-                    "companyName":"'.$subbank->name.'"
+                    "bankAccountHolderName":"'.$data->beneficiary->account_name.'",
+                    "companyName":"'.$data->beneficiary->account_name.'"
                 }',
                 'headers' => [
                   'Accept' => 'application/json',
@@ -322,7 +322,7 @@ class OtherBankTransferController extends Controller
                 'body' => '{
                     "accountId":"'.$account_id.'",
                     "beneficiaryId":"'.$beneficiary_id.'",
-                    "paymentType":"SWIFT",
+                    "paymentType":"'.$data->payment_type.'",
                     "amount":
                     {"currency":"'.$currency->code.'","value":"'.$data->amount.'"},
                     "reference":"'. $data->description.'"

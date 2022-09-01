@@ -147,6 +147,7 @@ class OtherBankController extends Controller
             $data->beneficiary_id = $request->beneficiary_id;
             $data->type = 'other';
             $data->cost = $cost;
+            $data->payment_type = $request->payment_type;
             $data->amount = $request->amount;
             $data->final_amount = $finalAmount;
             $data->description = $request->des;

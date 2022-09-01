@@ -142,6 +142,16 @@
                             <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" step="any" value="{{ old('amount') }}" min="1" required>
                         </div>
 
+                        <div class="form-group mt-3">
+                            <label class="form-label required">{{__('Payment Type')}}</label>
+                            <select name="payment_type" id="payment_type" class="form-select" required>
+                                <option value="">{{ __('Select Payment Type') }}</option>
+                                <option value="SWIFT">{{__('Swift')}}</option>
+                                <option value="SEPA">{{__('SEPA')}}</option>
+                                <option value="SEPA_INSTANT">{{__('SEPA_INSTANT')}}</option>
+                            </select>
+                        </div>
+
                         <div class="form-group mb-3 mt-3">
                             <label class="form-label document" id="document_label">{{__('Document')}}</label>
                             <input class= "document" name="document" id="document" class="form-control" autocomplete="off" type="file" accept=".xls,.xlsx,.pdf,.jpg,.png">

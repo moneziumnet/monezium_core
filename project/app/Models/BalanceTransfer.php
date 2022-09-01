@@ -20,6 +20,7 @@ class BalanceTransfer extends Model
         'currency_id',
         'swift_bic',
         'amount',
+        'payment_type',
         'final_amount',
         'type',
         'description',
