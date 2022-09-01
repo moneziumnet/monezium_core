@@ -60,13 +60,9 @@
                       </div>
                       <div class="row">
                         <div class="col">
-                        @php
-                            $currency_id = DB::table('merchant_wallets')->where('id', $item->currency_id)->first();
-                            $currency = DB::table('currencies')->where('id', $currency_id->currency_id)->first();
-                        @endphp
                           <p>{{__('Description')}}: {{$item->description}}</p>
                           <p>{{__('Reference')}}: {{$item->ref_id}}</p>
-                          <p>{{__('Amount')}}: @if($item->amount==null) Not fixed @else {{  $currency->symbol.$item->amount}}({{$currency->code}}) @endif</p>
+                          <p>{{__('Amount')}}: @if($item->amount==null) Not fixed @else {{$item->currency->symbol.$item->amount}}({{$item->currency->code}}) @endif</p>
                           <p>{{__('Redirect URL')}}: {{$item->redirect_link}}</p>
                           <p class="text-sm mb-2">{{__('Date')}}: {{date("h:i:A j, M Y", strtotime($item->created_at))}}</p>
                           @if($item->status==1)
