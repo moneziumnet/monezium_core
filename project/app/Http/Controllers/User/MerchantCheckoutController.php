@@ -123,18 +123,23 @@ class MerchantCheckoutController extends Controller
         return redirect()->route('user.merchant.checkout.index')->with('message','Merchant Checkout status has been changed successfully');
     }
 
-    public function transaction_status($id) {
+    public function transaction_status($id, $status) {
 
         $data = Transaction::findOrFail($id);
         $tran_status = json_decode($data->data,true);
         if($tran_status['status'] == 1) {
-            $tran_status['status'] = 0;
+            return redirect()->route('user.merchant.checkout.transactionhistory')->with('warning','Merchant Checkout transaction status already is completed');
+        }
+        elseif($tran_status['status'] == 2) {
+            return redirect()->route('user.merchant.checkout.transactionhistory')->with('warning','Merchant Checkout transaction status already is rejected');
         }
         else {
-            $tran_status['status'] = 1;
-            $cryptowallet = MerchantWallet::where('merchant_id', $data->user_id)->where('shop_id', $tran_status['shop'])->where('currency_id', $data->currency_id)->first();
-            $cryptowallet->balance += $data->amount;
-            $cryptowallet->save();
+            $tran_status['status'] = $status;
+            if ($status == 1) {
+                $cryptowallet = MerchantWallet::where('merchant_id', $data->user_id)->where('shop_id', $tran_status['shop'])->where('currency_id', $data->currency_id)->first();
+                $cryptowallet->balance += $data->amount;
+                $cryptowallet->save();
+            }
         }
         $data->data = json_encode($tran_status);
         $data->update();
