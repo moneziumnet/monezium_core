@@ -147,6 +147,7 @@ Route::prefix('user')->group(function() {
       Route::post('/fdr/finish', [UserFdrController::class,'finish'])->name('user.fdr.finish');
 
       Route::get('/merchant/index', [MerchantController::class,'index'])->name('user.merchant.index');
+      Route::post('/merchant/cryptowallet/update', [MerchantController::class,'address_edit'])->name('user.merchant.cryptowallet.update');
       Route::post('/merchant/download-qr',  [MerchantController::class,'downloadQR'])->name('user.merchant.download.qr');
       Route::get('/merchant/send-money',[MerchantSendController::class,'create'])->name('user.merchant.send.money.create');
       Route::post('/merchant/send-money',[MerchantSendController::class,'store'])->name('user.merchant.send.money.store');
@@ -303,7 +304,9 @@ Route::prefix('user')->group(function() {
 
         Route::get('/beneficiaries', [BeneficiaryController::class,'index'])->name('user.beneficiaries.index');
         Route::get('/beneficiaries/create', [BeneficiaryController::class,'create'])->name('user.beneficiaries.create');
+        Route::get('/beneficiaries/edit/{id}', [BeneficiaryController::class,'edit'])->name('user.beneficiaries.edit');
         Route::post('/beneficiaries/store', [BeneficiaryController::class,'store'])->name('user.beneficiaries.store');
+        Route::post('/beneficiaries/update/{id}', [BeneficiaryController::class,'update'])->name('user.beneficiaries.update');
         Route::get('/beneficiaries/show/{id}', [BeneficiaryController::class,'show'])->name('user.beneficiaries.show');
 
         Route::get('/openpayd/createaccount', [UserOpenPaydController::class, 'CreateAccount'])->name('user.openpayd.api.createaccount');
