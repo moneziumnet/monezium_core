@@ -99,7 +99,8 @@ class UserController extends Controller
         {
             $user = User::findOrFail(decrypt($id));
             Auth::guard('web')->loginUsingId($user->id);
-
+            $user->verified = 1;
+            $user->update();
             return redirect()->route('user.dashboard');
 
         }
