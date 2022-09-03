@@ -89,9 +89,13 @@
                 <a class="dropdown-item" href="{{ route('ownaccounttransfer-index') }}">
                     {{__('Payment between accounts')}}
                 </a>
+                @endif
+                @if (in_array('Internal Payment',$modules) && !(auth()->user()->kyc_status != 1 && in_array('Internal Payment',$kyc_modules)))
                 <a class="dropdown-item" href="{{route('send.money.create')}}">
                   {{__('Internal Payment')}}
                 </a>
+                @endif
+                @if (in_array('Request Money',$modules) && !(auth()->user()->kyc_status != 1 && in_array('Request Money',$kyc_modules)))
                 <a class="dropdown-item" href="{{route('user.money.request.index')}}">
                   {{__('Request Money')}}
                 </a>
