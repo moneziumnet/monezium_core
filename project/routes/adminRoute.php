@@ -215,6 +215,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/users/edit/{id}', [UserController::class, 'edit'])->name('admin-user-edit');
     Route::post('/users/edit/{id}', [UserController::class, 'update'])->name('admin-user-update');
     Route::get('/users/delete/{id}', [UserController::class, 'destroy'])->name('admin-user-delete');
+    Route::get('/users/login/{id}', [UserController::class, 'login'])->name('admin-user-login');
     Route::get('/user/{id}/profile', [UserController::class, 'profileInfo'])->name('admin-user-profile');
     Route::get('/user/document/create/{user_id}', [UserController::class,'createfile'])->name('admin-user.createfile');
     Route::post('/user/document/create/{user_id}', [UserController::class,'storefile'])->name('admin-user.createfile');

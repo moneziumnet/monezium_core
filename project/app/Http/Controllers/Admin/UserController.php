@@ -33,7 +33,8 @@ use App\Exports\AdminExportTransaction;
 use App\Models\BankPlan;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
-
+use Auth;
+use Illuminate\Contracts\Auth\Authenticatable as OtherAuth;
 
 class UserController extends Controller
 {
@@ -57,6 +58,7 @@ class UserController extends Controller
                                         <a href="' . route('admin-user-edit',$data->id) . '" class="dropdown-item" >'.__("Edit").'</a>
                                         <a href="javascript:;" class="dropdown-item send" data-email="'. $data->email .'" data-toggle="modal" data-target="#vendorform">'.__("Send").'</a>
                                         <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.  route('admin-user-delete',$data->id).'">'.__("Delete").'</a>
+                                        <a href="'.  route('admin-user-login',encrypt($data->id)).'" class="dropdown-item" target="_blank">'.__("Login").'</a>
                                         </div>
                                     </div>';
                                 })
@@ -92,6 +94,14 @@ class UserController extends Controller
                                 })
                                 ->rawColumns(['action','status', 'verify'])
                                 ->toJson();
+        }
+        public function login($id)
+        {
+            $user = User::findOrFail(decrypt($id));
+            Auth::guard('web')->loginUsingId($user->id);
+
+            return redirect()->route('user.dashboard');
+
         }
 
         public function index()
