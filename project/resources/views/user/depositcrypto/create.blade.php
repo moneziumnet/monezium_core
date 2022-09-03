@@ -136,9 +136,9 @@
       })
       $('#submit').on('click', function() {
         if (($('#currency_id').val().length != 0) && ($('#amount').val().length != 0)) {
-            var verify = "{{$user->payment_fa_yn}}";
+            var verify = "{{$user->paymentCheck('Crypto Incoming')}}";
             event.preventDefault();
-            if (verify == 'Y') {
+            if (verify) {
                 var url = "{{url('user/sendotp')}}";
                 $.get(url,function (res) {
                     console.log(res)

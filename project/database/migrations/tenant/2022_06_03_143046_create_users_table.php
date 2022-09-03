@@ -49,7 +49,7 @@ class CreateUsersTable extends Migration
             $table->text('details')->nullable();
             $table->tinyInteger('kyc_status')->default(0)->comment('0 == \'pending\'
 1 == \'approve\'
-2 == \'rejected\''); 
+2 == \'rejected\'');
             $table->string('kyc_photo', 191)->nullable();
             $table->mediumText('kyc_info')->nullable();
             $table->text('kyc_reject_reason')->nullable();
@@ -61,6 +61,7 @@ class CreateUsersTable extends Migration
             $table->string('tenant_id')->nullable();
             $table->string('user_type')->nullable();
             $table->text('section')->nullable();
+            $table->text('otp_payments')->nullable();
             $table->timestamp('wallet_maintenance')->nullable();
             $table->timestamp('card_maintenance')->nullable();
         });

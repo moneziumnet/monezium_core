@@ -196,14 +196,14 @@
 
   $('#submit').on('click', function() {
         if (($('#email').val().length != 0) && ($('#wallet_id').val().length != 0) && ($('#amount').val().length != 0) && ($('#account_name').val().length != 0)  && ($('#description').val().length != 0)) {
-            var verify = "{{$user->payment_fa_yn}}";
+            var verify = "{{$user->paymentCheck('Internal Payment')}}";
             event.preventDefault();
             $('#receiver_email').text($('#email').val());
             $('#receiver_name').text($('#account_name').val());
             $('#currency').text($('#wallet_id option:selected').text().split('--')[0]);
             $('#re_amount').text($('#amount').val());
             $('#re_description').text($('#description').val());
-            if (verify == 'Y') {
+            if (verify) {
                 var url = "{{url('user/sendotp')}}";
                 $.get(url,function (res) {
                     console.log(res)

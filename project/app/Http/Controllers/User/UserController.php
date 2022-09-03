@@ -281,7 +281,7 @@ class UserController extends Controller
         {
 
             $login_fa_yn = $payment_fa_yn = 'N';
-            $login_fa = $payment_fa = '';
+            $login_fa = $payment_fa = $otp_payment = '';
             if($request->input('login_fa_yn') == 'Y')
             {
                 $rules = [
@@ -308,12 +308,18 @@ class UserController extends Controller
                 }
                 $payment_fa_yn = 'Y';
                 $payment_fa = $request->input('login_fa');
+                if (!empty($request->otp_payment)) {
+                    $otp_payment = implode(" , ", $request->otp_payment);
+                } else {
+                    $otp_payment = '';
+                }
             }
 
             $update = User::where('id', $user->id)->update([
                 'login_fa_yn'  => $login_fa_yn,
                 'login_fa'     => $login_fa,
                 'payment_fa_yn'=> $payment_fa_yn,
+                'otp_payments'=> $otp_payment,
                 'payment_fa'=> $payment_fa
             ]);
 

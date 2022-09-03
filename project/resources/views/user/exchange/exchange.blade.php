@@ -279,13 +279,13 @@
             var to = $('.to option:selected').val();
             var amount = $('.amount').val()
 
-            var verify = "{{$user->payment_fa_yn}}";
+            var verify = "{{$user->paymentCheck('Exchange')}}";
 
             $('#modal_from_currency').text($('#from_wallet_id  option:selected').text().split('--')[0])
             $('#modal_to_currency').text($('#to_wallet_id  option:selected').text())
             $('#modal_to_wallet').text($('#wallet_type  option:selected').text())
             $('#modal_amount').text($('#amount').val())
-            if (verify == 'Y') {
+            if (verify) {
                 var url = "{{url('user/sendotp')}}";
                 $.get(url,function (res) {
                     console.log(res)

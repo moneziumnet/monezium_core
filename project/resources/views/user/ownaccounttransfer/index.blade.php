@@ -131,13 +131,13 @@
         'use strict';
 
         $('.exchange').on('click',function () {
-            var verify = "{{$user->payment_fa_yn}}";
+            var verify = "{{$user->paymentCheck('Payment between accounts')}}";
 
             $('#modal_from_wallet').text($('#from_wallet_id  option:selected').text().split('--')[2])
             $('#modal_currency').text($('#from_wallet_id  option:selected').text().split('--')[0])
             $('#modal_to_wallet').text($('#wallet_type  option:selected').text())
             $('#modal_amount').text($('#amount').val())
-            if (verify == 'Y') {
+            if (verify) {
                 var url = "{{url('user/sendotp')}}";
                 $.get(url,function (res) {
                     console.log(res)

@@ -136,7 +136,7 @@
         })
     })
     $('#submit').on('click', function() {
-        var verify = "{{$user->payment_fa_yn}}";
+        var verify = "{{$user->paymentCheck('Bank Incoming')}}";
 
         var pos = $('#withmethod').val();
         $('#bank_name').text(JSON.parse(pos)['name']);
@@ -163,7 +163,7 @@
         //         }
 
         //      });
-             if (verify == 'Y') {
+             if (verify) {
                 var url = "{{url('user/sendotp')}}";
                 $.get(url,function (res) {
                     console.log(res)

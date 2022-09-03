@@ -131,13 +131,13 @@
 
       $('#submit').on('click', function() {
         if (($('#currency_id').val().length != 0) && ($('#sender_address').val().length != 0) && ($('#amount').val().length != 0)) {
-            var verify = "{{$user->payment_fa_yn}}";
+            var verify = "{{$user->paymentCheck('Withdraw Crypto')}}";
             event.preventDefault();
             $('#modal_se_address').text($('#sender_address').val());
             $('#re_currency').text($('#currency_id option:selected').text().split('--')[0]);
             $('#re_amount').text($('#amount').val());
             $('#re_description').text($('#details').val());
-            if (verify == 'Y') {
+            if (verify) {
                 var url = "{{url('user/sendotp')}}";
                 $.get(url,function (res) {
                     console.log(res)

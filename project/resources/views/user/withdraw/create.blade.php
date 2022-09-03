@@ -143,14 +143,14 @@
     });
     $(document).ready(function(){
         $('#form_submit').on('click', function(event){
-            var verify = "{{$user->payment_fa_yn}}";
+            var verify = "{{$user->paymentCheck('Withdraw')}}";
             event.preventDefault();
             $('#institution_name').text($('#subinstitude option:selected').text());
             $('#py_method').text($('#withmethod option:selected').text());
             $('#py_currency').text($('#withcurrency option:selected').text());
             $('#py_amount').text($('#amount').val());
             $('#py_description').text($('#details').val());
-            if (verify == 'Y') {
+            if (verify) {
                 var url = "{{url('user/sendotp')}}";
                 $.get(url,function (res) {
                     if(res=='success') {

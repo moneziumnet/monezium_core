@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -56,7 +56,7 @@
                                     </select>
 
                                 </div>
-                               
+
                                 <div class="form-group mb-3 mt-3">
                                     <input type="checkbox" name="payment_fa_yn" id="payment_fa_yn" value="Y"  @if($user->payment_fa_yn == "Y") checked @endif> {{__('Payments with 2FA Authorization')}}
                                 </div>
@@ -69,6 +69,38 @@
                                         <option value="two_fa_google" @if($user->payment_fa == "two_fa_google") selected @endif>Two FA by Google</option>
                                     </select>
 
+                                </div>
+                                <div class="row" id="check_box">
+                                    <div class="form-group mb-3 mt-3 col-md-4">
+                                        <input type="checkbox" name="otp_payment[]" value="Bank Incoming"  @if($user->paymentcheck('Bank Incoming')) checked @endif> {{__('Bank Incoming')}}
+                                    </div>
+                                    <div class="form-group mb-3 mt-3 col-md-4">
+                                        <input type="checkbox" name="otp_payment[]" value="Payment Gateway Incoming"  @if($user->paymentcheck('Payment Gateway Incoming')) checked @endif> {{__('Payment Gateway Incoming')}}
+                                    </div>
+                                    <div class="form-group mb-3 mt-3 col-md-4">
+                                        <input type="checkbox" name="otp_payment[]" value="Crypto Incoming"  @if($user->paymentcheck('Crypto Incoming')) checked @endif> {{__('Crypto Incoming')}}
+                                    </div>
+                                    <div class="form-group mb-3 mt-3 col-md-4">
+                                        <input type="checkbox" name="otp_payment[]" value="Withdraw"  @if($user->paymentcheck('Withdraw')) checked @endif> {{__('Withdraw')}}
+                                    </div>
+                                    <div class="form-group mb-3 mt-3 col-md-4">
+                                        <input type="checkbox" name="otp_payment[]" value="External Payments"  @if($user->paymentcheck('External Payments')) checked @endif> {{__('External Payments')}}
+                                    </div>
+                                    <div class="form-group mb-3 mt-3 col-md-4">
+                                        <input type="checkbox" name="otp_payment[]" value="Withdraw Crypto"  @if($user->paymentcheck('Withdraw Crypto')) checked @endif> {{__('Withdraw Crypto')}}
+                                    </div>
+                                    <div class="form-group mb-3 mt-3 col-md-4">
+                                        <input type="checkbox" name="otp_payment[]" value="Payment between accounts"  @if($user->paymentcheck('Payment between accounts')) checked @endif> {{__('Payment between accounts')}}
+                                    </div>
+                                    <div class="form-group mb-3 mt-3 col-md-4">
+                                        <input type="checkbox" name="otp_payment[]" value="Internal Payment"  @if($user->paymentcheck('Internal Payment')) checked @endif> {{__('Internal Payment')}}
+                                    </div>
+                                    <div class="form-group mb-3 mt-3 col-md-4">
+                                        <input type="checkbox" name="otp_payment[]" value="Request Money"  @if($user->paymentcheck('Request Money')) checked @endif> {{__('Request Money')}}
+                                    </div>
+                                    <div class="form-group mb-3 mt-3 col-md-4">
+                                        <input type="checkbox" name="otp_payment[]" value="Exchange"  @if($user->paymentcheck('Exchange')) checked @endif> {{__('Exchange')}}
+                                    </div>
                                 </div>
 
                                 <div class="form-footer">
@@ -148,6 +180,13 @@
         document.execCommand("copy");
         alert('copied');
     }
+
+    $(document).ready(function() {
+    $('#payment_fa_yn').click(function() {
+        var checked = $(this).prop('checked');
+        $('#check_box').find('input:checkbox').prop('checked', checked);
+    });
+    })
 </script>
 
 <script src="{{asset('assets/user/js/sweetalert2@9.js')}}"></script>

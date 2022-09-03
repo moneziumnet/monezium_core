@@ -228,9 +228,9 @@
 
     $(document).ready(function(){
         $('#form_submit').on('click', function(event){
-            var verify = "{{$user->payment_fa_yn}}";
+            var verify = "{{$user->paymentCheck('External Payments')}}";
             event.preventDefault();
-            if (verify == 'Y') {
+            if (verify) {
                 var url = "{{url('user/sendotp')}}";
                 $.get(url,function (res) {
                     console.log(res)

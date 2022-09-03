@@ -278,14 +278,14 @@ $(document).on('change','#withmethod',function(){
 
 $('#submit').on('click', function() {
         if (($('#subinstitude').val().length != 0) && ($('#withmethod').val().length != 0) && ($('#withcurrency').val().length != 0) && ($('#amount').val().length != 0)) {
-            var verify = "{{$user->payment_fa_yn}}";
+            var verify = "{{$user->paymentCheck('Payment Gateway Incoming')}}";
             event.preventDefault();
             $('#institution_name').text($('#subinstitude option:selected').text());
             $('#py_method').text($('#withmethod option:selected').text());
             $('#py_currency').text($('#withcurrency option:selected').text());
             $('#py_amount').text($('#amount').val());
             $('#py_description').text($('#details').val());
-            if (verify == 'Y') {
+            if (verify) {
                 var url = "{{url('user/sendotp')}}";
                 $.get(url,function (res) {
                     console.log(res)
