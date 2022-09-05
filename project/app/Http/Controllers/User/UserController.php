@@ -307,7 +307,7 @@ class UserController extends Controller
                     return redirect()->back()->with('unsuccess','Select 2FA Option for Payments');
                 }
                 $payment_fa_yn = 'Y';
-                $payment_fa = $request->input('login_fa');
+                $payment_fa = $request->input('payment_fa');
                 if (!empty($request->otp_payment)) {
                     $otp_payment = implode(" , ", $request->otp_payment);
                 } else {
