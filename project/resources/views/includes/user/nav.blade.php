@@ -202,7 +202,7 @@
             @endif
 
             @if (in_array('Invoice',$modules) && !(auth()->user()->kyc_status != 1 && in_array('Invoice',$kyc_modules)))
-            <li class="nav-item dropdown {{ request()->routeIs('user.invoice.create', 'user.invoice.index', 'user.contract.index', 'user.invoice.invoic_setting') ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ request()->routeIs('user.invoice.create', 'user.invoice.index', 'user.contract.index', 'user.invoice.invoic_setting', 'user.invoice.incoming.index') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                   <i class="fas fa-file-invoice"></i>

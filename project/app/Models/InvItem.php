@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class InvItem extends Model
 {
     use HasFactory;
+    public function tax()
+    {
+        return $this->belongsTo(Tax::class, 'tax_id')->withDefault();
+    }
 }

@@ -70,7 +70,10 @@
                                     </select>
 
                                 </div>
-                                <div class="row" id="check_box">
+                                <div class="form-group mb-3 mt-3 ms-3 col-md-4">
+                                    <h4>{{__('Pamyment Modules')}}</h4>
+                                </div>
+                                <div class="row ms-4" id="check_box">
                                     <div class="form-group mb-3 mt-3 col-md-4">
                                         <input type="checkbox" name="otp_payment[]" value="Bank Incoming"  @if($user->paymentcheck('Bank Incoming')) checked @endif> {{__('Bank Incoming')}}
                                     </div>

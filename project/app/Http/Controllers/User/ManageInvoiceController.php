@@ -9,7 +9,10 @@ use App\Models\Charge;
 use App\Models\InvItem;
 use App\Models\Invoice;
 use App\Models\Currency;
+use App\Models\InvoiceBeneficiary;
+use App\Models\Tax;
 use App\Models\Transaction;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
 use App\Models\InvoiceSetting;
@@ -28,6 +31,13 @@ class ManageInvoiceController extends Controller
         return view('user.invoice.index',$data);
     }
 
+    public function incoming_index()
+    {
+        $user = User::findOrFail(auth()->id());
+        $data['invoices'] = Invoice::where('email',$user->email)->latest()->paginate(15);
+        return view('user.invoice.incoming_index',$data);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -36,6 +46,7 @@ class ManageInvoiceController extends Controller
     public function create()
     {
         $data['currencies'] = Currency::where('status', 1)->get();
+        $data['beneficiaries'] = InvoiceBeneficiary::where('user_id', auth()->id())->get();
         return view('user.invoice.create',$data);
     }
 
@@ -48,43 +59,60 @@ class ManageInvoiceController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'invoice_to' => 'required',
-            'email'      => 'required|email',
-            'address'    => 'required',
             'currency'   => 'required',
             'item'       => 'required',
             'item.*'     => 'required',
             'amount'     => 'required',
-            'amount.*'   => 'required|numeric|gt:0'
+            'amount.*'   => 'required|numeric|gt:0',
+            'description' => 'required',
+            'beneficiary_id' => 'required'
         ]);
 
-        $charge = charge('recieve');
         $currency = Currency::findOrFail($request->currency);
 
         $amount = array_sum($request->amount);
-        $finalCharge = chargeCalc($charge,$amount,$currency->rate);
-        $willGetAmount = numFormat($amount - $finalCharge);
+        $beneficiary = InvoiceBeneficiary::whereId($request->beneficiary_id)->first();
 
         $invoice = new Invoice();
         $invoice->user_id      = auth()->id();
         $invoice->number       = 'INV-'.randNum(8);
-        $invoice->invoice_to   = $request->invoice_to;
-        $invoice->email        = $request->email;
-        $invoice->address      = $request->address;
+        $invoice->invoice_to   = $beneficiary->name;
+        $invoice->email        = $beneficiary->email;
+        $invoice->address      = $beneficiary->registration_no;
         $invoice->currency_id  = $currency->id;
-        $invoice->charge       = $finalCharge;
+        $invoice->charge       = 0;
         $invoice->type       = $request->type;
         $invoice->final_amount = $amount;
-        $invoice->get_amount   = $willGetAmount;
+        $invoice->get_amount   = $amount;
+        $invoice->beneficiary_id = $request->beneficiary_id;
+        $invoice->description = $request->description;
+
+        $data = [];
+        if($request->hasfile('document'))
+        {
+           foreach($request->file('document') as $file)
+           {
+               $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
+               $file->move('assets/doc', $name);
+               array_push($data, $name);
+           }
+        }
+
+
+
+        $invoice->documents = implode(",",$data);
         $invoice->save();
 
         $items = array_combine($request->item,$request->amount);
+        $i=0;
         foreach($items as $item => $amount){
             $invItem             = new InvItem();
             $invItem->invoice_id = $invoice->id;
             $invItem->name       = $item;
             $invItem->amount	 = $amount;
+            $invItem->tax_id    = $request->tax_id[$i];
             $invItem->save();
+            $i++;
         }
 
         $route = route('invoice.view',encrypt($invoice->number));
@@ -105,7 +133,7 @@ class ManageInvoiceController extends Controller
             "
         ]);
 
-        return back()->with('success','Invoice has been created');
+        return back()->with('message','Invoice has been created');
     }
 
     /**
@@ -134,6 +162,7 @@ class ManageInvoiceController extends Controller
             return back()->with('error','Sorry! can\'t edit published invoice.');
         }
         $data['currencies'] = Currency::where('status', 1)->get();
+        $data['beneficiaries'] = InvoiceBeneficiary::where('user_id', auth()->id())->get();
         return view('user.invoice.edit',$data);
     }
 
@@ -147,44 +176,61 @@ class ManageInvoiceController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'invoice_to' => 'required',
-            'email'      => 'required|email',
-            'address'    => 'required',
             'currency'   => 'required',
             'item'       => 'required',
             'item.*'     => 'required',
             'amount'     => 'required',
-            'amount.*'   => 'required|numeric|gt:0'
+            'amount.*'   => 'required|numeric|gt:0',
+            'description' => 'required',
+            'beneficiary_id' => 'required'
         ],['amount.*.gt'=>'Amount must be greater than 0']);
 
-        $charge = charge('recieve');
         $currency = Currency::findOrFail($request->currency);
 
-        $finalCharge = chargeCalc($charge,array_sum($request->amount),$currency->rate);
-        $willGetAmount = numFormat(array_sum($request->amount) - $finalCharge);
+        $beneficiary = InvoiceBeneficiary::whereId($request->beneficiary_id)->first();
 
         $invoice = Invoice::findOrFail($id);
         $invoice->user_id      = auth()->id();
-        $invoice->invoice_to   = $request->invoice_to;
-        $invoice->email        = $request->email;
-        $invoice->address      = $request->address;
+        $invoice->invoice_to   = $beneficiary->name;
+        $invoice->email        = $beneficiary->email;
+        $invoice->address      = $beneficiary->registration_no;
         $invoice->currency_id  = $currency->id;
         $invoice->type       = $request->type;
-        $invoice->charge       = $finalCharge;
+        $invoice->charge       = 0;
         $invoice->final_amount = array_sum($request->amount);
-        $invoice->get_amount   = $willGetAmount;
+        $invoice->get_amount   = array_sum($request->amount);
+        $invoice->beneficiary_id = $request->beneficiary_id;
+        $invoice->description = $request->description;
+        $data = [];
+        if($request->file('document'))
+        {
+           foreach($request->file('document') as $file)
+           {
+               $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
+               $file->move('assets/doc', $name);
+               array_push($data, $name);
+           }
+        }
+
+
+
+        $invoice->documents = implode(",",$data);
         $invoice->update();
 
         $invoice->items()->delete();
         $items = array_combine($request->item,$request->amount);
+        $i=0;
+
         foreach($items as $item => $amount){
             $invItem             = new InvItem();
             $invItem->invoice_id = $invoice->id;
             $invItem->name       = $item;
             $invItem->amount	 = $amount;
+            $invItem->tax_id    = $request->tax_id[$i];
             $invItem->save();
+            $i++;
         }
-        return back()->with('success','Invoice has been updated');
+        return back()->with('message','Invoice has been updated');
     }
 
     public function payStatus(Request $request)
@@ -469,5 +515,21 @@ class ManageInvoiceController extends Controller
         $data->template = $request->template;
         $data->save();
         return back()->with('message', 'Invoice Setting has been updated successfully.');
+    }
+
+    public function beneficiary_create(Request $request)
+    {
+        $data = new InvoiceBeneficiary();
+        $input = $request->all();
+        $data->fill($input)->save();
+        return back()->with($data->id);
+    }
+
+    public function tax_create(Request $request)
+    {
+        $data = new Tax();
+        $input = $request->all();
+        $data->fill($input)->save();
+        return $data;
     }
 }

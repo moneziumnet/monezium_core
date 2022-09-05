@@ -18,6 +18,11 @@ class Invoice extends Model
         return $this->belongsTo(User::class)->withDefault();
     }
 
+    public function beneficiary()
+    {
+        return $this->belongsTo(InvoiceBeneficiary::class, 'beneficiary_id')->withDefault();
+    }
+
     public function items()
     {
         return $this->hasMany(InvItem::class);

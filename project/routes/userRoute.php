@@ -246,6 +246,11 @@ Route::prefix('user')->group(function() {
 
       Route::get('invoices-payment/{number}',   [ManageInvoiceController::class,'invoicePayment'])->name('user.invoice.payment');
       Route::post('invoices-payment/{number}',   [ManageInvoiceController::class,'invoicePaymentSubmit']);
+      Route::post('invoice/beneficiary/create',   [ManageInvoiceController::class,'beneficiary_create'])->name('user.invoice.beneficiary.create');
+      Route::get('invoices/incoming',   [ManageInvoiceController::class,'incoming_index'])->name('user.invoice.incoming.index');
+      Route::post('invoice/tax/create',   [ManageInvoiceController::class,'tax_create'])->name('user.invoice.tax');
+
+
       Route::get('contract',   [UserContractManageController::class,'index'])->name('user.contract.index');
       Route::get('contract/view/{id}',   [UserContractManageController::class,'view'])->name('user.contract.view');
       Route::get('contract/create',   [UserContractManageController::class,'create'])->name('user.contract.create');
