@@ -274,7 +274,7 @@ class ManageInvoiceController extends Controller
             "
         ]);
 
-        return back()->with('success','Invoice has been sent to the recipient');
+        return back()->with('message','Invoice has been sent to the recipient');
     }
 
     public function invoicePayment($number)

@@ -120,15 +120,17 @@
 
                                       <td data-label="{{ __('Action') }}">
                                         <div>
-                                          <a href="{{route('user.invoice.view',$item->number)}}" class="btn btn-dark btn-sm"><i class="fas fa-eye"></i></a>
+                                          <a href="{{route('user.invoice.view',$item->number)}}" class="btn btn-dark btn-sm" data-bs-toggle="tooltip" data-bs-original-title="{{__('Preview')}}"><i class="fas fa-eye"></i></a>
 
-                                          @if ($item->status == 0)
-                                            <a href="{{route('user.invoice.edit',$item->id)}}" class="btn btn-primary btn-sm edit-{{$item->id}}"><i class="fas fa-edit"></i></a>
+                                          @if ($item->status != 2 && $item->payment_status != 1)
+                                            <a href="{{route('user.invoice.edit',$item->id)}}" class="btn btn-primary btn-sm edit-{{$item->id}}" data-bs-toggle="tooltip" data-bs-original-title="{{__('Edit')}}"><i class="fas fa-edit"></i></a>
                                           @else
-                                          <a href="javascript:void(0)" class="btn btn-primary btn-sm disabled"><i class="fas fa-edit"></i></a>
+                                          <a href="javascript:void(0)" class="btn btn-primary btn-sm disabled" data-bs-toggle="tooltip" data-bs-original-title="{{__('Edit')}}"><i class="fas fa-edit"></i></a>
                                           @endif
 
                                           <a href="javascript:void(0)" class="btn btn-secondary btn-sm copy" data-clipboard-text="{{route('invoice.view',encrypt($item->number))}}" title="{{__('Copy Invoice URL')}}"><i class="fas fa-copy"></i></a>
+                                          <a href="javascript:void(0)" data-route="{{route('user.invoice.send.mail',$item->id)}}" class="btn btn-dark btn-sm send_email" data-bs-toggle="tooltip" data-bs-original-title="@lang('Send Email')"><i class="fas fa-mail-bulk"></i></a>
+
                                         </div>
                                       </td>
                                   </tr>
@@ -142,6 +144,36 @@
           </div>
       </div>
   </div>
+</div>
+
+
+<div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-status bg-primary"></div>
+        <div class="modal-body text-center py-4">
+            <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+            <h3>{{__('Do you want to send to email?')}}</h3>
+        </div>
+        <div class="modal-footer">
+            <div class="w-100">
+                <div class="row">
+                <div class="col"><a href="#" class="btn w-100" data-bs-dismiss="modal">
+                    {{__('Cancel')}}
+                    </a></div>
+                <div class="col">
+                    <form action="" method="get">
+                        <button type="submit" class="btn btn-primary w-100 confirm">
+                        {{__('Confirm')}}
+                        </button>
+                    </form>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
 </div>
 
 @endsection
@@ -194,6 +226,10 @@
                     return false
                 }
             })
+        })
+        $('.send_email').on('click',function() {
+            $('#modal-success').find('form').attr('action',$(this).data('route'))
+            $('#modal-success').modal('show')
         })
 
         var clipboard = new ClipboardJS('.copy');
