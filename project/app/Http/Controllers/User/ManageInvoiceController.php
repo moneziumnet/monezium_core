@@ -12,6 +12,7 @@ use App\Models\Currency;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
+use App\Models\InvoiceSetting;
 use App\Http\Controllers\Controller;
 
 class ManageInvoiceController extends Controller
@@ -448,5 +449,25 @@ class ManageInvoiceController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function invoic_setting()
+    {
+        $data['invoice_setting']=InvoiceSetting::where('user_id', auth()->id())->first();
+        $data['invoice_type'] = array('0'=>'Invoice', '1'=>'Proforma', '2'=>'Check');
+        return view('user.invoice.setting', $data);
+    }
+
+    public function invoice_setting_save(Request $request)
+    {
+        $data = InvoiceSetting::where('user_id', $request->user_id)->first();
+        if (!$data) {
+            $data = new InvoiceSetting();
+        }
+        $data->user_id = $request->user_id;
+        $data->number_generator = $request->except(array('_token', 'user_id', 'template'));
+        $data->template = $request->template;
+        $data->save();
+        return back()->with('message', 'Invoice Setting has been updated successfully.');
     }
 }

@@ -209,7 +209,9 @@ Route::prefix('user')->group(function() {
        //invoice
        Route::group(['middleware'=>'kyc:Invoice'],function(){
           Route::get('create-invoice',   [ManageInvoiceController::class,'create'])->name('user.invoice.create');
+          Route::get('invoice/setting',   [ManageInvoiceController::class,'invoic_setting'])->name('user.invoice.invoic_setting');
           Route::post('create-invoice',   [ManageInvoiceController::class,'store']);
+          Route::post('invoice/setting',   [ManageInvoiceController::class,'invoice_setting_save'])->name('user.invoice.invoic_setting');
       });
 
       //Voucher
