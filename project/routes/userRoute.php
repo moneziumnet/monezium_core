@@ -243,11 +243,14 @@ Route::prefix('user')->group(function() {
       Route::get('invoice-cancel/{id}',   [ManageInvoiceController::class,'cancel'])->name('user.invoice.cancel');
       Route::get('invoice/send-mail/{id}',   [ManageInvoiceController::class,'sendToMail'])->name('user.invoice.send.mail');
       Route::get('invoice/view/{number}',   [ManageInvoiceController::class,'view'])->name('user.invoice.view');
+      Route::get('invoice/incoming/view/{number}',   [ManageInvoiceController::class,'view'])->name('user.invoice.incoming.view');
 
       Route::get('invoices-payment/{number}',   [ManageInvoiceController::class,'invoicePayment'])->name('user.invoice.payment');
       Route::post('invoices-payment/{number}',   [ManageInvoiceController::class,'invoicePaymentSubmit']);
       Route::post('invoice/beneficiary/create',   [ManageInvoiceController::class,'beneficiary_create'])->name('user.invoice.beneficiary.create');
       Route::get('invoices/incoming',   [ManageInvoiceController::class,'incoming_index'])->name('user.invoice.incoming.index');
+      Route::get('invoices/incoming/edit/{id}',   [ManageInvoiceController::class,'incoming_edit'])->name('user.invoice.incoming.edit');
+      Route::post('invoices/incoming/update/{id}',   [ManageInvoiceController::class,'incoming_update'])->name('user.invoice.incoming.update');
       Route::post('invoice/tax/create',   [ManageInvoiceController::class,'tax_create'])->name('user.invoice.tax');
 
 

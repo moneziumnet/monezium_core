@@ -166,6 +166,65 @@ class ManageInvoiceController extends Controller
         return view('user.invoice.edit',$data);
     }
 
+    public function incoming_edit($id)
+    {
+        $invoice = Invoice::findOrFail($id);
+        $data['invoice'] = $invoice;
+
+        if($invoice->status == 1){
+            return back()->with('error','Sorry! can\'t edit published invoice.');
+        }
+        $data['currencies'] = Currency::where('status', 1)->get();
+        $data['beneficiaries'] = InvoiceBeneficiary::where('user_id', auth()->id())->get();
+        return view('user.invoice.incoming_edit',$data);
+    }
+
+    public function incoming_update(Request $request, $id)
+    {
+        $request->validate([
+            'currency'   => 'required',
+            'item'       => 'required',
+            'item.*'     => 'required',
+            'amount'     => 'required',
+            'amount.*'   => 'required|numeric|gt:0',
+            'description' => 'required',
+            'beneficiary_id' => 'required'
+        ],['amount.*.gt'=>'Amount must be greater than 0']);
+
+        $currency = Currency::findOrFail($request->currency);
+
+        $beneficiary = InvoiceBeneficiary::whereId($request->beneficiary_id)->first();
+
+        $invoice = Invoice::findOrFail($id);
+        $invoice->user_id      = auth()->id();
+        $invoice->invoice_to   = $beneficiary->name;
+        $invoice->email        = $beneficiary->email;
+        $invoice->address      = $beneficiary->registration_no;
+        $invoice->currency_id  = $currency->id;
+        $invoice->type       = $request->type;
+        $invoice->charge       = 0;
+        $invoice->final_amount = array_sum($request->amount);
+        $invoice->get_amount   = array_sum($request->amount);
+        $invoice->beneficiary_id = $request->beneficiary_id;
+        $invoice->description = $request->description;
+        $invoice->update();
+
+        $invoice->items()->delete();
+        $items = array_combine($request->item,$request->amount);
+        $i=0;
+
+        foreach($items as $item => $amount){
+            $invItem             = new InvItem();
+            $invItem->invoice_id = $invoice->id;
+            $invItem->name       = $item;
+            $invItem->amount	 = $amount;
+            $invItem->tax_id    = $request->tax_id[$i];
+            $invItem->save();
+            $i++;
+        }
+        return back()->with('message','Invoice has been updated');
+    }
+
     /**
      * Update the specified resource in storage.
      *
