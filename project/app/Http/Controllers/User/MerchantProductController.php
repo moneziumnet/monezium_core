@@ -41,7 +41,7 @@ class MerchantProductController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            return redirect()->back()->with('error',$validator->getMessageBag()->toArray()['document'][0]);
+            return redirect()->back()->with('error',$validator->getMessageBag()->toArray()['image'][0]);
         }
 
 
@@ -62,10 +62,47 @@ class MerchantProductController extends Controller
     }
 
     public function edit($id) {
-        $data = Product::findOrFail($id);
-        return view('user.merchant.product.edit', compact('data'));
+        $data['data'] = Product::findOrFail($id);
+        $data['shops'] = MerchantShop::where('merchant_id', auth()->id())->whereStatus(1)->get();
+        $data['categories'] = ProductCategory::where('user_id', auth()->id())->get();
+        $data['currencies'] = Currency::whereStatus(1)->get();
+        return view('user.merchant.product.edit', $data);
     }
 
+    public function update(Request $request, $id) {
+        $rules = [
+            'image' => 'mimes:jpg,git,png'
+        ];
+        $validator = Validator::make($request->all(), $rules);
 
+        if ($validator->fails()) {
+            return redirect()->back()->with('error',$validator->getMessageBag()->toArray()['image'][0]);
+        }
+
+        $data = Product::findOrFail($id);
+        $input = $request->all();
+        $image = ProductImage::where('product_id', $data->id)->first();
+        if ($file = $request->file('image'))
+        {
+            File::delete('assets/images/'.$image->image);
+            $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
+            $file->move('assets/images',$name);
+            $image->image = $name;
+        }
+        $image->update();
+
+        $data->fill($input)->update();
+
+        return redirect()->route('user.merchant.product.index')->with('message','Merchant Product has been updated successfully');
+    }
+
+    public function delete($id) {
+        $data = Product::findOrFail($id);
+        $image = ProductImage::where('product_id', $data->id)->first();
+        File::delete('assets/images/'.$image->image);
+        $image->delete();
+        $data->delete();
+        return  redirect()->back()->with('message','Merchant Product has been deleted successfully');
+    }
 }
 

@@ -30,7 +30,7 @@
         <div class="row row-cards">
             <div class="col-12">
                 <div class="card p-5">
-                    <form id="shop-form" action="{{ route('user.merchant.product.update', $data->id) }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('user.merchant.product.update', $data->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
                         <div class="form-group mt-2 mb-3">
@@ -44,6 +44,7 @@
                                 <option value="">Select</option>
                                 @foreach($shops as $shop)
                                 <option value="{{$shop->id}}" {{$shop->id == $data->shop_id ? "selected" : ""}}>{{$shop->name}}</option>
+                                @endforeach
                             </select>
                         </div>
 
@@ -80,12 +81,12 @@
 
                         <div class="form-group mb-3">
                             <label class="form-label required">{{__('Quantity')}}</label>
-                            <input name="quantity" id="quantity" class="form-control shadow-none" placeholder="{{__('Quanlity')}}" type="number" value="{{ old('quanlity') }}" required>
+                            <input name="quantity" id="quantity" class="form-control shadow-none" placeholder="{{__('Quantity')}}" type="number" value="{{ $data->quantity }}" required>
                         </div>
 
                         <div class="form-group mb-3">
-                            <label class="form-label required">{{__('Choose Media')}}</label>
-                            <input name="image" id="image" class="form-control" type="file" accept=".gif,.png,.jpg" required>
+                            <label class="form-label">{{__('Choose Media')}}</label>
+                            <input name="image" id="image" class="form-control" type="file" accept=".gif,.png,.jpg">
                         </div>
 
                         <input name="user_id" type="hidden" class="form-control" value="{{auth()->id()}}">
@@ -94,20 +95,11 @@
                         <div class="form-footer">
                             <button type="submit" class="btn btn-primary submit-btn w-100" >{{__('Update')}}</button>
                         </div>
-
-
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-
 @endsection
 
-@push('js')
-<script>
-  'use strict';
-</script>
-@endpush

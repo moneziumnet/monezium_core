@@ -62,9 +62,9 @@
                                         <i class="fas fa-chevron-circle-down"></i>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-left">
-                                        {{-- <a class="dropdown-item" href="{{route('edit.product', ['id' => $val->ref_id])}}"><i class="fas fa-pencil"></i>{{__('Edit')}}</a>
-                                        <a class="dropdown-item" href="{{route('orders', ['id' => $val->id])}}"><i class="fas fa-sync"></i>{{__('Orders')}}</a>
-                                        <a class="dropdown-item" data-bs-toggle="modal" data-target="#delete{{$val->id}}" href="#"><i class="fas fa-trash-alt"></i>{{__('Delete')}}</a> --}}
+                                        <a class="dropdown-item" href="{{route('user.merchant.product.edit', $val->id)}}"><i class="fas fa-pencil-alt"></i>{{__('Edit')}}</a>
+                                        {{-- <a class="dropdown-item" href="{{route('orders', ['id' => $val->id])}}"><i class="fas fa-sync"></i>{{__('Orders')}}</a> --}}
+                                        <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#delete{{$val->id}}" href="#"><i class="fas fa-trash-alt"></i>{{__('Delete')}}</a>
                                     </div>
                                     </div>
                                 </div>
@@ -85,26 +85,25 @@
                                 </div>
                             </div>
                         </div>
-                        {{-- <div class="modal fade" id="delete{{$val->id}}" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
+                        <div class="modal fade modal-blur" id="delete{{$val->id}}" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
-                                    <div class="modal-body p-0">
-                                        <div class="card bg-white border-0 mb-0">
-                                            <div class="card-header">
-                                            <h3 class="mb-0 font-weight-bolder">{{__('Delete Product')}}</h3>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                            <span class="mb-0 text-xs">{{__('Are you sure you want to delete this?, all transaction related to this product will also be deleted')}}</span>
-                                            </div>
-                                            <div class="card-body">
-                                                <a  href="{{route('delete.product', ['id' => $val->id])}}" class="btn btn-danger btn-block">{{__('Proceed')}}</a>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <div class="modal-status bg-success"></div>
+
+                                    <div class="modal-body text-center py-4">
+                                        <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+                                        <h3>{{__('Confirm Delete')}}</h3>
+                                        <p class="text-center mt-3">{{ __("Do you want to delete this product?") }}</p>
+                                      </div>
+
+                                      <div class="modal-footer">
+                                        <a href="javascript:;" class="btn btn-secondary" data-bs-dismiss="modal">{{ __("Cancel") }}</a>
+                                        <a href="{{route('user.merchant.product.delete', $val->id)}}" class="btn shadow-none btn-primary" >@lang('Proceed')</a>
+                                      </div>
                                 </div>
                             </div>
-                        </div> --}}
+                        </div>
                     </div>
                   @endforeach
                   @endif
@@ -211,8 +210,8 @@
                             </div>
 
                             <div class="form-group mb-3">
-                                <label class="form-label required">{{__('Quanlity')}}</label>
-                                <input name="quantity" id="quantity" class="form-control shadow-none" placeholder="{{__('Quantity')}}" type="number" value="{{ old('quanlity') }}" required>
+                                <label class="form-label required">{{__('QuanTity')}}</label>
+                                <input name="quantity" id="quantity" class="form-control shadow-none" placeholder="{{__('Quantity')}}" type="number" value="{{ old('quantity') }}" required>
                             </div>
 
                             <div class="form-group mb-3">
