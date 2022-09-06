@@ -14,7 +14,7 @@ class Product extends Model
         'description',
         'currency_id',
         'amount',
-        'quanlity',
+        'quantity',
         'ref_id'
     ];
 

@@ -74,7 +74,7 @@
                       </div>
                     </div>
                   </div>
-                </div>
+              </div>
               @endforeach
           @else
               <p class="text-center">@lang('NO Checkout FOUND')</p>
@@ -112,7 +112,7 @@
                       <option value="{{$shop->id}}">{{$shop->name}}</option>
                       @endforeach
                     </select>
-
+                  </div>
 
                     <div class="form-group mb-3 mt-3">
                         <label class="form-label required">{{__('Select Currency')}}</label>
@@ -122,7 +122,7 @@
                             @endforeach
                         </select>
 
-                </div>
+                    </div>
 
                   <div class="form-group mb-3">
                     <label class="form-label">{{__('Amount')}}</label>

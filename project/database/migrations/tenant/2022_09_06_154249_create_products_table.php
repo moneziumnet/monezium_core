@@ -22,7 +22,7 @@ class CreateProductsTable extends Migration
             $table->string('description')->nullable;
             $table->integer('currency_id');
             $table->double('amount');
-            $table->integer('quanlity');
+            $table->integer('quantity');
             $table->integer('sold')->nullable;
             $table->string('ref_id');
             $table->integer('status')->default(1);

@@ -52,6 +52,7 @@ use App\Http\Controllers\User\TransferController;
 use App\Http\Controllers\User\ExchangeMoneyController;
 use App\Http\Controllers\User\MerchantController;
 use App\Http\Controllers\User\MerchantShopController;
+use App\Http\Controllers\User\MerchantProductController;
 use App\Http\Controllers\User\MerchantSendController;
 use App\Http\Controllers\User\MerchantMoneyRequestController;
 use App\Http\Controllers\User\MerchantOtherBankController;
@@ -172,6 +173,13 @@ Route::prefix('user')->group(function() {
       Route::get('/merchant/shop/edit/{id}', [MerchantShopController::class,'edit'])->name('user.merchant.shop.edit');
       Route::post('/merchant/shop/update/{id}', [MerchantShopController::class,'update'])->name('user.merchant.shop.update');
       Route::get('/merchant/shop/delete/{id}', [MerchantShopController::class,'delete'])->name('user.merchant.shop.delete');
+
+      Route::get('/merchant/product', [MerchantProductController::class,'index'])->name('user.merchant.product.index');
+      Route::post('/merchant/product/store', [MerchantProductController::class,'store'])->name('user.merchant.product.store');
+      Route::post('/merchant/product/category/create', [MerchantProductController::class,'category_create'])->name('user.merchant.product.category.create');
+      Route::get('/merchant/product/edit/{id}', [MerchantProductController::class,'edit'])->name('user.merchant.product.edit');
+      Route::post('/merchant/product/update/{id}', [MerchantProductController::class,'update'])->name('user.merchant.product.update');
+
 
 
       Route::get('/merchant/checkout',[MerchantCheckoutController::class,'index'])->name('user.merchant.checkout.index');
