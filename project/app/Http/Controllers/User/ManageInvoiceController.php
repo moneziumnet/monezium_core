@@ -25,6 +25,11 @@ class ManageInvoiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        $this->middleware('auth', ['except' => ['invoiceView']]);
+    }
+
     public function index()
     {
         $data['invoices'] = Invoice::where('user_id',auth()->id())->latest()->paginate(15);
@@ -72,10 +77,13 @@ class ManageInvoiceController extends Controller
 
         $amount = array_sum($request->amount);
         $beneficiary = InvoiceBeneficiary::whereId($request->beneficiary_id)->first();
+        $setting = InvoiceSetting::where('user_id', auth()->id())->first();
+        $type = 'prefix_'.$request->type;
+        $length = 'length_'.$request->type;
 
         $invoice = new Invoice();
         $invoice->user_id      = auth()->id();
-        $invoice->number       = 'INV-'.randNum(8);
+        $invoice->number       = $setting->number_generator->$type.randNum($setting->number_generator->$length);
         $invoice->invoice_to   = $beneficiary->name;
         $invoice->email        = $beneficiary->email;
         $invoice->address      = $beneficiary->registration_no;
@@ -158,9 +166,9 @@ class ManageInvoiceController extends Controller
         $invoice = Invoice::findOrFail($id);
         $data['invoice'] = $invoice;
 
-        if($invoice->status == 1){
-            return back()->with('error','Sorry! can\'t edit published invoice.');
-        }
+        // if($invoice->status == 1){
+        //     return back()->with('error','Sorry! can\'t edit published invoice.');
+        // }
         $data['currencies'] = Currency::where('status', 1)->get();
         $data['beneficiaries'] = InvoiceBeneficiary::where('user_id', auth()->id())->get();
         return view('user.invoice.edit',$data);
@@ -171,9 +179,9 @@ class ManageInvoiceController extends Controller
         $invoice = Invoice::findOrFail($id);
         $data['invoice'] = $invoice;
 
-        if($invoice->status == 1){
-            return back()->with('error','Sorry! can\'t edit published invoice.');
-        }
+        // if($invoice->status == 1){
+        //     return back()->with('error','Sorry! can\'t edit published invoice.');
+        // }
         $data['currencies'] = Currency::where('status', 1)->get();
         $data['beneficiaries'] = InvoiceBeneficiary::where('user_id', auth()->id())->get();
         return view('user.invoice.incoming_edit',$data);
@@ -247,11 +255,15 @@ class ManageInvoiceController extends Controller
         $currency = Currency::findOrFail($request->currency);
 
         $beneficiary = InvoiceBeneficiary::whereId($request->beneficiary_id)->first();
+        $setting = InvoiceSetting::where('user_id', auth()->id())->first();
+        $type = 'prefix_'.$request->type;
+        $length = 'length_'.$request->type;
 
         $invoice = Invoice::findOrFail($id);
         $invoice->user_id      = auth()->id();
         $invoice->invoice_to   = $beneficiary->name;
         $invoice->email        = $beneficiary->email;
+        $invoice->number       = $setting->number_generator->$type.randNum($setting->number_generator->$length);
         $invoice->address      = $beneficiary->registration_no;
         $invoice->currency_id  = $currency->id;
         $invoice->type       = $request->type;

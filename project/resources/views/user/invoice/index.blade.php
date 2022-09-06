@@ -213,13 +213,11 @@
                 if(res.unpublish){
                   //  toast('success',res.unpublish)
                     $('.status-text-'+id).removeClass('bg-success').addClass('bg-secondary').text('Un-published')
-                    $('.edit-'+id).removeClass('disabled')
                     return false
                 }
                 if(res.publish){
                   //  toast('success',res.publish)
                     $('.status-text-'+id).addClass('bg-success').text('Published')
-                    $('.edit-'+id).addClass('disabled')
                     return false
                 }
                 if(res.error){

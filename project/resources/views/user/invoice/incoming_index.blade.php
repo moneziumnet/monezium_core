@@ -68,7 +68,9 @@
                                         <div>
                                           @if ($item->status != 2)
                                         <label class="">
+                                            <a href="{{$item->payment_status == 1 ?  "#" : route('user.invoice.payment',encrypt($item->number))}}">
                                             <small class="form-check-label pay-status-{{$item->id}} badge {{$item->payment_status == 1 ? 'bg-success':'bg-secondary'}}">{{$item->payment_status == 1 ? 'Paid':'Unpaid'}}</small>
+                                            </a>
                                           </label>
                                           @else
                                             {{__('N/A')}}
