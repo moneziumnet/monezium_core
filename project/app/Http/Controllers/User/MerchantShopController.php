@@ -8,6 +8,7 @@ use App\Models\MerchantShop;
 use App\Models\MerchantWallet;
 use App\Models\Generalsetting;
 use App\Models\User;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
@@ -101,6 +102,11 @@ class MerchantShopController extends Controller
             $wallet->delete();
         }
         return  redirect()->back()->with('message','Merchant Shop has been deleted successfully');
+    }
+
+    public function view_products($id) {
+        $data['products'] = Product::where('user_id',auth()->id())->latest()->get();
+        return view('user.merchant.shop.view_product', $data);
     }
 }
 

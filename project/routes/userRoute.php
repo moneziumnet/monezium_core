@@ -173,6 +173,7 @@ Route::prefix('user')->group(function() {
       Route::get('/merchant/shop/edit/{id}', [MerchantShopController::class,'edit'])->name('user.merchant.shop.edit');
       Route::post('/merchant/shop/update/{id}', [MerchantShopController::class,'update'])->name('user.merchant.shop.update');
       Route::get('/merchant/shop/delete/{id}', [MerchantShopController::class,'delete'])->name('user.merchant.shop.delete');
+      Route::get('/merchant/shop/{id}/view/product', [MerchantShopController::class,'view_products'])->name('user.merchant.shop.view_product');
 
       Route::get('/merchant/product', [MerchantProductController::class,'index'])->name('user.merchant.product.index');
       Route::post('/merchant/product/store', [MerchantProductController::class,'store'])->name('user.merchant.product.store');

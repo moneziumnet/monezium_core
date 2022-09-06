@@ -40,7 +40,7 @@
       <div class="row row-cards">
           <div class="row justify-content " style="max-height: 1600px;overflow-y: scroll;">
                   @if (count($products) == 0)
-                      <h3 class="text-center py-5">{{__('No Merchant Shop Data Found')}}</h3>
+                      <h3 class="text-center py-5">{{__('No Merchant Product Data Found')}}</h3>
                   @else
                   @foreach($products as $key=>$val)
                     <div class="col-lg-3 mb-3">
@@ -62,9 +62,9 @@
                                         <i class="fas fa-chevron-circle-down"></i>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-left">
-                                        <a class="dropdown-item" href="{{route('user.merchant.product.edit', $val->id)}}"><i class="fas fa-pencil-alt"></i>{{__('Edit')}}</a>
+                                        <a class="dropdown-item" href="{{route('user.merchant.product.edit', $val->id)}}"><i class="fas fa-pencil-alt me-2"></i>{{__('Edit')}}</a>
                                         {{-- <a class="dropdown-item" href="{{route('orders', ['id' => $val->id])}}"><i class="fas fa-sync"></i>{{__('Orders')}}</a> --}}
-                                        <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#delete{{$val->id}}" href="#"><i class="fas fa-trash-alt"></i>{{__('Delete')}}</a>
+                                        <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#delete{{$val->id}}" href="#"><i class="fas fa-trash-alt  me-2"></i>{{__('Delete')}}</a>
                                     </div>
                                     </div>
                                 </div>

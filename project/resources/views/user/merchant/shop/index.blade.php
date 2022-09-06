@@ -85,9 +85,11 @@
                                         <div>
 
                                             @if ($item->status == 0)
-                                            <a href="{{route('user.merchant.shop.edit',$item->id)}}" class="btn btn-primary btn-sm edit-{{$item->id}}" data-bs-toggle="tooltip" data-bs-original-title="@lang('edit')"><i class="fas fa-edit"></i></a>
+                                                <a href="{{route('user.merchant.shop.edit',$item->id)}}" class="btn btn-primary btn-sm edit-{{$item->id}}" data-bs-toggle="tooltip" data-bs-original-title="@lang('edit')"><i class="fas fa-edit"></i></a>
+                                                <a href="javascript:void(0)" class="btn btn-primary btn-sm disabled" data-bs-toggle="tooltip" data-bs-original-title="@lang('view product')"><i class="fas fa-file-contract"></i></a>
                                             @else
-                                            <a href="javascript:void(0)" class="btn btn-primary btn-sm disabled" data-bs-toggle="tooltip" data-bs-original-title="@lang('edit')"><i class="fas fa-edit"></i></a>
+                                                <a href="javascript:void(0)" class="btn btn-primary btn-sm disabled" data-bs-toggle="tooltip" data-bs-original-title="@lang('edit')"><i class="fas fa-edit"></i></a>
+                                                <a href="{{route('user.merchant.shop.view_product',$item->id)}}" class="btn btn-primary btn-sm view-{{$item->id}}" data-bs-toggle="tooltip" data-bs-original-title="@lang('view product')"><i class="fas fa-file-contract"></i></a>
                                             @endif
                                             <a href="javascript:void(0)" data-route="{{route('user.merchant.shop.delete',$item->id)}}" class="btn btn-dark btn-sm delete" data-bs-toggle="tooltip" data-bs-original-title="@lang('delete')"><i class="fas fa-eraser"></i></a>
                                         </div>
