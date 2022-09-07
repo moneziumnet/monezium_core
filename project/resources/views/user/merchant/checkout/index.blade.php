@@ -66,9 +66,9 @@
                           <p>{{__('Redirect URL')}}: {{$item->redirect_link}}</p>
                           <p class="text-sm mb-2">{{__('Date')}}: {{date("h:i:A j, M Y", strtotime($item->created_at))}}</p>
                           @if($item->status==1)
-                              <span class="badge badge-pill badge-success"><i class="fas fa-check"></i> {{__('Active')}}</span>
+                              <span class="badge badge-pill bg-success"><i class="fas fa-check"></i> {{__('Active')}}</span>
                           @else
-                              <span class="badge badge-pill badge-danger"><i class="fas fa-ban"></i> {{__('Disabled')}}</span>
+                              <span class="badge badge-pill bg-danger"><i class="fas fa-ban"></i> {{__('Disabled')}}</span>
                           @endif
                         </div>
                       </div>

@@ -181,6 +181,7 @@ Route::prefix('user')->group(function() {
       Route::get('/merchant/product/edit/{id}', [MerchantProductController::class,'edit'])->name('user.merchant.product.edit');
       Route::post('/merchant/product/update/{id}', [MerchantProductController::class,'update'])->name('user.merchant.product.update');
       Route::get('/merchant/product/delete/{id}', [MerchantProductController::class,'delete'])->name('user.merchant.product.delete');
+      Route::get('/merchant/product/status/{id}', [MerchantProductController::class,'status'])->name('user.merchant.product.status');
 
 
 

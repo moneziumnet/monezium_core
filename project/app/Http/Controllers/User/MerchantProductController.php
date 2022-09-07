@@ -104,5 +104,20 @@ class MerchantProductController extends Controller
         $data->delete();
         return  redirect()->back()->with('message','Merchant Product has been deleted successfully');
     }
+
+    public function status($id) {
+        $data = Product::findOrFail($id);
+        $data->status = $data->status == 1 ? 0 : 1;
+        $data->update();
+        return back()->with('message', 'Merchant Product status has been updated successfully.');
+    }
+
+    public function category_create(Request $request){
+        $data = New ProductCategory();
+        $data->user_id = $request->user_id;
+        $data->name = $request->name;
+        $data->save();
+        return back()->with('message', 'You have created new category successfully.');
+    }
 }
 

@@ -62,6 +62,7 @@
                                         <i class="fas fa-chevron-circle-down"></i>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-left">
+                                        <a class="dropdown-item" href="{{route('user.merchant.product.status', $val->id)}}"><i class="fas fa-ban me-2"></i>{{$val->status == 1 ? __('Disable') : __('Enable')}}</a>
                                         <a class="dropdown-item" href="{{route('user.merchant.product.edit', $val->id)}}"><i class="fas fa-pencil-alt me-2"></i>{{__('Edit')}}</a>
                                         {{-- <a class="dropdown-item" href="{{route('orders', ['id' => $val->id])}}"><i class="fas fa-sync"></i>{{__('Orders')}}</a> --}}
                                         <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#delete{{$val->id}}" href="#"><i class="fas fa-trash-alt  me-2"></i>{{__('Delete')}}</a>
@@ -77,9 +78,9 @@
                                     <h5 class="mb-1">{{__('Sold: ')}} {{$val->sold}}</h5>
                                     <h5 class="mb-3">{{__('Currenct Stock:')}} {{$val->quantity}}</h5>
                                     @if($val->status==1)
-                                        <span class="badge badge-pill badge-primary"><i class="fas fa-check"></i> {{__('Active')}}</span>
+                                        <span class="badge badge-pill bg-success"><i class="fas fa-check"></i> {{__('Active')}}</span>
                                     @else
-                                        <span class="badge badge-pill badge-danger"><i class="fas fa-ban"></i> {{__('Disabled')}}</span>
+                                        <span class="badge badge-pill bg-danger"><i class="fas fa-ban"></i> {{__('Disabled')}}</span>
                                     @endif
                                     </div>
                                 </div>
