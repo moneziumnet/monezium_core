@@ -150,7 +150,7 @@ if(!function_exists('getModule')){
     function email($data){
       $gs = Generalsetting::first();
 
-              $headers = "From: $gs->sitename <$gs->from_eamil> \r\n";
+              $headers = "From: $gs->sitename <$gs->from_email> \r\n";
               $headers .= "Reply-To: $gs->sitename <$gs->from_email> \r\n";
               $headers .= "MIME-Version: 1.0\r\n";
               $headers .= "Content-Type: text/html; charset=utf-8\r\n";
