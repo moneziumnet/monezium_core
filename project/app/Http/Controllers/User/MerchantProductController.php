@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Models\Wallet;
 use App\Models\Transaction;
 use App\Models\Charge;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
@@ -256,7 +257,21 @@ class MerchantProductController extends Controller
             $rcvTrnx->save();
 
             $data->quantity = $data->quantity - $request->quantity;
+            $data->sold = $data->sold + $request->quantity;
             $data->update();
+
+            $order = new Order();
+            $order->product_id = $request->product_id;
+            $order->user_id = $data->user_id;
+            $order->shop_id = $data->shop_id;
+            $order->name = auth()->user()->name;
+            $order->email = auth()->user()->email;
+            $order->phone = auth()->user()->phone;
+            $order->address = auth()->user()->address;
+            $order->quantity = $request->quantity;
+            $order->type = "Payment with Account";
+            $order->amount = $data->amount * $request->quantity;
+            $order->save();
 
             $to = $data->user->email;
             $subject = "Received product payments";
@@ -268,6 +283,18 @@ class MerchantProductController extends Controller
 
             return redirect(route('user.dashboard'))->with('success','You have paid for buy project successfully.');
         }
+    }
+
+    public function order()
+    {
+        $data['orders'] = Order::where('user_id', auth()->id())->get();
+        return view('user.merchant.product.order', $data);
+    }
+
+    public function order_by_product($id)
+    {
+        $data['orders'] = Order::where('product_id', $id)->get();
+        return view('user.merchant.product.order', $data);
     }
 }
 

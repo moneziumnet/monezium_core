@@ -64,7 +64,7 @@
                                     <div class="dropdown-menu dropdown-menu-left">
                                         <a class="dropdown-item" href="{{route('user.merchant.product.status', $val->id)}}"><i class="fas fa-ban me-2"></i>{{$val->status == 1 ? __('Disable') : __('Enable')}}</a>
                                         <a class="dropdown-item" href="{{route('user.merchant.product.edit', $val->id)}}"><i class="fas fa-pencil-alt me-2"></i>{{__('Edit')}}</a>
-                                        {{-- <a class="dropdown-item" href="{{route('orders', ['id' => $val->id])}}"><i class="fas fa-sync"></i>{{__('Orders')}}</a> --}}
+                                        <a class="dropdown-item" href="{{route('user.merchant.product.order_by_product', ['id' => $val->id])}}"><i class="fas fa-sync me-2"></i>{{__('Orders')}}</a>
                                         <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#delete{{$val->id}}" href="#"><i class="fas fa-trash-alt  me-2"></i>{{__('Delete')}}</a>
                                     </div>
                                     </div>

@@ -69,7 +69,7 @@
                                 @csrf
                                 <div class="form-selectgroup row">
                                     <label class="form-selectgroup-item">
-                                        <input type="radio" name="payment" value="gateway" class="form-selectgroup-input" checked="">
+                                        <input type="radio" name="payment" value="gateway" class="form-selectgroup-input" >
                                         <span class="form-selectgroup-label">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-credit-card" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -81,7 +81,7 @@
                                             @lang('Pay with gateways')</span>
                                     </label>
                                     <label class="form-selectgroup-item">
-                                    <input type="radio" name="payment" value="wallet" class="form-selectgroup-input">
+                                    <input type="radio" name="payment" value="wallet" class="form-selectgroup-input" checked="">
                                     <span class="form-selectgroup-label">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-wallet" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
