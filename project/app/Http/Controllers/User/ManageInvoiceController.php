@@ -460,11 +460,11 @@ class ManageInvoiceController extends Controller
                 user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
             }
 
-            if($wallet->balance < $invoice->final_payment) {
+            if($wallet->balance < $invoice->final_amount) {
                 return back()->with('error','Insufficient balance to your wallet');
             }
 
-            $wallet->balance -= $invoice->final_payment;
+            $wallet->balance -= $invoice->final_amount;
             $wallet->update();
 
             $trnx              = new Transaction();
