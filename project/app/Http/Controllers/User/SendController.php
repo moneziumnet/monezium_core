@@ -226,29 +226,12 @@ class SendController extends Controller
                 return redirect()->route('send.money.create')->with('success','Money Send Successfully');
             }
 
-            if($gs->is_smtp == 1)
-            {
-                $data = [
-                    'to' => $receiver->email,
-                    'type' => "send money",
-                    'cname' => $receiver->name,
-                    'oamount' => $request->amount,
-                    'aname' => "",
-                    'aemail' => "",
-                    'wtitle' => "",
-                ];
 
-                $mailer = new GeniusMailer();
-                $mailer->sendAutoMail($data);
-            }
-            else
-            {
                 $to = $receiver->email;
                 $subject = " Money send successfully.";
                 $msg = "Hello ".$receiver->name."!\nMoney send successfully.\nThank you.";
                 $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
                 mail($to,$subject,$msg,$headers);
-            }
 
             return redirect()->route('user.send.money.success');
         }else{

@@ -154,29 +154,12 @@ class CryptoDepositController extends Controller
         $data->status = $id2;
         $data->update();
         $gs = Generalsetting::findOrFail(1);
-        if($gs->is_smtp == 1)
-        {
-            $data = [
-                'to' => $user->email,
-                'type' => "Deposit",
-                'cname' => $user->name,
-                'oamount' => $data->amount,
-                'aname' => "",
-                'aemail' => "",
-                'wtitle' => "",
-            ];
 
-            $mailer = new GeniusMailer();
-            $mailer->sendAutoMail($data);
-        }
-        else
-        {
             $to = $user->email;
             $subject = " You have deposited successfully.";
             $msg = "Hello ".$user->name."!\nYou have deposited successfully.\nThank you.";
             $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
             mail($to,$subject,$msg,$headers);
-        }
 
         $msg = 'Data Updated Successfully.';
         return response()->json($msg);

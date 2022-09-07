@@ -29,7 +29,7 @@ class ForgotController extends Controller
       $input =  $request->all();
 
       if (User::where('email', '=', $request->email)->count() > 0) {
-   
+
         $admin = User::where('email', '=', $request->email)->firstOrFail();
         $autopass = Str::random(8);
         $input['password'] = bcrypt($autopass);
@@ -37,27 +37,13 @@ class ForgotController extends Controller
         $subject = "Reset Password Request";
         $msg = "Your New Password is : ".$autopass;
 
-        if($gs->is_smtp == 1)
-        {
-            $data = [
-              'to' => $request->email,
-              'subject' => $subject,
-              'body' => $msg,
-            ];
-
-            $mailer = new GeniusMailer();
-            $mailer->sendCustomMail($data);                
-        }
-        else
-        {
           $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-          mail($request->email,$subject,$msg,$headers);            
-        }
+          mail($request->email,$subject,$msg,$headers);
         return back()->with('message','Your Password Reseted Successfully. Please Check your email for new Password.');
       }
       else{
-        return back()->with('warning','No Account Found With This Email.');  
-      }  
+        return back()->with('warning','No Account Found With This Email.');
+      }
     }
 
 
@@ -79,7 +65,7 @@ class ForgotController extends Controller
         $length = strlen($allowed_letters);
         $letter = $allowed_letters[rand(0, $length-1)];
         $word='';
- 
+
         $text_color = imagecolorallocate($image, 0, 0, 0);
         $cap_length=6;
         for ($i = 0; $i< $cap_length;$i++)

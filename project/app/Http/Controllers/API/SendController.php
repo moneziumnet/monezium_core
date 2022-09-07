@@ -42,7 +42,7 @@ class SendController extends Controller
                 'code'              => 'required'
             ];
             $validator = Validator::make($request->all(), $rules);
-            
+
             if ($validator->fails()) {
                 return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
             }
@@ -131,29 +131,11 @@ class SendController extends Controller
                     return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Money Send Successfully.']);
                 }
 
-                if($gs->is_smtp == 1)
-                {
-                    $data = [
-                        'to' => $receiver->email,
-                        'type' => "send money",
-                        'cname' => $receiver->name,
-                        'oamount' => $request->amount,
-                        'aname' => "",
-                        'aemail' => "",
-                        'wtitle' => "",
-                    ];
-
-                    $mailer = new GeniusMailer();
-                    $mailer->sendAutoMail($data);
-                }
-                else
-                {
                     $to = $receiver->email;
                     $subject = " Money send successfully.";
                     $msg = "Hello ".$receiver->name."!\nMoney send successfully.\nThank you.";
                     $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
                     mail($to,$subject,$msg,$headers);
-                }
                 return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Money Send Successfully.']);
             }else{
                 return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Sender not found!.']);
@@ -168,14 +150,14 @@ class SendController extends Controller
     {
         try {
             $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
-            
+
             $rules = [
                 'account_name'      => 'required',
                 'wallet_id'         => 'required',
                 'amount'            => 'required|gt:0'
             ];
             $validator = Validator::make($request->all(), $rules);
-            
+
             if ($validator->fails()) {
                 return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
             }
@@ -247,18 +229,18 @@ class SendController extends Controller
                 'code' => 'required'
             ];
             $validator = Validator::make($request->all(), $rules);
-            
+
             if ($validator->fails()) {
                 return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
             }
             $user = User::whereId($user_id)->first();
-           
+
             if($uesr->twofa != 1)
             {
                 return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'You must be enable 2FA Security.']);
             }
 
-           
+
             $ga = new GoogleAuthenticator();
             $secret = $user->go;
             $oneCode = $ga->getCode($secret);
@@ -311,29 +293,11 @@ class SendController extends Controller
 
             $trans->save();
 
-            if($gs->is_smtp == 1)
-            {
-                $data = [
-                    'to' => $receiver->email,
-                    'type' => "request money",
-                    'cname' => $receiver->name,
-                    'oamount' => $finalAmount,
-                    'aname' => "",
-                    'aemail' => "",
-                    'wtitle' => "",
-                ];
-
-                $mailer = new GeniusMailer();
-                $mailer->sendAutoMail($data);
-            }
-            else
-            {
                 $to = $receiver->email;
                 $subject = " Money send successfully.";
                 $msg = "Hello ".$receiver->name."!\nMoney send successfully.\nThank you.";
                 $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
                 mail($to,$subject,$msg,$headers);
-            }
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Successfully Money Send.']);
 
         } catch (\Throwable $th) {

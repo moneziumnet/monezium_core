@@ -162,29 +162,12 @@ class CryptoWithdrawController extends Controller
             $trnx->save();
         }
         $gs = Generalsetting::findOrFail(1);
-        if($gs->is_smtp == 1)
-        {
-            $data = [
-                'to' => $user->email,
-                'type' => "Withdraw",
-                'cname' => $user->name,
-                'oamount' => $data->amount,
-                'aname' => "",
-                'aemail' => "",
-                'wtitle' => "",
-            ];
 
-            $mailer = new GeniusMailer();
-            $mailer->sendAutoMail($data);
-        }
-        else
-        {
             $to = $user->email;
             $subject = " You have withdrawed successfully.";
             $msg = "Hello ".$user->name."!\nYou have withdrawed successfully.\nThank you.";
             $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
             mail($to,$subject,$msg,$headers);
-        }
 
         $msg = 'Data Updated Successfully.';
         return response()->json($msg);

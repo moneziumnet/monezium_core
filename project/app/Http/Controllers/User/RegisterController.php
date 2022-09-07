@@ -128,36 +128,8 @@ class RegisterController extends Controller
             $subject = 'Verify your email address.';
             $msg = "Dear Customer,<br> We noticed that you need to verify your email address." . $verificationLink;
 
-            if ($gs->is_smtp == 1) {
-
-                $mail = new PHPMailer(true);
-
-                try {
-                    $mail->isSMTP();
-                    $mail->Host       = $gs->smtp_host;
-                    $mail->SMTPAuth   = true;
-                    $mail->Username   = $gs->smtp_user;
-                    $mail->Password   = $gs->smtp_pass;
-                    if ($gs->smtp_encryption == 'ssl') {
-                        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-                    } else {
-                        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-                    }
-                    $mail->Port       = $gs->smtp_port;
-                    $mail->CharSet = 'UTF-8';
-                    $mail->setFrom($gs->from_email, $gs->from_name);
-                    $mail->addAddress($user->email, $user->name);
-                    $mail->addReplyTo($gs->from_email, $gs->from_name);
-                    $mail->isHTML(true);
-                    $mail->Subject = $subject;
-                    $mail->Body    = $msg;
-                    $mail->send();
-                } catch (Exception $e) {
-                }
-            } else {
                 $headers = "From: " . $gs->from_name . "<" . $gs->from_email . ">";
                 mail($to, $subject, $msg, $headers);
-            }
             return response()->json('We need to verify your email address. We have sent an email to ' . $to . ' to verify your email address. Please click link in that email to continue.');
         } else {
 

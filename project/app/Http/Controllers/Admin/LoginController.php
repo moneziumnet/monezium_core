@@ -62,7 +62,7 @@ class LoginController extends Controller
                     return response()->json(array('errors' => $msg));
                 }
             }
-            elseif (!empty($current_domain) || !empty($user->tenant_id)) 
+            elseif (!empty($current_domain) || !empty($user->tenant_id))
             {
                 if (empty($current_domain) && !empty($user->tenant_id))
                 {
@@ -96,9 +96,9 @@ class LoginController extends Controller
 
 
 
-        
+
         // if unsuccessful, then redirect back to the login with the form data
-        
+
     }
 
     public function logout()
@@ -127,22 +127,8 @@ class LoginController extends Controller
 
       $subject = "Reset Password Request";
       $msg = "Please click this link : ".'<a href="'.route('admin.change.token',$token).'">'.route('admin.change.token',$token).'</a>'.' to change your password.';
-      if($gs->is_smtp == 1)
-      {
-          $data = [
-                  'to' => $request->email,
-                  'subject' => $subject,
-                  'body' => $msg,
-          ];
-
-          $mailer = new GeniusMailer();
-          $mailer->sendCustomMail($data);
-      }
-      else
-      {
           $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
           mail($request->email,$subject,$msg,$headers);
-      }
       return response()->json('Verification Link Sent Successfully!. Please Check your email.');
       }
       else{

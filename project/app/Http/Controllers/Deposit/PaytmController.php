@@ -427,30 +427,11 @@ class PaytmController extends Controller
             // $trans->txnid = $deposit_number;
             // $trans->user_id = $user->id;
             $trans->save();
-
-            if($gs->is_smtp == 1)
-            {
-                $data = [
-                    'to' => $user->email,
-                    'type' => "Deposit",
-                    'cname' => $user->name,
-                    'oamount' => $input['amount'],
-                    'aname' => "",
-                    'aemail' => "",
-                    'wtitle' => "",
-                ];
-
-                $mailer = new GeniusMailer();
-                $mailer->sendAutoMail($data);
-            }
-            else
-            {
                 $to = $user->email;
                 $subject = " You have deposited successfully.";
                 $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
                 $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
                 mail($to,$subject,$msg,$headers);
-            }
 
             Session::forget('deposit_number');
 

@@ -23,21 +23,21 @@ class MessageController extends Controller
     {
         $user = Auth::guard('web')->user();
         $convs = AdminUserConversation::where('user_id','=',$user->id)->paginate();
-        return view('user.message.index',compact('convs'));            
+        return view('user.message.index',compact('convs'));
     }
 
     public function messageload($id)
     {
         $conv = AdminUserConversation::findOrfail($id);
-        return view('load.usermessage',compact('conv'));                 
-    }   
+        return view('load.usermessage',compact('conv'));
+    }
 
     public function adminmessage($id)
     {
         $conv = AdminUserConversation::findOrfail($id);
         $admin = Admin::where('id',1)->first();
-        return view('user.message.create',compact('conv','admin'));                 
-    }   
+        return view('user.message.create',compact('conv','admin'));
+    }
 
 
     public function adminmessagedelete($id)
@@ -50,49 +50,36 @@ class MessageController extends Controller
             }
         }
         $conv->delete();
-        return redirect()->back()->with('success','Message Deleted Successfully');                 
+        return redirect()->back()->with('success','Message Deleted Successfully');
     }
 
     public function adminpostmessage(Request $request)
     {
         $msg = new AdminUserMessage();
-        $input = $request->all();  
+        $input = $request->all();
         $msg->fill($input)->save();
-        
+
         $notification = new Notification;
         $notification->conversation_id = $msg->conversation->id;
         $notification->save();
-        //--- Redirect Section     
+        //--- Redirect Section
         $msg = 'Message Sent!';
-        return response()->json($msg);      
-        //--- Redirect Section Ends  
+        return response()->json($msg);
+        //--- Redirect Section Ends
     }
 
     public function adminusercontact(Request $request)
     {
         $data = 1;
-        $user = Auth::guard('web')->user();        
+        $user = Auth::guard('web')->user();
         $gs = Generalsetting::findOrFail(1);
         $subject = $request->subject;
         $to = $gs->email;
         $from = $user->email;
         $msg = "Email: ".$from."\nMessage: ".$request->message;
-        if($gs->is_smtp == 1)
-        {
-            $data = [
-            'to' => $to,
-            'subject' => $subject,
-            'body' => $msg,
-        ];
 
-        $mailer = new GeniusMailer();
-        $mailer->sendCustomMail($data);
-        }
-        else
-        {
             $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
             mail($to,$subject,$msg,$headers);
-        }
 
     $conv = AdminUserConversation::where('user_id','=',$user->id)->where('subject','=',$subject)->first();
         if(isset($conv)){
@@ -101,7 +88,7 @@ class MessageController extends Controller
             $msg->message = $request->message;
             $msg->user_id = $user->id;
             $msg->save();
-            return response()->json($data);   
+            return response()->json($data);
         }
         else{
             $message = new AdminUserConversation();
@@ -119,7 +106,7 @@ class MessageController extends Controller
             $msg->message = $request->message;
             $msg->user_id = $user->id;
             $msg->save();
-            return response()->json($data);   
+            return response()->json($data);
 
         }
 }

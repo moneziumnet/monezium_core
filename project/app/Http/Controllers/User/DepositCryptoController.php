@@ -89,29 +89,12 @@ class DepositCryptoController extends Controller
 
         $gs =  Generalsetting::findOrFail(1);
         $user = auth()->user();
-        if($gs->is_smtp == 1)
-        {
-            $data = [
-                'to' => $user->email,
-                'type' => "Deposit",
-                'cname' => $user->name,
-                'oamount' => $request->amount.$currency->code,
-                'aname' => "",
-                'aemail' => "",
-                'wtitle' => "",
-            ];
 
-            $mailer = new GeniusMailer();
-            $mailer->sendAutoMail($data);
-        }
-        else
-        {
            $to = $user->email;
            $subject = " You have deposited the crypto successfully.";
            $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
            $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
            mail($to,$subject,$msg,$headers);
-        }
 
         return redirect()->route('user.cryptodeposit.create')->with('success','Deposit amount '.$request->amount.' ('.$currency->code.') successfully!');
     }

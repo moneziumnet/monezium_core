@@ -103,7 +103,7 @@ class FrontendController extends Controller
     {
         return view('frontend.about');
     }
-    
+
     public function termService()
     {
         return view('frontend.term-service');
@@ -329,19 +329,9 @@ class FrontendController extends Controller
         $from = $request->email;
         $msg = "First Name: " . $fname . "\nLast Name: " . $lname . "\nEmail: " . $from . "\nMessage: " . $request->message;
 
-        if ($gs->is_smtp) {
-            $data = [
-                'to' => $to,
-                'subject' => $subject,
-                'body' => $msg,
-            ];
 
-            $mailer = new GeniusMailer();
-            $mailer->sendCustomMail($data);
-        } else {
             $headers = "From: " . $gs->from_name . "<" . $gs->from_email . ">";
             mail($to, $subject, $msg, $headers);
-        }
 
         return response()->json($ps->contact_success);
     }

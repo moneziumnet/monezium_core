@@ -68,22 +68,9 @@ class UserGlobalPassController extends Controller
             $gs = Generalsetting::findOrFail(1);
             $type = str_replace('.', ' ', $request->type);
             $msg = 'Your KYC status is updated';
-            if($gs->is_smtp == 1)
-            {
-                $data = [
-                  'to' => $user->user->email,
-                  'subject' => $subject.'('.ucwords($type).')',
-                  'body' => $msg,
-                ];
 
-                $mailer = new GeniusMailer();
-                $mailer->sendCustomMail($data);
-            }
-            else
-            {
               $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
               mail($user->user->email,$subject.'('.ucwords($type).')',$msg,$headers);
-            }
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => 'Okay']);
         }
         else {

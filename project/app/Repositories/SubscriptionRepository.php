@@ -130,29 +130,12 @@ class SubscriptionRepository{
     }
 
     public function sendMail($subscription){
-        if($this->gs->is_smtp == 1)
-        {
-            $data = [
-                'to' => $subscription->user->email,
-                'type' => "Invest",
-                'cname' => $subscription->user->name,
-                'oamount' => $subscription->order_number,
-                'aname' => "",
-                'aemail' => "",
-                'wtitle' => "",
-            ];
 
-            $mailer = new GeniusMailer();
-            $mailer->sendAutoMail($data);            
-        }
-        else
-        {
            $to = $subscription->user->email;
            $subject = " You Purchase Plan Successfully.";
            $msg = "Hello ".$subscription->user->nam."!\nYou Purchase Plan Successfully.\nThank you.";
            $headers = "From: ".$this->gs->from_name."<".$this->gs->from_email.">";
-           mail($to,$subject,$msg,$headers);            
-        }
+           mail($to,$subject,$msg,$headers);
     }
 
 

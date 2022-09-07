@@ -18,7 +18,7 @@ class MessageController extends Controller
     {
         $this->middleware('auth:admin');
     }
-    
+
     public function datatables()
     {
          $datas = AdminUserConversation::orderBy('id','desc');
@@ -80,22 +80,9 @@ class MessageController extends Controller
         $from = $admin->email;
         $msg = "Email: ".$from."<br>Message: ".$request->message;
         $gs = Generalsetting::findOrFail(1);
-        if($gs->is_smtp == 1)
-        {
 
-        $datas = [
-            'to' => $to,
-            'subject' => $subject,
-            'body' => $msg,
-        ];
-        $mailer = new GeniusMailer();
-         $mailer->sendCustomMail($datas);
-        }
-        else
-        {
         $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
         mail($to,$subject,$msg,$headers);
-        }
 
 
         $conv = AdminUserConversation::where('user_id','=',$user->id)->where('subject','=',$subject)->first();

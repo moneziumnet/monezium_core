@@ -63,25 +63,12 @@ class EmailController extends Controller
         //Sending Email To Users
         foreach($users as $user)
         {
-            if($config->is_smtp == 1)
-            {
-                $data = [
-                    'to' => $user->email,
-                    'subject' => $request->subject,
-                    'body' => $request->body,
-                ];
 
-                $mailer = new GeniusMailer();
-                $mailer->sendCustomMail($data);
-            }
-            else
-            {
                $to = $user->email;
                $subject = $request->subject;
                $msg = $request->body;
                 $headers = "From: ".$config->from_name."<".$config->from_email.">";
                mail($to,$subject,$msg,$headers);
-            }
         }
         //--- Redirect Section
         $msg = 'Email Sent Successfully.';
@@ -94,25 +81,11 @@ class EmailController extends Controller
             //Sending Email To Subscribers
             foreach($users as $user)
             {
-                if($config->is_smtp == 1)
-                {
-                    $data = [
-                        'to' => $user->email,
-                        'subject' => $request->subject,
-                        'body' => $request->body,
-                    ];
-
-                    $mailer = new GeniusMailer();
-                    $mailer->sendCustomMail($data);
-                }
-                else
-                {
                 $to = $user->email;
                 $subject = $request->subject;
                 $msg = $request->body;
                     $headers = "From: ".$config->from_name."<".$config->from_email.">";
                 mail($to,$subject,$msg,$headers);
-                }
             }
         }
 
