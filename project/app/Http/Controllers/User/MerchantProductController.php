@@ -12,6 +12,9 @@ use App\Models\ProductImage;
 use App\Models\MerchantWallet;
 use App\Models\Generalsetting;
 use App\Models\User;
+use App\Models\Wallet;
+use App\Models\Transaction;
+use App\Models\Charge;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
@@ -23,7 +26,7 @@ class MerchantProductController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth', ['except' => ['link']]);
     }
 
     public function index(){
@@ -118,6 +121,153 @@ class MerchantProductController extends Controller
         $data->name = $request->name;
         $data->save();
         return back()->with('message', 'You have created new category successfully.');
+    }
+
+    public function link($ref_id) {
+        $data = Product::where('ref_id', $ref_id)->first();
+        if(!$data) {
+            return back()->with('error', 'This product does not exist.');
+        }
+        if($data->status == 0) {
+            return back()->with('error', 'This produc\'s sell status is deactive');
+        }
+        return view('user.merchant.product.product_pay', compact('data'));
+    }
+
+    public function pay(Request $request)
+    {
+        $data = Product::where('id', $request->product_id)->first();
+        if(!$data) {
+            return back()->with('error', 'This product does not exist.');
+        }
+        if($data->status == 0) {
+            return back()->with('error', 'This produc\'s sell status is deactive');
+        }
+        if($data->quantity < $request->quantity) {
+            return back()->with('error', 'The product\'s quantity is smaller than your quantity');
+        }
+        if($request->payment == 'gateway'){
+            return redirect(route(''));
+        }
+        elseif($request->payment == 'wallet'){
+            $wallet = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('currency_id',$data->currency_id)->where('wallet_type', 1)->first();
+
+            $gs = Generalsetting::first();
+            if(!$wallet){
+                $wallet =  Wallet::create([
+                    'user_id'     => auth()->id(),
+                    'user_type'   => 1,
+                    'currency_id' => $data->currency_id,
+                    'balance'     => 0,
+                    'wallet_type' => 1,
+                    'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
+                ]);
+
+                $user = User::findOrFail(auth()->id());
+
+                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+
+                $trans = new Transaction();
+                $trans->trnx = str_rand();
+                $trans->user_id     = $user->id;
+                $trans->user_type   = 1;
+                $trans->currency_id = 1;
+                $trans->amount      = $chargefee->data->fixed_charge;
+                $trans->charge      = 0;
+                $trans->type        = '-';
+                $trans->remark      = 'wallet_create';
+                $trans->details     = trans('Wallet Create');
+                $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+                $trans->save();
+
+                user_wallet_decrement($user->id, 1, $chargefee->data->fixed_charge, 1);
+                user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
+            }
+
+            if($wallet->balance < $data->amount * $request->quantity) {
+                return back()->with('error','Insufficient balance to your wallet');
+            }
+
+            $wallet->balance -= $data->amount * $request->quantity;
+            $wallet->update();
+
+            $trnx              = new Transaction();
+            $trnx->trnx        = str_rand();
+            $trnx->user_id     = auth()->id();
+            $trnx->user_type   = 1;
+            $trnx->currency_id = $data->currency_id;
+            $trnx->wallet_id   = $wallet->id;
+            $trnx->amount      = $data->amount * $request->quantity;
+            $trnx->charge      = 0;
+            $trnx->remark      = 'product_buy_payment';
+            $trnx->type        = '-';
+            $trnx->details     = trans('Payemnt to buy product : '). $data->ref_id;
+            $trnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($data->user_id)->name.'"}';
+            $trnx->save();
+
+            $rcvWallet = Wallet::where('user_id',$data->user_id)->where('user_type',1)->where('currency_id',$data->currency_id)->where('wallet_type', 1)->first();
+
+            if(!$rcvWallet){
+                $rcvWallet =  Wallet::create([
+                    'user_id'     => $data->user_id,
+                    'user_type'   => 1,
+                    'currency_id' => $data->currency_id,
+                    'balance'     => 0,
+                    'wallet_type' => 1,
+                    'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
+                ]);
+
+                $user = User::findOrFail($data->user_id);
+
+                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+
+                $trans = new Transaction();
+                $trans->trnx = str_rand();
+                $trans->user_id     = $data->user_id;
+                $trans->user_type   = 1;
+                $trans->currency_id = 1;
+                $trans->amount      = $chargefee->data->fixed_charge;
+                $trans->charge      = 0;
+                $trans->type        = '-';
+                $trans->remark      = 'wallet_create';
+                $trans->details     = trans('Wallet Create');
+                $trans->data        = '{"sender":"'.User::findOrFail($data->user_id)->name.'", "receiver":"System Account"}';
+                $trans->save();
+
+                user_wallet_decrement($data->user_id, 1, $chargefee->data->fixed_charge, 1);
+                user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
+            }
+
+            $rcvWallet->balance += $data->amount * $request->quantity;
+            $rcvWallet->update();
+
+            $rcvTrnx              = new Transaction();
+            $rcvTrnx->trnx        = $trnx->trnx;
+            $rcvTrnx->user_id     = $data->user_id;
+            $rcvTrnx->user_type   = 1;
+            $rcvTrnx->currency_id = $data->currency_id;
+            $rcvTrnx->wallet_id   = $rcvWallet->id;
+            $rcvTrnx->amount      = $data->amount * $request->quantity;
+            $rcvTrnx->charge      = 0;
+            $rcvTrnx->remark      = 'product_sell_payment';
+            $rcvTrnx->type        = '+';
+            $rcvTrnx->details     = trans('Receive Payemnt to sell product : '). $data->ref_id;
+            $rcvTrnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($data->user_id)->name.'"}';
+            $rcvTrnx->save();
+
+            $data->quantity = $data->quantity - $request->quantity;
+            $data->update();
+
+            $to = $data->user->email;
+            $subject = "Received product payments";
+            $msg_body = "You received money ".amount($data->amount * $request->quantity,$data->currency->type,2)." \n The customers buy your products." ;
+            $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
+            $headers .= "MIME-Version: 1.0" . "\r\n";
+            $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+            mail($to,$subject,$msg_body,$headers);
+
+            return redirect(route('user.dashboard'))->with('success','You have paid for buy project successfully.');
+        }
     }
 }
 

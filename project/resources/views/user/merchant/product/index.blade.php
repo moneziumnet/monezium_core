@@ -55,7 +55,7 @@
                             <div class="card-body">
                                 <div class="row mb-2">
                                     <div class="col-8">
-                                    <p class="text-sm  mb-2"><a class="btn-icon-clipboard" data-clipboard-text="" title="Copy">{{__('COPY LINK')}} <i class="fas fa-link text-xs"></i></a></p>
+                                    <p class="text-sm  mb-2"><a class="btn-icon-clipboard copy" data-clipboard-text="{{route('user.merchant.product.link', $val->ref_id)}}" title="Copy">{{__('COPY LINK')}} <i class="fas fa-link text-xs"></i></a></p>
                                     </div>
                                     <div class="col-4 text-end">
                                     <a class="mr-0" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -239,12 +239,17 @@
 @endsection
 
 @push('js')
-    <script>
+<script src="{{asset('assets/user/js/clipboard.min.js')}}"></script>
+<script>
         'use strict';
         $('.delete').on('click',function() {
             $('#modal-success').find('form').attr('action',$(this).data('route'))
             $('#modal-success').modal('show')
         })
+        var clipboard = new ClipboardJS('.copy');
+        clipboard.on('success', function(e) {
+           alert('copied');
+        });
     </script>
 @endpush
 
