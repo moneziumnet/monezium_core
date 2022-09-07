@@ -88,8 +88,7 @@
                                       <td data-label="{{ __('Pay Status') }}">
                                         <div>
                                           @if ($item->status != 2)
-                                        <label class="form-check form-switch">
-                                            <input class="form-check-input pay_status shadow-none" data-id="{{$item->id}}" type="checkbox" {{$item->payment_status == 1 ? 'checked':''}}>
+                                        <label >
                                             <small class="form-check-label pay-status-{{$item->id}} badge {{$item->payment_status == 1 ? 'bg-success':'bg-secondary'}}">{{$item->payment_status == 1 ? 'Paid':'Unpaid'}}</small>
                                           </label>
                                           @else
