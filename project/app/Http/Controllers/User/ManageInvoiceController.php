@@ -375,7 +375,7 @@ class ManageInvoiceController extends Controller
         $amount = amount($invoice->final_amount,$currency->type,3);
         $route = route('invoice.view',encrypt($invoice->number));
 
-        @email([
+        email([
 
             'email'   => $invoice->email,
             "subject" => trans('Invoice Payment'),
