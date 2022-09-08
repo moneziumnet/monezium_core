@@ -16,6 +16,7 @@ class CreateMerchantShopsTable extends Migration
         Schema::create('merchant_shops', function (Blueprint $table) {
             $table->id();
             $table->string('name', 255);
+            $table->string('logo', 255);
             $table->integer('merchant_id');
             $table->string('document');
             $table->string('url');

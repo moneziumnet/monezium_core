@@ -8,6 +8,7 @@ class MerchantShop extends Model
 {
     protected $fillable = [
         'name',
+        'logo',
         'merchant_id',
         'document',
         'url',

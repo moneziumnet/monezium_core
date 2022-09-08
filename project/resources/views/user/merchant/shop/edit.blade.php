@@ -39,8 +39,13 @@
                         </div>
 
                         <div class="form-group mb-3 mt-3">
+                            <label class="form-label">{{__('Logo')}}</label>
+                            <input  name="logo" id="logo"  type="file" accept=".png,.gif,.jpg">
+                        </div>
+
+                        <div class="form-group mb-3 mt-3">
                             <label class="form-label">{{__('Document')}}</label>
-                            <input class= "document" name="document" id="document" class="form-control" autocomplete="off" type="file" accept=".doc,.docx,.pdf">
+                            <input  name="document" id="document"  autocomplete="off" type="file" accept=".doc,.docx,.pdf">
                         </div>
 
                         <div class="form-group mb-3 mt-3">
