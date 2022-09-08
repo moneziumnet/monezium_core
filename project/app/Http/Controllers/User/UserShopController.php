@@ -35,7 +35,7 @@ class UserShopController extends Controller
         return view('user.shop.index', $data);
     }
 
-    public function buy($id) {
+    public function order($id) {
         $data = Product::where('id', $id)->first();
         return view('user.shop.buy', compact('data'));
     }

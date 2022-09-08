@@ -109,7 +109,7 @@ Route::prefix('user')->group(function() {
       Route::get('/transaction/details/{id}', [UserController::class,'trxDetails'])->name('user.trxDetails');
 
       Route::get('/shop', [UserShopController::class,'index'])->name('user.shop.index');
-      Route::get('/shop/buy/{id}', [UserShopController::class,'buy'])->name('user.shop.buy');
+      Route::get('/shop/order/{id}', [UserShopController::class,'order'])->name('user.shop.order');
 
 
       Route::get('/export-pdf', [UserController::class,'generatePDF'])->name('user.export.pdf');

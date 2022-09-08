@@ -49,7 +49,7 @@
                                         <i class="fas fa-chevron-circle-down"></i>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-left">
-                                        <a class="dropdown-item" href="{{route('user.shop.buy', $val->id)}}"><i class="fas fa-shopping-cart me-2"></i>{{__('Buy')}}</a>
+                                        <a class="dropdown-item" href="{{route('user.shop.order', $val->id)}}"><i class="fas fa-shopping-cart me-2"></i>{{__('Order')}}</a>
                                     </div>
                                     </div>
                                 </div>
