@@ -97,10 +97,12 @@ class WithdrawCryptoController extends Controller
         user_wallet_increment(0, $currency->id, $transaction_global_cost*$currency->rate, 9);
 
         if($user->referral_id != 0) {
+            $remark = 'withdraw_money_supervisor_fee';
             if (check_user_type_by_id(4, $user->referral_id)) {
                 user_wallet_increment($user->referral_id, $request->currency_id, $transaction_custom_cost*$currency->rate, 6);
             }
             elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
+                $remark = 'withdraw_money_manager_fee';
                 user_wallet_increment($user->referral_id, $request->currency_id, $transaction_custom_cost*$currency->rate, 10);
             }
             $trans = new Transaction();
@@ -111,7 +113,7 @@ class WithdrawCryptoController extends Controller
             $trans->amount      = $transaction_custom_cost*$currency->rate;
             $trans->charge      = 0;
             $trans->type        = '+';
-            $trans->remark      = 'withdraw_money_supervisor_fee';
+            $trans->remark      = $remark;
             $trans->details     = trans('Withdraw money');
             $trans->data        = '{"sender":"'.$user->name.'", "receiver":"'.User::findOrFail($user->referral_id)->name.'"}';
             $trans->save();

@@ -147,10 +147,12 @@ class SendController extends Controller
             if($transaction_custom_fee) {
                 $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/100) * $transaction_custom_fee->data->percent_charge;
             }
+            $remark = 'Send_money_supervisor_fee';
             if (check_user_type_by_id(4, $user->referral_id)) {
                 user_wallet_increment($user->referral_id, $currency_id, $transaction_custom_cost, 6);
             }
             elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
+                $remark = 'Send_money_manager_fee';
                 user_wallet_increment($user->referral_id, $currency_id, $transaction_custom_cost, 10);
             }
             $trans = new Transaction();
@@ -161,7 +163,7 @@ class SendController extends Controller
             $trans->amount      = $transaction_custom_cost;
             $trans->charge      = 0;
             $trans->type        = '+';
-            $trans->remark      = 'Send_money_supervisor_fee';
+            $trans->remark      = $remark;
             $trans->details     = trans('Send Money');
             $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($user->referral_id)->name.'"}';
             $trans->save();

@@ -67,10 +67,12 @@ class WithdrawalController extends Controller
                 if($transaction_custom_fee) {
                     $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($withdraw->amount/100) * $transaction_custom_fee->data->percent_charge;
                 }
+                $remark = 'withdraw_reject_supervisor_fee';
                 if (check_user_type_by_id(4, $user->referral_id)) {
                     user_wallet_decrement($user->referral_id, $withdraw->currency_id, $transaction_custom_cost, 6);
                 }
                 elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
+                    $remark = 'withdraw_reject_manager_fee';
                     user_wallet_decrement($user->referral_id, $withdraw->currency_id, $transaction_custom_cost, 10);
                 }
 
@@ -82,7 +84,7 @@ class WithdrawalController extends Controller
                 $trans->amount      = $transaction_custom_cost;
                 $trans->charge      = 0;
                 $trans->type        = '-';
-                $trans->remark      = 'withdraw_reject_supervisor_fee';
+                $trans->remark      = $remark;
                 $trans->details     = trans('Withdraw request rejected');
                 $trans->data        = '{"sender":"'.User::findOrFail($user->referral_id)->name.'", "receiver":"'.$user->name.'"}';
                 $trans->save();

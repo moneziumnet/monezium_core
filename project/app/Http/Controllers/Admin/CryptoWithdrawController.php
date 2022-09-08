@@ -128,10 +128,12 @@ class CryptoWithdrawController extends Controller
                 if($transaction_custom_fee) {
                     $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($data->amount/(100*$data->currency->rate)) * $transaction_custom_fee->data->percent_charge;
                 }
+                $remark = 'withdraw_reject_supervisor_fee';
                 if (check_user_type_by_id(4, $user->referral_id)) {
                     user_wallet_decrement($user->referral_id, $data->currency_id, $transaction_custom_cost*$data->currency->rate, 6);
                 }
                 elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
+                    $remark = 'withdraw_reject_manager_fee';
                     user_wallet_decrement($user->referral_id, $data->currency_id, $transaction_custom_cost*$data->currency->rate, 10);
                 }
 
@@ -143,7 +145,7 @@ class CryptoWithdrawController extends Controller
                 $trans->amount      = $transaction_custom_cost*$data->currency->rate;
                 $trans->charge      = 0;
                 $trans->type        = '-';
-                $trans->remark      = 'withdraw_reject_supervisor_fee';
+                $trans->remark      = $remark;
                 $trans->details     = trans('Withdraw request rejected');
                 $trans->data        = '{"sender":"'.User::findOrFail($user->referral_id)->name.'", "receiver":"'.$user->name.'"}';
                 $trans->save();

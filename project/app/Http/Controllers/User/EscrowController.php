@@ -102,10 +102,12 @@ class EscrowController extends Controller
         user_wallet_increment(0, $currency->id, $transaction_global_cost, 9);
         $senderWallet->update();
         if($user->referral_id != 0){
+            $remark = 'Make_Escrow_supervisor_fee';
             if (check_user_type_by_id(4, $user->referral_id)) {
                 user_wallet_increment($user->referral_id, $currency->id, $transaction_custom_cost, 6);
             }
             elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
+                $remark = 'Make_Escrow_manager_fee';
                 user_wallet_increment($user->referral_id, $currency->id, $transaction_custom_cost, 10);
             }
             $trans = new Transaction();
@@ -116,7 +118,7 @@ class EscrowController extends Controller
             $trans->amount      = $transaction_custom_cost;
             $trans->charge      = 0;
             $trans->type        = '+';
-            $trans->remark      = 'Make_Escrow_supervisor_fee';
+            $trans->remark      = $remark;
             $trans->details     = trans('Make Escrow');
             $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($user->referral_id)->name.'"}';
             $trans->save();

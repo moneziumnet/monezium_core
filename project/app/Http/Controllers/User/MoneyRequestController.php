@@ -211,13 +211,15 @@ class MoneyRequestController extends Controller
 
         user_wallet_decrement($sender->id, $currency_id, $data->amount);
         if ($receiver->referral_id != 0) {
-
+            $remark = 'Request_money_supervisor_fee';
             if (check_user_type_by_id(4, $receiver->referral_id)) {
                 user_wallet_increment($receiver->referral_id, $currency_id, $data->supervisor_cost,6);
             }
             elseif (DB::table('managers')->where('manager_id', $receiver->referral_id)->first()) {
+                $remark = 'Request_money_manager_fee';
                 user_wallet_increment($receiver->referral_id, $currency_id, $data->supervisor_cost,10);
             }
+            $referral_user = User::findOrFail($receiver->referral_id);
             $trans = new Transaction();
             $trans->trnx = str_rand();
             $trans->user_id     = $receiver->referral_id;
@@ -226,9 +228,9 @@ class MoneyRequestController extends Controller
             $trans->amount      = $data->supervisor_cost;
             $trans->charge      = 0;
             $trans->type        = '+';
-            $trans->remark      = 'Request_money_supervisor_fee';
+            $trans->remark      = $remark;
             $trans->details     = trans('Request Money');
-            $trans->data        = '{"sender":"'.$sender->name.'", "receiver":"'.$receiver->name.'"}';
+            $trans->data        = '{"sender":"'.$sender->name.'", "receiver":"'.$referral_user->name.'"}';
             $trans->save();
         }
         if (isset($data->shop_id)) {

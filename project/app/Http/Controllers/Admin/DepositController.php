@@ -91,12 +91,15 @@ class DepositController extends Controller
             if($transaction_custom_fee) {
                 $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($amount/100) * $transaction_custom_fee->data->percent_charge;
             }
+            $remark = 'Deposit_create_supervisor_fee';
             if (check_user_type_by_id(4, $user->referral_id)) {
                 user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost, 6);
             }
             elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
+                $remark = 'Deposit_create_manager_fee';
                 user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost, 10);
             }
+            $referral_user = User::findOrFail($user->referral_id);
             $trans = new Transaction();
             $trans->trnx = str_rand();
             $trans->user_id     = $user->referral_id;
@@ -105,9 +108,9 @@ class DepositController extends Controller
             $trans->amount      = $transaction_custom_cost;
             $trans->charge      = 0;
             $trans->type        = '+';
-            $trans->remark      = 'Deposit_create_supervisor_fee';
+            $trans->remark      = $remark;
             $trans->details     = trans('Deposit complete');
-            $trans->data        = '{"sender":"System Account", "receiver":"'.$user->name.'"}';
+            $trans->data        = '{"sender":"System Account", "receiver":"'.$referral_user->name.'"}';
             $trans->save();
         }
         $final_chargefee = $transaction_global_cost + $transaction_custom_cost;
