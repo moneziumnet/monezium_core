@@ -30,6 +30,7 @@
                             <li class="list-group-item d-flex justify-content-between">{{__('Name :')}} <span class="font-weight-bold">{{$invoice->invoice_to}}</span> </li>
                             <li class="list-group-item d-flex justify-content-between">{{__('Email :')}} <span class="font-weight-bold">{{$invoice->email}}</span> </li>
                             <li class="list-group-item d-flex justify-content-between">{{__('Amount :')}} <span class="font-weight-bold">{{amount($invoice->final_amount,$invoice->currency->type,2).' '.$invoice->currency->code}}</span> </li>
+                            <li class="list-group-item d-flex justify-content-between">{{__('Tax :')}} <span class="font-weight-bold">{{amount($tax_value,$invoice->currency->type,2).' '.$invoice->currency->code}}</span> </li>
                         </ul>
 
                         <div class="text-center mt-3">

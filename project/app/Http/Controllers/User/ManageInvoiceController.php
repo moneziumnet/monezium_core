@@ -399,6 +399,11 @@ class ManageInvoiceController extends Controller
     {
         try {
             $invoice = Invoice::where('number',decrypt($number))->firstOrFail();
+            $inv_items = InvItem::where('invoice_id', $invoice->id)->get();
+            $tax_value = 0;
+            foreach ($inv_items as $value) {
+                $tax_value += $value->tax->rate * $value->amount;
+            }
             if($invoice->payment_status == 1){
                 return back()->with('error','Invoice already been paid');
             }
@@ -411,7 +416,7 @@ class ManageInvoiceController extends Controller
             return back()->with('error','You can not pay your own invoice.');
         }
 
-        return view('user.invoice.invoice_payment',compact('invoice'));
+        return view('user.invoice.invoice_payment',compact('invoice', 'tax_value'));
     }
 
     public function invoicePaymentSubmit(Request $request,$number)
@@ -463,8 +468,29 @@ class ManageInvoiceController extends Controller
             if($wallet->balance < $invoice->final_amount) {
                 return back()->with('error','Insufficient balance to your wallet');
             }
+            $inv_items = InvItem::where('invoice_id', $invoice->id)->get();
+            $tax_value = 0;
+            foreach ($inv_items as $value) {
+                $tax_value += $value->tax->rate * $value->amount;
+            }
+            user_wallet_increment(0, $invoice->currency_id, $tax_value, 9);
+
+            $trans = new Transaction();
+            $trans->trnx = str_rand();
+            $trans->user_id     = auth()->id();
+            $trans->user_type   = 1;
+            $trans->currency_id = $invoice->currency_id;
+            $trans->amount      = $tax_value;
+            $trans->charge      = 0;
+            $trans->type        = '-';
+            $trans->remark      = 'invoice_tax_fee';
+            $trans->details     = trans('Invoice Tax Fee');
+            $trans->invoice_num = $invoice->number;
+            $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"System Account"}';
+            $trans->save();
 
             $wallet->balance -= $invoice->final_amount;
+            $wallet->balance -= $tax_value;
             $wallet->update();
 
             $trnx              = new Transaction();

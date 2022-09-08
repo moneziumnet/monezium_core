@@ -69,7 +69,7 @@
                     </div>
                     <hr>
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-5 mb-3">
                             <div class="form-label">{{__('Item name')}}</div>
                             <input type="text" name="item[]" class="form-control shadow-none itemname" required disabled>
                         </div>
@@ -77,9 +77,10 @@
                             <div class="form-label">{{__('Amount')}}</div>
                             <input type="text" name="amount[]" class="form-control shadow-none amount" required disabled>
                         </div>
-                        <div class="col-md-1 mb-3">
+                        <div class="col-md-2 mb-3">
                             <div class="form-label"> {{__("Tax")}}</div>
                             <div id="tax_append"></div>
+                            <input type="hidden"  class="add-tax tax" data-rate="0">
                             <a class="btn btn-primary w-100 add-tax disabled" href="javascript:void(0)">{{__('Add Tax')}}</a>
 
                         </div>
@@ -240,14 +241,15 @@
             $('.extra-container').append(`
 
                    <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-5 mb-3">
                             <input type="text" name="item[]" class="form-control shadow-none itemname" required>
                         </div>
                         <div class="col-md-4 mb-3">
                             <input type="text" name="amount[]" class="form-control shadow-none amount" required>
                         </div>
-                        <div class="col-md-1 mb-3">
+                        <div class="col-md-2 mb-3">
                             <div id="tax_append"></div>
+                            <input type="hidden"  class="add-tax tax" data-rate="0">
                             <a class="btn btn-primary w-100 add-tax" href="javascript:void(0)">{{__('Add Tax')}}</a>
                         </div>
                         <div class="col-md-1 mb-3">
@@ -276,7 +278,15 @@
         })
 
         $(document).on('click','.remove',function () {
+            var total = 0;
             $(this).closest('.row').remove()
+            $('.amount').each(function(e){
+                if($(this).val()!=''){
+                    var rate = parseFloat($(this).parent().parent().find('.tax').data('rate'))
+                    total += parseFloat($(this).val()) + rate *  parseFloat($(this).val()) / 100;
+                }
+                $('.totalAmount').text(total.toFixed(4))
+            })
         })
 
         $(document).on('click','.doc_remove',function () {
@@ -306,7 +316,8 @@
             var total = 0;
             $('.amount').each(function(e){
                 if($(this).val()!=''){
-                    total += parseFloat($(this).val());
+                    var rate = parseFloat($(this).parent().parent().find('.tax').data('rate'))
+                    total += parseFloat($(this).val()) + rate *  parseFloat($(this).val()) / 100;
                 }
                 $('.totalAmount').text(total.toFixed(4))
             })
@@ -329,13 +340,14 @@
                     url: "{{route('user.invoice.tax')}}",
                     data: $(this).serialize(),
                     success: function(msg) {
-                        console.log(msg);
                         $('#tax_append').append(`
-                            <input type="text"  class="form-control shadow-none" value=${msg.name} readonly required>
+                            <input type="text"  class="form-control shadow-none tax" value="${msg.name} ${msg.rate}%" data-rate="${msg.rate}" readonly required>
                             <input type="hidden" name="tax_id[]" class="form-control shadow-none" value=${msg.id}  required>
 
                             `);
                         $('.add-tax').remove();
+                        var tax_value = $('#tax_append').parent().parent().find('.amount').val() * msg.rate/100
+                        $('.totalAmount').text(parseFloat($('.totalAmount').text()) + tax_value)
                         $('#tax_append').attr('id', 'un_tax_append');
                         $('#modal-success-tax').modal('hide')
                     },
