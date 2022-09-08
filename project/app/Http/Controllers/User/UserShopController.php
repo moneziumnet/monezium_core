@@ -31,7 +31,7 @@ class UserShopController extends Controller
     }
 
     public function index(){
-        $data['products'] = Product::where('user_id'. '!=',auth()->id())->wherestatus(1)->get();
+        $data['products'] = Product::where('user_id','!=',auth()->id())->wherestatus(1)->get();
         return view('user.shop.index', $data);
     }
 
