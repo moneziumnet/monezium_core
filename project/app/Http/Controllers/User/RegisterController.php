@@ -16,6 +16,7 @@ use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Classes\GeniusMailer;
 use App\Models\ReferralBonus;
+use App\Models\Wallet;
 use App\Models\RequestDomain;
 use App\Models\Generalsetting;
 use Illuminate\Support\Carbon;
@@ -121,6 +122,18 @@ class RegisterController extends Controller
         $input['referral_id'] = $request->input('reff')? $request->input('reff'):'0';
         $input['affilate_code'] = md5($request->name . $request->email);
         $user->fill($input)->save();
+
+        $default_currency = Currency::where('is_default','1')->first();
+        $user_wallet = new Wallet();
+        $user_wallet->user_id = $user->id;
+        $user_wallet->user_type = 1;
+        $user_wallet->currency_id = $default_currency->id;
+        $user_wallet->balance = 0;
+        $user_wallet->wallet_type = 1;
+        $user_wallet->wallet_no =$gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
+        $user_wallet->created_at = date('Y-m-d H:i:s');
+        $user_wallet->updated_at = date('Y-m-d H:i:s');
+        $user_wallet->save();
 
         if ($gs->is_verification_email == 1) {
             $verificationLink = "<a href=" . url('user/register/verify/' . $token) . ">Simply click here to verify. </a>";
