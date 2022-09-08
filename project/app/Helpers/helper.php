@@ -498,23 +498,26 @@ if(!function_exists('getModule')){
             if($user->wallet_maintenance && $now->gt($user->wallet_maintenance)) {
                 $user->wallet_maintenance = Carbontime::now()->addDays(30);
                 $chargefee = Charge::where('slug', 'account-maintenance')->where('plan_id', $user->bank_plan_id)->first();
+                foreach ($wallets as $key => $value) {
+                    # code...
+                    $trans = new Transaction();
+                    $trans->trnx = str_rand();
+                    $trans->user_id     = $user->id;
+                    $trans->user_type   = 1;
+                    $trans->currency_id = $value->currency_id;
+                    $trans->amount      = $chargefee->data->fixed_charge;
+                    $trans->charge      = 0;
+                    $trans->type        = '-';
+                    $trans->remark      = 'wallet_monthly_fee';
+                    $trans->details     = trans('Wallet Maintenance');
+                    $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+                    $trans->save();
 
-                $trans = new Transaction();
-                $trans->trnx = str_rand();
-                $trans->user_id     = $user->id;
-                $trans->user_type   = 1;
-                $trans->currency_id = 1;
-                $trans->amount      = $chargefee->data->fixed_charge;
-                $trans->charge      = 0;
-                $trans->type        = '-';
-                $trans->remark      = 'wallet_monthly_fee';
-                $trans->details     = trans('Wallet Maintenance');
-                $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
-                $trans->save();
+                    user_wallet_decrement($user->id, $value->currency_id, $chargefee->data->fixed_charge, 1);
+                    user_wallet_increment(0, $value->currency_id, $chargefee->data->fixed_charge, 9);
+                    $user->update();
+                }
 
-                user_wallet_decrement($user->id, 1, $chargefee->data->fixed_charge, 1);
-                user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
-                $user->update();
 
             }
             elseif ( $user->wallet_maintenance == null) {
