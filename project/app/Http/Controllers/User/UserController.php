@@ -15,6 +15,8 @@ use App\Traits\Payout;
 use App\Models\Currency;
 use App\Models\Transaction;
 use App\Models\BankAccount;
+use App\Models\SubInsBank;
+use App\Models\BankGateway;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
@@ -44,11 +46,38 @@ class UserController extends Controller
         $data['cryptowallets'] = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('wallet_type', 8)->with('currency')->get();
         $data['transactions'] = Transaction::whereUserId(auth()->id())->orderBy('id','desc')->limit(5)->get();
         $data['bankaccountlist'] = BankAccount::whereUserId(auth()->id())->get();
+        $data['currencies'] = Currency::where('type', 1)->where('status', 1)->get();
+        $data['subbank'] = SubInsBank::wherestatus(1)->get();
+
         foreach ($data['transactions'] as $key => $transaction) {
             $transaction->currency = Currency::whereId($transaction->currency_id)->first();
         }
         $data['userBalance'] = userBalance(auth()->id());
         return view('user.dashboard',$data);
+    }
+
+    public function wallet_create (Request $request) {
+        $check =  Wallet::where('user_id', $request->user_id)->where('wallet_type', 1)->where('currency_id', $request->currency_id)->first();
+        if($check){
+            return back()->with('error', 'This wallet already exist');
+        }
+        $gs = Generalsetting::first();
+        $user_wallet = new Wallet();
+        $user_wallet->user_id = $request->user_id;
+        $user_wallet->user_type = 1;
+        $user_wallet->currency_id = $request->currency_id;
+        $user_wallet->balance = 0;
+        $user_wallet->wallet_type = 1;
+        $user_wallet->wallet_no =$gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
+        $user_wallet->created_at = date('Y-m-d H:i:s');
+        $user_wallet->updated_at = date('Y-m-d H:i:s');
+        $user_wallet->save();
+        return back()->with('message', 'You have created new Wallet successfully.');
+    }
+
+    public function gateway(Request $request) {
+        $bankgateway = BankGateway::where('subbank_id', $request->id)->first();
+        return $bankgateway;
     }
 
     public function scanQR(Request $request)

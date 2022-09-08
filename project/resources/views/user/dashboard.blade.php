@@ -68,8 +68,24 @@
       </div>
 
     </div>
-    <div class="row justify-content-center">
-        <h1>@lang('Wallet list')</h1>
+    <div class="container-xl">
+        <div class="page-header d-print-none">
+          <div class="row align-items-center">
+            <div class="col">
+              <h1>
+                {{__('Wallet list')}}
+              </h1>
+            </div>
+            <div class="col-auto ms-auto d-print-none">
+                <div class="btn-list">
+
+                  <a  data-bs-toggle="modal" data-bs-target="#modal-wallet-create" class="btn btn-primary d-sm-inline-block">
+                      <i class="fas fa-plus me-1"></i> {{__('Create Wallet')}}
+                  </a>
+                </div>
+              </div>
+          </div>
+        </div>
     </div>
     @php
     $userType = explode(',', auth()->user()->user_type);
@@ -86,8 +102,36 @@
         $wallet_type['7'] = 'Merchant';
     }
     @endphp
+    <div class="modal modal-blur fade" id="modal-wallet-create" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title">{{('Wallet Create')}}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{route('user.wallet.create')}}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label required">{{__('Currency')}}</label>
+                        <select name="currency_id" class="form-select" required>
+                            <option value="">{{ __('Select Currency') }}</option>
+                            @foreach ($currencies as $key => $value)
+                                    <option value="{{$value->id}}">{{$value->code}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <input type="hidden" name="user_id" value="{{$user->id}}">
+                </div>
 
-    <div class="row justify-content " style="max-height: 368px;overflow-y: scroll;">
+                <div class="modal-footer">
+                    <button  id="submit-btn" class="btn btn-primary">{{ __('Create') }}</button>
+                </div>
+            </form>
+        </div>
+        </div>
+    </div>
+    <div class="row justify-content mt-3" style="max-height: 368px;overflow-y: scroll;">
         @if (count($wallets) != 0)
             @foreach ($wallets as $item)
                 @if (isset($wallet_type[$item->wallet_type]))
@@ -113,8 +157,16 @@
 
     </div>
     <hr>
-    <div class="row justify-content-center">
-        <h1>@lang('Crypto Wallet list')</h1>
+    <div class="container-xl">
+        <div class="page-header d-print-none">
+          <div class="row align-items-center">
+            <div class="col">
+              <h1>
+                {{__('Crypto Wallet list')}}
+              </h1>
+            </div>
+          </div>
+        </div>
     </div>
 
     <div class="row justify-content " style="max-height: 368px;overflow-y: scroll;">
@@ -141,11 +193,66 @@
 
     </div>
     <hr>
-    <div class="row justify-content-center">
-        <h1>@lang('Bank Account list')</h1>
+    <div class="container-xl">
+        <div class="page-header d-print-none">
+          <div class="row align-items-center">
+            <div class="col">
+              <h1>
+                {{__('Back Account list')}}
+              </h1>
+            </div>
+            <div class="col-auto ms-auto d-print-none">
+                <div class="btn-list">
+
+                  <a  data-bs-toggle="modal" data-bs-target="#modal-bank-create" class="btn btn-primary d-sm-inline-block">
+                      <i class="fas fa-plus me-1"></i> {{__('Create Bank Account')}}
+                  </a>
+                </div>
+              </div>
+          </div>
+        </div>
     </div>
 
-    <div class="row justify-content " style="max-height: 368px;overflow-y: scroll;">
+    <div class="modal modal-blur fade" id="modal-bank-create" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title">{{('Bank Account Create')}}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="" class="bankaccount" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label required">{{ __('SubInstitions Bank') }}</label>
+                            <select class="form-control" name="subbank" id="subbank" required>
+                            <option value="">{{ __('Select SubInstitions Bank') }}</option>
+                            @foreach ($subbank as $bank )
+                                <option value="{{$bank->id}}">{{ __($bank->name) }}</option>
+                            @endforeach
+                            </select>
+                        </div>
+                    <div class="form-group mt-1">
+                        <label class="form-label required">{{__('Currency')}}</label>
+                        <select name="currency" class="form-select" required>
+                            <option value="">{{ __('Select Currency') }}</option>
+                            @foreach ($currencies as $key => $value)
+                                    <option value="{{$value->id}}">{{$value->code}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <input type="hidden" name="user" value="{{$user->id}}">
+                </div>
+
+                <div class="modal-footer">
+                    <button  id="submit-btn" class="btn btn-primary">{{ __('Create') }}</button>
+                </div>
+            </form>
+        </div>
+        </div>
+    </div>
+
+    <div class="row justify-content mt-3" style="max-height: 368px;overflow-y: scroll;">
         @if (count($bankaccountlist) != 0)
             @foreach ($bankaccountlist as $item)
                 <div class="col-sm-6 col-md-4 mb-3">
@@ -158,7 +265,10 @@
                     <div class="card-body">
                         <div class="h3 m-0 text-uppercase"> {{$item->iban}}</div>
                         <div class="h4 m-0 text-uppercase"> {{ $item->swift }}</div>
-                        <div class="text-muted">{{ __($item->subbank->name) }} </div>
+                        <div class="row">
+                            <div class="col text-muted">{{ __($item->subbank->name) }} </div>
+                            <div class="col h4 m-0 text-uppercase text-center">{{ __($item->currency->code) }} </div>
+                        </div>
                     </div>
                     </div>
                 </div>
@@ -378,5 +488,16 @@
           $('#modal-success').modal('show')
         })
       })
+
+      $('#subbank').on('change', function() {
+            $.post("{{ route('user.bankaccount.gateway') }}",{id:$('#subbank').val(),_token:'{{csrf_token()}}'},function (res) {
+            console.log(res);
+
+                if(res.keyword == 'openpayd')
+                    {
+                        $('.bankaccount').prop('action','{{ route('user.bankaccount.openpayd.store') }}');
+                    }
+             });
+        })
     </script>
 @endpush

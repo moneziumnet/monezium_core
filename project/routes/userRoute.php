@@ -97,6 +97,10 @@ Route::prefix('user')->group(function() {
     Route::group(['middleware' => ['otp','banuser']],function () {
 
       Route::get('/dashboard', [UserController::class,'index'])->name('user.dashboard');
+      Route::post('/user/wallet', [UserController::class,'wallet_create'])->name('user.wallet.create');
+      Route::POST('/user/bankaccount/openpayd',[OpenPaydController::class,'store'])->name('user.bankaccount.openpayd.store');
+      Route::POST('/user/bankaccount/gateway',[UserController::class,'gateway'])->name('user.bankaccount.gateway');
+
       Route::get('/username/{number}', [UserController::class,'username'])->name('user.username');
       Route::post('/username-by-email', [UserController::class,'username_by_email'])->name('user.username.email');
       Route::get('/transactions', [UserController::class,'transaction'])->name('user.transaction');
