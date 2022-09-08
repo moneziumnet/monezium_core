@@ -73,6 +73,7 @@ use App\Http\Controllers\User\UserContractManageController;
 use App\Http\Controllers\User\DepositCryptoController;
 use App\Http\Controllers\User\WithdrawCryptoController;
 use App\Http\Controllers\User\VirtualCardController;
+use App\Http\Controllers\User\UserShopController;
 
 Route::prefix('user')->group(function() {
 
@@ -102,6 +103,10 @@ Route::prefix('user')->group(function() {
       Route::get('/transactions-export', [UserController::class,'transactionExport'])->name('user.transaction-export');
       Route::get('/transactions-pdf', [UserController::class,'transactionPDF'])->name('user.transaction-pdf');
       Route::get('/transaction/details/{id}', [UserController::class,'trxDetails'])->name('user.trxDetails');
+
+      Route::get('/shop', [UserShopController::class,'index'])->name('user.shop.index');
+      Route::get('/shop/buy/{id}', [UserShopController::class,'buy'])->name('user.shop.buy');
+
 
       Route::get('/export-pdf', [UserController::class,'generatePDF'])->name('user.export.pdf');
 

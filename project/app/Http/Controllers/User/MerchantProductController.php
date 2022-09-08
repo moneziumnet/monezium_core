@@ -147,6 +147,9 @@ class MerchantProductController extends Controller
         if($data->quantity < $request->quantity) {
             return back()->with('error', 'The product\'s quantity is smaller than your quantity');
         }
+        if($data->user_id == auth()->id()) {
+            return back()->with('error', 'You can not buy your product.');
+        }
         if($request->payment == 'gateway'){
             return redirect(route(''));
         }

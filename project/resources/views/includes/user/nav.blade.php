@@ -25,6 +25,17 @@
           $count = count($modules);
           @endphp
 
+        <li class="nav-item dropdown {{ request()->routeIs('user.shop.index', 'user.shop.buy') ? 'active' : '' }}">
+        <a class="nav-link" href="{{route('user.shop.index')}}">
+            <span class="nav-link-icon d-md-none d-lg-inline-block">
+            <i class="fas fa-shopping-bag"></i>
+            </span>
+            <span class="nav-link-title">
+            {{__('Shop')}}
+            </span>
+        </a>
+        </li>
+
           @if (in_array('Loan',$modules) && !(auth()->user()->kyc_status != 1 && in_array('Loan',$kyc_modules)))
           <li class="nav-item dropdown {{ request()->routeIs('user.loans.plan') ? 'active' : '' }}">
             <a class="nav-link" href="{{route('user.loans.plan')}}">
@@ -42,7 +53,7 @@
             <li class="nav-item dropdown {{ request()->routeIs('user.invest.index') ? 'active' : '' }}">
             <a class="nav-link" href="{{route('user.invest.index')}}">
               <span class="nav-link-icon d-md-none d-lg-inline-block">
-                <i class="fas fa-cash-register"></i>
+                <i class="fas fa-warehouse"></i>
               </span>
               <span class="nav-link-title">
                 {{__('Investments ')}}
