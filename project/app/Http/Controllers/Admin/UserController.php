@@ -55,7 +55,6 @@ class UserController extends Controller
                                         </button>
                                         <div class="dropdown-menu" x-placement="bottom-start">
                                         <a href="' . route('admin-user-profile',$data->id) . '"  class="dropdown-item">'.__("Profile").'</a>
-                                        <a href="' . route('admin-user-edit',$data->id) . '" class="dropdown-item" >'.__("Edit").'</a>
                                         <a href="javascript:;" class="dropdown-item send" data-email="'. $data->email .'" data-toggle="modal" data-target="#vendorform">'.__("Send").'</a>
                                         <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.  route('admin-user-delete',$data->id).'">'.__("Delete").'</a>
                                         <a href="'.  route('admin-user-login',encrypt($data->id)).'" class="dropdown-item" target="_blank">'.__("Login").'</a>
@@ -824,6 +823,7 @@ class UserController extends Controller
 
             $user = User::findOrFail($id);
             $data = $request->all();
+            $data['name'] = $request->firstname." ".$request->lastname;
 
             if ($file = $request->file('photo'))
             {

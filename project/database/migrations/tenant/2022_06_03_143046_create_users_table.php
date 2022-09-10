@@ -19,6 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('business_name')->nullable();
             $table->string('account_number')->nullable();
             $table->string('name', 191);
+            $table->date('dob');
             $table->string('photo', 191)->nullable();
             $table->string('zip', 191)->nullable();
             $table->string('city', 191)->nullable();

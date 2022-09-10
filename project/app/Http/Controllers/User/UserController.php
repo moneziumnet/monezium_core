@@ -154,6 +154,7 @@ class UserController extends Controller
         ]);
 
         $input = $request->all();
+        $input['name'] = $request->firstname." ".$request->lastname;
         $data = Auth::user();
         if ($file = $request->file('photo'))
         {

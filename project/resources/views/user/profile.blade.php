@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -47,7 +47,14 @@
                           <div class="col-md-6">
                             <div class="form-group">
                               <label class="form-label required">{{__('Name')}}</label>
-                              <input name="name" class="form-control form--control" autocomplete="off" placeholder="{{__('User Name')}}" type="text" value="{{ $user->name }}" required readonly>
+                              <input name="name" class="form-control form--control" autocomplete="off" placeholder="{{__('User First Name')}}" type="text" value="{{ explode(" ", $user->name)[0] ?? $user->name }}" required readonly>
+                            </div>
+                          </div>
+
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="form-label required">{{__('Name')}}</label>
+                              <input name="name" class="form-control form--control" autocomplete="off" placeholder="{{__('User Last Name')}}" type="text" value="{{ explode(" ",$user->name)[1] ?? ""}}" required readonly>
                             </div>
                           </div>
 
@@ -57,6 +64,14 @@
                               <input name="email" class="form-control form--control" autocomplete="off" placeholder="{{__('Email Address')}}" type="email" value="{{ $user->email }}" required readonly>
                             </div>
                           </div>
+
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="form-label required">{{__('Birthday ')}}</label>
+                              <input name="dob" class="form-control form--control" autocomplete="off" placeholder="{{__('Your BirthDay')}}" type="date" value="{{$user->dob }}" required>
+                            </div>
+                          </div>
+
                           <div class="col-md-6">
                             <div class="form-group">
                               <label class="form-label required">{{__('Phone')}}</label>
@@ -95,7 +110,7 @@
                           <button type="submit" class="btn btn-primary submit-btn">{{__('Submit')}}</button>
                         </div>
 
-                        
+
                     </form>
                 </div>
             </div>
@@ -109,7 +124,7 @@
 @push('js')
 <script type="text/javascript">
   'use strict';
-  
+
   $('.edit-profile').on('click',function(){
     $('.upload').click();
 

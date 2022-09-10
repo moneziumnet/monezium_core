@@ -36,8 +36,16 @@
                 @csrf
                 <input type="hidden" name="reff" id="reff" value="{{Session::get('affilate')}}">
                 <div class="col-sm-6">
-                    <label for="name" class="form-label">@lang('Your Name')</label>
-                    <input type="text" id="name" name="name" class="form-control form--control">
+                    <label for="name" class="form-label">@lang('Your First Name')</label>
+                    <input type="text" id="name" name="firstname" class="form-control form--control" required>
+                </div>
+                <div class="col-sm-6">
+                    <label for="name" class="form-label">@lang('Your Last Name')</label>
+                    <input type="text" id="name" name="lastname" class="form-control form--control" required>
+                </div>
+                <div class="col-sm-6">
+                    <label for="customer_dob" class="form-label">@lang('Your Birthday')</label>
+                    <input type="date" id="customer_dob" name="customer_dob" class="form-control form--control" required>
                 </div>
                 <div class="col-sm-6">
                     <label for="email" class="form-label">@lang('Your Email')</label>
@@ -75,7 +83,7 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="inp-name" class="form-label">{{ __('Select Country') }}</label>
-                        <select class="form-control form--control mb-3" name="country_id" required>
+                        <select class="form-control form--control" name="country" required>
                             <option value="">{{ __('Select Country') }}</option>
                             @foreach(DB::table('countries')->get() as $dta)
                             <option value="{{ $dta->id }}">{{ $dta->name }}</option>
@@ -83,14 +91,15 @@
                         </select>
                     </div>
                 </div>
-
-                <div class="col-sm-6">
-                    <label for="password" class="form-label">@lang('Your Password')</label>
-                    <input type="password" id="password" name="password" class="form-control form--control">
-                </div>
-                <div class="col-sm-6">
-                    <label for="confirm-password" class="form-label">@lang('Confirm Password')</label>
-                    <input type="password" id="confirm-password" name="password_confirmation" class="form-control form--control">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label for="password" class="form-label">@lang('Your Password')</label>
+                        <input type="password" id="password" name="password" class="form-control form--control">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="confirm-password" class="form-label">@lang('Confirm Password')</label>
+                        <input type="password" id="confirm-password" name="password_confirmation" class="form-control form--control">
+                    </div>
                 </div>
 
 

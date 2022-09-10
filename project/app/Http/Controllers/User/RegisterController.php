@@ -121,6 +121,8 @@ class RegisterController extends Controller
         $input['verification_link'] = $token;
         $input['referral_id'] = $request->input('reff')? $request->input('reff'):'0';
         $input['affilate_code'] = md5($request->name . $request->email);
+        $input['name'] = $request->firstname." ".$request->lastname;
+        $input['dob'] = $request->customer_dob;
         $user->fill($input)->save();
 
         $default_currency = Currency::where('is_default','1')->first();

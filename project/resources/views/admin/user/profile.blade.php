@@ -165,8 +165,18 @@
                       </div>
                       <div class="col-md-6">
                         <div class="form-group">
-                          <label for="inp-name">{{ __('Name') }}</label>
-                          <input type="text" class="form-control" id="inp-name" name="name" placeholder="{{ __('Enter Name') }}" value="{{ $data->name }}" required>
+                          <label for="inp-name">{{ __('First Name') }}</label>
+                          <input type="text" class="form-control" id="inp-name" name="firstname" placeholder="{{ __('Enter First Name') }}" value="{{ explode(" ",$data->name)[0] ?? $data->name }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inp-name">{{ __('Last Name') }}</label>
+                            <input type="text" class="form-control" id="inp-name" name="lastname" placeholder="{{ __('Enter Second Name') }}" value="{{ explode(" ",$data->name)[1] ?? '' }}" required>
+                          </div>
+
+                        <div class="form-group">
+                            <label class="form-label required">{{__('Birthday ')}}</label>
+                            <input name="dob" class="form-control form--control" autocomplete="off" placeholder="{{__('Your BirthDay')}}" type="date" value="{{$data->dob }}" required>
                         </div>
 
                         <div class="form-group">
@@ -178,7 +188,7 @@
                           <label for="inp-email">{{ __('Account Number') }}</label>
                           <input type="text" class="form-control" id="inp-acc" name="account_number" value="{{ $data->account_number }}" disabled="">
                         </div>
-                        
+
                       </div>
                       <div class="col-md-6">
                         <div class="form-group">
