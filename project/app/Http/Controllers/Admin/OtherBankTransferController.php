@@ -257,7 +257,7 @@ class OtherBankTransferController extends Controller
                   'Accept' => 'application/json',
                   'Authorization' => 'Bearer '.$auth_token,
                   'Content-Type' => 'application/json',
-                  'x-account-holder-id' => $accounter_id,
+                  'x-account-holder-id' => $user->holder_id,
                 ],
               ]);
               $res_body = json_decode($response->getBody())->content[0];
@@ -282,7 +282,7 @@ class OtherBankTransferController extends Controller
                   'Accept' => 'application/json',
                   'Authorization' => 'Bearer '.$auth_token,
                   'Content-Type' => 'application/json',
-                  'x-account-holder-id' => $accounter_id,
+                  'x-account-holder-id' => $user->holder_id,
                 ],
             ]);
             $res_body = json_decode($response->getBody());
@@ -308,7 +308,7 @@ class OtherBankTransferController extends Controller
                   'Accept' => 'application/json',
                   'Authorization' => 'Bearer '.$auth_token,
                   'Content-Type' => 'application/json',
-                  'x-account-holder-id' => $accounter_id,
+                  'x-account-holder-id' => $user->holder_id,
                 ],
             ]);
             $res_body = json_decode($response->getBody());
@@ -331,7 +331,7 @@ class OtherBankTransferController extends Controller
                   'Accept' => 'application/json',
                   'Authorization' => 'Bearer '.$auth_token,
                   'Content-Type' => 'application/json',
-                  'x-account-holder-id' => $accounter_id,
+                  'x-account-holder-id' => $user->holder_id,
                 ],
             ]);
             $res_body = json_decode($response->getBody());

@@ -30,6 +30,7 @@ class CreateUsersTable extends Migration
             $table->string('vat', 191)->nullable();
             $table->string('email', 191);
             $table->string('password', 191)->nullable();
+            $table->string('holder_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->tinyInteger('is_provider')->default(0);

@@ -14,6 +14,7 @@ use App\Models\Admin;
 use App\Models\SubInsBank;
 use App\Models\BankPoolAccount;
 use App\Models\User;
+use App\Models\Country;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -43,12 +44,27 @@ class OpenPaydController extends Controller
             $auth_token = $res_body->access_token;
             $accounter_id = $res_body->accountHolderId;
         } catch (\Throwable $th) {
-             return redirect()->back()->with(array('warning' => 'Some Value is incorrect'));
+            return response()->json($th->getMessage());
         }
+        $country = Country::findOrFail($user->country);
         try {
             $currency = Currency::whereId($request->currency)->first();
-            $response = $client->request('POST', 'https://sandbox.openpayd.com/api/accounts', [
-                'body' => '{"currency":"'.$currency->code.'","friendlyName":"Billing Account('.$currency->code.')"}',
+            $response = $client->request('POST', 'https://sandbox.openpayd.com/api/linkedClient', [
+                'body' => '{
+                    "individual": {
+                         "address": {
+                              "addressLine1": "'.$user->address.'",
+                              "city": "'.$user->city.'",
+                              "country": "'.$country->iso2.'"
+                         },
+                         "firstName": "'.explode(" ",$user->name)[0].'",
+                         "lastName": "'.explode(" ",$user->name)[1].'",
+                         "dateOfBirth": "'.$user->dob.'",
+                         "email": "'.$user->email.'"
+                    },
+                    "clientType": "INDIVIDUAL",
+                    "friendlyName": "'.$user->name.'"
+               }',
                 'headers' => [
                   'Accept' => 'application/json',
                   'Authorization' => 'Bearer '.$auth_token,
@@ -57,9 +73,29 @@ class OpenPaydController extends Controller
                 ],
             ]);
             $res_body = json_decode($response->getBody());
+            $linked_accountid = $res_body->accountHolderId;
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage());
+        }
+        $user->holder_id = $linked_accountid;
+        $user->update();
+
+
+        try {
+            $currency = Currency::whereId($request->currency)->first();
+            $response = $client->request('POST', 'https://sandbox.openpayd.com/api/accounts', [
+                'body' => '{"currency":"'.$currency->code.'","friendlyName":"Billing Account('.$currency->code.')"}',
+                'headers' => [
+                  'Accept' => 'application/json',
+                  'Authorization' => 'Bearer '.$auth_token,
+                  'Content-Type' => 'application/json',
+                  'x-account-holder-id' => $linked_accountid,
+                ],
+            ]);
+            $res_body = json_decode($response->getBody());
             $internal_id = $res_body->internalAccountId;
         } catch (\Throwable $th) {
-             return redirect()->back()->with(array('warning' => 'Some Value is incorrect'));
+            return response()->json($th->getMessage());
         }
 
         try {
@@ -68,7 +104,7 @@ class OpenPaydController extends Controller
                   'Accept' => 'application/json',
                   'Authorization' => 'Bearer '.$auth_token,
                   'Content-Type' => 'application/json',
-                  'x-account-holder-id' => $accounter_id,
+                  'x-account-holder-id' => $linked_accountid,
                 ],
             ]);
             $res_body = json_decode($response->getBody())[0];
@@ -76,7 +112,7 @@ class OpenPaydController extends Controller
             $bic_swift = $res_body->bic;
             $iban = $res_body->iban;
         } catch (\Throwable $th) {
-             return redirect()->back()->with(array('warning' => 'Some Value is incorrect'));
+            return response()->json($th->getMessage());
         }
 
 
