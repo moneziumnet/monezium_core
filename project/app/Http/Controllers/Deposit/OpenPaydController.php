@@ -47,6 +47,8 @@ class OpenPaydController extends Controller
             return response()->json($th->getMessage());
         }
         $country = Country::findOrFail($user->country);
+
+        if (!$user->holder_id){
         try {
             $currency = Currency::whereId($request->currency)->first();
             $response = $client->request('POST', 'https://sandbox.openpayd.com/api/linkedClient', [
@@ -79,7 +81,10 @@ class OpenPaydController extends Controller
         }
         $user->holder_id = $linked_accountid;
         $user->update();
-
+    }
+    else {
+        $linked_accountid = $user->holder_id;
+    }
 
         try {
             $currency = Currency::whereId($request->currency)->first();
