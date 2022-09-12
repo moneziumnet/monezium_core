@@ -16,7 +16,8 @@
     <link href="{{asset('assets/user/css/custom.css')}}" rel="stylesheet"/>
     <link href="{{asset('assets/user/')}}/css/demo.min.css" rel="stylesheet"/>
 
-
+    <script src="{{asset('assets/user/js/jquery-3.6.0.min.js')}}"></script>
+    <script src="{{asset('assets/front/js/custom.js')}}"></script>
     <link rel="stylesheet" type="text/css" href="{{asset('assets/user/')}}/css/bootstrap-4.3.1.css">
     <script type="text/javascript" src="{{asset('assets/user/')}}/js/jquery-1.12.4.min.js"></script>
     <link type="text/css" href="{{asset('assets/user/')}}/css/jquery-ui.css" rel="stylesheet">
@@ -63,29 +64,46 @@
                                 </p>
                             </div>
                             @if ($data->status == 1)
-                                <div class="wrapper-image-preview col-6">
+                                <div class="wrapper-image-preview col-md-6">
                                     <p class="text-muted text-center"> {{__('Contracter')}} </p>
                                     <div class="box full-width">
                                         <div class="back-preview-image" style="background-image: url({{ $data->contracter_image_path ? asset('assets/images/'.$data->contracter_image_path) : '' }});"></div>
                                     </div>
                                 </div>
-                                <div class="wrapper-image-preview col-6">
+                                <div class="wrapper-image-preview col-md-6">
                                     <p class="text-muted text-center">{{__('You already signed')}}</p>
                                     <div class="box full-width">
                                         <div class="back-preview-image" style="background-image: url({{ $data->customer_image_path ? asset('assets/images/'.$data->customer_image_path) : '' }});"></div>
                                     </div>
                                 </div>
                             @else
-                                <form method="POST" action="{{route('user.aoa.sign', $data->id)}}">
+                                <div class="wrapper-image-preview col-md-6">
+                                    <p class="text-muted text-center"> {{__('Contracter')}} </p>
+                                    <div class="box full-width">
+                                        <div class="back-preview-image" style="background-image: url({{ $data->contracter_image_path ? asset('assets/images/'.$data->contracter_image_path) : '' }});"></div>
+                                    </div>
+                                </div>
+                                <form method="POST" action="{{route('user.aoa.sign', $data->id)}}" class="col-md-6" >
                                     @csrf
                                     <div class="col-md-12">
-                                        <label class="" for="">{{__('Signature:')}}</label>
-                                        <br/>
+                                        <label class="mb-3" for="">{{__('Signature:')}}</label>
                                         <div id="sig" ></div>
-                                        <br/>
-                                        <button id="clear" class="btn btn-primary btn-sm mt-2">{{__('Clear Signature')}}</button>
                                         <textarea id="signature64" name="signed" style="display: none"></textarea>
                                     </div>
+                                    <div class="col-md-11 mx-auto">
+                                        @if (auth()->user())
+
+                                        <div class="back-preview-image" id="preview_image" style= "display: none;"></div>
+                                        <div class="form-group mt-3">
+                                            <select class="form-select shadow-none" id="sign_select" name="sign_path">
+                                                <option value="" selected class="text-center" >{{__('Select Photo')}}</option>
+                                                <option value="{{auth()->user()->signature}}" >{{__('Signature')}}</option>
+                                                <option value="{{auth()->user()->stamp}}" >{{__('Stamp')}}</option>
+                                            </select>
+                                        </div>
+                                        @endif
+                                    </div>
+                                    <button id="clear" class="btn btn-primary btn-sm mt-2">{{__('Clear Signature')}}</button>
                                     <input type="hidden" name="contract_id" value="{{$data->contract_id}}">
                                     <br/>
                                     <div class="text-center">
@@ -111,11 +129,23 @@
       <script src="{{asset('assets/user/')}}/js/demo.min.js"></script>
         <script type="text/javascript">
             var sig = $('#sig').signature({syncField: '#signature64', syncFormat: 'PNG'});
+            let mainurl = '{{ url('/') }}';
             $('#clear').click(function(e) {
                 e.preventDefault();
                 sig.signature('clear');
                 $("#signature64").val('');
+                $("#sign_select").val('');
+                document.getElementById("preview_image").style.display = "none";
+                document.getElementById("sig").style.display = "block";
             });
+            $('#sign_select').change(function(){
+                var sign_select = $('#sign_select').val();
+                var image_path =  `${mainurl}/assets/images/${sign_select}`;
+                console.log(image_path)
+                document.getElementById("preview_image").style.display = "block";
+                    $('#preview_image').css('background-image',"url("+image_path+")" )
+                document.getElementById("sig").style.display = "none";
+            })
         </script>
       {{-- @include('notify.alert') --}}
       @stack('script')

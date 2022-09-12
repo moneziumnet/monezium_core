@@ -74,24 +74,30 @@ class UserContractManageController extends Controller
 
     public function contract_sign(Request $request, $id) {
         $data = Contract::findOrFail($id);
-
-        $folderPath ='assets/images/';
-        $image_parts = explode(";base64,", $request->signed);
-        $image_type_aux = explode("image/", $image_parts[0]);
-        $image_type = $image_type_aux[1];
-        $image_base64 = base64_decode($image_parts[1]);
-        $filename = uniqid() . '.'.$image_type;
-        $file = $folderPath . $filename;
-        file_put_contents($file, $image_base64);
+        if( $request->sign_path) {
+            $data->customer_image_path = $request->sign_path;
+        }
+        else {
+            $folderPath ='assets/images/';
+            $image_parts = explode(";base64,", $request->signed);
+            $image_type_aux = explode("image/", $image_parts[0]);
+            $image_type = $image_type_aux[1];
+            $image_base64 = base64_decode($image_parts[1]);
+            $filename = uniqid() . '.'.$image_type;
+            $file = $folderPath . $filename;
+            file_put_contents($file, $image_base64);
+            $data->image_path = $filename;
+        }
         $data->status = 1;
-        $data->image_path = $filename;
         $data->update();
         return back()->with('success', 'You have signed successfully');
     }
 
     public function edit($id) {
-        $data = Contract::findOrFail($id);
-        return view('user.contract.edit', compact('data'));
+        $data['data'] = Contract::findOrFail($id);
+        $data['userlist'] = User::get();
+        $data['clientlist'] = ContractBeneficiary::where('user_id', auth()->id())->get();
+        return view('user.contract.edit', $data);
     }
 
     public function update(Request $request, $id) {
@@ -102,6 +108,8 @@ class UserContractManageController extends Controller
         $data->title = $request->title;
         $data->description = $request->description;
         $data->user_id = $request->user_id;
+        $data->contractor_id = $request->contractor_id;
+        $data->client_id = $request->client_id;
         $items = array_combine($request->item,$request->value);
         $data->pattern = json_encode($items);
         $data->update();
@@ -219,17 +227,22 @@ class UserContractManageController extends Controller
 
     public function aoa_sign(Request $request, $id) {
         $data = ContractAoa::findOrFail($id);
+        if( $request->sign_path) {
+            $data->customer_image_path = $request->sign_path;
+        }
+        else {
 
-        $folderPath ='assets/images/';
-        $image_parts = explode(";base64,", $request->signed);
-        $image_type_aux = explode("image/", $image_parts[0]);
-        $image_type = $image_type_aux[1];
-        $image_base64 = base64_decode($image_parts[1]);
-        $filename = uniqid() . '.'.$image_type;
-        $file = $folderPath . $filename;
-        file_put_contents($file, $image_base64);
+            $folderPath ='assets/images/';
+            $image_parts = explode(";base64,", $request->signed);
+            $image_type_aux = explode("image/", $image_parts[0]);
+            $image_type = $image_type_aux[1];
+            $image_base64 = base64_decode($image_parts[1]);
+            $filename = uniqid() . '.'.$image_type;
+            $file = $folderPath . $filename;
+            file_put_contents($file, $image_base64);
+            $data->customer_image_path = $filename;
+        }
         $data->status = 1;
-        $data->customer_image_path = $filename;
         $data->update();
         return back()->with('success', 'You have signed successfully');
     }
