@@ -167,6 +167,22 @@ class UserController extends Controller
             $input['is_provider'] = 0;
         }
 
+        if ($file = $request->file('signature'))
+        {
+            $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
+            $file->move('assets/images',$name);
+            @unlink('assets/images/'.$data->signature);
+            $data['signature'] = $name;
+        }
+
+        if ($file = $request->file('stamp'))
+        {
+            $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
+            $file->move('assets/images',$name);
+            @unlink('assets/images/'.$data->stamp);
+            $data['stamp'] = $name;
+        }
+
         $data->update($input);
         $msg = 'Successfully updated your profile';
         return redirect()->back()->with('success',$msg);

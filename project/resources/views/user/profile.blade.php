@@ -46,15 +46,15 @@
                         <div class="row g-3">
                           <div class="col-md-6">
                             <div class="form-group">
-                              <label class="form-label required">{{__('Name')}}</label>
-                              <input name="name" class="form-control form--control" autocomplete="off" placeholder="{{__('User First Name')}}" type="text" value="{{ explode(" ", $user->name)[0] ?? $user->name }}" required readonly>
+                              <label class="form-label required">{{__('First Name')}}</label>
+                              <input name="firstname" class="form-control form--control" autocomplete="off" placeholder="{{__('User First Name')}}" type="text" value="{{ explode(" ", $user->name)[0] ?? $user->name }}" required readonly>
                             </div>
                           </div>
 
                           <div class="col-md-6">
                             <div class="form-group">
-                              <label class="form-label required">{{__('Name')}}</label>
-                              <input name="name" class="form-control form--control" autocomplete="off" placeholder="{{__('User Last Name')}}" type="text" value="{{ explode(" ",$user->name)[1] ?? ""}}" required readonly>
+                              <label class="form-label required">{{__('Last Name')}}</label>
+                              <input name="lastname" class="form-control form--control" autocomplete="off" placeholder="{{__('User Last Name')}}" type="text" value="{{ explode(" ",$user->name)[1] ?? ""}}" required readonly>
                             </div>
                           </div>
 
@@ -102,6 +102,19 @@
                             <div class="form-group">
                               <label class="form-label required">{{__('Address')}}</label>
                               <input name="address" class="form-control form--control" autocomplete="off" placeholder="{{__('Address')}}" type="text" value="{{ $user->address }}" required>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="form-label">{{__('Signature')}}</label>
+                              <input name="signature" class="form-control shadow-none" type="file" accept=".png,.jpg">
+                            </div>
+                          </div>
+
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="form-label">{{__('VAT Number')}}</label>
+                              <input name="stamp" class="form-control shadow-none" type="file" accept=".png,.jpg">
                             </div>
                           </div>
                         </div>

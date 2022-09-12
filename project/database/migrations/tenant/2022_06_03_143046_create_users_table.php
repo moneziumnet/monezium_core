@@ -21,6 +21,8 @@ class CreateUsersTable extends Migration
             $table->string('name', 191);
             $table->date('dob');
             $table->string('photo', 191)->nullable();
+            $table->string('signature', 191)->nullable();
+            $table->string('stamp', 191)->nullable();
             $table->string('zip', 191)->nullable();
             $table->string('city', 191)->nullable();
             $table->string('address', 191)->nullable();
