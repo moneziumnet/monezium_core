@@ -8,6 +8,7 @@ use App\Models\Contract;
 use App\Models\ContractAoa;
 use App\Models\Generalsetting;
 use App\Models\User;
+use App\Models\ContractBeneficiary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
@@ -26,7 +27,9 @@ class UserContractManageController extends Controller
     }
 
     public function create(){
-        return view('user.contract.create');
+        $data['userlist'] = User::get();
+        $data['clientlist'] = ContractBeneficiary::where('user_id', auth()->id())->get();
+        return view('user.contract.create', $data);
     }
 
     public function store(Request $request){
@@ -37,6 +40,8 @@ class UserContractManageController extends Controller
         $data->title = $request->title;
         $data->description = $request->description;
         $data->user_id = $request->user_id;
+        $data->contractor_id = $request->contractor_id;
+        $data->client_id = $request->client_id;
         $items = array_combine($request->item,$request->value);
         $data->pattern = json_encode($items);
         $data->save();
@@ -142,7 +147,16 @@ class UserContractManageController extends Controller
         return $pdf->download('aoa.pdf');
     }
 
-
+    public function beneficiary_create(Request $request)
+    {
+        $data = new ContractBeneficiary();
+        if($request->email == auth()->user()->email) {
+            return back()->with('error', 'You can\'t create the beneficiary with your email');
+        }
+        $input = $request->all();
+        $data->fill($input)->save();
+        return back()->with('message', 'You have created new beneficiary successfully, please choose beneficiary list.');
+    }
 
 
 

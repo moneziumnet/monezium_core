@@ -11,7 +11,18 @@ class Contract extends Model
         'title',
         'description',
         'image_path',
+        'client_id',
+        'contractor_id',
         'status',
     ];
+    public function client()
+    {
+        return $this->belongsTo(User::class, 'client_id')->withDefault();
+    }
+
+    public function contractor()
+    {
+        return $this->belongsTo(ContractBeneficiary::class, 'contractor_id')->withDefault();
+    }
 
 }

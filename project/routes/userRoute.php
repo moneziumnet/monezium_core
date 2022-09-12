@@ -296,6 +296,8 @@ Route::prefix('user')->group(function() {
       Route::get('contract/aoa/delete/{id}',   [UserContractManageController::class,'aoa_delete'])->name('user.contract.aoa.delete');
       Route::get('contract/aoa/pdf/{id}',   [UserContractManageController::class,'export_aoa_pdf'])->name('user.aoa-pdf');
       Route::get('pay-invoice',   [DepositController::class,'invoicePayment'])->name('user.pay.invoice');
+      Route::post('contract/beneficiary/create',   [UserContractManageController::class,'beneficiary_create'])->name('user.contract.beneficiary.create');
+
 
       //escrow
       Route::get('my-escrow',   [EscrowController::class,'index'])->name('user.escrow.index');
