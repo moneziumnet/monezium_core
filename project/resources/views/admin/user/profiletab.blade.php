@@ -27,5 +27,10 @@
         <li class="nav-item">
             <a class="nav-link {{menu('admin-user-bank-account')}}" id="modules" href="{{route('admin-user-bank-account',$data->id) }}" role="button" >Report</a>
         </li>
+        @if(getModule('KYC Management'))
+            <li class="nav-item">
+                <a class="nav-link {{menu('admin.user.kycinfo')}}" id="modules" href="{{route('admin.user.kycinfo',$data->id) }}" role="button" >Kyc Info</a>
+            </li>
+        @endif
     </ul>
 </div>

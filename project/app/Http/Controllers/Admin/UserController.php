@@ -470,6 +470,61 @@ class UserController extends Controller
             return view('admin.user.profilebankaccount',$data);
         }
 
+        public function profilekycinfo($id) {
+            $data['data'] = User::findOrFail($id);
+            return view('admin.user.profilekycinfo', $data);
+        }
+
+        public function kycdatatables($id)
+        {
+            $datas = User::where('kyc_info','!=',NULL)->where('id', $id)->orderBy('id','desc');
+
+            return Datatables::of($datas)
+                                ->addColumn('action', function(User $data) {
+
+                                    return '<div class="btn-group mb-1">
+                                        <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        '.'Actions' .'
+                                        </button>
+                                        <div class="dropdown-menu" x-placement="bottom-start">
+                                        <a href="' . route('admin.kyc.details',$data->id) . '"  class="dropdown-item">'.__("Details").'</a>
+                                        </div>
+                                    </div>';
+                                })
+
+
+                               ->addColumn('kyc', function(User $data) {
+                                   if($data->kyc_status == 1){
+                                    $status  = __('Approve');
+                                   }elseif($data->kyc_status == 2){
+                                    $status  = __('Rejected');
+                                   }else{
+                                    $status =  __('Pending');
+                                   }
+
+                                   if($data->kyc_status == 1){
+                                    $status_sign  = 'success';
+                                   }elseif($data->kyc_status == 2){
+                                    $status_sign  = 'danger';
+                                   }else{
+                                    $status_sign = 'warning';
+                                   }
+
+                                    return '<div class="btn-group mb-1">
+                                    <button type="button" class="btn btn-'.$status_sign.' btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        '.$status .'
+                                    </button>
+                                    <div class="dropdown-menu" x-placement="bottom-start">
+                                        <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="'. route('admin.user.kyc',['id1' => $data->id, 'id2' => 1]).'">'.__("Approve").'</a>
+                                        <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="'. route('admin.user.kyc',['id1' => $data->id, 'id2' => 2 ]).'">'.__("Reject").'</a>
+                                    </div>
+                                    </div>';
+
+                                })
+                                ->rawColumns(['action','status','kyc'])
+                                ->toJson();
+        }
+
         public function gateway(Request $request) {
             $bankgateway = BankGateway::where('subbank_id', $request->id)->first();
             return $bankgateway;
