@@ -348,7 +348,7 @@ class OtherBankTransferController extends Controller
             $trans->charge      = $data->cost;
             $trans->type        = '-';
             $trans->remark      = 'Send_Money';
-            $trans->data        = '{"sender":"'.$user->name.'", "receiver":"Other Bank"}';
+            $trans->data        = '{"sender":"'.$user->name.'", "receiver":"'.$data->beneficiary->account_name.'}';
             $trans->details     = trans('Send Money');
             $trans->save();
     }
