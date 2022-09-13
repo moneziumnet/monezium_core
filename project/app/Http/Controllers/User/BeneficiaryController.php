@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\Beneficiary;
 use App\Models\OtherBank;
+use App\Models\BalanceTransfer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -19,6 +20,7 @@ class BeneficiaryController extends Controller
 
     public function index(){
         $data['beneficiaries'] = Beneficiary::whereUserId(auth()->id())->orderBy('id','desc')->paginate(10);
+        $data['logs'] = BalanceTransfer::whereUserId(auth()->id())->whereType('other')->orderBy('id','desc')->paginate(10);
         return view('user.beneficiaries.index',$data);
     }
 
