@@ -35,7 +35,6 @@ class OtherBankTransferController extends Controller
         if ($data) {
           return '<div>
                                             <span>' . $data->name . '</span>
-                                            <p>' . $data->account_number . '</p>
                                     </div>';
         } else {
           return $data = '';
@@ -48,7 +47,6 @@ class OtherBankTransferController extends Controller
         if ($data) {
           return '<div>
                                             <span>' . $data->account_name . '</span>
-                                            <p>' . $data->account_number . '</p>
                                     </div>';
         } else {
           return $data = '';
@@ -121,7 +119,6 @@ class OtherBankTransferController extends Controller
         if ($data) {
           return '<div>
                                             <span>' . $data->name . '</span>
-                                            <p>' . $data->account_number . '</p>
                                     </div>';
         } else {
           return $data = '';
@@ -134,7 +131,6 @@ class OtherBankTransferController extends Controller
         if ($data) {
           return '<div>
                                             <span>' . $data->account_name . '</span>
-                                            <p>' . $data->account_number . '</p>
                                     </div>';
         } else {
           return $data = '';
@@ -204,8 +200,9 @@ class OtherBankTransferController extends Controller
   {
     $data = BalanceTransfer::whereId($id)->first();
     $banefeciary = Beneficiary::whereId($data->beneficiary_id)->first();
+    $bankaccount = BankAccount::whereUserId($data->user_id)->where('subbank_id',$data->subbank)->where('currency_id', $data->currency_id)->first();
 
-    return view('admin.otherbanktransfer.show', compact('data', 'banefeciary'));
+    return view('admin.otherbanktransfer.show', compact('data', 'banefeciary', 'bankaccount'));
   }
 
   public function status($id1, $id2)

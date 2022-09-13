@@ -125,7 +125,7 @@
                                 <tr>
                                     <th>{{ __('Date') }}</th>
                                     <th>{{ __('Transaction Number') }}</th>
-                                    <th>{{ __('Account Name') }}</th>
+                                    <th>{{ __('Beneficiary Name') }}</th>
                                     <th>{{ __('Type') }}</th>
                                     <th>{{ __('Amount') }}</th>
                                     <th>{{ __('Status') }}</th>
@@ -142,14 +142,14 @@
                                             @endphp
 
                                             <td data-label="{{ __('Account No') }}">{{ $receiver != NULL ? $receiver->account_number : 'User Deleted' }}</td>
-                                            <td data-label="{{ __('Account Name') }}">{{ $receiver != NULL ? $receiver->name : 'User Deleted' }}</td>
+                                            <td data-label="{{ __('Beneficiary Name') }}">{{ $receiver != NULL ? $receiver->name : 'User Deleted' }}</td>
                                           @endif
 
                                           @if (!$data->receiver_id)
                                             @php
                                               $beneficiary = App\Models\Beneficiary::whereId($data->beneficiary_id)->first();
                                             @endphp
-                                            <td data-label="{{ __('Account Name') }}">{{ $beneficiary != NULL ? $beneficiary->account_name : 'deleted' }}</td>
+                                            <td data-label="{{ __('Beneficiary Name') }}">{{ $beneficiary != NULL ? $beneficiary->account_name : 'deleted' }}</td>
                                           @endif
                                           <td data-label="{{ __('Type') }}">{{ $data->type }} {{ __('Bank') }}</td>
                                           <td data-label="{{ __('Amount') }}">{{$data->amount}}</td>

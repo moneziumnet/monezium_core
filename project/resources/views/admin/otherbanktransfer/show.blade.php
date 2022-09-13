@@ -66,6 +66,28 @@
                                     <td width="10%">:</td>
                                     <td width="45%">{{$data->beneficiary->swift_bic}}</td>
                                 </tr>
+                                <tr>
+                                    <th width="45%">{{__('Customer Name')}}</th>
+                                    <td width="10%">:</td>
+                                    <td width="45%">{{$bankaccount->user->name}}</td>
+                                </tr>
+                                <tr>
+                                    <th width="45%">{{__('Customer Email')}}</th>
+                                    <td width="10%">:</td>
+                                    <td width="45%">{{$bankaccount->user->email}}</td>
+                                </tr>
+                                <tr>
+                                    <th width="45%">{{__('Customer Bank Iban')}}</th>
+                                    <td width="10%">:</td>
+                                    <td width="45%">{{$bankaccount->iban}}</td>
+                                </tr>
+
+                                <tr>
+                                    <th width="45%">{{__('Customer Bank Swift')}}</th>
+                                    <td width="10%">:</td>
+                                    <td width="45%">{{$bankaccount->swift}}</td>
+                                </tr>
+
                                 @if ($data->document)
                                     <tr>
                                         <th width="45%">{{__('Document')}}</th>
