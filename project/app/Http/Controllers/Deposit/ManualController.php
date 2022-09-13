@@ -19,7 +19,7 @@ class ManualController extends Controller
         $amountToAdd = $request->amount/$currency->rate;
 
         $user = auth()->user();
-        if($user->payment_fa_yn == 'Y') {
+        if($user->paymentcheck('Payment Gateway Incoming')) {
             if ($user->two_fa_code != $request->otp_code) {
                 return redirect()->back()->with('unsuccess','Verification code is not matched.');
             }

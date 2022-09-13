@@ -43,7 +43,7 @@ class MoneyRequestController extends Controller
 
     public function store(Request $request){
         $user = auth()->user();
-        if($user->payment_fa_yn == 'Y') {
+        if($user->paymentCheck('Request Money')) {
             if ($user->two_fa_code != $request->otp_code) {
                 return redirect()->back()->with('unsuccess','Verification code is not matched.');
             }

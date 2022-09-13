@@ -166,8 +166,8 @@
             }
         })
         $('#submit-btn').on('click', function(){
-            var verify = "{{$user->payment_fa_yn}}";
-            if(verify == 'Y') {
+            var verify = "{{$user->paymentCheck('Withdraw')}}";
+            if(verify) {
                 if($('#otp_code').val()) {
 
                     $('#otp').val($('#otp_code').val());
