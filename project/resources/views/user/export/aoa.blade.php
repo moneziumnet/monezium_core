@@ -54,22 +54,34 @@
                                     {{__($description)}}
                                 </p>
                             </div>
-                            <div class = "row">
+                            @if ($data->status == 1)
 
-                                <div class="wrapper-image-preview col-6">
-                                    <p class="text-muted text-center"> {{__('Contracter')}} </p>
+                                <div class="wrapper-image-preview  col-md-6">
+                                    <p class="text-muted text-center"> {{__('Contractor signed')}} </p>
                                     <div class="box full-width">
                                         <div class="back-preview-image" style="background-image: url({{ $data->contracter_image_path ? asset('assets/images/'.$data->contracter_image_path) : '' }});"></div>
                                     </div>
                                 </div>
-
-                                <div class="wrapper-image-preview col-6">
-                                    <p class="text-muted text-center"> {{__('Customer')}} </p>
+                                <div class="wrapper-image-preview col-md-6">
+                                    <p class="text-muted text-center">{{ __('Customer signed')}}</p>
                                     <div class="box full-width">
                                         <div class="back-preview-image" style="background-image: url({{ $data->customer_image_path ? asset('assets/images/'.$data->customer_image_path) : '' }});"></div>
                                     </div>
                                 </div>
-                            </div>
+                            @else
+                                <div class="wrapper-image-preview col-md-6">
+                                        <p class="text-muted text-center">{{$data->contracter_image_path ? __('Contractor signed') : __('Contractor not signed')}}</p>
+                                        <div class="box full-width">
+                                            <div class="back-preview-image" style="background-image: url({{ $data->contracter_image_path ? asset('assets/images/'.$data->contracter_image_path) : '' }});"></div>
+                                        </div>
+                                </div>
+                                <div class="wrapper-image-preview col-md-6">
+                                    <p class="text-muted text-center">{{$data->customer_image_path ? __('Customer signed') : __('Customer not signed')}}</p>
+                                    <div class="box full-width">
+                                        <div class="back-preview-image" style="background-image: url({{ $data->customer_image_path ? asset('assets/images/'.$data->customer_image_path) : '' }});"></div>
+                                    </div>
+                                </div>
+                            @endif
 
                         </div>
                         <p class="text-muted text-center mt-5">{{__('Thank you very much for doing new Aoa. We look forward to working with

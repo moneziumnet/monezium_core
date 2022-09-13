@@ -36,7 +36,7 @@
                         <div class="row form-group mb-3 mt-3">
                             <div class="col-md-6 mb-3">
                                 <div class="form-label">@lang('Select Contractor')</div>
-                                <select class="form-select shadow-none" name="contractor_id">
+                                <select class="form-select shadow-none" name="contractor_id" required>
                                     <option value="" selected>@lang('Select')</option>
                                     @foreach ($userlist as $user)
                                       <option value="{{$user->id}}" >{{$user->name}}</option>
@@ -47,7 +47,7 @@
                             <div class="col-md-6 mb-3">
                                 <div class="form-label">@lang('Select Client')</div>
                                 <div class="input-group">
-                                    <select class="form-select shadow-none" name="client_id">
+                                    <select class="form-select shadow-none" name="client_id" required>
                                         <option value="" selected>@lang('Select')</option>
                                         @foreach ($clientlist as $user)
                                         <option value="{{$user->id}}" >{{$user->name}}</option>

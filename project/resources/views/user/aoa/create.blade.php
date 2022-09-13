@@ -42,7 +42,30 @@
                     @includeIf('includes.flash')
                     <form id="aoa-form" action="{{ route('user.contract.aoa.store', $id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
+                        <div class="row form-group mb-3 mt-3">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-label">@lang('Select Contractor')</div>
+                                <select class="form-select shadow-none" name="contractor_id" required>
+                                    <option value="" selected>@lang('Select')</option>
+                                    @foreach ($userlist as $user)
+                                      <option value="{{$user->id}}" >{{$user->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
 
+                            <div class="col-md-6 mb-3">
+                                <div class="form-label">@lang('Select Client')</div>
+                                <div class="input-group">
+                                    <select class="form-select shadow-none" name="client_id" required>
+                                        <option value="" selected>@lang('Select')</option>
+                                        @foreach ($clientlist as $user)
+                                        <option value="{{$user->id}}" >{{$user->name}}</option>
+                                        @endforeach
+                                    </select>
+                                    <button type="button"  data-bs-toggle="tooltip" data-bs-original-title="@lang('Add New Beneficiary')" class="input-group-text beneficiary"><i class="fas fa-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
                         <div class="form-group mb-3 mt-3">
                             <label class="form-label required">{{__('Title')}}</label>
                             <input name="title" id="title" class="form-control" autocomplete="off" placeholder="{{__('Enter Title')}}" type="text" required>
@@ -68,17 +91,6 @@
                             <label class="form-label required">{{__('Description')}} {{__('(i.e: if patten is amount, and value is 500,  {amount} is 500)')}}</label>
                             <textarea name="description" class="form-control" id="inp-details" cols="30" rows="10" placeholder="{{__('Description')}}" required></textarea>
                         </div>
-
-                        <div class="form-group mb-3 mt-3">
-                            <div class="col-md-12">
-                                <label class="" for="">{{__('Signature:')}}</label>
-                                <br/>
-                                <div id="sig" ></div>
-                                <br/>
-                                <div  id="clear" class="btn btn-primary btn-sm mt-2">{{__('Clear Signature')}}</div>
-                                <textarea id="signature64" name="signed" style="display: none" required></textarea>
-                            </div>
-                        </div>
                         <input name="contract_id" type="hidden" class="form-control" value="{{$id}}">
 
                         <div class="form-footer">
@@ -93,21 +105,68 @@
     </div>
 </div>
 
+<div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-status bg-primary"></div>
+        <div class="modal-body text-center py-4">
+            <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+            <h3>{{__('Create New Beneficiary')}}</h3>
+            <div class="row text-start">
+                <div class="col">
+                    <form action="{{route('user.contract.beneficiary.create')}}" method="post" enctype="multipart/form-data">
+                        @csrf
+                        <div class="form-group mt-2">
+                            <label class="form-label required">{{__('Name')}}</label>
+                            <input name="name" id="name" class="form-control shadow-none" placeholder="{{__('Name')}}" type="text" value="{{ old('name') }}" required>
+                        </div>
+                        <div class="form-group mt-2">
+                            <label class="form-label required">{{__('Email')}}</label>
+                            <input name="email" id="email" class="form-control shadow-none" placeholder="{{__('user@email.com')}}" type="email" value="{{ old('email') }}" required>
+                        </div>
+                        <div class="form-group mt-2">
+                            <label class="form-label required">{{__('Phone Number')}}</label>
+                            <input name="phone" id="phone" class="form-control shadow-none" placeholder="{{__('+123456789')}}" type="text" value="{{ old('phone') }}" required>
+                        </div>
+                        <div class="form-group mt-2">
+                            <label class="form-label required">{{__('Registration NO')}}</label>
+                            <input name="registration_no" id="registration_no" class="form-control shadow-none" placeholder="{{__('Registration NO')}}" type="text" value="{{ old('registration_no') }}" required>
+                        </div>
+                        <div class="form-group mt-2">
+                            <label class="form-label required">{{__('VAT NO')}}</label>
+                            <input name="vat_no" id="vat_no" class="form-control shadow-none" placeholder="{{__('VAT NO')}}" type="text" value="{{ old('vat_no') }}" required>
+                        </div>
+                        <div class="form-group mt-2">
+                            <label class="form-label required">{{__('Contact Person')}}</label>
+                            <input name="contact_person" id="contact_person" class="form-control shadow-none" placeholder="{{__('Contact Person')}}" type="text" value="{{ old('contact_person') }}" required>
+                        </div>
+                        <input type="hidden" name="user_id" value="{{auth()->id()}}">
+                        <div class="row mt-3">
+                            <div class="col"><a href="#" class="btn w-100" data-bs-dismiss="modal">
+                                {{__('Cancel')}}
+                                </a>
+                            </div>
+                            <div class="col">
+                                <button type="submit" class="btn btn-primary w-100 confirm">
+                                {{__('Confirm')}}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
 
 @endsection
 
 @push('js')
-<script type="text/javascript" src="{{asset('assets/user/')}}/js/jquery-1.12.4.min.js"></script>
-<script type="text/javascript" src="{{asset('assets/user/')}}/js/jquery-ui.min.js"></script>
-<script type="text/javascript" src="{{asset('assets/user/')}}/js/jquery.signature.js"></script>
 <script>
   'use strict';
-  var sig = $('#sig').signature({syncField: '#signature64', syncFormat: 'PNG'});
-            $('#clear').click(function(e) {
-                e.preventDefault();
-                sig.signature('clear');
-                $("#signature64").val('');
-            });
 $('.add').on('click',function(){
         $('.extra-container').append(`
 
@@ -129,5 +188,8 @@ $('.add').on('click',function(){
 $(document).on('click','.remove',function () {
     $(this).closest('.row').remove()
 })
+$('.beneficiary').on('click',function() {
+            $('#modal-success').modal('show')
+        })
 </script>
 @endpush

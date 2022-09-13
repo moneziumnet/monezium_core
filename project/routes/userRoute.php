@@ -296,6 +296,7 @@ Route::prefix('user')->group(function() {
       Route::post('contract/aoa/update/{id}',   [UserContractManageController::class,'aoa_update'])->name('user.contract.aoa.update');
       Route::get('contract/aoa/delete/{id}',   [UserContractManageController::class,'aoa_delete'])->name('user.contract.aoa.delete');
       Route::get('contract/aoa/pdf/{id}',   [UserContractManageController::class,'export_aoa_pdf'])->name('user.aoa-pdf');
+      Route::get('contract/aoa/send-mail/{id}',   [UserContractManageController::class,'aoa_sendToMail'])->name('user.contract.aoa.send.mail');
       Route::get('pay-invoice',   [DepositController::class,'invoicePayment'])->name('user.pay.invoice');
       Route::post('contract/beneficiary/create',   [UserContractManageController::class,'beneficiary_create'])->name('user.contract.beneficiary.create');
 

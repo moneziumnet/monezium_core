@@ -18,6 +18,7 @@
 
     <script src="{{asset('assets/user/js/jquery-3.6.0.min.js')}}"></script>
     <script src="{{asset('assets/front/js/custom.js')}}"></script>
+
     <link rel="stylesheet" type="text/css" href="{{asset('assets/user/')}}/css/bootstrap-4.3.1.css">
     <script type="text/javascript" src="{{asset('assets/user/')}}/js/jquery-1.12.4.min.js"></script>
     <link type="text/css" href="{{asset('assets/user/')}}/css/jquery-ui.css" rel="stylesheet">
@@ -65,28 +66,29 @@
                             </div>
                             @if ($data->status == 1)
                                 <div class="wrapper-image-preview col-md-6">
-                                    <p class="text-muted text-center"> {{__('Contracter')}} </p>
+                                    <p class="text-muted text-center"> {{__('Contractor signed')}} </p>
                                     <div class="box full-width">
                                         <div class="back-preview-image" style="background-image: url({{ $data->contracter_image_path ? asset('assets/images/'.$data->contracter_image_path) : '' }});"></div>
                                     </div>
                                 </div>
                                 <div class="wrapper-image-preview col-md-6">
-                                    <p class="text-muted text-center">{{__('You already signed')}}</p>
+                                    <p class="text-muted text-center">{{__('Client signed')}}</p>
                                     <div class="box full-width">
                                         <div class="back-preview-image" style="background-image: url({{ $data->customer_image_path ? asset('assets/images/'.$data->customer_image_path) : '' }});"></div>
                                     </div>
                                 </div>
                             @else
+                                @if ($role == 'client')
                                 <div class="wrapper-image-preview col-md-6">
-                                    <p class="text-muted text-center"> {{__('Contracter')}} </p>
+                                    <p class="text-muted text-center"> {{$data->contracter_image_path ? __('Contractor signed') : __('Contractor not signed')}} </p>
                                     <div class="box full-width">
                                         <div class="back-preview-image" style="background-image: url({{ $data->contracter_image_path ? asset('assets/images/'.$data->contracter_image_path) : '' }});"></div>
                                     </div>
                                 </div>
-                                <form method="POST" action="{{route('user.aoa.sign', $data->id)}}" class="col-md-6" >
+                                <form method="POST" action="{{route('user.aoa.sign', $data->id)}}" class="col-md-6">
                                     @csrf
                                     <div class="col-md-12">
-                                        <label class="mb-3" for="">{{__('Signature:')}}</label>
+                                        <label class="mb-3" for="">{{__('Client Signature:')}}</label>
                                         <div id="sig" ></div>
                                         <textarea id="signature64" name="signed" style="display: none"></textarea>
                                     </div>
@@ -104,13 +106,52 @@
                                         @endif
                                     </div>
                                     <button id="clear" class="btn btn-primary btn-sm mt-2">{{__('Clear Signature')}}</button>
-                                    <input type="hidden" name="contract_id" value="{{$data->contract_id}}">
+                                    <input type="hidden" name="contract_id" value="{{$data->id}}">
+                                    <input type="hidden" name="role" value="{{$role}}">
                                     <br/>
                                     <div class="text-center">
-                                    <button class="btn btn-primary ">{{__('SIGN')}}</button>
+                                    <button type="submit" class="btn btn-primary ">{{__('SIGN')}}</button>
                                     </div>
                                 </form>
-                            @endif
+                                @elseif ($role == 'contractor')
+
+                                    <form method="POST" action="{{route('user.aoa.sign', $data->id)}}" class="col-md-6">
+                                        @csrf
+                                        <div class="col-md-12">
+                                            <label class="mb-3" for="">{{__('Contractor Signature:')}}</label>
+                                            <div id="sig" ></div>
+                                            <textarea id="signature64" name="signed" style="display: none"></textarea>
+                                        </div>
+                                        <div class="col-md-11 mx-auto">
+                                            @if (auth()->user())
+
+                                            <div class="back-preview-image" id="preview_image" style= "display: none;"></div>
+                                            <div class="form-group mt-3">
+                                                <select class="form-select shadow-none" id="sign_select" name="sign_path">
+                                                    <option value="" selected class="text-center" >{{__('Select Photo')}}</option>
+                                                    <option value="{{auth()->user()->signature}}" >{{__('Signature')}}</option>
+                                                    <option value="{{auth()->user()->stamp}}" >{{__('Stamp')}}</option>
+                                                </select>
+                                            </div>
+                                            @endif
+                                        </div>
+                                        <button id="clear" class="btn btn-primary btn-sm mt-2">{{__('Clear Signature')}}</button>
+                                        <input type="hidden" name="role" value="{{$role}}">
+                                        <input type="hidden" name="contract_id" value="{{$data->id}}">
+                                        <br/>
+                                        <div class="text-center">
+                                        <button type="submit" class="btn btn-primary ">{{__('SIGN')}}</button>
+                                        </div>
+                                    </form>
+                                    <div class="wrapper-image-preview col-md-6">
+                                        <p class="text-muted text-center"> {{$data->customer_image_path ? __('Client signed') : __('Client not signed')}}</p>
+                                        <div class="box full-width">
+                                            <div class="back-preview-image" style="background-image: url({{ $data->customer_image_path ? asset('assets/images/'.$data->customer_image_path) : '' }});"></div>
+                                        </div>
+                                    </div>
+                                @endif
+
+                        @endif
 
 
                         </div>

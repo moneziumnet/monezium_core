@@ -16,6 +16,8 @@ class CreateContractAoasTable extends Migration
         Schema::create('contract_aoas', function (Blueprint $table) {
             $table->id();
             $table->integer('contract_id');
+            $table->integer('contractor_id');
+            $table->integer('client_id');
             $table->string('title', 255);
             $table->text('description');
             $table->mediumText('pattern')->nullable();
