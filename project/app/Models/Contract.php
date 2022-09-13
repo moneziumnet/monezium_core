@@ -16,14 +16,14 @@ class Contract extends Model
         'contractor_id',
         'status',
     ];
-    public function client()
+    public function beneficiary()
     {
-        return $this->belongsTo(User::class, 'client_id')->withDefault();
+        return $this->belongsTo(ContractBeneficiary::class, 'client_id')->withDefault();
     }
 
     public function contractor()
     {
-        return $this->belongsTo(ContractBeneficiary::class, 'contractor_id')->withDefault();
+        return $this->belongsTo(User::class, 'contractor_id')->withDefault();
     }
 
 }

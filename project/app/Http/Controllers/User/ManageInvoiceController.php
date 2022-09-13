@@ -9,7 +9,7 @@ use App\Models\Charge;
 use App\Models\InvItem;
 use App\Models\Invoice;
 use App\Models\Currency;
-use App\Models\InvoiceBeneficiary;
+use App\Models\ContractBeneficiary;
 use App\Models\Tax;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
@@ -51,7 +51,7 @@ class ManageInvoiceController extends Controller
     public function create()
     {
         $data['currencies'] = Currency::where('status', 1)->get();
-        $data['beneficiaries'] = InvoiceBeneficiary::where('user_id', auth()->id())->get();
+        $data['beneficiaries'] = ContractBeneficiary::where('user_id', auth()->id())->get();
         return view('user.invoice.create',$data);
     }
 
@@ -76,7 +76,7 @@ class ManageInvoiceController extends Controller
         $currency = Currency::findOrFail($request->currency);
 
         $amount = array_sum($request->amount);
-        $beneficiary = InvoiceBeneficiary::whereId($request->beneficiary_id)->first();
+        $beneficiary = ContractBeneficiary::whereId($request->beneficiary_id)->first();
         $setting = InvoiceSetting::where('user_id', auth()->id())->first();
         $type = 'prefix_'.$request->type;
         $length = 'length_'.$request->type;
@@ -170,7 +170,7 @@ class ManageInvoiceController extends Controller
         //     return back()->with('error','Sorry! can\'t edit published invoice.');
         // }
         $data['currencies'] = Currency::where('status', 1)->get();
-        $data['beneficiaries'] = InvoiceBeneficiary::where('user_id', auth()->id())->get();
+        $data['beneficiaries'] = ContractBeneficiary::where('user_id', auth()->id())->get();
         return view('user.invoice.edit',$data);
     }
 
@@ -183,7 +183,7 @@ class ManageInvoiceController extends Controller
         //     return back()->with('error','Sorry! can\'t edit published invoice.');
         // }
         $data['currencies'] = Currency::where('status', 1)->get();
-        $data['beneficiaries'] = InvoiceBeneficiary::where('user_id', auth()->id())->get();
+        $data['beneficiaries'] = ContractBeneficiary::where('user_id', auth()->id())->get();
         return view('user.invoice.incoming_edit',$data);
     }
 
@@ -201,7 +201,7 @@ class ManageInvoiceController extends Controller
 
         $currency = Currency::findOrFail($request->currency);
 
-        $beneficiary = InvoiceBeneficiary::whereId($request->beneficiary_id)->first();
+        $beneficiary = ContractBeneficiary::whereId($request->beneficiary_id)->first();
 
         $invoice = Invoice::findOrFail($id);
         $invoice->user_id      = auth()->id();
@@ -254,7 +254,7 @@ class ManageInvoiceController extends Controller
 
         $currency = Currency::findOrFail($request->currency);
 
-        $beneficiary = InvoiceBeneficiary::whereId($request->beneficiary_id)->first();
+        $beneficiary = ContractBeneficiary::whereId($request->beneficiary_id)->first();
         $setting = InvoiceSetting::where('user_id', auth()->id())->first();
         $type = 'prefix_'.$request->type;
         $length = 'length_'.$request->type;
@@ -616,10 +616,13 @@ class ManageInvoiceController extends Controller
 
     public function beneficiary_create(Request $request)
     {
-        $data = new InvoiceBeneficiary();
+        $data = new ContractBeneficiary();
+        if($request->email == auth()->user()->email) {
+            return back()->with('error', 'You can\'t create the beneficiary with your email');
+        }
         $input = $request->all();
         $data->fill($input)->save();
-        return back()->with($data->id);
+        return back()->with('message', 'You have created new beneficiary successfully, please choose beneficiary list.');
     }
 
     public function tax_create(Request $request)

@@ -42,10 +42,12 @@
                       <h3 class="text-center py-5">{{__('No Contract Data Found')}}</h3>
                   @else
                       <div class="table-responsive">
-                          <table class="table table-vcenter table-mobile-md card-table">
+                          <table class="table table-vcenter table-mobile-md card-table datatable">
                               <thead>
                                 <tr>
                                   <th>{{__('No')}}</th>
+                                  <th>{{__('Contractor')}}</th>
+                                  <th>{{__('Beneficiary')}}</th>
                                   <th>{{__('Title')}}</th>
                                   <th>{{__('Description')}}</th>
                                   <th>{{__('Status')}}</th>
@@ -64,6 +66,16 @@
                                         {{$counter}}
                                       </div>
                                     </td>
+                                    <td data-label="{{ __('Contractor') }}">
+                                        <div>
+                                          {{$item->contractor->name.' ('.$item->contractor->email.')'}}
+                                        </div>
+                                      </td>
+                                      <td data-label="{{ __('Beneficiary') }}">
+                                        <div>
+                                          {{$item->beneficiary->name.' ('.$item->beneficiary->email.')'}}
+                                        </div>
+                                      </td>
                                       <td data-label="{{ __('Title') }}">
                                         <div>
                                           {{$item->title}}
@@ -100,7 +112,8 @@
                                             @endif
                                             <a href="javascript:void(0)" data-route="{{route('user.contract.delete',$item->id)}}" class="btn btn-dark btn-sm delete" data-bs-toggle="tooltip" data-bs-original-title="@lang('delete')"><i class="fas fa-eraser"></i></a>
                                             <a href="{{route('user.contract.aoa',$item->id)}}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-original-title="@lang('Manage AoA(Act of Acceptance)')"><i class="fas fa-file-contract"></i></a>
-                                            <a href="javascript:void(0)" class="btn btn-secondary btn-sm copy" data-clipboard-text="{{route('contract.view',encrypt($item->id))}}" title="{{__('Copy Contract URL')}}"><i class="fas fa-copy"></i></a>
+                                            <a href="javascript:void(0)" class="btn btn-secondary btn-sm copy" data-clipboard-text="{{route('contract.view',['id' => encrypt($item->id), 'role' => encrypt('contractor')])}}" title="{{__('Copy Contract URL')}}"><i class="fas fa-copy"></i></a>
+                                            <a href="javascript:void(0)" data-route="{{route('user.contract.send.mail',$item->id)}}" class="btn btn-dark btn-sm send_email" data-bs-toggle="tooltip" data-bs-original-title="@lang('Send Email')"><i class="fas fa-mail-bulk"></i></a>
 
                                         </div>
                                       </td>
@@ -112,6 +125,7 @@
                               </tbody>
                           </table>
                       </div>
+                      {{ $contracts ->links() }}
                   @endif
               </div>
           </div>
@@ -147,6 +161,35 @@
     </div>
 </div>
 
+<div class="modal modal-blur fade" id="modal-success-mail" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-status bg-primary"></div>
+        <div class="modal-body text-center py-4">
+            <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+            <h3>{{__('Do you want to send to email?')}}</h3>
+        </div>
+        <div class="modal-footer">
+            <div class="w-100">
+                <div class="row">
+                <div class="col"><a href="#" class="btn w-100" data-bs-dismiss="modal">
+                    {{__('Cancel')}}
+                    </a></div>
+                <div class="col">
+                    <form action="" method="get">
+                        <button type="submit" class="btn btn-primary w-100 confirm">
+                        {{__('Confirm')}}
+                        </button>
+                    </form>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
 @endsection
 
 @push('js')
@@ -157,12 +200,17 @@
         'use strict';
         var clipboard = new ClipboardJS('.copy');
         clipboard.on('success', function(e) {
-           console.log('success','Contract URL Copied')
+           alert('Contract URL Copied.')
         });
-        
+
         $('.delete').on('click',function() {
             $('#modal-success').find('form').attr('action',$(this).data('route'))
             $('#modal-success').modal('show')
+        })
+
+        $('.send_email').on('click',function() {
+            $('#modal-success-mail').find('form').attr('action',$(this).data('route'))
+            $('#modal-success-mail').modal('show')
         })
     </script>
 

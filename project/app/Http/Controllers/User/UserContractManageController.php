@@ -61,21 +61,42 @@ class UserContractManageController extends Controller
         return view('user.contract.view', compact('data', 'description'));
     }
 
-    public function contract_view($id) {
+    public function contract_view($id, $role) {
         $data = Contract::findOrFail(decrypt($id));
+        $role = decrypt($role);
+        if(auth()->user()) {
+            if ($role == 'contractor' && $data->contractor->email != auth()->user()->email) {
+                return redirect(route('user.dashboard'))->with('error', 'You are not contractor of this contract.');
+            }
+
+            if ($role == 'client' && $data->beneficiary->email != auth()->user()->email) {
+                return redirect(url('/'))->with('error', 'You are not client(beneficiary) of this contract.');
+            }
+        }
+        elseif($role == 'contractor') {
+            return redirect(url('/'))->with('error', 'You must login to sign this contract as a contractor');
+        }
         $description = $data->description;
         foreach (json_decode($data->pattern, True) as $key => $value) {
             if(strpos($description, "{".$key."}" ) != false) {
                 $description = preg_replace("/{".$key."}/", $value ,$description);
             }
         }
-        return view('user.contract.contract', compact('data', 'description'));
+        return view('user.contract.contract', compact('data', 'description', 'role'));
     }
 
     public function contract_sign(Request $request, $id) {
         $data = Contract::findOrFail($id);
         if( $request->sign_path) {
-            $data->customer_image_path = $request->sign_path;
+            if($request->role == 'client') {
+                @unlink('assets/images/'.$data->customer_image_path);
+                $data->customer_image_path = $request->sign_path;
+
+            }
+            elseif ($request->role == 'contractor') {
+                @unlink('assets/images/'.$data->contracter_image_path);
+                $data->contracter_image_path = $request->sign_path;
+            }
         }
         else {
             $folderPath ='assets/images/';
@@ -86,9 +107,19 @@ class UserContractManageController extends Controller
             $filename = uniqid() . '.'.$image_type;
             $file = $folderPath . $filename;
             file_put_contents($file, $image_base64);
-            $data->image_path = $filename;
+            if($request->role == 'client') {
+                @unlink('assets/images/'.$data->customer_image_path);
+                $data->customer_image_path = $filename;
+
+            }
+            elseif ($request->role == 'contractor') {
+                @unlink('assets/images/'.$data->contracter_image_path);
+                $data->contracter_image_path = $filename;
+            }
         }
-        $data->status = 1;
+        if ($data->contracter_image_path && $data->customer_image_path) {
+            $data->status = 1;
+        }
         $data->update();
         return back()->with('success', 'You have signed successfully');
     }
@@ -119,7 +150,15 @@ class UserContractManageController extends Controller
     public function delete($id) {
         $data = Contract::findOrFail($id);
         $data->delete();
-        File::delete('assets/images/'.$data->image_path);
+        File::delete('assets/images/'.$data->contracter_image_path);
+        File::delete('assets/images/'.$data->customer_image_path);
+        $aoa =  ContractAoa::where('contract_id', $id)->get();
+        foreach ($aoa as $key => $value) {
+            $aoa_data = ContractAoa::findOrFail($value->id);
+            $aoa_data->delete();
+            File::delete('assets/images/'.$aoa_data->contracter_image_path);
+            File::delete('assets/images/'.$aoa_data->customer_image_path);
+        }
         return  redirect()->back()->with('success','Contract has been deleted successfully');
     }
 
@@ -164,6 +203,38 @@ class UserContractManageController extends Controller
         $input = $request->all();
         $data->fill($input)->save();
         return back()->with('message', 'You have created new beneficiary successfully, please choose beneficiary list.');
+    }
+
+    public function sendToMail($id)
+    {
+        $contract = Contract::findOrFail($id);
+        $gs = Generalsetting::first();
+
+        email([
+
+            'email'   => $contract->contractor->email,
+            "subject" => 'New Contract from '.$gs->from_name,
+            'message' => "Hello". $contract->contractor->name.",<br/></br>".
+
+                "You have received new contract as contractor. <br/>"." The Contract Title is <b>$contract->title</b>."."<br/>Please sign the contract." .".<br/></br>".
+
+                "New Contract Url"  .": ".route('contract.view',['id' => encrypt($contract->id), 'role' => encrypt('contractor')]) ."<br/>
+            "
+        ]);
+
+        email([
+
+            'email'   => $contract->beneficiary->email,
+            "subject" => 'New Contract from '.$gs->from_name,
+            'message' => "Hello". $contract->beneficiary->name.",<br/></br>".
+
+                "You have received new contract as client.  <br/>"." The Contract Title is <b>$contract->title</b>."."<br/>Please sign the contract." .".<br/></br>".
+
+                "New Contract Url"  .": ".route('contract.view',['id' => encrypt($contract->id), 'role' => encrypt('client')]) ."<br/>
+            "
+        ]);
+
+        return back()->with('message','Invoice has been sent to the recipient');
     }
 
 

@@ -48,13 +48,31 @@
             </div>
             @if ($data->status == 1)
 
-                <div class="wrapper-image-preview">
+                <div class="wrapper-image-preview  col-md-6">
+                    <p class="text-muted text-center"> {{__('Contractor signed')}} </p>
                     <div class="box full-width">
-                        <div class="back-preview-image" style="background-image: url({{ $data->image_path ? asset('assets/images/'.$data->image_path) : '' }});"></div>
+                        <div class="back-preview-image" style="background-image: url({{ $data->contracter_image_path ? asset('assets/images/'.$data->contracter_image_path) : '' }});"></div>
+                    </div>
+                </div>
+                <div class="wrapper-image-preview col-md-6">
+                    <p class="text-muted text-center">{{ __('Client signed')}}</p>
+                    <div class="box full-width">
+                        <div class="back-preview-image" style="background-image: url({{ $data->customer_image_path ? asset('assets/images/'.$data->customer_image_path) : '' }});"></div>
                     </div>
                 </div>
             @else
-                <p class="text-muted text-center mt-5">{{__('You did not signed')}}</p>
+            <div class="wrapper-image-preview col-md-6">
+                    <p class="text-muted text-center">{{$data->contracter_image_path ? __('Contractor signed') : __('Contractor not signed')}}</p>
+                    <div class="box full-width">
+                        <div class="back-preview-image" style="background-image: url({{ $data->contracter_image_path ? asset('assets/images/'.$data->contracter_image_path) : '' }});"></div>
+                    </div>
+            </div>
+            <div class="wrapper-image-preview col-md-6">
+                <p class="text-muted text-center">{{$data->customer_image_path ? __('Client signed') : __('Client not signed')}}</p>
+                <div class="box full-width">
+                    <div class="back-preview-image" style="background-image: url({{ $data->customer_image_path ? asset('assets/images/'.$data->customer_image_path) : '' }});"></div>
+                </div>
+            </div>
             @endif
 
         </div>
