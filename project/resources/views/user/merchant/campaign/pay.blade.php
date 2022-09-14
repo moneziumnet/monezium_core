@@ -3,7 +3,7 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-    <title>{{__($gs->title)}} - @lang('Product : '.$data->name) </title>
+    <title>{{__($gs->title)}} - @lang('Campaign : '.$data->name) </title>
     <!-- CSS files -->
     {{-- <link rel="shortcut icon" href="{{getPhoto($gs->favicon)}}"> --}}
 
@@ -28,7 +28,7 @@
                 <div class="row align-items-center">
                   <div class="col">
                     <h2 class="page-title text-dark">
-                        @lang('Product Pay')
+                        @lang('Campaign Pay')
                     </h2>
                   </div>
                 </div>
@@ -42,21 +42,19 @@
                           <div class="col-md-4">
                             <div class="card">
                                 <img class="back-preview-image"
-                                    @php
-                                        $image=DB::table('product_images')->whereProductId($data->id)->first();
-                                    @endphp
-                                    src="{{asset('assets/images')}}/{{$image->image}}"
-                                alt="Image placeholder">
+                                    src="{{asset('assets/images')}}/{{$data->logo}}"
+                                alt="Campaign Logo">
                                 <!-- Card body -->
                                 <div class="card-body">
                                     <div class="row mb-3">
                                         <div class="col-12">
-                                        <h5 class="h4 mb-2 font-weight-bolder">{{__('Product Name: ')}}{{$data->name}}</h5>
-                                        <h5 class="mb-1">{{__('Shop: ')}} {{$data->shop->name}}</h5>
+                                        <h5 class="h4 mb-2 font-weight-bolder">{{__('Campaign Title: ')}}{{$data->title}}</h5>
                                         <h5 class="mb-1">{{__('Category: ')}} {{$data->category->name}}</h5>
-                                        <h5 class="mb-1">{{__('Amount: ')}} {{$data->currency->symbol}}{{$data->amount}}</h5>
-                                        <h5 class="mb-1">{{__('Sold: ')}} {{$data->sold}}</h5>
-                                        <h5 class="mb-3">{{__('Currenct Stock:')}} {{$data->quantity}}</h5>
+                                        <h5 class="mb-1">{{__('Organizer: ')}} {{$data->user->name}}</h5>
+                                        <h5 class="mb-1">{{__('Goal: ')}} {{$data->currency->symbol}}{{$data->goal}}</h5>
+                                        <h5 class="mb-1">{{__('FundsRaised: ')}} {{'$data->sold'}}</h5>
+                                        <h5 class="mb-1">{{__('Deadline: ')}} {{$data->deadline}}</h5>
+                                        <h6 class="mb-3">{{__('Description:')}} {{$data->description}}</h6>
                                         </div>
                                     </div>
                                 </div>
@@ -64,8 +62,8 @@
                           </div>
                           <div class="col-md-3">
                           </div>
-                          <div class="col-md-5 text-end ">
-                            <form action="{{route('user.merchant.product.pay')}}" method="post" enctype="multipart/form-data">
+                          <div class="col-md-5 ">
+                            <form action="{{route('user.merchant.campaign.pay')}}" method="post" class="text-end" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-selectgroup row">
                                     <label class="form-selectgroup-item">
@@ -94,11 +92,16 @@
 
                                 </div>
 
-                                <div class="form-group ms-5 mt-5" >
-                                        <label class="form-label">{{__('Quantity')}}</label>
-                                        <input name="quantity" id="quantity" class="form-control shadow-none col-md-4"  type="number" min="1" max="{{$data->quantity}}" required>
+                                <div class="form-group ms-5 mt-5 text-start" >
+                                        <label class="form-label">{{__('Amount')}}</label>
+                                        <input name="amount" id="amount" class="form-control shadow-none col-md-4"  type="number" min="1" max="{{$data->goal}}" required>
                                 </div >
-                                <input type="hidden" name="product_id" value="{{$data->id}}">
+                                <div class="form-group ms-5 mt-5 text-start" >
+                                    <label class="form-label">{{__('description')}}</label>
+                                    <input name="description" id="description" class="form-control shadow-none col-md-4"  type="text"  required>
+                                </div >
+                                <input type="hidden" name="campaign_id" value="{{$data->id}}">
+                                <input type="hidden" name="user_id" value="{{auth()->id()}}">
 
                                 <div class="mt-4">
                                     <button type="submit" class="btn btn-primary btn-block">{{__('Pay')}} <i class="ms-2 fas fa-long-arrow-alt-right"></i></button>

@@ -57,6 +57,7 @@ use App\Http\Controllers\User\MerchantSendController;
 use App\Http\Controllers\User\MerchantMoneyRequestController;
 use App\Http\Controllers\User\MerchantOtherBankController;
 use App\Http\Controllers\User\MerchantCheckoutController;
+use App\Http\Controllers\User\MerchantCampaignController;
 use App\Http\Controllers\User\UserOpenPaydController;
 use App\Http\Controllers\User\UserRailsbankController;
 use App\Http\Controllers\User\SupervisorController;
@@ -195,7 +196,15 @@ Route::prefix('user')->group(function() {
       Route::get('/merchant/product/order', [MerchantProductController::class,'order'])->name('user.merchant.product.order');
       Route::get('/merchant/product/order/{id}', [MerchantProductController::class,'order_by_product'])->name('user.merchant.product.order_by_product');
 
-
+      Route::get('/merchant/campaign', [MerchantCampaignController::class,'index'])->name('user.merchant.campaign.index');
+      Route::post('/merchant/campaign/store', [MerchantCampaignController::class,'store'])->name('user.merchant.campaign.store');
+      Route::post('/merchant/campaign/category/create', [MerchantCampaignController::class,'category_create'])->name('user.merchant.campaign.category.create');
+      Route::get('/merchant/campaign/edit/{id}', [MerchantCampaignController::class,'edit'])->name('user.merchant.campaign.edit');
+      Route::post('/merchant/campaign/update/{id}', [MerchantCampaignController::class,'update'])->name('user.merchant.campaign.update');
+      Route::get('/merchant/campaign/delete/{id}', [MerchantCampaignController::class,'delete'])->name('user.merchant.campaign.delete');
+      Route::get('/merchant/campaign/status/{id}', [MerchantCampaignController::class,'status'])->name('user.merchant.campaign.status');
+      Route::post('/merchant/campaign/pay', [MerchantCampaignController::class,'pay'])->name('user.merchant.campaign.pay');
+      Route::get('/merchant/campaign/donation/{id}', [MerchantCampaignController::class,'donation_by_campaign'])->name('user.merchant.campaign.donation_list');
 
       Route::get('/merchant/checkout',[MerchantCheckoutController::class,'index'])->name('user.merchant.checkout.index');
       Route::get('/merchant/checkout/edit/{id}',[MerchantCheckoutController::class,'edit'])->name('user.merchant.checkout.edit');

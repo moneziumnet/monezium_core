@@ -16,6 +16,7 @@ class CreateCampaignDonationsTable extends Migration
         Schema::create('campaign_donations', function (Blueprint $table) {
             $table->id();
             $table->integer('campaign_id');
+            $table->integer('user_id');
             $table->string('payment');
             $table->integer('currency_id');
             $table->double('amount');

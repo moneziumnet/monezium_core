@@ -31,7 +31,7 @@ class MerchantProductController extends Controller
     }
 
     public function index(){
-        $data['products'] = Product::where('user_id',auth()->id())->latest()->paginate(15);
+        $data['products'] = Product::where('user_id',auth()->id())->get();
         $data['shops'] = MerchantShop::where('merchant_id', auth()->id())->whereStatus(1)->get();
         $data['categories'] = ProductCategory::where('user_id', auth()->id())->get();
         $data['currencies'] = Currency::whereStatus(1)->get();
@@ -130,7 +130,7 @@ class MerchantProductController extends Controller
             return back()->with('error', 'This product does not exist.');
         }
         if($data->status == 0) {
-            return back()->with('error', 'This produc\'s sell status is deactive');
+            return back()->with('error', 'This product\'s sell status is deactive');
         }
         return view('user.merchant.product.product_pay', compact('data'));
     }
@@ -139,16 +139,16 @@ class MerchantProductController extends Controller
     {
         $data = Product::where('id', $request->product_id)->first();
         if(!$data) {
-            return back()->with('error', 'This product does not exist.');
+            return redirect(route('user.dashboard'))->with('error', 'This product does not exist.');
         }
         if($data->status == 0) {
-            return back()->with('error', 'This produc\'s sell status is deactive');
+            return redirect(route('user.dashboard'))->with('error', 'This product\'s sell status is deactive');
         }
         if($data->quantity < $request->quantity) {
-            return back()->with('error', 'The product\'s quantity is smaller than your quantity');
+            return redirect(route('user.dashboard'))->with('error', 'The product\'s quantity is smaller than your quantity');
         }
         if($data->user_id == auth()->id()) {
-            return back()->with('error', 'You can not buy your product.');
+            return redirect(route('user.dashboard'))->with('error', 'You can not buy your product.');
         }
         if($request->payment == 'gateway'){
             return redirect(route(''));
@@ -189,7 +189,7 @@ class MerchantProductController extends Controller
             }
 
             if($wallet->balance < $data->amount * $request->quantity) {
-                return back()->with('error','Insufficient balance to your wallet');
+                return redirect(route('user.dashboard'))->with('error','Insufficient balance to your wallet');
             }
 
             $wallet->balance -= $data->amount * $request->quantity;
@@ -209,38 +209,7 @@ class MerchantProductController extends Controller
             $trnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($data->user_id)->name.'"}';
             $trnx->save();
 
-            $rcvWallet = Wallet::where('user_id',$data->user_id)->where('user_type',1)->where('currency_id',$data->currency_id)->where('wallet_type', 1)->first();
-
-            if(!$rcvWallet){
-                $rcvWallet =  Wallet::create([
-                    'user_id'     => $data->user_id,
-                    'user_type'   => 1,
-                    'currency_id' => $data->currency_id,
-                    'balance'     => 0,
-                    'wallet_type' => 1,
-                    'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
-                ]);
-
-                $user = User::findOrFail($data->user_id);
-
-                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
-
-                $trans = new Transaction();
-                $trans->trnx = str_rand();
-                $trans->user_id     = $data->user_id;
-                $trans->user_type   = 1;
-                $trans->currency_id = 1;
-                $trans->amount      = $chargefee->data->fixed_charge;
-                $trans->charge      = 0;
-                $trans->type        = '-';
-                $trans->remark      = 'wallet_create';
-                $trans->details     = trans('Wallet Create');
-                $trans->data        = '{"sender":"'.User::findOrFail($data->user_id)->name.'", "receiver":"System Account"}';
-                $trans->save();
-
-                user_wallet_decrement($data->user_id, 1, $chargefee->data->fixed_charge, 1);
-                user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
-            }
+            $rcvWallet = MerchantWallet::where('merchant_id', $data->user_id)->where('shop_id', $data->shop_id)->where('currency_id', $data->currency_id)->first();
 
             $rcvWallet->balance += $data->amount * $request->quantity;
             $rcvWallet->update();

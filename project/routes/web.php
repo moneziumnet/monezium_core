@@ -9,6 +9,7 @@ use App\Http\Controllers\User\UserContractManageController;
 use App\Http\Controllers\User\KYCController;
 use App\Http\Controllers\User\MerchantCheckoutController;
 use App\Http\Controllers\User\MerchantProductController;
+use App\Http\Controllers\User\MerchantCampaignController;
 
 Route::redirect('admin', 'admin/login');
 Route::post('the/genius/ocean/2441139', [FrontendController::class, 'subscription']);
@@ -40,4 +41,5 @@ Route::get('/language/{id}', [FrontendController::class, 'language'])->name('fro
 Route::get('/merchant/checkout/link/{id}',[MerchantCheckoutController::class,'link'])->name('user.merchant.checkout.link');
 Route::get('/merchant/checkout/link_pay/{id}',[MerchantCheckoutController::class,'link_pay'])->name('user.merchant.checkout.link_pay');
 Route::get('/merchant/product/link/{id}', [MerchantProductController::class,'link'])->name('user.merchant.product.link');
+Route::get('/merchant/campaign/link/{id}', [MerchantCampaignController::class,'link'])->name('user.merchant.campaign.link');
 Route::get('kyc-take-selfie/{id}', [KYCController::class,'onlineSelfie'])->name('user.kyc.selfie');
