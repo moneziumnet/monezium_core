@@ -68,8 +68,8 @@
         <div class="modal-status bg-primary"></div>
         <div class="modal-body text-center py-4">
         <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
-        <h3>@lang('Bank Details')</h3>
-        <p class="bank_details"></p>
+        <h3>@lang('Campaign Details')</h3>
+        <p class="campaign_details"></p>
         <ul class="list-group mt-2">
             <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Campaign Title')<span id="title" style="margin-left: 60px"></span></li>
             <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Category')<span id="category"  style="margin-left: 60px"></span></li>
@@ -144,31 +144,21 @@
             }
         });
 
-        $(document).ready(function(){
-            console.log('ehll');
-            $('.detailsBtn').on('click', function() {
-                var res_data = $(this).data('data');
-                var total = $(this).data('total');
+        function getdetails(e){
+            var res_data = JSON.parse(e.target.getAttribute('data-data'));
+            var total = e.target.getAttribute('data-total');
                 $('#title').text(res_data.title);
-                $('#category').text(res_data.category);
-                $('#organizer').text(res_data.user.organizer);
+                $('#category').text(res_data.category.name);
+                $('#organizer').text(res_data.user.name);
                 $('#goal').text(res_data.currency.symbol+res_data.goal);
                 $('#fund').text(res_data.currency.symbol+total);
                 $('#deadline').text(res_data.deadline);
                 $('#date').text(res_data.created_at);
                 $('#description').text(res_data.description);
 
-                if(document_url) {
-                    $("#li_document").attr("style","display: block");
-                    $("#document").attr("href", `{{asset('assets/doc/${document_url}')}}`);
-                }
-                else{
-                    $("#li_document").attr("style","display: none!important");
-                    $("#document").attr("href", `#`);
-                }
+
                 $('#modal-success').modal('show');
-            })
-        })
+        }
 
         $('.closed').click(function() {
             $('#modal-success').modal('hide');

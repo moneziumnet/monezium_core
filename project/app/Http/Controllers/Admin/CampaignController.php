@@ -20,7 +20,7 @@ class CampaignController extends Controller
 {
     public function datatables()
     {
-        $datas = Campaign::orderBy('id','desc');
+        $datas = Campaign::orderBy('id','desc')->with('category');
 
         return Datatables::of($datas)
                         ->editColumn('date', function(Campaign $data) {
@@ -63,7 +63,7 @@ class CampaignController extends Controller
                                     '.'Actions' .'
                                 </button>
                                 <div class="dropdown-menu" x-placement="bottom-start">
-                                <a href="javascript:;"  data-data= '.json_encode($data).' data-total='.$total.'  class=" dropdown-item detailsBtn" >
+                                <a href="javascript:;"  data-data= \''.json_encode($data).'\' data-total="'.$total.'"  onclick = "getdetails(event)"class=" dropdown-item detailsBtn" >
                                 ' . __("Details") . '</a>'.$delete.'
 
                                 </div>
@@ -138,13 +138,14 @@ class CampaignController extends Controller
                         })
                         ->editColumn('action', function(CampaignDonation $data) {
                             $total = CampaignDonation::where('campaign_id', $data->id)->where('status', 1)->sum('amount');
+                            $organizer = User::findOrFail($data->campaign->user_id)->name;
                             $delete = '<a href="javascript:;" data-href="' . route('admin.donation.delete',$data->id) . '" data-toggle="modal" data-target="#deleteModal" class="dropdown-item">'.__("Delete").'</a>';
                             return '<div class="btn-group mb-1">
                                 <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     '.'Actions' .'
                                 </button>
                                 <div class="dropdown-menu" x-placement="bottom-start">
-                                <a href="javascript:;"  data-data= '.json_encode($data).' data-total='.$total.'  class=" dropdown-item detailsBtn" >
+                                <a href="javascript:;"   data-data= \''.json_encode($data).'\' data-organizer="'.$organizer.'" onclick = "getdetails(event)" class=" dropdown-item detailsBtn" >
                                 ' . __("Details") . '</a>'.$delete.'
 
                                 </div>

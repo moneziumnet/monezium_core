@@ -24,7 +24,7 @@ class Campaign extends Model
     }
 
     public function category(){
-        return $this->belongsTo(ProductCategory::class, 'cat_id')->withDefault();
+        return $this->belongsTo(CampaignCategory::class, 'cat_id')->withDefault();
     }
 
     public function currency(){
