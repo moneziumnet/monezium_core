@@ -72,8 +72,12 @@
                                     <h5 class="mb-1">{{__('Category: ')}} {{$val->category->name}}</h5>
                                     <h5 class="mb-1">{{__('Organizer: ')}} {{$val->user->name}}</h5>
                                     <h5 class="mb-1">{{__('Goal: ')}} {{$val->currency->symbol}}{{$val->goal}}</h5>
-                                    <h5 class="mb-1">{{__('FundsRaised: ')}} {{'$data->sold'}}</h5>
+                                    @php
+                                        $total = DB::table('campaign_donations')->where('campaign_id', $val->id)->where('status', 1)->sum('amount');
+                                    @endphp
+                                    <h5 class="mb-1">{{__('FundsRaised: ')}} {{$val->currency->symbol}}{{$total}}</h5>
                                     <h5 class="mb-1">{{__('Deadline: ')}} {{$val->deadline}}</h5>
+                                    <h5 class="mb-3">{{__('Created Date:')}} {{$val->created_at}}</h5>
                                     <h6 class="mb-3">{{__('Description:')}} {{$val->description}}</h6>
                                     @if($val->status==1)
                                         <span class="badge badge-pill bg-success"><i class="fas fa-check"></i> {{__('Active')}}</span>

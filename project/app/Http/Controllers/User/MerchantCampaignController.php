@@ -149,14 +149,6 @@ class MerchantCampaignController extends Controller
 
             $gs = Generalsetting::first();
 
-            $to = $data->user->email;
-            $subject = "Received Campaign Donation payments";
-            $msg_body = "You received money ".amount($data->amount, $data->currency->type,2)." \n The customers donate your campaign." ;
-            $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-            $headers .= "MIME-Version: 1.0" . "\r\n";
-            $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-            mail($to,$subject,$msg_body,$headers);
-
             return redirect(route('user.dashboard'))->with('success','You have donated for Campaign successfully.');
         }
     }

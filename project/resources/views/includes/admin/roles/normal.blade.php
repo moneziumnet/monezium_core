@@ -118,7 +118,7 @@
   </li>
   @endif
 
-  
+
   @if(getModule('Deposits'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#bank" aria-expanded="true" aria-controls="collapseTable">
@@ -208,6 +208,21 @@
     <span>{{ __('Bank Transfer') }}</span>
     </a>
   </li>
+@endif
+
+@if(getModule('Crowdfunding'))
+<li class="nav-item">
+  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#crowdfunding" aria-expanded="true" aria-controls="collapseTable">
+    <i class="fas fa-donate"></i>
+  <span>{{ __('Crowdfunding') }}</span>
+</a>
+  <div id="crowdfunding" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
+    <div class="bg-white py-2 collapse-inner rounded">
+      <a class="collapse-item" href="{{ route('admin.campaign.index') }}">{{ __('Campaign') }}</a>
+      <a class="collapse-item" href="{{ route('admin.donation.index') }}">{{ __('Donations') }}</a>
+    </div>
+  </div>
+</li>
 @endif
 
 @if(getModule('Transactions'))
@@ -316,7 +331,7 @@
   </li>
   @endif
 
-  
+
   @if(getModule('Home page Setting'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#homepage" aria-expanded="true"

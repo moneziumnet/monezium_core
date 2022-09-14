@@ -188,6 +188,15 @@
                   </div>
                 </div>
 
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <div class="custom-control custom-switch">
+                        <input type="checkbox" name="section[]" value="Crowdfunding" {{ $data->sectionCheck('Crowdfunding') ? 'checked' : '' }} class="custom-control-input" id="crowdfunding">
+                        <label class="custom-control-label" for="crowdfunding">{{__('Crowdfunding')}}</label>
+                      </div>
+                    </div>
+                  </div>
+
                 <!-- <div class="col-md-6">
               <div class="form-group">
                 <div class="custom-control custom-switch">

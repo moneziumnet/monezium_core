@@ -71,6 +71,7 @@ use App\Http\Controllers\Deposit\OpenPaydController;
 use App\Http\Controllers\Admin\ContractManageController;
 use App\Http\Controllers\Admin\SystemAccountController;
 use App\Http\Controllers\Admin\MerchantShopController;
+use App\Http\Controllers\Admin\CampaignController;
 
 
 Route::prefix('admin')->group(function () {
@@ -439,6 +440,17 @@ Route::prefix('admin')->group(function () {
     Route::get('/deposits/bank', [AppDepositBankController::class, 'index'])->name('admin.deposits.bank.index');
     Route::get('/deposits/bank/status/{id1}/{id2}', [AppDepositBankController::class, 'status'])->name('admin.deposits.bank.status');
   });
+
+  Route::group(['middleware' => 'permissions:Crowdfunding'], function () {
+    Route::get('/campaign/datatables', [CampaignController::class, 'datatables'])->name('admin.campaign.datatables');
+    Route::get('/campaign', [CampaignController::class, 'index'])->name('admin.campaign.index');
+    Route::get('/campaign/status/{id1}/{id2}', [CampaignController::class, 'status'])->name('admin.campaign.status');
+    Route::get('/campaign/delete/{id}', [CampaignController::class, 'destroy'])->name('admin.campaign.delete');
+    Route::get('/campaign/donation/datatables', [CampaignController::class, 'donation_datatables'])->name('admin.donation.datatables');
+    Route::get('/campaign/donation', [CampaignController::class, 'donation_index'])->name('admin.donation.index');
+    Route::get('/campaign/donation/status/{id1}/{id2}', [CampaignController::class, 'donation_status'])->name('admin.donation.status');
+    Route::get('/campaign/donation/delete/{id}', [CampaignController::class, 'donation_destroy'])->name('admin.donation.delete');
+});
 
   Route::group(['middleware' => 'permissions:Manage Blog'], function () {
     Route::get('/blog/datatables', [BlogController::class, 'datatables'])->name('admin.blog.datatables'); //JSON REQUEST

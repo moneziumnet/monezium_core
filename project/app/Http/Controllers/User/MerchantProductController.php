@@ -253,8 +253,8 @@ class MerchantProductController extends Controller
             $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
             mail($to,$subject,$msg_body,$headers);
 
-            return redirect(route('user.dashboard'))->with('success','You have paid for buy project successfully.');
         }
+        return redirect(route('user.dashboard'))->with('success','You have paid for buy project successfully.');
     }
 
     public function order()
