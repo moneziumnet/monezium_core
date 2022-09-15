@@ -177,7 +177,7 @@ Route::prefix('admin')->group(function () {
     Route::post('/banks/store', [SubInsBankController::class, 'store'])->name('admin.subinstitution.banks.store');
     Route::get('/banks/edit/{id}', [SubInsBankController::class, 'edit'])->name('admin.subinstitution.banks.edit');
     Route::get('/banks/account/{id}', [SubInsBankController::class, 'account'])->name('admin.subinstitution.banks.account');
-    Route::post('/banks/account/create', [SubInsBankController::class, 'subbank_account_create'])->name('admin.subinstitution.banks.account.create');
+    Route::post('/banks/account/create', [OpenPaydController::class, 'master_store'])->name('admin.subinstitution.banks.account.create');
 
 
     Route::post('/banks/update/{id}', [SubInsBankController::class, 'update'])->name('admin.subinstitution.banks.update');

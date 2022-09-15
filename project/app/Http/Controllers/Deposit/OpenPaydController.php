@@ -133,6 +133,82 @@ class OpenPaydController extends Controller
 
     }
 
+    public function master_store(Request $request){
+        $rules = [
+            'currency' => 'required',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return redirect()->back()->with(array('errors' => $validator->getMessageBag()->toArray()));
+        }
+        $client = New Client();
+        $bankgateway = BankGateway::where('subbank_id', $request->subbank)->first();
+        $bankaccount = BankPoolAccount::where('bank_id', $request->subbank)->where('currency_id', $request->currency)->first();
+        if ($bankaccount){
+            return redirect()->back()->with(array('warning' => 'This bank account already exists.'));
+
+        }
+        try {
+            $response = $client->request('POST', 'https://sandbox.openpayd.com/api/oauth/token?grant_type=client_credentials', [
+                'headers' => [
+                   'Accept'=> 'application/json',
+                  'Authorization' => 'Basic '.$bankgateway->information->Auth,
+                  'Content-Type' => 'application/x-www-form-urlencoded',
+                ],
+              ]);
+            $res_body = json_decode($response->getBody());
+            $auth_token = $res_body->access_token;
+            $accounter_id = $res_body->accountHolderId;
+        } catch (\Throwable $th) {
+             return response()->json($th->getMessage());
+        }
+        try {
+            $currency = Currency::whereId($request->currency)->first();
+            $response = $client->request('POST', 'https://sandbox.openpayd.com/api/accounts', [
+                'body' => '{"currency":"'.$currency->code.'","friendlyName":"Billing Account('.$currency->code.')"}',
+                'headers' => [
+                  'Accept' => 'application/json',
+                  'Authorization' => 'Bearer '.$auth_token,
+                  'Content-Type' => 'application/json',
+                  'x-account-holder-id' => $accounter_id,
+                ],
+            ]);
+            $res_body = json_decode($response->getBody());
+            $internal_id = $res_body->internalAccountId;
+        } catch (\Throwable $th) {
+             return response()->json($th->getMessage());
+        }
+
+        try {
+            $response = $client->request('GET', 'https://sandbox.openpayd.com/api/bank-accounts?internalAccountId='.$internal_id, [
+                'headers' => [
+                  'Accept' => 'application/json',
+                  'Authorization' => 'Bearer '.$auth_token,
+                  'Content-Type' => 'application/json',
+                  'x-account-holder-id' => $accounter_id,
+                ],
+            ]);
+            $res_body = json_decode($response->getBody())[0];
+
+            $bic_swift = $res_body->bic;
+            $iban = $res_body->iban;
+        } catch (\Throwable $th) {
+             return response()->json($th->getMessage());
+        }
+
+
+        $data = new BankPoolAccount();
+        $data->bank_id = $request->subbank;
+        $data->currency_id = $request->currency;
+        $data->iban = $iban;
+        $data->swift = $bic_swift;
+        $data->save();
+        return redirect()->back()->with(array('message' => 'Bank Account has been created successfully'));
+
+    }
+
     public function transfer(Request $request) {
         $user = auth()->user();
         if($user->payment_fa_yn == 'Y') {

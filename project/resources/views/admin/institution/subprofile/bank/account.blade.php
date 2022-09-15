@@ -77,23 +77,15 @@
             {{ csrf_field() }}
 
                 <div class="form-group">
-                    <label for="iban">{{ __('Account/IBAN') }}</label>
-                    <input type="text" class="form-control" id="iban" name="iban" placeholder="{{ __('Account/IBAN') }}"  value="" required>
-                    </div>
-                <div class="form-group">
-                    <label for="swift">{{ __('SWIFT/BIC') }}</label>
-                    <input type="text" class="form-control" id="swift" name="swift" placeholder="{{ __('SWIFT/BIC') }}" value="" required>
-                </div>
-                <div class="form-group">
                     <label for="inp-name">{{ __('Currency') }}</label>
-                        <select class="form-control" name="currency_id" id="currency" required>
+                        <select class="form-control" name="currency" id="currency" required>
                         <option value="">{{ __('Select Currency') }}</option>
                         @foreach ($currencylist as $value )
                             <option value="{{$value->id}}">{{ __($value->code) }}</option>
                         @endforeach
                         </select>
                 </div>
-                <input type="hidden" name="bank_id" value="{{$data->id}}">
+                <input type="hidden" name="subbank" value="{{$data->id}}">
                 <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Create') }}</button>
             </form>
         </div>
