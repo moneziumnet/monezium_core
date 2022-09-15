@@ -11,6 +11,7 @@ use App\Models\BankAccount;
 use App\Models\BankGateway;
 use App\Models\SubInsBank;
 use App\Models\Transaction;
+use App\Models\BankPoolAccount;
 use GuzzleHttp\Client;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -228,6 +229,7 @@ class OtherBankTransferController extends Controller
         $currency = Currency::where('id',$data->currency_id)->first();
         $customer_bank = BankAccount::whereUserId($user->id)->where('subbank_id',$data->subbank)->where('currency_id', $data->currency_id)->first();
         $bankgateway = BankGateway::where('subbank_id', $data->subbank)->first();
+        $master_account = BankPoolAccount::where('bank_id', $data->subbank)->where('currency_id', $data->currency_id)->first();
 
         $subbank = SubInsBank::where('id', $data->subbank)->first();
         $client = New Client();
@@ -269,70 +271,55 @@ class OtherBankTransferController extends Controller
         }
 
         try {
-            $response = $client->request('POST', 'https://sandbox.openpayd.com/api/beneficiaries', [
-                'body' => '{
-                    "beneficiaryType":"CORPORATE",
-                    "friendlyName":"'.$data->beneficiary->account_name.'",
-                    "companyName":"'.$data->beneficiary->account_name.'"
-                }',
+            $response = $client->request('GET', 'https://sandbox.openpayd.com/api/accounts?iban='.$master_account->iban, [
                 'headers' => [
                   'Accept' => 'application/json',
                   'Authorization' => 'Bearer '.$auth_token,
                   'Content-Type' => 'application/json',
-                  'x-account-holder-id' => $user->holder_id,
+                  'x-account-holder-id' => $accounter_id,
                 ],
-            ]);
-            $res_body = json_decode($response->getBody());
-            $beneficiary_id = $res_body->id;
+              ]);
+              $res_body = json_decode($response->getBody())->content[0];
+
+            $master_account_id = $res_body->id;
+            $master_amount = $res_body->availableBalance->value;
+            if ($master_amount < $data->amount) {
+                return response()->json(('Your balance is Insufficient '));
+            }
         } catch (\Throwable $th) {
              return response()->json($th->getMessage());
         }
 
         try {
-            $response = $client->request('POST', 'https://sandbox.openpayd.com/api/beneficiaries/'.$beneficiary_id.'/bank-beneficiaries', [
-                'body' => '{
-                    "paymentTypes":["'.$data->payment_type.'"],
-                    "bankAccountCurrency":"'.$currency->code.'",
-                    "beneficiaryType":"CORPORATE",
-                    "beneficiaryCountry":"'.substr($data->iban, 0,2).'",
-                    "bankAccountCountry":"'.substr($data->iban, 0,2).'",
-                    "iban":"'.$data->iban.'",
-                    "bic":"'.$data->swift_bic.'",
-                    "bankAccountHolderName":"'.$data->beneficiary->account_name.'",
-                    "companyName":"'.$data->beneficiary->account_name.'"
-                }',
-                'headers' => [
-                  'Accept' => 'application/json',
-                  'Authorization' => 'Bearer '.$auth_token,
-                  'Content-Type' => 'application/json',
-                  'x-account-holder-id' => $user->holder_id,
-                ],
-            ]);
-            $res_body = json_decode($response->getBody());
-            $beneficiary_id = $res_body->id;
-        } catch (\Throwable $th) {
-             return response()->json($th->getMessage());
-        }
-
-        try {
-            $response = $client->request('POST', 'https://sandbox.openpayd.com/api/transactions/bank-payouts', [
-                'body' => '{
-                    "accountId":"'.$account_id.'",
-                    "beneficiaryId":"'.$beneficiary_id.'",
-                    "paymentType":"'.$data->payment_type.'",
+            $response = $client->request('POST', 'https://sandbox.openpayd.com/api/transactions/sweepPayout', [
+                'body' =>
+                    '{"beneficiary":
+                        {"bankAccountCountry":"'.substr($data->iban, 0,2).'",
+                        "customerType":"RETAIL",
+                        "firstName":"'.$data->beneficiary->account_name.'",
+                        "lastName":"'.$data->beneficiary->account_name.'",
+                        "iban":"'.$data->iban.'",
+                        "bic":"'.$data->swift_bic.'"
+                        },
                     "amount":
-                    {"currency":"'.$currency->code.'","value":"'.$data->amount.'"},
-                    "reference":"'. $data->description.'"
-                }',
+                        {"value":"'.$data->amount.'",
+                        "currency":"'.$currency->code.'"
+                        },
+                    "linkedAccountHolderId":"'.$user->holder_id.'",
+                    "accountId":"'.$account_id.'",
+                    "sweepSourceAccountId":"'.$master_account_id.'",
+                    "paymentType":"'.$data->payment_type.'",
+                    "reference":"'.$data->description.'"
+                    }',
                 'headers' => [
                   'Accept' => 'application/json',
                   'Authorization' => 'Bearer '.$auth_token,
                   'Content-Type' => 'application/json',
-                  'x-account-holder-id' => $user->holder_id,
+                  'x-account-holder-id' => $accounter_id,
                 ],
             ]);
             $res_body = json_decode($response->getBody());
-            $transaction_id = $res_body->id;
+            $transaction_id = $res_body->transactionId;
         } catch (\Throwable $th) {
              return response()->json($th->getMessage());
         }
@@ -348,7 +335,7 @@ class OtherBankTransferController extends Controller
             $trans->charge      = $data->cost;
             $trans->type        = '-';
             $trans->remark      = 'Send_Money';
-            $trans->data        = '{"sender":"'.$user->name.'", "receiver":"'.$data->beneficiary->account_name.'}';
+            $trans->data        = '{"sender":"'.$user->name.'", "receiver":"'.$data->beneficiary->account_name.'", "transaction_id":"'.$transaction_id.'"}';
             $trans->details     = trans('Send Money');
             $trans->save();
     }
