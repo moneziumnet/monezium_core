@@ -263,9 +263,6 @@ class OtherBankTransferController extends Controller
 
             $account_id = $res_body->id;
             $amount = $res_body->availableBalance->value;
-            if ($amount < $data->amount) {
-                return response()->json(('Your balance is Insufficient '));
-            }
         } catch (\Throwable $th) {
              return response()->json($th->getMessage());
         }
@@ -283,6 +280,9 @@ class OtherBankTransferController extends Controller
 
             $master_account_id = $res_body->id;
             $master_amount = $res_body->availableBalance->value;
+            if ($master_amount < $data->amount) {
+                return response()->json(('Your balance is Insufficient '));
+            }
         } catch (\Throwable $th) {
              return response()->json($th->getMessage());
         }
