@@ -82,10 +82,10 @@
                                         </td>
                                         <td data-label="@lang('Details')" class="text-end">
                                             @php
-                                                $subbank = DB::table('sub_ins_banks')->where('id', $deposit->sub_bank_id)->first();
-                                                $data = DB::table('bank_accounts')->whereUserId(auth()->id())->where('subbank_id', $subbank->id)->where('currency_id', $deposit->currency_id)->first();
+                                                @$subbank = DB::table('sub_ins_banks')->where('id', $deposit->sub_bank_id)->first();
+                                                @$data = DB::table('bank_accounts')->whereUserId(auth()->id())->where('subbank_id', $subbank->id)->where('currency_id', $deposit->currency_id)->first();
                                             @endphp
-                                            <button class="btn btn-primary btn-sm details" data-data="{{json_encode($data)}}" data-subbank="{{json_encode($subbank)}}" data-description="{{$deposit->details}}">@lang('Details')</button>
+                                            <button class="btn btn-primary btn-sm details" data-data="{{json_encode($data ?? '')}}" data-subbank="{{json_encode($subbank ?? '')}}" data-description="{{$deposit->details}}">@lang('Details')</button>
                                         </td>
                                     </tr>
                                 @endforeach
