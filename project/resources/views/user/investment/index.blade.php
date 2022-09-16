@@ -482,7 +482,7 @@
             <div class="col-12">
                 <div class="card">
                     @if (count($fdr) == 0)
-                        <h3 class="text-center py-5">{{__('No Dps Data Found')}}</h3>
+                        <h3 class="text-center py-5">{{__('No FDR Data Found')}}</h3>
                     @else
                         <div class="table-responsive">
                             <table class="table table-vcenter table-mobile-md card-table">
