@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use App\Helpers\MediaHelper;
 use App\Models\UserApiCred;
 use App\Models\MerchantWallet;
+use App\Models\MerchantSetting;
 use Auth;
 
 class MerchantController extends Controller
@@ -41,6 +42,22 @@ class MerchantController extends Controller
         $wallets = MerchantWallet::where('merchant_id', auth()->id())->with('currency')->with('shop')->get();
 
         return view('user.merchant.index',compact('cred', 'user', 'wallets'));
+    }
+
+    public function setting() {
+        $data['setting'] = MerchantSetting::where('user_id',auth()->id())->first();
+        return view('user.merchant.setting', $data);
+    }
+
+    public function setting_update(Request $request) {
+        $data = MerchantSetting::where('user_id', auth()->id())->first();
+        if (!$data) {
+            $data = new MerchantSetting();
+        }
+        $data->user_id = auth()->id();
+        $data->address = $request->address;
+        $data->save();
+        return back()->with('message', 'Merchant Setting has been updated successfully.');
     }
 
     public function address_edit(Request $request){

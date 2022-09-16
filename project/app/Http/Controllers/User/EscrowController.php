@@ -77,7 +77,7 @@ class EscrowController extends Controller
         $transaction_global_fee = check_global_transaction_fee($request->amount, $user, 'escrow');
         $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'escrow')->first();
         if ($request->amount < $global_range->min || $request->amount > $global_range->max) {
-            return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
+            return redirect()->back()->with('error','Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
         }
         if($transaction_global_fee)
         {
@@ -149,7 +149,7 @@ class EscrowController extends Controller
         $trnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.$receiver->name.'"}';
         $trnx->save();
 
-        return back()->with('message','Escrow has been created successfully');
+        return redirect(route('user.escrow.index'))->with('message','Escrow has been created successfully');
     }
 
     public function calcharge($amount)

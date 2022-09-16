@@ -10,7 +10,7 @@
             {{__('Overview')}}
           </div>
           <h2 class="page-title">
-            {{__('Setting Invoice')}}
+            {{__('Invoice Setting')}}
           </h2>
         </div>
       </div>
