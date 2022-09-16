@@ -200,7 +200,7 @@ class CampaignController extends Controller
             }
 
             if($wallet->balance < $donation->amount) {
-                return redirect()->back()->with('error','Insufficient balance to your wallet');
+                return response()->json('Insufficient balance to your wallet');
             }
 
             $wallet->balance -= $donation->amount;

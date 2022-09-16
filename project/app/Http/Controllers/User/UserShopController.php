@@ -10,6 +10,7 @@ use App\Models\Currency;
 use App\Models\ProductCategory;
 use App\Models\ProductImage;
 use App\Models\MerchantWallet;
+use App\Models\Campaign;
 use App\Models\Generalsetting;
 use App\Models\User;
 use App\Models\Wallet;
@@ -32,12 +33,18 @@ class UserShopController extends Controller
 
     public function index(){
         $data['products'] = Product::where('user_id','!=',auth()->id())->wherestatus(1)->get();
+        $data['campaigns'] = Campaign::where('user_id','!=',auth()->id())->wherestatus(1)->get();
         return view('user.shop.index', $data);
     }
 
     public function order($id) {
         $data = Product::where('id', $id)->first();
         return view('user.shop.buy', compact('data'));
+    }
+
+    public function donate($id) {
+        $data = Campaign::where('id', $id)->first();
+        return view('user.shop.donate', compact('data'));
     }
 
 }
