@@ -25,8 +25,8 @@
         <div class="tab-pane fade show p-3 active" id="accounts" role="tabpanel" aria-labelledby="accounts-tab">
             @php
                 $userType = explode(',', $data->user_type);
-                $supervisor = DB::table('customer_types')->where('type_name', 'Supervisors')->first()->id;
-                $merchant = DB::table('customer_types')->where('type_name', 'Merchants')->first()->id;
+                @$supervisor = DB::table('customer_types')->where('type_name', 'Supervisors')->first()->id;
+                @$merchant = DB::table('customer_types')->where('type_name', 'Merchants')->first()->id;
                 $accounttype = array('0'=>'All', '1'=>'Current', '2'=>'Card', '3'=>'Deposit', '4'=>'Loan', '5'=>'Escrow', '8'=>'Crypto');
                 if(in_array($supervisor, $userType)) {
                     $accounttype['6'] = 'Supervisor';
