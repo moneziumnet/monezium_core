@@ -154,7 +154,7 @@ class MerchantCampaignController extends Controller
 
             $gs = Generalsetting::first();
 
-            return redirect(route('user.dashboard'))->with('success','You have donated for Campaign successfully.');
+            return redirect(route('user.dashboard'))->with('message','You have donated for Campaign successfully.');
         }
     }
 
