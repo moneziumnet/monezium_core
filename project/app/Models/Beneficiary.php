@@ -20,6 +20,15 @@ class Beneficiary extends Model
         'details'
     ];
 
+    protected $casts = [
+        'account_name' => 'encrypted',
+        'address' => 'encrypted',
+        'bank_address' => 'encrypted',
+        'swift_bic' => 'encrypted',
+        'account_iban' => 'encrypted',
+        'details' => 'encrypted',
+    ];
+
     public function bank(){
         return $this->belongsTo('App\Models\OtherBank','other_bank_id')->withDefault();
     }
