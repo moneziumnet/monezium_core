@@ -111,6 +111,7 @@ Route::prefix('user')->group(function() {
 
       Route::get('/shop', [UserShopController::class,'index'])->name('user.shop.index');
       Route::get('/shop/order/{id}', [UserShopController::class,'order'])->name('user.shop.order');
+      Route::get('/shop/campaign/donate/{id}', [UserShopController::class,'donate'])->name('user.campaign.donate');
 
 
       Route::get('/export-pdf', [UserController::class,'generatePDF'])->name('user.export.pdf');
