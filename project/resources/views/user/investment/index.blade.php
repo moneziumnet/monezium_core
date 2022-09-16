@@ -20,6 +20,11 @@
 <div class="page-body">
     <div class="container-xl">
     <div class="row justify-content " style="max-height: 368px;">
+    @if (count($dps_plans) == 0)
+    <div class="card">
+        <h3 class="text-center">{{__('NO Wallet FOUND')}}</h3>
+    </div>
+    @else
     @foreach ($wallets as $item)
     <div class="col-sm-6 col-md-4 mb-3">
         <div class="card h-100 card--info-item">
@@ -36,6 +41,7 @@
         </div>
     </div>
     @endforeach
+    @endif
     </div>
     </div>
 </div>
