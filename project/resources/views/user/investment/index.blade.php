@@ -20,7 +20,7 @@
 <div class="page-body">
     <div class="container-xl">
     <div class="row justify-content " style="max-height: 368px;">
-    @if (count($dps_plans) == 0)
+    @if (count($wallets) == 0)
     <div class="card">
         <h3 class="text-center">{{__('NO Wallet FOUND')}}</h3>
     </div>
