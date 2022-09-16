@@ -78,6 +78,9 @@ class ManageInvoiceController extends Controller
         $amount = array_sum($request->amount);
         $beneficiary = ContractBeneficiary::whereId($request->beneficiary_id)->first();
         $setting = InvoiceSetting::where('user_id', auth()->id())->first();
+        if(!$setting){
+            return redirect(route('user.invoice.invoic_setting'))->with('error','You should confirm the invoice setting first.');
+        }
         $type = 'prefix_'.$request->type;
         $length = 'length_'.$request->type;
 
@@ -118,7 +121,7 @@ class ManageInvoiceController extends Controller
             $invItem->invoice_id = $invoice->id;
             $invItem->name       = $item;
             $invItem->amount	 = $amount;
-            $invItem->tax_id    = $request->tax_id[$i];
+            $invItem->tax_id    = $request->tax_id[$i] ?? 0;
             $invItem->save();
             $i++;
         }
@@ -141,7 +144,7 @@ class ManageInvoiceController extends Controller
             "
         ]);
 
-        return back()->with('message','Invoice has been created');
+        return redirect(route('user.invoice.index'))->with('message','Invoice has been created');
     }
 
     /**
@@ -297,11 +300,11 @@ class ManageInvoiceController extends Controller
             $invItem->invoice_id = $invoice->id;
             $invItem->name       = $item;
             $invItem->amount	 = $amount;
-            $invItem->tax_id    = $request->tax_id[$i];
+            $invItem->tax_id    = $request->tax_id[$i] ?? 0;
             $invItem->save();
             $i++;
         }
-        return back()->with('message','Invoice has been updated');
+        return redirect(route('user.invoice.index'))->with('message','Invoice has been updated');
     }
 
     public function payStatus(Request $request)

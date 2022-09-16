@@ -132,7 +132,7 @@ class VoucherController extends Controller
         // $commissionTrnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.auth()->user()->name.'"}';
         // $commissionTrnx->save();
 
-        return back()->with('success','Voucher has been created successfully');
+        return redirect(route('user.vouchers'))->with('message','Voucher has been created successfully');
 
     }
 

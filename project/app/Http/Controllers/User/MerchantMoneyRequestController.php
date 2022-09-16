@@ -112,7 +112,7 @@ class MerchantMoneyRequestController extends Controller
         $data->shop_id = $request->shop_id;
         $data->save();
 
-        return redirect()->back()->with('success','Request Money Send Successfully.');
+        return redirect(route('user.merchant.money.request.index'))->with('message','Request Money Send Successfully.');
     }
     public function details($id){
         $data = MoneyRequest::findOrFail($id);

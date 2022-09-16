@@ -168,7 +168,7 @@ class SupervisorController extends Controller
         $data->supervisor_id = $request->supervisor_id;
         $data->manager_id = $manager->id;
         $data->save();
-        return back()->with('message','Manager has been added successfully.');
+        return redirect(route('user.referral.index'))->with('message','Manager has been added successfully.');
     }
 
     public function deletemanager($id) {

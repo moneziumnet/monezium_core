@@ -39,7 +39,7 @@
                                 @php
                                     $length = 'length_'.$type;
                                 @endphp
-                                <input type="number" name="{{$length}}" class="form-control shadow-none" value="{{$invoice_setting->number_generator->$length ?? ''}}"  min="4" required>
+                                <input type="number" name="{{$length}}" class="form-control shadow-none" value="{{$invoice_setting->number_generator->$length ?? ''}}"  min="4" max="10" required>
                             </div>
                         @endforeach
 

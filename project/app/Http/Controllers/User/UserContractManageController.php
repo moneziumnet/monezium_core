@@ -46,7 +46,7 @@ class UserContractManageController extends Controller
         $data->pattern = json_encode($items);
         $data->save();
 
-        return redirect()->back()->with('success','Contract has been created successfully');
+        return redirect(route('user.contract.index'))->with('message','Contract has been created successfully');
     }
 
     public function view($id) {
@@ -145,7 +145,7 @@ class UserContractManageController extends Controller
         $data->pattern = json_encode($items);
         $data->update();
 
-        return redirect()->back()->with('success','Contract has been updated successfully');
+        return redirect(route('user.contract.index'))->with('success','Contract has been updated successfully');
     }
     public function delete($id) {
         $data = Contract::findOrFail($id);

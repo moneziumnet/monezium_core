@@ -72,7 +72,7 @@
                     <hr>
                     @foreach ($invoice->items as $value)
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-5 mb-3">
                             @if ($loop->first)
                             <div class="form-label">{{__('Item name')}}</div>
                             @endif
@@ -82,17 +82,23 @@
                             @if ($loop->first)
                             <div class="form-label">{{__('Amount')}}</div>
                             @endif
-                            <input type="text" name="amount[]" class="form-control shadow-none amount" required value="{{numFormat($value->amount)}}">
+                            <input type="number" step="any" name="amount[]" class="form-control shadow-none amount" required value="{{numFormat($value->amount)}}">
                         </div>
                         @php
                             $item = DB::table('taxes')->where('id', $value->tax_id)->first();
                         @endphp
-                        <div class="col-md-1 mb-3">
+                        <div class="col-md-2 mb-3">
                             @if ($loop->first)
                             <div class="form-label"> {{__("Tax")}}</div>
                             @endif
-                            <input type="text"  class="form-control shadow-none" value={{$item->name}} readonly required>
+                            @if($item)
+                            <input type="text"  class="form-control shadow-none tax" value="{{$item->name}} {{$item->rate}}%" data-rate="{{$item->rate}}" readonly required>
                             <input type="hidden" name="tax_id[]" class="form-control shadow-none" value={{$item->id}}  required>
+                            @else
+                            <div id="tax_append" tax-count="{{$loop->count}}"></div>
+                            <input type="hidden" name="tax_id[]" value="0" class="add-tax tax" data-rate="0" tax-count="{{$loop->count}}">
+                            <a class="btn btn-primary w-100 add-tax" href="javascript:void(0)" tax-count="{{$loop->count}}">{{__('Add Tax')}}</a>
+                            @endif
 
                         </div>
                         @if ($loop->first)
@@ -253,19 +259,34 @@
 @push('js')
     <script>
         'use strict';
+        var tax_count = {{count($invoice->items)}};
+
+        function calcAmount() {
+            var total = 0;
+            $('.amount').each(function(e){
+                if($(this).val()!=''){
+                    var rate = parseFloat($(this).parent().parent().find('.tax').data('rate'))
+                    total += parseFloat($(this).val()) + rate *  parseFloat($(this).val()) / 100;
+                }
+                $('.totalAmount').text(total.toFixed(4))
+            })
+        }
+        
         $('.add').on('click',function(){
+            tax_count++;
             $('.extra-container').append(`
 
                    <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-5 mb-3">
                             <input type="text" name="item[]" class="form-control shadow-none itemname" required>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <input type="text" name="amount[]" class="form-control shadow-none amount" required>
+                            <input type="number" step="any" name="amount[]" class="form-control shadow-none amount" required>
                         </div>
-                        <div class="col-md-1 mb-3">
-                            <div id="tax_append"></div>
-                            <a class="btn btn-primary w-100 add-tax" href="javascript:void(0)">{{__('Add Tax')}}</a>
+                        <div class="col-md-2 mb-3">
+                            <div id="tax_append" tax-count="${tax_count}"></div>
+                            <input type="hidden" name="tax_id[]" value="0" class="add-tax tax" data-rate="0" tax-count="${tax_count}">
+                            <a class="btn btn-primary w-100 add-tax" tax-count="${tax_count}" href="javascript:void(0)">{{__('Add Tax')}}</a>
                         </div>
                         <div class="col-md-1 mb-3">
                             <button type="button" class="btn btn-danger w-100 remove"><i class="fas fa-times"></i></button>
@@ -293,7 +314,8 @@
         })
 
         $(document).on('click','.remove',function () {
-            $(this).closest('.row').remove()
+            $(this).closest('.row').remove();
+            calcAmount();
         })
 
         $(document).on('click','.doc_remove',function () {
@@ -320,40 +342,36 @@
 
 
         $(document).on('keyup','.amount',function () {
-            var total = 0;
-            $('.amount').each(function(e){
-                if($(this).val()!=''){
-                    total += parseFloat($(this).val());
-                }
-                $('.totalAmount').text(total.toFixed(4))
-            })
+            calcAmount();
         })
         $('.beneficiary').on('click',function() {
             $('#modal-success').modal('show')
         })
         $(document).on('click', '.add-tax', function() {
+            $('#modal-success-tax #customerSubmit').attr('tax-count',$(this).attr('tax-count'));
             $('#modal-success-tax').modal('show')
         })
 
         $(document).ready(function(){
-
+            calcAmount();
             $(document).on('submit','#customerSubmit',function(e){
                 e.preventDefault();
                 // AJAX request
                 console.log($(this).serialize())
+                var tax_count = $(this).attr('tax-count');
                 $.ajax({
                     method: 'post',
                     url: "{{route('user.invoice.tax')}}",
                     data: $(this).serialize(),
                     success: function(msg) {
                         console.log(msg);
-                        $('#tax_append').append(`
-                            <input type="text"  class="form-control shadow-none" value=${msg.name} readonly required>
+                        $(`#tax_append[tax-count="${tax_count}"]`).append(`
+                            <input type="text"  class="form-control shadow-none" value="${msg.name} ${msg.rate}%" readonly required>
                             <input type="hidden" name="tax_id[]" class="form-control shadow-none" value=${msg.id}  required>
 
                             `);
-                        $('.add-tax').remove();
-                        $('#tax_append').attr('id', 'un_tax_append');
+                        $(`.add-tax[tax-count="${tax_count}"]`).remove();
+                        $(`#tax_append[tax-count="${tax_count}"]`).attr('id', 'un_tax_append');
                         $('#modal-success-tax').modal('hide')
                     },
                     error: function(XMLHttpRequest, textStatus, errorThrown) {

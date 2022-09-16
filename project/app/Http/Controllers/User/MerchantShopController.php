@@ -66,7 +66,7 @@ class MerchantShopController extends Controller
         $data->logo = $logo_name;
         $data->url = $request->url;
         $data->save();
-        return redirect()->back()->with('message','Merchant Shop has been created successfully');
+        return redirect(route('user.merchant.shop.index'))->with('message','Merchant Shop has been created successfully');
     }
 
     public function edit($id) {
