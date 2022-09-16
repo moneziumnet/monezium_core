@@ -16,6 +16,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
 use Datatables;
+use Illuminate\Support\Carbon;
 
 class MerchantCampaignController extends Controller
 {
@@ -130,6 +131,10 @@ class MerchantCampaignController extends Controller
         }
         if($data->status == 0) {
             return redirect(route('user.dashboard'))->with('error', 'This compaign\'s status is deactive');
+        }
+        $now = Carbon::now();
+        if($now->gt($data->deadline)) {
+            return redirect(route('user.dashboard'))->with('error', 'This compaign\'s deadline is passed');
         }
         if($request->payment == 'gateway'){
             return redirect(route(''));
