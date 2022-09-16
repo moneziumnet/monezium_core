@@ -92,7 +92,9 @@
                         <div class="extra-container"></div>
 
                         <div class="form-group mb-3 mt-3">
-                            <label class="form-label required">{{__('Description')}} {{__('(i.e: if patten is amount, and value is 500,  {amount} is 500)')}}</label>
+                            <label class="form-label required">{{__('Description')}} <span class="pattern-help"><i class="fas fa-question-circle"></i></span></label>
+                            
+
                             <textarea name="description" class="form-control" id="inp-details" cols="30" rows="10" placeholder="{{__('Description')}}"  required>{{__($data->description)}}</textarea>
                         </div>
                         <input name="user_id" type="hidden" class="form-control" value="{{$data->user_id}}">
@@ -163,6 +165,52 @@
     </div>
     </div>
 </div>
+<div class="modal modal-blur fade" id="modal-pattern-help" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-status bg-primary"></div>
+        <div class="modal-body text-center py-4">
+            <i  class="fas fa-question-circle fa-3x text-primary mb-2"></i>
+            <h3>{{__('How to write description')}}</h3>
+            <div class="row form-group mt-3 text-start">
+                <div class="col-md-6">
+                    <div class="form-label">{{__('Pattern name')}}</div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-label">{{__('Value')}}</div>
+                </div>
+            </div>
+            <div class="row form-group mb-1">
+                <div class="col-md-6">
+                    <input type="text" class="form-control shadow-none" value="name" readonly>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" class="form-control shadow-none" value="Aleksander" readonly>
+                </div>
+            </div>
+            <div class="row form-group mb-1">
+                <div class="col-md-6">
+                    <input type="text" class="form-control shadow-none" value="amount" readonly>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" class="form-control shadow-none" value="1000"readonly >
+                </div>
+            </div>
+            <div class="row form-group mt-3 text-start">
+                    <label class="form-label">{{__('Description')}}</label>
+                    <textarea name="description" class="form-control" readonly>{{__('Hello, {name}. 
+I need {amount} from you.')}}</textarea>
+            </div>
+            <div class="row form-group mt-3 text-start">
+                <label class="form-label">{{__('Preview')}}</label>
+                <textarea name="description" class="form-control" readonly>{{__('Hello, Aleksander.
+I need 1000 from you.')}}</textarea>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
 
 @endsection
 
@@ -192,6 +240,9 @@
         })
         $('.beneficiary').on('click',function() {
             $('#modal-success').modal('show')
+        })
+        $('.pattern-help').on('click', function(){
+            $("#modal-pattern-help").modal('show')
         })
 </script>
 @endpush
