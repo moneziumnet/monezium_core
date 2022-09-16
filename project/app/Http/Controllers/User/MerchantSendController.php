@@ -87,13 +87,6 @@ class MerchantSendController extends Controller
         ]);
 
         $user = auth()->user();
-        $ga = new GoogleAuthenticator();
-        $secret = $user->go;
-        $oneCode = $ga->getCode($secret);
-
-        if ($oneCode != $request->code) {
-            return redirect()->back()->with('unsuccess','Two factor authentication code is wrong');
-        }
 
         if($user->bank_plan_id === null){
             return redirect()->back()->with('unsuccess','You have to buy a plan to withdraw.');
