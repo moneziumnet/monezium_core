@@ -78,6 +78,79 @@
   </div>
 </div>
 
+<div class="container-xl">
+    <div class="page-header d-print-none">
+      <div class="row align-items-center">
+        <div class="col">
+          <div class="page-pretitle">
+            {{__('Overview')}}
+          </div>
+          <h2 class="page-title">
+            {{__('Campaign List')}}
+          </h2>
+        </div>
+      </div>
+    </div>
+</div>
+
+
+<div class="page-body">
+    <div class="container-xl mt-3 mb-3">
+        <div class="row row-cards">
+            <div class="row justify-content " style="max-height: 1600px;overflow-y: scroll;">
+                    @if (count($campaigns) == 0)
+                        <h3 class="text-center py-5">{{__('No Campaign Data Found')}}</h3>
+                    @else
+                    @foreach($campaigns as $key=>$val)
+                      <div class="col-lg-3 mb-3">
+                          <div class="card">
+                              <img class="back-preview-image"
+                                  src="{{asset('assets/images')}}/{{$val->logo}}"
+                              alt="Campaign Logo">
+                              <!-- Card body -->
+                              <div class="card-body">
+                                  <div class="row mb-2">
+                                      <div class="col-8">
+                                      </div>
+                                      <div class="col-4 text-end">
+                                      <a class="mr-0" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                          <i class="fas fa-chevron-circle-down"></i>
+                                      </a>
+                                      <div class="dropdown-menu dropdown-menu-left">
+                                          <a class="dropdown-item" href="{{route('user.campaign.donate', ['id' => $val->id])}}"><i class="fas fa-donate me-2"></i>{{__('Donate')}}</a>
+                                      </div>
+                                      </div>
+                                  </div>
+                                  <div class="row mb-3">
+                                      <div class="col-12">
+                                      <h5 class="h4 mb-2 font-weight-bolder">{{__('Campaign Title: ')}}{{$val->title}}</h5>
+                                      <h5 class="mb-1">{{__('Category: ')}} {{$val->category->name}}</h5>
+                                      <h5 class="mb-1">{{__('Organizer: ')}} {{$val->user->name}}</h5>
+                                      <h5 class="mb-1">{{__('Goal: ')}} {{$val->currency->symbol}}{{$val->goal}}</h5>
+                                      @php
+                                          $total = DB::table('campaign_donations')->where('campaign_id', $val->id)->where('status', 1)->sum('amount');
+                                      @endphp
+                                      <h5 class="mb-1">{{__('FundsRaised: ')}} {{$val->currency->symbol}}{{$total}}</h5>
+                                      <h5 class="mb-1">{{__('Deadline: ')}} {{$val->deadline}}</h5>
+                                      <h5 class="mb-3">{{__('Created Date:')}} {{$val->created_at}}</h5>
+                                      <h6 class="mb-3">{{__('Description:')}} {{$val->description}}</h6>
+                                      @if($val->status==1)
+                                          <span class="badge badge-pill bg-success"><i class="fas fa-check"></i> {{__('Active')}}</span>
+                                      @else
+                                          <span class="badge badge-pill bg-danger"><i class="fas fa-ban"></i> {{__('Disabled')}}</span>
+                                      @endif
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                    @endforeach
+                    @endif
+                </div>
+        </div>
+    </div>
+  </div>
+
 @endsection
 
 
