@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Contract extends Model
 {
@@ -24,6 +25,11 @@ class Contract extends Model
     public function contractor()
     {
         return $this->belongsTo(User::class, 'contractor_id')->withDefault();
+    }
+
+    public function contract_aoa()
+    {
+        return $this->hasMany(ContractAoa::class);
     }
 
 }

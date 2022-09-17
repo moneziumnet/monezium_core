@@ -11,6 +11,8 @@ use App\Models\Invoice;
 use App\Models\Currency;
 use App\Models\ContractBeneficiary;
 use App\Models\Tax;
+use App\Models\Contract;
+use App\Models\Product;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -52,6 +54,8 @@ class ManageInvoiceController extends Controller
     {
         $data['currencies'] = Currency::where('status', 1)->get();
         $data['beneficiaries'] = ContractBeneficiary::where('user_id', auth()->id())->get();
+        $data['contracts'] = Contract::where('user_id', auth()->id())->where('status', 1)->get();
+        $data['products'] = Product::where('user_id', auth()->id())->where('status', 1)->get();
         return view('user.invoice.create',$data);
     }
 
@@ -96,6 +100,9 @@ class ManageInvoiceController extends Controller
         $invoice->final_amount = $amount;
         $invoice->get_amount   = $amount;
         $invoice->beneficiary_id = $request->beneficiary_id;
+        $invoice->product_id = $request->product_id;
+        $invoice->contract_id = $request->contract_id;
+        $invoice->contract_aoa_id = $request->aoa_id;
         $invoice->description = $request->description;
 
         $data = [];
@@ -174,6 +181,8 @@ class ManageInvoiceController extends Controller
         // }
         $data['currencies'] = Currency::where('status', 1)->get();
         $data['beneficiaries'] = ContractBeneficiary::where('user_id', auth()->id())->get();
+        $data['contracts'] = Contract::where('user_id', auth()->id())->where('status', 1)->get();
+        $data['products'] = Product::where('user_id', auth()->id())->where('status', 1)->get();
         return view('user.invoice.edit',$data);
     }
 
@@ -405,7 +414,7 @@ class ManageInvoiceController extends Controller
             $inv_items = InvItem::where('invoice_id', $invoice->id)->get();
             $tax_value = 0;
             foreach ($inv_items as $value) {
-                $tax_value += $value->tax->rate * $value->amount;
+                $tax_value += $value->tax->rate * $value->amount / 100;
             }
             if($invoice->payment_status == 1){
                 return back()->with('error','Invoice already been paid');
@@ -474,7 +483,7 @@ class ManageInvoiceController extends Controller
             $inv_items = InvItem::where('invoice_id', $invoice->id)->get();
             $tax_value = 0;
             foreach ($inv_items as $value) {
-                $tax_value += $value->tax->rate * $value->amount;
+                $tax_value += $value->tax->rate * $value->amount / 100;
             }
             user_wallet_increment(0, $invoice->currency_id, $tax_value, 9);
 
@@ -579,7 +588,7 @@ class ManageInvoiceController extends Controller
             ],$invoice->user);
 
             session()->forget('invoice');
-            return redirect(route('user.dashboard'))->with('success','Payment completed');
+            return redirect(route('user.dashboard'))->with('message','Payment completed');
         }
         else{
             abort(404);

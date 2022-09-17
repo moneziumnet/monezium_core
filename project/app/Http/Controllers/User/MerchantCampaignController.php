@@ -9,6 +9,7 @@ use App\Models\CampaignDonation;
 use App\Models\Currency;
 use App\Models\CampaignCategory;
 use App\Models\Generalsetting;
+use App\Models\PaymentGateway;
 use App\Models\User;
 use App\Models\Wallet;
 use Illuminate\Http\Request;
@@ -18,12 +19,42 @@ use Illuminate\Support\Facades\File;
 use Datatables;
 use Illuminate\Support\Carbon;
 
+use PayPal\{
+    Api\Item,
+    Api\Payer,
+    Api\Amount,
+    Api\Payment,
+    Api\ItemList,
+    Rest\ApiContext,
+    Api\Transaction,
+    Api\RedirectUrls,
+    Api\PaymentExecution,
+    Auth\OAuthTokenCredential,
+    Api\Payout,
+    Api\PayoutSenderBatchHeader,
+    Api\PayoutItem,
+    Api\Currency As PaypalCurrency,
+};
+
 class MerchantCampaignController extends Controller
 {
+    private $_api_context;
 
     public function __construct()
     {
         $this->middleware('auth', ['except' => ['link']]);
+        $data = PaymentGateway::whereKeyword('paypal')->first();
+        $paydata = $data->convertAutoData();
+
+        $paypal_conf = \Config::get('paypal');
+        $paypal_conf['client_id'] = $paydata['client_id'];
+        $paypal_conf['secret'] = $paydata['client_secret'];
+        $paypal_conf['settings']['mode'] = $paydata['sandbox_check'] == 1 ? 'sandbox' : 'live';
+        $this->_api_context = new ApiContext(new OAuthTokenCredential(
+            $paypal_conf['client_id'],
+            $paypal_conf['secret'])
+        );
+        $this->_api_context->setConfig($paypal_conf['settings']);
     }
 
     public function index(){
@@ -137,7 +168,38 @@ class MerchantCampaignController extends Controller
             return redirect(route('user.dashboard'))->with('error', 'This compaign\'s deadline is passed');
         }
         if($request->payment == 'gateway'){
-            return redirect(route(''));
+            $settings = Generalsetting::findOrFail(1);
+
+            $payouts = new Payout();
+            $senderBatchHeader = new PayoutSenderBatchHeader();
+
+            $senderBatchHeader->setSenderBatchId(Str::random(12))
+                            ->setEmailSubject('You have a Payout');
+
+            $senderItem = new PayoutItem();
+            $senderItem->setRecipientType('Email')
+                    ->setNote('This is for Campaign.')
+                    ->setSenderItemId(Str::random(12))
+                    ->setReceiver('appc31058@gmail.com')
+                    ->setAmount(new PaypalCurrency('{
+                        "value":"'.$data->amount.'",
+                        "currency":"'.$data->currency->code.'"
+                    }'));
+            $payouts->setSenderBatchHeader($senderBatchHeader)
+                    ->addItem($senderItem);
+
+            $sender_request = clone $payouts;
+
+            try {
+                $output = $payouts->create(null, $this->_api_context);
+            } catch (Throwable $ex) {
+                return redirect(route('user.dashboard'))->with('error', $th->getMessage());
+            }
+            $newdonation = new CampaignDonation();
+            $input = $request->all();
+            $input['currency_id'] = $data->currency_id;
+            $newdonation->fill($input)->save();
+            return redirect(route('user.dashboard'))->with('message','You have donated for Campaign successfully.');
         }
         elseif($request->payment == 'wallet'){
             $wallet = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('currency_id',$data->currency_id)->where('wallet_type', 1)->first();

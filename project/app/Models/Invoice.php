@@ -23,6 +23,16 @@ class Invoice extends Model
         return $this->belongsTo(ContractBeneficiary::class, 'beneficiary_id')->withDefault();
     }
 
+    public function contract()
+    {
+        return $this->belongsTo(Contract::class, 'contract_id')->withDefault();
+    }
+
+    public function aoa()
+    {
+        return $this->belongsTo(ContractAoa::class, 'contract_aoa_id')->withDefault();
+    }
+
     public function items()
     {
         return $this->hasMany(InvItem::class);

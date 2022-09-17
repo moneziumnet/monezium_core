@@ -70,6 +70,39 @@
                         </div>
                     </div>
                     <hr>
+                    @if (check_user_type(3))
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-label">{{__('Select Product')}}</div>
+                            <select class="form-select shadow-none" name="product_id" id="product" >
+                                <option value="" selected>{{__('Select')}}</option>
+                                @foreach ($products as $product)
+                                  <option value="{{$product->id}}" {{$invoice->product_id == $product->id ? 'selected' : ''}}>{{$product->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row" id="contract_part" class="display: none!important;">
+
+                        <div class="col-md-6 mb-3">
+                            <div class="form-label">{{__('Select Contract')}}</div>
+                            <select class="form-select shadow-none" name="contract_id" id="contract">
+                                <option value="" selected>{{__('Select')}}</option>
+                                @foreach ($contracts as $contract)
+                                  <option value="{{$contract->id}}" data-aoa = "{{$contract->contract_aoa}}" {{$invoice->contract_id == $contract->id ? 'selected' : ''}}>{{$contract->title}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="form-label">{{__('Select Contract AOA')}}</div>
+                            <select class="form-select shadow-none" name="aoa_id" id="aoa" >
+                                <option value="{{$invoice->contract_aoa_id}}" selected>{{__($invoice->aoa->title)}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    @endif
+                    <hr>
                     @foreach ($invoice->items as $value)
                     <div class="row">
                         <div class="col-md-5 mb-3">
@@ -271,7 +304,7 @@
                 $('.totalAmount').text(total.toFixed(4))
             })
         }
-        
+
         $('.add').on('click',function(){
             tax_count++;
             $('.extra-container').append(`
@@ -312,6 +345,28 @@
 
             `);
         })
+
+        $('#contract').on('click', function() {
+            var contract = $('#contract option:selected');
+            let _optionHtml = '<option value="">Select</option>';
+            $.each(contract.data('aoa'), function(i, item) {
+                _optionHtml += '<option value="' + item.id + '">' + item.title + '</option>';
+            });
+            $('select#aoa').html(_optionHtml);
+
+        })
+
+        $('#product').on('click', function() {
+            if($('#product').val()) {
+                document.getElementById("contract_part").style.display = "flex";
+            }
+            else {
+                document.getElementById("contract_part").style.display = "none";
+                $('#contract').val('');
+                $('#aoa').val('');
+            }
+        })
+
 
         $(document).on('click','.remove',function () {
             $(this).closest('.row').remove();
@@ -354,6 +409,10 @@
 
         $(document).ready(function(){
             calcAmount();
+            var product_id = '{{$invoice->product_id}}';
+            if(product_id == '') {
+                document.getElementById("contract_part").style.display = "none";
+            }
             $(document).on('submit','#customerSubmit',function(e){
                 e.preventDefault();
                 // AJAX request
