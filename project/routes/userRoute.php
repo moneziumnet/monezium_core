@@ -72,6 +72,7 @@ use App\Http\Controllers\Deposit\RailsBankController;
 use App\Http\Controllers\Deposit\OpenPaydController;
 use App\Http\Controllers\User\UserContractManageController;
 use App\Http\Controllers\User\DepositCryptoController;
+use App\Http\Controllers\User\UserICOController;
 use App\Http\Controllers\User\WithdrawCryptoController;
 use App\Http\Controllers\User\VirtualCardController;
 use App\Http\Controllers\User\UserShopController;
@@ -159,6 +160,8 @@ Route::prefix('user')->group(function() {
       Route::post('/fdr/finish', [UserFdrController::class,'finish'])->name('user.fdr.finish');
 
       Route::get('/merchant/index', [MerchantController::class,'index'])->name('user.merchant.index');
+      Route::get('/merchant/setting', [MerchantController::class,'setting'])->name('user.merchant.setting');
+      Route::post('/merchant/setting', [MerchantController::class,'setting_update'])->name('user.merchant.settingUpdate');
       Route::post('/merchant/cryptowallet/update', [MerchantController::class,'address_edit'])->name('user.merchant.cryptowallet.update');
       Route::post('/merchant/download-qr',  [MerchantController::class,'downloadQR'])->name('user.merchant.download.qr');
       Route::get('/merchant/send-money',[MerchantSendController::class,'create'])->name('user.merchant.send.money.create');
@@ -231,6 +234,8 @@ Route::prefix('user')->group(function() {
         Route::get('/money-request/add/{id}', [MoneyRequestController::class,'request_user'])->name('user.money.request.new');
       });
 
+
+
        //exchange money
       Route::group(['middleware'=>'kyc:Exchange'],function(){
         Route::get('exchange-money',   [ExchangeMoneyController::class,'exchangeForm'])->name('user.exchange.money');
@@ -258,6 +263,17 @@ Route::prefix('user')->group(function() {
         Route::get('make-escrow',   [EscrowController::class,'create'])->name('user.escrow.create');
         Route::post('make-escrow',   [EscrowController::class,'store']);
         Route::get('escrow/calcharge/{amount}',   [EscrowController::class,'calcharge']);
+      });
+
+      //ICO
+      Route::group(['middleware'=>'kyc:ICO'], function(){
+        Route::get('ico', [UserICOController::class, 'index'])->name('user.ico');
+        Route::get('ico/mytoken', [UserICOController::class, 'mytoken'])->name('user.ico.mytoken');
+        Route::get('ico/edit/{id}', [UserICOController::class, 'edit'])->name('user.ico.edit');
+        Route::get('ico/delete/{id}', [UserICOController::class, 'delete'])->name('user.ico.delete');
+        Route::get('ico/details/{id}', [UserICOController::class, 'details'])->name('user.ico.details');
+        Route::post('ico/store', [UserICOController::class, 'store'])->name('user.ico.store');
+        Route::post('ico/update/{id}', [UserICOController::class, 'update'])->name('user.ico.update');
       });
 
       //Reedem voucher

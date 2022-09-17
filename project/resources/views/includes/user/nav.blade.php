@@ -166,6 +166,10 @@
                   {{__('Merchant')}}
                 </a>
 
+                <a class="dropdown-item" href="{{route('user.merchant.setting')}}">
+                  {{__('Merchant Setting')}}
+                </a>
+
                 <a class="dropdown-item" href="{{route('user.merchant.shop.index')}}">
                     {{__('Merchant Shop')}}
                 </a>
@@ -269,6 +273,19 @@
                   {{__('Pending Escrows')}}
                 </a>
               </div>
+            </li>
+            @endif
+
+            @if (in_array('ICO',$modules) && !(auth()->user()->kyc_status != 1 && in_array('ICO',$kyc_modules)))
+            <li class="nav-item dropdown {{ request()->routeIs('user.ico') ? 'active' : '' }}">
+              <a class="nav-link" href="{{route('user.ico')}}">
+                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                  <i class="fas fa-cash-register"></i>
+                </span>
+                <span class="nav-link-title">
+                  {{__('ICO')}}
+                </span>
+              </a>
             </li>
             @endif
         </ul>

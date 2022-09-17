@@ -158,6 +158,14 @@
                     </div>
                   </div>
                 </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" name="section[]" value="ICO" {{ $data->sectionCheck('ICO') ? 'checked' : '' }} class="custom-control-input" id="ICO">
+                      <label class="custom-control-label" for="ICO">{{__('ICO')}}</label>
+                    </div>
+                  </div>
+                </div>
               </div>
           </div>
           <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Submit') }}</button>
