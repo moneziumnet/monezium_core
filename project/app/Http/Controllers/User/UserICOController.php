@@ -5,6 +5,8 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\Currency;
 use App\Models\IcoToken;
+use App\Models\Transaction;
+use App\Models\Wallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
@@ -31,7 +33,7 @@ class UserICOController extends Controller
 
     public function edit($id)
     {
-        $data['data'] = IcoToken::findOrFail($id);
+        $data['item'] = IcoToken::findOrFail($id);
         return view('user.ico.edit', $data);
     }
 
@@ -39,6 +41,95 @@ class UserICOController extends Controller
     {
         $data['item'] = IcoToken::findOrFail($id);
         return view('user.ico.detail', $data);
+    }
+
+    public function show_buy($id)
+    {
+        $ico_token = IcoToken::findOrFail($id);
+        $wallets = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('wallet_type',1)->where('balance', '>', 0)->get();
+        $currencies = Currency::where('status',1)->get();
+        $user = auth()->user();
+        return view('user.ico.buy', compact('wallets','currencies', 'user', 'ico_token'));
+    }
+
+    public function buy($id, Request $request)
+    {
+        $request->validate([
+            'from_wallet_id'    => 'required',
+            'amount'            => 'required|numeric|min:1',
+        ]);
+
+        $ico_token = IcoToken::findOrFail($id);
+        $wallet = Wallet::where('id',$request->from_wallet_id)->with('currency')->first();
+        $currency_id = $wallet->currency->id;
+        $user = auth()->user();
+        $transaction_amount = (float)filter_var(amount($request->amount * $ico_token->price * $wallet->currency->rate, 1, 8), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+
+        if(now()->gt($ico_token->end_date)){
+            return redirect()->back()->with('error','Date Expired.');
+        }
+
+        if($ico_token->balance >= $ico_token->total_supply){
+            return redirect()->back()->with('error','Run out of token.');
+        }
+
+        if($ico_token->status == 0) {
+            return redirect()->back()->with('error','Status disabled.');
+        }
+
+        if($transaction_amount > user_wallet_balance(auth()->id(), $currency_id, $wallet->wallet_type)){
+            return redirect()->back()->with('error','Insufficient Balance.');
+        }
+
+        // Change buyer balance
+        user_wallet_increment($user->id, $ico_token->currency->id, $request->amount, 8);
+        user_wallet_decrement($user->id, $currency_id, $transaction_amount, 1);
+
+        // Increase seller balance
+        user_wallet_increment($ico_token->user_id, $currency_id, $transaction_amount, 1);
+
+        $ico_token->increment('balance');
+
+        $trans = new Transaction();
+        $trans->trnx = str_rand();
+        $trans->user_id     = $user->id;
+        $trans->user_type   = 1;
+        $trans->currency_id = $ico_token->currency->id;
+        $trans->amount      = $request->amount;
+        $trans->charge      = 0;
+        $trans->type        = '+';
+        $trans->remark      = 'ico_token_buy';
+        $trans->details     = trans('Buy ico token');
+        $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.$ico_token->user->name.'"}';
+        $trans->save();
+
+        $trans = new Transaction();
+        $trans->trnx = str_rand();
+        $trans->user_id     = $user->id;
+        $trans->user_type   = 1;
+        $trans->currency_id = $currency_id;
+        $trans->amount      = $transaction_amount;
+        $trans->charge      = 0;
+        $trans->type        = '-';
+        $trans->remark      = 'ico_token_buy';
+        $trans->details     = trans('Buy ico token');
+        $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.$ico_token->user->name.'"}';
+        $trans->save();
+
+        $trans = new Transaction();
+        $trans->trnx = str_rand();
+        $trans->user_id     = $ico_token->user->id;
+        $trans->user_type   = 1;
+        $trans->currency_id = $currency_id;
+        $trans->amount      = $transaction_amount;
+        $trans->charge      = 0;
+        $trans->type        = '+';
+        $trans->remark      = 'ico_token_sell';
+        $trans->details     = trans('Sell ico token');
+        $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.$ico_token->user->name.'"}';
+        $trans->save();
+
+        return redirect(route('user.ico'))->with('message','Buy token successfully.');
     }
 
     public function delete($id)

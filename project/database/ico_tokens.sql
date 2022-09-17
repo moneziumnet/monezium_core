@@ -11,7 +11,7 @@
  Target Server Version : 100413
  File Encoding         : 65001
 
- Date: 17/09/2022 07:44:01
+ Date: 17/09/2022 12:24:39
 */
 
 SET NAMES utf8mb4;
@@ -31,6 +31,7 @@ CREATE TABLE `ico_tokens`  (
   `balance` int(11) NOT NULL DEFAULT 0,
   `white_paper` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   `end_date` date NULL DEFAULT NULL,
+  `status` int(1) NOT NULL DEFAULT 0,
   `created_at` timestamp(0) NULL DEFAULT NULL,
   `updated_at` timestamp(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE

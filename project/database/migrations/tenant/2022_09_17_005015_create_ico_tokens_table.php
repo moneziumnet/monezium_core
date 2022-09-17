@@ -21,6 +21,7 @@ class CreateIcoTokensTable extends Migration
             $table->integer('currency_id');
             $table->integer('total_supply');
             $table->integer('balance')->default(0);
+            $table->integer('status')->default(0);
             $table->double('price');
             $table->date('end_date');
             $table->string('white_paper');

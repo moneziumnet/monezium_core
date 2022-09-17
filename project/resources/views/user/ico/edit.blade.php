@@ -29,47 +29,47 @@
             <div class="row row-cards">
                 <div class="col-12">
                     <div class="card p-5">
-                        <form id="shop-form" action="{{ route('user.ico.update', $data->id) }}" method="POST"
+                        <form id="shop-form" action="{{ route('user.ico.update', $item->id) }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
 
                             <div class="form-group mt-2 mb-3">
                                 <label class="form-label required">{{ __('Name') }}</label>
                                 <input name="name" id="name" class="form-control shadow-none"
-                                    placeholder="{{ __('Name') }}" type="text" value="{{ $data->name }}" required>
+                                    placeholder="{{ __('Name') }}" type="text" value="{{ $item->name }}" required>
                             </div>
 
                             <div class="form-group mb-3">
                                 <label class="form-label">{{ __('Code') }}</label>
                                 <input name="code" id="code" class="form-control shadow-none"
-                                    placeholder="{{ __('Code') }}" type="text" value="{{ $data->currency->code }}">
+                                    placeholder="{{ __('Code') }}" type="text" value="{{ $item->currency->code }}">
                             </div>
 
                             <div class="form-group mb-3">
                                 <label class="form-label">{{ __('Symbol') }}</label>
                                 <input name="symbol" id="symbol" class="form-control shadow-none"
                                     placeholder="{{ __('Symbol') }}" type="text"
-                                    value="{{ $data->currency->symbol }}">
+                                    value="{{ $item->currency->symbol }}">
                             </div>
 
                             <div class="form-group mb-3">
                                 <label class="form-label required">{{ __('Price') }}</label>
                                 <input name="price" id="price" class="form-control shadow-none"
                                     placeholder="{{ __('Price') }}" type="number" step="any"
-                                    value="{{ $data->price }}" required>
+                                    value="{{ $item->price }}" required>
                             </div>
 
                             <div class="form-group mb-3">
                                 <label class="form-label required">{{ __('Total Supply') }}</label>
                                 <input name="total_supply" id="total_supply" class="form-control shadow-none"
                                     placeholder="{{ __('Total supply') }}" type="number"
-                                    value="{{ $data->total_supply }}" required>
+                                    value="{{ $item->total_supply }}" required>
                             </div>
 
                             <div class="form-group mb-3">
                                 <label class="form-label required">{{ __('End Date') }}</label>
                                 <input name="end_date" id="end_date" class="form-control shadow-none"
-                                    placeholder="{{ __('End Date') }}" type="date" value="{{ $data->end_date }}"
+                                    placeholder="{{ __('End Date') }}" type="date" value="{{ $item->end_date }}"
                                     required>
                             </div>
 
@@ -93,7 +93,4 @@
 @endsection
 
 @push('js')
-    <script>
-        'use strict';
-    </script>
 @endpush

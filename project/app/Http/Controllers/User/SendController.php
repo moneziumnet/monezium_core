@@ -94,7 +94,6 @@ class SendController extends Controller
             'description'       => 'required',
         ]);
 
-
         if($user->bank_plan_id === null){
             return redirect()->back()->with('unsuccess','You have to buy a plan to withdraw.');
         }

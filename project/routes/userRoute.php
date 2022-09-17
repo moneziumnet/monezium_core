@@ -270,8 +270,10 @@ Route::prefix('user')->group(function() {
         Route::get('ico', [UserICOController::class, 'index'])->name('user.ico');
         Route::get('ico/mytoken', [UserICOController::class, 'mytoken'])->name('user.ico.mytoken');
         Route::get('ico/edit/{id}', [UserICOController::class, 'edit'])->name('user.ico.edit');
+        Route::get('ico/buy/{id}', [UserICOController::class, 'show_buy'])->name('user.ico.buy');
         Route::get('ico/delete/{id}', [UserICOController::class, 'delete'])->name('user.ico.delete');
         Route::get('ico/details/{id}', [UserICOController::class, 'details'])->name('user.ico.details');
+        Route::post('ico/buy/{id}', [UserICOController::class, 'buy'])->name('user.ico.buy');
         Route::post('ico/store', [UserICOController::class, 'store'])->name('user.ico.store');
         Route::post('ico/update/{id}', [UserICOController::class, 'update'])->name('user.ico.update');
       });

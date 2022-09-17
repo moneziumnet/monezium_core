@@ -30,8 +30,9 @@
                                             <th>{{ __('Total Supply') }}</th>
                                             <th>{{ __('Balance') }}</th>
                                             <th>{{ __('End Date') }}</th>
+                                            <th>{{ __('Status') }}</th>
                                             <th>{{ __('Details') }}</th>
-                                            <th>{{ __('Action') }}</th>
+                                            <th>{{ __('Buy') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -45,6 +46,13 @@
                                                 <td>{{ $item->balance }}</td>
                                                 <td>{{ dateFormat($item->end_date) }}</td>
                                                 <td>
+                                                    @if($item->status)
+                                                        <span class="badge bg-success">Approved</span>
+                                                    @else
+                                                        <span class="badge bg-warning">Pending</span>
+                                                    @endif
+                                                </td>
+                                                <td>
                                                     <div class="btn-list">
                                                         <button class="btn btn-primary btn-sm details" data-id="{{ $item->id }}">
                                                             {{ __('Details') }}
@@ -53,9 +61,14 @@
                                                 </td>
                                                 <td>
                                                     <div class="btn-list">
-                                                        <button class="btn btn-warning btn-sm">
+                                                        @php
+                                                            $available = !($item->balance >= $item->total_supply || $item->status == 0 || now()->gt($ico_token->end_date));
+                                                        @endphp
+                                                        @if($available)
+                                                        <a class="btn btn-secondary btn-sm" href="{{ route('user.ico.buy', $item->id) }}">
                                                             {{ __('Buy') }}
-                                                        </button>
+                                                        </a>
+                                                        @endif
                                                     </div>
                                                 </td>
                                             </tr>

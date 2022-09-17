@@ -50,6 +50,13 @@
                                                 <h5 class="mb-1">{{ __('Balance:') }} {{ $val->balance }}</h5>
                                                 <h5 class="mb-3">{{ __('End Date:') }} {{ dateFormat($val->end_date) }}</h5>
                                                 <a href ="{{asset('assets/doc/'.$val->white_paper)}}" class="btn btn-primary btn-sm" attributes-list download >{{ __('Download White Paper')}} </a>
+                                                <div class="mt-3">
+                                                    @if($val->status)
+                                                        <span class="badge bg-success">Approved</span>
+                                                    @else
+                                                        <span class="badge bg-warning">Pending</span>
+                                                    @endif
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
