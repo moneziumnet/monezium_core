@@ -145,7 +145,7 @@ class UserICOController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'whitepaper' => 'required|mimes:doc,docx, pdf'
+            'whitepaper' => 'required|mimes:doc,docx,pdf'
         ];
         $validator = Validator::make($request->all(), $rules);
 
