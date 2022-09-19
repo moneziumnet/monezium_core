@@ -59,7 +59,7 @@
 
                                           <td data-label="{{ __('Beneficiary Name') }}">
                                             <div>
-                                              {{$data->account_name}}
+                                              {{$data->name}}
                                             </div>
                                           </td>
 
@@ -149,7 +149,7 @@
                                             @php
                                               $beneficiary = App\Models\Beneficiary::whereId($data->beneficiary_id)->first();
                                             @endphp
-                                            <td data-label="{{ __('Beneficiary Name') }}">{{ $beneficiary != NULL ? $beneficiary->account_name : 'deleted' }}</td>
+                                            <td data-label="{{ __('Beneficiary Name') }}">{{ $beneficiary != NULL ? $beneficiary->name : 'deleted' }}</td>
                                           @endif
                                           <td data-label="{{ __('Type') }}">{{ $data->type }} {{ __('Bank') }}</td>
                                           <td data-label="{{ __('Amount') }}">{{$data->amount}}</td>

@@ -31,7 +31,7 @@ class BeneficiaryController extends Controller
 
     public function store(Request $request){
         $request->validate([
-            'account_name' => 'required',
+            'name' => 'required',
         ]);
 
         $data = new Beneficiary();
@@ -67,7 +67,7 @@ class BeneficiaryController extends Controller
         $input['user_id'] = auth()->user()->id;
         $data->fill($input)->save();
 
-        return redirect()->back()->with('success','Beneficiary Added Successfully');
+        return redirect()->route('user.beneficiaries.index')->with('success','Beneficiary Added Successfully');
     }
 
     public function show($id){
@@ -83,7 +83,7 @@ class BeneficiaryController extends Controller
 
     public function update(Request $request, $id) {
         $request->validate([
-            'account_name' => 'required',
+            'name' => 'required',
         ]);
 
         $data = Beneficiary::findOrFail($id);

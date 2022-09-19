@@ -12,16 +12,21 @@ class Beneficiary extends Model
     protected $fillable = [
         'user_id',
         'other_bank_id',
-        'account_name',
         'address',
         'bank_address',
         'swift_bic',
         'account_iban',
-        'details'
+        'details',
+        'name',
+        'email',
+        'phone',
+        'registration_no',
+        'vat_no',
+        'contact_person'
     ];
 
     // protected $casts = [
-    //     'account_name' => 'encrypted',
+    //     'name' => 'encrypted',
     //     'address' => 'encrypted',
     //     'bank_address' => 'encrypted',
     //     'swift_bic' => 'encrypted',
@@ -35,6 +40,11 @@ class Beneficiary extends Model
 
     public function transfers(){
         return $this->hasMany(BalanceTransfer::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id')->withDefault();
     }
 
 }

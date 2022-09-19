@@ -28,22 +28,15 @@
                         <form action="{{route('user.beneficiaries.store')}}" method="POST" enctype="multipart/form-data">
                             @csrf
 
-
-
-                            <!-- <div class="form-group mb-3 mt-3">
-                                <label class="form-label required">{{__('Account Number')}}</label>
-                                <input name="account_number" id="account_number" class="form-control" autocomplete="off" placeholder="{{__('000.000.0000')}}" type="text" value="{{ old('account_number') }}" min="1" required>
-                            </div> -->
-
                             <div class="form-group mb-3 mt-3">
                                 <label class="form-label required">{{__('Beneficiary Name')}}</label>
-                                <input name="account_name" id="account_name" class="form-control" autocomplete="off" placeholder="{{__('Jhon Doe')}}" type="text" value="{{ old('account_name') }}" min="1" required>
+                                <input name="name" id="name" class="form-control" autocomplete="off" placeholder="{{__('Jhon Doe')}}" type="text" value="{{ old('name') }}" min="1" required>
                             </div>
 
-                            <!-- <div class="form-group mb-3 mt-3">
-                                <label class="form-label required">{{__('Nick Name')}}</label>
-                                <input name="nick_name" id="nick_name" class="form-control" autocomplete="off" placeholder="{{__('Doe')}}" type="text" value="{{ old('nick_name') }}" min="1" required>
-                            </div> -->
+                            <div class="form-group mb-3 mt-3">
+                                <label class="form-label required">{{__('Email')}}</label>
+                                <input name="email" id="email" class="form-control shadow-none" placeholder="{{__('user@email.com')}}" type="email" value="{{ old('email') }}" required>
+                            </div>
 
                             <div class="form-group mb-3 mt-3">
                                 <label class="form-label required">{{__('Beneficiary Address')}}</label>

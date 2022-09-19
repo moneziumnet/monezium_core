@@ -20,7 +20,7 @@ class Invoice extends Model
 
     public function beneficiary()
     {
-        return $this->belongsTo(ContractBeneficiary::class, 'beneficiary_id')->withDefault();
+        return $this->belongsTo(Beneficiary::class, 'beneficiary_id')->withDefault();
     }
 
     public function contract()

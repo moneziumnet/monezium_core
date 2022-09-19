@@ -33,7 +33,12 @@
 
                             <div class="form-group mb-3 mt-3">
                                 <label class="form-label required">{{__('Beneficiary Name')}}</label>
-                                <input name="account_name" id="account_name" class="form-control" autocomplete="off" placeholder="{{__('Jhon Doe')}}" type="text" value="{{ $beneficiary->account_name }}"  required>
+                                <input name="name" id="name" class="form-control" autocomplete="off" placeholder="{{__('Jhon Doe')}}" type="text" value="{{ $beneficiary->name }}"  required>
+                            </div>
+
+                            <div class="form-group mb-3 mt-3">
+                                <label class="form-label required">{{__('Email')}}</label>
+                                <input name="email" id="email" class="form-control shadow-none" placeholder="{{__('user@email.com')}}" type="email" value="{{ $beneficiary->email }}" required>
                             </div>
 
 

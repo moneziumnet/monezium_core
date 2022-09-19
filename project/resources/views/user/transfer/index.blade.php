@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -27,7 +27,7 @@
                 <div class="card">
                     @if (count($logs) == 0)
                         <h3 class="text-center py-5">{{__('No Transfer Data Found')}}</h3>
-                    @else 
+                    @else
                         <div class="table-responsive">
                             <table class="table table-vcenter table-mobile-lg card-table">
                                 <thead>
@@ -60,7 +60,7 @@
                                               $beneficiary = App\Models\Beneficiary::whereId($data->beneficiary_id)->first();
                                             @endphp
                                             <td data-label="{{ __('Account No') }}">{{ $beneficiary != NULL ? $beneficiary->account_number : 'deleted' }}</td>
-                                            <td data-label="{{ __('Account Name') }}">{{ $beneficiary != NULL ? $beneficiary->account_name : 'deleted' }}</td>
+                                            <td data-label="{{ __('Account Name') }}">{{ $beneficiary != NULL ? $beneficiary->name : 'deleted' }}</td>
                                           @endif
                                           <td data-label="{{ __('Type') }}">{{ $data->type }} {{ __('Bank') }}</td>
                                           <td data-label="{{ __('Amount') }}">{{$data->amount}}</td>
@@ -69,7 +69,7 @@
                                               <span class="badge bg-success">{{ __('Completed')}}</span>
                                             @elseif($data->status == 2)
                                               <span class="badge bg-danger">{{ __('Rejected')}}</span>
-                                            @else 
+                                            @else
                                               <span class="badge bg-warning">{{ __('Pending')}}</span>
                                             @endif
                                           </td>
