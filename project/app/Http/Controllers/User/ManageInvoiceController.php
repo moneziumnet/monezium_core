@@ -93,7 +93,7 @@ class ManageInvoiceController extends Controller
         $invoice->number       = $setting->number_generator->$type.randNum($setting->number_generator->$length);
         $invoice->invoice_to   = $beneficiary->name;
         $invoice->email        = $beneficiary->email;
-        $invoice->address      = $beneficiary->registration_no;
+        $invoice->address      = $beneficiary->registration_no ?? $beneficiary->address;
         $invoice->currency_id  = $currency->id;
         $invoice->charge       = 0;
         $invoice->type         = $request->type;
@@ -220,7 +220,7 @@ class ManageInvoiceController extends Controller
         $invoice->user_id      = auth()->id();
         $invoice->invoice_to   = $beneficiary->name;
         $invoice->email        = $beneficiary->email;
-        $invoice->address      = $beneficiary->registration_no;
+        $invoice->address      = $beneficiary->registration_no ?? $beneficiary->address;
         $invoice->currency_id  = $currency->id;
         $invoice->type       = $request->type;
         $invoice->charge       = 0;
@@ -277,7 +277,7 @@ class ManageInvoiceController extends Controller
         $invoice->invoice_to   = $beneficiary->name;
         $invoice->email        = $beneficiary->email;
         $invoice->number       = $setting->number_generator->$type.randNum($setting->number_generator->$length);
-        $invoice->address      = $beneficiary->registration_no;
+        $invoice->address      = $beneficiary->registration_no ?? $beneficiary->address;
         $invoice->currency_id  = $currency->id;
         $invoice->type         = $request->type;
         $invoice->template     = $request->template;
