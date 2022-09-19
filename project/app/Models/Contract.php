@@ -19,7 +19,7 @@ class Contract extends Model
     ];
     public function beneficiary()
     {
-        return $this->belongsTo(ContractBeneficiary::class, 'client_id')->withDefault();
+        return $this->belongsTo(Beneficiary::class, 'client_id')->withDefault();
     }
 
     public function contractor()

@@ -17,12 +17,17 @@ class CreateBeneficiariesTable extends Migration
             $table->integer('id', true);
             $table->integer('user_id')->nullable();
             $table->integer('other_bank_id')->nullable();
-            $table->string('account_name')->nullable();
             $table->string('address')->nullable();
             $table->string('bank_address')->nullable();
             $table->string('swift_bic')->nullable();
             $table->string('account_iban')->nullable();
             $table->text('details')->nullable();
+            $table->string('name')->nullable();
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('registration_no')->nullable();
+            $table->string('vat_no')->nullable();
+            $table->string('contact_person')->nullable();
             $table->timestamps();
         });
     }

@@ -91,7 +91,7 @@
 
                         <div class="form-group mb-3 mt-3">
                             <label class="form-label required">{{__('Name')}}</label>
-                            <input name="account_name" id="account_name" class="form-control" autocomplete="off" placeholder="{{__('Jhon Doe')}}" type="text" value="{{ $data->account_name }}" min="1" required readonly>
+                            <input name="name" id="name" class="form-control" autocomplete="off" placeholder="{{__('Jhon Doe')}}" type="text" value="{{ $data->name }}" min="1" required readonly>
                         </div>
 
                         <div class="form-group mb-3 mt-3">

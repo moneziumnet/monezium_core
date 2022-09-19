@@ -47,7 +47,7 @@ class OtherBankTransferController extends Controller
 
         if ($data) {
           return '<div>
-                                            <span>' . $data->account_name . '</span>
+                                            <span>' . $data->name . '</span>
                                     </div>';
         } else {
           return $data = '';
@@ -131,7 +131,7 @@ class OtherBankTransferController extends Controller
 
         if ($data) {
           return '<div>
-                                            <span>' . $data->account_name . '</span>
+                                            <span>' . $data->name . '</span>
                                     </div>';
         } else {
           return $data = '';
@@ -293,8 +293,8 @@ class OtherBankTransferController extends Controller
                     '{"beneficiary":
                         {"bankAccountCountry":"'.substr($data->iban, 0,2).'",
                         "customerType":"RETAIL",
-                        "firstName":"'.$data->beneficiary->account_name.'",
-                        "lastName":"'.$data->beneficiary->account_name.'",
+                        "firstName":"'.$data->beneficiary->name.'",
+                        "lastName":"'.$data->beneficiary->name.'",
                         "iban":"'.$data->iban.'",
                         "bic":"'.$data->swift_bic.'"
                         },
@@ -332,7 +332,7 @@ class OtherBankTransferController extends Controller
             $trans->charge      = $data->cost;
             $trans->type        = '-';
             $trans->remark      = 'Send_Money';
-            $trans->data        = '{"sender":"'.$user->name.'", "receiver":"'.$data->beneficiary->account_name.'", "transaction_id":"'.$transaction_id.'"}';
+            $trans->data        = '{"sender":"'.$user->name.'", "receiver":"'.$data->beneficiary->name.'", "transaction_id":"'.$transaction_id.'"}';
             $trans->details     = trans('Send Money');
             $trans->save();
     }

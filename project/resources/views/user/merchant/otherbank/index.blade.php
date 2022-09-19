@@ -54,7 +54,7 @@
                                           </td>
                                           <td data-label="{{ __('Account Name') }}">
                                             <div>
-                                              {{$data->account_name}}
+                                              {{$data->name}}
                                             </div>
                                           </td>
                                           <td data-label="{{ __('Nick Name') }}">

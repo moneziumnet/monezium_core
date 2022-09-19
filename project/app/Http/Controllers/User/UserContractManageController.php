@@ -8,7 +8,7 @@ use App\Models\Contract;
 use App\Models\ContractAoa;
 use App\Models\Generalsetting;
 use App\Models\User;
-use App\Models\ContractBeneficiary;
+use App\Models\Beneficiary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
@@ -28,7 +28,7 @@ class UserContractManageController extends Controller
 
     public function create(){
         $data['userlist'] = User::get();
-        $data['clientlist'] = ContractBeneficiary::where('user_id', auth()->id())->get();
+        $data['clientlist'] = Beneficiary::where('user_id', auth()->id())->get();
         return view('user.contract.create', $data);
     }
 
@@ -127,7 +127,7 @@ class UserContractManageController extends Controller
     public function edit($id) {
         $data['data'] = Contract::findOrFail($id);
         $data['userlist'] = User::get();
-        $data['clientlist'] = ContractBeneficiary::where('user_id', auth()->id())->get();
+        $data['clientlist'] = Beneficiary::where('user_id', auth()->id())->get();
         return view('user.contract.edit', $data);
     }
 
@@ -196,7 +196,7 @@ class UserContractManageController extends Controller
 
     public function beneficiary_create(Request $request)
     {
-        $data = new ContractBeneficiary();
+        $data = new Beneficiary();
         if($request->email == auth()->user()->email) {
             return back()->with('error', 'You can\'t create the beneficiary with your email');
         }
@@ -247,7 +247,7 @@ class UserContractManageController extends Controller
 
     public function aoa_create($id){
         $data['userlist'] = User::get();
-        $data['clientlist'] = ContractBeneficiary::where('user_id', auth()->id())->get();
+        $data['clientlist'] = Beneficiary::where('user_id', auth()->id())->get();
         $data['id'] = $id;
         return view('user.aoa.create',$data);
     }
@@ -347,7 +347,7 @@ class UserContractManageController extends Controller
     public function aoa_edit($id) {
         $data['data'] = ContractAoa::findOrFail($id);
         $data['userlist'] = User::get();
-        $data['clientlist'] = ContractBeneficiary::where('user_id', auth()->id())->get();
+        $data['clientlist'] = Beneficiary::where('user_id', auth()->id())->get();
         return view('user.aoa.edit', $data);
     }
 
