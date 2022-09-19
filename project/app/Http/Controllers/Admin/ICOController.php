@@ -45,7 +45,7 @@ class ICOController extends Controller
                               if ($data->status == 1) {
                                 $status_sign  = 'success';
                               } else {
-                                $status_sign = 'danger';
+                                $status_sign = 'warning';
                               }
 
                               return '<div class="btn-group mb-1">
