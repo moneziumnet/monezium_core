@@ -28,7 +28,7 @@ class DepositBankController extends Controller
     }
 
     public function index(){
-        $data['deposits'] = DepositBank::orderby('id','desc')->whereUserId(auth()->id())->paginate(10);
+        $data['deposits'] = DepositBank::orderby('id','desc')->whereUserId(auth()->id())->with('user')->paginate(10);
         return view('user.depositbank.index',$data);
     }
 
@@ -136,7 +136,7 @@ class DepositBankController extends Controller
            $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
            mail($to,$subject,$msg,$headers);
 
-        return redirect()->route('user.depositbank.create')->with('success','Deposit amount '.$request->amount.' ('.$currency->code.') successfully!');
+        return redirect()->route('user.depositbank.index')->with('success','Deposit amount '.$request->amount.' ('.$currency->code.') successfully!');
     }
 
     public function gateway(Request $request) {

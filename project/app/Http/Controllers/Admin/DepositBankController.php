@@ -41,30 +41,27 @@ class DepositBankController extends Controller
                             $status = $data->status == 'pending' ? '<span class="badge badge-warning">pending</span>' : '<span class="badge badge-success">completed</span>';
                             return $status;
                         })
-                        ->editColumn('status', function(DepositBank $data) {
+                        ->editColumn('action', function(DepositBank $data) {
                             $status      = $data->status == 'complete' ? _('completed') : _('pending');
                             $status_sign = $data->status == 'complete' ? 'success'   : 'danger';
 
+                            @$detail = SubInsBank::where('name', $data->method)->first();
+                            @$bankaccount = BankAccount::whereUserId($data->user_id)->where('subbank_id', $detail->id)->where('currency_id', $data->currency_id)->with('user')->first();
+                            $detail->address = str_replace(' ', '-', $detail->address);
+                            $detail->name = str_replace(' ', '-', $detail->name);
+                            $doc_url = $data->document ? $data->document : null;
                             return '<div class="btn-group mb-1">
                             <button type="button" class="btn btn-'.$status_sign.' btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                               '.$status .'
                             </button>
                             <div class="dropdown-menu" x-placement="bottom-start">
                               <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="'. route('admin.deposits.bank.status',['id1' => $data->id, 'id2' => 'complete']).'">'.__("Pending").'</a>
-                              <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="'. route('admin.deposits.bank.status',['id1' => $data->id, 'id2' => 'pending']).'">'.__("Completed").'</a>
+                              <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="'. route('admin.deposits.bank.status',['id1' => $data->id, 'id2' => 'pending']).'">'.__("Completed").'</a>'.' <a href="javascript:;"  data-detail = \''.json_encode($detail).'\' data-bank= \''.json_encode($bankaccount).'\' data-docu="'.$doc_url.'" data-number="'.$data->deposit_number.'"  onclick=getDetails(event) class="dropdown-item detailsBtn" >
+                              ' . __("Details") . '</a>'.'
                             </div>
                           </div>';
                         })
-                        ->editColumn('action', function(DepositBank $data) {
-                            $detail = SubInsBank::where('name', $data->method)->first();
-                            $bankaccount = BankAccount::whereUserId($data->user_id)->where('subbank_id', $detail->id)->where('currency_id', $data->currency_id)->first();
-                            $detail->address = str_replace(' ', '-', $detail->address);
-                            $detail->name = str_replace(' ', '-', $detail->name);
-                            $doc_url = $data->document ? $data->document : null;
-                            return '<input type="hidden", id="sub_data", value ='.json_encode($detail).'>'.' <a href="javascript:;"   onclick=getDetails('.json_encode($detail).','.json_encode($bankaccount).',"'.$doc_url.'") class="detailsBtn" >
-                            ' . __("Details") . '</a>';
-                        })
-                        ->rawColumns(['created_at','customer_name','customer_email','amount','status', 'action'])
+                        ->rawColumns(['created_at','customer_name','customer_email','amount','action'])
                         ->toJson();
     }
 

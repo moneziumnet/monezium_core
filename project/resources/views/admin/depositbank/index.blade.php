@@ -28,7 +28,6 @@
         <th>{{__('Customer Name')}}</th>
         <th>{{__('Customer Email')}}</th>
         <th>{{__('Amount')}}</th>
-        <th>{{__('Status')}}</th>
         <th>{{__('Action')}}</th>
 			</tr>
 		  </thead>
@@ -70,10 +69,13 @@
         <h3>@lang('Bank Details')</h3>
         <p class="bank_details"></p>
         <ul class="list-group mt-2">
-            <li class="list-group-item d-flex justify-content-between">@lang('Bank Name')<span id="bank_name"></span></li>
-            <li class="list-group-item d-flex justify-content-between">@lang('Bank Address')<span id="bank_address"></span></li>
-            <li class="list-group-item d-flex justify-content-between">@lang('Bank Iban')<span id="bank_iban"></span></li>
-            <li class="list-group-item d-flex justify-content-between">@lang('Bank Swift')<span id="bank_swift"></span></li>
+            <li class="list-group-item d-flex justify-content-between"  style="word-break:break-all;">@lang('Receiver Name')<span id="user_name"  style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between"  style="word-break:break-all;">@lang('Receiver Address')<span id="user_addr"  style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between"   style="word-break:break-all;">@lang('Bank Name')<span id="bank_name" style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between"   style="word-break:break-all;">@lang('Bank Address')<span id="bank_address" style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between"   style="word-break:break-all;">@lang('Bank Iban')<span id="bank_iban" style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between"   style="word-break:break-all;">@lang('Bank Swift')<span id="bank_swift" style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between"   style="word-break:break-all;">@lang('Description')<span id="deposit_detail" style="margin-left: 60px"></span></li>
             <li class="list-group-item d-flex justify-content-between" id="li_document" >@lang('Document')<span > <a id="document" attributes-list download > {{__('Download Document')}} </a> </span></li>
         </ul>
         </div>
@@ -112,7 +114,6 @@
                 { data: 'customer_name', name: 'customer_name' },
                 { data: 'customer_email', name: 'customer_email' },
                 { data: 'amount', name: 'amount' },
-                { data: 'status', name: 'status' },
                 { data: 'action', name: 'action' },
             ],
             language : {
@@ -120,11 +121,18 @@
             }
         });
 
-        function getDetails(res_data, bankaccount, document_url) {
+        function getDetails(e) {
+            var res_data = JSON.parse(e.target.getAttribute('data-detail'));
+            var bankaccount = JSON.parse(e.target.getAttribute('data-bank'));
+            var document_url = e.target.getAttribute('data-docu');
+            var deposit_detail = e.target.getAttribute('data-number');
             $('#bank_name').text(res_data.name.replace(/-/gi, ' '));
             $('#bank_address').text(res_data.address.replace(/-/gi, ' '));
             $('#bank_iban').text(bankaccount.iban);
             $('#bank_swift').text(bankaccount.swift);
+            $('#user_name').text(bankaccount.user.name);
+            $('#user_addr').text(bankaccount.user.address);
+            $('#deposit_detail').text('Payment For Reference NO. : '+deposit_detail);
             if(document_url) {
                 $("#li_document").attr("style","display: block");
                 $("#document").attr("href", `{{asset('assets/doc/${document_url}')}}`);

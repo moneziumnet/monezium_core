@@ -85,7 +85,7 @@
                                                 @$subbank = DB::table('sub_ins_banks')->where('id', $deposit->sub_bank_id)->first();
                                                 @$data = DB::table('bank_accounts')->whereUserId(auth()->id())->where('subbank_id', $subbank->id)->where('currency_id', $deposit->currency_id)->first();
                                             @endphp
-                                            <button class="btn btn-primary btn-sm details" data-data="{{json_encode($data ?? '')}}" data-subbank="{{json_encode($subbank ?? '')}}" data-description="{{$deposit->details}}">@lang('Details')</button>
+                                            <button class="btn btn-primary btn-sm details" data-data="{{json_encode($data ?? '')}}" data-subbank="{{json_encode($subbank ?? '')}}" data-deposit="{{json_encode($deposit)}}">@lang('Details')</button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -109,12 +109,13 @@
         <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
         <h3>@lang('Bank Details')</h3>
         <ul class="list-group mt-2">
-            <li class="list-group-item d-flex justify-content-between">@lang('Bank Name')<span id="bank_name"></span></li>
-            <li class="list-group-item d-flex justify-content-between">@lang('Bank Address')<span id="bank_address"></span></li>
-            <li class="list-group-item d-flex justify-content-between">@lang('Bank Iban')<span id="bank_iban"></span></li>
-            <li class="list-group-item d-flex justify-content-between">@lang('Bank Swift')<span id="bank_swift"></span></li>
-            <li class="list-group-item d-flex justify-content-between">@lang('Amount')<span id="amount"></span></li>
-            <li class="list-group-item d-flex justify-content-between">@lang('Description')<span id="bank_details"></span></li>
+            <li class="list-group-item d-flex justify-content-between"  style="word-break:break-all;">@lang('Receiver Name')<span id="user_name"  style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank Name')<span id="bank_name"  style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank Address')<span id="bank_address"  style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank Iban')<span id="bank_iban"  style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank Swift')<span id="bank_swift"  style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Amount')<span id="amount"  style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Description')<span id="bank_details"  style="margin-left: 60px"></span></li>
         </ul>
         </div>
     </div>
@@ -128,11 +129,12 @@
 <script type="text/javascript">
     'use strict';
       $('.details').on('click', function() {
+          $('#user_name').text($(this).data('deposit').user.name);
           $('#bank_name').text($(this).data('subbank').name);
           $('#bank_address').text($(this).data('subbank').address);
           $('#bank_iban').text($(this).data('data').iban);
           $('#bank_swift').text($(this).data('data').swift);
-          $('#bank_details').text($(this).data('description'));
+          $('#bank_details').text($(this).data('deposit').details + '\n' + 'Payment Deposit NO. :' + $(this).data('deposit').deposit_number);
           $('#amount').text($('#li_amount').text());
           $('#modal-success').modal('show');
 
