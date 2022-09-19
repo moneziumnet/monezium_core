@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Admin\DpsController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\FdrController;
+use App\Http\Controllers\Admin\ICOController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\FontController;
 use App\Http\Controllers\Admin\LoanController;
@@ -343,6 +344,13 @@ Route::prefix('admin')->group(function () {
     Route::get('/fdr', [FdrController::class, 'index'])->name('admin.fdr.index');
     Route::get('/running-fdr', [FdrController::class, 'running'])->name('admin.fdr.running');
     Route::get('/closed-fdr', [FdrController::class, 'closed'])->name('admin.fdr.closed');
+  });
+
+  Route::group(['middleware' => 'permissions:ICO Management'], function () {
+    Route::get('/ico', [ICOController::class, 'index'])->name('admin.ico.index');
+    Route::get('/ico/details/{id}', [ICOController::class, 'details'])->name('admin.ico.details');
+    Route::get('/ico/datatables', [ICOController::class, 'datatables'])->name('admin.ico.datatables');
+    Route::get('/ico/status/{id}/{status}', [ICOController::class, 'status'])->name('admin.ico.status');
   });
 
   Route::group(['middleware' => 'permissions:Other Banks'], function () {

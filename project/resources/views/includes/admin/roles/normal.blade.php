@@ -117,6 +117,14 @@
     </div>
   </li>
   @endif
+  @if(getModule('ICO Management'))
+  <li class="nav-item">
+    <a class="nav-link" href="{{ route('admin.ico.index') }}">
+      <i class="fas fa-coins"></i>
+      <span>{{ __('ICO Management') }}</span>
+    </a>
+  </li>
+  @endif
 
 
   @if(getModule('Deposits'))

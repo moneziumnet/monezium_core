@@ -21,13 +21,13 @@ class UserICOController extends Controller
 
     public function index()
     {
-        $data['ico_tokens'] = IcoToken::all();//where('user_id',auth()->id())->get();
+        $data['ico_tokens'] = IcoToken::orderBy('id', 'desc')->get();
         return view('user.ico.index', $data);
     }
 
     public function mytoken()
     {
-        $data['ico_tokens'] = IcoToken::where('user_id',auth()->id())->get();
+        $data['ico_tokens'] = IcoToken::where('user_id',auth()->id())->orderBy('id', 'desc')->get();
         return view('user.ico.mytoken', $data);
     }
 
