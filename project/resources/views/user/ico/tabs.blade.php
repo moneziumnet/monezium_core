@@ -88,7 +88,7 @@
                                 <div class="form-group mb-3">
                                     <label class="form-label required">{{ __('White paper') }}</label>
                                     <input name="whitepaper" id="whitepaper" class="form-control" type="file"
-                                        accept=".doc,.docx" required>
+                                        accept=".doc,.docx, .pdf" required>
                                 </div>
 
                             </div>

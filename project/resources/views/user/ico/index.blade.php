@@ -62,7 +62,7 @@
                                                 <td>
                                                     <div class="btn-list">
                                                         @php
-                                                            $available = !($item->balance >= $item->total_supply || $item->status == 0 || now()->gt($ico_token->end_date));
+                                                            $available = !($item->balance >= $item->total_supply || $item->status == 0 || now()->gt($item->end_date));
                                                         @endphp
                                                         @if($available)
                                                         <a class="btn btn-secondary btn-sm" href="{{ route('user.ico.buy', $item->id) }}">
@@ -92,7 +92,7 @@
                     <i class="fas fa-info-circle fa-3x text-primary mb-2"></i>
                     <h3>@lang('ICO Token Details')</h3>
                     <div class="ico-token-details">
-                        
+
                     </div>
                 </div>
                 <div class="modal-footer">

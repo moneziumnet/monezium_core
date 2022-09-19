@@ -37,7 +37,7 @@ class UserICOController extends Controller
         return view('user.ico.edit', $data);
     }
 
-    public function details($id) 
+    public function details($id)
     {
         $data['item'] = IcoToken::findOrFail($id);
         return view('user.ico.detail', $data);
@@ -88,7 +88,7 @@ class UserICOController extends Controller
         // Increase seller balance
         user_wallet_increment($ico_token->user_id, $currency_id, $transaction_amount, 1);
 
-        $ico_token->increment('balance');
+        $ico_token->increment('balance', $request->amount);
 
         $trans = new Transaction();
         $trans->trnx = str_rand();
@@ -142,10 +142,10 @@ class UserICOController extends Controller
         return  redirect()->back()->with('message','ICO Token has been deleted successfully');
     }
 
-    public function store(Request $request) 
+    public function store(Request $request)
     {
         $rules = [
-            'whitepaper' => 'required|mimes:doc,docx'
+            'whitepaper' => 'required|mimes:doc,docx, pdf'
         ];
         $validator = Validator::make($request->all(), $rules);
 
@@ -160,7 +160,7 @@ class UserICOController extends Controller
             $file->move('assets/doc',$name);
         }
         $currency = Currency::where('code', $request->code)
-            ->orWhere('symbol', $request->symbol)    
+            ->orWhere('symbol', $request->symbol)
             ->first();
         if($currency) {
             return redirect()->back()->with('error','The currency already exists.');
@@ -185,7 +185,7 @@ class UserICOController extends Controller
         return redirect()->back()->with('message','New ICO Token has been created successfully');
     }
 
-    public function update($id, Request $request) 
+    public function update($id, Request $request)
     {
         $rules = [
             'whitepaper' => 'mimes:doc,docx'
@@ -204,11 +204,11 @@ class UserICOController extends Controller
             $data->white_paper = $name;
         }
         $currency = Currency::where('code', $request->code)
-            ->orWhere('symbol', $request->symbol)    
+            ->orWhere('symbol', $request->symbol)
             ->first();
         if($currency->id != $data->currency_id && $currency) {
             return redirect()->back()->with('error','The currency already exists.');
-        } 
+        }
         if(!$currency || $currency && $currency->id == $data->currency_id) {
             if(!$currency)
                 $currency = new Currency();
