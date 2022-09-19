@@ -3,10 +3,10 @@
     <h1 class="text-uppercase me-auto display-6 font-weight-bold">{{ __($type) }}</h1>
 </div>
 <div class="row mt-5">
-    <div class="col-1">
+    <div class="col-3">
         <p class="h3">{{ __('From:') }}</p>
     </div>
-    <div class="col-11">
+    <div class="col-9">
         <address class="h3 font-weight-normal">
             {{ @$user->address }}<br>
             {{ @$user->email }}<br>
@@ -15,10 +15,10 @@
     </div>
 </div>
 <div class="row mt-3">
-    <div class="col-1">
+    <div class="col-3">
         <p class="h3">{{ __('Bill To:') }}</p>
     </div>
-    <div class="col-11">
+    <div class="col-9">
         <address class="h3 font-weight-normal">
             {{ $invoice->address }}<br/>
             {{ $invoice->email }}
@@ -26,12 +26,32 @@
     </div>
 </div>
 <div class="row mt-3 mb-5">
-    <div class="col-1">
-        <p class="h3">{{ __('Date:') }}</p>
+    @if($invoice->product)
+    <div class="row">
+        <h3 class="col-3">Product:</h3> 
+        <h3 class="col-9 font-weight-normal">{{$invoice->product->name}}</h3>
     </div>
-    <div class="col-11">
-        <h3 class="font-weight-normal">{{ dateFormat($invoice->created_at) }}</h3>
+    @endif
+    @if($invoice->contract)
+    <div class="row">
+        <h3 class="col-3">Contract:</h3>
+        <h3 class="col-9 font-weight-normal">
+            <a class="text-primary" href="{{route('contract.view',['id' => encrypt($invoice->contract->id), 'role' => encrypt('contractor')])}}" target="_blank">
+                {{ $invoice->contract->title }}
+            </a>
+        </h3>
     </div>
+    @endif
+    @if($invoice->aoa)
+    <div class="row">
+        <h3 class="col-3">Contract AOA:</h3>
+        <h3 class="col-9 font-weight-normal">
+            <a class="text-primary" href="{{route('aoa.view',['id' => encrypt($invoice->aoa->id), 'role' => encrypt('contractor')])}}" target="_blank">
+                {{ $invoice->aoa->title }}
+            </a>
+        </h3>
+    </div>
+    @endif
 </div>
 <table class="table table-transparent table-responsive">
     <thead>

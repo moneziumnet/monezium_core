@@ -23,6 +23,11 @@ class Invoice extends Model
         return $this->belongsTo(Beneficiary::class, 'beneficiary_id')->withDefault();
     }
 
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id')->withDefault();
+    }
+
     public function contract()
     {
         return $this->belongsTo(Contract::class, 'contract_id')->withDefault();

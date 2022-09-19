@@ -1,21 +1,42 @@
 <div class="row">
+    <div class="col-12">
+        <h1>{{ __($type) }} : {{ $invoice->number }}</h1>
+    </div>
+</div>
+<div class="row my-5">
     <div class="col-6">
+        @if($invoice->product)
+            <span class="h3">Product: </span>{{$invoice->product->name}}
+        @endif
+        @if($invoice->contract)
+            <div class="mt-3">
+                <span class="h3">Contract:</span>
+                <a class="text-primary" href="{{route('contract.view',['id' => encrypt($invoice->contract->id), 'role' => encrypt('contractor')])}}" target="_blank">
+                    {{ $invoice->contract->title }}
+                </a>
+            </div>
+        @endif
+        @if($invoice->aoa)
+            <div class="mt-3">
+                <span class="h3">Contract AOA:</span>
+                <a class="text-primary" href="{{route('aoa.view',['id' => encrypt($invoice->aoa->id), 'role' => encrypt('contractor')])}}" target="_blank">
+                    {{ $invoice->aoa->title }}
+                </a>
+            </div>
+        @endif
+    </div>
+    <div class="col-6 text-end">
         <p class="h3">{{ __('From') }}</p>
         <address>
             {{ @$user->address }}<br>
             {{ @$user->email }}<br>
             {{ @$user->phone }}<br>
         </address>
-    </div>
-    <div class="col-6 text-end">
         <p class="h3">{{ __('To') }}</p>
         <address>
             {{ $invoice->address }}<br>
             {{ $invoice->email }}
         </address>
-    </div>
-    <div class="col-12 my-5">
-        <h1>{{ __($type) }} : {{ $invoice->number }}</h1>
     </div>
 </div>
 <table class="table table-transparent table-responsive">

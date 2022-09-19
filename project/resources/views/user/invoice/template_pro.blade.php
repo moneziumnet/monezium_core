@@ -9,12 +9,12 @@
     </div>
 </div>
 <div class="row my-5">
-    <div class="col-6">
+    <div class="col-4">
         <div class="row">
-            <div class="col-2">
+            <div class="col-12">
                 <p class="h2">{{ __('FROM:') }}</p>
             </div>
-            <div class="col-10">
+            <div class="col-12">
                 <div class="h3 font-weight-normal">
                     <p class="me-4"><i class="fas fa-map-marker me-2"></i> {{ @$user->address }}</p>
                     <p class="me-4"><i class="fas fa-envelope me-2"></i> {{ @$user->email }}</p>
@@ -23,28 +23,46 @@
             </div>
         </div>
     </div>
-    <div class="col-6">
+    <div class="col-4">
         <div class="row">
-            <div class="col-2">
+            <div class="col-12">
                 <p class="h2">{{ __('TO:') }}</p>
             </div>
-            <div class="col-10">
+            <div class="col-12">
                 <div class="h3 font-weight-normal">
                     <p class="me-4"><i class="fas fa-map-marker me-2"></i> {{ $invoice->address }}</p>
                     <p class="me-4"><i class="fas fa-envelope me-2"></i> {{ $invoice->email }}</p>
                 </div>
             </div>
         </div>
+    </div>
+    <div class="col-4">
+        @if($invoice->product)
         <div class="row">
-            <div class="col-2">
-                <p class="h2">{{ __('Date:') }} </p>
-            </div>
-            <div class="col-10">
-                <div class="h3 font-weight-normal">
-                    <p class="me-4"><i class="fas fa-calendar-check me-2"></i> {{ dateFormat($invoice->created_at) }}</p>
-                </div>
-            </div>
+            <h2 class="col-4">Product:</h2> 
+            <h3 class="col-8 font-weight-normal">{{$invoice->product->name}}</h3>
         </div>
+        @endif
+        @if($invoice->contract)
+        <div class="row">
+            <h2 class="col-4">Contract:</h2>
+            <h3 class="col-8 font-weight-normal">
+                <a class="text-primary" href="{{route('contract.view',['id' => encrypt($invoice->contract->id), 'role' => encrypt('contractor')])}}" target="_blank">
+                    {{ $invoice->contract->title }}
+                </a>
+            </h3>
+        </div>
+        @endif
+        @if($invoice->aoa)
+        <div class="row">
+            <h2 class="col-4">AOA:</h2>
+            <h3 class="col-8 font-weight-normal">
+                <a class="text-primary" href="{{route('aoa.view',['id' => encrypt($invoice->aoa->id), 'role' => encrypt('contractor')])}}" target="_blank">
+                    {{ $invoice->aoa->title }}
+                </a>
+            </h3>
+        </div>
+        @endif
     </div>
 </div>
 
