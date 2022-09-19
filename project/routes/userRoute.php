@@ -229,7 +229,6 @@ Route::prefix('user')->group(function() {
         Route::post('/request/money/send/{id}', [MoneyRequestController::class,'send'])->name('user.request.money.send');
         Route::post('/request/money/cancel/{id}', [MoneyRequestController::class,'cancel'])->name('user.request.money.cancel');
         Route::get('/money-request/details/{id}', [MoneyRequestController::class,'details'])->name('user.money.request.details');
-        Route::get('/money-request/add/{id}', [MoneyRequestController::class,'request_user'])->name('user.money.request.new');
       });
 
 
