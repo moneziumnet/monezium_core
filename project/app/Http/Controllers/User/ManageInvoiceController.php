@@ -96,7 +96,8 @@ class ManageInvoiceController extends Controller
         $invoice->address      = $beneficiary->registration_no;
         $invoice->currency_id  = $currency->id;
         $invoice->charge       = 0;
-        $invoice->type       = $request->type;
+        $invoice->type         = $request->type;
+        $invoice->template     = $request->template;
         $invoice->final_amount = $amount;
         $invoice->get_amount   = $amount;
         $invoice->beneficiary_id = $request->beneficiary_id;
@@ -278,7 +279,8 @@ class ManageInvoiceController extends Controller
         $invoice->number       = $setting->number_generator->$type.randNum($setting->number_generator->$length);
         $invoice->address      = $beneficiary->registration_no;
         $invoice->currency_id  = $currency->id;
-        $invoice->type       = $request->type;
+        $invoice->type         = $request->type;
+        $invoice->template     = $request->template;
         $invoice->charge       = 0;
         $invoice->final_amount = array_sum($request->amount);
         $invoice->get_amount   = array_sum($request->amount);

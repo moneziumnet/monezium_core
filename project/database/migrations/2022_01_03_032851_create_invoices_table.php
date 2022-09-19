@@ -22,6 +22,7 @@ class CreateInvoicesTable extends Migration
             $table->decimal('charge',20,10);
             $table->decimal('final_amount',20,10);
             $table->decimal('get_amount',10,10);
+            $table->tinyInteger('template')->comment('0 => basic, 1=> classic, 2=> pro');
             $table->tinyInteger('pay_status')->comment('1 => paid, 0 => not paid');
             $table->tinyInteger('status')->comment('1 => published, 0 => not published , 2 => cancel');
             $table->timestamps();

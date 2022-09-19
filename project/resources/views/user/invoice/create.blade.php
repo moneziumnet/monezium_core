@@ -66,6 +66,16 @@
                                   <option value="Check" >{{__('Check')}}</option>
                             </select>
                         </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="form-label">{{__('Select template')}}</div>
+                            <select class="form-select shadow-none" name="template" required>
+                                <option value="" selected>{{__('Select')}}</option>
+                                  <option value="0">{{__('Basic')}}</option>
+                                  <option value="1">{{__('Classic')}}</option>
+                                  <option value="2">{{__('Pro')}}</option>
+                            </select>
+                        </div>
                     </div>
                     <hr>
                     @if (check_user_type(3))
