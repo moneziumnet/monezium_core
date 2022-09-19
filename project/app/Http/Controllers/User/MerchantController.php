@@ -44,18 +44,35 @@ class MerchantController extends Controller
         return view('user.merchant.index',compact('cred', 'user', 'wallets'));
     }
 
-    public function setting() {
-        $data['setting'] = MerchantSetting::where('user_id',auth()->id())->first();
+    public function setting($tab = "paypal") {
+        $data['setting'] = MerchantSetting::where('user_id',auth()->id())
+            ->where('keyword', $tab)
+            ->first();
+        $data['tab'] = $tab;
         return view('user.merchant.setting', $data);
     }
 
-    public function setting_update(Request $request) {
-        $data = MerchantSetting::where('user_id', auth()->id())->first();
+    public function setting_update($tab = "paypal", Request $request) {
+        $data = MerchantSetting::where('user_id', auth()->id())
+            ->where('keyword', $tab)
+            ->first();
         if (!$data) {
             $data = new MerchantSetting();
         }
         $data->user_id = auth()->id();
-        $data->address = $request->address;
+        if($tab == 'paypal') {
+            $data->information = array(
+                'client_id' => $request->client_id,
+                'client_secret' => $request->client_secret,
+                'sandbox_check' => $request->sandbox_check == 'on'
+            );
+        } else {
+            $data->information = array(
+                'key' => $request->key,
+                'secret' => $request->secret,
+            );
+        }
+        $data->keyword = $tab;
         $data->save();
         return back()->with('message', 'Merchant Setting has been updated successfully.');
     }

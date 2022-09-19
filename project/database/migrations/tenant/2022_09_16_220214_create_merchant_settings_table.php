@@ -16,7 +16,8 @@ class CreateMerchantPaymentsTable extends Migration
         Schema::create('merchant_settings', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
-            $table->string('address');
+            $table->string('information');
+            $table->string('keyword');
             $table->timestamps();
         });
     }

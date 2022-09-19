@@ -160,8 +160,8 @@ Route::prefix('user')->group(function() {
       Route::post('/fdr/finish', [UserFdrController::class,'finish'])->name('user.fdr.finish');
 
       Route::get('/merchant/index', [MerchantController::class,'index'])->name('user.merchant.index');
-      Route::get('/merchant/setting', [MerchantController::class,'setting'])->name('user.merchant.setting');
-      Route::post('/merchant/setting', [MerchantController::class,'setting_update'])->name('user.merchant.settingUpdate');
+      Route::get('/merchant/setting/{tab?}', [MerchantController::class,'setting'])->name('user.merchant.setting');
+      Route::post('/merchant/setting/{tab?}', [MerchantController::class,'setting_update'])->name('user.merchant.settingUpdate');
       Route::post('/merchant/cryptowallet/update', [MerchantController::class,'address_edit'])->name('user.merchant.cryptowallet.update');
       Route::post('/merchant/download-qr',  [MerchantController::class,'downloadQR'])->name('user.merchant.download.qr');
       Route::get('/merchant/send-money',[MerchantSendController::class,'create'])->name('user.merchant.send.money.create');
