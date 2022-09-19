@@ -226,8 +226,6 @@ Route::prefix('user')->group(function() {
         Route::get('/money-request', [MoneyRequestController::class,'index'])->name('user.money.request.index');
         Route::get('/money-request/create', [MoneyRequestController::class,'create'])->name('user.money.request.create');
         Route::post('/money-request/store', [MoneyRequestController::class,'store'])->name('user.money.request.store');
-        Route::get('/request/money/verify/{id}', [MoneyRequestController::class,'verify'])->name('user.request.money.verify');
-        Route::post('/request/money/verify/{id}', [MoneyRequestController::class,'verify'])->name('user.request.money.verify');
         Route::post('/request/money/send/{id}', [MoneyRequestController::class,'send'])->name('user.request.money.send');
         Route::post('/request/money/cancel/{id}', [MoneyRequestController::class,'cancel'])->name('user.request.money.cancel');
         Route::get('/money-request/details/{id}', [MoneyRequestController::class,'details'])->name('user.money.request.details');

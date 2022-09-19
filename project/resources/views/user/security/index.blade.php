@@ -104,6 +104,9 @@
                                     <div class="form-group mb-3 mt-3 col-md-4">
                                         <input type="checkbox" name="otp_payment[]" value="Exchange"  @if($user->paymentcheck('Exchange')) checked @endif> {{__('Exchange')}}
                                     </div>
+                                    <div class="form-group mb-3 mt-3 col-md-4">
+                                        <input type="checkbox" name="otp_payment[]" value="Receive Request Money"  @if($user->paymentcheck('Receive Request Money')) checked @endif> {{__('Receive Request Money')}}
+                                    </div>
                                 </div>
 
                                 <div class="form-footer">

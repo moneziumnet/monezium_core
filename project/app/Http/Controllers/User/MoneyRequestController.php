@@ -20,11 +20,12 @@ class MoneyRequestController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth', ['except' => ['request_user']]);
     }
 
     public function index(){
         $data['requests'] = MoneyRequest::orderby('id','desc')->whereUserId(auth()->id())->where('user_type', 1)->paginate(10);
+        $data['user'] = User::findOrFail(auth()->id());
         // if(auth()->user()->twofa)
         // {
             $data['receives'] = MoneyRequest::orderby('id','desc')->whereReceiverId(auth()->id())->paginate(10);
@@ -166,34 +167,12 @@ class MoneyRequestController extends Controller
 
     }
 
-    public function verify($id)
-    {
-        // if(auth()->user()->twofa)
-        // {
-            $data['id'] = $id;
-            return view('user.requestmoney.verify', $data);
-        // }else{
-        //     return redirect()->route('user.show2faForm')->with('unsuccess','You must be enable 2FA Security');
-        // }
-    }
-
     public function send(Request $request, $id){
-        if(auth()->user()->twofa != 1)
-        {
-            return redirect()->route('user.show2faForm')->with('unsuccess','You must be enable 2FA Security');
-        }
-
-        $request->validate([
-            'code' => 'required'
-        ]);
-
         $user = auth()->user();
-        $ga = new GoogleAuthenticator();
-        $secret = $user->go;
-        $oneCode = $ga->getCode($secret);
-
-        if ($oneCode != $request->code) {
-            return redirect()->back()->with('unsuccess','Two factor authentication code is wrong');
+        if($user->paymentCheck('Request Money')) {
+            if ($user->two_fa_code != $request->otp_code) {
+                return redirect()->back()->with('error','Verification code is not matched.');
+            }
         }
 
         $data = MoneyRequest::findOrFail($id);
@@ -204,7 +183,7 @@ class MoneyRequestController extends Controller
         $receiver = User::whereId($data->user_id)->first();
 
         if($data->amount > user_wallet_balance($sender->id, $currency_id)){
-            return back()->with('warning','You don,t have sufficient balance!');
+            return back()->with('error','You don,t have sufficient balance!');
         }
 
         $finalAmount = $data->amount - $data->cost -$data->supervisor_cost;
@@ -290,17 +269,24 @@ class MoneyRequestController extends Controller
 
     public function request_user($id) {
         $data = MoneyRequest::where('transaction_no', decrypt($id))->first();
-        if($data) {
-            $data->receiver_id = auth()->id();
-            $data->update();
+        if(auth()->user()) {
+
+            if($data) {
+                $data->receiver_id = auth()->id();
+                $data->update();
+            }
+            return redirect()->route('user.money.request.index');
         }
-        return redirect()->route('user.money.request.index');
+        else {
+            return redirect()->route('user.register');
+        }
     }
 
     public function details($id){
         $data = MoneyRequest::findOrFail($id);
         $from = User::whereId($data->user_id)->first();
         $to = User::whereId($data->receiver_id)->first();
-        return view('user.requestmoney.details',compact('data','from','to'));
+        $user = User::findOrFail(auth()->id());
+        return view('user.requestmoney.details',compact('data','from','to', 'user'));
     }
 }

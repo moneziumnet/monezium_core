@@ -196,7 +196,7 @@
                                                 </a>
 
                                                 @if ($data->status == 0)
-                                                  <a href="javascript:;" id="sendBtn" data-href="{{ route('user.request.money.verify',$data->id) }}" class="btn" data-bs-toggle="modal" data-bs-target="#modal-success">
+                                                  <a href="javascript:;" id="sendBtn" data-href="{{route('user.request.money.send', $data->id)}}" class="btn" data-bs-toggle="modal" data-bs-target="#modal-success">
                                                     {{__('Send')}}
                                                   </a>
                                                   <a href="javascript:;" id="cancelBtn" data-href="{{ route('user.request.money.cancel',$data->id) }}" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-cancel">
@@ -231,8 +231,11 @@
         <div class="modal-body text-center py-4">
           <p class="text-center">{{ __("You are about to change the status.") }}</p>
           <p class="text-center">{{ __("Do you want to proceed?") }}</p>
+          <div class="form-group mt-3 text-start" id="otp_body">
+              <label class="form-label required">{{__('OTP Code')}}</label>
+              <input name="otp_code" id="otp_code" class="form-control" placeholder="{{__('OTP Code')}}" type="text" step="any" value="{{ old('opt_code') }}" required>
+          </div>
         </div>
-
         <div class="modal-footer">
           <a href="javascript:;" class="btn btn-secondary" data-bs-dismiss="modal">{{ __("Cancel") }}</a>
           <button type="submit" id="sendprocess" class="btn shadow-none btn--success" data-bs-dismiss="modal">@lang('Proceed')</button>
@@ -272,6 +275,23 @@
 
     $("#sendBtn").on('click',function(){
       $("#requestMoney").prop("action",$(this).data('href'))
+      var verify = "{{$user->paymentCheck('Payment between accounts')}}";
+
+        if (verify) {
+            var url = "{{url('user/sendotp')}}";
+            $.get(url,function (res) {
+                console.log(res)
+                if(res=='success') {
+                    $('#modal-success').modal('show');
+                }
+                else {
+                    alert('The OTP code can not be sent to you.')
+                }
+            });
+        } else {
+            $('#otp_body').remove();
+            $('#modal-success').modal('show');
+        }
     })
     $("#sendprocess").on('click',function(){
       $("#sendBtn").text("Processing ...");
