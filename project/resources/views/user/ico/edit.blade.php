@@ -42,14 +42,14 @@
                             <div class="form-group mb-3">
                                 <label class="form-label">{{ __('Code') }}</label>
                                 <input name="code" id="code" class="form-control shadow-none"
-                                    placeholder="{{ __('Code') }}" type="text" value="{{ $item->currency->code }}">
+                                    placeholder="{{ __('Code') }}" type="text" value="{{ $item->currency->code }}" required>
                             </div>
 
                             <div class="form-group mb-3">
                                 <label class="form-label">{{ __('Symbol') }}</label>
                                 <input name="symbol" id="symbol" class="form-control shadow-none"
                                     placeholder="{{ __('Symbol') }}" type="text"
-                                    value="{{ $item->currency->symbol }}">
+                                    value="{{ $item->currency->symbol }}" required>
                             </div>
 
                             <div class="form-group mb-3">

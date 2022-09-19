@@ -55,13 +55,13 @@
                                 <div class="form-group mb-3">
                                     <label class="form-label">{{ __('Code') }}</label>
                                     <input name="code" id="code" class="form-control shadow-none"
-                                        placeholder="{{ __('Code') }}" type="text" value="{{ old('code') }}">
+                                        placeholder="{{ __('Code') }}" type="text" value="{{ old('code') }}" required>
                                 </div>
 
                                 <div class="form-group mb-3">
                                     <label class="form-label">{{ __('Symbol') }}</label>
                                     <input name="symbol" id="symbol" class="form-control shadow-none"
-                                        placeholder="{{ __('Symbol') }}" type="text" value="{{ old('symbol') }}">
+                                        placeholder="{{ __('Symbol') }}" type="text" value="{{ old('symbol') }}" required>
                                 </div>
 
                                 <div class="form-group mb-3">

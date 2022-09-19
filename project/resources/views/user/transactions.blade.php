@@ -58,10 +58,13 @@
     <div class="container-xl">
         <div class="row row-cards">
           <div class="col-sm-12 text-right" style="text-align: right">
-            <a href="{{url('user/transactions-pdf?search='.request('search').'&remark='.request('remark').'&s_time='.request('s_time').'&e_time='.request('e_time'))}}" id="download_pdf">
+            @php
+              $str_end_time = $e_time ?? '';
+            @endphp
+            <a href="{{url('user/transactions-pdf?search='.request('search').'&remark='.request('remark').'&s_time='.request('s_time').'&e_time='.$str_end_time)}}" id="download_pdf">
               <i class="fas fa-file-pdf" aria-hidden="true"></i> {{__('PDF')}}
             </a> &nbsp;
-            <a href="{{url('user/transactions-export?search='.request('search').'&remark='.request('remark').'&s_time='.request('s_time').'&e_time='.request('e_time'))}}">
+            <a href="{{url('user/transactions-export?search='.request('search').'&remark='.request('remark').'&s_time='.request('s_time').'&e_time='.$str_end_time)}}">
               <i class="fas fa-file-excel" aria-hidden="true"></i> {{__('Export')}}
             </a>
           </div>
@@ -87,23 +90,26 @@
 							</tr>
 						  </thead>
 						  <tbody>
+              @php
+                $i = ($transactions->currentpage() - 1) * $transactions->perpage() + 1;
+              @endphp
 							@forelse ($transactions as $key=>$data)
-							  <tr>
+							<tr>
 								<td data-label="@lang('No')">
 								  <div>
-									<span class="text-muted">{{ $loop->iteration }}</span>
+									<span class="text-muted">{{ $i++ }}</span>
 								  </div>
 								</td>
 								<td data-label="@lang('Date')">{{dateFormat($data->created_at,'d-M-Y')}}</td>
 								<td data-label="@lang('Transaction ID')">
 								{{__(str_dis($data->trnx))}}
 								</td>
-                                <td data-label="@lang('Sender')">
-                                    {{__(json_decode($data->data)->sender ?? "")}}
-                                </td>
-                                <td data-label="@lang('Receiver')">
-                                    {{__(json_decode($data->data)->receiver ?? "")}}
-                                </td>
+                <td data-label="@lang('Sender')">
+                    {{__(json_decode($data->data)->sender ?? "")}}
+                </td>
+                <td data-label="@lang('Receiver')">
+                    {{__(json_decode($data->data)->receiver ?? "")}}
+                </td>
 								<td data-label="@lang('Remark')">
 								<span class="badge badge-dark">{{ucwords(str_replace('_',' ',$data->remark))}}</span>
 								</td>
@@ -113,7 +119,7 @@
 								<td data-label="@lang('Details')" class="text-end">
 									<button class="btn btn-primary btn-sm details" data-data="{{$data}}">@lang('Details')</button>
 								</td>
-							  </tr>
+							</tr>
 							@empty
 							  <p>@lang('NO DATA FOUND')</p>
 							@endforelse
