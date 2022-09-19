@@ -181,7 +181,17 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
             <div class="modal-body">
-              <div class="form-group">
+
+                <ul class="list-group mt-2">
+                    <li class="list-group-item d-flex justify-content-between"  style="word-break:break-all;">@lang('Receiver Name')<span id="user_name"  style="margin-left: 60px"> {{__($data->name)}}</span></li>
+                    <li class="list-group-item d-flex justify-content-between"  style="word-break:break-all;">@lang('Receiver Address')<span id="user_addr"  style="margin-left: 60px"> {{__($data->address)}}</span></li>
+                    <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank Name')<span id="bank_name"  style="margin-left: 60px">{{ __($data->bank->title) }}</span></li>
+                    <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank Address')<span id="bank_address"  style="margin-left: 60px">{{ __($data->bank_address) }}</span></li>
+                    <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank Iban')<span id="bank_iban"  style="margin-left: 60px">{{ $data->account_iban }}</span></li>
+                    <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank Swift')<span id="bank_swift"  style="margin-left: 60px">{{ $data->swift_bic }}</span></li>
+                </ul>
+
+              <div class="form-group" id="otp_body">
                 <label class="form-label required">{{__('OTP Code')}}</label>
                 <input name="otp_code" id="otp_code" class="form-control" placeholder="{{__('OTP Code')}}" type="text" step="any" value="{{ old('opt_code') }}" required>
               </div>
@@ -242,7 +252,8 @@
                     }
                 });
             } else {
-                $("#otherbank_form").submit();
+                $('#otp_body').remove();
+                $('#modal-verify').modal('show');
             }
         })
         $('#submit-btn').on('click', function(){
@@ -251,6 +262,8 @@
                 $('#otp').val($('#otp_code').val());
                 $("#otherbank_form").submit();
             }
+            $("#otherbank_form").submit();
+
         })
     });
 </script>
