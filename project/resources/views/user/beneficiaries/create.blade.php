@@ -28,44 +28,69 @@
                         <form action="{{route('user.beneficiaries.store')}}" method="POST" enctype="multipart/form-data">
                             @csrf
 
-                            <div class="form-group mb-3 mt-3">
-                                <label class="form-label required">{{__('Beneficiary Name')}}</label>
-                                <input name="name" id="name" class="form-control" autocomplete="off" placeholder="{{__('Jhon Doe')}}" type="text" value="{{ old('name') }}" min="1" required>
-                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label class="form-label required">{{__('Name')}}</label>
+                                        <input name="name" id="name" class="form-control" autocomplete="off" placeholder="{{__('John Doe')}}" type="text" value="{{ old('name') }}" min="1" required>
+                                    </div>
+        
+                                    <div class="form-group mb-3 mt-3">
+                                        <label class="form-label required">{{__('Email')}}</label>
+                                        <input name="email" id="email" class="form-control shadow-none" placeholder="{{__('user@email.com')}}" type="email" value="{{ old('email') }}" required>
+                                    </div>
+        
+                                    <div class="form-group mb-3 mt-3">
+                                        <label class="form-label required">{{__('Address')}}</label>
+                                        <input name="address" id="address" class="form-control" autocomplete="off" placeholder="{{__('Enter Address')}}" type="text" value="{{ old('address') }}" min="1" required>
+                                    </div>
 
-                            <div class="form-group mb-3 mt-3">
-                                <label class="form-label required">{{__('Email')}}</label>
-                                <input name="email" id="email" class="form-control shadow-none" placeholder="{{__('user@email.com')}}" type="email" value="{{ old('email') }}" required>
-                            </div>
+                                    <div class="form-group mb-3 mt-3">
+                                        <label class="form-label required">{{__('Phone')}}</label>
+                                        <input name="phone" id="phone" class="form-control" autocomplete="off" placeholder="{{__('Enter Phone')}}" type="text" value="{{ old('phone') }}" min="1" required>
+                                    </div>
+                                    
+                                    <div class="form-group mb-3 mt-3">
+                                        <label class="form-label required">{{__('Registration NO')}}</label>
+                                        <input name="registration_no" id="registration_no" class="form-control" autocomplete="off" placeholder="{{__('Enter Registration NO')}}" type="text" value="{{ old('registration_no') }}" min="1" required>
+                                    </div>
 
-                            <div class="form-group mb-3 mt-3">
-                                <label class="form-label required">{{__('Beneficiary Address')}}</label>
-                                <input name="address" id="address" class="form-control" autocomplete="off" placeholder="{{__('Enter Beneficiary Address')}}" type="text" value="{{ old('address') }}" min="1" required>
-                            </div>
+                                    <div class="form-group mb-3 mt-3">
+                                        <label class="form-label required">{{__('VAT NO')}}</label>
+                                        <input name="vat_no" id="vat_no" class="form-control" autocomplete="off" placeholder="{{__('Enter VAT NO')}}" type="text" value="{{ old('vat_no') }}" min="1" required>
+                                    </div>
 
-                            <div class="form-group">
-                                <label class="form-label required">{{__('Bank Name')}}</label>
-                                <select name="other_bank_id" class="form-select bankId" required>
-                                    <option value="">{{ __('Select Bank') }}</option>
-                                    @foreach ($othersBank as $key=>$data)
-                                        <option value="{{$data->id}}" data-requirements="{{ json_decode(json_encode($data->required_information,true)) }}">{{$data->title}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="form-group mb-3 mt-3">
-                                <label class="form-label required">{{__('Bank Address')}}</label>
-                                <input name="bank_address" id="bank_address" class="form-control" autocomplete="off" placeholder="{{__('Enter Bank Address')}}" type="text" value="{{ old('bank_address') }}" min="1" required>
-                            </div>
-
-                            <div class="form-group mb-3 mt-3">
-                                <label class="form-label required">{{__('SWIFT/BIC')}}</label>
-                                <input name="swift_bic" id="swift_bic" class="form-control" autocomplete="off" placeholder="{{__('MEINATWW')}}" type="text" value="{{ old('swift_bic') }}" min="1" required>
-                            </div>
-
-                            <div class="form-group mb-3 mt-3">
-                                <label class="form-label required">{{__('Account/IBAN')}}</label>
-                                <input name="account_iban" id="account_iban" class="form-control" autocomplete="off" placeholder="{{__('Enter Account/IBAN')}}" type="text" value="{{ old('account_iban') }}" min="1" required>
+                                    <div class="form-group mb-3 mt-3">
+                                        <label class="form-label required">{{__('Contact Person')}}</label>
+                                        <input name="contact_person" id="contact_person" class="form-control" autocomplete="off" placeholder="{{__('Enter Contact Person')}}" type="text" value="{{ old('contact_person') }}" min="1" required>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label class="form-label required">{{__('Bank Name')}}</label>
+                                        <select name="other_bank_id" class="form-select bankId" required>
+                                            <option value="">{{ __('Select Bank') }}</option>
+                                            @foreach ($othersBank as $key=>$data)
+                                                <option value="{{$data->id}}" data-requirements="{{ json_decode(json_encode($data->required_information,true)) }}">{{$data->title}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+        
+                                    <div class="form-group mb-3 mt-3">
+                                        <label class="form-label required">{{__('Bank Address')}}</label>
+                                        <input name="bank_address" id="bank_address" class="form-control" autocomplete="off" placeholder="{{__('Enter Bank Address')}}" type="text" value="{{ old('bank_address') }}" min="1" required>
+                                    </div>
+        
+                                    <div class="form-group mb-3 mt-3">
+                                        <label class="form-label required">{{__('SWIFT/BIC')}}</label>
+                                        <input name="swift_bic" id="swift_bic" class="form-control" autocomplete="off" placeholder="{{__('MEINATWW')}}" type="text" value="{{ old('swift_bic') }}" min="1" required>
+                                    </div>
+        
+                                    <div class="form-group mb-3 mt-3">
+                                        <label class="form-label required">{{__('Account/IBAN')}}</label>
+                                        <input name="account_iban" id="account_iban" class="form-control" autocomplete="off" placeholder="{{__('Enter Account/IBAN')}}" type="text" value="{{ old('account_iban') }}" min="1" required>
+                                    </div>
+                                </div>
                             </div>
 
                             <div id="required-form-element">
