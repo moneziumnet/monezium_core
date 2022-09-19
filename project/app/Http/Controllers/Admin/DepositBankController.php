@@ -45,7 +45,7 @@ class DepositBankController extends Controller
                             $status      = $data->status == 'complete' ? _('completed') : _('pending');
                             $status_sign = $data->status == 'complete' ? 'success'   : 'danger';
 
-                            @$detail = SubInsBank::where('name', $data->method)->first();
+                            @$detail = SubInsBank::where('id', $data->sub_bank_id)->first();
                             @$bankaccount = BankAccount::whereUserId($data->user_id)->where('subbank_id', $detail->id)->where('currency_id', $data->currency_id)->with('user')->first();
                             $detail->address = str_replace(' ', '-', $detail->address);
                             $detail->name = str_replace(' ', '-', $detail->name);

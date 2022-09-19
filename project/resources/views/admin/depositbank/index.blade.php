@@ -136,6 +136,7 @@
             if(document_url) {
                 $("#li_document").attr("style","display: block");
                 $("#document").attr("href", `{{asset('assets/doc/${document_url}')}}`);
+                $("#document").text(document_url);
             }
             else{
                 $("#li_document").attr("style","display: none!important");
