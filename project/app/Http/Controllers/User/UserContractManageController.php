@@ -38,7 +38,7 @@ class UserContractManageController extends Controller
 
         $data = new Contract();
         $data->title = $request->title;
-        $data->information = array_combine($request->desc_title,$request->desc_text);
+        $data->information = json_encode(array_combine($request->desc_title,$request->desc_text));
         $data->user_id = $request->user_id;
         $data->contractor_id = $request->contractor_id;
         $data->client_id = $request->client_id;
@@ -141,7 +141,7 @@ class UserContractManageController extends Controller
 
         $data = Contract::findOrFail($id);
         $data->title = $request->title;
-        $data->information = array_combine($request->desc_title,$request->desc_text);
+        $data->information = json_encode(array_combine($request->desc_title,$request->desc_text));
         $data->user_id = $request->user_id;
         $data->contractor_id = $request->contractor_id;
         $data->client_id = $request->client_id;
@@ -187,16 +187,18 @@ class UserContractManageController extends Controller
 
     public function export_aoa_pdf($id) {
         $contract = ContractAoa::where('id', $id)->first();
-        $description = $contract->description;
-        foreach (json_decode($contract->pattern, True) as $key => $value) {
-            if(strpos($description, "{".$key."}" ) != false) {
-                $description = preg_replace("/{".$key."}/", $value ,$description);
+        $information = $contract->information ? json_decode($contract->information) : array("" => null);
+        foreach ($information as $title => $text) {
+            foreach (json_decode($contract->pattern, True) as $key => $value) {
+                if(strpos($text, "{".$key."}" ) != false) {
+                    $information->$title = preg_replace("/{".$key."}/", $value ,$text);
+                }
             }
         }
 
         $pdf = Pdf::loadView('user.export.aoa', [
             'data' => $contract,
-            'description' => $description
+            'information' => $information
         ]);
         return $pdf->download('aoa.pdf');
     }
@@ -260,7 +262,7 @@ class UserContractManageController extends Controller
     }
 
     public function aoa_store(Request $request, $id){
-        $rules = ['title' => 'required', 'description' => 'required'];
+        $rules = ['title' => 'required'];
         $request->validate($rules);
 
         $data = new ContractAoa();
@@ -268,7 +270,7 @@ class UserContractManageController extends Controller
         $data->client_id = $request->client_id;
 
         $data->title = $request->title;
-        $data->description = $request->description;
+        $data->information = json_encode(array_combine($request->desc_title,$request->desc_text));
         $data->contract_id = $request->contract_id;
         $items = array_combine($request->item,$request->value);
         $data->pattern = json_encode($items);
@@ -279,13 +281,15 @@ class UserContractManageController extends Controller
 
     public function aoa_view($id) {
         $data = ContractAoa::findOrFail($id);
-        $description = $data->description;
-        foreach (json_decode($data->pattern, True) as $key => $value) {
-            if(strpos($description, "{".$key."}" ) != false) {
-                $description = preg_replace("/{".$key."}/", $value ,$description);
+        $information = $data->information ? json_decode($data->information) : array("" => null);
+        foreach ($information as $title => $text) {
+            foreach (json_decode($data->pattern, True) as $key => $value) {
+                if(strpos($text, "{".$key."}" ) != false) {
+                    $information->$title = preg_replace("/{".$key."}/", $value ,$text);
+                }
             }
         }
-        return view('user.aoa.view', compact('data', 'description'));
+        return view('user.aoa.view', compact('data', 'information'));
     }
 
     public function aoa_sign_view($id,$role) {
@@ -303,13 +307,15 @@ class UserContractManageController extends Controller
         elseif($role == 'contractor') {
             return redirect(url('/'))->with('error', 'You must login to sign this contract as a contractor');
         }
-        $description = $data->description;
-        foreach (json_decode($data->pattern, True) as $key => $value) {
-            if(strpos($description, "{".$key."}" ) != false) {
-                $description = preg_replace("/{".$key."}/", $value ,$description);
+        $information = $data->information ? json_decode($data->information) : array("" => null);
+        foreach ($information as $title => $text) {
+            foreach (json_decode($data->pattern, True) as $key => $value) {
+                if(strpos($text, "{".$key."}" ) != false) {
+                    $information->$title = preg_replace("/{".$key."}/", $value ,$text);
+                }
             }
         }
-        return view('user.aoa.aoa', compact('data', 'description', 'role'));
+        return view('user.aoa.aoa', compact('data', 'information', 'role'));
     }
 
     public function aoa_sign(Request $request, $id) {
@@ -359,21 +365,20 @@ class UserContractManageController extends Controller
     }
 
     public function aoa_update(Request $request, $id) {
-        $rules = ['title' => 'required', 'description' => 'required'];
+        $rules = ['title' => 'required'];
         $request->validate($rules);
 
         $data = ContractAoa::findOrFail($id);
         $data->contractor_id = $request->contractor_id;
         $data->client_id = $request->client_id;
         $data->title = $request->title;
-        $data->description = $request->description;
+        $data->information = json_encode(array_combine($request->desc_title,$request->desc_text));
         $data->contract_id = $request->contract_id;
         $items = array_combine($request->item,$request->value);
         $data->pattern = json_encode($items);
         $data->update();
 
-
-        return redirect()->back()->with('success','AoA has been updated successfully');
+        return redirect(route('user.contract.aoa', $request->contract_id))->with('message','AoA has been updated successfully');
     }
 
     public function aoa_delete($id) {

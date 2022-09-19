@@ -40,10 +40,11 @@
                     {{__($data->title)}}
                 </h1>
             </div>
-            <div class="text-center mt-5">
-                <p>
-                    {{__($description)}}
-                </p>
+            <div class="mt-5 mb-3">
+                @foreach ($information as $title => $text)
+                    <h2 class="ms-1">{{ $title }}</h2>
+                    <p>{!!nl2br($text)!!}</p>
+                @endforeach
             </div>
             <div class = "row">
             @if ($data->status == 1)

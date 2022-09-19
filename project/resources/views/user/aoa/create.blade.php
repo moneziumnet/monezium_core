@@ -67,16 +67,16 @@
                             </div>
                         </div>
                         <div class="form-group mb-3 mt-3">
-                            <label class="form-label required">{{__('Title')}}</label>
+                            <label class="form-label required">{{__('Contract AOA Name')}}</label>
                             <input name="title" id="title" class="form-control" autocomplete="off" placeholder="{{__('Enter Title')}}" type="text" required>
                         </div>
 
                         <div class="row form-group mb-3 mt-3">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <div class="form-label">{{__('Pattern name')}}</div>
                                 <input type="text" name="item[]" class="form-control shadow-none itemname"  >
                             </div>
-                            <div class="col-md-5 mb-3">
+                            <div class="col-md-7 mb-3">
                                 <div class="form-label">{{__('Value')}}</div>
                                 <input type="text" name="value[]" class="form-control shadow-none itemvalue"  >
                             </div>
@@ -87,21 +87,79 @@
                         </div>
                         <div class="extra-container"></div>
 
-                        <div class="form-group mb-3 mt-3">
-                            <label class="form-label required">{{__('Description')}} {{__('(i.e: if patten is amount, and value is 500,  {amount} is 500)')}}</label>
-                            <textarea name="description" class="form-control" id="inp-details" cols="30" rows="10" placeholder="{{__('Description')}}" required></textarea>
+                        <div class="row form-group mb-3 mt-3">
+                            <div class="col-md-4 mb-3">
+                                <div class="form-label">{{__('Title')}}</div>
+                                <input type="text" name="desc_title[]" class="form-control shadow-none itemname">
+                            </div>
+                            <div class="col-md-7 mb-3">
+                                <div class="form-label">{{__('Text')}} <span class="pattern-help"><i class="fas fa-question-circle"></i></span></div>
+                                <textarea type="text" name="desc_text[]" class="form-control shadow-none itemvalue"></textarea>
+                            </div>
+                            <div class="col-md-1 mb-3">
+                                <div class="form-label">&nbsp;</div>
+                                <button type="button" class="btn btn-primary w-100 desc-add"><i class="fas fa-plus"></i></button>
+                            </div>
                         </div>
+                        <div class="description-extra-container"></div>
+
                         <input name="contract_id" type="hidden" class="form-control" value="{{$id}}">
 
                         <div class="form-footer">
                             <button type="submit" class="btn btn-primary submit-btn w-100" >{{__('Submit')}}</button>
                         </div>
 
-
                     </form>
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
+<div class="modal modal-blur fade" id="modal-pattern-help" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-status bg-primary"></div>
+        <div class="modal-body text-center py-4">
+            <i  class="fas fa-question-circle fa-3x text-primary mb-2"></i>
+            <h3>{{__('How to write description')}}</h3>
+            <div class="row form-group mt-3 text-start">
+                <div class="col-md-6">
+                    <div class="form-label">{{__('Pattern name')}}</div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-label">{{__('Value')}}</div>
+                </div>
+            </div>
+            <div class="row form-group mb-1">
+                <div class="col-md-6">
+                    <input type="text" class="form-control shadow-none" value="name" readonly>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" class="form-control shadow-none" value="Aleksander" readonly>
+                </div>
+            </div>
+            <div class="row form-group mb-1">
+                <div class="col-md-6">
+                    <input type="text" class="form-control shadow-none" value="amount" readonly>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" class="form-control shadow-none" value="1000"readonly >
+                </div>
+            </div>
+            <div class="row form-group mt-3 text-start">
+                    <label class="form-label">{{__('Description')}}</label>
+                    <textarea name="description" class="form-control" readonly>{{__('Hello, {name}. 
+I need {amount} from you.')}}</textarea>
+            </div>
+            <div class="row form-group mt-3 text-start">
+                <label class="form-label">{{__('Preview')}}</label>
+                <textarea name="description" class="form-control" readonly>{{__('Hello, Aleksander.
+I need 1000 from you.')}}</textarea>
+            </div>
+        </div>
+    </div>
     </div>
 </div>
 
@@ -166,30 +224,47 @@
 
 @push('js')
 <script>
-  'use strict';
+'use strict';
 $('.add').on('click',function(){
-        $('.extra-container').append(`
+    $('.extra-container').append(`
+        <div class="row form-group mb-3 mt-3">
+            <div class="col-md-6 mb-3">
+                <input type="text" name="item[]" class="form-control shadow-none itemname" required>
+            </div>
+            <div class="col-md-5 mb-3">
+                <input type="text" name="value[]" class="form-control shadow-none itemvalue" required>
+            </div>
+            <div class="col-md-1 mb-3">
+                <button type="button" class="btn btn-danger w-100 remove"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+    `);
+})
 
-                <div class="row form-group mb-3 mt-3">
-                    <div class="col-md-6 mb-3">
-                        <input type="text" name="item[]" class="form-control shadow-none itemname" required>
-                    </div>
-                    <div class="col-md-5 mb-3">
-                        <input type="text" name="value[]" class="form-control shadow-none itemvalue" required>
-                    </div>
-                    <div class="col-md-1 mb-3">
-                        <button type="button" class="btn btn-danger w-100 remove"><i class="fas fa-times"></i></button>
-                    </div>
-                </div>
-
-        `);
-    })
+$('.desc-add').on('click',function(){
+    $('.description-extra-container').append(`
+        <div class="row form-group mb-3 mt-3">
+            <div class="col-md-4 mb-3">
+                <input type="text" name="desc_title[]" class="form-control shadow-none itemname">
+            </div>
+            <div class="col-md-7 mb-3">
+                <textarea type="text" name="desc_text[]" class="form-control shadow-none itemvalue"></textarea>
+            </div>
+            <div class="col-md-1 mb-3">
+                <button type="button" class="btn btn-danger w-100 remove"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+    `);
+})
 
 $(document).on('click','.remove',function () {
     $(this).closest('.row').remove()
 })
 $('.beneficiary').on('click',function() {
-            $('#modal-success').modal('show')
-        })
+    $('#modal-success').modal('show')
+})
+$('.pattern-help').on('click', function(){
+    $("#modal-pattern-help").modal('show')
+})
 </script>
 @endpush

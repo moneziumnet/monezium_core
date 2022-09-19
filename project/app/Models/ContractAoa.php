@@ -9,7 +9,7 @@ class ContractAoa extends Model
     protected $fillable = [
         'contract_id',
         'title',
-        'description',
+        'information',
         'status',
         'contracter_image_path',
         'customer_image_path',
