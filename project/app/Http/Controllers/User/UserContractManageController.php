@@ -33,12 +33,12 @@ class UserContractManageController extends Controller
     }
 
     public function store(Request $request){
-        $rules = ['title' => 'required', 'description' => 'required'];
+        $rules = ['title' => 'required'];
         $request->validate($rules);
 
         $data = new Contract();
         $data->title = $request->title;
-        $data->description = $request->description;
+        $data->information = array_combine($request->desc_title,$request->desc_text);
         $data->user_id = $request->user_id;
         $data->contractor_id = $request->contractor_id;
         $data->client_id = $request->client_id;
@@ -51,14 +51,16 @@ class UserContractManageController extends Controller
 
     public function view($id) {
         $data = Contract::findOrFail($id);
-        $description = $data->description;
-        foreach (json_decode($data->pattern, True) as $key => $value) {
-            if(strpos($description, "{".$key."}" ) != false) {
-                $description = preg_replace("/{".$key."}/", $value ,$description);
+        $information = $data->information ? json_decode($data->information) : array("" => null);
+        foreach ($information as $title => $text) {
+            foreach (json_decode($data->pattern, True) as $key => $value) {
+                if(strpos($text, "{".$key."}" ) != false) {
+                    $information->$title = preg_replace("/{".$key."}/", $value ,$text);
+                }
             }
         }
-
-        return view('user.contract.view', compact('data', 'description'));
+        
+        return view('user.contract.view', compact('data', 'information'));
     }
 
     public function contract_view($id, $role) {
@@ -76,13 +78,15 @@ class UserContractManageController extends Controller
         elseif($role == 'contractor') {
             return redirect(url('/'))->with('error', 'You must login to sign this contract as a contractor');
         }
-        $description = $data->description;
-        foreach (json_decode($data->pattern, True) as $key => $value) {
-            if(strpos($description, "{".$key."}" ) != false) {
-                $description = preg_replace("/{".$key."}/", $value ,$description);
+        $information = $data->information ? json_decode($data->information) : array("" => null);
+        foreach ($information as $title => $text) {
+            foreach (json_decode($data->pattern, True) as $key => $value) {
+                if(strpos($text, "{".$key."}" ) != false) {
+                    $information->$title = preg_replace("/{".$key."}/", $value ,$text);
+                }
             }
         }
-        return view('user.contract.contract', compact('data', 'description', 'role'));
+        return view('user.contract.contract', compact('data', 'information', 'role'));
     }
 
     public function contract_sign(Request $request, $id) {
@@ -132,12 +136,12 @@ class UserContractManageController extends Controller
     }
 
     public function update(Request $request, $id) {
-        $rules = ['title' => 'required', 'description' => 'required'];
+        $rules = ['title' => 'required'];
         $request->validate($rules);
 
         $data = Contract::findOrFail($id);
         $data->title = $request->title;
-        $data->description = $request->description;
+        $data->information = array_combine($request->desc_title,$request->desc_text);
         $data->user_id = $request->user_id;
         $data->contractor_id = $request->contractor_id;
         $data->client_id = $request->client_id;
@@ -164,16 +168,19 @@ class UserContractManageController extends Controller
 
     public function export_pdf($id) {
         $contract = Contract::where('id', $id)->first();
-        $description = $contract->description;
-        foreach (json_decode($contract->pattern, True) as $key => $value) {
-            if(strpos($description, "{".$key."}" ) != false) {
-                $description = preg_replace("/{".$key."}/", $value ,$description);
+
+        $information = $contract->information ? json_decode($contract->information) : array("" => null);
+        foreach ($information as $title => $text) {
+            foreach (json_decode($contract->pattern, True) as $key => $value) {
+                if(strpos($text, "{".$key."}" ) != false) {
+                    $information->$title = preg_replace("/{".$key."}/", $value ,$text);
+                }
             }
         }
 
         $pdf = Pdf::loadView('user.export.contract', [
             'data' => $contract,
-            'description' => $description
+            'information' => $information
         ]);
         return $pdf->download('contract.pdf');
     }

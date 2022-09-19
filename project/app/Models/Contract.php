@@ -10,7 +10,7 @@ class Contract extends Model
     protected $fillable = [
         'user_id',
         'title',
-        'description',
+        'information',
         'contracter_image_path',
         'customer_image_path',
         'client_id',
