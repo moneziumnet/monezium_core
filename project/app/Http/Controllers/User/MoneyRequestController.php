@@ -20,7 +20,7 @@ class MoneyRequestController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['request_user']]);
+        $this->middleware('auth');
     }
 
     public function index(){
