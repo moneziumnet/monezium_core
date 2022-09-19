@@ -285,7 +285,11 @@ class ManageInvoiceController extends Controller
         $invoice->final_amount = array_sum($request->amount);
         $invoice->get_amount   = array_sum($request->amount);
         $invoice->beneficiary_id = $request->beneficiary_id;
-        $invoice->description = $request->description;
+        $invoice->description  = $request->description;
+        $invoice->product_id   = $request->product_id;
+        $invoice->contract_id  = $request->contract_id;
+        $invoice->contract_aoa_id = $request->aoa_id;
+
         $data = [];
         if($request->file('document'))
         {
