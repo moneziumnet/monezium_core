@@ -215,6 +215,15 @@
               </div>
             </div>
 
+            <div class="col-md-6">
+                <div class="form-group">
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox" name="section[]" value="ICO Management" {{ $data->sectionCheck('ICO Management') ? 'checked' : '' }} class="custom-control-input" id="manage_ico">
+                    <label class="custom-control-label" for="manage_ico">{{__('ICO Management')}}</label>
+                    </div>
+                </div>
+              </div>
+
                 <div class="col-md-6">
                   <div class="form-group">
                     <div class="custom-control custom-switch">
