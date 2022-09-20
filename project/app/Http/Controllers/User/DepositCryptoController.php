@@ -96,7 +96,7 @@ class DepositCryptoController extends Controller
            $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
            mail($to,$subject,$msg,$headers);
 
-        return redirect()->route('user.cryptodeposit.create')->with('success','Deposit amount '.$request->amount.' ('.$currency->code.') successfully!');
+        return redirect(route('user.cryptodeposit.index'))->with('success','Deposit amount '.$request->amount.' ('.$currency->code.') successfully!');
     }
 
     public function getcurrency(Request $request ) {
