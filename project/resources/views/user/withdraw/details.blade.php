@@ -1,83 +1,13 @@
-@extends('layouts.user')
-
-@push('css')
-
-@endpush
-
-@section('contents')
-<div class="container-xl">
-    <div class="page-header d-print-none">
-    @include('user.ex_payment_tab')
-      <div class="row align-items-center mt-3">
-        <div class="col">
-          <h2 class="page-title">
-            {{__('Withdraw Details')}}
-          </h2>
-        </div>
-      </div>
-    </div>
-</div>
-
-<div class="page-body">
-    <div class="container-xl">
-      <div class="row row-cards">
-          <div class="col-12">
-              <div class="card mb-4">
-                <div class="card-body">
-                    <div class="table-responsive-sm">
-                        <table class="table mb-0">
-                            <tbody>
-                            <tr>
-                                <th class="45%" width="45%">{{__('WithDraw Method')}}</th>
-                                <td width="10%">:</td>
-                                <td class="45%" width="45%">{{ $data->method->method }}</td>
-                            </tr>
-
-                            <tr>
-                                <th class="45%" width="45%">{{__('User Name')}}</th>
-                                <td width="10%">:</td>
-                                <td class="45%" width="45%">{{ $data->user->name }}</td>
-                            </tr>
-
-                            <tr>
-                                <th class="45%" width="45%">{{__('Amount')}}</th>
-                                <td width="10%">:</td>
-                                <td class="45%" width="45%">{{ showprice($data->amount,$data->currency) }}</td>
-                            </tr>
-
-                            <tr>
-                                <th class="45%" width="45%">{{__('Charge')}}</th>
-                                <td width="10%">:</td>
-                                <td class="45%" width="45%">{{ showprice($data->charge,$data->currency) }}</td>
-                            </tr>
-
-                            <tr>
-                                <th class="45%" width="45%">{{__('Status')}}</th>
-                                <td width="10%">:</td>
-                                <td class="45%" width="45%">
-                                  @if ($data->status == '1')
-                                    <span class="badge bg-success">{{__('Completed')}}</span>
-                                  @elseif($data->status == '0')
-                                    <span class="badge bg-warning">{{__('Pending')}}</span>
-                                  @else
-                                    <span class="badge bg-danger">{{__('Rejected')}}</span>
-                                  @endif
-                                </td>
-                            </tr>
-
-
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-              </div>
-          </div>
-      </div>
-    </div>
-</div>
-
-@endsection
-
-@push('js')
-
-@endpush
+<li class="list-group-item d-flex justify-content-between">@lang('WithDraw Method')<span>{{$data->method->name}}</span></li>
+<li class="list-group-item d-flex justify-content-between">@lang('User Name')<span>{{ $data->user->name }}</span></li>
+<li class="list-group-item d-flex justify-content-between">@lang('Amount')<span>{{ showprice($data->amount,$data->currency) }}</span></li>
+<li class="list-group-item d-flex justify-content-between">@lang('Charge')<span>{{ showprice($data->charge,$data->currency) }}</span></li>
+<li class="list-group-item d-flex justify-content-between">@lang('Status')
+  @if ($data->status == '1')
+    <span class="badge bg-success">{{__('Completed')}}</span>
+  @elseif($data->status == '0')
+    <span class="badge bg-warning">{{__('Pending')}}</span>
+  @else
+    <span class="badge bg-danger">{{__('Rejected')}}</span>
+  @endif
+</li>

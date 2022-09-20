@@ -64,9 +64,9 @@
                                           @endif
 
                                           <td data-label="{{ __('Details') }}">
-                                            <a href="{{route('user.withdraw.details',$withdraw->id)}}" class="btn btn-primary">
+                                            <button class="btn btn-primary btn-sm details" data-id="{{$withdraw->id}}">
                                               {{__('Details')}}
-                                            </a>
+                                            </button>
                                           </td>
                                       </tr>
                                   @endforeach
@@ -80,11 +80,46 @@
         </div>
     </div>
 </div>
+<div class="modal modal-blur fade" id="modal-details" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+      <div class="modal-content">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-status bg-primary"></div>
+          <div class="modal-body text-center py-4">
+              <i class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+              <h3>@lang('Withdraw Details')</h3>
+              <div class="withdraw-details">
 
+              </div>
+          </div>
+          <div class="modal-footer">
+              <div class="w-100">
+                  <div class="row">
+                      <div class="col">
+                          <a href="#" class="btn w-100" data-bs-dismiss="modal">
+                              @lang('Close')
+                          </a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
 
 @endsection
 
-@section('scripts')
+@push('js')
+<script>
+  'use strict';
 
-@endsection
+  $('.details').on('click', function() {
+      var url = "{{url('user/withdraw/')}}"+'/'+$(this).data('id')
+      $.get(url,function (res) {
+          $('.withdraw-details').html(res)
+          $('#modal-details').modal('show')
+      })
+  })
+</script>
+@endpush
 

@@ -188,7 +188,7 @@ class WithdrawController extends Controller
 
     }
 
-    public function details(Request $request, $id){
+    public function details($id){
         $data['data'] = Withdrawals::findOrFail($id);
         return view('user.withdraw.details',$data);
     }
