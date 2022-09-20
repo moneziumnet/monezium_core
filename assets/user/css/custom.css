@@ -519,6 +519,19 @@ div[class*="col"]:nth-of-type(6n + 4) .card--info-item .icon {
 	background-repeat: no-repeat !important;
 	background-size: contain !important;
   }
+
+  .contract-signature-preview {
+	height: 75px;
+    width: 250px;
+    margin: auto;
+    position: relative;
+    background-color: white !important;
+    background-size: contain !important;
+    overflow: hidden;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+  }
+
   .back-preview-image.color-white {
 	background-color: #ffffff !important;
   }
