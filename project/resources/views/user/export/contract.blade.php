@@ -55,32 +55,29 @@
                                     <p>{!!nl2br($text)!!}</p>
                                 @endforeach
                             </div>
+
                             @if ($data->status == 1)
-                                <div class="wrapper-image-preview  col-md-6">
-                                    <p class="text-muted text-center"> {{__('Contractor signed')}} </p>
-                                    <div class="box full-width">
-                                        <div class="contract-signature-preview" style="background-image: url({{ $data->contracter_image_path ? asset('assets/images/'.$data->contracter_image_path) : '' }});"></div>
+                                <div>
+                                    <div class="wrapper-image-preview text-center" style="width:250px">
+                                        <p class="text-muted"> {{__('Contractor signed')}} </p>
+                                        <div class="contract-signature-preview-pdf" style="background-image: url({{ $data->contracter_image_path ? asset('assets/images/'.$data->contracter_image_path) : '' }});"></div>
                                     </div>
-                                </div>
-                                <div class="wrapper-image-preview col-md-6">
-                                    <p class="text-muted text-center">{{ __('Customer signed')}}</p>
-                                    <div class="box full-width">
-                                        <div class="contract-signature-preview" style="background-image: url({{ $data->customer_image_path ? asset('assets/images/'.$data->customer_image_path) : '' }});"></div>
+                                    <div class="wrapper-image-preview text-center" style="width: 250px;position: absolute;right: 15px;margin-top: -115px;">
+                                        <p class="text-muted">{{ __('Customer signed')}}</p>
+                                        <div class="contract-signature-preview-pdf" style="background-image: url({{ $data->customer_image_path ? asset('assets/images/'.$data->customer_image_path) : '' }});"></div>
                                     </div>
                                 </div>
                             @else
-                                <div class="wrapper-image-preview col-md-6">
-                                    <p class="text-muted text-center">{{$data->contracter_image_path ? __('Contractor signed') : __('Contractor not signed')}}</p>
-                                    <div class="box full-width">
-                                        <div class="contract-signature-preview" style="background-image: url({{ $data->contracter_image_path ? asset('assets/images/'.$data->contracter_image_path) : '' }});"></div>
-                                    </div>
+                            <div>
+                                <div class="wrapper-image-preview text-center" style="width:250px">
+                                    <p class="text-muted">{{$data->contracter_image_path ? __('Contractor signed') : __('Contractor not signed')}}</p>
+                                    <div class="contract-signature-preview-pdf" style="background-image: url({{ $data->contracter_image_path ? asset('assets/images/'.$data->contracter_image_path) : '' }});"></div>
                                 </div>
-                                <div class="wrapper-image-preview col-md-6">
-                                    <p class="text-muted text-center">{{$data->customer_image_path ? __('Customer signed') : __('Customer not signed')}}</p>
-                                    <div class="box full-width">
-                                        <div class="contract-signature-preview" style="background-image: url({{ $data->customer_image_path ? asset('assets/images/'.$data->customer_image_path) : '' }});"></div>
-                                    </div>
+                                <div class="wrapper-image-preview text-center" style="width: 250px;position: absolute;right: 15px;margin-top: -120px;">
+                                    <p class="text-muted">{{$data->customer_image_path ? __('Customer signed') : __('Customer not signed')}}</p>
+                                    <div class="contract-signature-preview-pdf" style="background-image: url({{ $data->customer_image_path ? asset('assets/images/'.$data->customer_image_path) : '' }});"></div>
                                 </div>
+                            </div>
                             @endif
                         </div>
                         <p class="text-muted text-center mt-5">{{__('Thank you very much for doing new contract. We look forward to working with
