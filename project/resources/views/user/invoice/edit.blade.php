@@ -435,13 +435,13 @@
                     success: function(msg) {
                         console.log(msg);
                         $(`#tax_append[tax-count="${tax_count}"]`).append(`
-                            <input type="text"  class="form-control shadow-none" value="${msg.name} ${msg.rate}%" readonly required>
+                            <input type="text"  class="form-control shadow-none tax" value="${msg.name} ${msg.rate}%" data-rate="${msg.rate}" readonly required>
                             <input type="hidden" name="tax_id[]" class="form-control shadow-none" value=${msg.id}  required>
-
                             `);
                         $(`.add-tax[tax-count="${tax_count}"]`).remove();
                         $(`#tax_append[tax-count="${tax_count}"]`).attr('id', 'un_tax_append');
-                        $('#modal-success-tax').modal('hide')
+                        $('#modal-success-tax').modal('hide');
+                        calcAmount();
                     },
                     error: function(XMLHttpRequest, textStatus, errorThrown) {
                         console.log("some error");

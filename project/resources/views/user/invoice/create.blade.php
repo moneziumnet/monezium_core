@@ -344,15 +344,8 @@
         })
 
         $(document).on('click','.remove',function () {
-            var total = 0;
             $(this).closest('.row').remove()
-            $('.amount').each(function(e){
-                if($(this).val()!=''){
-                    var rate = parseFloat($(this).parent().parent().find('.tax').data('rate'))
-                    total += parseFloat($(this).val()) + rate *  parseFloat($(this).val()) / 100;
-                }
-                $('.totalAmount').text(total.toFixed(4))
-            })
+            computeTotalAmount();
         })
 
         $(document).on('click','.doc_remove',function () {
@@ -379,14 +372,7 @@
 
 
         $(document).on('keyup','.amount',function () {
-            var total = 0;
-            $('.amount').each(function(e){
-                if($(this).val()!=''){
-                    var rate = parseFloat($(this).parent().parent().find('.tax').data('rate'))
-                    total += parseFloat($(this).val()) + rate *  parseFloat($(this).val()) / 100;
-                }
-                $('.totalAmount').text(total.toFixed(4))
-            })
+            computeTotalAmount();
         })
         $('.beneficiary').on('click',function() {
             $('#modal-success').modal('show')
@@ -415,16 +401,26 @@
 
                             `);
                         $(`.add-tax[tax-count="${tax_count}"]`).remove();
-                        var tax_value = $(`#tax_append[tax-count="${tax_count}"]`).parent().parent().find('.amount').val() * msg.rate/100
-                        $('.totalAmount').text(parseFloat($('.totalAmount').text()) + tax_value)
                         $(`#tax_append[tax-count="${tax_count}"]`).attr('id', 'un_tax_append');
-                        $('#modal-success-tax').modal('hide')
+                        $('#modal-success-tax').modal('hide');
+                        computeTotalAmount();
                     },
                     error: function(XMLHttpRequest, textStatus, errorThrown) {
                         console.log("some error");
                     }
                 });
             });
+
+            function computeTotalAmount() {
+                var total = 0;
+                $('.amount').each(function(e){
+                    if($(this).val()!=''){
+                        var rate = parseFloat($(this).parent().parent().find('.tax').data('rate'))
+                        total += parseFloat($(this).val()) + rate *  parseFloat($(this).val()) / 100;
+                    }
+                    $('.totalAmount').text(total.toFixed(4))
+                })
+            }
         });
 
     </script>
