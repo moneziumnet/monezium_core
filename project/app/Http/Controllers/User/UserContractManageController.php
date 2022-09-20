@@ -276,7 +276,7 @@ class UserContractManageController extends Controller
         $data->pattern = json_encode($items);
         $data->save();
 
-        return redirect()->back()->with('success','AoA has been created successfully');
+        return redirect(route('user.contract.aoa', $id))->with('message','AoA has been created successfully');
     }
 
     public function aoa_view($id) {
