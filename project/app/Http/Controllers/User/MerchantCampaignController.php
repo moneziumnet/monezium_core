@@ -225,5 +225,14 @@ class MerchantCampaignController extends Controller
         $data['donations'] = CampaignDonation::where('campaign_id', $id)->latest()->paginate(15);
         return view('user.merchant.campaign.donation', $data);
     }
+
+    public function send_email(Request $request)
+    {
+        $to = $request->email;
+        $subject = "Campaign";
+        $msg = "Please check <a href='".$request->link."'>this link</a>";
+        $headers = "From: ".auth()->user()->name."<".auth()->user()->email.">";
+        mail($to,$subject,$msg,$headers);
+    }
 }
 

@@ -198,6 +198,7 @@ Route::prefix('user')->group(function() {
       Route::get('/merchant/product/status/{id}', [MerchantProductController::class,'status'])->name('user.merchant.product.status');
       Route::post('/merchant/product/pay', [MerchantProductController::class,'pay'])->name('user.merchant.product.pay');
       Route::get('/merchant/product/order', [MerchantProductController::class,'order'])->name('user.merchant.product.order');
+      Route::post('/merchant/product/send_email', [MerchantProductController::class,'send_email'])->name('user.merchant.product.send_email');
       Route::get('/merchant/product/order/{id}', [MerchantProductController::class,'order_by_product'])->name('user.merchant.product.order_by_product');
 
       Route::get('/merchant/campaign', [MerchantCampaignController::class,'index'])->name('user.merchant.campaign.index');
@@ -209,6 +210,7 @@ Route::prefix('user')->group(function() {
       Route::get('/merchant/campaign/status/{id}', [MerchantCampaignController::class,'status'])->name('user.merchant.campaign.status');
       Route::post('/merchant/campaign/pay', [MerchantCampaignController::class,'pay'])->name('user.merchant.campaign.pay');
       Route::get('/merchant/campaign/donation/{id}', [MerchantCampaignController::class,'donation_by_campaign'])->name('user.merchant.campaign.donation_list');
+      Route::post('/merchant/campaign/send_email',[MerchantCampaignController::class,'send_email'])->name('user.merchant.campaign.send_email');
 
       Route::get('/merchant/checkout',[MerchantCheckoutController::class,'index'])->name('user.merchant.checkout.index');
       Route::get('/merchant/checkout/edit/{id}',[MerchantCheckoutController::class,'edit'])->name('user.merchant.checkout.edit');
@@ -218,6 +220,7 @@ Route::prefix('user')->group(function() {
       Route::get('/merchant/checkout/delete/{id}', [MerchantCheckoutController::class,'delete'])->name('user.merchant.checkout.delete');
       Route::get('/merchant/checkout/transaction/history', [MerchantCheckoutController::class,'transactionhistory'])->name('user.merchant.checkout.transactionhistory');
       Route::get('/merchant/checkout/transaction/status/{id}/{status}', [MerchantCheckoutController::class,'transaction_status'])->name('user.merchant.checkout.transaction.status');
+      Route::post('/merchant/checkout/send_email',[MerchantCheckoutController::class,'send_email'])->name('user.merchant.checkout.send_email');
       Route::post('/merchant/checkout/transaction', [MerchantCheckoutController::class,'transaction'])->name('user.merchant.checkout.transaction');
 
 

@@ -66,6 +66,7 @@
                                         <a class="dropdown-item" href="{{route('user.merchant.product.status', $val->id)}}"><i class="fas fa-ban me-2"></i>{{$val->status == 1 ? __('Disable') : __('Enable')}}</a>
                                         <a class="dropdown-item" href="{{route('user.merchant.product.edit', $val->id)}}"><i class="fas fa-pencil-alt me-2"></i>{{__('Edit')}}</a>
                                         <a class="dropdown-item" href="{{route('user.merchant.product.order_by_product', ['id' => $val->id])}}"><i class="fas fa-sync me-2"></i>{{__('Orders')}}</a>
+                                        <a class="dropdown-item send-email" data-url="{{route('user.merchant.product.link', $val->ref_id)}}" href="#"><i class="fas fa-paper-plane me-2"></i>{{__('Send Email')}}</a>
                                         <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#delete{{$val->id}}" href="#"><i class="fas fa-trash-alt  me-2"></i>{{__('Delete')}}</a>
                                     </div>
                                     </div>
@@ -142,6 +143,40 @@
                             <div class="col">
                                 <button type="submit" class="btn btn-primary w-100 confirm">
                                 {{__('Confirm')}}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+<div class="modal modal-blur fade" id="modal-send-email" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-status bg-primary"></div>
+        <div class="modal-body text-center py-4">
+            <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+            <h3>{{__('Send E-mail')}}</h3>
+            <div class="row text-start">
+                <div class="col">
+                    <form action="{{ route('user.merchant.product.send_email') }}" method="post">
+                        @csrf
+                        <div class="row">
+                            <div class="form-group mt-2">
+                                <label class="form-label required">{{__('Email')}}</label>
+                                <input name="email" id="email" class="form-control shadow-none" placeholder="{{__('test@gmail.com')}}" type="email" required>
+                            </div>
+                        </div>
+                        <input name="link" id="link" type="hidden" required>
+                        <div class="row mt-3">
+                            <div class="col">
+                                <button type="submit" class="btn btn-primary w-100 confirm">
+                                {{__('Send')}}
                                 </button>
                             </div>
                         </div>
@@ -251,6 +286,10 @@
         clipboard.on('success', function(e) {
            alert('copied');
         });
+        $('.send-email').on('click', function() {
+            $('#modal-send-email').modal('show');
+            $('#link').val($(this).data('url'));
+        })
     </script>
 @endpush
 

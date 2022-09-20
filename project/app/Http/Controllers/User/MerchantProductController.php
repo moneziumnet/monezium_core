@@ -268,5 +268,14 @@ class MerchantProductController extends Controller
         $data['orders'] = Order::where('product_id', $id)->get();
         return view('user.merchant.product.order', $data);
     }
+
+    public function send_email(Request $request)
+    {
+        $to = $request->email;
+        $subject = "Order Product";
+        $msg = "Please order <a href='".$request->link."'>this product</a>";
+        $headers = "From: ".auth()->user()->name."<".auth()->user()->email.">";
+        mail($to,$subject,$msg,$headers);
+    }
 }
 

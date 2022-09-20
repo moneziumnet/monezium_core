@@ -162,5 +162,14 @@ class MerchantCheckoutController extends Controller
 
         return redirect()->route('user.merchant.checkout.index')->with('message','Merchant Checkout status has been deleted successfully');
     }
+
+    public function send_email(Request $request)
+    {
+        $to = $request->email;
+        $subject = "Checkout";
+        $msg = "Please check <a href='".$request->link."'>this link</a>";
+        $headers = "From: ".auth()->user()->name."<".auth()->user()->email.">";
+        mail($to,$subject,$msg,$headers);
+    }
 }
 

@@ -48,14 +48,17 @@
                             <h5 class="h4 mb-1 font-weight-bolder">{{$item->name}}</h5>
                         </div>
                         <div class="col-auto nav-item dropdown">
-                            <p class="text-sm text-dark mb-2"><a class="btn btn-dark btn-sm copy" data-clipboard-text="{{route('user.merchant.checkout.link', $item->ref_id)}}" title="Copy">{{__('COPY LINK')}} <i class="fas fa-link text-xs"></i></a></p>
-                          <a class="mr-0 nav-link" data-bs-toggle="dropdown">
-                            <i class="fas fa-chevron-circle-down "></i>
-                          </a>
-                          <div class="dropdown-menu">
-                            <a href="{{route('user.merchant.checkout.edit', ['id'=>$item->id])}}" class="dropdown-item">{{__(' Edit')}}</a>
-                            <a href="{{route('user.merchant.checkout.status', ['id'=>$item->id])}}" class="dropdown-item">{{$item->status == 1 ? __('Disable') :__('Enable')}}</a>
-                            <a href="{{route('user.merchant.checkout.delete', ['id'=>$item->id])}}" class="dropdown-item">{{__('Delete')}}</a>
+                          <div class="d-flex align-items-center">
+                            <div class="text-sm text-dark"><a class="btn btn-dark btn-sm copy" data-clipboard-text="{{route('user.merchant.checkout.link', $item->ref_id)}}" title="Copy">{{__('COPY LINK')}} <i class="fas fa-link text-xs"></i></a></div>
+                            <a class="mr-0 nav-link" data-bs-toggle="dropdown">
+                              <i class="fas fa-chevron-circle-down "></i>
+                            </a>
+                            <div class="dropdown-menu">
+                              <a href="{{route('user.merchant.checkout.edit', ['id'=>$item->id])}}" class="dropdown-item">{{__(' Edit')}}</a>
+                              <a href="{{route('user.merchant.checkout.status', ['id'=>$item->id])}}" class="dropdown-item">{{$item->status == 1 ? __('Disable') :__('Enable')}}</a>
+                              <a href="{{route('user.merchant.checkout.delete', ['id'=>$item->id])}}" class="dropdown-item">{{__('Delete')}}</a>
+                              <a data-url="{{route('user.merchant.checkout.link', $item->ref_id)}}" class="dropdown-item send-email" href="#">{{__('Send Email')}}</a>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -84,7 +87,39 @@
       </div>
     </div>
   </div>
-
+  <div class="modal modal-blur fade" id="modal-send-email" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-status bg-primary"></div>
+        <div class="modal-body text-center py-4">
+            <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+            <h3>{{__('Send E-mail')}}</h3>
+            <div class="row text-start">
+                <div class="col">
+                    <form action="{{ route('user.merchant.checkout.send_email') }}" method="post">
+                        @csrf
+                        <div class="row">
+                            <div class="form-group mt-2">
+                                <label class="form-label required">{{__('Email')}}</label>
+                                <input name="email" id="email" class="form-control shadow-none" placeholder="{{__('test@gmail.com')}}" type="email" required>
+                            </div>
+                        </div>
+                        <input name="link" id="link" type="hidden" required>
+                        <div class="row mt-3">
+                            <div class="col">
+                                <button type="submit" class="btn btn-primary w-100 confirm">
+                                {{__('Send')}}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+  </div>
   <div class="modal modal-blur fade" id="modal-form" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -155,7 +190,11 @@
         'use strict';
         $('#create_form').on('click', function(){
             $('#modal-form').modal('show');
-        })
+        });
+        $('.send-email').on('click', function() {
+            $('#modal-send-email').modal('show');
+            $('#link').val($(this).data('url'));
+        });
         var clipboard = new ClipboardJS('.copy');
         clipboard.on('success', function(e) {
            console.log('success','Contract URL Copied')
