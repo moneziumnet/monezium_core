@@ -386,16 +386,16 @@ class ManageInvoiceController extends Controller
         return view('user.invoice.invoice',$data);
     }
 
-    public function sendToMail($id)
+    public function sendToMail(Request $request)
     {
-        $invoice = Invoice::findOrFail($id);
+        $invoice = Invoice::findOrFail($request->invoice_id);
         $currency = $invoice->currency;
         $amount = amount($invoice->final_amount,$currency->type,3);
         $route = route('invoice.view',encrypt($invoice->number));
 
         email([
 
-            'email'   => $invoice->email,
+            'email'   => $request->email,
             "subject" => 'Invoice Payment',
             'message' => "Hello"." $invoice->invoice_to,<br/></br>".
 

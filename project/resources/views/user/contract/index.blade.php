@@ -113,7 +113,7 @@
                                             <a href="javascript:void(0)" data-route="{{route('user.contract.delete',$item->id)}}" class="btn btn-dark btn-sm delete" data-bs-toggle="tooltip" data-bs-original-title="@lang('delete')"><i class="fas fa-eraser"></i></a>
                                             <a href="{{route('user.contract.aoa',$item->id)}}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-original-title="@lang('Manage AoA(Act of Acceptance)')"><i class="fas fa-file-contract"></i></a>
                                             <a href="javascript:void(0)" class="btn btn-secondary btn-sm copy" data-clipboard-text="{{route('contract.view',['id' => encrypt($item->id), 'role' => encrypt('contractor')])}}" title="{{__('Copy Contract URL')}}"><i class="fas fa-copy"></i></a>
-                                            <a href="javascript:void(0)" data-route="{{route('user.contract.send.mail',$item->id)}}" class="btn btn-dark btn-sm send_email" data-bs-toggle="tooltip" data-bs-original-title="@lang('Send Email')"><i class="fas fa-mail-bulk"></i></a>
+                                            <a href="javascript:void(0)" data-email="{{$item->contractor->email}}" data-id="{{$item->id}}" class="btn btn-dark btn-sm send_email" data-bs-toggle="tooltip" data-bs-original-title="@lang('Send Email')"><i class="fas fa-mail-bulk"></i></a>
 
                                         </div>
                                       </td>
@@ -167,24 +167,29 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         <div class="modal-status bg-primary"></div>
         <div class="modal-body text-center py-4">
-            <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
-            <h3>{{__('Do you want to send to email?')}}</h3>
-        </div>
-        <div class="modal-footer">
-            <div class="w-100">
-                <div class="row">
-                <div class="col"><a href="#" class="btn w-100" data-bs-dismiss="modal">
-                    {{__('Cancel')}}
-                    </a></div>
-                <div class="col">
-                    <form action="" method="get">
-                        <button type="submit" class="btn btn-primary w-100 confirm">
-                        {{__('Confirm')}}
-                        </button>
-                    </form>
-                </div>
-                </div>
-            </div>
+          <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+          <h3>{{__('Send E-mail')}}</h3>
+          <div class="row text-start">
+              <div class="col">
+                  <form action="{{ route('user.contract.send.mail') }}" method="post">
+                      @csrf
+                      <div class="row">
+                          <div class="form-group mt-2">
+                              <label class="form-label required">{{__('Email')}}</label>
+                              <input name="email" id="email" class="form-control shadow-none" placeholder="{{__('test@gmail.com')}}" type="email" required>
+                          </div>
+                      </div>
+                      <input name="contract_id" id="contract_id" type="hidden" required>
+                      <div class="row mt-3">
+                          <div class="col">
+                              <button type="submit" class="btn btn-primary w-100 confirm">
+                              {{__('Send')}}
+                              </button>
+                          </div>
+                      </div>
+                  </form>
+              </div>
+          </div>
         </div>
     </div>
     </div>
@@ -209,8 +214,9 @@
         })
 
         $('.send_email').on('click',function() {
-            $('#modal-success-mail').find('form').attr('action',$(this).data('route'))
-            $('#modal-success-mail').modal('show')
+            $('#modal-success-mail').modal('show');
+            $('#modal-success-mail #email').val($(this).data('email'));
+            $('#modal-success-mail #contract_id').val($(this).data('id'));
         })
     </script>
 

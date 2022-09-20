@@ -214,14 +214,14 @@ class UserContractManageController extends Controller
         return back()->with('message', 'You have created new beneficiary successfully, please choose beneficiary list.');
     }
 
-    public function sendToMail($id)
+    public function sendToMail(Request $request)
     {
-        $contract = Contract::findOrFail($id);
+        $contract = Contract::findOrFail($request->contract_id);
         $gs = Generalsetting::first();
 
         email([
 
-            'email'   => $contract->contractor->email,
+            'email'   => $request->email,
             "subject" => 'New Contract from '.$gs->from_name,
             'message' => "Hello". $contract->contractor->name.",<br/></br>".
 

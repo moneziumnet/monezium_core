@@ -129,7 +129,7 @@
                                           @endif
 
                                           <a href="javascript:void(0)" class="btn btn-secondary btn-sm copy" data-clipboard-text="{{route('invoice.view',encrypt($item->number))}}" title="{{__('Copy Invoice URL')}}"><i class="fas fa-copy"></i></a>
-                                          <a href="javascript:void(0)" data-route="{{route('user.invoice.send.mail',$item->id)}}" class="btn btn-dark btn-sm send_email" data-bs-toggle="tooltip" data-bs-original-title="@lang('Send Email')"><i class="fas fa-mail-bulk"></i></a>
+                                          <a href="javascript:void(0)" data-email="{{$item->email}}" data-id="{{$item->id}}" class="btn btn-dark btn-sm send_email"><i class="fas fa-mail-bulk"></i></a>
 
                                         </div>
                                       </td>
@@ -153,24 +153,29 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         <div class="modal-status bg-primary"></div>
         <div class="modal-body text-center py-4">
-            <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
-            <h3>{{__('Do you want to send to email?')}}</h3>
-        </div>
-        <div class="modal-footer">
-            <div class="w-100">
-                <div class="row">
-                <div class="col"><a href="#" class="btn w-100" data-bs-dismiss="modal">
-                    {{__('Cancel')}}
-                    </a></div>
-                <div class="col">
-                    <form action="" method="get">
-                        <button type="submit" class="btn btn-primary w-100 confirm">
-                        {{__('Confirm')}}
-                        </button>
-                    </form>
-                </div>
-                </div>
-            </div>
+          <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+          <h3>{{__('Send E-mail')}}</h3>
+          <div class="row text-start">
+              <div class="col">
+                  <form action="{{ route('user.invoice.send.mail') }}" method="post">
+                      @csrf
+                      <div class="row">
+                          <div class="form-group mt-2">
+                              <label class="form-label required">{{__('Email')}}</label>
+                              <input name="email" id="email" class="form-control shadow-none" placeholder="{{__('test@gmail.com')}}" type="email" required>
+                          </div>
+                      </div>
+                      <input name="invoice_id" id="invoice_id" type="hidden" required>
+                      <div class="row mt-3">
+                          <div class="col">
+                              <button type="submit" class="btn btn-primary w-100 confirm">
+                              {{__('Send')}}
+                              </button>
+                          </div>
+                      </div>
+                  </form>
+              </div>
+          </div>
         </div>
     </div>
     </div>
@@ -226,8 +231,10 @@
             })
         })
         $('.send_email').on('click',function() {
-            $('#modal-success').find('form').attr('action',$(this).data('route'))
-            $('#modal-success').modal('show')
+            // $('#modal-success').find('form').attr('action',$(this).data('route'))
+            $('#modal-success').modal('show');
+            $('#modal-success #email').val($(this).data('email'));
+            $('#modal-success #invoice_id').val($(this).data('id'));
         })
 
         var clipboard = new ClipboardJS('.copy');

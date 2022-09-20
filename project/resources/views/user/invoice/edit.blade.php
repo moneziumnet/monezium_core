@@ -30,8 +30,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header justify-content-end">
-                    <a href="{{route('user.invoice.send.mail',$invoice->id)}}" class="btn btn-primary"><i class="fab fa-telegram-plane me-1"></i> {{__('Send To Email')}}</a>
-
+                    <button data-email="{{$invoice->email}}" data-id="{{$invoice->id}}" class="btn btn-primary send-email"><i class="fab fa-telegram-plane me-1"></i> {{__('Send To Email')}}</button>
                     <a href="{{route('user.invoice.cancel',$invoice->id)}}" class="btn btn-danger ms-2"><i class="fas fa-ban me-1"></i> {{__('Cancel Invoice')}}</a>
                 </div>
             <div class="card-body">
@@ -198,7 +197,39 @@
         </div>
     </div>
 </div>
-
+<div class="modal modal-blur fade" id="modal-send-email" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-status bg-primary"></div>
+        <div class="modal-body text-center py-4">
+            <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+            <h3>{{__('Send E-mail')}}</h3>
+            <div class="row text-start">
+                <div class="col">
+                    <form action="{{ route('user.invoice.send.mail') }}" method="post">
+                        @csrf
+                        <div class="row">
+                            <div class="form-group mt-2">
+                                <label class="form-label required">{{__('Email')}}</label>
+                                <input name="email" id="email" class="form-control shadow-none" placeholder="{{__('test@gmail.com')}}" type="email" required>
+                            </div>
+                        </div>
+                        <input name="invoice_id" id="invoice_id" type="hidden" required>
+                        <div class="row mt-3">
+                            <div class="col">
+                                <button type="submit" class="btn btn-primary w-100 confirm">
+                                {{__('Send')}}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
 <div class="modal modal-blur fade" id="modal-success-tax" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -449,7 +480,11 @@
                 });
             });
         });
-
+        $('.send-email').on('click', function() {
+            $('#modal-send-email').modal('show');
+            $('#modal-send-email #email').val($(this).data('email'));
+            $('#modal-send-email #invoice_id').val($(this).data('id'));
+        });
 
     </script>
 @endpush

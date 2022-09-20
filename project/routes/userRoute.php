@@ -293,7 +293,7 @@ Route::prefix('user')->group(function() {
       Route::get('invoices-edit/{id}',   [ManageInvoiceController::class,'edit'])->name('user.invoice.edit');
       Route::post('invoices-update/{id}',   [ManageInvoiceController::class,'update'])->name('user.invoice.update');
       Route::get('invoice-cancel/{id}',   [ManageInvoiceController::class,'cancel'])->name('user.invoice.cancel');
-      Route::get('invoice/send-mail/{id}',   [ManageInvoiceController::class,'sendToMail'])->name('user.invoice.send.mail');
+      Route::post('invoice/send-mail',   [ManageInvoiceController::class,'sendToMail'])->name('user.invoice.send.mail');
       Route::get('invoice/view/{number}',   [ManageInvoiceController::class,'view'])->name('user.invoice.view');
       Route::get('invoice/incoming/view/{number}',   [ManageInvoiceController::class,'view'])->name('user.invoice.incoming.view');
 
@@ -315,7 +315,7 @@ Route::prefix('user')->group(function() {
       Route::post('contract/update/{id}',   [UserContractManageController::class,'update'])->name('user.contract.update');
       Route::get('contract/delete/{id}',   [UserContractManageController::class,'delete'])->name('user.contract.delete');
       Route::get('contract/pdf/{id}',   [UserContractManageController::class,'export_pdf'])->name('user.contract-pdf');
-      Route::get('contract/send-mail/{id}',   [UserContractManageController::class,'sendToMail'])->name('user.contract.send.mail');
+      Route::post('contract/send-mail',   [UserContractManageController::class,'sendToMail'])->name('user.contract.send.mail');
       Route::get('contract/aoa/{id}',   [UserContractManageController::class,'aoa_index'])->name('user.contract.aoa');
       Route::get('contract/aoa/view/{id}',   [UserContractManageController::class,'aoa_view'])->name('user.contract.aoa.view');
       Route::post('contract/aoa/sign/{id}',   [UserContractManageController::class,'aoa_sign'])->name('user.aoa.sign');
