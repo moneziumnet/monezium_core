@@ -65,15 +65,15 @@
 
                                           <td data-label="{{ __('Details') }}">
                                             <div class="btn-list">
-                                                <a href="{{route('user.beneficiaries.show',$data->id)}}" class="btn btn-primary">
+                                                <button data-id="{{$data->id}}" class="btn btn-sm btn-primary beneficiary-details">
                                                   {{__('Details')}}
-                                                </a>
+                                                </button>
                                             </div>
                                           </td>
 
                                           <td data-label="{{ __('Edit') }}">
                                             <div class="btn-list">
-                                                <a href="{{route('user.beneficiaries.edit',$data->id)}}" class="btn btn-primary">
+                                                <a href="{{route('user.beneficiaries.edit',$data->id)}}" class="btn btn-sm btn-primary">
                                                   {{__('Edit')}}
                                                 </a>
                                             </div>
@@ -81,7 +81,7 @@
 
                                           <td data-label="{{ __('Action') }}">
                                             <div class="btn-list">
-                                                <a href="{{route('user.other.send',$data->id)}}" class="btn btn-primary">
+                                                <a href="{{route('user.other.send',$data->id)}}" class="btn btn-sm btn-primary">
                                                   {{__('Send')}}
                                                 </a>
                                             </div>
@@ -208,6 +208,33 @@
   </div>
 </div>
 
+<div class="modal modal-blur fade" id="modal-details-2" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+      <div class="modal-content">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-status bg-primary"></div>
+          <div class="modal-body text-center py-4">
+              <i class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+              <h3>@lang('Beneficiary Details')</h3>
+              <div class="beneficiary-details-info">
+
+              </div>
+          </div>
+          <div class="modal-footer">
+              <div class="w-100">
+                  <div class="row">
+                      <div class="col">
+                          <a href="#" class="btn w-100" data-bs-dismiss="modal">
+                              @lang('Close')
+                          </a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
 @endsection
 
 @push('js')
@@ -219,6 +246,14 @@ $('.details').on('click', function() {
     $.get(url,function (res) {
         $('.transfer-log-details').html(res)
         $('#modal-details').modal('show')
+    })
+})
+
+$('.beneficiary-details').on('click', function() {
+    var url = "{{url('user/beneficiaries/show/')}}"+'/'+$(this).data('id')
+    $.get(url,function (res) {
+        $('.beneficiary-details-info').html(res);
+        $('#modal-details-2').modal('show');
     })
 })
 </script>
