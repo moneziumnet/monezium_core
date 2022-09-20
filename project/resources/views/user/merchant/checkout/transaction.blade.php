@@ -90,10 +90,10 @@
 								</td>
                                 <td data-label="@lang('Action')">
                                     @php
-                                        if (json_decode($data->data)->status == 1) {
+                                        if (json_decode($data->data)->status == 'Completed') {
                                         $status  = __('Completed');
-                                        $css = 'btn-primary';
-                                        } elseif (json_decode($data->data)->status == 2) {
+                                        $css = 'btn-success';
+                                        } elseif (json_decode($data->data)->status == 'Rejected') {
                                         $status  = __('Rejected');
                                         $css = 'btn-danger';
                                         } else {
@@ -101,7 +101,12 @@
                                         $css = 'btn-primary';
                                         }
                                     @endphp
+                                    @if ($status == 'Pending')
                                     <a class="btn {{$css}} btn-sm status" data-bs-toggle="modal" data-bs-target="#modal-success-confirm{{$data->id}}" data-data="{{json_decode($data->data)->status}}">{{$status}}</a>
+                                    @else
+                                    <a class="btn {{$css}} btn-sm status" >{{$status}}</a>
+                                    @endif
+
                                     <div class="modal modal-blur fade" id="modal-success-confirm{{$data->id}}" tabindex="-1" role="dialog" aria-hidden="true">
                                         <div class="modal-dialog modal-md modal-dialog-centered" role="document">
                                         <div class="modal-content">
@@ -111,19 +116,19 @@
                                             <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
                                             <h3>@lang('Do you want to update the status?')</h3>
                                             <p class="trx_details"></p>
-                                            <ul class="list-group mt-2">
-                                            </ul>
+                                            {{-- <ul class="list-group mt-2">
+                                            </ul> --}}
                                             </div>
                                             <div class="modal-footer text-center">
                                             <div class="w-100">
                                                 <div class="row justify-content-between">
                                                     <div class="col-md-6">
-                                                        <a href="{{route('user.merchant.checkout.transaction.status', ['id' => $data->id, 'status' => 1])}}" class="btn btn-primary" >
+                                                        <a href="{{route('user.merchant.checkout.transaction.status', ['id' => $data->id, 'status' => 'Completed'])}}" class="btn btn-primary" >
                                                             @lang('Complete')
                                                         </a>
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <a href="{{route('user.merchant.checkout.transaction.status', ['id' => $data->id, 'status' => 2])}}" class="btn btn-danger" >
+                                                        <a href="{{route('user.merchant.checkout.transaction.status', ['id' => $data->id, 'status' => 'Rejected'])}}" class="btn btn-danger" >
                                                             @lang('Reject')
                                                         </a>
                                                     </div>

@@ -113,7 +113,7 @@
 
                           <div class="col-md-6">
                             <div class="form-group">
-                              <label class="form-label">{{__('VAT Number')}}</label>
+                              <label class="form-label">{{__('Stamp')}}</label>
                               <input name="stamp" class="form-control shadow-none" type="file" accept=".png,.jpg">
                             </div>
                           </div>

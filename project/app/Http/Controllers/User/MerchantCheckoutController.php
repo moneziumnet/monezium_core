@@ -76,7 +76,7 @@ class MerchantCheckoutController extends Controller
         $trans->type        = '+';
         $trans->remark      = 'merchant_checkout';
         $trans->details     = trans('Merchant Checkout');
-        $trans->data        = '{"hash":"'.$request->hash.'","status":"0","shop":"'.$check->shop_id.'", "receiver":"'.$user->name.'"}';
+        $trans->data        = '{"hash":"'.$request->hash.'","status":"Pending","shop":"'.$check->shop->name.'", "receiver":"'.$user->name.'"}';
         $trans->save();
         return back()->with('success', 'You have done successfully');
     }
@@ -135,15 +135,15 @@ class MerchantCheckoutController extends Controller
 
         $data = Transaction::findOrFail($id);
         $tran_status = json_decode($data->data,true);
-        if($tran_status['status'] == 1) {
+        if($tran_status['status'] == 'Completed') {
             return redirect()->route('user.merchant.checkout.transactionhistory')->with('warning','Merchant Checkout transaction status already is completed');
         }
-        elseif($tran_status['status'] == 2) {
+        elseif($tran_status['status'] == 'Rejected') {
             return redirect()->route('user.merchant.checkout.transactionhistory')->with('warning','Merchant Checkout transaction status already is rejected');
         }
         else {
             $tran_status['status'] = $status;
-            if ($status == 1) {
+            if ($status == 'Completed') {
                 $cryptowallet = MerchantWallet::where('merchant_id', $data->user_id)->where('shop_id', $tran_status['shop'])->where('currency_id', $data->currency_id)->first();
                 $cryptowallet->balance += $data->amount;
                 $cryptowallet->save();
