@@ -55,7 +55,7 @@ class UserContractManageController extends Controller
         foreach ($information as $title => $text) {
             foreach (json_decode($data->pattern, True) as $key => $value) {
                 if(strpos($text, "{".$key."}" ) != false) {
-                    $information->$title = preg_replace("/{".$key."}/", $value ,$text);
+                    $information->$title = preg_replace("/{".$key."}/", $value ,$information->$title);
                 }
             }
         }
@@ -82,7 +82,7 @@ class UserContractManageController extends Controller
         foreach ($information as $title => $text) {
             foreach (json_decode($data->pattern, True) as $key => $value) {
                 if(strpos($text, "{".$key."}" ) != false) {
-                    $information->$title = preg_replace("/{".$key."}/", $value ,$text);
+                    $information->$title = preg_replace("/{".$key."}/", $value ,$information->$title);
                 }
             }
         }
@@ -173,7 +173,7 @@ class UserContractManageController extends Controller
         foreach ($information as $title => $text) {
             foreach (json_decode($contract->pattern, True) as $key => $value) {
                 if(strpos($text, "{".$key."}" ) != false) {
-                    $information->$title = preg_replace("/{".$key."}/", $value ,$text);
+                    $information->$title = preg_replace("/{".$key."}/", $value ,$information->$title);
                 }
             }
         }
@@ -191,7 +191,7 @@ class UserContractManageController extends Controller
         foreach ($information as $title => $text) {
             foreach (json_decode($contract->pattern, True) as $key => $value) {
                 if(strpos($text, "{".$key."}" ) != false) {
-                    $information->$title = preg_replace("/{".$key."}/", $value ,$text);
+                    $information->$title = preg_replace("/{".$key."}/", $value ,$information->$title);
                 }
             }
         }
@@ -285,7 +285,7 @@ class UserContractManageController extends Controller
         foreach ($information as $title => $text) {
             foreach (json_decode($data->pattern, True) as $key => $value) {
                 if(strpos($text, "{".$key."}" ) != false) {
-                    $information->$title = preg_replace("/{".$key."}/", $value ,$text);
+                    $information->$title = preg_replace("/{".$key."}/", $value ,$information->$title);
                 }
             }
         }
@@ -311,7 +311,7 @@ class UserContractManageController extends Controller
         foreach ($information as $title => $text) {
             foreach (json_decode($data->pattern, True) as $key => $value) {
                 if(strpos($text, "{".$key."}" ) != false) {
-                    $information->$title = preg_replace("/{".$key."}/", $value ,$text);
+                    $information->$title = preg_replace("/{".$key."}/", $value ,$information->$title);
                 }
             }
         }

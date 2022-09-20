@@ -49,7 +49,6 @@
                                   <th>{{__('Contractor')}}</th>
                                   <th>{{__('Beneficiary')}}</th>
                                   <th>{{__('Title')}}</th>
-                                  <th>{{__('Description')}}</th>
                                   <th>{{__('Status')}}</th>
                                   <th>{{__('Action')}}</th>
                                 </tr>
@@ -79,16 +78,6 @@
                                       <td data-label="{{ __('Title') }}">
                                         <div>
                                           {{$item->title}}
-                                        </div>
-                                      </td>
-                                      <td data-label="{{ __('Description') }}">
-                                        <div>
-                                            @if (strlen($item->description) > 20)
-                                                {{(substr($item->description, 0, 10)).' ...'}}
-                                            @else
-                                                {{($item->description)}}
-                                            @endif
-
                                         </div>
                                       </td>
 
