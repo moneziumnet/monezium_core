@@ -116,6 +116,7 @@
             <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank Swift')<span id="bank_swift"  style="margin-left: 60px"></span></li>
             <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Amount')<span id="amount"  style="margin-left: 60px"></span></li>
             <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Description')<span id="bank_details"  style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Payment Deposit NO.')<span id="deposit_no"  style="margin-left: 60px"></span></li>
         </ul>
         </div>
     </div>
@@ -134,10 +135,10 @@
           $('#bank_address').text($(this).data('subbank').address);
           $('#bank_iban').text($(this).data('data').iban);
           $('#bank_swift').text($(this).data('data').swift);
-          $('#bank_details').text($(this).data('deposit').details + '\n' + 'Payment Deposit NO. :' + $(this).data('deposit').deposit_number);
+          $('#bank_details').text($(this).data('deposit').details);
+          $('#deposit_no').text($(this).data('deposit').deposit_number);
           $('#amount').text($('#li_amount').text());
           $('#modal-success').modal('show');
-
       })
     </script>
 @endpush
