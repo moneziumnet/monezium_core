@@ -173,27 +173,7 @@
                 <a class="dropdown-item" href="{{route('user.merchant.shop.index')}}">
                     {{__('Merchant Shop')}}
                 </a>
-
-                <a class="dropdown-item" href="{{route('user.merchant.product.index')}}">
-                    {{__('Merchant Product')}}
-                </a>
-
-                <a class="dropdown-item" href="{{route('user.merchant.product.order')}}">
-                    {{__('Merchant Product Order')}}
-                </a>
-
-                <a class="dropdown-item" href="{{route('user.merchant.checkout.index')}}">
-                {{__('Merchant Checkout')}}
-                </a>
-
-                <a class="dropdown-item" href="{{route('user.merchant.checkout.transactionhistory')}}">
-                    {{__('Merchant Transaciton')}}
-                </a>
-
-                <a class="dropdown-item" href="{{route('user.merchant.campaign.index')}}">
-                    {{__('Merchant Campaign')}}
-                </a>
-
+                
                 <a class="dropdown-item" href="{{route('user.merchant.send.money.create')}}">
                     {{__('Internal Payment')}}
                 </a>
