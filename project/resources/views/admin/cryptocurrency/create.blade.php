@@ -35,8 +35,8 @@
           </div>
 
           <div class="form-group">
-            <label for="address">{{ __('Address') }}</label>
-            <input type="text" class="form-control" name="address" placeholder="{{ __('Enter Crypto Address') }}" required="" value="">
+            <label for="keyword">{{ __('Keyword') }}</label>
+            <input type="text" class="form-control" name="keyword" placeholder="{{ __('Enter Crypto Keyword') }}" required="" value="">
           </div>
 
           <div class="form-group">

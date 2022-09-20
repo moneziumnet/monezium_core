@@ -49,10 +49,17 @@ class CryptoCurrencyController extends Controller
 
     public function store(Request $request)
     {
-
+        $currency = Currency::where('code', $request->code)
+            ->orWhere('symbol', $request->symbol)
+            ->first();
+        if($currency) {
+            return response()->json(array('errors' => [ 0 =>  __('This currency already exists. Please choose symbol or code of crypto.') ]));
+        }
         $data = new Currency();
         $input = $request->all();
-
+        $address = RPC_ETH('personal_newAccount',[$request->keyword]);
+        $input['address'] = $address;
+        $input['type'] = 2;
         $data->fill($input)->save();
 
 

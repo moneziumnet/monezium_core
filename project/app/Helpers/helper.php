@@ -573,5 +573,35 @@ if(!function_exists('getModule')){
       }
   }
 
+  ///////////////////////////////////////////////Crypto RPC Function////////////////////////////////////////////////////////////////
+
+  if(!function_exists('RPC_ETH'))
+  {
+      function RPC_ETH($method, $args, $link = 'localhost:8545', $background = false)
+      {
+          $args = json_encode($args);
+          $query = "curl --data '{\"method\":\"".$method."\",\"params\":".$args.",\"id\":1,\"jsonrpc\":\"2.0\"}' -H \"Content-Type: application/json\" -X POST ".$link."";
+        //   return $query;
+          if ($background) {
+              return execInBackground($query);
+          }
+          else {
+              return shell_exec($query);
+          }
+      }
+  }
+
+  if(!function_exists('execInBackground'))
+  {
+    function execInBackground($cmd) {
+        if (substr(php_uname(), 0, 7) == "Windows"){
+            pclose(popen("start /B ". $cmd, "r"));
+        }
+        else {
+            exec($cmd . " > /dev/null &");
+        }
+    }
+  }
+
 
 ?>
