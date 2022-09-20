@@ -111,7 +111,7 @@
                                 <div class="modal-content">
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     <div class="modal-status bg-primary"></div>
-                                    <div class="modal-bodypy-4">
+                                    <div class="modal-body py-4">
                                         <div class="text-center">
 
                                             <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>

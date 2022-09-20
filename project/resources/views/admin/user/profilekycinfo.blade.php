@@ -28,7 +28,7 @@
                         <tr>
                             <th>{{ __("Name") }}</th>
                             <th>{{ __("Email") }}</th>
-                            <th>{{__('Kyc')}}</th>
+                            <th>{{__('KYC')}}</th>
                             <th>{{ __("KYC Info") }}</th>
                         </tr>
                         </thead>

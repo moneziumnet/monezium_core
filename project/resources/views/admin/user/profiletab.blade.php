@@ -29,7 +29,7 @@
         </li>
         @if(getModule('KYC Management'))
             <li class="nav-item">
-                <a class="nav-link {{menu('admin.user.kycinfo')}}" id="modules" href="{{route('admin.user.kycinfo',$data->id) }}" role="button" >Kyc Info</a>
+                <a class="nav-link {{menu('admin.user.kycinfo')}}" id="modules" href="{{route('admin.user.kycinfo',$data->id) }}" role="button" >AML/KYC</a>
             </li>
         @endif
     </ul>
