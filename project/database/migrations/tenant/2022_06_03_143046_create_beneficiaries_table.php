@@ -21,7 +21,6 @@ class CreateBeneficiariesTable extends Migration
             $table->string('bank_address')->nullable();
             $table->string('swift_bic')->nullable();
             $table->string('account_iban')->nullable();
-            $table->text('details')->nullable();
             $table->string('name')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();

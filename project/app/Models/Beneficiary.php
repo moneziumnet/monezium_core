@@ -16,7 +16,6 @@ class Beneficiary extends Model
         'bank_address',
         'swift_bic',
         'account_iban',
-        'details',
         'name',
         'email',
         'phone',

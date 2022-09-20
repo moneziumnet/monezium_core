@@ -59,21 +59,6 @@
                               <td class="45%" width="45%">{{ $data->account_iban }}</td>
                             </tr>
 
-                            @foreach (json_decode($data->details,true) as $key=>$value)
-                              @if ($value[1] == 'file')
-                              <tr>
-                                  <th width="45%">{{$key}}</th>
-                                  <td width="10%">:</td>
-                                  <td width="45%"><a href="{{asset('assets/images/'.$value[0])}}" download=""><img src="{{asset('assets/images/'.$value[0])}}" class="img-thumbnail"></a></td>
-                              </tr>
-                              @else
-                                  <tr>
-                                      <th width="45%">{{$key}}</th>
-                                      <td width="10%">:</td>
-                                      <td width="45%">{{ $value[0] }}</td>
-                                  </tr>
-                              @endif
-                          @endforeach
 
                           </tbody>
                       </table>
