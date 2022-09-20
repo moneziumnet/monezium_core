@@ -53,6 +53,13 @@
                             </div>
 
                             <div class="form-group mb-3">
+                                <label class="form-label">{{ __('Address') }}</label>
+                                <input name="address" id="address" class="form-control shadow-none"
+                                    placeholder="{{ __('Address') }}" type="text"
+                                    value="{{ $item->currency->address }}" required>
+                            </div>
+
+                            <div class="form-group mb-3">
                                 <label class="form-label required">{{ __('Price') }}</label>
                                 <input name="price" id="price" class="form-control shadow-none"
                                     placeholder="{{ __('Price') }}" type="number" step="any"

@@ -168,6 +168,7 @@ class UserICOController extends Controller
             $currency = new Currency();
             $currency->symbol  = $request->symbol;
             $currency->code  = $request->code;
+            $currency->address  = $request->address;
             $currency->curr_name = $request->name;
             $currency->rate = $request->price == 0 ? 0 : 1 / $request->price;
             $currency->type  = 2;
@@ -214,6 +215,7 @@ class UserICOController extends Controller
                 $currency = new Currency();
             $currency->symbol  = $request->symbol;
             $currency->code  = $request->code;
+            $currency->address  = $request->address;
             $currency->curr_name = $request->name;
             $currency->rate = $request->price == 0 ? 0 : 1 / $request->price;
             $currency->type  = 2;
