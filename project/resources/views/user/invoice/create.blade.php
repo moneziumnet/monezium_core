@@ -90,9 +90,8 @@
                             </select>
                         </div>
                     </div>
-                    <div class="row" id="contract_part" class="display: none!important;">
-
-                        <div class="col-md-6 mb-3">
+                    <div class="row" >
+                        <div class="col-md-6 mb-3" id="contract_part" style="display: none!important;">
                             <div class="form-label">{{__('Select Contract')}}</div>
                             <select class="form-select shadow-none" name="contract_id" id="contract">
                                 <option value="" selected>{{__('Select')}}</option>
@@ -101,16 +100,15 @@
                                 @endforeach
                             </select>
                         </div>
-
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-6 mb-3" id="aoa_part" style="display: none!important;">
                             <div class="form-label">{{__('Select Contract AOA')}}</div>
                             <select class="form-select shadow-none" name="aoa_id" id="aoa" >
                                 <option value="" selected>{{__('Select')}}</option>
                             </select>
                         </div>
                     </div>
-                    @endif
                     <hr>
+                    @endif
                     <div class="row">
                         <div class="col-md-5 mb-3">
                             <div class="form-label">{{__('Item name')}}</div>
@@ -334,11 +332,22 @@
 
         $('#product').on('click', function() {
             if($('#product').val()) {
-                document.getElementById("contract_part").style.display = "flex";
+                document.getElementById("contract_part").style.display = "block";
             }
             else {
                 document.getElementById("contract_part").style.display = "none";
+                document.getElementById("aoa_part").style.display = "none";
                 $('#contract').val('');
+                $('#aoa').val('');
+            }
+        })
+
+        $('#contract').on('click', function() {
+            if($('#contract').val()) {
+                document.getElementById("aoa_part").style.display = "block";
+            }
+            else {
+                document.getElementById("aoa_part").style.display = "none";
                 $('#aoa').val('');
             }
         })
@@ -383,7 +392,7 @@
         })
 
         $(document).ready(function(){
-            document.getElementById("contract_part").style.display = "none";
+            // document.getElementById("contract_part").style.display = "none";
 
             $(document).on('submit','#customerSubmit',function(e){
                 e.preventDefault();
