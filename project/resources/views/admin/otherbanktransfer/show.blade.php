@@ -92,7 +92,17 @@
                                     <tr>
                                         <th width="45%">{{__('Document')}}</th>
                                         <td width="10%">:</td>
-                                        <td width="45%"><a href ="{{asset('assets/doc/'.$data->document)}}" attributes-list download > Download Document </a>  </td>
+                                        <td width="45%">
+                                            @php
+                                                $arr_file_name = explode('.', $data->document);
+                                                $extension = $arr_file_name[count($arr_file_name) - 1];
+                                            @endphp
+                                            @if(in_array($extension, array('doc','docx')))
+                                            <a href ="https://docs.google.com/gview?url={{asset('assets/doc/'.$data->document)}}">{{$data->document}}</a>
+                                            @else
+                                            <a href ="{{asset('assets/doc/'.$data->document)}}" >{{$data->document}}</a>
+                                            @endif
+                                        </td>
                                     </tr>
                                 @endif
 
