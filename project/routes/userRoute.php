@@ -366,6 +366,7 @@ Route::prefix('user')->group(function() {
         Route::post('/other-bank/store', [UserOtherBankController::class,'store'])->name('user.other.send.store');
 
         Route::get('/beneficiaries', [BeneficiaryController::class,'index'])->name('user.beneficiaries.index');
+        Route::get('/beneficiaries/details/{id}', [BeneficiaryController::class,'details'])->name('user.beneficiaries.details');
         Route::get('/beneficiaries/create', [BeneficiaryController::class,'create'])->name('user.beneficiaries.create');
         Route::get('/beneficiaries/edit/{id}', [BeneficiaryController::class,'edit'])->name('user.beneficiaries.edit');
         Route::post('/beneficiaries/store', [BeneficiaryController::class,'store'])->name('user.beneficiaries.store');

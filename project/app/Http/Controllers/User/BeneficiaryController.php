@@ -29,6 +29,11 @@ class BeneficiaryController extends Controller
         return view('user.beneficiaries.create',$data);
     }
 
+    public function details($id) {
+        $data['item'] = BalanceTransfer::findOrFail($id);
+        return view('user.beneficiaries.transfer_detail',$data);
+    }
+
     public function store(Request $request){
         $request->validate([
             'name' => 'required',

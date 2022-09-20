@@ -129,6 +129,7 @@
                                     <th>{{ __('Type') }}</th>
                                     <th>{{ __('Amount') }}</th>
                                     <th>{{ __('Status') }}</th>
+                                    <th>{{ __('Details') }}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -162,6 +163,11 @@
                                               <span class="badge bg-warning">{{ __('Pending')}}</span>
                                             @endif
                                           </td>
+                                          <td>
+                                            <button class="btn btn-primary btn-sm details" data-id="{{ $data->id }}">
+                                              {{ __('Details') }}
+                                            </button>
+                                          </td>
                                       </tr>
                                   @endforeach
                                 </tbody>
@@ -175,10 +181,46 @@
     </div>
 </div>
 
+<div class="modal modal-blur fade" id="modal-details" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+      <div class="modal-content">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-status bg-primary"></div>
+          <div class="modal-body text-center py-4">
+              <i class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+              <h3>@lang('Transfer Log Details')</h3>
+              <div class="transfer-log-details">
+
+              </div>
+          </div>
+          <div class="modal-footer">
+              <div class="w-100">
+                  <div class="row">
+                      <div class="col">
+                          <a href="#" class="btn w-100" data-bs-dismiss="modal">
+                              @lang('Close')
+                          </a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
 
 @endsection
 
 @push('js')
+<script>
+'use strict';
 
+$('.details').on('click', function() {
+    var url = "{{url('user/beneficiaries/details/')}}"+'/'+$(this).data('id')
+    $.get(url,function (res) {
+        $('.transfer-log-details').html(res)
+        $('#modal-details').modal('show')
+    })
+})
+</script>
 @endpush
 

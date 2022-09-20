@@ -178,7 +178,7 @@ class OtherBankController extends Controller
             // $currency = defaultCurr();
             // user_wallet_decrement(auth()->id(),$currency->id,$finalAmount);
 
-            return redirect()->back()->with('success','Money Send successfully.');
+            return redirect(route('user.beneficiaries.index'))->with('message','Money Send successfully.');
 
         }
 

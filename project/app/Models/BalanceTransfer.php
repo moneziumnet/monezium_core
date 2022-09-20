@@ -40,6 +40,10 @@ class BalanceTransfer extends Model
         return $this->belongsTo(Beneficiary::class,'beneficiary_id')->withDefault();
     }
 
+    public function currency(){
+        return $this->belongsTo(Currency::class,'currency_id')->withDefault();
+    }
+
     public function subbank(){
         return $this->belongsTo(SubInsBank::class,'subbank')->withDefault();
     }
