@@ -97,7 +97,7 @@
                                                 $arr_file_name = explode('.', $data->document);
                                                 $extension = $arr_file_name[count($arr_file_name) - 1];
                                             @endphp
-                                            @if(in_array($extension, array('doc','docx')))
+                                            @if(in_array($extension, array('doc','docx','xls','xlsx','pdf')))
                                             <a href ="https://docs.google.com/gview?url={{asset('assets/doc/'.$data->document)}}">{{$data->document}}</a>
                                             @else
                                             <a href ="{{asset('assets/doc/'.$data->document)}}" >{{$data->document}}</a>
