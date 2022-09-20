@@ -21,7 +21,7 @@ class UserICOController extends Controller
 
     public function index()
     {
-        $data['ico_tokens'] = IcoToken::orderBy('id', 'desc')->get();
+        $data['ico_tokens'] = IcoToken::orderBy('id', 'desc')->paginate(15);
         return view('user.ico.index', $data);
     }
 

@@ -19,7 +19,7 @@
                                 <h3 class="text-center py-5">{{ __('No ICO Token Data Found') }}</h3>
                             </div>
                         @else
-                            <div class="table-responsive">
+                            <div class="card table-responsive mb-4 p-3">
                                 <table class="table table-vcenter table-mobile-lg card-table">
                                     <thead>
                                         <tr>
@@ -76,6 +76,7 @@
                                     </tbody>
                                 </table>
                             </div>
+                            {{$ico_tokens->links()}}
                         @endif
                     </div>
                 </div>

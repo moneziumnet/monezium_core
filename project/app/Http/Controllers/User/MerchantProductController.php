@@ -259,13 +259,13 @@ class MerchantProductController extends Controller
 
     public function order()
     {
-        $data['orders'] = Order::where('user_id', auth()->id())->get();
+        $data['orders'] = Order::where('user_id', auth()->id())->paginate(15);
         return view('user.merchant.product.order', $data);
     }
 
     public function order_by_product($id)
     {
-        $data['orders'] = Order::where('product_id', $id)->get();
+        $data['orders'] = Order::where('product_id', $id)->paginate(15);
         return view('user.merchant.product.order', $data);
     }
 
