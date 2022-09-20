@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API;
 
 use App\Models\BankPlan;
 use App\Models\Currency;
-use App\Models\OtherBank;
 use App\Models\Beneficiary;
 use App\Models\UserApiCred;
 use App\Models\User;
@@ -32,7 +31,7 @@ class UserClearJunctionController extends Controller
         $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
 
         $user = User::whereId($user_id)->first();
-        
+
 
             $client = new  Client();
             $response = $client->request('post', $this->url.'/v7/gate/payout/bankTransfer/swift?checkOnly=true', [
@@ -123,7 +122,7 @@ class UserClearJunctionController extends Controller
                 'X-API-KEY' => $this->API_Key,
                 'Authorization' => hash("sha512", $this->apiPassword),
                 'Content-Type' => 'application/json',
-                
+
                 ],
             ]);
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
@@ -132,5 +131,5 @@ class UserClearJunctionController extends Controller
         }
     }
 
-    
+
 }

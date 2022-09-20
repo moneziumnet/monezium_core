@@ -68,12 +68,7 @@
                             <div class="row">
                                 <div class="form-group mb-3 mt-3 col-md-6">
                                     <label class="form-label required">{{__('Bank Name')}}</label>
-                                    <select name="other_bank_id" class="form-select bankId" required>
-                                        <option value="">{{ __('Select Bank') }}</option>
-                                        @foreach ($othersBank as $key=>$data)
-                                            <option value="{{$data->id}}" {{$data->id == $beneficiary->other_bank_id ? 'selected' : ''}} >{{$data->title}}</option>
-                                        @endforeach
-                                    </select>
+                                    <input name="bank_name" id="bank_name" class="form-control" autocomplete="off" placeholder="{{__('Enter Bank Name')}}" type="text" value="{{ $beneficiary->bank_name }}" required>
                                 </div>
 
                                 <div class="form-group mb-3 mt-3 col-md-6">

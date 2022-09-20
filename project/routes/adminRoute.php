@@ -38,7 +38,6 @@ use App\Http\Controllers\Admin\LoanPlanController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DocumentsController;
 use App\Http\Controllers\Admin\KycManageController;
-use App\Http\Controllers\Admin\OtherBankController;
 
 use App\Http\Controllers\Admin\SubInsBankController;
 use App\Http\Controllers\Admin\SubscriberController;
@@ -353,16 +352,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/ico/status/{id}/{status}', [ICOController::class, 'status'])->name('admin.ico.status');
   });
 
-  Route::group(['middleware' => 'permissions:Other Banks'], function () {
-    Route::get('/other-banks/datatables', [OtherBankController::class, 'datatables'])->name('admin.other.banks.datatables');
-    Route::get('/other-banks', [OtherBankController::class, 'index'])->name('admin.other.banks.index');
-    Route::get('/other-banks/create', [OtherBankController::class, 'create'])->name('admin.other.banks.create');
-    Route::post('/other-banks/store', [OtherBankController::class, 'store'])->name('admin.other.banks.store');
-    Route::get('/other-banks/edit/{id}', [OtherBankController::class, 'edit'])->name('admin.other.banks.edit');
-    Route::post('/other-banks/update/{id}', [OtherBankController::class, 'update'])->name('admin.other.banks.update');
-    Route::get('/other-banks/delete/{id}', [OtherBankController::class, 'destroy'])->name('admin.other.banks.delete');
-    Route::get('/other-banks/{id1}/status/{status}', [OtherBankController::class, 'status'])->name('admin.other.banks.status');
-  });
+
 
   Route::group(['middleware' => 'permissions:Withdraw'], function () {
     Route::get('withdraw/method/datatables', [WithdrawMethodController::class, 'datatables'])->name('admin.withdraw.method.datatables'); //->middleware('permission:withdraw method');

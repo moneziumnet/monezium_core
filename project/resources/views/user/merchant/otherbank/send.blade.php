@@ -82,7 +82,6 @@
                     <form action="{{route('user.merchant.other.send.store')}}" method="POST" enctype="multipart/form-data">
                         @csrf
 
-                        <input type="hidden" name="other_bank_id" value="{{ $data->other_bank_id }}">
                         <input type="hidden" name="beneficiary_id" value="{{ $data->id }}">
                         <div class="form-group mb-3">
                             <label class="form-label required">{{__('Bank Name')}}</label>

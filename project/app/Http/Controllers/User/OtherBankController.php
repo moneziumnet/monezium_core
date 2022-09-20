@@ -4,7 +4,6 @@ namespace App\Http\Controllers\User;
 
 use App\Models\BankPlan;
 use App\Models\Currency;
-use App\Models\OtherBank;
 use App\Models\BankAccount;
 use App\Models\SubInsBank;
 use App\Models\Beneficiary;
@@ -81,19 +80,25 @@ class OtherBankController extends Controller
 
 
         $gs = Generalsetting::first();
-        $otherBank = OtherBank::whereId($request->other_bank_id)->first();
+        $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'withdraw')->first();
+
         $dailyTransactions = BalanceTransfer::whereType('other')->whereUserId(auth()->user()->id)->whereDate('created_at', now())->get();
         $monthlyTransactions = BalanceTransfer::whereType('other')->whereUserId(auth()->user()->id)->whereMonth('created_at', now()->month())->get();
+        $transaction_global_cost = 0;
+        $transaction_global_fee = check_global_transaction_fee($request->amount, $user, 'withdraw');
 
-        if ($otherBank ) {
-            $cost = $otherBank->fixed_charge + ($request->amount/100) * $otherBank->percent_charge;
-            $finalAmount = $request->amount + $cost;
+        if ($global_range) {
+            if($transaction_global_fee)
+            {
+                $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/100) * $transaction_global_fee->data->percent_charge;
+            }
+            $finalAmount = $request->amount + $transaction_global_cost;
 
-            if($otherBank->min_limit > $request->amount){
+            if($global_range->min > $request->amount){
                 return redirect()->back()->with('unsuccess','Request Amount should be greater than this');
             }
 
-            if($otherBank->max_limit < $request->amount){
+            if($global_range->max_limit < $request->amount){
                 return redirect()->back()->with('unsuccess','Request Amount should be less than this');
             }
 
@@ -104,25 +109,20 @@ class OtherBankController extends Controller
             //     return redirect()->back()->with('unsuccess','Insufficient Balance!');
             // }
 
-            if($otherBank->daily_maximum_limit <= $finalAmount){
+            if($global_range->daily_limit <= $finalAmount){
                 return redirect()->back()->with('unsuccess','Your daily limitation of transaction is over.');
             }
 
-            if($otherBank->daily_maximum_limit <= $dailyTransactions->sum('final_amount')){
+            if($global_range->daily_limit <= $dailyTransactions->sum('final_amount')){
                 return redirect()->back()->with('unsuccess','Your daily limitation of transaction is over.');
             }
 
-            if($otherBank->daily_total_transaction <= count($dailyTransactions)){
-                return redirect()->back()->with('unsuccess','Your daily number of transaction is over.');
-            }
 
-            if($otherBank->monthly_maximum_limit < $monthlyTransactions->sum('final_amount')){
+            if($global_range->monthly_limit < $monthlyTransactions->sum('final_amount')){
                 return redirect()->back()->with('unsuccess','Your monthly limitation of transaction is over.');
             }
 
-            if($otherBank->monthly_total_transaction <= count($monthlyTransactions)){
-                return redirect()->back()->with('unsuccess','Your monthly number of transaction is over!');
-            }
+
 
             // if($request->amount > $balance){
             //     return redirect()->back()->with('unsuccess','Insufficient Account Balance.');
@@ -143,10 +143,9 @@ class OtherBankController extends Controller
             $data->subbank = $request->subbank;
             $data->iban = $request->account_iban;
             $data->swift_bic = $request->swift_bic;
-            $data->other_bank_id = $request->other_bank_id;
             $data->beneficiary_id = $request->beneficiary_id;
             $data->type = 'other';
-            $data->cost = $cost;
+            $data->cost = $transaction_global_cost;
             $data->payment_type = $request->payment_type;
             $data->amount = $request->amount;
             $data->final_amount = $finalAmount;

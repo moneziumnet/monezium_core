@@ -17,7 +17,6 @@ class CreateBalanceTransfersTable extends Migration
             $table->integer('id', true);
             $table->integer('user_id')->nullable();
             $table->integer('receiver_id')->nullable();
-            $table->integer('bank_id')->nullable();
             $table->integer('beneficiary_id')->nullable();
             $table->integer('subbank')->nullable();
             $table->string('iban')->nullable();

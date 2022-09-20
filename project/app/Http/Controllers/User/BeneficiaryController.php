@@ -4,7 +4,6 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Beneficiary;
-use App\Models\OtherBank;
 use App\Models\BalanceTransfer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -25,8 +24,7 @@ class BeneficiaryController extends Controller
     }
 
     public function create(){
-        $data['othersBank'] = OtherBank::whereStatus(1)->orderBy('id','desc')->get();
-        return view('user.beneficiaries.create',$data);
+        return view('user.beneficiaries.create');
     }
 
     public function details($id) {
@@ -54,7 +52,6 @@ class BeneficiaryController extends Controller
     }
 
     public function edit($id){
-        $data['othersBank'] = OtherBank::whereStatus(1)->orderBy('id','desc')->get();
         $data['beneficiary'] = Beneficiary::findOrFail($id);
         return view('user.beneficiaries.edit',$data);
     }

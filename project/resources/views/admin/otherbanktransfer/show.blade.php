@@ -31,7 +31,7 @@
                                 <tr>
                                     <th class="45%" width="45%">{{__('Bank Name')}}</th>
                                     <td width="10%">:</td>
-                                    <td class="45%" width="45%">{{$data->bank->title}}</td>
+                                    <td class="45%" width="45%">{{$data->beneficiary->bank_name}}</td>
                                 </tr>
 
                                 <tr>

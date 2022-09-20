@@ -13,7 +13,6 @@ use App\Models\BankPlan;
 use App\Models\Currency;
 use App\Models\Charge;
 use App\Models\BalanceTransfer;
-use App\Models\OtherBank;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Classes\GeniusMailer;
@@ -36,12 +35,12 @@ class UserOtherBankController extends Controller
                 'beneficiary_id'       => 'required'
             ];
             $validator = Validator::make($request->all(), $rules);
-            
+
             if ($validator->fails()) {
                 return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
             }
 
-           
+
             $beneficiary_id = $request->beneficiary_id;
             $data['beneficiaries'] = Beneficiary::whereUserId($user_id)->where('id', $beneficiary_id)->first();
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data'=> $data]);
@@ -49,12 +48,12 @@ class UserOtherBankController extends Controller
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
         }
     }
-    
+
     public function otherbank(Request $request)
     {
         try{
            // $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
-           
+
             $data['otherBanks'] = OtherBank::orderBy('id','desc')->paginate(10);
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data'=> $data]);
         }catch(\Throwable $th){
@@ -73,7 +72,7 @@ class UserOtherBankController extends Controller
                 'amount' => 'required|numeric|min:0'
             ];
             $validator = Validator::make($request->all(), $rules);
-            
+
             if ($validator->fails()) {
                 return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
             }
@@ -86,7 +85,7 @@ class UserOtherBankController extends Controller
             if($user->bank_plan_id === null){
                 return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'You have to buy a plan to withdraw.']);
             }
-    
+
             if(strtotime($user->plan_end_date)< strtotime(date('Y-m-dH:i:s'))){
                 return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Plan Date Expired.']);
             }
@@ -189,11 +188,11 @@ class UserOtherBankController extends Controller
                 // $currency = defaultCurr();
                 user_wallet_decrement($user_id,$currency->id,$finalAmount);
                 return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Money Send successfully.']);
-            
-            }
-    
 
-            
+            }
+
+
+
         }catch(\Throwable $th){
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
         }

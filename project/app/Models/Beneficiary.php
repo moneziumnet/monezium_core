@@ -11,7 +11,7 @@ class Beneficiary extends Model
 
     protected $fillable = [
         'user_id',
-        'other_bank_id',
+        'bank_name',
         'address',
         'bank_address',
         'swift_bic',
@@ -33,9 +33,6 @@ class Beneficiary extends Model
     //     'details' => 'encrypted',
     // ];
 
-    public function bank(){
-        return $this->belongsTo('App\Models\OtherBank','other_bank_id')->withDefault();
-    }
 
     public function transfers(){
         return $this->hasMany(BalanceTransfer::class);

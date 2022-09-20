@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\BalanceTransfer;
 use App\Models\Beneficiary;
 use App\Models\Currency;
-use App\Models\OtherBank;
 use App\Models\BankAccount;
 use App\Models\BankGateway;
 use App\Models\SubInsBank;
@@ -322,6 +321,8 @@ class OtherBankTransferController extends Controller
         }
 
 
+            user_wallet_decrement($user->id, $data->currency_id, $data->final_amount);
+            user_wallet_increment(0, $data->currency_id, $data->cost, 9);
 
             $trans = new Transaction();
             $trans->trnx = Str::random(4).time();

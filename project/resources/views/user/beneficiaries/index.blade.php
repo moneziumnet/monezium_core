@@ -53,7 +53,7 @@
                                       <tr>
                                           <td data-label="{{ __('Bank') }}">
                                             <div>
-                                              {{ $data->bank->title}}
+                                              {{ $data->bank_name}}
                                             </div>
                                           </td>
 

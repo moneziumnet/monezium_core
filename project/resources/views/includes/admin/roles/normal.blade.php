@@ -22,7 +22,6 @@
         <a class="collapse-item" href="{{ route('admin.user.index') }}">{{ __('User List') }}</a>
         <a class="collapse-item" href="{{ route('admin.bank.plan.index') }}">{{ __('Pricing Plan') }}</a>
         <!-- <a class="collapse-item" href="{{ route('admin.gs.user.modules') }}">{{ __('User Modules') }}</a> -->
-        <a class="collapse-item" href="{{ route('admin.other.banks.index') }}">{{ __('Other Banks') }}</a>
         <a class="collapse-item" href="{{ route('admin.contract.management') }}">{{ __('View Contract') }}</a>
         <a class="collapse-item" href="{{ route('admin.merchant.shop.index') }}">{{ __('Merchant Shop') }}</a>
         <!-- <a class="collapse-item" href="{{ route('admin.user.bonus') }}">{{ __('Supervisor Fee') }}</a> -->

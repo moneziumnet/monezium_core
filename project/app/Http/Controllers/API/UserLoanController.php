@@ -16,7 +16,6 @@ use App\Models\Notification;
 use App\Models\Withdrawals;
 use App\Models\Currency;
 use App\Models\Beneficiary;
-use App\Models\OtherBank;
 use App\Models\UserLoan;
 
 use App\Models\LoanPlan;
@@ -39,7 +38,7 @@ class UserLoanController extends Controller
 {
     public $successStatus = 200;
 
-    
+
 //////////////////////////////////////////////// Loan api ////////////////////////////////////////////////////
     public function loan_index(Request $request)
     {
