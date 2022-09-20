@@ -139,7 +139,7 @@ class CryptoDepositController extends Controller
 
 
             $trans = new Transaction();
-            $trans->trnx = $data->hash;
+            $trans->trnx = str_rand();
             $trans->user_id     = $user->id;
             $trans->user_type   = 1;
             $trans->currency_id = $data->currency_id;
