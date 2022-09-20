@@ -26,13 +26,13 @@
     </div>
 </div>
 <div class="row mt-3 mb-5">
-    @if($invoice->product)
+    @if($invoice->product_id)
     <div class="row">
         <h3 class="col-3">Product:</h3> 
         <h3 class="col-9 font-weight-normal">{{$invoice->product->name}}</h3>
     </div>
     @endif
-    @if($invoice->contract)
+    @if($invoice->contract_id)
     <div class="row">
         <h3 class="col-3">Contract:</h3>
         <h3 class="col-9 font-weight-normal">
@@ -42,7 +42,7 @@
         </h3>
     </div>
     @endif
-    @if($invoice->aoa)
+    @if($invoice->contract_aoa_id)
     <div class="row">
         <h3 class="col-3">Contract AOA:</h3>
         <h3 class="col-9 font-weight-normal">

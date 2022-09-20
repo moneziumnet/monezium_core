@@ -216,10 +216,10 @@ I need 1000 from you.')}}</textarea>
     $('.add').on('click',function(){
         $('.extra-container').append(`
             <div class="row form-group mb-3 mt-3">
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <input type="text" name="item[]" class="form-control shadow-none itemname" required>
                 </div>
-                <div class="col-md-5 mb-3">
+                <div class="col-md-7 mb-3">
                     <input type="text" name="value[]" class="form-control shadow-none itemvalue" required>
                 </div>
                 <div class="col-md-1 mb-3">
