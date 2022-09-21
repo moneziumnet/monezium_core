@@ -51,7 +51,7 @@
                                 <tr>
                                     <th width="45%">{{__('Selfie')}} {{$key+1}}</th>
                                     <td width="10%">:</td>
-                                    <td width="45%"><a href="{{asset('assets/images/'.$value)}}" download><img src="{{asset('assets/images/'.$user->kyc_photo)}}" class="img-thumbnail"></a></td></td>
+                                    <td width="45%"><a href="{{asset('assets/images/'.$value)}}" download><img src="{{asset('assets/images/'.$value)}}" class="img-thumbnail"></a></td></td>
                                 </tr>
                                 @endforeach
 
