@@ -336,6 +336,9 @@ if(!function_exists('getModule')){
         $currency =  Currency::findOrFail($currency_id);
         if ($currency->type == 2) {
             $address = RPC_ETH('personal_newAccount',['123123']);
+            if ($address == 'error') {
+                exit();
+            }
             $keyword = '123123';
         }
         else {
@@ -414,6 +417,9 @@ if(!function_exists('getModule')){
       $currency =  Currency::findOrFail($currency_id);
         if ($currency->type == 2) {
         $address = RPC_ETH('personal_newAccount',['123123']);
+        if ($address == 'error') {
+            exit();
+        }
         $keyword = '123123';
         }
         else {
