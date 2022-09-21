@@ -67,7 +67,7 @@ class KYCController extends Controller
 
 
         $user = User::findOrFail($request->user_id);
-        $user->kyc_photo = $fileName.','.$front_filename.','.$back_filename;
+        $user->kyc_photo = $filename.','.$front_filename.','.$back_filename;
         $user->save();
 
         return back()->with('success', 'KYC submitted successfully');
