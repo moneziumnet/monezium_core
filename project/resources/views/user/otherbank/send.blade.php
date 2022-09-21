@@ -125,29 +125,28 @@
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">{{('OTP')}}</h5>
+          <h5 class="modal-title text-center">{{('Details')}}</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
             <div class="modal-body">
 
                 <ul class="list-group mt-2">
-                    <li class="list-group-item d-flex justify-content-between"  style="word-break:break-all;">@lang('Receiver Name')<span id="user_name"  style="margin-left: 60px"> {{__($data->name)}}</span></li>
-                    <li class="list-group-item d-flex justify-content-between"  style="word-break:break-all;">@lang('Receiver Address')<span id="user_addr"  style="margin-left: 60px"> {{__($data->address)}}</span></li>
+                    <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Receiver Name')<span id="user_name"  style="margin-left: 60px"> {{__($data->name)}}</span></li>
+                    <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Receiver Address')<span id="user_addr"  style="margin-left: 60px"> {{__($data->address)}}</span></li>
                     <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank Name')<span id="bank_name"  style="margin-left: 60px">{{ __($data->bank_name) }}</span></li>
                     <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank Address')<span id="bank_address"  style="margin-left: 60px">{{ __($data->bank_address) }}</span></li>
                     <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank Iban')<span id="bank_iban"  style="margin-left: 60px">{{ $data->account_iban }}</span></li>
                     <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank Swift')<span id="bank_swift"  style="margin-left: 60px">{{ $data->swift_bic }}</span></li>
+                    
+                    <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Amount')<span id="otp_amount" style="margin-left: 60px"></span></li>
+                    <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Description')<span id="otp_description" style="margin-left: 60px;width:50%;word-break:break-all;text-align:right;"></span></li>
                 </ul>
 
-              <div class="form-group" id="otp_body">
-                <label class="form-label required">{{__('OTP Code')}}</label>
-                <input name="otp_code" id="otp_code" class="form-control" placeholder="{{__('OTP Code')}}" type="text" step="any" value="{{ old('opt_code') }}" required>
-              </div>
-
-            </div>
-
-            <div class="modal-footer">
-                <button  id="submit-btn" class="btn btn-primary">{{ __('Verify') }}</button>
+                <div class="form-group mt-3" id="otp_body">
+                    <label class="form-label required">{{__('OTP Code')}}</label>
+                    <input name="otp_code" id="otp_code" class="form-control" placeholder="{{__('OTP Code')}}" type="text" step="any" value="{{ old('opt_code') }}" required>
+                </div>
+                <button id="submit-btn" class="btn btn-primary col-12 mt-3">{{ __('Submit') }}</button>
             </div>
       </div>
     </div>
@@ -177,8 +176,8 @@
         $.get(url, function(res) {
             let _optionHtml = '<option value="">Select Currency</option>';
             $.each(res, function(i, item) {
-                console.log(JSON.stringify(item))
-                _optionHtml += '<option value=\'' + item.currency.id + '\'>' + item.currency.code + '</option>';
+                // console.log(JSON.stringify(item))
+                _optionHtml += `<option value='${item.currency.id}' symbol='${item.currency.symbol}'>${item.currency.code}</option>`;
             });
             $('select#currency').html(_optionHtml);
         })
@@ -194,6 +193,12 @@
                     console.log(res)
                     if(res=='success') {
                         $('#modal-verify').modal('show');
+                        $('#otp_amount').html(
+                            $('#currency option:selected').attr('symbol') + 
+                            $('#amount').val() + " " + 
+                            $('#currency option:selected').text()
+                        );
+                        $('#otp_description').html($('#des').val());
                     }
                     else {
                         alert('The OTP code can not be sent to you.')
@@ -202,6 +207,8 @@
             } else {
                 $('#otp_body').remove();
                 $('#modal-verify').modal('show');
+                $('#otp_amount').html($('#amount').val() + " " + $('#currency').val());
+                $('#otp_description').html($('#des').val());
             }
         })
         $('#submit-btn').on('click', function(){
