@@ -129,7 +129,7 @@ class KYCController extends Controller
                 }
             }
         }
-
+        $details['type'] = $request->type;
         $user = auth()->user();
         if(!empty($details)){
             $user->kyc_info = json_encode($details,true);

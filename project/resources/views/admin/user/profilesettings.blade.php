@@ -50,7 +50,7 @@
               </h2>
           </div>
           <div class="card-body">
-            <form class="geniusform" action="{{ route('admin-user-edit',$data->id) }}" method="POST" enctype="multipart/form-data">
+            <form class="geniusform" action="{{ route('admin-user-update',$data->id) }}" method="POST" enctype="multipart/form-data">
               @include('includes.admin.form-both')
               {{ csrf_field() }}
               <div class="form-group">
@@ -60,6 +60,13 @@
               @php
               $userType = explode(',', $data->user_type);
               @endphp
+              <div class="form-group">
+                <label for="kyc_method">{{ __('KYC Method') }}</label>
+                <select class="form-control mb-3" name="kyc_method" >
+                    <option value="manual" @if('manual' == $data->kyc_method) selected @endif>Manual</option>
+                    <option value="auto" @if('auto' == $data->kyc_method) selected @endif>Auto</option>
+                </select>
+              </div>
 
               <div class="form-group">
                 <label for="inp-name">{{ __('Type') }}</label>
