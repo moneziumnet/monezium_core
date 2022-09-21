@@ -44,9 +44,9 @@
                                         <label class="form-label">@lang('Select Type')</label>
                                         <select class="form-select shadow-none" name="type">
                                             <option value="" selected>@lang('Select')</option>
-                                            <option value="passport" >@lang('Select')</option>
-                                            <option value="driver_license" >@lang('Select')</option>
-                                            <option value="ID" >@lang('Select')</option>
+                                            <option value="passport" >@lang('Passport')</option>
+                                            <option value="driver_license" >@lang('Driver License')</option>
+                                            <option value="ID" >@lang('ID')</option>
                                         </select>
                                     </div>
                                     <div class="form-group mb-3 mt-3">
