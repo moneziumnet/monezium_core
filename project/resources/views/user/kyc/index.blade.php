@@ -33,7 +33,7 @@
                                 <label class="form-label {{$field->required == 1 ? 'required':'Optional'}}">@lang($field->label)</label>
                                 @if ($field->type == 1)
                                   <input type="text" name="{{strtolower(str_replace(' ', '_', $field->label))}}" class="form-control" autocomplete="off" placeholder="@lang($field->label)" min="1" {{$field->required == 1 ? 'required':'Optional'}}>
-                                  @else 
+                                  @else
                                   <textarea class="form-control" name="{{strtolower(str_replace(' ', '_', $field->label))}}" placeholder="@lang($field->label)"></textarea>
                                 @endif
                               </div>
@@ -45,10 +45,10 @@
                             @endif
                           @endforeach
 
-                          <label class="form-check">
+                          {{-- <label class="form-check">
                                 <input class="form-check-input shadow-none" type="checkbox" name="sendlink" checked>
                                 <span class="form-check-label">@lang('Send online selfie link to email')</span>
-                          </label>
+                          </label> --}}
                           <div class="form-footer">
                             <button type="submit" class="btn btn-primary w-100">{{__('Submit')}}</button>
                           </div>

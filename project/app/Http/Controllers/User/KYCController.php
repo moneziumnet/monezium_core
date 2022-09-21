@@ -40,10 +40,7 @@ class KYCController extends Controller
         return view('user.kyc.selfie',compact('user_id'));
     }
 
-    public function takeOnlineSelfie(Request $request){
-        /** Direct Photo upload**/
-        $img = $request->image;
-
+    public function image_save($img) {
         $folderPath = asset('assets/images');
 
         $image_parts = explode(";base64,", $img);
@@ -56,11 +53,21 @@ class KYCController extends Controller
         $file = $folderPath . $fileName;
 
         Storage::put($file, $image_base64);
+        return $fileName;
+    }
+
+    public function takeOnlineSelfie(Request $request){
+        /** Direct Photo upload**/
+        $img = $request->image;
+        $filename = $this->image_save($img) ?? '';
+        $img = $request->image_front;
+        $front_filename = $this->image_save($img) ?? '';
+        $img = $request->image_back;
+        $back_filename = $this->image_save($img) ?? '';
+
 
         $user = User::findOrFail($request->user_id);
-        if(!empty($details)){
-            $user->kyc_photo = $fileName;
-        }
+        $user->kyc_photo = $fileName.','.$front_filename.','.$back_filename;
         $user->save();
 
         return back()->with('success', 'KYC submitted successfully');
@@ -83,13 +90,11 @@ class KYCController extends Controller
         $user = auth()->user();
         $gs = Generalsetting::first();
         $route = route('user.kyc.selfie',encrypt($user->id));
-        if($request->sendlink) {
-            $to = $user->email;
-            $subject = " Online Selfie Link";
-            $msg = "Hello ".$user->name."!\nThis is the link of online Selfie for you.\nLink is \n".$route." \n Thank you.";
-            $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-            mail($to,$subject,$msg,$headers);
-        }
+        $to = $user->email;
+        $subject = " Online Selfie Link";
+        $msg = "Hello ".$user->name."!\nThis is the link of online Selfie for you.\nLink is \n".$route." \n Thank you.";
+        $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
+        mail($to,$subject,$msg,$headers);
 
         $requireInformations = [];
         if($userForms){

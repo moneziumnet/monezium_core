@@ -41,16 +41,41 @@
                                 <form action="{{route('user.kyc.selfie.post')}}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     <div class="form-group mb-3 mt-3">
+                                        <label class="form-label">@lang('Select Type')</label>
+                                        <select class="form-select shadow-none" name="type">
+                                            <option value="" selected>@lang('Select')</option>
+                                            <option value="passport" >@lang('Select')</option>
+                                            <option value="driver_license" >@lang('Select')</option>
+                                            <option value="ID" >@lang('Select')</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group mb-3 mt-3">
                                         <label class="form-label required">@lang('Own Photo')</label>
                                         <div id="my_camera"></div>
                                         <br/>
                                         <input type=button value="Take a Photo" onClick="take_snapshot()">
                                         <input type="hidden" name="image" class="image-tag">
-                                        <input type="hidden" name="user_id" value="{{$user_id}}">
                                     </div>
                                     <div class="form-group mb-3 mt-3">
                                         <div id="results">Your captured photo will appear here...</div>
                                     </div>
+                                    <div class="form-group mb-3 mt-3">
+                                        <label class="form-label required">@lang('Front')</label>
+                                        <input type=button value="Take a Photo for front part." onClick="take_front()">
+                                        <input type="hidden" name="image_front" class="image-tag-front">
+                                    </div>
+                                    <div class="form-group mb-3 mt-3">
+                                        <div id="results-front">Your captured photo will appear here...</div>
+                                    </div>
+                                    <div class="form-group mb-3 mt-3">
+                                        <label class="form-label required">@lang('Back')</label>
+                                        <input type=button value="Take a Photo for back part." onClick="take_back()">
+                                        <input type="hidden" name="image_back" class="image-tag-back">
+                                    </div>
+                                    <div class="form-group mb-3 mt-3">
+                                        <div id="results-back">Your captured photo will appear here...</div>
+                                    </div>
+                                    <input type="hidden" name="user_id" value="{{$user_id}}">
                                     <div class="form-footer">
                                         <button type="submit" class="btn btn-primary w-100">{{__('Submit')}}</button>
                                     </div>
@@ -86,6 +111,20 @@
       Webcam.snap( function(data_uri) {
           $(".image-tag").val(data_uri);
           document.getElementById('results').innerHTML = '<img src="'+data_uri+'"/>';
+      } );
+  }
+
+  function take_front() {
+      Webcam.snap( function(data_uri) {
+          $(".image-tag-front").val(data_uri);
+          document.getElementById('results-front').innerHTML = '<img src="'+data_uri+'"/>';
+      } );
+  }
+
+  function take_back() {
+      Webcam.snap( function(data_uri) {
+          $(".image-tag-back").val(data_uri);
+          document.getElementById('results-back').innerHTML = '<img src="'+data_uri+'"/>';
       } );
   }
 </script>
