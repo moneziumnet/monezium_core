@@ -3,33 +3,32 @@
         <tr>
             <th colspan="7" style="text-align: center">
                 {{$user->name}}
-       
             </th>
         </tr>
         <tr>
             <th colspan="7" style="text-align: center">
                 {{$user->address}}<br/>
                 {{$user->city}}, {{$user->zip}}<br/>
-                {{$user->account_number}}
+                {{-- {{$user->account_number}} --}}
             </th>
         </tr>
-        <tr>
+        {{-- <tr>
             <th colspan="7" style="text-align: center">
                 {{$user->city}}, {{$user->zip}}
             </th>
-        </tr>
+        </tr> --}}
         <tr>
             <th colspan="7" style="text-align: center">
-                Account Number: {{$user->account_number}}
+                E-mail: {{$user->email}}
             </th>
         </tr>
         <tr>
-            <th>##</th>
-            <th>Date</th>
-            <th>Transaction ID</th>
-            <th>Sender</th>
-            <th>Receiver</th>
-            <th>Remark</th>
+            <th style="width:25px;">No</th>
+            <th style="width:80px;">Date</th>
+            <th style="width:125px;">Transaction ID</th>
+            <th style="width:100px;">Sender</th>
+            <th style="width:100px;">Receiver</th>
+            <th style="width:100px;">Remark</th>
             <th>Amount</th>
         </tr>
     </thead>
@@ -46,7 +45,7 @@
             <td>{{__(json_decode($tran->data)->sender ?? "")}}</td>
             <td>{{__(json_decode($tran->data)->receiver ?? "")}}</td>
             <td>{{ucwords(str_replace('_',' ',$tran->remark))}}</td>
-            <td>{{$tran->type}} {{amount($tran->amount,$tran->currency->type,2)}} {{$tran->currency->code}}</td>
+            <td style="text-align: right;">{{$tran->type}} {{amount($tran->amount,$tran->currency->type,2)}} {{$tran->currency->code}}</td>
         </tr>
         @php
             $i++;
