@@ -74,17 +74,29 @@ class MerchantShopController extends Controller
             $msg = 'Merchant shop already approved';
             return response()->json($msg);
         }
-        $data->update(['status' => $id2]);
         $currencies = $data['currencylist'] = Currency::wherestatus(1)->get();
         $gs = Generalsetting::first();
         foreach ($currencies as $key => $value) {
+            if($value->type == 2) {
+                $address = RPC_ETH('personal_newAccount',['123123']);
+                if ($address == 'error') {
+                    return response()->json(array('errors' => [0 => __('You can not create this shop because there is some issue in crypto node.')]));
+                }
+                $keyword = '123123';
+            }
+            else {
+                $address = $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
+                $keyword = '';
+            }
             DB::table('merchant_wallets')->insert([
                 'merchant_id' => $data->merchant_id,
                 'currency_id' => $value->id,
                 'shop_id' => $data->id,
-                'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999),
+                'wallet_no' => $address,
+                'keyword' => $keyword,
             ]);
         }
+        $data->update(['status' => $id2]);
         $msg = __('Data Updated Successfully.');
         return ($msg);
     }

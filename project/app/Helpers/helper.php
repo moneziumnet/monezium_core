@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon as Carbontime;
 use App\Models\User;
 use App\Models\Transaction;
+use GuzzleHttp\Client;
 
 if(!function_exists('getModule')){
   function getModule($value)
@@ -332,6 +333,15 @@ if(!function_exists('getModule')){
         $gs = Generalsetting::first();
         $wallet = Wallet::where('user_id', $auth_id)->where('wallet_type', $wallet_type)
             ->where('currency_id',$currency_id)->first();
+        $currency =  Currency::findOrFail($currency_id);
+        if ($currency->type == 2) {
+            $address = RPC_ETH('personal_newAccount',['123123']);
+            $keyword = '123123';
+        }
+        else {
+            $address = $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
+            $keyword = '';
+        }
         if(!$wallet)
         {
           $user_wallet = new Wallet();
@@ -340,7 +350,8 @@ if(!function_exists('getModule')){
           $user_wallet->currency_id = $currency_id;
           $user_wallet->balance = $amount;
           $user_wallet->wallet_type = $wallet_type;
-          $user_wallet->wallet_no =$gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
+          $user_wallet->wallet_no =$address;
+          $user_wallet->keyword =$keyword;
           $user_wallet->created_at = date('Y-m-d H:i:s');
           $user_wallet->updated_at = date('Y-m-d H:i:s');
           $user_wallet->save();
@@ -400,6 +411,15 @@ if(!function_exists('getModule')){
       $gs = Generalsetting::first();
       $wallet = MerchantWallet::where('merchant_id', $auth_id)->where('shop_id', $shop_id)
           ->where('currency_id',$currency_id)->first();
+      $currency =  Currency::findOrFail($currency_id);
+        if ($currency->type == 2) {
+        $address = RPC_ETH('personal_newAccount',['123123']);
+        $keyword = '123123';
+        }
+        else {
+        $address = $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
+        $keyword = '';
+        }
       if(!$wallet)
       {
         $shop_wallet = new MerchantWallet();
@@ -407,7 +427,8 @@ if(!function_exists('getModule')){
         $shop_wallet->currency_id = $currency_id;
         $shop_wallet->balance = $amount;
         $shop_wallet->shop_id = $shop_id;
-        $shop_wallet->wallet_no =$gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
+        $shop_wallet->wallet_no =$address;
+        $shop_wallet->keyword =$keyword;
         $shop_wallet->created_at = date('Y-m-d H:i:s');
         $shop_wallet->updated_at = date('Y-m-d H:i:s');
         $shop_wallet->save();
@@ -577,31 +598,27 @@ if(!function_exists('getModule')){
 
   if(!function_exists('RPC_ETH'))
   {
-      function RPC_ETH($method, $args, $link = 'localhost:8545', $background = false)
+      function RPC_ETH($method, $args, $link = 'localhost:8545')
       {
           $args = json_encode($args);
-          $query = "curl --data '{\"method\":\"".$method."\",\"params\":".$args.",\"id\":1,\"jsonrpc\":\"2.0\"}' -H \"Content-Type: application/json\" -X POST ".$link."";
-        //   return $query;
-          if ($background) {
-              return execInBackground($query);
-          }
-          else {
-              return shell_exec($query);
-          }
+          $client = new Client();
+            $headers = [
+            'Content-Type' => 'application/json'
+            ];
+            $body = '{
+            "method": "'.$method.'",
+            "params": '.$args.',
+            "id": 1,
+            "jsonrpc": "2.0"
+            }';
+            try {
+                $response = $client->request('POST', $link, ["headers"=>$headers, "body"=>$body]);
+                $res =json_decode($response->getBody());
+                return $res->result;
+            } catch (\Throwable $th) {
+                return 'error';
+            }
       }
   }
-
-  if(!function_exists('execInBackground'))
-  {
-    function execInBackground($cmd) {
-        if (substr(php_uname(), 0, 7) == "Windows"){
-            pclose(popen("start /B ". $cmd, "r"));
-        }
-        else {
-            exec($cmd . " > /dev/null &");
-        }
-    }
-  }
-
 
 ?>

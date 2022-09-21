@@ -86,7 +86,7 @@ class ManageEscrowController extends Controller
         $request->validate(['id'=>'required','escrow_id'=>'required']);
 
         $escrow = Escrow::findOrFail($request->escrow_id);
-        $wallet = Wallet::where('user_id',$request->id)->where('user_type',1)->where('currency_id',$escrow->currency_id)->first();
+        $wallet = Wallet::where('user_id',$request->id)->where('user_type',1)->where('currency_id',$escrow->currency_id)->where('wallet_type', 5)->first();
         $gs = Generalsetting::first();
         if(!$wallet){
             $wallet = Wallet::create([
@@ -94,7 +94,7 @@ class ManageEscrowController extends Controller
                 'user_type' => 1,
                 'currency_id' => $escrow->currency_id,
                 'balance' => 0,
-                'wallet_type' => 1,
+                'wallet_type' => 5,
                 'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
             ]);
 
@@ -115,7 +115,7 @@ class ManageEscrowController extends Controller
             $trans->data        = '{"sender":"'.User::findOrFail($request->id)->name.'", "receiver":"System Account"}';
             $trans->save();
 
-            user_wallet_decrement($request->id, 1, $chargefee->data->fixed_charge, 1);
+            user_wallet_decrement($request->id, 1, $chargefee->data->fixed_charge, 5);
             user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
         }
 

@@ -51,7 +51,18 @@ class OwnTransferController extends Controller
         $fromWallet = Wallet::where('id',$request->from_wallet_id)->where('user_id',auth()->id())->where('user_type',1)->firstOrFail();
 
         $toWallet = Wallet::where('currency_id',$fromWallet->currency_id)->where('user_id',auth()->id())->where('wallet_type',$request->wallet_type)->where('user_type',1)->first();
-
+        $currency =  Currency::findOrFail($fromWallet->currency_id);
+        if ($currency->type == 2) {
+            $address = RPC_ETH('personal_newAccount',['123123']);
+            if ($address == 'error') {
+                return back()->with('error','You can not create this wallet because there is some issue in crypto node.');
+            }
+            $keyword = '123123';
+        }
+        else {
+            $address = $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
+            $keyword = '';
+        }
         if(!$toWallet){
             $gs = Generalsetting::first();
             $toWallet = Wallet::create([
@@ -60,7 +71,8 @@ class OwnTransferController extends Controller
                 'currency_id' => $fromWallet->currency_id,
                 'balance'     => 0,
                 'wallet_type' => $request->wallet_type,
-                'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
+                'wallet_no' => $address,
+                'keyword' => $keyword
             ]);
             if($request->wallet_type == 2) {
                 $chargefee = Charge::where('slug', 'card-issuance')->where('plan_id', $user->bank_plan_id)->first();

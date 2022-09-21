@@ -20,6 +20,7 @@ class CreateMerchantWalletsTable extends Migration
             $table->decimal('balance', 20, 10)->default(0);
             $table->tinyInteger('shop_id');
             $table->string('wallet_no');
+            $table->string('keyword')->nullable();
             $table->timestamps();
         });
     }

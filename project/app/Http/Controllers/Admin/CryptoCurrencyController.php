@@ -58,6 +58,9 @@ class CryptoCurrencyController extends Controller
         $data = new Currency();
         $input = $request->all();
         $address = RPC_ETH('personal_newAccount',[$request->keyword]);
+        if ($address == 'error') {
+            return response()->json(array('errors' => [0 => __('You can not create this currency because there is some issue in crypto node.')]));
+        }
         $input['address'] = $address;
         $input['type'] = 2;
         $data->fill($input)->save();

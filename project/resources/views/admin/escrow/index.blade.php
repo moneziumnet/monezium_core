@@ -66,7 +66,7 @@
                                         <a class="btn btn-info disabled" >@lang('Details')</a>
                                     @endif
                                 </td>
-                               
+
                             </tr>
                          @empty
 
@@ -78,7 +78,7 @@
                     </table>
                 </div>
             @if($escrows->hasPages())
-                {{ $escrows->links('admin.partials.paginate') }}
+                {{ $escrows->links() }}
             @endif
         </div>
     </div>
