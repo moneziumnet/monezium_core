@@ -41,7 +41,7 @@ class KYCController extends Controller
     }
 
     public function image_save($img) {
-        $folderPath = asset('assets/images');
+        $folderPath = asset('assets/images/');
 
         $image_parts = explode(";base64,", $img);
         $image_type_aux = explode("image/", $image_parts[0]);
