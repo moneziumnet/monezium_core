@@ -52,7 +52,7 @@ class KYCController extends Controller
 
         $file = $folderPath . $fileName;
 
-        Storage::put($file, $image_base64);
+        file_put_contents($file, $image_base64);
         return $fileName;
     }
 
