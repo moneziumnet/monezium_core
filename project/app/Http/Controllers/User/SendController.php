@@ -198,7 +198,7 @@ class SendController extends Controller
             $trans->amount      = $finalamount;
             $trans->charge      = $finalCharge;
             $trans->type        = '-';
-            $trans->remark      = 'Send_Money';
+            $trans->remark      = 'Internal Payment';
             $trans->details     = trans('Send Money');
             $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.$receiver->name.'"}';
             $trans->save();
@@ -212,7 +212,7 @@ class SendController extends Controller
             $trans->amount      = $request->amount;
             $trans->charge      = 0;
             $trans->type        = '+';
-            $trans->remark      = 'Recieve_Money';
+            $trans->remark      = 'Internal Payment';
             $trans->details     = trans('Send Money');
             $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.$receiver->name.'"}';
             $trans->save();

@@ -522,7 +522,7 @@ class ManageInvoiceController extends Controller
             $trnx->remark      = 'invoice_payment';
             $trnx->invoice_num = $invoice->number;
             $trnx->type        = '-';
-            $trnx->details     = trans('Payemnt to invoice : '). $invoice->number;
+            $trnx->details     = trans('Payment to invoice : '). $invoice->number;
             $trnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($invoice->user_id)->name.'"}';
             $trnx->save();
 
@@ -574,7 +574,7 @@ class ManageInvoiceController extends Controller
             $rcvTrnx->remark      = 'invoice_payment';
             $rcvTrnx->invoice_num = $invoice->number;
             $rcvTrnx->type        = '+';
-            $rcvTrnx->details     = trans('Receive Payemnt from invoice : '). $invoice->number;
+            $rcvTrnx->details     = trans('Receive Payment from invoice : '). $invoice->number;
             $rcvTrnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($invoice->user_id)->name.'"}';
             $rcvTrnx->save();
 

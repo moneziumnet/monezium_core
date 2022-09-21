@@ -34,8 +34,8 @@ class OtherBankTransferController extends Controller
         $data = User::whereId($data->user_id)->first();
         if ($data) {
           return '<div>
-                                            <span>' . $data->name . '</span>
-                                    </div>';
+            <span>' . $data->name . '</span>
+          </div>';
         } else {
           return $data = '';
         }
@@ -46,8 +46,8 @@ class OtherBankTransferController extends Controller
 
         if ($data) {
           return '<div>
-                                            <span>' . $data->name . '</span>
-                                    </div>';
+            <span>' . $data->name . '</span>
+          </div>';
         } else {
           return $data = '';
         }
@@ -81,26 +81,26 @@ class OtherBankTransferController extends Controller
         }
 
         return '<div class="btn-group mb-1">
-                                <button type="button" class="btn btn-' . $status_sign . ' btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  ' . $status . '
-                                </button>
-                                <div class="dropdown-menu" x-placement="bottom-start">
-                                  <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="' . route('admin.other.banks.transfer.status', ['id1' => $data->id, 'status' => 1]) . '">' . __("completed") . '</a>
-                                  <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="' . route('admin.other.banks.transfer.status', ['id1' => $data->id, 'status' => 2]) . '">' . __("rejected") . '</a>
-                                </div>
-                              </div>';
+          <button type="button" class="btn btn-' . $status_sign . ' btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            ' . $status . '
+          </button>
+          <div class="dropdown-menu" x-placement="bottom-start">
+            <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="' . route('admin.other.banks.transfer.status', ['id1' => $data->id, 'status' => 1]) . '">' . __("completed") . '</a>
+            <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="' . route('admin.other.banks.transfer.status', ['id1' => $data->id, 'status' => 2]) . '">' . __("rejected") . '</a>
+          </div>
+        </div>';
       })
 
       ->addColumn('action', function (BalanceTransfer $data) {
 
         return '<div class="btn-group mb-1">
-                                  <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    ' . 'Actions' . '
-                                  </button>
-                                  <div class="dropdown-menu" x-placement="bottom-start">
-                                    <a href="' . route('admin.other.banks.transfer.show', $data->id) . '"  class="dropdown-item">' . __("Details") . '</a>
-                                  </div>
-                                </div>';
+          <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            ' . 'Actions' . '
+          </button>
+          <div class="dropdown-menu" x-placement="bottom-start">
+            <a href="' . route('admin.other.banks.transfer.show', $data->id) . '"  class="dropdown-item">' . __("Details") . '</a>
+          </div>
+        </div>';
       })
 
       ->rawColumns(['user_id', 'beneficiary_id', 'amount', 'cost', 'status', 'action'])
@@ -332,7 +332,7 @@ class OtherBankTransferController extends Controller
             $trans->amount      = $data->final_amount;
             $trans->charge      = $data->cost;
             $trans->type        = '-';
-            $trans->remark      = 'Send_Money';
+            $trans->remark      = 'External_Payment';
             $trans->data        = '{"sender":"'.$user->name.'", "receiver":"'.$data->beneficiary->name.'", "transaction_id":"'.$transaction_id.'"}';
             $trans->details     = trans('Send Money');
             $trans->save();

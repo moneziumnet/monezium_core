@@ -216,7 +216,7 @@ class CampaignController extends Controller
             $trnx->charge      = 0;
             $trnx->remark      = 'donation_payment';
             $trnx->type        = '-';
-            $trnx->details     = trans('Payemnt for Donation : '). $donation->campaign->ref_id;
+            $trnx->details     = trans('Payment for Donation : '). $donation->campaign->ref_id;
             $trnx->data        = '{"sender":"'.User::findOrFail($donation->user_id)->name.'", "receiver":"'.User::findOrFail($donation->campaign->user_id)->name.'"}';
             $trnx->save();
 
@@ -235,7 +235,7 @@ class CampaignController extends Controller
             $rcvTrnx->charge      = 0;
             $rcvTrnx->remark      = 'donation_receive_payment';
             $rcvTrnx->type        = '+';
-            $rcvTrnx->details     = trans('Receive Payemnt for Donation : '). $donation->campaign->ref_id;
+            $rcvTrnx->details     = trans('Receive Payment for Donation : '). $donation->campaign->ref_id;
             $rcvTrnx->data        = '{"sender":"'.User::findOrFail($donation->user_id)->name.'", "receiver":"'.User::findOrFail($donation->campaign->user_id)->name.'"}';
             $rcvTrnx->save();
             $donation->status = $id2;

@@ -205,7 +205,7 @@ class MerchantProductController extends Controller
             $trnx->charge      = 0;
             $trnx->remark      = 'product_buy_payment';
             $trnx->type        = '-';
-            $trnx->details     = trans('Payemnt to buy product : '). $data->ref_id;
+            $trnx->details     = trans('Payment to buy product : '). $data->ref_id;
             $trnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($data->user_id)->name.'"}';
             $trnx->save();
 
@@ -224,7 +224,7 @@ class MerchantProductController extends Controller
             $rcvTrnx->charge      = 0;
             $rcvTrnx->remark      = 'product_sell_payment';
             $rcvTrnx->type        = '+';
-            $rcvTrnx->details     = trans('Receive Payemnt to sell product : '). $data->ref_id;
+            $rcvTrnx->details     = trans('Receive Payment to sell product : '). $data->ref_id;
             $rcvTrnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($data->user_id)->name.'"}';
             $rcvTrnx->save();
 
