@@ -138,7 +138,7 @@ class WithdrawCryptoController extends Controller
         $trans->type        = '-';
         $trans->remark      = 'withdraw_money';
         $trans->details     = trans('Withdraw money');
-        $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+        $trans->data        = '{"sender":"'.$user->name.'", "receiver":"'.$request->sender_address.'"}';
         $trans->save();
 
 

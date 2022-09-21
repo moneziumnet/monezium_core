@@ -181,7 +181,7 @@ class WithdrawController extends Controller
         $trans->type        = '-';
         $trans->remark      = 'withdraw_money';
         $trans->details     = trans('Withdraw money');
-        $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+        $trans->data        = '{"sender":"'.$user->name.'", "receiver":"'.Admin::findOrFail($request->subinstitude)->name.'"}';
         $trans->save();
 
         return redirect(route('user.withdraw.index'))->with('message','Withdraw Request Amount : '.$request->amount.' Fee : '.$messagefee.' = '.$messagefinal.' ('.$currency->code.') Sent Successfully.');
