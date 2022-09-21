@@ -126,7 +126,7 @@
                                     <th>{{ __('Date') }}</th>
                                     <th>{{ __('Transaction Number') }}</th>
                                     <th>{{ __('Beneficiary Name') }}</th>
-                                    <th>{{ __('Type') }}</th>
+                                    <th>{{ __('Sender Bank Name') }}</th>
                                     <th>{{ __('Amount') }}</th>
                                     <th>{{ __('Status') }}</th>
                                     <th>{{ __('Details') }}</th>
@@ -152,8 +152,12 @@
                                             @endphp
                                             <td data-label="{{ __('Beneficiary Name') }}">{{ $beneficiary != NULL ? $beneficiary->name : 'deleted' }}</td>
                                           @endif
-                                          <td data-label="{{ __('Type') }}">{{ $data->type }} {{ __('Bank') }}</td>
-                                          <td data-label="{{ __('Amount') }}">{{$data->amount}}</td>
+                                          {{var_dump($data->subbank)}}
+                                          @php
+                                            $subbank = App\Models\SubInsBank::whereId($data->subbank)->first();
+                                          @endphp
+                                          <td data-label="{{ __('Sender Bank Name') }}">{{ $subbank->name }}</td>
+                                          <td data-label="{{ __('Amount') }}">{{$data->currency->symbol}}{{$data->amount}} {{$data->currency->code}}</td>
                                           <td data-label="{{ __('Status') }}">
                                             @if ($data->status == 1)
                                               <span class="badge bg-success">{{ __('Completed')}}</span>
