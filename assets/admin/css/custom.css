@@ -860,3 +860,17 @@ table.dataTable thead td {
 .draggable-item .media {
 	align-items: center;
 }
+
+ul.list-group.details-list .list-group-item{
+	word-break:break-word;
+	align-items: center;
+	display: flex;
+	justify-content: space-between;
+	text-align: left;
+}
+
+ul.list-group.details-list .list-group-item span{
+	margin-left: 20px;
+	width: 60%;
+	text-align: right;
+}
