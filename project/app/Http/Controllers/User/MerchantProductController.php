@@ -273,7 +273,7 @@ class MerchantProductController extends Controller
     {
         $to = $request->email;
         $subject = "Order Product";
-        $msg = "Please order <a href='".$request->link."'>this product</a>";
+        $msg = "Please order <a href='".$request->link."'>this product</a> \n PLease check QR code: <img src='".generateQR($request->link)."' class='' alt=''>";
         $headers = "From: ".auth()->user()->name."<".auth()->user()->email.">";
         mail($to,$subject,$msg,$headers);
     }

@@ -405,6 +405,7 @@ class ManageInvoiceController extends Controller
 
                 "Amount"  .":  $amount $currency->code <br/>".
                 "Payment Link"." :  <a href='$route' target='_blank'>"."Click To Payment"."</a><br/>".
+                "QR Code"." :  <img src='".generateQR($route)."' class='' alt=''>".
                 "Time"." : $invoice->created_at,
 
             "
