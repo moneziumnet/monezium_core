@@ -235,7 +235,7 @@ class MerchantCampaignController extends Controller
         $headers .= "MIME-Version: 1.0" . "\r\n";
         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
         mail($to,$subject,$msg,$headers);
-        return back()->with('success', 'Email is sent successfully.');
+        return back()->with('message', 'Email is sent successfully.');
 
     }
 }
