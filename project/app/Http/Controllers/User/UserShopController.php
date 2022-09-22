@@ -13,6 +13,7 @@ use App\Models\MerchantWallet;
 use App\Models\Campaign;
 use App\Models\Generalsetting;
 use App\Models\User;
+use App\Models\BankAccount;
 use App\Models\Wallet;
 use App\Models\Transaction;
 use App\Models\Charge;
@@ -39,12 +40,14 @@ class UserShopController extends Controller
 
     public function order($id) {
         $data = Product::where('id', $id)->first();
-        return view('user.shop.buy', compact('data'));
+        $bankaccounts = BankAccount::where('user_id', auth()->id())->where('currency_id', $data->currency_id)->get();
+        return view('user.shop.buy', compact('data', 'bankaccounts'));
     }
 
     public function donate($id) {
         $data = Campaign::where('id', $id)->first();
-        return view('user.shop.donate', compact('data'));
+        $bankaccounts = BankAccount::where('user_id', auth()->id())->where('currency_id', $data->currency_id)->get();
+        return view('user.shop.donate', compact('data', 'bankaccounts'));
     }
 
 }

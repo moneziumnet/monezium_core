@@ -64,31 +64,46 @@
                     @csrf
                     <div class="form-selectgroup row">
                         <label class="form-selectgroup-item">
-                            <input type="radio" name="payment" value="bank_pay" class="form-selectgroup-input" >
+                            <input type="radio" name="payment" value="bank_pay" id="bank_pay" class="form-selectgroup-input select_method" >
                             <span class="form-selectgroup-label">
                                 <i class="fas fa-credit-card me-2"></i>
                                 @lang('Pay with Bank')</span>
                         </label>
                         <label class="form-selectgroup-item">
-                            <input type="radio" name="payment" value="gateway" class="form-selectgroup-input" >
+                            <input type="radio" name="payment" value="gateway" id="gateway" class="form-selectgroup-input select_method" >
                             <span class="form-selectgroup-label">
                                 <i class="fas fa-dollar-sign me-2"></i>
                                 @lang('Pay with gateways')</span>
                         </label>
                         <label class="form-selectgroup-item">
-                            <input type="radio" name="payment" value="crypto" class="form-selectgroup-input" >
+                            <input type="radio" name="payment" value="crypto" id="crypto" class="form-selectgroup-input select_method" >
                             <span class="form-selectgroup-label">
                                 <i class="fas fa-coins me-2"></i>
                                 @lang('Pay with Crypto')</span>
                         </label>
                         <label class="form-selectgroup-item">
-                        <input type="radio" name="payment" value="wallet" class="form-selectgroup-input" checked="">
+                        <input type="radio" name="payment" value="wallet" id="wallet" class="form-selectgroup-input select_method" checked>
                         <span class="form-selectgroup-label">
                             <i class="fas fa-wallet me-2"></i>
                             @lang('Pay with customer wallet')
                             </span>
                         </label>
 
+                    </div>
+                    <div class="form-group ms-5 mt-5" id="bank_part" style="display: none">
+                        <label class="form-label">{{__('Bank Account')}}</label>
+                        <select name="bank_account" id="bank_account" class="form-control">
+                            @if(count($bankaccounts) != 0)
+                            <option value="">Select</option>
+                              @foreach($bankaccounts as $account)
+                                  <option value="{{$account->id}}">{{$account->subbank->name}}</option>
+
+                              @endforeach
+                            @else
+                            <option value="">There is no bank account for this currency.</option>
+
+                            @endif
+                          </select>
                     </div>
 
                     <div class="form-group ms-5 mt-5" >
@@ -110,5 +125,20 @@
 </div>
 
 @endsection
+@push('js')
+<script type="text/javascript">
+"use strict";
+$('.select_method').on('click', function() {
+    if ($(this).attr('id') == 'bank_pay') {
+        $("#bank_account").prop('required',true);
+        document.getElementById("bank_part").style.display = "block";
+    }
+    else {
+        $("#bank_account").prop('required',false);
+        document.getElementById("bank_part").style.display = "none";
+    }
+})
+</script>
+@endpush
 
 
