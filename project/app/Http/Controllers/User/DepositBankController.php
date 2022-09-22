@@ -54,12 +54,12 @@ class DepositBankController extends Controller
         $other_bank_limit =Generalsetting::first()->other_bank_limit;
         if ($request->amount >= $other_bank_limit) {
             $rules = [
-                'document' => 'required|mimes:xls,xlsx,pdf,jpg,png'
+                'document' => 'required|mimes:xls,xlsx,pdf,jpg,png,doc,docx'
             ];
         }
         else {
             $rules = [
-                'document' => 'mimes:xls,xlsx,pdf,jpg,png'
+                'document' => 'mimes:xls,xlsx,pdf,jpg,png,doc,docx'
             ];
         }
 

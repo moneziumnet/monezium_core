@@ -98,9 +98,9 @@
                                                 $extension = $arr_file_name[count($arr_file_name) - 1];
                                             @endphp
                                             @if(in_array($extension, array('doc','docx','xls','xlsx','pdf')))
-                                            <a href ="https://docs.google.com/gview?url={{asset('assets/doc/'.$data->document)}}">{{$data->document}}</a>
+                                            <a target="_blank" href ="https://docs.google.com/gview?url={{asset('assets/doc/'.$data->document)}}">{{$data->document}}</a>
                                             @else
-                                            <a href ="{{asset('assets/doc/'.$data->document)}}" >{{$data->document}}</a>
+                                            <a target="_blank" href ="{{asset('assets/doc/'.$data->document)}}" >{{$data->document}}</a>
                                             @endif
                                         </td>
                                     </tr>

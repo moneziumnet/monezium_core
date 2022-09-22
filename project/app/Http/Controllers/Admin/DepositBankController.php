@@ -50,16 +50,27 @@ class DepositBankController extends Controller
             ->editColumn('action', function(DepositBank $data) {
 
                 @$detail = SubInsBank::where('id', $data->sub_bank_id)->first();
-                @$bankaccount = BankAccount::whereUserId($data->user_id)->where('subbank_id', $detail->id)->where('currency_id', $data->currency_id)->with('user')->first();
+                @$bankaccount = BankAccount::where('subbank_id', $detail->id)->where('currency_id', $data->currency_id)->with('user')->first();
                 $detail->address = str_replace(' ', '-', $detail->address);
                 $detail->name = str_replace(' ', '-', $detail->name);
                 $doc_url = $data->document ? $data->document : null;
+                if($doc_url){
+                    $arr_file_name = explode('.', $data->document);
+                    $extension = $arr_file_name[count($arr_file_name) - 1];
+
+                    if(in_array($extension, array('doc','docx','xls','xlsx','pdf')))
+                        $doc_url = "https://docs.google.com/gview?url=".asset('assets/doc/'.$data->document);
+                    else
+                        $doc_url = asset('assets/doc/'.$data->document);
+                }
+
                 return '<div class="btn-group mb-1">
                     <a href="javascript:;" 
                         data-detail = \''.json_encode($detail).'\' 
                         data-bank= \''.json_encode($bankaccount).'\' 
                         data-docu="'.$doc_url.'" 
                         data-number="'.$data->deposit_number.'"
+                        data-description="'.$data->details.'"
                         data-status="'.$data->status.'"
                         data-complete-url="'.route('admin.deposits.bank.status',['id1' => $data->id, 'id2' => 'complete']).'"
                         data-reject-url="'.route('admin.deposits.bank.status',['id1' => $data->id, 'id2' => 'reject']).'"

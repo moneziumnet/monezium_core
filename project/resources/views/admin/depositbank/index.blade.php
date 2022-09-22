@@ -75,8 +75,9 @@
             <li class="list-group-item">@lang('Bank Address')<span id="bank_address"></span></li>
             <li class="list-group-item">@lang('Bank IBAN')<span id="bank_iban"></span></li>
             <li class="list-group-item">@lang('Bank SWIFT')<span id="bank_swift"></span></li>
-            <li class="list-group-item">@lang('Deposit No.')<span id="deposit_detail"></span></li>
-            <li class="list-group-item" id="li_document" >@lang('Document')<span> <a id="document" attributes-list download > {{__('Download Document')}} </a> </span></li>
+            <li class="list-group-item">@lang('Deposit No.')<span id="deposit_number"></span></li>
+            <li class="list-group-item">@lang('Details')<span id="deposit_description"></span></li>
+            <li class="list-group-item" id="li_document" >@lang('Document')<span> <a id="document" target="_blank"> {{__('Download Document')}} </a> </span></li>
         </ul>
         </div>
         <div class="modal-footer">
@@ -87,10 +88,10 @@
                     @lang('Close')
                 </button>
                 <div class="row action-button">
-                    <div class="col-md-6">
+                    <div class="col-md-6 mt-2">
                         <button class="btn btn-success w-100" id="complete_deposit" data-toggle="modal" data-target="#statusModal" data-href="">{{__("Approve")}}</button>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 mt-2">
                         <button class="btn btn-danger w-100" id="reject_deposit" data-toggle="modal" data-target="#statusModal" data-href="">{{__("Reject")}}</button>
                     </div>
                 </div>
@@ -135,7 +136,8 @@
             var res_data = JSON.parse(e.target.getAttribute('data-detail'));
             var bankaccount = JSON.parse(e.target.getAttribute('data-bank'));
             var document_url = e.target.getAttribute('data-docu');
-            var deposit_detail = e.target.getAttribute('data-number');
+            var deposit_number = e.target.getAttribute('data-number');
+            var deposit_description = e.target.getAttribute('data-description');
             var deposit_status = e.target.getAttribute('data-status');
             var complete_url = e.target.getAttribute('data-complete-url');
             var reject_url = e.target.getAttribute('data-reject-url');
@@ -145,7 +147,8 @@
             $('#bank_swift').text(bankaccount.swift);
             $('#user_name').text(bankaccount.user.name);
             $('#user_addr').text(bankaccount.user.address);
-            $('#deposit_detail').text(deposit_detail);
+            $('#deposit_number').text(deposit_number);
+            $('#deposit_description').text(deposit_description);
             if(deposit_status == "pending"){
                 $('#complete_deposit').attr('data-href', complete_url);
                 $('#reject_deposit').attr('data-href', reject_url);
@@ -159,12 +162,16 @@
                 $('.closed').removeClass("d-none");
             }
             if(document_url) {
-                $("#li_document").attr("style","display: block");
-                $("#document").attr("href", `{{asset('assets/doc/${document_url}')}}`);
-                $("#document").text(document_url);
+                $("#li_document").removeClass("d-none");
+                $("#document").attr("href", document_url);
+                var arr_url = document_url.split('/');
+                if(arr_url.length > 0)
+                    $("#document").text(arr_url[arr_url.length - 1]);
+                else 
+                    $("#document").text('Document');
             }
             else{
-                $("#li_document").attr("style","display: none!important");
+                $("#li_document").addClass("d-none");
                 $("#document").attr("href", `#`);
             }
             $('#modal-success').modal('show');
