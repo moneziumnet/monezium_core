@@ -273,7 +273,7 @@ class MerchantProductController extends Controller
     {
         $to = $request->email;
         $subject = "Order Product";
-        $msg = "Please order <a href='".$request->link."'>this product</a> \n PLease check QR code: <img src='".generateQR($request->link)."' class='' alt=''>";
+        $msg = "Please order <a href='".$request->link."'>this product</a> <br> PLease check QR code: <img src='".generateQR($request->link)."' class='' alt=''>";
         $headers = "From: ".auth()->user()->name."<".auth()->user()->email.">";
         $headers .= "MIME-Version: 1.0" . "\r\n";
         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
