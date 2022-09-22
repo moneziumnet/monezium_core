@@ -108,15 +108,15 @@
         <div class="modal-body text-center py-4">
         <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
         <h3>@lang('Bank Details')</h3>
-        <ul class="list-group mt-2">
-            <li class="list-group-item d-flex justify-content-between"  style="word-break:break-all;">@lang('Receiver Name')<span id="user_name"  style="margin-left: 60px"></span></li>
-            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank Name')<span id="bank_name"  style="margin-left: 60px"></span></li>
-            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank Address')<span id="bank_address"  style="margin-left: 60px"></span></li>
-            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank IBAN')<span id="bank_iban"  style="margin-left: 60px"></span></li>
-            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank SWIFT')<span id="bank_swift"  style="margin-left: 60px"></span></li>
-            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Amount')<span id="amount"  style="margin-left: 60px"></span></li>
-            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Description')<span id="bank_details"  style="margin-left: 60px"></span></li>
-            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Deposit No.')<span id="deposit_no"  style="margin-left: 60px"></span></li>
+        <ul class="list-group details-list mt-2">
+            <li class="list-group-item">@lang('Receiver Name')<span id="user_name"></span></li>
+            <li class="list-group-item">@lang('Bank Name')<span id="bank_name"></span></li>
+            <li class="list-group-item">@lang('Bank Address')<span id="bank_address"></span></li>
+            <li class="list-group-item">@lang('Bank IBAN')<span id="bank_iban"></span></li>
+            <li class="list-group-item">@lang('Bank SWIFT')<span id="bank_swift"></span></li>
+            <li class="list-group-item">@lang('Amount')<span id="amount"></span></li>
+            <li class="list-group-item">@lang('Description')<span id="bank_details"></span></li>
+            <li class="list-group-item">@lang('Deposit No.')<span id="deposit_no"></span></li>
         </ul>
         </div>
     </div>
@@ -132,7 +132,7 @@
       $('.details').on('click', function() {
           $('#user_name').text($(this).data('deposit').user.name);
           $('#bank_name').text($(this).data('subbank').name);
-          $('#bank_address').text($(this).data('subbank').address);
+          $('#bank_address').text($(this).data('subbank').address + "fjaowiejfoiawejfjawojefoiawjoefjo");
           $('#bank_iban').text($(this).data('data').iban);
           $('#bank_swift').text($(this).data('data').swift);
           $('#bank_details').text($(this).data('deposit').details);
