@@ -69,10 +69,10 @@
                                           {{$subbank->name}}
                                         </td>
                                         <td data-label="{{ __('Bank SWIFT') }}">
-                                          {{$data->swift}}
+                                          {{$data->swift ?? ''}}
                                         </td>
                                         <td data-label="{{ __('Bank IBAN') }}">
-                                          {{$data->iban}}
+                                          {{$data->iban ?? ''}}
                                         </td>
                                         <td data-label="{{ __('Amount') }}" id="li_amount">
                                           {{ showprice($deposit->amount,$deposit->currency) }}
@@ -88,7 +88,7 @@
                                           @endif
                                         </td>
                                         <td data-label="@lang('Details')" class="text-end">
-                                          <button class="btn btn-primary btn-sm details" data-data="{{json_encode($data ?? '')}}" data-subbank="{{json_encode($subbank ?? '')}}" data-deposit="{{json_encode($deposit)}}">@lang('Details')</button>
+                                          <button class="btn btn-primary btn-sm details" data-data="{{json_encode($data ?? '')}}" data-subbank="{{json_encode($subbank ?? '')}}" data-deposit="{{json_encode($deposit)}}" data-amount="{{showprice($deposit->amount,$deposit->currency)}}">@lang('Details')</button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -133,6 +133,7 @@
 <script type="text/javascript">
     'use strict';
       $('.details').on('click', function() {
+        console.log($(this));
           $('#user_name').text($(this).data('deposit').user.name);
           $('#bank_name').text($(this).data('subbank').name);
           $('#bank_address').text($(this).data('subbank').address);
@@ -140,7 +141,7 @@
           $('#bank_swift').text($(this).data('data').swift);
           $('#bank_details').text($(this).data('deposit').details);
           $('#deposit_no').text($(this).data('deposit').deposit_number);
-          $('#amount').text($('#li_amount').text());
+          $('#amount').text($(this).data('amount'));
           $('#modal-success').modal('show');
       })
     </script>

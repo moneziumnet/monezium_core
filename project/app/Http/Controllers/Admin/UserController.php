@@ -494,17 +494,19 @@ class UserController extends Controller
 
             return Datatables::of($datas)
                                 ->addColumn('action', function(User $data) {
-
+                                    $url = $data->kyc_method == 'auto' ? '#' : route('admin.kyc.details',$data->id);
                                     return '<div class="btn-group mb-1">
                                         <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         '.'Actions' .'
                                         </button>
                                         <div class="dropdown-menu" x-placement="bottom-start">
-                                        <a href="' . route('admin.kyc.details',$data->id) . '"  class="dropdown-item">'.__("Details").'</a>
+                                        <a href="' .$url. '"  class="dropdown-item">'.__("Details").'</a>
                                         </div>
                                     </div>';
                                 })
-
+                                ->editColumn('kyc_method', function(User $data) {
+                                    return strtoupper($data->kyc_method);
+                                })
 
                                ->addColumn('kyc', function(User $data) {
                                    if($data->kyc_status == 1){
