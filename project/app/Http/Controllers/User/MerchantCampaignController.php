@@ -232,7 +232,11 @@ class MerchantCampaignController extends Controller
         $subject = "Campaign";
         $msg = "Please check <a href='".$request->link."'>this link</a>";
         $headers = "From: ".auth()->user()->name."<".auth()->user()->email.">";
+        $headers .= "MIME-Version: 1.0" . "\r\n";
+        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
         mail($to,$subject,$msg,$headers);
+        return back()->with('success', 'Email is sent successfully.');
+
     }
 }
 

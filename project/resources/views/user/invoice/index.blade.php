@@ -129,7 +129,7 @@
                                           @endif
 
                                           <a href="javascript:void(0)" class="btn btn-secondary btn-sm copy" data-clipboard-text="{{route('invoice.view',encrypt($item->number))}}" title="{{__('Copy Invoice URL')}}"><i class="fas fa-copy"></i></a>
-                                          <a href="javascript:void(0)" data-email="{{$item->email}}" data-id="{{$item->id}}" class="btn btn-dark btn-sm send_email"><i class="fas fa-mail-bulk"></i></a>
+                                          <a href="javascript:void(0)" data-email="{{$item->email}}" data-id="{{$item->id}}" class="btn btn-dark btn-sm send_email" data-bs-toggle="tooltip" data-bs-original-title="@lang('Send Email')"><i class="fas fa-mail-bulk"></i></a>
 
                                         </div>
                                       </td>
