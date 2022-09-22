@@ -81,8 +81,10 @@
                                         <td data-label="{{ __('Status') }}">
                                           @if($deposit->status == "complete")
                                             <span class="badge bg-success">Complete</span>
-                                          @else
+                                          @elseif ($deposit->status == "pending")
                                             <span class="badge bg-warning">Pending</span>
+                                          @else
+                                            <span class="badge bg-danger">Reject</span>
                                           @endif
                                         </td>
                                         <td data-label="@lang('Details')" class="text-end">

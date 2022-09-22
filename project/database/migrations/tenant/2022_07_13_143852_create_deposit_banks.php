@@ -24,7 +24,7 @@ class CreateDepositBanks extends Migration
             $table->string('sub_bank_id')->nullable();
             $table->text('details')->nullable();
             $table->string('document')->nullable();
-            $table->enum('status', ['pending', 'complete'])->default('pending');
+            $table->enum('status', ['pending', 'complete','reject'])->default('pending');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
         });

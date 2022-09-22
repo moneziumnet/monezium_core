@@ -22,47 +22,53 @@ class DepositBankController extends Controller
         $datas = DepositBank::orderBy('id','desc');
 
         return Datatables::of($datas)
-                        ->editColumn('created_at', function(DepositBank $data) {
-                            $date = date('d-m-Y',strtotime($data->created_at));
-                            return $date;
-                        })
-                        ->addColumn('customer_name',function(DepositBank $data){
-                            $data = User::where('id',$data->user_id)->first();
-                            return $data->name;
-                        })
-                        ->addColumn('customer_email',function(DepositBank $data){
-                            $data = User::where('id',$data->user_id)->first();
-                            return $data->email;
-                        })
-                        ->editColumn('amount', function(DepositBank $data) {
-                            return $data->currency->symbol.round($data->amount*$data->currency->rate);
-                        })
-                        ->editColumn('status', function(DepositBank $data) {
-                            $status = $data->status == 'pending' ? '<span class="badge badge-warning">pending</span>' : '<span class="badge badge-success">completed</span>';
-                            return $status;
-                        })
-                        ->editColumn('action', function(DepositBank $data) {
-                            $status      = $data->status == 'complete' ? _('completed') : _('pending');
-                            $status_sign = $data->status == 'complete' ? 'success'   : 'danger';
+            ->editColumn('created_at', function(DepositBank $data) {
+                $date = date('d-m-Y',strtotime($data->created_at));
+                return $date;
+            })
+            ->addColumn('customer_name',function(DepositBank $data){
+                $data = User::where('id',$data->user_id)->first();
+                return $data->name;
+            })
+            ->addColumn('customer_email',function(DepositBank $data){
+                $data = User::where('id',$data->user_id)->first();
+                return $data->email;
+            })
+            ->editColumn('amount', function(DepositBank $data) {
+                return $data->currency->symbol.round($data->amount*$data->currency->rate);
+            })
+            ->editColumn('status', function(DepositBank $data) {
+                if($data->status == 'pending') {
+                    $status = '<span class="badge badge-warning">pending</span>'; 
+                } else if ($data->status == 'complete') {
+                    $status = '<span class="badge badge-success">completed</span>';
+                } else {
+                    $status = '<span class="badge badge-danger">rejected</span>';
+                }
+                return $status;
+            })
+            ->editColumn('action', function(DepositBank $data) {
 
-                            @$detail = SubInsBank::where('id', $data->sub_bank_id)->first();
-                            @$bankaccount = BankAccount::whereUserId($data->user_id)->where('subbank_id', $detail->id)->where('currency_id', $data->currency_id)->with('user')->first();
-                            $detail->address = str_replace(' ', '-', $detail->address);
-                            $detail->name = str_replace(' ', '-', $detail->name);
-                            $doc_url = $data->document ? $data->document : null;
-                            return '<div class="btn-group mb-1">
-                            <button type="button" class="btn btn-'.$status_sign.' btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              '.$status .'
-                            </button>
-                            <div class="dropdown-menu" x-placement="bottom-start">
-                              <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="'. route('admin.deposits.bank.status',['id1' => $data->id, 'id2' => 'complete']).'">'.__("Pending").'</a>
-                              <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="'. route('admin.deposits.bank.status',['id1' => $data->id, 'id2' => 'pending']).'">'.__("Completed").'</a>'.' <a href="javascript:;"  data-detail = \''.json_encode($detail).'\' data-bank= \''.json_encode($bankaccount).'\' data-docu="'.$doc_url.'" data-number="'.$data->deposit_number.'"  onclick=getDetails(event) class="dropdown-item detailsBtn" >
-                              ' . __("Details") . '</a>'.'
-                            </div>
-                          </div>';
-                        })
-                        ->rawColumns(['created_at','customer_name','customer_email','amount','action'])
-                        ->toJson();
+                @$detail = SubInsBank::where('id', $data->sub_bank_id)->first();
+                @$bankaccount = BankAccount::whereUserId($data->user_id)->where('subbank_id', $detail->id)->where('currency_id', $data->currency_id)->with('user')->first();
+                $detail->address = str_replace(' ', '-', $detail->address);
+                $detail->name = str_replace(' ', '-', $detail->name);
+                $doc_url = $data->document ? $data->document : null;
+                return '<div class="btn-group mb-1">
+                    <a href="javascript:;" 
+                        data-detail = \''.json_encode($detail).'\' 
+                        data-bank= \''.json_encode($bankaccount).'\' 
+                        data-docu="'.$doc_url.'" 
+                        data-number="'.$data->deposit_number.'"
+                        data-status="'.$data->status.'"
+                        data-complete-url="'.route('admin.deposits.bank.status',['id1' => $data->id, 'id2' => 'complete']).'"
+                        data-reject-url="'.route('admin.deposits.bank.status',['id1' => $data->id, 'id2' => 'reject']).'"
+                        onclick=getDetails(event) 
+                        class="btn btn-sm btn-primary detailsBtn">' . __("Details") . '</a>
+                </div>';
+            })
+            ->rawColumns(['created_at','customer_name','customer_email','amount','status','action'])
+            ->toJson();
     }
 
     public function index(){
@@ -72,9 +78,18 @@ class DepositBankController extends Controller
     public function status($id1,$id2){
         $data = DepositBank::findOrFail($id1);
 
-        if($data->status == 'complete'){
-          $msg = 'Deposits already completed';
-          return response()->json($msg);
+        if($data->status == 'complete' || $data->status == 'reject'){
+          $msg = $data->status == 'complete' 
+            ? 'Deposits already completed'
+            : 'Deposits already rejected';
+          return redirect()->back()->with("error", $msg);
+        }
+
+        $data->status = $id2;
+        $data->save();
+        if($id2 == 'reject') {
+            $msg = 'Data Updated Successfully.';
+            return redirect()->back()->with("message", $msg);
         }
 
         $user = User::findOrFail($data->user_id);
@@ -121,12 +136,8 @@ class DepositBankController extends Controller
         $final_chargefee = $transaction_global_cost + $transaction_custom_cost;
         $final_amount = amount($amount - $final_chargefee, $data->currency->type );
 
-
         user_wallet_increment($user->id, $data->currency_id, $final_amount, 1);
         user_wallet_increment(0, 1, $transaction_global_cost, 9);
-
-
-
 
         $trans = new Transaction();
         $trans->trnx = $data->deposit_number;
@@ -148,10 +159,10 @@ class DepositBankController extends Controller
             $subject = " You have deposited successfully.";
             $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
             $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-            mail($to,$subject,$msg,$headers);
+            @mail($to,$subject,$msg,$headers);
 
         $msg = 'Data Updated Successfully.';
-        return response()->json($msg);
+        return redirect()->back()->with("message", $msg);
       }
 }
 
