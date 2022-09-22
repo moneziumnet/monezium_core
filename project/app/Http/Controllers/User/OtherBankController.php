@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Models\BankPlan;
+use App\Models\PlanDetail;
 use App\Models\Currency;
 use App\Models\BankAccount;
 use App\Models\SubInsBank;
