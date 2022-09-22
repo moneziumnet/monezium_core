@@ -43,8 +43,10 @@
                                 <thead>
                                 <tr>
                                     <th>{{ __('Incoming Date') }}</th>
-                                    <th>{{ __('Method') }}</th>
-                                    <th>{{ __('Account') }}</th>
+                                    <th>{{ __('Deposit No') }}</th>
+                                    <th>{{ __('Bank Name') }}</th>
+                                    <th>{{ __('Bank SWIFT') }}</th>
+                                    <th>{{ __('Bank IBAN') }}</th>
                                     <th>{{ __('Amount') }}</th>
                                     <th>{{ __('Status') }}</th>
                                     <th class="text-end">{{ __('Details') }}</th>
@@ -52,40 +54,39 @@
                                 </thead>
                                 <tbody>
                                 @foreach($deposits as $deposit)
+                                    @php
+                                        @$subbank = DB::table('sub_ins_banks')->where('id', $deposit->sub_bank_id)->first();
+                                        @$data = DB::table('bank_accounts')->whereUserId(auth()->id())->where('subbank_id', $subbank->id)->where('currency_id', $deposit->currency_id)->first();
+                                    @endphp
                                     <tr>
                                         <td data-label="{{ __('Incoming Date') }}">
-                                        <div>
                                           {{date('d-M-Y',strtotime($deposit->created_at))}}
-                                        </div>
-                                      </td>
-                                        <td data-label="{{ __('Method') }}">
-                                          <div>
-                                            {{$deposit->method}}
-                                          </div>
                                         </td>
-                                        <td data-label="{{ __('Account') }}">
-                                          <div>
-                                            {{ auth()->user()->email }}
-                                          </div>
+                                        <td data-label="{{ __('Deposit No') }}">
+                                          {{$deposit->deposit_number}}
                                         </td>
-
-                                        <td data-label="{{ __('Amount') }}">
-                                          <div id="li_amount">
-                                            {{ showprice($deposit->amount,$deposit->currency) }}
-                                          </div>
+                                        <td data-label="{{ __('Bank Name') }}">
+                                          {{$subbank->name}}
+                                        </td>
+                                        <td data-label="{{ __('Bank SWIFT') }}">
+                                          {{$data->swift}}
+                                        </td>
+                                        <td data-label="{{ __('Bank IBAN') }}">
+                                          {{$data->iban}}
+                                        </td>
+                                        <td data-label="{{ __('Amount') }}" id="li_amount">
+                                          {{ showprice($deposit->amount,$deposit->currency) }}
                                         </td>
 
                                         <td data-label="{{ __('Status') }}">
-                                          <div>
-                                            {{ ucfirst($deposit->status) }}
-                                          </div>
+                                          @if($deposit->status == "complete")
+                                            <span class="badge bg-success">Complete</span>
+                                          @else
+                                            <span class="badge bg-warning">Pending</span>
+                                          @endif
                                         </td>
                                         <td data-label="@lang('Details')" class="text-end">
-                                            @php
-                                                @$subbank = DB::table('sub_ins_banks')->where('id', $deposit->sub_bank_id)->first();
-                                                @$data = DB::table('bank_accounts')->whereUserId(auth()->id())->where('subbank_id', $subbank->id)->where('currency_id', $deposit->currency_id)->first();
-                                            @endphp
-                                            <button class="btn btn-primary btn-sm details" data-data="{{json_encode($data ?? '')}}" data-subbank="{{json_encode($subbank ?? '')}}" data-deposit="{{json_encode($deposit)}}">@lang('Details')</button>
+                                          <button class="btn btn-primary btn-sm details" data-data="{{json_encode($data ?? '')}}" data-subbank="{{json_encode($subbank ?? '')}}" data-deposit="{{json_encode($deposit)}}">@lang('Details')</button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -107,7 +108,7 @@
         <div class="modal-status bg-primary"></div>
         <div class="modal-body text-center py-4">
         <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
-        <h3>@lang('Bank Details')</h3>
+        <h3>@lang('Deposit Details')</h3>
         <ul class="list-group details-list mt-2">
             <li class="list-group-item">@lang('Receiver Name')<span id="user_name"></span></li>
             <li class="list-group-item">@lang('Bank Name')<span id="bank_name"></span></li>
@@ -132,7 +133,7 @@
       $('.details').on('click', function() {
           $('#user_name').text($(this).data('deposit').user.name);
           $('#bank_name').text($(this).data('subbank').name);
-          $('#bank_address').text($(this).data('subbank').address + "fjaowiejfoiawejfjawojefoiawjoefjo");
+          $('#bank_address').text($(this).data('subbank').address);
           $('#bank_iban').text($(this).data('data').iban);
           $('#bank_swift').text($(this).data('data').swift);
           $('#bank_details').text($(this).data('deposit').details);
