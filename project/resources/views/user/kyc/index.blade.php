@@ -105,9 +105,9 @@
 }
 
 function getNewAccessToken() {
-  return Promise.resolve($NEW_ACCESS_TOKEN)
+  return Promise.resolve()
 }
 
-    launchWebSdk('_act-sbx-5c320e30-7a5a-4ab9-b5ae-394bd030e6c3')
+    launchWebSdk('{{$token}}','{{auth()->user()->email}}', '{{auth()->user()->phone}}')
 </script>
 @endpush

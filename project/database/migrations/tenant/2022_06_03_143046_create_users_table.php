@@ -55,6 +55,7 @@ class CreateUsersTable extends Migration
 1 == \'approve\'
 2 == \'rejected\'');
             $table->string('kyc_photo', 191)->nullable();
+            $table->string('kyc_token', 191)->nullable();
             $table->mediumText('kyc_info')->nullable();
             $table->enum('kyc_method', ['manual', 'auto'])->default('auto');
             $table->text('kyc_reject_reason')->nullable();

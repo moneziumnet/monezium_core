@@ -11,6 +11,7 @@ use App\Models\Generalsetting;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use App\Classes\SumsubKYC;
 
 class KYCController extends Controller
 {
@@ -27,7 +28,28 @@ class KYCController extends Controller
             {
                 $userType = 'user';
                 $userForms = KycForm::where('user_type',$userType == 'user' ? 1 : 2)->get();
-                return view('user.kyc.index',compact('userType','userForms'));
+                $user = User::findOrFail(auth()->id());
+                $token = '';
+                if($user->kyc_method == 'auto') {
+                    if($user->kyc_token) {
+                        $token = $user->kyc_token;
+                    }
+                    else {
+                        $externalUserId = uniqid();
+                        $levelName = 'basic-kyc-level';
+
+                        $testObject = new SumsubKYC();
+                        $applicantId = $testObject->createApplicant($externalUserId, $levelName);
+
+                        $applicantStatusStr = $testObject->getApplicantStatus($applicantId);
+
+                        $accessTokenStr = $testObject->getAccessToken($externalUserId, $levelName);
+                        $token = json_decode($accessTokenStr)->token;
+                        $user->kyc_token = $token;
+                        $user->save();
+                    }
+                }
+                return view('user.kyc.index',compact('userType','userForms', 'token'));
             }else{
                 return redirect()->route('user.dashboard')->with('unsuccess','You have submitted kyc for verification.');
             }
