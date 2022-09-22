@@ -25,6 +25,7 @@
                     <th>{{ __("Email") }}</th>
                     <th>{{__('Kyc')}}</th>
                     <th>{{ __("KYC Info") }}</th>
+                    <th>{{ __("KYC Method") }}</th>
                 </tr>
               </thead>
             </table>
@@ -77,7 +78,8 @@
                         { data: 'name', name: 'name' },
                         { data: 'email', name: 'email' },
                         { data: 'kyc',searchable: false, orderable: false},
-            			{ data: 'action', searchable: false, orderable: false }
+            			{ data: 'action', searchable: false, orderable: false },
+                        { data: 'kyc_method', name: 'kyc_method' },
                      ],
                 language : {
                     processing: '<img src="{{asset('assets/images/'.$gs->admin_loader)}}">'
