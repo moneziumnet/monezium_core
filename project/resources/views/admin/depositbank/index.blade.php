@@ -24,7 +24,7 @@
 		  <thead class="thead-light">
 			<tr>
         <th>{{__('Date')}}</th>
-        <th>{{__('Deposit Number')}}</th>
+        <th>{{__('Deposit No.')}}</th>
         <th>{{__('Customer Name')}}</th>
         <th>{{__('Customer Email')}}</th>
         <th>{{__('Amount')}}</th>
@@ -73,9 +73,9 @@
             <li class="list-group-item d-flex justify-content-between"  style="word-break:break-all;">@lang('Receiver Address')<span id="user_addr"  style="margin-left: 60px"></span></li>
             <li class="list-group-item d-flex justify-content-between"   style="word-break:break-all;">@lang('Bank Name')<span id="bank_name" style="margin-left: 60px"></span></li>
             <li class="list-group-item d-flex justify-content-between"   style="word-break:break-all;">@lang('Bank Address')<span id="bank_address" style="margin-left: 60px"></span></li>
-            <li class="list-group-item d-flex justify-content-between align-items-center"   style="word-break:break-all;">@lang('Bank Iban')<span id="bank_iban" style="margin-left: 60px;text-align:right;width:50%;"></span></li>
-            <li class="list-group-item d-flex justify-content-between"   style="word-break:break-all;">@lang('Bank Swift')<span id="bank_swift" style="margin-left: 60px"></span></li>
-            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Payment Deposit NO.')<span id="deposit_detail"  style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between align-items-center"   style="word-break:break-all;">@lang('Bank IBAN')<span id="bank_iban" style="margin-left: 60px;text-align:right;width:50%;"></span></li>
+            <li class="list-group-item d-flex justify-content-between"   style="word-break:break-all;">@lang('Bank SWIFT')<span id="bank_swift" style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Deposit No.')<span id="deposit_detail"  style="margin-left: 60px"></span></li>
             <li class="list-group-item d-flex justify-content-between" id="li_document" >@lang('Document')<span > <a id="document" attributes-list download > {{__('Download Document')}} </a> </span></li>
         </ul>
         </div>

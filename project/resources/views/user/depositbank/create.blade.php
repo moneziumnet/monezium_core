@@ -83,8 +83,8 @@
         <ul class="list-group mt-2">
             <li class="list-group-item d-flex justify-content-between">@lang('Bank Name')<span id="bank_name"></span></li>
             <li class="list-group-item d-flex justify-content-between">@lang('Bank Address')<span id="bank_address"></span></li>
-            <li class="list-group-item d-flex justify-content-between">@lang('Bank Iban')<span id="bank_iban"></span></li>
-            <li class="list-group-item d-flex justify-content-between">@lang('Bank Swift')<span id="bank_swift"></span></li>
+            <li class="list-group-item d-flex justify-content-between">@lang('Bank IBAN')<span id="bank_iban"></span></li>
+            <li class="list-group-item d-flex justify-content-between">@lang('Bank SWIFT')<span id="bank_swift"></span></li>
             <li class="list-group-item d-flex justify-content-between">@lang('Description')<span id="bank_description"></span></li>
         </ul>
         </div>

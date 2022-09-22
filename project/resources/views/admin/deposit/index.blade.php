@@ -24,7 +24,7 @@
 		  <thead class="thead-light">
 			<tr>
         <th>{{__('Date')}}</th>
-        <th>{{__('Deposit Number')}}</th>
+        <th>{{__('Deposit No.')}}</th>
         <th>{{__('Customer Email')}}</th>
         <th>{{__('Customer Name')}}</th>
         <th>{{__('Amount')}}</th>

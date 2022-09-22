@@ -135,8 +135,8 @@
                     <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Receiver Address')<span id="user_addr"  style="margin-left: 60px"> {{__($data->address)}}</span></li>
                     <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank Name')<span id="bank_name"  style="margin-left: 60px">{{ __($data->bank_name) }}</span></li>
                     <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank Address')<span id="bank_address"  style="margin-left: 60px">{{ __($data->bank_address) }}</span></li>
-                    <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank Iban')<span id="bank_iban"  style="margin-left: 60px">{{ $data->account_iban }}</span></li>
-                    <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank Swift')<span id="bank_swift"  style="margin-left: 60px">{{ $data->swift_bic }}</span></li>
+                    <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank IBAN')<span id="bank_iban"  style="margin-left: 60px">{{ $data->account_iban }}</span></li>
+                    <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank SWIFT')<span id="bank_swift"  style="margin-left: 60px">{{ $data->swift_bic }}</span></li>
                     
                     <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Amount')<span id="otp_amount" style="margin-left: 60px"></span></li>
                     <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Description')<span id="otp_description" style="margin-left: 60px;width:50%;word-break:break-all;text-align:right;"></span></li>

@@ -77,13 +77,13 @@
                                     <td width="45%">{{$bankaccount->user->email}}</td>
                                 </tr>
                                 <tr>
-                                    <th width="45%">{{__('Customer Bank Iban')}}</th>
+                                    <th width="45%">{{__('Customer Bank IBAN')}}</th>
                                     <td width="10%">:</td>
                                     <td width="45%">{{$bankaccount->iban}}</td>
                                 </tr>
 
                                 <tr>
-                                    <th width="45%">{{__('Customer Bank Swift')}}</th>
+                                    <th width="45%">{{__('Customer Bank SWIFT')}}</th>
                                     <td width="10%">:</td>
                                     <td width="45%">{{$bankaccount->swift}}</td>
                                 </tr>

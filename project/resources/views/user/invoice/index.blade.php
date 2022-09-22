@@ -161,7 +161,7 @@
                       @csrf
                       <div class="row">
                           <div class="form-group mt-2">
-                              <label class="form-label required">{{__('Email')}}</label>
+                              <label class="form-label required">{{__('Email Address')}}</label>
                               <input name="email" id="email" class="form-control shadow-none" placeholder="{{__('test@gmail.com')}}" type="email" required>
                           </div>
                       </div>
