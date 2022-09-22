@@ -134,6 +134,7 @@ Route::prefix('user')->group(function() {
 
       Route::get('/kyc-form', [KYCController::class,'kycform'])->name('user.kyc.form');
       Route::post('/kyc-form', [KYCController::class,'kyc'])->name('user.kyc.submit');
+      Route::post('/kyc/status', [KYCController::class,'kyc_status'])->name('user.kyc.status');
       Route::post('/kyc-take-selfie/save', [KYCController::class,'takeOnlineSelfie'])->name('user.kyc.selfie.post');
 
       Route::group(['middleware'=>'kyc:Loan'],function(){

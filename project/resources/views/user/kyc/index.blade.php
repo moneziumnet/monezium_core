@@ -64,7 +64,11 @@
   </div>
 </div>
 
-
+<form action="{{route('user.kyc.status')}}" method="POST" enctype="multipart/form-data" id="status_form">
+    @csrf
+    <input type="hidden" name="id" value="{{auth()->id()}}">
+    <input type="hidden" name="status" id="kyc_status" value="2">
+</form>
 @endsection
 
 @push('js')
@@ -98,6 +102,16 @@
             console.log('onError', payload)
         })
         .onMessage((type, payload) => {
+            if (payload.reviewResult.reviewAnswer == "GREEN") {
+                $('#kyc_status').val(1);
+                $('#status_form').submit();
+                console.log('onMessage::::', payload.reviewResult.reviewAnswer)
+            }
+            if (payload.reviewResult.reviewAnswer == "RED") {
+                $('#kyc_status').val(2);
+                $('#status_form').submit();
+                console.log('onMessage::::', payload.reviewResult.reviewAnswer)
+            }
             console.log('onMessage', type, payload)
         })
         .build();

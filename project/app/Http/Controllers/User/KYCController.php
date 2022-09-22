@@ -160,4 +160,16 @@ class KYCController extends Controller
         $user->save();
         return redirect()->route('user.dashboard')->with('message','KYC submitted successfully');
     }
+
+    public function kyc_status(Request $request) {
+        $user = User::findOrFail($request->id);
+        $user->kyc_status = $request->status;
+        if($request->status == 2) {
+            $user->kyc_token = null;
+        }
+        $user->update();
+        $res = $request->status == 1 ? 'Your Verification Completed.' : 'Your Verification Rejected.';
+        $res_status = $request->status == 1 ? 'message' : 'error';
+        return redirect(route('user.dashboard'))->with($res_status, $res);
+    }
 }
