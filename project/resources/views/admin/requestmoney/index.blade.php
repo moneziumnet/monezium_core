@@ -25,7 +25,7 @@
 				<th>{{__('Request From')}}</th>
 				<th>{{__('Request To')}}</th>
 				<th>{{__('Amount')}}</th>
-				<th>{{__('Cost')}}</th>
+				<th>{{__('Charge')}}</th>
 				<th>{{__('Status')}}</th>
 			</tr>
 		  </thead>
