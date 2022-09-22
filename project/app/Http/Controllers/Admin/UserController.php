@@ -891,7 +891,10 @@ class UserController extends Controller
 
             $user = User::findOrFail($id);
             $data = $request->all();
-            $data['name'] = trim($request->firstname)." ".trim($request->lastname);
+            if ($request->firstname)
+            {
+                $data['name'] = trim($request->firstname)." ".trim($request->lastname);
+            }
 
             if ($file = $request->file('photo'))
             {
