@@ -108,6 +108,7 @@ class MoneyRequestController extends Controller
         $data->user_id = auth()->user()->id;
         $data->receiver_id = $receiver === null ? 0 : $receiver->id;
         $data->receiver_name = $request->account_name;
+        $data->receiver_email = $request->account_email;
         $data->transaction_no = $txnid;
         $data->currency_id = $request->wallet_id;
         $data->cost = $transaction_global_cost;
@@ -141,13 +142,7 @@ class MoneyRequestController extends Controller
 
                 </body>
             </html>
-
             ';
-
-
-
-
-
 
             $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
             $headers .= "MIME-Version: 1.0" . "\r\n";
@@ -155,7 +150,7 @@ class MoneyRequestController extends Controller
 
             // More headers
 
-            mail($to,$subject,$msg_body,$headers);
+            @mail($to,$subject,$msg_body,$headers);
             $data->save();
             return redirect(route('user.money.request.index'))->with('message','Request Money Send to unregisted user('.$request->account_email.') Successfully.');
 

@@ -19,6 +19,7 @@ class CreateMoneyRequestsTable extends Migration
             $table->integer('user_id')->nullable();
             $table->integer('receiver_id')->nullable();
             $table->string('receiver_name')->nullable();
+            $table->string('receiver_email')->nullable();
             $table->integer('currency_id')->nullable();
             $table->double('cost')->nullable();
             $table->double('supervisor_cost')->nullable();

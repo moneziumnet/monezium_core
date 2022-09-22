@@ -127,7 +127,7 @@
 @push('js')
 <script>
   'use strict';
-  $("#account_email").on('change',function(){
+    $("#account_email").on('change',function(){
       $.post("{{ route('user.username.email') }}",{email: $("#account_email").val(),_token:'{{csrf_token()}}'}, function(data){
         $("#account_name").val(data['name']);
       });
