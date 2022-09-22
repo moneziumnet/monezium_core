@@ -106,21 +106,6 @@
                                     </tr>
                                 @endif
 
-                                @foreach (json_decode($data->beneficiary->details,true) as $key=>$value)
-                                    @if ($value[1] == 'file')
-                                        <tr>
-                                            <th width="45%">{{$key}}</th>
-                                            <td width="10%">:</td>
-                                            <td width="45%"><img src="{{asset('assets/images/'.$value[0])}}" class="img-thumbnail"></td>
-                                        </tr>
-                                    @else
-                                        <tr>
-                                            <th width="45%">{{$key}}</th>
-                                            <td width="10%">:</td>
-                                            <td width="45%">{{ $value[0] }}</td>
-                                        </tr>
-                                    @endif
-                                @endforeach
 
                                 </tbody>
                             </table>
