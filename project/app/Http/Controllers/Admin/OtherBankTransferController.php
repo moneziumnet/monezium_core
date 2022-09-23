@@ -118,8 +118,8 @@ class OtherBankTransferController extends Controller
         $data = User::whereId($data->user_id)->first();
         if ($data) {
           return '<div>
-                                            <span>' . $data->name . '</span>
-                                    </div>';
+            <span>' . $data->name . '</span>
+          </div>';
         } else {
           return $data = '';
         }
@@ -130,8 +130,8 @@ class OtherBankTransferController extends Controller
 
         if ($data) {
           return '<div>
-                                            <span>' . $data->name . '</span>
-                                    </div>';
+            <span>' . $data->name . '</span>
+          </div>';
         } else {
           return $data = '';
         }
@@ -165,26 +165,26 @@ class OtherBankTransferController extends Controller
         }
 
         return '<div class="btn-group mb-1">
-                                <button type="button" class="btn btn-' . $status_sign . ' btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  ' . $status . '
-                                </button>
-                                <div class="dropdown-menu" x-placement="bottom-start">
-                                  <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="' . route('admin.other.banks.transfer.status', ['id1' => $data->id, 'status' => 1]) . '">' . __("completed") . '</a>
-                                  <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="' . route('admin.other.banks.transfer.status', ['id1' => $data->id, 'status' => 2]) . '">' . __("rejected") . '</a>
-                                </div>
-                              </div>';
+          <button type="button" class="btn btn-' . $status_sign . ' btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            ' . $status . '
+          </button>
+          <div class="dropdown-menu" x-placement="bottom-start">
+            <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="' . route('admin.other.banks.transfer.status', ['id1' => $data->id, 'status' => 1]) . '">' . __("completed") . '</a>
+            <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="' . route('admin.other.banks.transfer.status', ['id1' => $data->id, 'status' => 2]) . '">' . __("rejected") . '</a>
+          </div>
+        </div>';
       })
 
       ->addColumn('action', function (BalanceTransfer $data) {
 
         return '<div class="btn-group mb-1">
-                                  <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    ' . 'Actions' . '
-                                  </button>
-                                  <div class="dropdown-menu" x-placement="bottom-start">
-                                    <a href="' . route('admin.other.banks.transfer.show', $data->id) . '"  class="dropdown-item">' . __("Details") . '</a>
-                                  </div>
-                                </div>';
+          <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            ' . 'Actions' . '
+          </button>
+          <div class="dropdown-menu" x-placement="bottom-start">
+            <a href="' . route('admin.other.banks.transfer.show', $data->id) . '"  class="dropdown-item">' . __("Details") . '</a>
+          </div>
+        </div>';
       })
 
       ->rawColumns(['user_id', 'beneficiary_id', 'amount', 'cost', 'status', 'action'])
@@ -209,14 +209,12 @@ class OtherBankTransferController extends Controller
   {
     $data = BalanceTransfer::findOrFail($id1);
     if ($data->status == 1) {
-      $msg = __('Status already Completed.');
-      return response()->json($msg);
+      return response()->json(array('errors' => [ 0 =>  __('Status already completed.') ]));
     }
     if ($data->status == 2) {
-        $msg = __('Status already Rejected.');
-        return response()->json($msg);
-      }
-      $user = User::whereId($data->user_id)->first();
+      return response()->json(array('errors' => [ 0 =>  __('Status already rejected.') ]));
+    }
+    $user = User::whereId($data->user_id)->first();
     if ($id2 == 2) {
       if ($user) {
         // $user->increment('balance', $data->final_amount);

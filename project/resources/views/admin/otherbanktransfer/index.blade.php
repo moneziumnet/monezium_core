@@ -16,6 +16,7 @@
 <div class="row mt-3">
   <div class="col-lg-12">
 	@include('includes.admin.form-success')
+	@include('includes.admin.form-error')
 	<div class="card mb-4">
 	  <div class="table-responsive p-3">
 		<table id="geniustable" class="table table-hover dt-responsive" cellspacing="0" width="100%">
