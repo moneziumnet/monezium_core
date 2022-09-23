@@ -165,6 +165,7 @@ Route::prefix('user')->group(function() {
       Route::post('/merchant/setting/{tab?}', [MerchantController::class,'setting_update'])->name('user.merchant.settingUpdate');
       Route::post('/merchant/cryptowallet/update', [MerchantController::class,'address_edit'])->name('user.merchant.cryptowallet.update');
       Route::post('/merchant/download-qr',  [MerchantController::class,'downloadQR'])->name('user.merchant.download.qr');
+      
       Route::get('/merchant/send-money',[MerchantSendController::class,'create'])->name('user.merchant.send.money.create');
       Route::post('/merchant/send-money',[MerchantSendController::class,'store'])->name('user.merchant.send.money.store');
       Route::get('/merchant/send/money/success',[MerchantSendController::class,'success'])->name('user.merchant.send.money.success');
@@ -225,8 +226,6 @@ Route::prefix('user')->group(function() {
       Route::get('/merchant/checkout/transaction/status/{id}/{status}', [MerchantCheckoutController::class,'transaction_status'])->name('user.merchant.checkout.transaction.status');
       Route::post('/merchant/checkout/send_email',[MerchantCheckoutController::class,'send_email'])->name('user.merchant.checkout.send_email');
       Route::post('/merchant/checkout/transaction', [MerchantCheckoutController::class,'transaction'])->name('user.merchant.checkout.transaction');
-
-
 
       Route::group(['middleware'=>'kyc:Request Money'],function(){
         Route::get('/money-request', [MoneyRequestController::class,'index'])->name('user.money.request.index');

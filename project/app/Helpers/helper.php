@@ -446,9 +446,25 @@ if(!function_exists('getModule')){
       }
 
     }
-}
+  }
 
+  if(!function_exists('merchant_shop_wallet_decrement'))
+  {
+    function merchant_shop_wallet_decrement($auth_id, $currency_id, $amount, $shop_id)
+    {
+      $wallet = MerchantWallet::where('merchant_id', $auth_id)->where('shop_id', $shop_id)
+          ->where('currency_id',$currency_id)->first();
+      if($wallet)
+      {
+        $balance = MerchantWallet::where('merchant_id', $auth_id)
+          ->where('shop_id', $shop_id)
+          ->where('currency_id',$currency_id)
+          ->decrement('balance', $amount);
+        return $balance;
+      }
 
+    }
+  }
 
   if(!function_exists('check_user_type'))
   {
