@@ -89,15 +89,15 @@
                                               @endphp
                                             @endif
                                             <div>
-                                              <span class="badge badge-{{ $bclass }}">{{ $bstatus}}</span>
+                                              <span class="badge bg-{{ $bclass }}">{{ $bstatus}}</span>
                                             </div>
                                           </td>
 
                                           <td data-label="{{ __('Details') }}">
                                             <div class="btn-list">
-                                                <a href="{{route('user.money.request.details',$data->id)}}" class="btn btn-primary btn-sm">
+                                                <button data-id="{{$data->id}}" class="btn btn-primary btn-sm details">
                                                   {{__('Details')}}
-                                                </a>
+                                                </button>
                                             </div>
                                           </td>
                                       </tr>
@@ -185,24 +185,15 @@
                                               @endphp
                                             @endif
                                             <div>
-                                              <span class="badge badge-{{ $bclass }}">{{ $bstatus}}</span>
+                                              <span class="badge bg-{{ $bclass }}">{{ $bstatus}}</span>
                                             </div>
                                           </td>
 
                                           <td data-label="{{ __('Details') }}">
                                             <div class="btn-list">
-                                                <a href="{{route('user.money.request.details',$data->id)}}" class="btn btn-primary">
+                                                <button data-id="{{$data->id}}" class="btn btn-sm btn-primary details">
                                                   {{__('Details')}}
-                                                </a>
-
-                                                @if ($data->status == 0)
-                                                  <a href="javascript:;" id="sendBtn" data-href="{{route('user.request.money.send', $data->id)}}" class="btn" data-bs-toggle="modal" data-bs-target="#modal-success">
-                                                    {{__('Send')}}
-                                                  </a>
-                                                  <a href="javascript:;" id="cancelBtn" data-href="{{ route('user.request.money.cancel',$data->id) }}" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-cancel">
-                                                    {{__('Cancel')}}
-                                                  </a>
-                                                @endif
+                                                </button>
                                             </div>
                                           </td>
                                       </tr>
@@ -267,12 +258,27 @@
   </div>
 </div>
 
+<div class="modal modal-blur fade" id="modal-details" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="request-money-details">
+        </div>
+      </div>
+  </div>
+</div>
+
 @endsection
 
 @push('js')
   <script>
     'use strict';
-
+    $('.details').on('click', function() {
+        var url = "{{url('user/money-request/details/')}}"+'/'+$(this).data('id')
+        $.get(url,function (res) {
+          $('.request-money-details').html(res)
+          $('#modal-details').modal('show')
+        })
+    })
     $("#sendBtn").on('click',function(){
       $("#requestMoney").prop("action",$(this).data('href'))
       var verify = "{{$user->paymentCheck('Payment between accounts')}}";
