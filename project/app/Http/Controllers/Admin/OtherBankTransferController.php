@@ -79,27 +79,12 @@ class OtherBankTransferController extends Controller
         } else {
           $status_sign = 'warning';
         }
-
-        return '<div class="btn-group mb-1">
-          <button type="button" class="btn btn-' . $status_sign . ' btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            ' . $status . '
-          </button>
-          <div class="dropdown-menu" x-placement="bottom-start">
-            <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="' . route('admin.other.banks.transfer.status', ['id1' => $data->id, 'status' => 1]) . '">' . __("completed") . '</a>
-            <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="' . route('admin.other.banks.transfer.status', ['id1' => $data->id, 'status' => 2]) . '">' . __("rejected") . '</a>
-          </div>
-        </div>';
+        return '<span class="badge badge-'.$status_sign.'">'.$status.'</span>';
       })
 
       ->addColumn('action', function (BalanceTransfer $data) {
-
         return '<div class="btn-group mb-1">
-          <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            ' . 'Actions' . '
-          </button>
-          <div class="dropdown-menu" x-placement="bottom-start">
-            <a href="' . route('admin.other.banks.transfer.show', $data->id) . '"  class="dropdown-item">' . __("Details") . '</a>
-          </div>
+          <button type="button" class="btn btn-primary btn-sm" onclick="getDetails(event)" id="'.$data->id.'">Details</button>
         </div>';
       })
 
@@ -203,6 +188,15 @@ class OtherBankTransferController extends Controller
     $bankaccount = BankAccount::whereUserId($data->user_id)->where('subbank_id',$data->subbank)->where('currency_id', $data->currency_id)->first();
 
     return view('admin.otherbanktransfer.show', compact('data', 'banefeciary', 'bankaccount'));
+  }
+
+  public function details($id)
+  {
+    $data = BalanceTransfer::whereId($id)->first();
+    $banefeciary = Beneficiary::whereId($data->beneficiary_id)->first();
+    $bankaccount = BankAccount::whereUserId($data->user_id)->where('subbank_id',$data->subbank)->where('currency_id', $data->currency_id)->first();
+
+    return view('admin.otherbanktransfer.details', compact('data', 'banefeciary', 'bankaccount'));
   }
 
   public function status($id1, $id2)

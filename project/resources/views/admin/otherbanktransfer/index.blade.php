@@ -61,7 +61,14 @@
 </div>
 {{-- STATUS MODAL ENDS --}}
 
-
+<div class="modal modal-blur fade" id="modal-details" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="bank_transfer_details"></div>
+        </div>
+    </div>
+    </div>
+</div>
 @endsection
 
 
@@ -71,24 +78,45 @@
 	"use strict";
 
     var table = $('#geniustable').DataTable({
-           ordering: false,
-           processing: true,
-           serverSide: true,
-           searching: true,
-           ajax: '{{ route('admin.other.banks.transfer.datatables') }}',
-           columns: [
-				{ data: 'transaction_no', name: 'transaction_no' },
-				{ data: 'user_id', name: 'user_id' },
-				{ data: 'beneficiary_id', name: 'beneficiary_id' },
-				{ data: 'amount', name: 'amount' },
-				{ data: 'cost', name: 'cost' },
-				{ data: 'status', name: 'status' },
-                { data: 'action', searchable: false, orderable: false }
-            ],
-            language : {
-                processing: '<img src="{{asset('assets/images/'.$gs->admin_loader)}}">'
-            }
-        });
+		ordering: false,
+		processing: true,
+		serverSide: true,
+		searching: true,
+		ajax: '{{ route('admin.other.banks.transfer.datatables') }}',
+		columns: [
+			{ data: 'transaction_no', name: 'transaction_no' },
+			{ data: 'user_id', name: 'user_id' },
+			{ data: 'beneficiary_id', name: 'beneficiary_id' },
+			{ data: 'amount', name: 'amount' },
+			{ data: 'cost', name: 'cost' },
+			{ data: 'status', name: 'status' },
+			{ data: 'action', searchable: false, orderable: false }
+		],
+		language : {
+			processing: '<img src="{{asset('assets/images/'.$gs->admin_loader)}}">'
+		}
+	});
+
+	function getDetails(e) {
+		var url = "{{url('admin/other-banks/transfer/details/')}}"+'/'+e.target.getAttribute('id');
+		$.get(url,function (res) {
+			$('.bank_transfer_details').html(res);
+			$('#modal-details').modal('show');
+			$('.closed').on('click', function() {
+				$('#modal-details').modal('hide');
+			});
+
+			$('#complete_transfer').on('click', function() {
+				$('#modal-details').modal('hide');
+				$('.btn-ok').attr('href', $(this).data('href'));
+			});
+
+			$('#reject_transfer').on('click', function() {
+				$('#modal-details').modal('hide');
+				$('.btn-ok').attr('href', $(this).data('href'));
+			});
+		})
+	};
 </script>
 
 @endsection

@@ -1,0 +1,67 @@
+<div class="modal-status bg-primary"></div>
+<div class="modal-body text-center py-4">
+    <i class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+    <h3>@lang('Bank Transfer Details')</h3>
+    <ul class="list-group details-list mt-2">
+        <li class="list-group-item">@lang('Bank Name')<span>{{ $data->beneficiary->bank_name }}</span></li>
+        <li class="list-group-item">@lang('Account Name')<span>{{ $data->beneficiary->name }}</span></li>
+        <li class="list-group-item">@lang('Beneficiary Address')<span>{{ $data->beneficiary->address }}</span></li>
+        <li class="list-group-item">@lang('Bank Address')<span>{{ $data->beneficiary->bank_address }}</span></li>
+        <li class="list-group-item">@lang('Account IBAN')<span>{{ $data->beneficiary->account_iban }}</span></li>
+        <li class="list-group-item">@lang('SWIFT/BIC')<span>{{ $data->beneficiary->swift_bic }}</span></li>
+        <li class="list-group-item">@lang('Customer Name')<span>{{ $bankaccount->user->name }}</span></li>
+        <li class="list-group-item">@lang('Customer Email')<span>{{ $bankaccount->user->email }}</span></li>
+        <li class="list-group-item">@lang('Customer Bank IBAN')<span>{{ $bankaccount->iban }}</span></li>
+        <li class="list-group-item">@lang('Customer Bank SWIFT')<span>{{ $bankaccount->swift }}</span></li>
+        @if ($data->document)
+            @php
+                $arr_file_name = explode('.', $data->document);
+                $extension = $arr_file_name[count($arr_file_name) - 1];
+            @endphp
+            <li class="list-group-item">@lang('Document')
+                <span>
+                    @if (in_array($extension, ['doc', 'docx', 'xls', 'xlsx', 'pdf']))
+                        <a target="_blank"
+                            href="https://docs.google.com/gview?url={{ asset('assets/doc/' . $data->document) }}">{{ $data->document }}</a>
+                    @else
+                        <a target="_blank" href="{{ asset('assets/doc/' . $data->document) }}">{{ $data->document }}</a>
+                    @endif
+                </span>
+            </li>
+        @endif
+    </ul>
+</div>
+<div class="modal-footer">
+    <div class="w-100">
+        <div class="row">
+            <div class="col">
+            @if ($data->status == 0)
+                <div class="row action-button">
+                    <div class="col-md-6 mt-2">
+                        <button 
+                            class="btn btn-success w-100" 
+                            id="complete_transfer" 
+                            data-toggle="modal" 
+                            data-target="#statusModal" 
+                            data-href="{{route('admin.other.banks.transfer.status', ['id1' => $data->id, 'status' => 1])}}"
+                        >{{__("Approve")}}</button>
+                    </div>
+                    <div class="col-md-6 mt-2">
+                        <button 
+                            class="btn btn-danger w-100" 
+                            id="reject_transfer" 
+                            data-toggle="modal" 
+                            data-target="#statusModal" 
+                            data-href="{{route('admin.other.banks.transfer.status', ['id1' => $data->id, 'status' => 2])}}"
+                        >{{__("Reject")}}</button>
+                    </div>
+                </div>
+            @else
+                <button class="btn w-100 closed" data-bs-dismiss="modal">
+                    @lang('Close')
+                </button>
+            @endif
+            </div>
+        </div>
+    </div>
+</div>

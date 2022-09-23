@@ -400,6 +400,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/other-banks/transfer/subdatatables', [OtherBankTransferController::class, 'subdatatables'])->name('admin.other.banks.transfer.subdatatables');
     Route::get('/other-banks/transfer', [OtherBankTransferController::class, 'index'])->name('admin.other.banks.transfer.index');
     Route::get('/other-banks/transfer/show/{id}', [OtherBankTransferController::class, 'show'])->name('admin.other.banks.transfer.show');
+    Route::get('/other-banks/transfer/details/{id}', [OtherBankTransferController::class, 'details'])->name('admin.other.banks.transfer.details');
     Route::get('/other-banks/transfer/{id1}/status/{status}', [OtherBankTransferController::class, 'status'])->name('admin.other.banks.transfer.status');
   });
 
