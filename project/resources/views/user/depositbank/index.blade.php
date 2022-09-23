@@ -111,6 +111,7 @@
         <div class="modal-body text-center py-4">
         <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
         <h3>@lang('Deposit Details')</h3>
+        <p class="bank_details"></p>
         <ul class="list-group details-list mt-2">
             <li class="list-group-item">@lang('Receiver Name')<span id="user_name"></span></li>
             <li class="list-group-item">@lang('Bank Name')<span id="bank_name"></span></li>

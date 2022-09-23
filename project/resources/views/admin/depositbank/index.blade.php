@@ -69,15 +69,15 @@
         <h3>@lang('Bank Details')</h3>
         <p class="bank_details"></p>
         <ul class="list-group details-list mt-2">
-            <li class="list-group-item">@lang('Receiver Name')<span id="user_name"></span></li>
-            <li class="list-group-item">@lang('Receiver Address')<span id="user_addr"></span></li>
-            <li class="list-group-item">@lang('Bank Name')<span id="bank_name"></span></li>
-            <li class="list-group-item">@lang('Bank Address')<span id="bank_address"></span></li>
-            <li class="list-group-item">@lang('Bank IBAN')<span id="bank_iban"></span></li>
-            <li class="list-group-item">@lang('Bank SWIFT')<span id="bank_swift"></span></li>
-            <li class="list-group-item">@lang('Deposit No.')<span id="deposit_number"></span></li>
-            <li class="list-group-item">@lang('Details')<span id="deposit_description"></span></li>
-            <li class="list-group-item" id="li_document" >@lang('Document')<span> <a id="document" target="_blank"> {{__('Download Document')}} </a> </span></li>
+            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Receiver Name')<span id="user_name" style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Receiver Address')<span id="user_addr" style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank Name')<span id="bank_name" style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank Address')<span id="bank_address" style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank IBAN')<span id="bank_iban" style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank SWIFT')<span id="bank_swift" style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Deposit No.')<span id="deposit_number" style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Description')<span id="deposit_description" style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;" id="li_document" >@lang('Document')<span  style="margin-left: 60px"> <a id="document" target="_blank"> </a> </span></li>
         </ul>
         </div>
         <div class="modal-footer">
