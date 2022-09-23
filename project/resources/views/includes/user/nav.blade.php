@@ -175,7 +175,7 @@
                 </a>
 
                 <a class="dropdown-item" href="{{route('user.merchant.send.money.create')}}">
-                    {{__('Internal Payment')}}
+                    {{__('Payment to own Account')}}
                 </a>
 
                 <a class="dropdown-item" href="{{route('user.merchant.money.request.index')}}">

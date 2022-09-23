@@ -98,16 +98,21 @@
                                       </td>
 
                                       <td data-label="{{ __('Publish Status') }}">
-                                        <div>
+                                        <div class="text-end">
                                           @if (($item->status == 1 || $item->status == 0) && $item->payment_status != 1)
                                           <label class="form-check form-switch">
                                             <input class="form-check-input status shadow-none" type="checkbox" data-id="{{$item->id}}" {{$item->status == 1 ? 'checked':''}}>
-                                            <small class="form-check-label status-text-{{$item->id}} badge {{$item->status == 1 ? 'bg-success':'bg-secondary'}}">{{$item->status == 1 ? 'Published':'Un-Published'}}</small>
+                                            <span 
+                                              class="form-check-label status-text-{{$item->id}} badge {{$item->status == 1 ? 'bg-success':'bg-secondary'}}"
+                                              style="width: 92px"
+                                            >
+                                              {{$item->status == 1 ? 'Published':'Un-Published'}}
+                                            </span>
                                           </label>
                                           @elseif($item->status == 2)
-                                            <span class="badge bg-danger">{{__('cancelled')}}</span>
-                                            @else
-                                            <span class="badge bg-success">{{__('Published')}}</span>
+                                            <span class="badge bg-danger" style="width: 92px">{{__('cancelled')}}</span>
+                                          @else
+                                            <span class="badge bg-success" style="width: 92px">{{__('Published')}}</span>
                                           @endif
                                         </div>
                                       </td>
