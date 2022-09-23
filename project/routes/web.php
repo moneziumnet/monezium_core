@@ -44,4 +44,6 @@ Route::get('/merchant/product/link/{id}', [MerchantProductController::class,'lin
 Route::get('/merchant/product/link/crypto/{id}', [MerchantProductController::class,'crypto_link'])->name('user.merchant.product.crypto.link');
 Route::get('/merchant/product/link/crypto/pay/{id}', [MerchantProductController::class,'crypto_link_pay'])->name('user.merchant.product.crypto.link.pay');
 Route::get('/merchant/campaign/link/{id}', [MerchantCampaignController::class,'link'])->name('user.merchant.campaign.link');
+Route::get('/merchant/campaign/link/crypto/{id}', [MerchantCampaignController::class,'crypto_link'])->name('user.merchant.campaign.crypto.link');
+Route::get('/merchant/campaign/link/crypto/pay/{id}', [MerchantCampaignController::class,'crypto_link_pay'])->name('user.merchant.campaign.crypto.link.pay');
 Route::get('kyc-take-selfie/{id}', [KYCController::class,'onlineSelfie'])->name('user.kyc.selfie');

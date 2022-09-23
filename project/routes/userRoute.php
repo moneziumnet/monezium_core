@@ -213,6 +213,8 @@ Route::prefix('user')->group(function() {
       Route::get('/merchant/campaign/delete/{id}', [MerchantCampaignController::class,'delete'])->name('user.merchant.campaign.delete');
       Route::get('/merchant/campaign/status/{id}', [MerchantCampaignController::class,'status'])->name('user.merchant.campaign.status');
       Route::post('/merchant/campaign/pay', [MerchantCampaignController::class,'pay'])->name('user.merchant.campaign.pay');
+      Route::get('/merchant/campaign/crypto/{id}', [MerchantCampaignController::class,'crypto'])->name('user.merchant.campaign.crypto');
+      Route::get('/merchant/campaign/crypto/pay/{id}', [MerchantCampaignController::class,'crypto_pay'])->name('user.merchant.campaign.crypto.pay');
       Route::get('/merchant/campaign/donation/{id}', [MerchantCampaignController::class,'donation_by_campaign'])->name('user.merchant.campaign.donation_list');
       Route::post('/merchant/campaign/send_email',[MerchantCampaignController::class,'send_email'])->name('user.merchant.campaign.send_email');
 

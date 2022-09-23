@@ -93,27 +93,50 @@
 
                     </div>
                     <div class="form-group ms-5 mt-5 text-start" id="bank_part" style="display: none">
-                        <label class="form-label">{{__('Bank Account')}}</label>
+                        <label class="form-label required">{{__('Bank Account')}}</label>
                         <select name="bank_account" id="bank_account" class="form-control">
                             @if(count($bankaccounts) != 0)
-                            <option value="">Select</option>
+                            <option value="">{{__('Select')}}</option>
                               @foreach($bankaccounts as $account)
-                                  <option value="{{$account->id}}">{{$account->subbank->name}}</option>
+                                  <option value="{{$account->id}}" data-data="{{$account}}" data-bank="{{$account->subbank}}" data-user="{{$account->user->name}}">{{$account->subbank->name}}</option>
 
                               @endforeach
                             @else
-                            <option value="">There is no bank account for this currency.</option>
+                            <option value="">{{__('There is no bank account for this currency.')}}</option>
 
                             @endif
                           </select>
                     </div>
 
+                    <div id="bank_account_part" style="display: none;">
+                        <div class="form-group ms-5 mt-2 text-start" >
+                            <label class="form-label">{{__('Receiver Name')}}</label>
+                            <input name="receiver_name" id="receiver_name" class="form-control shadow-none col-md-4"  type="text" readonly>
+                        </div >
+                        <div class="form-group ms-5 mt-2 text-start" >
+                            <label class="form-label">{{__('Bank Name')}}</label>
+                            <input name="bank_name" id="bank_name" class="form-control shadow-none col-md-4"  type="text" readonly>
+                        </div >
+                        <div class="form-group ms-5 mt-2 text-start" >
+                            <label class="form-label">{{__('Bank Address')}}</label>
+                            <input name="bank_address" id="bank_address" class="form-control shadow-none col-md-4"  type="text" readonly>
+                        </div >
+                        <div class="form-group ms-5 mt-2 text-start" >
+                            <label class="form-label">{{__('Bank IBAN')}}</label>
+                            <input name="bank_iban" id="bank_iban" class="form-control shadow-none col-md-4"  type="text" readonly>
+                        </div >
+                        <div class="form-group ms-5 mt-2 text-start" >
+                            <label class="form-label">{{__('Bank SWIFT')}}</label>
+                            <input name="bank_swift" id="bank_swift" class="form-control shadow-none col-md-4"  type="text" readonly>
+                        </div >
+                    </div>
+
                     <div class="form-group ms-5 mt-5 text-start" >
-                        <label class="form-label">{{__('Amount')}}</label>
+                        <label class="form-label required">{{__('Amount')}}</label>
                         <input name="amount" id="amount" class="form-control shadow-none col-md-4"  type="number" min="1" max="{{$data->goal}}" required>
                     </div >
                     <div class="form-group ms-5 mt-5 text-start" >
-                        <label class="form-label">{{__('description')}}</label>
+                        <label class="form-label required">{{__('description')}}</label>
                         <input name="description" id="description" class="form-control shadow-none col-md-4"  type="text"  required>
                     </div >
                     <input type="hidden" name="campaign_id" value="{{$data->id}}">
@@ -143,8 +166,30 @@ $('.select_method').on('click', function() {
     }
     else {
         $("#bank_account").prop('required',false);
+        document.getElementById('bank_account_part').style.display = "none";
         document.getElementById("bank_part").style.display = "none";
     }
+    if ($(this).attr('id') == 'crypto') {
+            window.location.href = "{{route('user.merchant.campaign.crypto', $data->id)}}"
+        }
+    })
+$('#bank_account').on('change', function() {
+    console.log('test');
+    var selected = $('#bank_account option:selected').data('data');
+    var bank = $('#bank_account option:selected').data('bank');
+    var user = $('#bank_account option:selected').data('user');
+    if(selected){
+       $('#receiver_name').val(user);
+       $('#bank_name').val(bank.name);
+       $('#bank_address').val(bank.address);
+       $('#bank_iban').val(selected.iban);
+       $('#bank_swift').val(selected.swift);
+       $('#bank_swift').val(selected.swift);
+        document.getElementById('bank_account_part').style.display = "block";
+    } else{
+        document.getElementById('bank_account_part').style.display = "none";
+    }
 })
+
 </script>
 @endpush

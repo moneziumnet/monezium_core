@@ -18,6 +18,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
 use Datatables;
 use Illuminate\Support\Carbon;
+use App\Models\BankAccount;
+use App\Models\MerchantWallet;
+use GuzzleHttp\Client;
 
 use PayPal\{
     Api\Item,
@@ -42,7 +45,7 @@ class MerchantCampaignController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['link']]);
+        $this->middleware('auth', ['except' => ['link', 'crypto_link', 'crypto_link_pay', 'pay']]);
         $data = PaymentGateway::whereKeyword('paypal')->first();
         $paydata = $data->convertAutoData();
 
@@ -143,13 +146,14 @@ class MerchantCampaignController extends Controller
 
     public function link($ref_id) {
         $data = Campaign::where('ref_id', $ref_id)->first();
+        $bankaccounts = BankAccount::where('user_id', $data->user_id)->where('currency_id', $data->currency_id)->get();
         if(!$data) {
             return back()->with('error', 'This Campaign does not exist.');
         }
         if($data->status == 0) {
             return back()->with('error', 'This Campaign\'s status is deactive');
         }
-        return view('user.merchant.campaign.pay', compact('data'));
+        return view('user.merchant.campaign.pay', compact('data', 'bankaccounts'));
     }
 
     public function pay(Request $request)
@@ -158,48 +162,63 @@ class MerchantCampaignController extends Controller
         $totalamount = CampaignDonation::where('campaign_id', $request->campaign_id)->whereStatus(1)->sum('amount');
 
         if(!$data) {
-            return redirect(route('user.dashboard'))->with('error', 'This campaign does not exist.');
+            if(auth()->user()) {
+                return redirect(route('user.shop.index'))->with('error', 'This campaign does not exist.');
+            }
+            else {
+                return redirect(url('/'))->with('error', 'This campaign does not exist.');
+            }
         }
         if($data->status == 0) {
-            return redirect(route('user.dashboard'))->with('error', 'This compaign\'s status is deactive');
+            if(auth()->user()) {
+                return redirect(route('user.shop.index'))->with('error', 'This compaign\'s status is deactive');
+            }
+            else {
+                return redirect(url('/'))->with('error', 'This compaign\'s status is deactive');
+            }
         }
         $now = Carbon::now();
         if($now->gt($data->deadline)) {
-            return redirect(route('user.dashboard'))->with('error', 'This compaign\'s deadline is passed');
+            if(auth()->user()) {
+                return redirect(route('user.shop.index'))->with('error', 'This compaign\'s deadline is passed');
+            }
+            else {
+                return redirect(url('/'))->with('error', 'This compaign\'s deadline is passed');
+            }
         }
         if($request->payment == 'gateway'){
-            $settings = Generalsetting::findOrFail(1);
+            // $settings = Generalsetting::findOrFail(1);
 
-            $payouts = new Payout();
-            $senderBatchHeader = new PayoutSenderBatchHeader();
+            // $payouts = new Payout();
+            // $senderBatchHeader = new PayoutSenderBatchHeader();
 
-            $senderBatchHeader->setSenderBatchId(Str::random(12))
-                            ->setEmailSubject('You have a Payout');
+            // $senderBatchHeader->setSenderBatchId(Str::random(12))
+            //                 ->setEmailSubject('You have a Payout');
 
-            $senderItem = new PayoutItem();
-            $senderItem->setRecipientType('Email')
-                    ->setNote('This is for Campaign.')
-                    ->setSenderItemId(Str::random(12))
-                    ->setReceiver('appc31058@gmail.com')
-                    ->setAmount(new PaypalCurrency('{
-                        "value":"'.$data->amount.'",
-                        "currency":"'.$data->currency->code.'"
-                    }'));
-            $payouts->setSenderBatchHeader($senderBatchHeader)
-                    ->addItem($senderItem);
+            // $senderItem = new PayoutItem();
+            // $senderItem->setRecipientType('Email')
+            //         ->setNote('This is for Campaign.')
+            //         ->setSenderItemId(Str::random(12))
+            //         ->setReceiver('appc31058@gmail.com')
+            //         ->setAmount(new PaypalCurrency('{
+            //             "value":"'.$data->amount.'",
+            //             "currency":"'.$data->currency->code.'"
+            //         }'));
+            // $payouts->setSenderBatchHeader($senderBatchHeader)
+            //         ->addItem($senderItem);
 
-            $sender_request = clone $payouts;
+            // $sender_request = clone $payouts;
 
-            try {
-                $output = $payouts->create(null, $this->_api_context);
-            } catch (Throwable $ex) {
-                return redirect(route('user.dashboard'))->with('error', $th->getMessage());
-            }
-            $newdonation = new CampaignDonation();
-            $input = $request->all();
-            $input['currency_id'] = $data->currency_id;
-            $newdonation->fill($input)->save();
-            return redirect(route('user.dashboard'))->with('message','You have donated for Campaign successfully.');
+            // try {
+            //     $output = $payouts->create(null, $this->_api_context);
+            // } catch (Throwable $ex) {
+            //     return redirect(route('user.dashboard'))->with('error', $th->getMessage());
+            // }
+            // $newdonation = new CampaignDonation();
+            // $input = $request->all();
+            // $input['currency_id'] = $data->currency_id;
+            // $newdonation->fill($input)->save();
+            // return redirect(route('user.dashboard'))->with('message','You have donated for Campaign successfully.');
         }
         elseif($request->payment == 'wallet'){
             $wallet = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('currency_id',$data->currency_id)->where('wallet_type', 1)->first();
@@ -218,6 +237,92 @@ class MerchantCampaignController extends Controller
 
             return redirect(route('user.dashboard'))->with('message','You have donated for Campaign successfully.');
         }
+        elseif($request->payment == 'bank_pay'){
+            // $bankaccount = BankAccount::where('id', $request->bank_account)->first();
+            // $currency = Currency::where('id',$data->currency_id)->first();
+            // $user = User::findOrFail($bankaccount->user_id);
+
+            // $trans = new Transaction();
+            // $trans->trnx = str_rand();
+            // $trans->user_id     = $user->user_id;
+            // $trans->user_type   = 1;
+            // $trans->currency_id = $currency->currency_id;
+            // $trans->amount      = $data->amount * $request->quantity;
+            // $trans->charge      = 0;
+            // $trans->type        = '+';
+            // $trans->remark      = 'merchant_product_buy';
+            // $trans->details     = trans('Merchant Product Buy by Bank');
+            // $trans->data        = '{"Bank":"'.$bankaccount->subbank->name.'","status":"Pending", "receiver":"'.$user->name.'"}';
+            // $trans->save();
+
+            // $data->quantity = $data->quantity - $request->quantity;
+            // $data->sold = $data->sold + $request->quantity;
+            // $data->update();
+
+            if(auth()->user()) {
+                return redirect(route('user.shop.index'))->with('message','You have paid for buy project successfully (Deposit Bank).');
+            }
+            else {
+                return redirect(url('/'))->with('message','You have paid for buy project successfully (Deposit Bank).');
+            }
+            // return 'bank';
+        }
+        elseif($request->payment = 'crypto') {
+            if(auth()->user()) {
+                return redirect(route('user.shop.index'))->with('message','You have paid for buy project successfully (Crypto).');
+            }
+            else {
+                return redirect(url('/'))->with('message','You have paid for buy project successfully (Crypto).');
+            }
+        }
+    }
+
+    public function crypto($id)
+    {
+        $data['campaign'] = Campaign::where('id', $id)->first();
+        $data['cryptolist'] = Currency::whereStatus(1)->where('type', 2)->get();
+        return view('user.merchant.campaign.crypto', $data);
+    }
+
+    public function crypto_pay(Request $request, $id) {
+        $data['campaign'] = Campaign::where('id', $id)->first();
+        $data['total_amount'] = $request->amount * $request->quantity;
+        $pre_currency = Currency::findOrFail($data['campaign']->currency_id)->code;
+        $select_currency = Currency::findOrFail($request->link_pay_submit);
+        $client = New Client();
+        $code = $select_currency->code;
+        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency='.$code);
+        $result = json_decode($response->getBody());
+        $data['cal_amount'] = floatval($result->data->rates->$pre_currency);
+        $data['wallet'] =  Wallet::where('user_id', $data['campaign']->user_id)->where('user_type',1)->where('wallet_type', 1)->where('currency_id', $select_currency->id)->first();
+        if(!$data['wallet']) {
+            return back()->with('error', $select_currency->code .' crypto wallet is not existed in Campaign Owner.');
+        }
+        return view('user.merchant.campaign.crypto_pay', $data);
+    }
+
+    public function crypto_link($id)
+    {
+        $data['campaign'] = Campaign::where('id', $id)->first();
+        $data['cryptolist'] = Currency::whereStatus(1)->where('type', 2)->get();
+        return view('user.merchant.campaign.crypto_link', $data);
+    }
+
+    public function crypto_link_pay(Request $request, $id) {
+        $data['campaign'] = Campaign::where('id', $id)->first();
+        $data['total_amount'] = $request->amount * $request->quantity;
+        $pre_currency = Currency::findOrFail($data['campaign']->currency_id)->code;
+        $select_currency = Currency::findOrFail($request->link_pay_submit);
+        $client = New Client();
+        $code = $select_currency->code;
+        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency='.$code);
+        $result = json_decode($response->getBody());
+        $data['cal_amount'] = floatval($result->data->rates->$pre_currency);
+        $data['wallet'] =  Wallet::where('user_id', $data['campaign']->user_id)->where('user_type',1)->where('wallet_type', 1)->where('currency_id', $select_currency->id)->first();
+        if(!$data['wallet']) {
+            return back()->with('unsuccess', $select_currency->code .' crypto wallet is not existed in Campaign Owner.');
+        }
+        return view('user.merchant.campaign.crypto_link_pay', $data);
     }
 
     public function donation_by_campaign($id)

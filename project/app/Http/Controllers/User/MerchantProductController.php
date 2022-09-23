@@ -12,6 +12,7 @@ use App\Models\ProductImage;
 use App\Models\MerchantWallet;
 use App\Models\Generalsetting;
 use App\Models\User;
+use App\Models\DepositBank;
 use App\Models\Wallet;
 use App\Models\Transaction;
 use App\Models\BankAccount;
@@ -29,7 +30,7 @@ class MerchantProductController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['link', 'crypto_link', 'crypto_link_pay']]);
+        $this->middleware('auth', ['except' => ['link', 'crypto_link', 'crypto_link_pay', 'pay']]);
     }
 
     public function index(){
@@ -164,20 +165,61 @@ class MerchantProductController extends Controller
     {
         $data = Product::where('id', $request->product_id)->first();
         if(!$data) {
-            return redirect(route('user.dashboard'))->with('error', 'This product does not exist.');
+            if(auth()->user()) {
+                return redirect(route('user.shop.index'))->with('error', 'This product does not exist.');
+            }
+            else {
+                return redirect(url('/'))->with('error', 'This product does not exist.');
+            }
         }
         if($data->status == 0) {
-            return redirect(route('user.dashboard'))->with('error', 'This product\'s sell status is deactive');
+            if(auth()->user()) {
+                return redirect(route('user.shop.index'))->with('error', 'This product\'s sell status is deactive');
+            }
+            else {
+                return redirect(url('/'))->with('error', 'This product\'s sell status is deactive');
+            }
         }
         if($data->quantity < $request->quantity) {
-            return redirect(route('user.dashboard'))->with('error', 'The product\'s quantity is smaller than your quantity');
+            if(auth()->user()) {
+                return redirect(route('user.shop.index'))->with('error', 'The product\'s quantity is smaller than your quantity');
+            }
+            else {
+                return redirect(url('/'))->with('error', 'The product\'s quantity is smaller than your quantity');
+            }
         }
         if($data->user_id == auth()->id()) {
             return redirect(route('user.dashboard'))->with('error', 'You can not buy your product.');
         }
-        if($request->payment == 'gateway'){
-            $bankaccount = BankAccount::where('id',$request->bank_account)->first();
-            return redirect(route(''));
+        if($request->payment == 'bank_pay'){
+            // $bankaccount = BankAccount::where('id', $request->bank_account)->first();
+            // $currency = Currency::where('id',$data->currency_id)->first();
+            // $user = User::findOrFail($bankaccount->user_id);
+
+            // $trans = new Transaction();
+            // $trans->trnx = str_rand();
+            // $trans->user_id     = $user->user_id;
+            // $trans->user_type   = 1;
+            // $trans->currency_id = $currency->currency_id;
+            // $trans->amount      = $data->amount * $request->quantity;
+            // $trans->charge      = 0;
+            // $trans->type        = '+';
+            // $trans->remark      = 'merchant_product_buy';
+            // $trans->details     = trans('Merchant Product Buy by Bank');
+            // $trans->data        = '{"Bank":"'.$bankaccount->subbank->name.'","status":"Pending", "receiver":"'.$user->name.'"}';
+            // $trans->save();
+
+            // $data->quantity = $data->quantity - $request->quantity;
+            // $data->sold = $data->sold + $request->quantity;
+            // $data->update();
+
+            if(auth()->user()) {
+                return redirect(route('user.shop.index'))->with('message','You have paid for buy project successfully (Deposit Bank).');
+            }
+            else {
+                return redirect(url('/'))->with('message','You have paid for buy project successfully (Deposit Bank).');
+            }
+            // return 'bank';
         }
         elseif($request->payment == 'wallet'){
             $wallet = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('currency_id',$data->currency_id)->where('wallet_type', 1)->first();
@@ -229,7 +271,7 @@ class MerchantProductController extends Controller
             $trnx->wallet_id   = $wallet->id;
             $trnx->amount      = $data->amount * $request->quantity;
             $trnx->charge      = 0;
-            $trnx->remark      = 'product_buy_payment';
+            $trnx->remark      = 'merchant_product_buy';
             $trnx->type        = '-';
             $trnx->details     = trans('Payment to buy product : '). $data->ref_id;
             $trnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($data->user_id)->name.'"}';
@@ -280,7 +322,23 @@ class MerchantProductController extends Controller
             mail($to,$subject,$msg_body,$headers);
 
         }
-        return redirect(route('user.dashboard'))->with('success','You have paid for buy project successfully.');
+        elseif($request->payment = 'crypto') {
+            if(auth()->user()) {
+                return redirect(route('user.shop.index'))->with('message','You have paid for buy project successfully (Crypto).');
+            }
+            else {
+                return redirect(url('/'))->with('message','You have paid for buy project successfully (Crypto).');
+            }
+        }
+        elseif($request->payment = 'gateway') {
+            if(auth()->user()) {
+                return redirect(route('user.shop.index'))->with('message','You have paid for buy project successfully (Payment Gateway).');
+            }
+            else {
+                return redirect(url('/'))->with('message','You have paid for buy project successfully (Payment Gateway).');
+            }
+        }
+        return redirect(route('user.shop.index'))->with('success','You have paid for buy project successfully.');
     }
 
     public function crypto($id)
