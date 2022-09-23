@@ -334,10 +334,11 @@ if(!function_exists('getModule')){
         $wallet = Wallet::where('user_id', $auth_id)->where('wallet_type', $wallet_type)
             ->where('currency_id',$currency_id)->first();
         $currency =  Currency::findOrFail($currency_id);
+        
         if ($currency->type == 2) {
             $address = RPC_ETH('personal_newAccount',['123123']);
             if ($address == 'error') {
-                exit();
+                return false;
             }
             $keyword = '123123';
         }

@@ -68,7 +68,7 @@ class CryptoDepositController extends Controller
                             })
                         ->editColumn('action', function(CryptoDeposit $data) {
                             $doc_url = $data->proof ? $data->proof : null;
-                            return '<input type="hidden", id="sub_data", value ='.json_encode($data).'>'.' <a href="javascript:;"   onclick=getDetails('.json_encode($data).',"'.$doc_url.'") class="detailsBtn" >
+                            return '<input type="hidden", id="sub_data", value ='.json_encode($data).'>'.' <a href="javascript:;" data=\''.json_encode($data).'\' url="'.$doc_url.'" onclick="getDetails(this)" class="detailsBtn" >
                             ' . __("Details") . '</a>';
                         })
                         ->rawColumns(['created_at','customer_name','amount','status', 'action'])
@@ -133,10 +133,13 @@ class CryptoDepositController extends Controller
         if ($id2 == 1) {
 
             $final_amount = $amount - $transaction_custom_cost - $transaction_global_cost;
-            user_wallet_increment($user->id, $data->currency_id, $final_amount*$data->currency->rate, 8);
-            user_wallet_increment(0, $data->currency_id, $transaction_global_cost*$data->currency->rate, 9);
 
+            $result1 = user_wallet_increment($user->id, $data->currency_id, $final_amount*$data->currency->rate, 8);
+            $result2 = user_wallet_increment(0, $data->currency_id, $transaction_global_cost*$data->currency->rate, 9);
 
+            if(!$result1 || !$result2) {
+              return response()->json(array('errors' => [ 0 =>  __('Crypto node is not installed.') ]));
+            }
 
             $trans = new Transaction();
             $trans->trnx = str_rand();
