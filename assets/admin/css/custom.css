@@ -869,7 +869,7 @@ ul.list-group.details-list .list-group-item{
 	text-align: left;
 }
 
-ul.list-group.details-list .list-group-item span{
+ul.list-group.details-list .list-group-item>span{
 	margin-left: 20px;
 	width: 60%;
 	text-align: right;
