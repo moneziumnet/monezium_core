@@ -169,6 +169,26 @@
         }
     })
 
+    $('#currency').on('change', function() {
+        displayPaymentType();
+    })
+
+    function displayPaymentType() {
+        if($('#currency option:selected').text() === 'EUR') {
+            $('#payment_type').html(`
+                <option value="">{{ __('Select Payment Type') }}</option>
+                <option value="SWIFT">{{__('SWIFT')}}</option>
+                <option value="SEPA">{{__('SEPA')}}</option>
+                <option value="SEPA_INSTANT">{{__('SEPA_INSTANT')}}</option>
+            `);
+        } else {
+            $('#payment_type').html(`
+                <option value="">{{ __('Select Payment Type') }}</option>
+                <option value="SWIFT">{{__('SWIFT')}}</option>
+            `);
+        }
+    }
+
     $('#withmethod').on('change', function() {
         var pos = $('#withmethod').val();
 
@@ -184,6 +204,7 @@
     })
 
     $(document).ready(function(){
+        displayPaymentType();
         $('#form_submit').on('click', function(event){
             var verify = "{{$user->paymentCheck('External Payments')}}";
             event.preventDefault();

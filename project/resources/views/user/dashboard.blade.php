@@ -198,7 +198,7 @@
           <div class="row align-items-center">
             <div class="col">
               <h1>
-                {{__('Back Account list')}}
+                {{__('Bank Account list')}}
               </h1>
             </div>
             <div class="col-auto ms-auto d-print-none">
@@ -274,7 +274,7 @@
                 </div>
             @endforeach
         @else
-            <p class="text-center">@lang('NO Back Account FOUND')</p>
+            <p class="text-center">@lang('NO Bank Account FOUND')</p>
         @endif
 
     </div>
