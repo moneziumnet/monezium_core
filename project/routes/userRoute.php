@@ -198,6 +198,8 @@ Route::prefix('user')->group(function() {
       Route::get('/merchant/product/delete/{id}', [MerchantProductController::class,'delete'])->name('user.merchant.product.delete');
       Route::get('/merchant/product/status/{id}', [MerchantProductController::class,'status'])->name('user.merchant.product.status');
       Route::post('/merchant/product/pay', [MerchantProductController::class,'pay'])->name('user.merchant.product.pay');
+      Route::get('/merchant/product/crypto/{id}', [MerchantProductController::class,'crypto'])->name('user.merchant.product.crypto');
+      Route::get('/merchant/product/crypto/pay/{id}', [MerchantProductController::class,'crypto_pay'])->name('user.merchant.product.crypto.pay');
       Route::get('/merchant/product/order', [MerchantProductController::class,'order'])->name('user.merchant.product.order');
       Route::post('/merchant/product/send_email', [MerchantProductController::class,'send_email'])->name('user.merchant.product.send_email');
       Route::get('/merchant/product/order/{id}', [MerchantProductController::class,'order_by_product'])->name('user.merchant.product.order_by_product');

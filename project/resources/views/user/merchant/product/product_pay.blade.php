@@ -69,32 +69,75 @@
                                 @csrf
                                 <div class="form-selectgroup row">
                                     <label class="form-selectgroup-item">
-                                        <input type="radio" name="payment" value="gateway" class="form-selectgroup-input" >
+                                        <input type="radio" name="payment" value="bank_pay" id="bank_pay" class="form-selectgroup-input select_method" >
                                         <span class="form-selectgroup-label">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-credit-card" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                <rect x="3" y="5" width="18" height="14" rx="3"></rect>
-                                                <line x1="3" y1="10" x2="21" y2="10"></line>
-                                                <line x1="7" y1="15" x2="7.01" y2="15"></line>
-                                                <line x1="11" y1="15" x2="13" y2="15"></line>
-                                            </svg>
+                                            <i class="fas fa-credit-card me-2"></i>
+                                            @lang('Pay with Bank')</span>
+                                    </label>
+                                    <label class="form-selectgroup-item">
+                                        <input type="radio" name="payment" value="gateway" id="gateway" class="form-selectgroup-input select_method" >
+                                        <span class="form-selectgroup-label">
+                                            <i class="fas fa-dollar-sign me-2"></i>
                                             @lang('Pay with gateways')</span>
                                     </label>
                                     <label class="form-selectgroup-item">
-                                    <input type="radio" name="payment" value="wallet" class="form-selectgroup-input" checked="">
+                                        <input type="radio" name="payment" value="crypto" id="crypto" class="form-selectgroup-input select_method" >
+                                        <span class="form-selectgroup-label">
+                                            <i class="fas fa-coins me-2"></i>
+                                            @lang('Pay with Crypto')</span>
+                                    </label>
+                                    <label class="form-selectgroup-item">
+                                    <input type="radio" name="payment" value="wallet" id="wallet" class="form-selectgroup-input select_method" checked>
                                     <span class="form-selectgroup-label">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-wallet" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                            <path d="M17 8v-3a1 1 0 0 0 -1 -1h-10a2 2 0 0 0 0 4h12a1 1 0 0 1 1 1v3m0 4v3a1 1 0 0 1 -1 1h-12a2 2 0 0 1 -2 -2v-12"></path>
-                                            <path d="M20 12v4h-4a2 2 0 0 1 0 -4h4"></path>
-                                        </svg>
+                                        <i class="fas fa-wallet me-2"></i>
                                         @lang('Pay with customer wallet')
                                         </span>
                                     </label>
 
                                 </div>
+                                <div class="form-group ms-5 mt-5 text-start" id="bank_part" style="display: none">
+                                    <label class="form-label required">{{__('Bank Account')}}</label>
+                                    <select name="bank_account" id="bank_account" class="form-control">
+                                        @if(count($bankaccounts) != 0)
+                                        <option value="">{{__('Select')}}</option>
+                                          @foreach($bankaccounts as $account)
+                                              <option value="{{$account->id}}" data-data="{{$account}}" data-bank="{{$account->subbank}}" data-user="{{$account->user->name}}">{{$account->subbank->name}}</option>
 
-                                <div class="form-group ms-5 mt-5" >
+                                          @endforeach
+                                        @else
+                                        <option value="">{{__('There is no bank account for this currency.')}}</option>
+
+                                        @endif
+                                      </select>
+                                </div>
+                                <div id="bank_account_part" style="display: none;">
+                                    <div class="form-group ms-5 mt-2 text-start" >
+                                        <label class="form-label">{{__('Receiver Name')}}</label>
+                                        <input name="receiver_name" id="receiver_name" class="form-control shadow-none col-md-4"  type="text" readonly>
+                                    </div >
+                                    <div class="form-group ms-5 mt-2 text-start" >
+                                        <label class="form-label">{{__('Bank Name')}}</label>
+                                        <input name="bank_name" id="bank_name" class="form-control shadow-none col-md-4"  type="text" readonly>
+                                    </div >
+                                    <div class="form-group ms-5 mt-2 text-start" >
+                                        <label class="form-label">{{__('Bank Address')}}</label>
+                                        <input name="bank_address" id="bank_address" class="form-control shadow-none col-md-4"  type="text" readonly>
+                                    </div >
+                                    <div class="form-group ms-5 mt-2 text-start" >
+                                        <label class="form-label">{{__('Bank IBAN')}}</label>
+                                        <input name="bank_iban" id="bank_iban" class="form-control shadow-none col-md-4"  type="text" readonly>
+                                    </div >
+                                    <div class="form-group ms-5 mt-2 text-start" >
+                                        <label class="form-label">{{__('Bank SWIFT')}}</label>
+                                        <input name="bank_swift" id="bank_swift" class="form-control shadow-none col-md-4"  type="text" readonly>
+                                    </div >
+                                    <div class="form-group ms-5 mt-2 text-start" >
+                                        <label class="form-label required">{{__('Description')}}</label>
+                                        <input name="description" id="description" class="form-control shadow-none col-md-4"  type="text" required>
+                                    </div >
+                                </div>
+
+                                <div class="form-group ms-5 mt-5 text-start" >
                                         <label class="form-label">{{__('Quantity')}}</label>
                                         <input name="quantity" id="quantity" class="form-control shadow-none col-md-4"  type="number" min="1" max="{{$data->quantity}}" required>
                                 </div >
@@ -163,6 +206,40 @@
         }
             toastr.warning("{{ session('warning') }}");
         @endif
+        $('.select_method').on('click', function() {
+            if ($(this).attr('id') == 'bank_pay') {
+                $("#bank_account").prop('required',true);
+                document.getElementById("bank_part").style.display = "block";
+            }
+            else {
+                $("#bank_account").prop('required',false);
+                $("#description").prop('required',false);
+                document.getElementById('bank_account_part').style.display = "none";
+                document.getElementById("bank_part").style.display = "none";
+            }
+            if ($(this).attr('id') == 'crypto') {
+                window.location.href = "{{route('user.merchant.product.crypto.link', $data->id)}}"
+            }
+        })
+        $('#bank_account').on('change', function() {
+            console.log('test');
+            var selected = $('#bank_account option:selected').data('data');
+            var bank = $('#bank_account option:selected').data('bank');
+            var user = $('#bank_account option:selected').data('user');
+            if(selected){
+            $('#receiver_name').val(user);
+            $('#bank_name').val(bank.name);
+            $('#bank_address').val(bank.address);
+            $('#bank_iban').val(selected.iban);
+            $('#bank_swift').val(selected.swift);
+            $('#bank_swift').val(selected.swift);
+            $("#description").prop('required',true);
+                document.getElementById('bank_account_part').style.display = "block";
+            } else{
+            $("#description").prop('required',false);
+                document.getElementById('bank_account_part').style.display = "none";
+            }
+        })
       </script>
       @stack('js')
     </body>

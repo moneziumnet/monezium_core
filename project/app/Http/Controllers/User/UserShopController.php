@@ -40,7 +40,7 @@ class UserShopController extends Controller
 
     public function order($id) {
         $data = Product::where('id', $id)->first();
-        $bankaccounts = BankAccount::where('user_id', auth()->id())->where('currency_id', $data->currency_id)->get();
+        $bankaccounts = BankAccount::where('user_id', $data->user_id)->where('currency_id', $data->currency_id)->get();
         return view('user.shop.buy', compact('data', 'bankaccounts'));
     }
 

@@ -25,7 +25,7 @@
           $count = count($modules);
           @endphp
 
-        <li class="nav-item dropdown {{ request()->routeIs('user.shop.index', 'user.shop.buy') ? 'active' : '' }}">
+        <li class="nav-item dropdown {{ request()->routeIs('user.shop.index', 'user.shop.order', 'user.campaign.donate', 'user.merchant.product.crypto.pay', 'user.merchant.product.crypto') ? 'active' : '' }}">
         <a class="nav-link" href="{{route('user.shop.index')}}">
             <span class="nav-link-icon d-md-none d-lg-inline-block">
             <i class="fas fa-shopping-bag"></i>
