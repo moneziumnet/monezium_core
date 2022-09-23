@@ -222,10 +222,12 @@
         <div class="modal-body text-center py-4">
           <p class="text-center">{{ __("You are about to change the status.") }}</p>
           <p class="text-center">{{ __("Do you want to proceed?") }}</p>
+          @if($user->paymentCheck('Receive Request Money'))
           <div class="form-group mt-3 text-start" id="otp_body">
               <label class="form-label required">{{__('OTP Code')}}</label>
               <input name="otp_code" id="otp_code" class="form-control" placeholder="{{__('OTP Code')}}" type="text" step="any" value="{{ old('opt_code') }}" required>
           </div>
+          @endif
         </div>
         <div class="modal-footer">
           <a href="javascript:;" class="btn btn-secondary" data-bs-dismiss="modal">{{ __("Cancel") }}</a>
@@ -277,13 +279,9 @@
         $.get(url,function (res) {
           $('.request-money-details').html(res)
           $('#modal-details').modal('show')
-        })
-    })
-    $("#sendBtn").on('click',function(){
-      $("#requestMoney").prop("action",$(this).data('href'))
-      var verify = "{{$user->paymentCheck('Payment between accounts')}}";
-
-        if (verify) {
+          $('#sendBtn').on('click', function() {
+            $("#requestMoney").prop("action",$(this).data('href'))
+            @if($user->paymentCheck('Receive Request Money'))
             var url = "{{url('user/sendotp')}}";
             $.get(url,function (res) {
                 console.log(res)
@@ -294,19 +292,21 @@
                     alert('The OTP code can not be sent to you.')
                 }
             });
-        } else {
-            $('#otp_body').remove();
+            @else
             $('#modal-success').modal('show');
-        }
-    })
-    $("#sendprocess").on('click',function(){
-      $("#sendBtn").text("Processing ...");
-    })
-    $("#cancelBtn").on('click',function(){
-      $("#cancelRequestMoney").prop("action",$(this).data('href'))
-    })
-    $("#closeprocess").on('click',function(){
-      $("#cancelBtn").text("Processing ...");
+            @endif
+          })
+
+          $("#sendprocess").on('click',function(){
+            $("#sendBtn").text("Processing ...");
+          })
+          $("#cancelBtn").on('click',function(){
+            $("#cancelRequestMoney").prop("action",$(this).data('href'))
+          })
+          $("#closeprocess").on('click',function(){
+            $("#cancelBtn").text("Processing ...");
+          })
+        })
     })
   </script>
 @endpush

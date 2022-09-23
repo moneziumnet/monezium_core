@@ -164,7 +164,7 @@ class MoneyRequestController extends Controller
 
     public function send(Request $request, $id){
         $user = auth()->user();
-        if($user->paymentCheck('Request Money')) {
+        if($user->paymentCheck('Receive Request Money')) {
             if ($user->two_fa_code != $request->otp_code) {
                 return redirect()->back()->with('error','Verification code is not matched.');
             }
