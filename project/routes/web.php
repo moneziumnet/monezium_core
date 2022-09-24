@@ -12,6 +12,7 @@ use App\Http\Controllers\User\MerchantProductController;
 use App\Http\Controllers\User\MerchantCampaignController;
 
 Route::redirect('admin', 'admin/login');
+Route::webhooks('/webhook-receiving-url');
 Route::post('the/genius/ocean/2441139', [FrontendController::class, 'subscription']);
 Route::get('finalize', [FrontendController::class, 'finalize']);
 
