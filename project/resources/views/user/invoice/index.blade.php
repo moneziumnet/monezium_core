@@ -102,7 +102,7 @@
                                           @if (($item->status == 1 || $item->status == 0) && $item->payment_status != 1)
                                           <label class="form-check form-switch">
                                             <input class="form-check-input status shadow-none" type="checkbox" data-id="{{$item->id}}" {{$item->status == 1 ? 'checked':''}}>
-                                            <span 
+                                            <span
                                               class="form-check-label status-text-{{$item->id}} badge {{$item->status == 1 ? 'bg-success':'bg-secondary'}}"
                                               style="width: 92px"
                                             >
@@ -135,6 +135,7 @@
 
                                           <a href="javascript:void(0)" class="btn btn-secondary btn-sm copy" data-clipboard-text="{{route('invoice.view',encrypt($item->number))}}" title="{{__('Copy Invoice URL')}}"><i class="fas fa-copy"></i></a>
                                           <a href="javascript:void(0)" data-email="{{$item->email}}" data-id="{{$item->id}}" class="btn btn-dark btn-sm send_email" data-bs-toggle="tooltip" data-bs-original-title="@lang('Send Email')"><i class="fas fa-mail-bulk"></i></a>
+                                          <a class="btn btn-secondary btn-sm download-qrcode" data-data="{{generateQR(route('invoice.view',encrypt($item->number)))}}" href="#"><i class="fas fa-qrcode"></i></a>
 
                                         </div>
                                       </td>
@@ -150,7 +151,28 @@
       </div>
   </div>
 </div>
-
+<div class="modal fade modal-blur" id="qrcode" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-status bg-success"></div>
+            <div class="modal-body text-center py-4">
+                <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+                <h3>{{__('QR code')}}</h3>
+                <form action="{{route('user.merchant.download.qr')}}" method="POST" enctype="multipart/form-data">
+                    {{ csrf_field() }}
+                        <div >
+                            <img src="" class="" id="qr_code" alt="">
+                        </div>
+                        <input type="hidden" id="email" name="email" value="">
+                        <div class="mt-3">
+                            <button type="submit" class="btn btn-primary btn-lg">@lang('Download')</button>
+                        </div>
+                </form>
+              </div>
+        </div>
+    </div>
+</div>
 
 <div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
@@ -246,6 +268,11 @@
         clipboard.on('success', function(e) {
            toast('success','Invoice URL Copied')
         });
+        $('.download-qrcode').on('click', function() {
+            $('#qrcode').modal('show');
+            $('#email').val($(this).data('data'));
+            $('#qr_code').attr('src' , $(this).data('data'));
+        })
     </script>
 
 @endpush

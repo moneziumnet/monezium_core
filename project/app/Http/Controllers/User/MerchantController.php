@@ -114,7 +114,7 @@ class MerchantController extends Controller
         $file = file_get_contents($file);
         $image = Image::make($file);
         $extension = str_replace('image/','',$image->mime);
-        $filename = 'QrCode_'.$request->email.'_.'.$extension;
+        $filename = 'QrCode_'.str_rand().'_.'.$extension;
         $qrCode = $image->opacity(100)->fit(350,350);
         $qrCode->encode('jpg');
 

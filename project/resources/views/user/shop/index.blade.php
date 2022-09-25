@@ -50,6 +50,7 @@
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-left">
                                         <a class="dropdown-item" href="{{route('user.shop.order', $val->id)}}"><i class="fas fa-shopping-cart me-2"></i>{{__('Order')}}</a>
+                                        <a class="dropdown-item download-qrcode" data-data="{{generateQR(route('user.merchant.product.link', $val->ref_id))}}" href="#"><i class="fas fa-qrcode  me-2"></i>{{__('QR code')}}</a>
                                     </div>
                                     </div>
                                 </div>
@@ -77,7 +78,28 @@
       </div>
   </div>
 </div>
-
+<div class="modal fade modal-blur" id="qrcode" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-status bg-success"></div>
+            <div class="modal-body text-center py-4">
+                <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+                <h3>{{__('QR code')}}</h3>
+                <form action="{{route('user.merchant.download.qr')}}" method="POST" enctype="multipart/form-data">
+                    {{ csrf_field() }}
+                        <div >
+                            <img src="" class="" id="qr_code" alt="">
+                        </div>
+                        <input type="hidden" id="email" name="email" value="">
+                        <div class="mt-3">
+                            <button type="submit" class="btn btn-primary btn-lg">@lang('Download')</button>
+                        </div>
+                </form>
+              </div>
+        </div>
+    </div>
+</div>
 <div class="container-xl">
     <div class="page-header d-print-none">
       <div class="row align-items-center">
@@ -118,6 +140,7 @@
                                       </a>
                                       <div class="dropdown-menu dropdown-menu-left">
                                           <a class="dropdown-item" href="{{route('user.campaign.donate', ['id' => $val->id])}}"><i class="fas fa-donate me-2"></i>{{__('Donate')}}</a>
+                                          <a class="dropdown-item download-qrcode" data-data="{{generateQR(route('user.merchant.campaign.link', $val->ref_id))}}" href="#"><i class="fas fa-qrcode  me-2"></i>{{__('QR code')}}</a>
                                       </div>
                                       </div>
                                   </div>
@@ -152,5 +175,14 @@
   </div>
 
 @endsection
-
+@push('js')
+<script>
+        'use strict';
+        $('.download-qrcode').on('click', function() {
+            $('#qrcode').modal('show');
+            $('#email').val($(this).data('data'));
+            $('#qr_code').attr('src' , $(this).data('data'));
+        })
+    </script>
+@endpush
 
