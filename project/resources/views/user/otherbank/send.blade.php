@@ -137,7 +137,7 @@
                     <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank Address')<span id="bank_address"  style="margin-left: 60px">{{ __($data->bank_address) }}</span></li>
                     <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank IBAN')<span id="bank_iban"  style="margin-left: 60px">{{ $data->account_iban }}</span></li>
                     <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank SWIFT')<span id="bank_swift"  style="margin-left: 60px">{{ $data->swift_bic }}</span></li>
-                    
+
                     <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Amount')<span id="otp_amount" style="margin-left: 60px"></span></li>
                     <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Description')<span id="otp_description" style="margin-left: 60px;width:50%;word-break:break-all;text-align:right;"></span></li>
                 </ul>
@@ -159,7 +159,7 @@
     'use strict';
     $('#amount').on('change', function() {
 
-        if ($('#amount').val() >= '{{$other_bank_limit}}') {
+        if ($('#amount').val() >= parseFloat('{{$other_bank_limit}}')) {
             document.getElementById("document").style.display = "block";
             document.getElementById("document_label").style.display = "block";
         }
@@ -215,8 +215,8 @@
                     if(res=='success') {
                         $('#modal-verify').modal('show');
                         $('#otp_amount').html(
-                            $('#currency option:selected').attr('symbol') + 
-                            $('#amount').val() + " " + 
+                            $('#currency option:selected').attr('symbol') +
+                            $('#amount').val() + " " +
                             $('#currency option:selected').text()
                         );
                         $('#otp_description').html($('#des').val());

@@ -147,7 +147,7 @@
         $('#modal_method').val(JSON.parse(pos)['name']);
         $('#modal_bank').val(JSON.parse(pos)['id']);
         $('#modal_amount').val($('#amount').val());
-        if ($('#amount').val() >= '{{$other_bank_limit}}') {
+        if ($('#amount').val() >= parseFloat('{{$other_bank_limit}}')) {
             $('#modal_document')[0].files = $('#document')[0].files;
         }
         $('#modal_currency').val(JSON.parse(($('#currency').val()))['currency_id']);
@@ -183,7 +183,7 @@
         });
         $('#amount').on('change', function() {
 
-            if ($('#amount').val() >= '{{$other_bank_limit}}') {
+            if ($('#amount').val() >= parseFloat('{{$other_bank_limit}}')) {
                 document.getElementById("document").style.display = "block";
                 document.getElementById("document_label").style.display = "block";
             }
