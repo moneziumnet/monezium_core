@@ -10,6 +10,7 @@ use App\Http\Controllers\User\KYCController;
 use App\Http\Controllers\User\MerchantCheckoutController;
 use App\Http\Controllers\User\MerchantProductController;
 use App\Http\Controllers\User\MerchantCampaignController;
+use Illuminate\Http\Request;
 
 Route::redirect('admin', 'admin/login');
 Route::webhooks('/webhook-receiving-url');

@@ -18,7 +18,7 @@ return [
             /*
              * The name of the header containing the signature.
              */
-            'signature_header_name' => 'Signature',
+            'signature_header_name' => 'signature',
 
             /*
              *  This class will verify that the content of the signature header is valid.
@@ -30,12 +30,12 @@ return [
             /*
              * This class determines if the webhook call should be stored and processed.
              */
-            'webhook_profile' => \Spatie\WebhookClient\WebhookProfile\ProcessEverythingWebhookProfile::class,
+            'webhook_profile' => App\Handler\CustomWebhookProfile::class,
 
             /*
              * This class determines the response on a valid webhook call.
              */
-            'webhook_response' => \Spatie\WebhookClient\WebhookResponse\DefaultRespondsTo::class,
+            'webhook_response' => App\Handler\CustomWebhookResponse::class,
 
             /*
              * The classname of the model to be used to store call. The class should be equal
@@ -48,7 +48,7 @@ return [
              *
              * This should be set to a class that extends \Spatie\WebhookClient\ProcessWebhookJob.
              */
-            'process_webhook_job' => App\Handler\ProcessWebhook::class,
+            'process_webhook_job' => App\Handler\CustomProcessWebhook::class,
         ],
     ],
 ];

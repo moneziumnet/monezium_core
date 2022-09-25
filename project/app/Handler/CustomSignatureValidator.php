@@ -6,7 +6,7 @@ use Spatie\WebhookClient\Exceptions\WebhookFailed;
 use Spatie\WebhookClient\SignatureValidator\SignatureValidator;
 use Spatie\WebhookClient\WebhookConfig;
 
-class PaystackSignature implements SignatureValidator
+class CustomSignatureValidator implements SignatureValidator
 {
     public function isValid(Request $request, WebhookConfig $config): bool
     {

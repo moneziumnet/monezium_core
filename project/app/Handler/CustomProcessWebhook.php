@@ -4,7 +4,7 @@ namespace App\Handler;
 use \Spatie\WebhookClient\ProcessWebhookJob;
 
 //The class extends "ProcessWebhookJob" class as that is the class //that will handle the job of processing our webhook before we have //access to it.
-class ProcessWebhook extends ProcessWebhookJob
+class CustomProcessWebhook extends ProcessWebhookJob
 {
     public function handle()
     {
