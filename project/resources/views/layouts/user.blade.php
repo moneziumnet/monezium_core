@@ -59,7 +59,12 @@
           scanner.addListener('scan',function(content){
               $.post("{{ route('scan.qr') }}",{email: content,_token:'{{csrf_token()}}'}, function( data ) {
                   if(data.error){
-                      alert(data.error)
+                      toastr.options =
+                      {
+                        "closeButton" : true,
+                        "progressBar" : true
+                      }
+                      toastr.error(data.error);
                   } else {
                       $(".camera_value").val(data);
                       $(".camera_value").focusout()
@@ -72,10 +77,20 @@
                   $('#cameraModal').modal('show')
                       scanner.start(cameras[0]);
               } else{
-                  alert('No cameras found.');
+                toastr.options =
+                {
+                  "closeButton" : true,
+                  "progressBar" : true
+                }
+                toastr.error('No cameras found.');
               }
           }).catch(function(e){
-              alert('No cameras found.');
+            toastr.options =
+            {
+              "closeButton" : true,
+              "progressBar" : true
+            }
+            toastr.error('No cameras found.');
           });
       });
 

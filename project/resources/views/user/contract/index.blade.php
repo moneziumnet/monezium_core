@@ -194,7 +194,12 @@
         'use strict';
         var clipboard = new ClipboardJS('.copy');
         clipboard.on('success', function(e) {
-           alert('Contract URL Copied.')
+          toastr.options =
+          {
+            "closeButton" : true,
+            "progressBar" : true
+          }
+          toastr.success("Contract URL Copied.");
         });
 
         $('.delete').on('click',function() {

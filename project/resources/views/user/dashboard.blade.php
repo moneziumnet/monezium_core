@@ -470,7 +470,12 @@
     copyText.select();
     copyText.setSelectionRange(0, 99999);
     document.execCommand("copy");
-    alert('copied');
+    toastr.options =
+    {
+      "closeButton" : true,
+      "progressBar" : true
+    }
+    toastr.success("Copied.");
   }
 </script>
 <script>

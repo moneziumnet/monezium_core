@@ -293,7 +293,8 @@ $('#submit').on('click', function() {
                         $('#modal-success').modal('show');
                     }
                     else {
-                        alert('The OTP code can not be sent to you.')
+                        toastr.options = { "closeButton" : true, "progressBar" : true }
+                        toastr.error('The OTP code can not be sent to you.');
                     }
                 });
             } else {
@@ -339,7 +340,8 @@ $(document).on('submit','.step1-form',function(){
 
 
     closedFunction=function() {
-        alert('Payment Cancelled!');
+        toastr.options = { "closeButton" : true, "progressBar" : true }
+        toastr.error('Payment Cancelled!');
     }
 
      successFunction=function(transaction_id) {
@@ -347,7 +349,8 @@ $(document).on('submit','.step1-form',function(){
     }
 
      failedFunction=function(transaction_id) {
-         alert('Transaction was not successful, Ref: '+transaction_id)
+        toastr.options = { "closeButton" : true, "progressBar" : true }
+        toastr.error('Transaction was not successful, Ref: '+transaction_id);
     }
 </script>
 

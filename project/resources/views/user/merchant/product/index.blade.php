@@ -284,7 +284,12 @@
         })
         var clipboard = new ClipboardJS('.copy');
         clipboard.on('success', function(e) {
-           alert('copied');
+            toastr.options =
+            {
+                "closeButton" : true,
+                "progressBar" : true
+            }
+            toastr.success("Copied.");
         });
         $('.send-email').on('click', function() {
             $('#modal-send-email').modal('show');

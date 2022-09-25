@@ -202,7 +202,12 @@
 
         var clipboard = new ClipboardJS('.copy');
         clipboard.on('success', function(e) {
-           alert('AoA URL Copied')
+          toastr.options =
+          {
+            "closeButton" : true,
+            "progressBar" : true
+          }
+          toastr.success("AoA URL Copied");
         });
         $('.delete').on('click',function() {
             $('#modal-success').find('form').attr('action',$(this).data('route'))

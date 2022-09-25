@@ -272,7 +272,12 @@
         'use strict';
         var clipboard = new ClipboardJS('.copy');
         clipboard.on('success', function(e) {
-           alert('Link Url Copied');
+            toastr.options =
+            {
+            "closeButton" : true,
+            "progressBar" : true
+            }
+            toastr.success("Link URL Copied.");
         });
         $('.send-email').on('click', function() {
             $('#modal-send-email').modal('show');

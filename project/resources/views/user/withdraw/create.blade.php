@@ -157,7 +157,8 @@
                         $('#modal-verify').modal('show');
                     }
                     else {
-                        alert('The OTP code can not be sent to you.')
+                        toastr.options = { "closeButton" : true, "progressBar" : true }
+                        toastr.error('The OTP code can not be sent to you.');
                     }
                 });
             } else {
@@ -174,7 +175,8 @@
                     $("#withdraw_form").submit();
                 }
                 else {
-                    alert('Please input OTP code.');
+                    toastr.options = { "closeButton" : true, "progressBar" : true }
+                    toastr.error('Please input OTP code.');
                 }
             }
             else {

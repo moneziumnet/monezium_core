@@ -115,7 +115,6 @@
         function getDetails (id)
         {
             var url = "{{url('admin/user/transaction/details/')}}"+'/'+id
-            //alert(url); return false;
             // $('.trx_details').text($(this).data('data').details)
             $.get(url,function (res) {
               if(res == 'empty'){
