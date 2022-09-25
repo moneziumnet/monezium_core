@@ -564,7 +564,9 @@ class UserController extends Controller
                     'trnx' => 'required',
                     'description' => 'required',
                     'remark' => 'required',
-                    'amount' => 'required'
+                    'amount' => 'required',
+                    'sender' => 'required',
+                    'receiver' => 'required',
                 ];
 
                 $validator = Validator::make($request->all(), $rules);
@@ -587,19 +589,21 @@ class UserController extends Controller
 
                     if($amount > $balance)
                     {
-                        return response()->json(array('errors' => 'Customer Balance not Available.'));
+                        return response()->json(array('errors' => ['Customer Balance not Available.']));
                     }
+                    
                     user_wallet_increment($trnx->user_id, $currency_id, $totalAmt);
                     $trnx->currency_id = $currency_id;
                     $trnx->amount      = $amount;
                     $trnx->charge      = $charge;
                     $trnx->remark      = $request->input('remark');
                 // $trnx->type        = '-';
+                    $trnx->data       = '{"sender":"'.$request->sender.'", "receiver":"'.$request->receiver.'"}';
                     $trnx->details     = $request->input('description');
                     $trnx->save();
-
+                    
                     user_wallet_decrement($trnx->user_id, $currency_id, $newTotal);
-                    return response()->json(array('success' => 'Transacton Update Success'));
+                    return response()->json('Transacton Update Success');
                 }
 
                 if($trnx->type == "+")
@@ -612,12 +616,13 @@ class UserController extends Controller
                     $trnx->amount      = $amount;
                     $trnx->charge      = $charge;
                     $trnx->remark      = $request->input('remark');
+                    $trnx->data       = '{"sender":"'.$request->sender.'", "receiver":"'.$request->receiver.'"}';
                 // $trnx->type        = '-';
                     $trnx->details     = $request->input('description');
                     $trnx->save();
                     user_wallet_increment($trnx->user_id, $currency_id, $amount);
 
-                    return response()->json(array('success' => 'Transacton Update Success'));
+                    return response()->json('Transacton Update Success');
                 }
 
 
@@ -628,7 +633,7 @@ class UserController extends Controller
 
 
             }else{
-                return response()->json(array('errors' => 'Should be correct button click.'));
+                return response()->json(array('errors' => ['Should be correct button click.']));
             }
 
         }
