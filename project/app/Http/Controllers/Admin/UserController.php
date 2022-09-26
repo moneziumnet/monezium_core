@@ -599,7 +599,10 @@ class UserController extends Controller
                     $trnx->charge      = $charge;
                     $trnx->remark      = $request->input('remark');
                 // $trnx->type        = '-';
-                    $trnx->data       = '{"sender":"'.$request->sender.'", "receiver":"'.$request->receiver.'"}';
+                    $json_data         = json_decode($trnx->data);
+                    $json_data->sender = $request->sender;
+                    $json_data->receiver = $request->receiver;
+                    $trnx->data        = json_encode($json_data);
                     $trnx->details     = $request->input('description');
                     $trnx->save();
 
@@ -617,7 +620,10 @@ class UserController extends Controller
                     $trnx->amount      = $amount;
                     $trnx->charge      = $charge;
                     $trnx->remark      = $request->input('remark');
-                    $trnx->data       = '{"sender":"'.$request->sender.'", "receiver":"'.$request->receiver.'"}';
+                    $json_data         = json_decode($trnx->data);
+                    $json_data->sender = $request->sender;
+                    $json_data->receiver = $request->receiver;
+                    $trnx->data        = json_encode($json_data);
                 // $trnx->type        = '-';
                     $trnx->details     = $request->input('description');
                     $trnx->save();
