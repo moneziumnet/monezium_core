@@ -158,7 +158,7 @@ class UserController extends Controller
         $data = Auth::user();
         if ($file = $request->file('photo'))
         {
-            $name = time().$file->getClientOriginalName();
+            $name = Str::random(8).time().$file->getClientOriginalExtension();
             $file->move('assets/images/',$name);
             @unlink('assets/images/'.$data->photo);
 

@@ -107,14 +107,35 @@
                           <div class="col-md-6">
                             <div class="form-group">
                               <label class="form-label">{{__('Signature')}}</label>
-                              <input name="signature" class="form-control shadow-none" type="file" accept=".png,.jpg">
+                              <div class="wrapper-image-preview">
+                                <div class="box">
+                                    <div 
+                                      class="back-preview-image mx-auto" 
+                                      style="height: 120px;width:75%;background-image: url({{auth()->user()->signature ? asset('assets/images/'.auth()->user()->signature) : asset('assets/images/placeholder.jpg') }});"></div>
+                                    <div class="upload-options">
+                                        <label class="img-upload-label" for="signature-upload"> <i class="fa fa-camera"></i> {{ __('Upload Picture') }} </label>
+                                        <input id="signature-upload" type="file" class="image-upload" accept=".png,.jpg" name="signature" >
+                                    </div>
+                                </div>
+                              </div>
                             </div>
                           </div>
 
                           <div class="col-md-6">
                             <div class="form-group">
                               <label class="form-label">{{__('Stamp')}}</label>
-                              <input name="stamp" class="form-control shadow-none" type="file" accept=".png,.jpg">
+                              {{-- <input name="stamp" class="form-control shadow-none" type="file" accept=".png,.jpg"> --}}
+                              <div class="wrapper-image-preview">
+                                <div class="box">
+                                  <div 
+                                    class="back-preview-image mx-auto" 
+                                    style="height: 120px;width:75%;background-image: url({{auth()->user()->stamp ? asset('assets/images/'.auth()->user()->stamp) : asset('assets/images/placeholder.jpg') }});"></div>
+                                  <div class="upload-options">
+                                      <label class="img-upload-label" for="stamp-upload"> <i class="fa fa-camera"></i> {{ __('Upload Picture') }} </label>
+                                      <input id="stamp-upload" type="file" class="image-upload" name="stamp" accept=".png,.jpg" >
+                                  </div>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -122,8 +143,6 @@
                         <div class="form-footer">
                           <button type="submit" class="btn btn-primary submit-btn">{{__('Submit')}}</button>
                         </div>
-
-
                     </form>
                 </div>
             </div>
@@ -140,7 +159,6 @@
 
   $('.edit-profile').on('click',function(){
     $('.upload').click();
-
   });
 
 </script>
