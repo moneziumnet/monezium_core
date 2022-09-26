@@ -119,7 +119,8 @@
 
 
             if($('#amount').val() == ''){
-              toast('error','@lang('Please provide the amount first')')
+              toastr.options = { "closeButton" : true, "progressBar" : true };
+              toastr.error('Please provide the amount first.');
               return false
             }
 
@@ -134,11 +135,13 @@
 
         $('.create').on('click',function () {
             if($('#amount').val() == ''){
-              toast('error','@lang('Please provide the amount first')')
+              toastr.options = { "closeButton" : true, "progressBar" : true };
+              toastr.error('Please provide the amount first.');
               return false
             }
             if($('.wallet option:selected').val() == ''){
-              toast('error','@lang('Please select the wallet.')')
+              toastr.options = { "closeButton" : true, "progressBar" : true };
+              toastr.error('Please select the wallet.');
               return false
             }
             $('#modal-success').modal('show')

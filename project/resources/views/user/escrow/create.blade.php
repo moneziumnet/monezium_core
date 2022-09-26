@@ -163,7 +163,8 @@
             var description = $('#description').val()
 
             if(amount == '' || selected.val() == '' || description == ''){
-                toast('error','@lang('Please fill up the required fields.')')
+                toastr.options = { "closeButton" : true, "progressBar" : true };
+                toastr.error('Please fill up the required fields.');
                 return false;
             }
             var url = "{{url('user/escrow/calcharge')}}"+'/'+amount;

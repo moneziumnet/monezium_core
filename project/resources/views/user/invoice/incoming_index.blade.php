@@ -125,7 +125,8 @@
 
         var clipboard = new ClipboardJS('.copy');
         clipboard.on('success', function(e) {
-           toast('success','Invoice URL Copied')
+          toastr.options = { "closeButton" : true, "progressBar" : true };
+          toastr.success('Invoice URL Copied');
         });
     </script>
 

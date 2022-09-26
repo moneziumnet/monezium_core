@@ -117,7 +117,8 @@
        
         $('.create').on('click',function () { 
             if($('#code').val() == ''){
-              toast('error','@lang("Please provide the voucher code first")')
+              toastr.options = { "closeButton" : true, "progressBar" : true };
+              toastr.error('Please provide the voucher code first.');
               return false
             } 
             $('#modal-success').modal('show')

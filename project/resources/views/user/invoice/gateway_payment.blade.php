@@ -81,7 +81,8 @@
         'use strict';
         $('.pay').on('click',function () { 
             if(!$('input[name=gateway]:checked').val()){
-                toast('error','@lang('Please select the payment method first.')')
+                toastr.options = { "closeButton" : true, "progressBar" : true };
+                toastr.error('Please select the payment method first.');
                 return false
             }
              $('#modal-success').modal('show')

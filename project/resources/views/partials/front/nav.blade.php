@@ -1,7 +1,7 @@
 <div class="navbar-wrapper">
     <div class="logo">
         <a href="{{ route('front.index') }}">
-            <img src="{{asset('assets/images/'.$gs->logo)}}" alt="logo" />
+            <img src="{{asset('assets/images/'.$gs->logo)}}" alt="logo" height="50"/>
         </a>
     </div>
     <div class="change-language d-sm-none ms-auto me-3 text--title">

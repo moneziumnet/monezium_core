@@ -222,17 +222,20 @@
             var id = $(this).data('id')
             $.post(url,{id:id,_token:'{{csrf_token()}}'},function (res) {
                 if(res.paid){
-                  //  toast('success',res.paid)
+                    toastr.options = { "closeButton" : true, "progressBar" : true }
+                    toastr.success(res.paid);
                     $('.pay-status-'+id).addClass('bg-success').text('Paid')
                     return false
                 }
                 if(res.unpaid){
-                   // toast('success',res.unpaid)
+                    toastr.options = { "closeButton" : true, "progressBar" : true }
+                    toastr.success(res.unpaid);
                     $('.pay-status-'+id).removeClass('bg-success').addClass('bg-secondary').text('Unpaid')
                     return false
                 }
                 if(res.error){
-                    //toast('error',res.error)
+                    toastr.options = { "closeButton" : true, "progressBar" : true }
+                    toastr.error(res.error);
                     return false
                 }
             })
@@ -242,17 +245,20 @@
             var id = $(this).data('id')
             $.post(url,{id:id,_token:'{{csrf_token()}}'},function (res) {
                 if(res.unpublish){
-                  //  toast('success',res.unpublish)
+                    toastr.options = { "closeButton" : true, "progressBar" : true }
+                    toastr.success(res.unpublish);
                     $('.status-text-'+id).removeClass('bg-success').addClass('bg-secondary').text('Un-published')
                     return false
                 }
                 if(res.publish){
-                  //  toast('success',res.publish)
+                    toastr.options = { "closeButton" : true, "progressBar" : true }
+                    toastr.success(res.publish);
                     $('.status-text-'+id).addClass('bg-success').text('Published')
                     return false
                 }
                 if(res.error){
-                   // toast('error',res.error)
+                    toastr.options = { "closeButton" : true, "progressBar" : true }
+                    toastr.error(res.error);
                     return false
                 }
             })
@@ -266,7 +272,8 @@
 
         var clipboard = new ClipboardJS('.copy');
         clipboard.on('success', function(e) {
-           toast('success','Invoice URL Copied')
+          toastr.options = { "closeButton" : true, "progressBar" : true };
+          toastr.success('Invoice URL Copied');
         });
         $('.download-qrcode').on('click', function() {
             $('#qrcode').modal('show');

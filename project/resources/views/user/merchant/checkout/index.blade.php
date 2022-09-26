@@ -220,7 +220,8 @@
         });
         var clipboard = new ClipboardJS('.copy');
         clipboard.on('success', function(e) {
-           console.log('success','Contract URL Copied')
+          toastr.options = { "closeButton" : true, "progressBar" : true };
+          toastr.success('Contract URL Copied');
         });
         $('.download-qrcode').on('click', function() {
             $('#qrcode').modal('show');
