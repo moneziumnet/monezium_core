@@ -334,13 +334,23 @@ if(!function_exists('getModule')){
         $wallet = Wallet::where('user_id', $auth_id)->where('wallet_type', $wallet_type)
             ->where('currency_id',$currency_id)->first();
         $currency =  Currency::findOrFail($currency_id);
-        
+
         if ($currency->type == 2) {
-            $address = RPC_ETH('personal_newAccount',['123123']);
-            if ($address == 'error') {
-                return false;
+            if($currency->code == 'ETH') {
+
+                $address = RPC_ETH('personal_newAccount',['123123']);
+                if ($address == 'error') {
+                    return false;
+                }
+                $keyword = '123123';
             }
-            $keyword = '123123';
+            else if ($currency->code == 'BTC') {
+                $address = RPC_BTC('createwallet',[str_rand()]);
+                if ($address == 'error') {
+                    return false;
+                }
+                $keyword = '123123';
+            }
         }
         else {
             $address = $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
@@ -417,11 +427,21 @@ if(!function_exists('getModule')){
           ->where('currency_id',$currency_id)->first();
       $currency =  Currency::findOrFail($currency_id);
         if ($currency->type == 2) {
-        $address = RPC_ETH('personal_newAccount',['123123']);
-        if ($address == 'error') {
-            exit();
-        }
-        $keyword = '123123';
+            if($currency->code == 'ETH') {
+
+                $address = RPC_ETH('personal_newAccount',['123123']);
+                if ($address == 'error') {
+                    return false;
+                }
+                $keyword = '123123';
+            }
+            else if ($currency->code == 'BTC') {
+                $address = RPC_BTC('createwallet',[str_rand()]);
+                if ($address == 'error') {
+                    return false;
+                }
+                $keyword = '123123';
+            }
         }
         else {
         $address = $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
@@ -627,6 +647,32 @@ if(!function_exists('getModule')){
           $client = new Client();
             $headers = [
             'Content-Type' => 'application/json'
+            ];
+            $body = '{
+            "method": "'.$method.'",
+            "params": '.$args.',
+            "id": 1,
+            "jsonrpc": "2.0"
+            }';
+            try {
+                $response = $client->request('POST', $link, ["headers"=>$headers, "body"=>$body]);
+                $res =json_decode($response->getBody());
+                return $res->result;
+            } catch (\Throwable $th) {
+                return 'error';
+            }
+      }
+  }
+
+  if(!function_exists('RPC_BTC'))
+  {
+      function RPC_BTC($method, $args, $link = 'http://127.0.0.1:18443')
+      {
+          $args = json_encode($args);
+          $client = new Client();
+            $headers = [
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Basic ZGV2b3BzOjEyMzEyMw=='
             ];
             $body = '{
             "method": "'.$method.'",

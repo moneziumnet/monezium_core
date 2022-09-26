@@ -57,7 +57,12 @@ class CryptoCurrencyController extends Controller
         }
         $data = new Currency();
         $input = $request->all();
-        $address = RPC_ETH('personal_newAccount',[$request->keyword]);
+        if ($request->code == 'BTC') {
+            $address = RPC_BTC('createwallet',[str_rand()]);
+        }
+        else {
+            $address = RPC_ETH('personal_newAccount',[$request->keyword]);
+        }
         if ($address == 'error') {
             return response()->json(array('errors' => [0 => __('You can not create this currency because there is some issue in crypto node.')]));
         }
