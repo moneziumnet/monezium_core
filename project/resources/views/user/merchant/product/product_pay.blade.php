@@ -144,11 +144,11 @@
                                 <input type="hidden" name="product_id" value="{{$data->id}}">
 
                                 <div class="mt-4" id="default_pay" style="display: block;">
-                                    <button type="submit" class="btn btn-primary btn-block">{{__('Pay')}} <i class="ms-2 fas fa-long-arrow-alt-right"></i></button>
+                                    <button class="btn btn-primary btn-block" id="btn-pay">{{__('Pay')}} <i class="ms-2 fas fa-long-arrow-alt-right"></i></button>
                                 </div>
-                                <div class="mt-4 row" id="crypto_pay" style="display: none;">
+                                <div class="mt-4 ms-5" id="crypto_pay" style="display: none;">
                                     @foreach($cryptolist as $currency)
-                                                    <button type="submit" id="submit" name="link_pay_submit" value="{{$currency->id}}" class="col btn btn-primary btn-block mb-2"> {{__('Pay with ')}}{{$currency->curr_name}} - {{$currency->code}}</button>
+                                        <button id="submit" name="link_pay_submit" value="{{$currency->id}}" class="col btn btn-primary w-100 mb-2"> {{__('Pay with ')}}{{$currency->curr_name}} - {{$currency->code}}</button>
                                     @endforeach
                                 </div>
                             </form>
@@ -163,14 +163,38 @@
             </div>
           </div>
       </div>
+      <div class="modal modal-blur fade" id="modal-details" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+          <div class="modal-content">
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <div class="modal-status bg-primary"></div>
+              <div class="modal-body text-center py-4">
+              <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+              <h3>@lang('Payment Details')</h3>
+              <p class="bank_details"></p>
+              <ul class="list-group details-list mt-2">
+                  <li class="list-group-item">@lang('Receiver Name')<span id="detail_user_name"></span></li>
+                  <li class="list-group-item">@lang('Bank Name')<span id="detail_bank_name"></span></li>
+                  <li class="list-group-item">@lang('Bank Address')<span id="detail_bank_address"></span></li>
+                  <li class="list-group-item">@lang('Bank IBAN')<span id="detail_bank_iban"></span></li>
+                  <li class="list-group-item">@lang('Bank SWIFT')<span id="detail_bank_swift"></span></li>
+                  <li class="list-group-item">@lang('Quantity')<span id="detail_quantity"></span></li>
+                  <li class="list-group-item">@lang('Total Price')<span id="detail_total_price"></span></li>
+                  <li class="list-group-item">@lang('Description')<span id="detail_bank_details"></span></li>
+              </ul>
+              <button class="btn btn-primary w-100 mt-3" id="payment_submit">Submit</button>
+              </div>
+          </div>
+        </div>
+      </div>
       <!-- Tabler Core -->
       <script src="{{asset('assets/front/js/toastr.min.js')}}"></script>
-    <script src="{{asset('assets/user/js/jquery-3.6.0.min.js')}}"></script>
-    <script src="{{asset('assets/user/js/tabler.min.js')}}"></script>
-    <script src="{{asset('assets/user/js/demo.min.js')}}"></script>
-    <script src="{{asset('assets/front/js/custom.js')}}"></script>
-    <script src="{{asset('assets/user/js/notify.min.js')}}"></script>
-    <script src="{{asset('assets/front/js/toastr.min.js')}}"></script>
+      <script src="{{asset('assets/user/js/jquery-3.6.0.min.js')}}"></script>
+      <script src="{{asset('assets/user/js/tabler.min.js')}}"></script>
+      <script src="{{asset('assets/user/js/demo.min.js')}}"></script>
+      <script src="{{asset('assets/front/js/custom.js')}}"></script>
+      <script src="{{asset('assets/user/js/notify.min.js')}}"></script>
+      <script src="{{asset('assets/front/js/toastr.min.js')}}"></script>
 
       {{-- @include('notify.alert') --}}
       <script>
@@ -242,24 +266,46 @@
             }
         })
         $('#bank_account').on('change', function() {
-            console.log('test');
             var selected = $('#bank_account option:selected').data('data');
             var bank = $('#bank_account option:selected').data('bank');
             var user = $('#bank_account option:selected').data('user');
             if(selected){
-            $('#receiver_name').val(user);
-            $('#bank_name').val(bank.name);
-            $('#bank_address').val(bank.address);
-            $('#bank_iban').val(selected.iban);
-            $('#bank_swift').val(selected.swift);
-            $('#bank_swift').val(selected.swift);
-            $("#description").prop('required',true);
+                $('#receiver_name').val(user);
+                $('#bank_name').val(bank.name);
+                $('#bank_address').val(bank.address);
+                $('#bank_iban').val(selected.iban);
+                $('#bank_swift').val(selected.swift);
+                $("#description").prop('required',true);
                 document.getElementById('bank_account_part').style.display = "block";
             } else{
             $("#description").prop('required',false);
                 document.getElementById('bank_account_part').style.display = "none";
             }
         })
+
+        $('#btn-pay').on('click', function(e) {
+            var payment_type = $('input[name=payment]:checked', '#form_submit').val();
+            if(payment_type == "bank_pay" && document.getElementById('form_submit').checkValidity()) {
+                $('#modal-details').modal('show');
+                $('#detail_user_name').html($('#receiver_name').val());
+                $('#detail_bank_name').html($('#bank_name').val());
+                $('#detail_bank_address').html($('#bank_address').val());
+                $('#detail_bank_iban').html($('#bank_iban').val());
+                $('#detail_bank_swift').html($('#bank_swift').val());
+                $('#detail_quantity').html($('#quantity').val());
+                $('#detail_total_price').html("{{$data->currency->symbol}}" + $('#quantity').val() * "{{$data->amount}}");
+                $('#detail_bank_details').html($('#description').val());
+            }
+            if(payment_type != "bank_pay") {
+                $('#form_submit').submit();
+            }
+        });
+        $('#payment_submit').on('click', function () {
+          $('#form_submit').submit();
+        });
+        $('#submit').on('click', function() {
+          $('#form_submit').submit();
+        });
       </script>
       @stack('js')
     </body>
