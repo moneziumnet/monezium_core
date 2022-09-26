@@ -5,8 +5,8 @@ use GuzzleHttp;
 use GuzzleHttp\Psr7\MultipartStream;
 
 
-define("SUMSUB_SECRET_KEY", "wwXkcaUPaBfZaYCAVXpNTct2591SPr1E"); // Example: Hej2ch71kG2kTd1iIUDZFNsO5C1lh5Gq
-define("SUMSUB_APP_TOKEN", "sbx:ksF7koLT6tRbIOXAZlk25DMF.A5VR1Xvb3a1oJ95BsfjdvrfZsK6vNAIy"); // Example: sbx:uY0CgwELmgUAEyl4hNWxLngb.0WSeQeiYny4WEqmAALEAiK2qTC96fBad
+define("SUMSUB_SECRET_KEY", "uguMYn92zTjeH6TDvt2vaamywzdeL6WP"); // Example: wwXkcaUPaBfZaYCAVXpNTct2591SPr1E
+define("SUMSUB_APP_TOKEN", "sbx:iBrExPavOL2rx8BnlNzDgT2y.Q6JmECASi7SKRSEfWDvRD3jfoxrE4LYE"); // Example: sbx:ksF7koLT6tRbIOXAZlk25DMF.A5VR1Xvb3a1oJ95BsfjdvrfZsK6vNAIy
 define("SUMSUB_TEST_BASE_URL", "https://cockpit.sumsub.com");
 class SumsubKYC
 {
