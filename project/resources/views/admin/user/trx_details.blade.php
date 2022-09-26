@@ -12,4 +12,4 @@
 
 @endif
 <li class="list-group-item justify-content-between text-center"><a href="{{ route('admin-user.transaction-edit',$transaction->id)}}">@lang('Edit Transaction')</a> |
-    <a href="javascript:;">@lang('Delete Transaction')</a></li>
+    <a href="{{ route('admin-user.transaction-delete',$transaction->id)}}">@lang('Delete Transaction')</a></li>

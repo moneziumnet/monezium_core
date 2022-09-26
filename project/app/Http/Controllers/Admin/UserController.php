@@ -577,7 +577,7 @@ class UserController extends Controller
                 }
                 $trnx            = Transaction::findOrFail($id);
 
-                $currency_id = Currency::whereIsDefault(1)->first()->id;
+                $currency_id = $trnx->currency_id;
                 $userBalance = user_wallet_balance($trnx->user_id,$currency_id);
                 $amount = $request->input('amount');
                 $charge = $request->input('charge');
@@ -645,6 +645,27 @@ class UserController extends Controller
 
         }
 
+        public function transctionDelete($id)
+        {
+            $trnx            = Transaction::findOrFail($id);
+            $currency_id     = $trnx->currency_id;
+
+            if($trnx->type == "-")
+            {
+                $totalAmt = $trnx->amount + $trnx->charge;
+                user_wallet_increment($trnx->user_id, $currency_id, $totalAmt);
+                $trnx->delete();
+                return redirect()->back()->with(array('message' => 'Transacton Delete Success'));
+            }
+
+            if($trnx->type == "+")
+            {
+                $totalAmt = $trnx->amount + $trnx->charge;
+                user_wallet_decrement($trnx->user_id, $currency_id, $totalAmt);
+                $trnx->delete();
+                return redirect()->back()->with(array('message' => 'Transacton Delete Success'));
+            }
+        }
 
         public function trxDetails($id)
         {
