@@ -150,9 +150,9 @@
                                 <div class="mt-4" id="default_pay" style="display: block;">
                                     <button class="btn btn-primary btn-block" id="btn-pay">{{__('Pay')}} <i class="ms-2 fas fa-long-arrow-alt-right"></i></button>
                                 </div>
-                                <div class="mt-4 row" id="crypto_pay" style="display: none;">
+                                <div class="mt-4 ms-5" id="crypto_pay" style="display: none;">
                                     @foreach($cryptolist as $currency)
-                                        <button id="submit_crypto" name="link_pay_submit" value="{{$currency->id}}" class="col btn btn-primary btn-block mb-2"> {{__('Pay with ')}}{{$currency->curr_name}} - {{$currency->code}}</button>
+                                        <button id="submit_crypto" name="link_pay_submit" value="{{$currency->id}}" class="col btn btn-primary w-100 mb-2"> {{__('Pay with ')}}{{$currency->curr_name}} - {{$currency->code}}</button>
                                     @endforeach
                                 </div>
                             </form>
