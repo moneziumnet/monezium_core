@@ -48,7 +48,8 @@ class UserShopController extends Controller
     public function donate($id) {
         $data = Campaign::where('id', $id)->first();
         $bankaccounts = BankAccount::where('user_id', auth()->id())->where('currency_id', $data->currency_id)->get();
-        return view('user.shop.donate', compact('data', 'bankaccounts'));
+        $cryptolist= Currency::whereStatus(1)->where('type', 2)->get();
+        return view('user.shop.donate', compact('data', 'bankaccounts', 'cryptolist'));
     }
 
 }

@@ -147,13 +147,14 @@ class MerchantCampaignController extends Controller
     public function link($ref_id) {
         $data = Campaign::where('ref_id', $ref_id)->first();
         $bankaccounts = BankAccount::where('user_id', $data->user_id)->where('currency_id', $data->currency_id)->get();
+        $cryptolist= Currency::whereStatus(1)->where('type', 2)->get();
         if(!$data) {
             return back()->with('error', 'This Campaign does not exist.');
         }
         if($data->status == 0) {
             return back()->with('error', 'This Campaign\'s status is deactive');
         }
-        return view('user.merchant.campaign.pay', compact('data', 'bankaccounts'));
+        return view('user.merchant.campaign.pay', compact('data', 'bankaccounts', 'cryptolist'));
     }
 
     public function pay(Request $request)
@@ -221,6 +222,9 @@ class MerchantCampaignController extends Controller
             // return redirect(route('user.dashboard'))->with('message','You have donated for Campaign successfully.');
         }
         elseif($request->payment == 'wallet'){
+            if(!auth()->user()) {
+                return redirect(route('user.login'))->with('error', 'You have to login for this payment.');
+            }
             $wallet = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('currency_id',$data->currency_id)->where('wallet_type', 1)->first();
 
             if($wallet->balance < $data->amount) {
@@ -286,7 +290,7 @@ class MerchantCampaignController extends Controller
 
     public function crypto_pay(Request $request, $id) {
         $data['campaign'] = Campaign::where('id', $id)->first();
-        $data['total_amount'] = $request->amount * $request->quantity;
+        $data['total_amount'] = $request->amount;
         $pre_currency = Currency::findOrFail($data['campaign']->currency_id)->code;
         $select_currency = Currency::findOrFail($request->link_pay_submit);
         $client = New Client();
@@ -294,7 +298,7 @@ class MerchantCampaignController extends Controller
         $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency='.$code);
         $result = json_decode($response->getBody());
         $data['cal_amount'] = floatval($result->data->rates->$pre_currency);
-        $data['wallet'] =  Wallet::where('user_id', $data['campaign']->user_id)->where('user_type',1)->where('wallet_type', 1)->where('currency_id', $select_currency->id)->first();
+        $data['wallet'] =  Wallet::where('user_id', $data['campaign']->user_id)->where('user_type',1)->where('wallet_type', 8)->where('currency_id', $select_currency->id)->first();
         if(!$data['wallet']) {
             return back()->with('error', $select_currency->code .' crypto wallet is not existed in Campaign Owner.');
         }
@@ -310,7 +314,7 @@ class MerchantCampaignController extends Controller
 
     public function crypto_link_pay(Request $request, $id) {
         $data['campaign'] = Campaign::where('id', $id)->first();
-        $data['total_amount'] = $request->amount * $request->quantity;
+        $data['total_amount'] = $request->amount ;
         $pre_currency = Currency::findOrFail($data['campaign']->currency_id)->code;
         $select_currency = Currency::findOrFail($request->link_pay_submit);
         $client = New Client();
@@ -318,7 +322,7 @@ class MerchantCampaignController extends Controller
         $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency='.$code);
         $result = json_decode($response->getBody());
         $data['cal_amount'] = floatval($result->data->rates->$pre_currency);
-        $data['wallet'] =  Wallet::where('user_id', $data['campaign']->user_id)->where('user_type',1)->where('wallet_type', 1)->where('currency_id', $select_currency->id)->first();
+        $data['wallet'] =  Wallet::where('user_id', $data['campaign']->user_id)->where('user_type',1)->where('wallet_type', 8)->where('currency_id', $select_currency->id)->first();
         if(!$data['wallet']) {
             return back()->with('unsuccess', $select_currency->code .' crypto wallet is not existed in Campaign Owner.');
         }

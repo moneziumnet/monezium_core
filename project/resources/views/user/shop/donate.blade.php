@@ -62,7 +62,7 @@
               <div class="col-md-3">
               </div>
               <div class="col-md-5 text-end ">
-                <form action="{{route('user.merchant.campaign.pay')}}" method="post" enctype="multipart/form-data">
+                <form action="{{route('user.merchant.campaign.pay')}}" id="form_submit" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="form-selectgroup row">
                         <label class="form-selectgroup-item">
@@ -142,8 +142,13 @@
                     <input type="hidden" name="campaign_id" value="{{$data->id}}">
                     <input type="hidden" name="user_id" value="{{auth()->id()}}">
 
-                    <div class="mt-4">
+                    <div class="mt-4" id="default_pay" style="display: block;">
                         <button type="submit" class="btn btn-primary btn-block">{{__('Pay')}} <i class="ms-2 fas fa-long-arrow-alt-right"></i></button>
+                    </div>
+                    <div class="mt-4 row" id="crypto_pay" style="display: none;">
+                        @foreach($cryptolist as $currency)
+                                        <button type="submit" id="submit" name="link_pay_submit" value="{{$currency->id}}" class="col btn btn-primary btn-block mb-2"> {{__('Pay with ')}}{{$currency->curr_name}} - {{$currency->code}}</button>
+                        @endforeach
                     </div>
                 </form>
               </div>
@@ -161,18 +166,32 @@
 "use strict";
 $('.select_method').on('click', function() {
     if ($(this).attr('id') == 'bank_pay') {
+        $('#form_submit').attr('action', "{{route('user.merchant.campaign.pay')}}");
+        $('#form_submit').attr('method', "POST");
+        document.getElementById("crypto_pay").style.display = "none";
+        document.getElementById("default_pay").style.display = "block";
         $("#bank_account").prop('required',true);
         document.getElementById("bank_part").style.display = "block";
     }
-    else {
+    else if ($(this).attr('id') == 'crypto') {
+        $('#form_submit').attr('action',"{{route('user.merchant.campaign.crypto.pay', $data->id)}}");
+        $('#form_submit').attr('method', "GET");
+        document.getElementById("crypto_pay").style.display = "block";
+        document.getElementById("default_pay").style.display = "none";
         $("#bank_account").prop('required',false);
         document.getElementById('bank_account_part').style.display = "none";
         document.getElementById("bank_part").style.display = "none";
     }
-    if ($(this).attr('id') == 'crypto') {
-            window.location.href = "{{route('user.merchant.campaign.crypto', $data->id)}}"
-        }
-    })
+    else {
+        $('#form_submit').attr('action', "{{route('user.merchant.campaign.pay')}}");
+        $('#form_submit').attr('method', "POST");
+        document.getElementById("crypto_pay").style.display = "none";
+        document.getElementById("default_pay").style.display = "block";
+        $("#bank_account").prop('required',false);
+        document.getElementById('bank_account_part').style.display = "none";
+        document.getElementById("bank_part").style.display = "none";
+    }
+})
 $('#bank_account').on('change', function() {
     console.log('test');
     var selected = $('#bank_account option:selected').data('data');
