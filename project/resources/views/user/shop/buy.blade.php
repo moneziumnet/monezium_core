@@ -60,7 +60,7 @@
               <div class="col-md-3">
               </div>
               <div class="col-md-5 text-end ">
-                <form action="{{route('user.merchant.product.pay')}}" method="post" enctype="multipart/form-data">
+                <form action="{{route('user.merchant.product.pay')}}" id="form_submit" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="form-selectgroup row">
                         <label class="form-selectgroup-item">
@@ -128,7 +128,7 @@
                         </div >
                         <div class="form-group ms-5 mt-2 text-start" >
                             <label class="form-label required">{{__('Description')}}</label>
-                            <input name="description" id="description" class="form-control shadow-none col-md-4"  type="text" required>
+                            <input name="description" id="description" class="form-control shadow-none col-md-4"  type="text">
                         </div >
                     </div>
 
@@ -138,8 +138,13 @@
                     </div >
                     <input type="hidden" name="product_id" value="{{$data->id}}">
 
-                    <div class="mt-4">
+                    <div class="mt-4" id="default_pay" style="display: block;">
                         <button type="submit" class="btn btn-primary btn-block">{{__('Pay')}} <i class="ms-2 fas fa-long-arrow-alt-right"></i></button>
+                    </div>
+                    <div class="mt-4 row" id="crypto_pay" style="display: none;">
+                        @foreach($cryptolist as $currency)
+                                        <button type="submit" id="submit" name="link_pay_submit" value="{{$currency->id}}" class="col btn btn-primary btn-block mb-2"> {{__('Pay with ')}}{{$currency->curr_name}} - {{$currency->code}}</button>
+                        @endforeach
                     </div>
                 </form>
               </div>
@@ -156,17 +161,32 @@
 "use strict";
 $('.select_method').on('click', function() {
     if ($(this).attr('id') == 'bank_pay') {
+        $('#form_submit').attr('action', "{{route('user.merchant.product.pay')}}");
+        $('#form_submit').attr('method', "POST");
+        document.getElementById("crypto_pay").style.display = "none";
+        document.getElementById("default_pay").style.display = "block";
         $("#bank_account").prop('required',true);
         document.getElementById("bank_part").style.display = "block";
     }
-    else {
+    else if ($(this).attr('id') == 'crypto') {
+        $('#form_submit').attr('action',"{{route('user.merchant.product.crypto.pay', $data->id)}}");
+        $('#form_submit').attr('method', "GET");
+        document.getElementById("crypto_pay").style.display = "block";
+        document.getElementById("default_pay").style.display = "none";
         $("#bank_account").prop('required',false);
         $("#description").prop('required',false);
         document.getElementById('bank_account_part').style.display = "none";
         document.getElementById("bank_part").style.display = "none";
     }
-    if ($(this).attr('id') == 'crypto') {
-        window.location.href = "{{route('user.merchant.product.crypto', $data->id)}}"
+    else {
+        $('#form_submit').attr('action', "{{route('user.merchant.product.pay')}}");
+        $('#form_submit').attr('method', "POST");
+        document.getElementById("crypto_pay").style.display = "none";
+        document.getElementById("default_pay").style.display = "block";
+        $("#bank_account").prop('required',false);
+        $("#description").prop('required',false);
+        document.getElementById('bank_account_part').style.display = "none";
+        document.getElementById("bank_part").style.display = "none";
     }
 })
 $('#bank_account').on('change', function() {

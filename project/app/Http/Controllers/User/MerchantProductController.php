@@ -130,14 +130,14 @@ class MerchantProductController extends Controller
     public function link($ref_id) {
         $data = Product::where('ref_id', $ref_id)->first();
         $bankaccounts = BankAccount::where('user_id', $data->user_id)->where('currency_id', $data->currency_id)->get();
-
+        $cryptolist = Currency::whereStatus(1)->where('type', 2)->get();
         if(!$data) {
             return back()->with('error', 'This product does not exist.');
         }
         if($data->status == 0) {
             return back()->with('error', 'This product\'s sell status is deactive');
         }
-        return view('user.merchant.product.product_pay', compact('data', 'bankaccounts'));
+        return view('user.merchant.product.product_pay', compact('data', 'bankaccounts', 'cryptolist'));
     }
 
     public function crypto_link($id)
@@ -149,7 +149,7 @@ class MerchantProductController extends Controller
 
     public function crypto_link_pay(Request $request, $id) {
         $data['product'] = Product::where('id', $id)->first();
-        $data['total_amount'] = $request->amount * $request->quantity;
+        $data['total_amount'] = $data['product']->amount * $request->quantity;
         $pre_currency = Currency::findOrFail($data['product']->currency_id)->code;
         $select_currency = Currency::findOrFail($request->link_pay_submit);
         $client = New Client();
@@ -222,6 +222,9 @@ class MerchantProductController extends Controller
             // return 'bank';
         }
         elseif($request->payment == 'wallet'){
+            if(!auth()->user()) {
+                return redirect(route('user.login'))->with('error', 'You have to login for this payment.');
+            }
             $wallet = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('currency_id',$data->currency_id)->where('wallet_type', 1)->first();
 
             $gs = Generalsetting::first();
@@ -350,7 +353,7 @@ class MerchantProductController extends Controller
 
     public function crypto_pay(Request $request, $id) {
         $data['product'] = Product::where('id', $id)->first();
-        $data['total_amount'] = $request->amount * $request->quantity;
+        $data['total_amount'] = $data['product']->amount * $request->quantity;
         $pre_currency = Currency::findOrFail($data['product']->currency_id)->code;
         $select_currency = Currency::findOrFail($request->link_pay_submit);
         $client = New Client();

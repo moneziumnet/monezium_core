@@ -20,7 +20,7 @@
       </div>
       <div class="col-auto ms-auto d-print-none">
 
-            <a class="btn btn-primary d-sm-inline-block" href="{{route('user.merchant.product.crypto', $product->id)}}">
+            <a class="btn btn-primary d-sm-inline-block" href="{{route('user.shop.order', $product->id)}}">
               <i class="fas fa-backward me-1"></i> {{__('Back')}}
             </a>
       </div>
