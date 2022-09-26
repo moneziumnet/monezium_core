@@ -221,6 +221,8 @@ class UserController extends Controller
             {
                 $wallet = Wallet::where('user_id', $id)->where('wallet_type', $wallet_type)->where('currency_id', $currency_id)->first();
                 $currency =  Currency::findOrFail($currency_id);
+                $gs = Generalsetting::first();
+                // return response()->json('$msg');
                 if ($currency->type == 2) {
                     $address = RPC_ETH('personal_newAccount',['123123']);
                     if ($address == 'error') {
@@ -232,7 +234,6 @@ class UserController extends Controller
                     $address = $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
                     $keyword = '';
                 }
-                $gs = Generalsetting::first();
                 if(!$wallet)
                 {
                   $user_wallet = new Wallet();
@@ -591,7 +592,7 @@ class UserController extends Controller
                     {
                         return response()->json(array('errors' => ['Customer Balance not Available.']));
                     }
-                    
+
                     user_wallet_increment($trnx->user_id, $currency_id, $totalAmt);
                     $trnx->currency_id = $currency_id;
                     $trnx->amount      = $amount;
@@ -601,7 +602,7 @@ class UserController extends Controller
                     $trnx->data       = '{"sender":"'.$request->sender.'", "receiver":"'.$request->receiver.'"}';
                     $trnx->details     = $request->input('description');
                     $trnx->save();
-                    
+
                     user_wallet_decrement($trnx->user_id, $currency_id, $newTotal);
                     return response()->json('Transacton Update Success');
                 }
