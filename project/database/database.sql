@@ -498,6 +498,28 @@ INSERT INTO `countries` VALUES (247, 'South Africa', 'ZA', 'ZAF', 27, 0, 0, 0, N
 INSERT INTO `countries` VALUES (248, 'Zambia', 'ZM', 'ZMB', 260, 0, 0, 0, NULL, NULL);
 INSERT INTO `countries` VALUES (249, 'Zimbabwe', 'ZW', 'ZWE', 263, 0, 0, 0, NULL, NULL);
 
+
+-- ----------------------------
+-- Table structure for customer_types
+-- ----------------------------
+DROP TABLE IF EXISTS `customer_types`;
+CREATE TABLE `customer_types`  (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `type_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `created_at` timestamp(0) NULL DEFAULT NULL,
+  `updated_at` timestamp(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of customer_types
+-- ----------------------------
+INSERT INTO `customer_types` VALUES (1, 'Private', '2022-06-20 13:46:01', '2022-06-20 13:46:01');
+INSERT INTO `customer_types` VALUES (2, 'Corporate', '2022-06-20 13:46:01', '2022-06-20 13:46:01');
+INSERT INTO `customer_types` VALUES (3, 'Merchants', '2022-06-20 13:46:01', '2022-06-20 13:46:01');
+INSERT INTO `customer_types` VALUES (4, 'Supervisors', '2022-06-20 13:46:01', '2022-06-20 13:46:01');
+INSERT INTO `customer_types` VALUES (5, 'Staff', '2022-06-20 13:46:01', '2022-06-20 13:46:01');
+
 -- ----------------------------
 -- Table structure for currencies
 -- ----------------------------
