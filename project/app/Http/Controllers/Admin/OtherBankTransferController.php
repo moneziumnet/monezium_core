@@ -224,92 +224,158 @@ class OtherBankTransferController extends Controller
 
         $subbank = SubInsBank::where('id', $data->subbank)->first();
         $client = New Client();
+        if($bankgateway->keyword == 'openpayd') {
 
-        try {
-            $response = $client->request('POST', 'https://sandbox.openpayd.com/api/oauth/token?grant_type=client_credentials', [
-                'headers' => [
-                   'Accept'=> 'application/json',
-                  'Authorization' => 'Basic '.$bankgateway->information->Auth,
-                  'Content-Type' => 'application/x-www-form-urlencoded',
-                ],
-              ]);
-            $res_body = json_decode($response->getBody());
-            $auth_token = $res_body->access_token;
-            $accounter_id = $res_body->accountHolderId;
-        } catch (\Throwable $th) {
-             return response()->json($th->getMessage());
-        }
-
-
-        try {
-            $response = $client->request('GET', 'https://sandbox.openpayd.com/api/accounts?iban='.$customer_bank->iban, [
-                'headers' => [
-                  'Accept' => 'application/json',
-                  'Authorization' => 'Bearer '.$auth_token,
-                  'Content-Type' => 'application/json',
-                  'x-account-holder-id' => $user->holder_id,
-                ],
-              ]);
-              $res_body = json_decode($response->getBody())->content[0];
-
-            $account_id = $res_body->id;
-            $amount = $res_body->availableBalance->value;
-        } catch (\Throwable $th) {
-             return response()->json($th->getMessage());
-        }
-
-        try {
-            $response = $client->request('GET', 'https://sandbox.openpayd.com/api/accounts?iban='.$master_account->iban, [
-                'headers' => [
-                  'Accept' => 'application/json',
-                  'Authorization' => 'Bearer '.$auth_token,
-                  'Content-Type' => 'application/json',
-                  'x-account-holder-id' => $accounter_id,
-                ],
-              ]);
-              $res_body = json_decode($response->getBody())->content[0];
-
-            $master_account_id = $res_body->id;
-            $master_amount = $res_body->availableBalance->value;
-            if ($master_amount < $data->amount) {
-                return response()->json(('Your balance is Insufficient '));
+            try {
+                $response = $client->request('POST', 'https://sandbox.openpayd.com/api/oauth/token?grant_type=client_credentials', [
+                    'headers' => [
+                       'Accept'=> 'application/json',
+                      'Authorization' => 'Basic '.$bankgateway->information->Auth,
+                      'Content-Type' => 'application/x-www-form-urlencoded',
+                    ],
+                  ]);
+                $res_body = json_decode($response->getBody());
+                $auth_token = $res_body->access_token;
+                $accounter_id = $res_body->accountHolderId;
+            } catch (\Throwable $th) {
+                 return response()->json($th->getMessage());
             }
-        } catch (\Throwable $th) {
-             return response()->json($th->getMessage());
-        }
 
-        try {
-            $response = $client->request('POST', 'https://sandbox.openpayd.com/api/transactions/sweepPayout', [
-                'body' =>
-                    '{"beneficiary":
-                        {"bankAccountCountry":"'.substr($data->iban, 0,2).'",
-                        "customerType":"RETAIL",
-                        "firstName":"'.$data->beneficiary->name.'",
-                        "lastName":"'.$data->beneficiary->name.'",
-                        "iban":"'.$data->iban.'",
-                        "bic":"'.$data->swift_bic.'"
-                        },
-                    "amount":
-                        {"value":"'.$data->amount.'",
-                        "currency":"'.$currency->code.'"
-                        },
-                    "linkedAccountHolderId":"'.$user->holder_id.'",
-                    "accountId":"'.$account_id.'",
-                    "sweepSourceAccountId":"'.$master_account_id.'",
-                    "paymentType":"'.$data->payment_type.'",
-                    "reference":"'.$data->description.'"
+
+            try {
+                $response = $client->request('GET', 'https://sandbox.openpayd.com/api/accounts?iban='.$customer_bank->iban, [
+                    'headers' => [
+                      'Accept' => 'application/json',
+                      'Authorization' => 'Bearer '.$auth_token,
+                      'Content-Type' => 'application/json',
+                      'x-account-holder-id' => $user->holder_id,
+                    ],
+                  ]);
+                  $res_body = json_decode($response->getBody())->content[0];
+
+                $account_id = $res_body->id;
+                $amount = $res_body->availableBalance->value;
+            } catch (\Throwable $th) {
+                 return response()->json($th->getMessage());
+            }
+
+            try {
+                $response = $client->request('GET', 'https://sandbox.openpayd.com/api/accounts?iban='.$master_account->iban, [
+                    'headers' => [
+                      'Accept' => 'application/json',
+                      'Authorization' => 'Bearer '.$auth_token,
+                      'Content-Type' => 'application/json',
+                      'x-account-holder-id' => $accounter_id,
+                    ],
+                  ]);
+                  $res_body = json_decode($response->getBody())->content[0];
+
+                $master_account_id = $res_body->id;
+                $master_amount = $res_body->availableBalance->value;
+                if ($master_amount < $data->amount) {
+                    return response()->json(('Your balance is Insufficient '));
+                }
+            } catch (\Throwable $th) {
+                 return response()->json($th->getMessage());
+            }
+
+            try {
+                $response = $client->request('POST', 'https://sandbox.openpayd.com/api/transactions/sweepPayout', [
+                    'body' =>
+                        '{"beneficiary":
+                            {"bankAccountCountry":"'.substr($data->iban, 0,2).'",
+                            "customerType":"RETAIL",
+                            "firstName":"'.$data->beneficiary->name.'",
+                            "lastName":"'.$data->beneficiary->name.'",
+                            "iban":"'.$data->iban.'",
+                            "bic":"'.$data->swift_bic.'"
+                            },
+                        "amount":
+                            {"value":"'.$data->amount.'",
+                            "currency":"'.$currency->code.'"
+                            },
+                        "linkedAccountHolderId":"'.$user->holder_id.'",
+                        "accountId":"'.$account_id.'",
+                        "sweepSourceAccountId":"'.$master_account_id.'",
+                        "paymentType":"'.$data->payment_type.'",
+                        "reference":"'.$data->description.'"
+                        }',
+                    'headers' => [
+                      'Accept' => 'application/json',
+                      'Authorization' => 'Bearer '.$auth_token,
+                      'Content-Type' => 'application/json',
+                      'x-account-holder-id' => $accounter_id,
+                    ],
+                ]);
+                $res_body = json_decode($response->getBody());
+                $transaction_id = $res_body->transactionId  ;
+            } catch (\Throwable $th) {
+                 return response()->json($th->getMessage());
+            }
+        }
+        else {
+
+            try {
+                $response = $client->request('GET','https://play.railsbank.com/v1/customer/ledgers?account_number='.$customer_bank->iban, [
+                    'headers' => [
+                        'Accept'=> 'application/json',
+                        'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
+                        'Content-Type' => 'application/json',
+                    ],
+                ]);
+                $enduser = json_decode($response->getBody())[0]->holder_id;
+                $amount = json_decode($response->getBody())[0]->amount;
+                $ledger = json_decode($response->getBody())[0]->ledger_id;
+                if ($amount < $request->amount) {
+                    return redirect()->back()->with(array('warning' => 'Insufficient Balance.'));
+                }
+            } catch (\Throwable $th) {
+                return response()->json($th->getMessage());
+            }
+            try {
+
+                $response = $client->request('POST','https://play.railsbank.com/v1/customer/beneficiaries', [
+                    'body' => '{
+                        "holder_id": "'.$enduser.'",
+                        "asset_class": "currency",
+                        "asset_type": "eur",
+                        "iban": "'.$data->iban.'",
+                        "bic_swift": "'.$data->swift_bic.'",
+                        "person": {
+                        "name": "'.$data->beneficiary->name.'",
+                        "email": "'.$data->beneficiary->email.'",
+                        "address": { "address_iso_country": "'.substr($data->iban, 0,2).'" }
+                        }
                     }',
-                'headers' => [
-                  'Accept' => 'application/json',
-                  'Authorization' => 'Bearer '.$auth_token,
-                  'Content-Type' => 'application/json',
-                  'x-account-holder-id' => $accounter_id,
-                ],
-            ]);
-            $res_body = json_decode($response->getBody());
-            $transaction_id = $res_body->transactionId  ;
-        } catch (\Throwable $th) {
-             return response()->json($th->getMessage());
+                    'headers' => [
+                        'Accept'=> 'application/json',
+                        'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
+                        'Content-Type' => 'application/json',
+                    ],
+                ]);
+
+                $beneficiary = json_decode($response->getBody())->beneficiary_id;
+            } catch (\Throwable $th) {
+                return response()->json($th->getMessage());
+            }
+            try {
+                $response = $client->request('POST', 'https://play.railsbank.com/v1/customer/transactions', [
+                    'body' => '{
+                        "ledger_from_id": "'.$ledger.'",
+                        "beneficiary_id": "'.$beneficiary.'",
+                        "payment_type": "payment-type-EU-SEPA-Step2",
+                        "amount": "'.$data->amount.'"
+                      }',
+                    'headers' => [
+                       'Accept'=> 'application/json',
+                      'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
+                      'Content-Type' => 'application/json',
+                    ],
+                  ]);
+                $transaction_id = json_decode($response->getBody())->transaction_id;
+            } catch (\Throwable $th) {
+                return response()->json($th->getMessage());
+            }
         }
 
 
