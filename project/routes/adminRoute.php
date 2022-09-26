@@ -477,7 +477,6 @@ Route::prefix('admin')->group(function () {
     Route::post('/general-settings/update/all', [GeneralSettingController::class, 'generalupdate'])->name('admin.gs.update');
     Route::get('/general-settings/contents', [GeneralSettingController::class, 'contents'])->name('admin.gs.contents');
     Route::get('/general-settings/user/modules', [GeneralSettingController::class, 'usermodules'])->name('admin.gs.user.modules');
-    Route::get('/general-settings/moneytransfer', [GeneralSettingController::class, 'moneytransfer'])->name('admin.gs.moneytransfer');
     Route::get('/general-settings/theme', [GeneralSettingController::class, 'theme'])->name('admin.gs.theme');
 
     Route::get('/general-settings/breadcumb', [GeneralSettingController::class, 'breadcumb'])->name('admin.gs.breadcumb');

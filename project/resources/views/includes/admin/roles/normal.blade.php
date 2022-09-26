@@ -326,11 +326,11 @@
   </a>
     <div id="general" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
+        <a class="collapse-item" href="{{ route('admin.gs.contents') }}">{{ __('Website Contents') }}</a>
         <a class="collapse-item" href="{{ route('admin.gs.logo') }}">{{ __('Logo') }}</a>
         <a class="collapse-item" href="{{ route('admin.gs.fav') }}">{{ __('Favicon') }}</a>
         <a class="collapse-item" href="{{ route('admin.gs.load') }}">{{ __('Loader') }}</a>
         <a class="collapse-item" href="{{ route('admin.gs.breadcumb') }}">{{ __('Breadcumb Banner') }}</a>
-        <a class="collapse-item" href="{{ route('admin.gs.contents') }}">{{ __('Website Contents') }}</a>
         <a class="collapse-item" href="{{ route('admin.gs.footer') }}">{{ __('Footer') }}</a>
         <a class="collapse-item" href="{{ route('admin.gs.error.banner') }}">{{ __('Error Banner') }}</a>
       </div>

@@ -70,8 +70,6 @@ class CreateGeneralsettingsTable extends Migration
             $table->string('currency_code', 191)->nullable();
             $table->string('currency_sign', 191)->nullable();
             $table->boolean('is_verification_email')->default(false);
-            $table->double('withdraw_fee')->default(0);
-            $table->double('withdraw_charge')->default(0);
             $table->boolean('is_affilate')->default(true);
             $table->double('affilate_charge')->default(0);
             $table->text('affilate_banner')->nullable();
@@ -96,14 +94,6 @@ class CreateGeneralsettingsTable extends Migration
             $table->tinyInteger('two_factor')->default(0);
             $table->tinyInteger('kyc')->default(0);
             $table->text('menu')->nullable();
-            $table->double('transfer_fixed')->nullable();
-            $table->double('transfer_percentage')->nullable();
-            $table->double('transfer_min')->nullable();
-            $table->double('transfer_max')->nullable();
-            $table->double('fixed_request_charge')->nullable();
-            $table->double('percentage_request_charge')->nullable();
-            $table->double('minimum_request_money')->nullable();
-            $table->double('maximum_request_money')->nullable();
             $table->mediumText('module_section')->nullable();
             $table->mediumText('user_module')->nullable();
             $table->tinyInteger('is_verify')->nullable()->default(0);

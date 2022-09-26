@@ -5,13 +5,13 @@
  Source Server Type    : MySQL
  Source Server Version : 100424
  Source Host           : localhost:3306
- Source Schema         : geniusbank_db
+ Source Schema         : mt_superadmin_db
 
  Target Server Type    : MySQL
  Target Server Version : 100424
  File Encoding         : 65001
 
- Date: 21/07/2022 10:22:11
+ Date: 26/09/2022 07:17:06
 */
 
 SET NAMES utf8mb4;
@@ -91,34 +91,34 @@ CREATE TABLE `admin_user_messages`  (
 -- ----------------------------
 -- Table structure for admins
 -- ----------------------------
--- ----------------------------
--- Table structure for bank_plans
--- ----------------------------
-DROP TABLE IF EXISTS `bank_plans`;
-CREATE TABLE `bank_plans`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `amount` double NULL DEFAULT NULL,
-  `daily_send` double NULL DEFAULT NULL,
-  `monthly_send` double NULL DEFAULT NULL,
-  `daily_receive` double NULL DEFAULT NULL,
-  `monthly_receive` double NULL DEFAULT NULL,
-  `daily_withdraw` double NULL DEFAULT NULL,
-  `monthly_withdraw` double NULL DEFAULT NULL,
-  `loan_amount` double NULL DEFAULT NULL,
-  `attribute` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
-  `days` int(11) NULL DEFAULT NULL,
+DROP TABLE IF EXISTS `admins`;
+CREATE TABLE `admins`  (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `phone` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `photo` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `password` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1,
+  `remember_token` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   `created_at` timestamp(0) NULL DEFAULT NULL,
   `updated_at` timestamp(0) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  `tenant_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `zip` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `city` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `address` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `country_id` int(11) NULL DEFAULT NULL,
+  `vat` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `plan_id` int(11) NULL DEFAULT NULL,
+  `section` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `admins_email_unique`(`email`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Records of bank_plans
+-- Records of admins
 -- ----------------------------
-INSERT INTO `bank_plans` VALUES (1, 'Free', 0, 10000, 10000, 10000, 100000, 100000, 100000, 100000, NULL, 30, '2022-06-07 21:21:12', '2022-06-07 21:21:12');
-INSERT INTO `bank_plans` VALUES (13, 'Standard', 50, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, NULL, 30, '2022-06-18 04:55:10', '2022-06-18 08:20:18');
-INSERT INTO `bank_plans` VALUES (14, 'Professional', 100, 10000, 10000, 10000, 10000, 10000, 10000, 10000, NULL, 90, '2022-06-18 08:20:57', '2022-06-18 08:20:57');
+INSERT INTO `admins` VALUES (1, 'Supper Admin', 'admin@gmail.com', '01629552892', '1639300861admin.jpg', '$2y$10$NSxBfIBeDdxRjisT83p/0uN4GN4LcbYvKzuazAfyekwPffExwBUpO', 1, 'x9hxNawwQu0bPl7yNNaenNvwFxQ0I2s5JiFoArJwnZWyDJDYvPrV3fZYM0Qh', '2018-03-01 00:27:08', '2022-06-27 11:08:56', NULL, NULL, NULL, NULL, 127, NULL, 0, 'Manage Customers , Loan Management , DPS Management , FDR Management , Manage Escrow , Money Transfer , Wire Transfer , Request Money , Management Withdraw , Management Deposit , Transactions , Deposits , Currency Setting , General Setting , Homepage Manage , Email Setting , Language Manage');
 
 -- ----------------------------
 -- Table structure for blog_categories
@@ -194,12 +194,6 @@ CREATE TABLE `contacts`  (
   `contact` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 36 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of contacts
--- ----------------------------
-INSERT INTO `contacts` VALUES (31, 51, 'Aleksandar Todorovic', '2022-06-21', '234', '234234', 'aleksandart450@gmail.com', 'Konatice Noname street 378', 'Konatice', '11506', NULL, NULL, NULL, NULL, NULL, NULL, 190, 'Onwer111');
-INSERT INTO `contacts` VALUES (32, 10, 'Aleksandar Todorovic', '2022-05-30', '234', '234234', 'aleksandart450@gmail.com', 'Konatice Noname street 378', 'Konatice', '11506', NULL, NULL, NULL, NULL, NULL, NULL, 190, 'Onwer');
 
 -- ----------------------------
 -- Table structure for counters
@@ -525,7 +519,6 @@ INSERT INTO `currencies` VALUES (1, 1, '$', 'USD', 'United State Dollar', 1, 1, 
 INSERT INTO `currencies` VALUES (4, 0, '€', 'EUR', 'European Currency', 1, 1, 0.8790350000, '2021-12-20 05:12:58', '2022-02-16 04:02:35');
 INSERT INTO `currencies` VALUES (5, 0, '£', 'GBP', 'Greate British Pound', 1, 1, 0.7376150000, '2021-12-21 01:45:51', '2022-02-16 04:02:35');
 INSERT INTO `currencies` VALUES (9, 0, '₿', 'BTC', 'Bitcoin', 2, 1, 0.0000225900, '2021-12-21 01:48:53', '2022-02-16 04:02:36');
-INSERT INTO `currencies` VALUES (13, 0, '₦', 'NGN', 'Nigerian naira', 1, 1, 1.0000000000, '2022-02-06 06:41:35', '2022-02-16 04:02:35');
 INSERT INTO `currencies` VALUES (17, 0, 'Ð', 'ETH', 'Ethereum', 2, 1, 0.0005300000, NULL, NULL);
 
 -- ----------------------------
@@ -556,31 +549,26 @@ CREATE TABLE `documents`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 55 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
+-- ----------------------------
+-- Records of documents
+-- ----------------------------
+INSERT INTO `documents` VALUES (52, 51, 'Institution Introduction', '81.jpg');
 
 -- ----------------------------
--- Table structure for dps_plans
+-- Table structure for domains
 -- ----------------------------
-DROP TABLE IF EXISTS `dps_plans`;
-CREATE TABLE `dps_plans`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `per_installment` decimal(10, 0) NULL DEFAULT NULL,
-  `installment_interval` int(11) NULL DEFAULT NULL,
-  `total_installment` int(11) NOT NULL,
-  `interest_rate` decimal(10, 0) NOT NULL,
-  `final_amount` decimal(10, 0) NOT NULL,
-  `user_profit` decimal(10, 0) NULL DEFAULT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 1,
+DROP TABLE IF EXISTS `domains`;
+CREATE TABLE `domains`  (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `domain` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tenant_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp(0) NULL DEFAULT NULL,
   `updated_at` timestamp(0) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of dps_plans
--- ----------------------------
-INSERT INTO `dps_plans` VALUES (1, 'Standard', 9000, 30, 20, 9, 180000, 16200, 1, '2022-01-11 01:46:41', '2022-03-14 22:57:03');
-INSERT INTO `dps_plans` VALUES (2, 'Basic', 80, 30, 20, 20, 1600, 320, 1, '2022-01-25 05:27:06', '2022-06-10 14:30:37');
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `domains_domain_unique`(`domain`) USING BTREE,
+  INDEX `domains_tenant_id_foreign`(`tenant_id`) USING BTREE,
+  CONSTRAINT `domains_ibfk_1` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for email_templates
@@ -623,31 +611,6 @@ INSERT INTO `faqs` VALUES (3, 'Man particular insensible celebrated', 'Aut, expe
 INSERT INTO `faqs` VALUES (4, 'Will I be charged a fee for receiving the OTP via SMS?', 'No. The OTP service is free of charge. The Bank shall notify customers if any charge is imposed in future for this service. You can find the latest tariff guide for services on the Genius Bank Bangladesh website.', 0);
 INSERT INTO `faqs` VALUES (5, 'Can I choose not to use the OTP service for online purchases?', 'No. Bangladesh Bank regulation has mandated the use of OTP for every online purchase.', 0);
 INSERT INTO `faqs` VALUES (6, 'Why is there a need for an One-Time-Password (OTP) to complete an online purchase?', 'An OTP helps to protect against online fraud. It is a secure way to authenticate whether the customer who is making an online purchase is the rightful owner of the debit card being used.', 0);
-
--- ----------------------------
--- Table structure for fdr_plans
--- ----------------------------
-DROP TABLE IF EXISTS `fdr_plans`;
-CREATE TABLE `fdr_plans`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `min_amount` decimal(10, 0) NULL DEFAULT NULL,
-  `max_amount` decimal(10, 0) NULL DEFAULT NULL,
-  `interest_interval` int(11) NULL DEFAULT NULL,
-  `interval_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `interest_rate` decimal(10, 0) NULL DEFAULT NULL,
-  `matured_days` int(11) NULL DEFAULT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 1,
-  `created_at` timestamp(0) NULL DEFAULT NULL,
-  `updated_at` timestamp(0) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of fdr_plans
--- ----------------------------
-INSERT INTO `fdr_plans` VALUES (2, 'Basic', 20, 200, NULL, 'fixed', 3, 30, 1, '2022-01-12 06:05:44', '2022-03-14 22:57:33');
-INSERT INTO `fdr_plans` VALUES (3, 'Standard', 50, 100, 30, 'partial', 4, 365, 1, '2022-01-12 06:54:25', '2022-03-14 22:57:47');
 
 -- ----------------------------
 -- Table structure for features
@@ -788,31 +751,7 @@ CREATE TABLE `generalsettings`  (
 -- ----------------------------
 -- Records of generalsettings
 -- ----------------------------
-INSERT INTO `generalsettings` VALUES (1, 'gdV5JbBZ1652956530.png', '16393007481563335660service-icon-1.png', '5monWltX1641808745.gif', '33CiUFaI1641808748.gif', '1563350277herobg.jpg', 'MT Payment System - All in One Banking System', 'MT', 'Info@example.com', '0123 456789', 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae', '<p>COPYRIGHT © 2022. All Rights Reserved By <a href=\"https://monezium.net/\" target=\"_blank\">monezium.net</a></p>', '#0ba026', 0, '<script type=\"text/javascript\">\r\nvar Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();\r\n(function(){\r\nvar s1=document.createElement(\"script\"),s0=document.getElementsByTagName(\"script\")[0];\r\ns1.async=true;\r\ns1.src=\'https://embed.tawk.to/5bc2019c61d0b77092512d03/default\';\r\ns1.charset=\'UTF-8\';\r\ns1.setAttribute(\'crossorigin\',\'*\');\r\ns0.parentNode.insertBefore(s1,s0);\r\n})();\r\n</script>', 1, 1, 'AIzaSyB1GpE4qeoJ__70UZxvX9CTMUTZRZNHcu8', 1, 'MoneziumNET', 1, 1, 1, 'smtp.gmail.com', '465', 'tls', 'devops.sm.group22222@gmail.com', 'ohzgxzxyaebarzop', 'devops.sm.group22222@gmail.com', 'MT Payment System', 1, 'Coupon Found', 'Coupon Already Applied', 'THANK YOU FOR YOUR INVEST.', '<h5 class=\"sub-title\">A litter bit More&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</h5>', '<h2 class=\"title extra-padding\">About US&nbsp;</h2>', '<p>Our organization pursues several goals that can be \r\n											identified as our mission. Learn more about them below.\r\n											Auis nostrud exercitation ullamc laboris nisitm aliquip ex \r\nbea sed consequat duis autes ure dolor. dolore magna aliqua nim ad \r\nminim.</p>\r\n									<p>\r\n											Auis nostrud exercitation ullamc laboris nisitm aliquip ex \r\nbea sed consequat duis autes ure dolor. dolore magna aliqua nim ad \r\nminim.&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</p>', '1563350729about.png', 'We\'ll email you an order confirmation with details and tracking info.', 1, 0, 'PRICING', 'Choose Plans & Pricing', 'Choose the best for yourself', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'You are subscribed Successfully.', 'This email has already been taken.', 'OOPS ! ... PAGE NOT FOUND', 'THE PAGE YOU ARE LOOKING FOR MIGHT HAVE BEEN REMOVED, HAD ITS NAME CHANGED, OR IS TEMPORARILY UNAVAILABLE.', '16392899281561878540404.png', 'b4GEKQxa1654847903.jpg', 1, 'USD', '$', 0, 1, 5, '16406712051566471347add.jpg', 'ZzsMLGKe162CfA5EcG6j', 3000, 1, 4, 10, '1EGZG7py1652956537.png', 'U36807958', 1, 'cdb2163c-91cc-4fa6-b3fc-7de11bdcdf1a', 1, 'ACb87cec0c7d04b80d78bf1647edf8f67f', 'ee60fb893d6e7a2db56e5748e5eab8a3', '01976814812', 1, 'ba9111b8', 'cgxbAg4KnE80bcKx', '01976814812', 1, 0, 0, '{\"Home\":{\"title\":\"Home\",\"dropdown\":\"no\",\"href\":\"\\/\",\"target\":\"self\"},\"Pricing\":{\"title\":\"Pricing\",\"dropdown\":\"no\",\"href\":\"\\/#pricing\",\"target\":\"self\"},\"Services\":{\"title\":\"Services\",\"dropdown\":\"no\",\"href\":\"\\/services\",\"target\":\"self\"},\"About\":{\"title\":\"About\",\"dropdown\":\"no\",\"href\":\"\\/about\",\"target\":\"self\"},\"Blog\":{\"title\":\"Blog\",\"dropdown\":\"no\",\"href\":\"\\/blogs\",\"target\":\"self\"}}', '', '', 1, 1, 'MONE123', 1500);
-
--- ----------------------------
--- Table structure for kyc_forms
--- ----------------------------
-DROP TABLE IF EXISTS `kyc_forms`;
-CREATE TABLE `kyc_forms`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_type` tinyint(4) NULL DEFAULT NULL,
-  `type` int(11) NULL DEFAULT NULL,
-  `label` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `required` tinyint(4) NOT NULL DEFAULT 0,
-  `created_at` timestamp(0) NULL DEFAULT NULL,
-  `updated_at` timestamp(0) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of kyc_forms
--- ----------------------------
-INSERT INTO `kyc_forms` VALUES (9, 1, 1, 'Full Name', 'full_name', 1, '2022-03-06 07:08:28', '2022-03-06 07:08:28');
-INSERT INTO `kyc_forms` VALUES (10, 1, 2, 'NID', 'nid', 1, '2022-03-06 07:08:38', '2022-03-06 07:08:38');
-INSERT INTO `kyc_forms` VALUES (11, 1, 3, 'Present Address', 'present_address', 1, '2022-03-06 07:08:51', '2022-03-06 07:08:51');
-INSERT INTO `kyc_forms` VALUES (12, 1, 3, 'Parmanent Address', 'parmanent_address', 1, '2022-03-06 07:09:04', '2022-03-06 07:09:04');
+INSERT INTO `generalsettings` VALUES (1, 'gdV5JbBZ1652956530.png', '16393007481563335660service-icon-1.png', '5monWltX1641808745.gif', '33CiUFaI1641808748.gif', '1563350277herobg.jpg', 'MT Payment System - All in One Banking System', 'MT', 'Info@example.com', '0123 456789', 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae', '<p>COPYRIGHT © 2022. All Rights Reserved By <a href=\"https://monezium.net/\" target=\"_blank\">monezium.net</a></p>', '#0ba026', 0, '<script type=\"text/javascript\">\r\nvar Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();\r\n(function(){\r\nvar s1=document.createElement(\"script\"),s0=document.getElementsByTagName(\"script\")[0];\r\ns1.async=true;\r\ns1.src=\'https://embed.tawk.to/5bc2019c61d0b77092512d03/default\';\r\ns1.charset=\'UTF-8\';\r\ns1.setAttribute(\'crossorigin\',\'*\');\r\ns0.parentNode.insertBefore(s1,s0);\r\n})();\r\n</script>', 1, 1, 'AIzaSyB1GpE4qeoJ__70UZxvX9CTMUTZRZNHcu8', 1, 'MoneziumNET', 1, 1, 1, 'smtp.gmail.com', '465', 'tls', 'ahmmedafzal4@gmail.com', 'ohzgxzxyaebarzop', 'ahmmedafzal4@gmail.com', 'GeniusOcean', 1, 'Coupon Found', 'Coupon Already Applied', 'THANK YOU FOR YOUR INVEST.', '<h5 class=\"sub-title\">A litter bit More&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</h5>', '<h2 class=\"title extra-padding\">About US&nbsp;</h2>', '<p>Our organization pursues several goals that can be \r\n											identified as our mission. Learn more about them below.\r\n											Auis nostrud exercitation ullamc laboris nisitm aliquip ex \r\nbea sed consequat duis autes ure dolor. dolore magna aliqua nim ad \r\nminim.</p>\r\n									<p>\r\n											Auis nostrud exercitation ullamc laboris nisitm aliquip ex \r\nbea sed consequat duis autes ure dolor. dolore magna aliqua nim ad \r\nminim.&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</p>', '1563350729about.png', 'We\'ll email you an order confirmation with details and tracking info.', 1, 1, 'PRICING', 'Choose Plans & Pricing', 'Choose the best for yourself', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'You are subscribed Successfully.', 'This email has already been taken.', 'OOPS ! ... PAGE NOT FOUND', 'THE PAGE YOU ARE LOOKING FOR MIGHT HAVE BEEN REMOVED, HAD ITS NAME CHANGED, OR IS TEMPORARILY UNAVAILABLE.', '16392899281561878540404.png', 'b4GEKQxa1654847903.jpg', 1, 'USD', '$', 0, 1, 5, '16406712051566471347add.jpg', 'ZzsMLGKe162CfA5EcG6j', 3000, 1, 4, 10, '1EGZG7py1652956537.png', 'U36807958', 1, 'cdb2163c-91cc-4fa6-b3fc-7de11bdcdf1a', 1, 'ACb87cec0c7d04b80d78bf1647edf8f67f', 'ee60fb893d6e7a2db56e5748e5eab8a3', '01976814812', 1, 'ba9111b8', 'cgxbAg4KnE80bcKx', '01976814812', 1, 1, 1, '{\"Home\":{\"title\":\"Home\",\"dropdown\":\"no\",\"href\":\"\\/\",\"target\":\"self\"},\"Pricing\":{\"title\":\"Pricing\",\"dropdown\":\"no\",\"href\":\"\\/#pricing\",\"target\":\"self\"},\"Services\":{\"title\":\"Services\",\"dropdown\":\"no\",\"href\":\"\\/services\",\"target\":\"self\"},\"About\":{\"title\":\"About\",\"dropdown\":\"no\",\"href\":\"\\/about\",\"target\":\"self\"},\"Blog\":{\"title\":\"Blog\",\"dropdown\":\"no\",\"href\":\"\\/blogs\",\"target\":\"self\"}}', '', '', 1, 1, 'MONE', 1500);
 
 -- ----------------------------
 -- Table structure for languages
@@ -836,33 +775,6 @@ CREATE TABLE `languages`  (
 INSERT INTO `languages` VALUES (1, 1, 1, 'EN', '1636017050KyjRNauw', '1636017050KyjRNauw.json', NULL, NULL);
 
 -- ----------------------------
--- Table structure for loan_plans
--- ----------------------------
-DROP TABLE IF EXISTS `loan_plans`;
-CREATE TABLE `loan_plans`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `min_amount` decimal(10, 0) NULL DEFAULT NULL,
-  `max_amount` decimal(10, 0) NULL DEFAULT NULL,
-  `per_installment` decimal(10, 0) NULL DEFAULT NULL,
-  `installment_interval` int(11) NULL DEFAULT NULL,
-  `total_installment` int(11) NULL DEFAULT NULL,
-  `instruction` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
-  `required_information` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 1,
-  `created_at` timestamp(0) NULL DEFAULT NULL,
-  `updated_at` timestamp(0) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of loan_plans
--- ----------------------------
-INSERT INTO `loan_plans` VALUES (4, 'Agriculture Loan', 5000, 50000, 2, 30, 60, NULL, '{\"1\":{\"field_name\":\"NID\",\"type\":\"file\",\"validation\":\"required\"},\"2\":{\"field_name\":\"Father\'s Name\",\"type\":\"text\",\"validation\":\"required\"},\"3\":{\"field_name\":\"Details Information\",\"type\":\"textarea\",\"validation\":\"nullable\"}}', 1, '2022-01-12 22:35:12', '2022-03-14 22:51:54');
-INSERT INTO `loan_plans` VALUES (5, 'Education Loan', 5000, 50000, 2, 30, 55, NULL, NULL, 1, '2022-01-23 03:36:10', '2022-03-14 22:52:10');
-INSERT INTO `loan_plans` VALUES (6, 'House Loan', 3000, 100000, 10, 30, 15, NULL, NULL, 1, '2022-01-23 03:37:55', '2022-03-14 22:52:27');
-
--- ----------------------------
 -- Table structure for members
 -- ----------------------------
 DROP TABLE IF EXISTS `members`;
@@ -883,11 +795,6 @@ CREATE TABLE `members`  (
 INSERT INTO `members` VALUES (2, 'Ervin Kim', 'CEO of Apple', '1561539258comment2.png', 'https://www.facebook.com', 'https://www.twitter.com', 'https://www.linkedin.com');
 INSERT INTO `members` VALUES (3, 'Ervin Kim', 'CEO of Apple', '1561539242comment2.png', 'https://www.facebook.com', 'https://www.twitter.com', 'https://www.linkedin.com');
 INSERT INTO `members` VALUES (4, 'Ervin Kim', 'CEO of Apple', '1561539231comment2.png', 'https://www.facebook.com', 'https://www.twitter.com', 'https://www.linkedin.com');
-INSERT INTO `members` VALUES (5, 'Ervin Kim', 'CEO of Apple', '1561539222comment2.png', NULL, 'https://www.twitter.com', 'https://www.linkedin.com');
-INSERT INTO `members` VALUES (6, 'Ervin Kim', 'CEO of Apple', '1561539213comment2.png', NULL, 'https://www.twitter.com', 'https://www.linkedin.com');
-INSERT INTO `members` VALUES (7, 'Ervin Kim', 'CEO of Apple', '1561539184comment2.png', 'https://www.facebook.com', NULL, 'https://www.linkedin.com');
-INSERT INTO `members` VALUES (8, 'Ervin Kim', 'CEO of Apple', '1561539197comment2.png', 'https://www.facebook.com', 'https://www.twitter.com', 'https://www.linkedin.com');
-INSERT INTO `members` VALUES (9, 'Ervin Kim', 'CEO of Apple', '1561539345comment2.png', 'https://www.facebook.com', 'https://www.twitter.com', NULL);
 
 -- ----------------------------
 -- Table structure for migrations
@@ -1161,7 +1068,7 @@ CREATE TABLE `pagesettings`  (
 -- ----------------------------
 -- Records of pagesettings
 -- ----------------------------
-INSERT INTO `pagesettings` VALUES (1, 'Success! Thanks for contacting us, we will get back to you shortly.', 'admin@geniusocean.com', '<h4 class=\"subtitle\" style=\"margin-bottom: 6px; font-weight: 600; line-height: 28px; font-size: 28px; text-transform: uppercase;\">WE\'D LOVE TO</h4><h2 class=\"title\" style=\"margin-bottom: 13px;font-weight: 600;line-height: 50px;font-size: 40px;color: #1f71d4;text-transform: uppercase;\">HEAR FROM YOU</h2>', '<span style=\"color: rgb(119, 119, 119);\">Send us a message and we\' ll respond as soon as possible</span><br>', 'FEEL FREE TO DROP US A MESSAGE', 'Need to speak to us? Do you have any queries or suggestions? Please contact us about all enquiries including membership and volunteer work using the form below.', '3584 Hickory Heights Drive ,Hanover MD 21076, USA', '+12 3456 7890 1234', '00 000 000 000', 'admin@geniusocean.com', 'https://geniusocean.com/', 1, 1, 0, 0, 0, 1, 1, 1, 1, 'Simple And Safe Digital Banking System', 'MT System works around your schedule, offering innovative products that is better, faster and affordable', 'http://localhost/geniusbank/', 'https://www.youtube.com/watch?v=lG-J1QC8cKY&ab_channel=EsoGolpoKoriPrime', 'qN2bqitJ1645077354.jpg', 1, 1, 'The client perspective depends on Business first growth.', 'The Better Way to Save & Invest', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'Simple Transparent Pricing', 'The best price we only can ask for you.', 'Testimonial', 'What customers say about us', 'The client perspective depends on Business first growth. How big business can be. We provide best service all area.', 'Need a Personalized Solution?', 'Explicabo repellat minus eaque velit unde nulla nobis veritatis labore dolore, necessitatibus harum laborum at, aut reprehenderit!', 'http://localhost/geniusbank/', '4TsFX1TA1645088780.png', 'uhzm3tT31645088780.jpg', 'Latest Blog', 'Latest News & Tips', 'Banking commodi explicabo aperiam unde maxime debitis.', 'Frequently Asked Questions', 'Though we have provided lots of information about us and how we serve what is our working process our terms and conditions our policies etc.', 'N7TNLIK31645005637.jpg', 'WE ARE Genius Bank', 'A place for everyone who wants to simply banking system. Deposit funds using payment gateway or bank transfer. A Bank at fair price is guaranteed. Nothing extra. Join over 700,000 users from all over the world satisfied with our services. A place for everyone who wants to simply loans and Dps. Even with a history of hefty technological investments and an even larger donations, consumer and investor confidence has never waned.', '[\"Get up to $15,000 Cash Fast\",\"15 Minute Online Application\",\"Coverage around the world\",\"Business without borders\",\"Affiliates and partnerships\",\"Bad Credit Considered2\"]', 'https://www.google.com/', '<h3>We are Secure and Stable</h3>\r\nGenius Bank has become one of the largest donors and the largest bank donor in Bangladesh. The bank has won numerous international awards because of its unique approach as a socially conscious bank\r\nAs a result it now provides unrivaled banking technology offerings to all its customers. Because of this mindset, most local banks have joined Genius Bank banking infrastructure instead of pursuing their own.\r\n<br><br><br>\r\n<h3>We are Secure and Stable</h3>\r\nGenius Bank has become one of the largest donors and the largest bank donor in Bangladesh. The bank has won numerous international awards because of its unique approach as a socially conscious bank\r\nAs a result it now provides unrivaled banking technology offerings to all its customers. Because of this mindset, most local banks have joined Genius Bank banking infrastructure instead of pursuing their own.\r\n<br><br><br>\r\n\r\n<h3>We are Secure and Stable</h3>\r\nGenius Bank has become one of the largest donors and the largest bank donor in Bangladesh. The bank has won numerous international awards because of its unique approach as a socially conscious bank\r\nAs a result it now provides unrivaled banking technology offerings to all its customers. Because of this mindset, most local banks have joined Genius Bank banking infrastructure instead of pursuing their own.\r\n<br><br><br>\r\n\r\n<h3>We are Secure and Stable</h3>\r\nGenius Bank has become one of the largest donors and the largest bank donor in Bangladesh. The bank has won numerous international awards because of its unique approach as a socially conscious bank\r\nAs a result it now provides unrivaled banking technology offerings to all its customers. Because of this mindset, most local banks have joined Genius Bank banking infrastructure instead of pursuing their own.\r\n<br><br><br>', '1639568953bg-banner.jpg', 'https://www.youtube.com/watch?v=0gv7OC9L2s8', 'How it Works', 'The strategy where user can use the banking system. The strategy is simple easier to use. This is the fewer step to follow to create a bank account.', 'cjER6eH01645442056.png', '1639561929call-to-action-bg.jpg', 'GET STARTED TODAY WITH BITCOIN', 'Open account for free and start trading Bitcoins!', '<h4 class=\"subtitle\" style=\"font-weight: 600; line-height: 1.2381; font-size: 24px; color: rgb(31, 113, 212);\">More convenient than others</h4>', '<h2 class=\"title\" style=\"font-weight: 600; line-height: 60px; font-size: 50px; color: rgb(23, 34, 44);\">Find Value &amp; Build confidence</h2>', 'https://www.google.com/', 'https://www.google.com/', 'gFNRbRDL1645425298.png', 'Your banking experience anytime, anywhere', 'Deserunt hic consequatur ex placeat! atque repellendus inventore quisquam, perferendis, eum reiciendis quia nesciunt fuga. Natus illum doloremque sed perferendis blanditiis maiores, voluptas ad quas beatae facilis totam officiis ratione, ab cumque libero. Ducimus molestias iusto facilis!\r\n\r\nNatus illum doloremque sed perferendis blanditiis maiores, voluptas ad quas beatae facilis totam officiis ratione, ab cumque libero. Ducimus molestias iusto facilis!', '9HX3cjLu1645425298.png', 'https://www.google.com/', 'zbT8VZef1645425298.png', NULL);
+INSERT INTO `pagesettings` VALUES (1, 'Success! Thanks for contacting us, we will get back to you shortly.', 'info@monezium.com', '<h4 class=\"subtitle\" style=\"margin-bottom: 6px; font-weight: 600; line-height: 28px; font-size: 28px; text-transform: uppercase;\">WE\'D LOVE TO</h4><h2 class=\"title\" style=\"margin-bottom: 13px;font-weight: 600;line-height: 50px;font-size: 40px;color: #1f71d4;text-transform: uppercase;\">HEAR FROM YOU</h2>', '<span style=\"color: rgb(119, 119, 119);\">Send us a message and we\' ll respond as soon as possible</span><br>', 'FEEL FREE TO DROP US A MESSAGE', 'Need to speak to us? Do you have any queries or suggestions? Please contact us about all enquiries including membership and volunteer work using the form below.', 'Poland, Warsaw, 00-844, Grzybowska 80/82/700', '+12 3456 7890 1234', '00 000 000 000', 'info@monezium.com', 'http://monezium.net', 1, 1, 0, 0, 0, 1, 1, 1, 1, 'Simple And Safe Digital Banking System', 'MT System works around your schedule, offering innovative products that is better, faster and affordable', 'http://localhost/geniusbank/', 'https://www.youtube.com/watch?v=lG-J1QC8cKY&ab_channel=EsoGolpoKoriPrime', 'qN2bqitJ1645077354.jpg', 1, 1, 'The client perspective depends on Business first growth.', 'The Better Way to Save & Invest', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'Simple Transparent Pricing', 'The best price we only can ask for you.', 'Testimonial', 'What customers say about us', 'The client perspective depends on Business first growth. How big business can be. We provide best service all area.', 'Need a Personalized Solution?', 'Explicabo repellat minus eaque velit unde nulla nobis veritatis labore dolore, necessitatibus harum laborum at, aut reprehenderit!', 'http://localhost/geniusbank/', '4TsFX1TA1645088780.png', 'uhzm3tT31645088780.jpg', 'Latest Blog', 'Latest News & Tips', 'Banking commodi explicabo aperiam unde maxime debitis.', 'Frequently Asked Questions', 'Though we have provided lots of information about us and how we serve what is our working process our terms and conditions our policies etc.', 'N7TNLIK31645005637.jpg', 'WE ARE Genius Bank', 'A place for everyone who wants to simply banking system. Deposit funds using payment gateway or bank transfer. A Bank at fair price is guaranteed. Nothing extra. Join over 700,000 users from all over the world satisfied with our services. A place for everyone who wants to simply loans and Dps. Even with a history of hefty technological investments and an even larger donations, consumer and investor confidence has never waned.', '[\"Get up to $15,000 Cash Fast\",\"15 Minute Online Application\",\"Coverage around the world\",\"Business without borders\",\"Affiliates and partnerships\",\"Bad Credit Considered2\"]', 'https://www.google.com/', '<h3>We are Secure and Stable</h3>\r\nGenius Bank has become one of the largest donors and the largest bank donor in Bangladesh. The bank has won numerous international awards because of its unique approach as a socially conscious bank\r\nAs a result it now provides unrivaled banking technology offerings to all its customers. Because of this mindset, most local banks have joined Genius Bank banking infrastructure instead of pursuing their own.\r\n<br><br><br>\r\n<h3>We are Secure and Stable</h3>\r\nGenius Bank has become one of the largest donors and the largest bank donor in Bangladesh. The bank has won numerous international awards because of its unique approach as a socially conscious bank\r\nAs a result it now provides unrivaled banking technology offerings to all its customers. Because of this mindset, most local banks have joined Genius Bank banking infrastructure instead of pursuing their own.\r\n<br><br><br>\r\n\r\n<h3>We are Secure and Stable</h3>\r\nGenius Bank has become one of the largest donors and the largest bank donor in Bangladesh. The bank has won numerous international awards because of its unique approach as a socially conscious bank\r\nAs a result it now provides unrivaled banking technology offerings to all its customers. Because of this mindset, most local banks have joined Genius Bank banking infrastructure instead of pursuing their own.\r\n<br><br><br>\r\n\r\n<h3>We are Secure and Stable</h3>\r\nGenius Bank has become one of the largest donors and the largest bank donor in Bangladesh. The bank has won numerous international awards because of its unique approach as a socially conscious bank\r\nAs a result it now provides unrivaled banking technology offerings to all its customers. Because of this mindset, most local banks have joined Genius Bank banking infrastructure instead of pursuing their own.\r\n<br><br><br>', '1639568953bg-banner.jpg', 'https://www.youtube.com/watch?v=0gv7OC9L2s8', 'How it Works', 'The strategy where user can use the banking system. The strategy is simple easier to use. This is the fewer step to follow to create a bank account.', 'cjER6eH01645442056.png', '1639561929call-to-action-bg.jpg', 'GET STARTED TODAY WITH BITCOIN', 'Open account for free and start trading Bitcoins!', '<h4 class=\"subtitle\" style=\"font-weight: 600; line-height: 1.2381; font-size: 24px; color: rgb(31, 113, 212);\">More convenient than others</h4>', '<h2 class=\"title\" style=\"font-weight: 600; line-height: 60px; font-size: 50px; color: rgb(23, 34, 44);\">Find Value &amp; Build confidence</h2>', 'https://www.google.com/', 'https://www.google.com/', 'gFNRbRDL1645425298.png', 'Your banking experience anytime, anywhere', 'Deserunt hic consequatur ex placeat! atque repellendus inventore quisquam, perferendis, eum reiciendis quia nesciunt fuga. Natus illum doloremque sed perferendis blanditiis maiores, voluptas ad quas beatae facilis totam officiis ratione, ab cumque libero. Ducimus molestias iusto facilis!\r\n\r\nNatus illum doloremque sed perferendis blanditiis maiores, voluptas ad quas beatae facilis totam officiis ratione, ab cumque libero. Ducimus molestias iusto facilis!', '9HX3cjLu1645425298.png', 'https://www.google.com/', 'zbT8VZef1645425298.png', NULL);
 
 -- ----------------------------
 -- Table structure for payment_gateways
@@ -1238,7 +1145,6 @@ CREATE TABLE `request_domains`  (
   `reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 68 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
-
 
 -- ----------------------------
 -- Table structure for reviews
@@ -1391,5 +1297,58 @@ CREATE TABLE `socialsettings`  (
 -- Records of socialsettings
 -- ----------------------------
 INSERT INTO `socialsettings` VALUES (1, 'https://www.facebook.com/', 'https://plus.google.com/', 'https://twitter.com/', 'https://www.linkedin.com/', 'https://dribbble.com/', 1, 0, 1, 1, 0, 1, 1, '503140663460329', 'f66cd670ec43d14209a2728af26dcc43', 'https://localhost/crypto/auth/facebook/callback', '904681031719-sh1aolu42k7l93ik0bkiddcboghbpcfi.apps.googleusercontent.com', 'yGBWmUpPtn5yWhDAsXnswEX3', 'http://localhost/marketplace/auth/google/callback');
+
+-- ----------------------------
+-- Table structure for subscribers
+-- ----------------------------
+DROP TABLE IF EXISTS `subscribers`;
+CREATE TABLE `subscribers`  (
+  `id` int(191) NOT NULL AUTO_INCREMENT,
+  `email` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of subscribers
+-- ----------------------------
+INSERT INTO `subscribers` VALUES (1, 'ahmmedafzal4@gmail.com');
+INSERT INTO `subscribers` VALUES (2, 'imtiaze93@yahoo.com');
+
+-- ----------------------------
+-- Table structure for tenants
+-- ----------------------------
+DROP TABLE IF EXISTS `tenants`;
+CREATE TABLE `tenants`  (
+  `id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp(0) NULL DEFAULT NULL,
+  `updated_at` timestamp(0) NULL DEFAULT NULL,
+  `data` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tenants
+-- ----------------------------
+INSERT INTO `tenants` VALUES ('51', '2022-06-20 00:13:16', '2022-06-20 00:13:16', '{\"tenancy_db_name\":\"bank2\",\"tenancy_db_username\":\"root\",\"tenancy_db_password\":null}');
+
+-- ----------------------------
+-- Table structure for user_subscriptions
+-- ----------------------------
+DROP TABLE IF EXISTS `user_subscriptions`;
+CREATE TABLE `user_subscriptions`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `subscription_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `txnid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `user_id` int(11) NULL DEFAULT NULL,
+  `bank_plan_id` int(11) NULL DEFAULT NULL,
+  `currency_id` int(11) NULL DEFAULT NULL,
+  `price` double NULL DEFAULT NULL,
+  `method` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `days` int(11) NULL DEFAULT NULL,
+  `status` enum('pending','completed') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'pending',
+  `created_at` timestamp(0) NULL DEFAULT NULL,
+  `updated_at` timestamp(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 49 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;
