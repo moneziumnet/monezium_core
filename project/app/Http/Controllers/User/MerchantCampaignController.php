@@ -324,7 +324,7 @@ class MerchantCampaignController extends Controller
         $data['cal_amount'] = floatval($result->data->rates->$pre_currency);
         $data['wallet'] =  Wallet::where('user_id', $data['campaign']->user_id)->where('user_type',1)->where('wallet_type', 8)->where('currency_id', $select_currency->id)->first();
         if(!$data['wallet']) {
-            return back()->with('unsuccess', $select_currency->code .' crypto wallet is not existed in Campaign Owner.');
+            return back()->with('error', $select_currency->code .' crypto wallet is not existed in Campaign Owner.');
         }
         return view('user.merchant.campaign.crypto_link_pay', $data);
     }
