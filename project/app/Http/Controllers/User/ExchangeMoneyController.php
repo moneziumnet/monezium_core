@@ -60,11 +60,11 @@ class ExchangeMoneyController extends Controller
             $keyword = '123123';
         }
         else {
+            $gs = Generalsetting::first();
             $address = $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
             $keyword = '';
         }
         if(!$toWallet){
-            $gs = Generalsetting::first();
             $toWallet = Wallet::create([
                 'user_id'     => auth()->id(),
                 'user_type'   => 1,
