@@ -36,11 +36,12 @@
                         <div class="row form-group mb-3 mt-3">
                             <div class="col-md-6 mb-3">
                                 <div class="form-label required">@lang('Select Contractor')</div>
-                                <select class="form-select shadow-none" name="contractor_id" required>
+                                <select class="form-select shadow-none" name="contractor" required>
                                     <option value="" selected>@lang('Select')</option>
-                                    @foreach ($userlist as $user)
-                                      <option value="{{$user->id}}" >{{$user->name}}</option>
+                                    @foreach ($clientlist as $user)
+                                      <option value="Beneficiary {{$user->id}}" >{{$user->name}}</option>
                                     @endforeach
+                                    <option value="User {{auth()->user()->id}}" >{{auth()->user()->name}}</option>
                                 </select>
                             </div>
 

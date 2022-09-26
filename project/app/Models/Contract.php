@@ -15,6 +15,7 @@ class Contract extends Model
         'customer_image_path',
         'client_id',
         'contractor_id',
+        'contractor_type',
         'status',
     ];
     public function beneficiary()
@@ -24,7 +25,8 @@ class Contract extends Model
 
     public function contractor()
     {
-        return $this->belongsTo(User::class, 'contractor_id')->withDefault();
+        // return $this->belongsTo(User::class, 'contractor_id')->withDefault();
+        return $this->morphTo();
     }
 
     public function contract_aoa()

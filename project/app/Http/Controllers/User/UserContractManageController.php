@@ -44,6 +44,11 @@ class UserContractManageController extends Controller
         $data->client_id = $request->client_id;
         $items = array_combine($request->item,$request->value);
         $data->pattern = json_encode($items);
+        $contractor_info = explode(' ', $request->contractor);
+        if(count($contractor_info) == 2) {
+            $data->contractor_type = 'App\\Models\\'.$contractor_info[0];
+            $data->contractor_id = $contractor_info[1];
+        }
         $data->save();
 
         return redirect(route('user.contract.index'))->with('message','Contract has been created successfully');
@@ -143,7 +148,11 @@ class UserContractManageController extends Controller
         $data->title = $request->title;
         $data->information = json_encode(array_combine($request->desc_title,$request->desc_text));
         $data->user_id = $request->user_id;
-        $data->contractor_id = $request->contractor_id;
+        $contractor_info = explode(' ', $request->contractor);
+        if(count($contractor_info) == 2) {
+            $data->contractor_type = 'App\\Models\\'.$contractor_info[0];
+            $data->contractor_id = $contractor_info[1];
+        }
         $data->client_id = $request->client_id;
         $items = array_combine($request->item,$request->value);
         $data->pattern = json_encode($items);
@@ -266,7 +275,11 @@ class UserContractManageController extends Controller
         $request->validate($rules);
 
         $data = new ContractAoa();
-        $data->contractor_id = $request->contractor_id;
+        $contractor_info = explode(' ', $request->contractor);
+        if(count($contractor_info) == 2) {
+            $data->contractor_type = 'App\\Models\\'.$contractor_info[0];
+            $data->contractor_id = $contractor_info[1];
+        }
         $data->client_id = $request->client_id;
 
         $data->title = $request->title;
@@ -369,7 +382,11 @@ class UserContractManageController extends Controller
         $request->validate($rules);
 
         $data = ContractAoa::findOrFail($id);
-        $data->contractor_id = $request->contractor_id;
+        $contractor_info = explode(' ', $request->contractor);
+        if(count($contractor_info) == 2) {
+            $data->contractor_type = 'App\\Models\\'.$contractor_info[0];
+            $data->contractor_id = $contractor_info[1];
+        }
         $data->client_id = $request->client_id;
         $data->title = $request->title;
         $data->information = json_encode(array_combine($request->desc_title,$request->desc_text));
