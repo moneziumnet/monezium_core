@@ -78,6 +78,10 @@ class MoneyRequestController extends Controller
         }
 
         $receiver = User::where('email',$request->account_email)->first();
+        if($receiver->id == $user->id){
+            return redirect()->back()->with('unsuccess','You can not send money request to you.');
+        }
+
 
         if($dailyRequests > $global_range->daily_limit){
             return redirect()->back()->with('unsuccess','Daily request limit over.');

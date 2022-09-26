@@ -201,7 +201,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        {{ $requests->links() }}
+                        {{ $receives->links() }}
                     @endif
                 </div>
             </div>
