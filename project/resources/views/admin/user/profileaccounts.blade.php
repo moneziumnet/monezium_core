@@ -82,17 +82,23 @@
                         <div class="card h-100" >
                         <div class="card-body">
                             <div class="row align-items-center">
-                            <div class="col mr-2">
-                                <div class="row mb-1 mr-1">
-                                    <div class='col font-weight-bold text-gray-900'>{{$value}}</div>
-                                    <div class='col font-weight-bold text-gray-900'>{{$wallet->wallet_no}}</div>
+                            <div class="col">
+                                <div class="d-flex mb-1 mr-1 align-items-start">
+                                    <div class='font-weight-bold text-gray-900 mr-auto'>{{$value}}<br/>{{$wallet->wallet_no}}</div>
+                                    <div class='font-weight-bold text-gray-900'>
+                                        <div class="dropdown">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" style="padding: 6px 11px 1px 7px; border-radius: 50%;">
+                                                <span class="caret"></span>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                <a class="dropdown-item" href="javascript:;" onclick="getDetails({{$wallet->id}})">{{ __('Fee') }}</a>
+                                                <a class="dropdown-item" href="javascript:;" onclick="Deposit({{$wallet->id}})">{{ __('Deposit') }}</a>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="text-xs font-weight-bold text-uppercase mb-1"> {{$dcurr->curr_name}}</div>
                                 <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{amount($wallet->balance,$dcurr->type,2)}} {{$dcurr->code}} ({{$dcurr->symbol}}) </div>
-                                <div class="row mb-1 mr-1">
-                                    <button class="col btn btn-primary ml-2 w-25 mt-2" onclick="getDetails({{$wallet->id}})">{{ __('Fee') }}</button>
-                                    <button class="col btn btn-primary ml-1 w-25 mt-2" onclick="Deposit({{$wallet->id}})">{{ __('Deposit') }}</button>
-                                </div>
                             </div>
                             </div>
                         </div>
@@ -103,9 +109,9 @@
                         <div class="card h-100" style="background-color: #a2b2c5;">
                         <div class="card-body">
                             <div class="row align-items-center">
-                            <div class="col mr-2">
+                            <div class="col">
                                 <div class="row mb-1 mr-1">
-                                    <div class='col font-weight-bold text-gray-900'>{{$value}}</div>
+                                    <div class='col font-weight-bold text-gray-900'>{{$value}}<br/><br/></div>
                                     <div class='col font-weight-bold text-gray-900'></div>
                                 </div>
                                 <div class="text-xs font-weight-bold text-uppercase mb-1"> {{$dcurr->curr_name}}</div>
@@ -129,17 +135,23 @@
                         <div class="card h-100" >
                         <div class="card-body">
                             <div class="row align-items-center">
-                            <div class="col mr-2">
-                                <div class="row mb-1 mr-1">
-                                    <div class='col font-weight-bold text-gray-900'>{{'Crypto'}}</div>
-                                    <div class='col font-weight-bold text-gray-900'>{{$wallet->wallet_no}}</div>
+                            <div class="col">
+                                <div class="d-flex mb-1 mr-1 align-items-start">
+                                    <div class='font-weight-bold text-gray-900 mr-auto'>{{'Crypto'}} {{$wallet->wallet_no}}</div>
+                                    <div class='col font-weight-bold text-gray-900'>
+                                        <div class="dropdown">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" style="padding: 6px 11px 1px 7px; border-radius: 50%;">
+                                                <span class="caret"></span>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                <a class="dropdown-item" href="javascript:;" onclick="getDetails({{$wallet->id}})">{{ __('Fee') }}</a>
+                                                <a class="dropdown-item" href="javascript:;" onclick="Deposit({{$wallet->id}})">{{ __('Deposit') }}</a>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="text-xs font-weight-bold text-uppercase mb-1"> {{$dcurr->curr_name}}</div>
                                 <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{amount($wallet->balance,$dcurr->type,2)}} {{$dcurr->code}} ({{$dcurr->symbol}}) </div>
-                                <div class="row mb-1 mr-1">
-                                    <button class="col btn btn-primary ml-2 w-25 mt-2" onclick="getDetails({{$wallet->id}})">{{ __('Fee') }}</button>
-                                    <button class="col btn btn-primary ml-1 w-25 mt-2" onclick="Deposit({{$wallet->id}})">{{ __('Deposit') }}</button>
-                                </div>
                             </div>
                             </div>
                         </div>
@@ -150,9 +162,9 @@
                         <div class="card h-100" style="background-color: #a2b2c5;">
                         <div class="card-body">
                             <div class="row align-items-center">
-                            <div class="col mr-2">
+                            <div class="col">
                                 <div class="row mb-1 mr-1">
-                                    <div class='col font-weight-bold text-gray-900'>{{'Crypto'}}</div>
+                                    <div class='col font-weight-bold text-gray-900'>{{'Crypto'}}<br/><br/></div>
                                     <div class='col font-weight-bold text-gray-900'></div>
                                 </div>
                                 <div class="text-xs font-weight-bold text-uppercase mb-1"> {{$dcurr->curr_name}}</div>
@@ -205,9 +217,9 @@
     <div class="modal-dialog modal-md modal-dialog-centered" role="document">
     <div class="modal-content">
         <div class="modal-status bg-primary"></div>
-        <div class="modal-body text-center py-4">
-        <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
-        <h3>@lang('Fee Details')</h3>
+        <div class="modal-body py-4">
+        <div class="text-center"><i  class="fas fa-info-circle fa-3x text-primary mb-2"></i></div>
+        <h3 class="text-center">@lang('Fee Details')</h3>
         <ul class="list-group mt-2">
 
         </ul>
@@ -220,17 +232,14 @@
     <div class="modal-dialog modal-md modal-dialog-centered" role="document">
     <div class="modal-content">
         <div class="modal-status bg-primary"></div>
-        <div class="modal-body text-center py-4">
-        <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
-        <h3>@lang('Deposit Details')</h3>
-        <form action="{{route('admin-user-accounts-deposit')}}" method="post">
+        <div class="modal-body py-4">
+        <div class="text-center"><i  class="fas fa-info-circle fa-3x text-primary mb-2"></i></div>
+        <h3 class="text-center">@lang('Deposit Details')</h3>
+        <form action="{{route('admin-user-accounts-deposit')}}" method="post" class="m-3">
             @csrf
             <input type="hidden" class="form-control" id="wallet_id" name="wallet_id"  value="" >
 
-            <ul class="list-group mt-2">
-
-                    </ul>
-
+            <ul class="list-group mt-2"></ul>
             </form>
         </div>
     </div>
