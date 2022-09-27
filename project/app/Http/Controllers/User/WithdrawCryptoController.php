@@ -95,6 +95,16 @@ class WithdrawCryptoController extends Controller
 
         user_wallet_decrement($user->id, $currency->id, $amountToAdd*$currency->rate, 8);
         user_wallet_increment(0, $currency->id, $transaction_global_cost*$currency->rate, 9);
+        $fromWallet = Wallet::where('user_id', $user->id)->where('wallet_type', 8)->where('currency_id', $currency->id)->first();
+        $toWallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $currency->id)->first();
+        if($currency->code == 'ETH') {
+            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword, 30]);
+            $tx = '{from: "'.$fromWallet->wallet_no.'", to: "'.$toWallet->wallet_no.'", value: web3.toWei('.$amountToAdd*$currency->rate.', "ether")}';
+            RPC_ETH('personal_sendTransaction',[$tx, $fromWallet->keyword]);
+        }
+        else if($currency->code == 'BTC') {
+            RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, $amountToAdd*$currency->rate],$fromWallet->keyword);
+        }
 
         if($user->referral_id != 0) {
             $remark = 'withdraw_money_supervisor_fee';

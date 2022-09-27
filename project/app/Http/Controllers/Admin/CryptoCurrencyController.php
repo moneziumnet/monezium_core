@@ -58,7 +58,7 @@ class CryptoCurrencyController extends Controller
         $data = new Currency();
         $input = $request->all();
         if ($request->code == 'BTC') {
-            $address = RPC_BTC_Create('createwallet',[str_rand()]);
+            $address = RPC_BTC_Create('createwallet',[$request->keyword]);
         }
         else {
             $address = RPC_ETH('personal_newAccount',[$request->keyword]);

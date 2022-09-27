@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Models\Transaction;
 use App\Models\Generalsetting;
 use App\Models\PlanDetail;
+use GuzzleHttp\Client;
 use App\Http\Controllers\Controller;
 
 class ExchangeMoneyController extends Controller
@@ -129,7 +130,7 @@ class ExchangeMoneyController extends Controller
         //     $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/100) * $transaction_global_fee->data->percent_charge;
         // }
         $transaction_custom_cost = 0;
-        // if(check_user_type(3))
+        // if(check_user_type(3))l
         // {
         //     $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user,  'send');
         //     if($transaction_custom_fee) {
@@ -138,9 +139,13 @@ class ExchangeMoneyController extends Controller
         // }
 
 
-
-        $defaultAmount = $request->amount / $fromWallet->currency->rate;
-        $finalAmount   = amount($defaultAmount * $toWallet->currency->rate,$toWallet->currency->type);
+        $client = New Client();
+        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency=USD');
+        $result = json_decode($response->getBody());
+        $fromrate = $fromWallet->currency->code;
+        $torate = $toWallet->currency->code;
+        $defaultAmount = $request->amount * $result->data->rates->$fromrate;
+        $finalAmount   = amount($defaultAmount / $result->data->rates->$torate,$toWallet->currency->type);
 
         $charge = amount($transaction_global_cost+$transaction_custom_cost,$fromWallet->currency->type);
         $totalAmount = amount(($request->amount +  $charge),$fromWallet->currency->type);
@@ -154,6 +159,63 @@ class ExchangeMoneyController extends Controller
 
         $toWallet->balance += $finalAmount;
         $toWallet->update();
+
+        if($fromWallet->currency->code == 'ETH' && $toWallet->currency->type == 1) {
+            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword, 30]);
+            $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
+            $tx = '{from: "'.$fromWallet->wallet_no.'", to: "'.$tosystemwallet->wallet_no.'", value: web3.toWei('.$totalAmount.', "ether")}';
+            RPC_ETH('personal_sendTransaction',[$tx, $fromWallet->keyword]);
+            $tosystemwallet1 = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
+            $tosystemwallet1->balance -= $finalAmount;
+            $tosystemwallet1->update();
+        }
+        if($fromWallet->currency->code == 'BTC' && $toWallet->currency->type == 1) {
+            $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
+            RPC_BTC_Send('sendtoaddress',[$tosystemwallet->wallet_no, $totalAmount],$fromWallet->keyword);
+            $tosystemwallet1 = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
+            $tosystemwallet1->balance -= $finalAmount;
+            $tosystemwallet1->update();
+        }
+        if($toWallet->currency->code == 'ETH' && $fromWallet->currency->type == 1) {
+            $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
+            RPC_ETH('personal_unlockAccount',[$tosystemwallet->wallet_no, $tosystemwallet->keyword, 30]);
+            $tx = '{from: "'.$tosystemwallet->wallet_no.'", to: "'.$toWallet->wallet_no.'", value: web3.toWei('.$finalAmount.', "ether")}';
+            RPC_ETH('personal_sendTransaction',[$tx, $tosystemwallet->keyword]);
+            $fromsystemwallet1 = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
+            $fromsystemwallet1->balance += $totalAmount;
+            $fromsystemwallet1->update();
+        }
+        if($toWallet->currency->code == 'BTC' && $fromWallet->currency->type == 1) {
+            $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
+            RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, $finalAmount],$tosystemwallet->keyword);
+            $fromsystemwallet1 = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
+            $fromsystemwallet1->balance += $totalAmount;
+            $fromsystemwallet1->update();
+        }
+        if($fromWallet->currency->code == 'ETH' && $toWallet->currency->code == 'ETH') {
+            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword, 30]);
+            $tx = '{from: "'.$fromWallet->wallet_no.'", to: "'.$toWallet->wallet_no.'", value: web3.toWei('.$totalAmount.', "ether")}';
+            RPC_ETH('personal_sendTransaction',[$tx, $fromWallet->keyword]);
+        }
+        if($fromWallet->currency->code == 'BTC' && $toWallet->currency->code == 'BTC') {
+            RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, $totalAmount],$fromWallet->keyword);
+        }
+        if($fromWallet->currency->code == 'ETH' && $toWallet->currency->code == 'BTC') {
+            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword, 30]);
+            $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
+            $tx = '{from: "'.$fromWallet->wallet_no.'", to: "'.$tosystemwallet->wallet_no.'", value: web3.toWei('.$totalAmount.', "ether")}';
+            RPC_ETH('personal_sendTransaction',[$tx, $fromWallet->keyword]);
+            $fromsystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
+            RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, $finalAmount],$fromsystemwallet->keyword);
+        }
+        if($fromWallet->currency->code == 'BTC' && $toWallet->currency->code == 'ETH') {
+            $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
+            RPC_BTC_Send('sendtoaddress',[$tosystemwallet->wallet_no, $totalAmount],$fromWallet->keyword);
+            $fromsystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
+            RPC_ETH('personal_unlockAccount',[$fromsystemwallet->wallet_no, $fromsystemwallet->keyword, 30]);
+            $tx = '{from: "'.$fromsystemwallet->wallet_no.'", to: "'.$toWallet->wallet_no.'", value: web3.toWei('.$finalAmount.', "ether")}';
+            RPC_ETH('personal_sendTransaction',[$tx, $fromsystemwallet->keyword]);
+        }
 
         $exchange = new ExchangeMoney();
         $exchange->trnx = str_rand();

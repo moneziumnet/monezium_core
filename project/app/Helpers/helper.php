@@ -708,4 +708,31 @@ if(!function_exists('getModule')){
       }
   }
 
+  if(!function_exists('RPC_BTC_Send'))
+  {
+      function RPC_BTC_Send($method, $args, $wallet_name, $link = 'http://127.0.0.1:18443')
+      {
+          $args = json_encode($args);
+          $client = new Client();
+            $headers = [
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Basic ZGV2b3BzOjEyMzEyMw=='
+            ];
+            $body = '{
+            "method": "'.$method.'",
+            "params": '.$args.',
+            "id": 1,
+            "jsonrpc": "2.0"
+            }';
+            try {
+                $response = $client->request('POST', $link.'/wallet/'.$wallet_name, ["headers"=>$headers, "body"=>$body]);
+                $res =json_decode($response->getBody());
+                $wallet_name =  $res->result->name;
+            } catch (\Throwable $th) {
+                return 'error';
+            }
+            return 'success';
+      }
+  }
+
 ?>

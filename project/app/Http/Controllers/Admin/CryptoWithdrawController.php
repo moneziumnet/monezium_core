@@ -9,6 +9,7 @@ use App\Models\CryptoWithdraw;
 use App\Models\Generalsetting;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Models\wallet;
 use Illuminate\Http\Request;
 use Datatables;
 
@@ -111,6 +112,16 @@ class CryptoWithdrawController extends Controller
         if ($id2 == 2) {
             $user = $data->user;
             //$wallet = Wallet::where('user_id',$data->user_id)->where('user_type',1)->where('currency_id',$data->currency_id)->firstOrFail();
+            $toWallet = Wallet::where('user_id', $user->id)->where('wallet_type', 8)->where('currency_id', $data->currency_id)->first();
+            $fromWallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $data->currency_id)->first();
+            if($currency->code == 'ETH') {
+                RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword, 30]);
+                $tx = '{from: "'.$fromWallet->wallet_no.'", to: "'.$toWallet->wallet_no.'", value: web3.toWei('.$data->amount.', "ether")}';
+                RPC_ETH('personal_sendTransaction',[$tx, $fromWallet->keyword]);
+            }
+            else if($currency->code == 'BTC') {
+                RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, $data->amount],$fromWallet->keyword);
+            }
             user_wallet_increment($data->user_id, $data->currency_id, $data->amount, 8);
             $transaction_global_cost = 0;
 

@@ -35,15 +35,21 @@ class SystemAccountController extends Controller
                 $wallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $currency_id)->first();
                 $currency =  Currency::findOrFail($currency_id);
                 if ($currency->type == 2) {
-                    $address = RPC_ETH('personal_newAccount',['123123']);
-                    if ($address == 'error') {
-                        return response()->json(array('errors' => [0 => __('You can not create this wallet because there is some issue in crypto node.')]));
+                    if ($currency->code == 'BTC') {
+                        $address = RPC_BTC_Create('createwallet',['system_btc']);
+                        $keyword = 'system_btc';
                     }
-                    $keyword = '123123';
+                    else if ($currency->code == 'ETH'){
+                        $address = RPC_ETH('personal_newAccount',[$request->keyword]);
+                        $keyword = '123123';
+                    }
                 }
                 else {
                     $address = $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
                     $keyword = '';
+                }
+                if ($address == 'error') {
+                    return response()->json(array('errors' => [0 => __('You can not create this wallet because there is some issue in crypto node.')]));
                 }
                 $gs = Generalsetting::first();
                 if(!$wallet)

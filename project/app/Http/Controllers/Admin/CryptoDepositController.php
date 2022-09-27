@@ -9,6 +9,7 @@ use App\Models\CryptoDeposit;
 use App\Models\Generalsetting;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Models\Wallet;
 use Illuminate\Http\Request;
 use Datatables;
 
@@ -101,42 +102,62 @@ class CryptoDepositController extends Controller
             $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($amount/100) * $transaction_global_fee->data->percent_charge;
         }
         $transaction_custom_cost = 0;
-
-        if($user->referral_id != 0)
-        {
-            $transaction_custom_fee = check_custom_transaction_fee($amount, $user, 'deposit');
-            if($transaction_custom_fee) {
-                $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($amount/100) * $transaction_custom_fee->data->percent_charge;
-            }
-            $remark = 'Deposit_create_supervisor_fee';
-            if (check_user_type_by_id(4, $user->referral_id)) {
-                user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost*$data->currency->rate, 6);
-            }
-            elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
-                user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost*$data->currency->rate, 10);
-                $remark = 'Deposit_create_manager_fee';
-            }
-            $referral_user = User::findOrFail($user->referral_id);
-            $trans = new Transaction();
-            $trans->trnx = str_rand();
-            $trans->user_id     = $user->referral_id;
-            $trans->user_type   = 1;
-            $trans->currency_id = $data->currency_id;
-            $trans->amount      = $transaction_custom_cost*$data->currency->rate;
-            $trans->charge      = 0;
-            $trans->type        = '+';
-            $trans->remark      = $remark;
-            $trans->details     = trans('Deposit complete');
-            $trans->data        = '{"sender":"System Account", "receiver":"'.$referal_user->name.'"}';
-            $trans->save();
-        }
+        $toWallet = Wallet::where('user_id', $user->id)->where('wallet_type', 8)->where('currency_id', $data->currency_id)->first();
+        $fromWallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $data->currency_id)->first();
         if ($id2 == 1) {
+            if($user->referral_id != 0)
+            {
+                $transaction_custom_fee = check_custom_transaction_fee($amount, $user, 'deposit');
+
+                if($transaction_custom_fee) {
+                    $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($amount/100) * $transaction_custom_fee->data->percent_charge;
+                }
+                $remark = 'Deposit_create_supervisor_fee';
+                if (check_user_type_by_id(4, $user->referral_id)) {
+                    $torefWallet = Wallet::where('user_id', $user->referral_id)->where('wallet_type', 6)->where('currency_id', $data->currency_id)->first();
+                    user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost*$data->currency->rate, 6);
+                }
+                elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
+                    $torefWallet = Wallet::where('user_id', $user->referral_id)->where('wallet_type', 10)->where('currency_id', $data->currency_id)->first();
+                    user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost*$data->currency->rate, 10);
+                    $remark = 'Deposit_create_manager_fee';
+                }
+                if($currency->code == 'ETH') {
+                    RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword, 30]);
+                    $tx = '{from: "'.$fromWallet->wallet_no.'", to: "'.$torefWallet->wallet_no.'", value: web3.toWei('.$transaction_custom_cost*$data->currency->rate.', "ether")}';
+                    RPC_ETH('personal_sendTransaction',[$tx, $fromWallet->keyword]);
+                }
+                else if($currency->code == 'BTC') {
+                    RPC_BTC_Send('sendtoaddress',[$torefWallet->wallet_no, $transaction_custom_cost*$data->currency->rate],$fromWallet->keyword);
+                }
+                $referral_user = User::findOrFail($user->referral_id);
+                $trans = new Transaction();
+                $trans->trnx = str_rand();
+                $trans->user_id     = $user->referral_id;
+                $trans->user_type   = 1;
+                $trans->currency_id = $data->currency_id;
+                $trans->amount      = $transaction_custom_cost*$data->currency->rate;
+                $trans->charge      = 0;
+                $trans->type        = '+';
+                $trans->remark      = $remark;
+                $trans->details     = trans('Deposit complete');
+                $trans->data        = '{"sender":"System Account", "receiver":"'.$referal_user->name.'"}';
+                $trans->save();
+            }
 
             $final_amount = $amount - $transaction_custom_cost - $transaction_global_cost;
 
             $result1 = user_wallet_increment($user->id, $data->currency_id, $final_amount*$data->currency->rate, 8);
             $result2 = user_wallet_increment(0, $data->currency_id, $transaction_global_cost*$data->currency->rate, 9);
 
+            if($currency->code == 'ETH') {
+                RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword, 30]);
+                $tx = '{from: "'.$fromWallet->wallet_no.'", to: "'.$toWallet->wallet_no.'", value: web3.toWei('.$final_amount*$data->currency->rate.', "ether")}';
+                RPC_ETH('personal_sendTransaction',[$tx, $fromWallet->keyword]);
+            }
+            else if($currency->code == 'BTC') {
+                RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, $final_amount*$data->currency->rate],$fromWallet->keyword);
+            }
             if(!$result1 || !$result2) {
               return response()->json(array('errors' => [ 0 =>  __('Crypto node is not installed.') ]));
             }

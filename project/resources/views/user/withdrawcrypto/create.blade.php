@@ -124,7 +124,7 @@
           var token = '{{ csrf_token() }}';
           var data  = {id:$(this).val(),_token:token}
           $.post(url,data, function(res) {
-              $('.check').text('@lang('Received Address is ')' + res).addClass('text-success');
+              $('.check').text('@lang('Sender Address is ')' + res).addClass('text-success');
               $('#receiver_address').text(res);
           })
       })
