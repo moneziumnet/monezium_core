@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Facade;
-
 return [
 
     /*
@@ -56,7 +54,7 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
-    'asset_url' => env('ASSET_URL'),
+    'asset_url' => env('ASSET_URL', null),
 
     /*
     |--------------------------------------------------------------------------
@@ -127,24 +125,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Maintenance Mode Driver
-    |--------------------------------------------------------------------------
-    |
-    | These configuration options determine the driver used to determine and
-    | manage Laravel's "maintenance mode" status. The "cache" driver will
-    | allow maintenance mode to be controlled across multiple machines.
-    |
-    | Supported drivers: "file", "cache"
-    |
-    */
-
-    'maintenance' => [
-        'driver' => 'file',
-        // 'store'  => 'redis',
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
     | Autoloaded Service Providers
     |--------------------------------------------------------------------------
     |
@@ -205,8 +185,7 @@ return [
         Intervention\Image\ImageServiceProvider::class,
         Cartalyst\Stripe\Laravel\StripeServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
-        // Update Nexmo
-        // Nexmo\Laravel\NexmoServiceProvider::class,
+        Nexmo\Laravel\NexmoServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
     ],
 
@@ -221,7 +200,7 @@ return [
     |
     */
 
-    'aliases' => Facade::defaultAliases()->merge([
+    'aliases' => [
 
         'App' => Illuminate\Support\Facades\App::class,
         'Arr' => Illuminate\Support\Arr::class,
@@ -267,9 +246,8 @@ return [
         'Toastr'  => Brian2694\Toastr\Facades\Toastr::class,
         'Zip' => ZanySoft\Zip\ZipFacade::class,
         'Toastr'  => Brian2694\Toastr\Facades\Toastr::class,
-        // Update Nexmo
         'Nexmo' => Nexmo\Laravel\Facade\Nexmo::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-    ])->toArray(),
+    ],
 
 ];
