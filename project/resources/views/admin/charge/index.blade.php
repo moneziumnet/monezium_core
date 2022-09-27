@@ -125,7 +125,7 @@
         });
         $(function() {
         $(".btn-area").append('<div class="col-sm-12 col-md-4 pr-3 text-right">'+
-            '<button class="btn btn-primary"  data-id="'+'{{$plan_id}}'+'" onclick="createglobalplan(\''+'{{$plan_id}}'+'\')" ><i class="fas fa-plus"></i> {{__('Add New Plan')}} </button>'+
+            '<button class="btn btn-primary"  data-id="'+'{{$plan_id}}'+'" onclick="createglobalplan(\''+'{{$plan_id}}'+'\')" ><i class="fas fa-plus"></i> {{__('Add New Charge')}} </button>'+
         '</a>'+
         '</div>');
     });
