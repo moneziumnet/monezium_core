@@ -199,10 +199,19 @@
     <script>
         'use strict';
         function showDiv(select) {
+            var company_input_list = $('.company-input');
             if (select.value == 1) {
                 document.getElementById('hidden_div').style.display = "block";
+                for (let i = 0; i < company_input_list.length; i++) {
+                    const item = company_input_list[i];
+                    item.required = true;
+                }
             } else {
                 document.getElementById('hidden_div').style.display = "none";
+                for (let i = 0; i < company_input_list.length; i++) {
+                    const item = company_input_list[i];
+                    item.required = false;
+                }
             }
         }
 

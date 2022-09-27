@@ -123,6 +123,20 @@ class RegisterController extends Controller
         $input['affilate_code'] = md5($request->name . $request->email);
         $input['name'] = trim($request->firstname)." ".trim($request->lastname);
         $input['dob'] = $request->customer_dob;
+
+        if($request->form_select == 1) {
+            $input['company_name'] = $request->company_name;
+            $input['company_reg_no'] = $request->company_reg_no;
+            $input['company_vat_no'] = $request->company_vat_no;
+            $input['company_address'] = $request->company_address;
+            $input['company_dob'] = $request->company_dob;
+            $input['personal_code'] = $request->personal_code;
+            $input['your_id'] = $request->your_id;
+            $input['issued_authority'] = $request->issued_authority;
+            $input['date_of_issue'] = $request->date_of_issue;
+            $input['date_of_expire'] = $request->date_of_expire;
+        }
+
         $user->fill($input)->save();
 
         $default_currency = Currency::where('is_default','1')->first();

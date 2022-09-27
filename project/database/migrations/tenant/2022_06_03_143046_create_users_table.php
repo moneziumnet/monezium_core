@@ -70,6 +70,17 @@ class CreateUsersTable extends Migration
             $table->text('otp_payments')->nullable();
             $table->timestamp('wallet_maintenance')->nullable();
             $table->timestamp('card_maintenance')->nullable();
+            
+            $table->string('company_name', 255)->nullable();
+            $table->string('company_reg_no', 255)->nullable();
+            $table->string('company_vat_no', 255)->nullable();
+            $table->string('company_address', 255)->nullable();
+            $table->timestamp('company_dob')->nullable();
+            $table->string('personal_code', 255)->nullable();
+            $table->string('your_id', 255)->nullable();
+            $table->string('issued_authority', 255)->nullable();
+            $table->timestamp('date_of_issue')->nullable();
+            $table->timestamp('date_of_expire')->nullable();
         });
     }
 

@@ -49,11 +49,11 @@
                 </div>
                 <div class="col-sm-6">
                     <label for="email" class="form-label">@lang('Your Email')</label>
-                    <input type="text" id="email" name="email" class="form-control form--control">
+                    <input type="text" id="email" name="email" class="form-control form--control" required>
                 </div>
                 <div class="col-sm-6">
                     <label for="phone" class="form-label">@lang('Your Phone')</label>
-                    <input type="text" id="phone" name="phone" class="form-control form--control">
+                    <input type="text" id="phone" name="phone" class="form-control form--control" required>
                 </div>
 
                 <div class="col-sm-6">
@@ -91,16 +91,19 @@
                         </select>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-sm-6">
+                <div class="col-sm-6">
+                    <div class="form-group">
                         <label for="password" class="form-label">@lang('Your Password')</label>
-                        <input type="password" id="password" name="password" class="form-control form--control">
-                    </div>
-                    <div class="col-sm-6">
-                        <label for="confirm-password" class="form-label">@lang('Confirm Password')</label>
-                        <input type="password" id="confirm-password" name="password_confirmation" class="form-control form--control">
+                        <input type="password" id="password" name="password" class="form-control form--control" required>
                     </div>
                 </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="confirm-password" class="form-label">@lang('Confirm Password')</label>
+                        <input type="password" id="confirm-password" name="password_confirmation" class="form-control form--control" required>
+                    </div>
+                </div>
+                
 
 
                 <div class="form-group">
@@ -113,34 +116,51 @@
 
                 <div id="hidden_div" style="display: none;">
 
-                    <div class="form-group">
+                    <div class="form-group mt-2">
+                        <label for="dob" class="form-label">{{ __('Company Name') }}</label>
+                        <input type="text" class="company-input form-control form--control" id="company_name"name="company_name" placeholder="{{ __('Enter Company Name') }}" value="">
+                    </div>
+                    <div class="form-group mt-2">
+                        <label for="dob" class="form-label">{{ __('Registration No') }}</label>
+                        <input type="text" class="company-input form-control form--control" id="company_reg_no"name="company_reg_no" placeholder="{{ __('Enter Company Registration No') }}" value="">
+                    </div>
+                    <div class="form-group mt-2">
+                        <label for="dob" class="form-label">{{ __('VAT No') }}</label>
+                        <input type="text" class="company-input form-control form--control" id="company_vat_no"name="company_vat_no" placeholder="{{ __('Enter Company VAT No') }}" value="">
+                    </div>
+                    <div class="form-group mt-2">
+                        <label for="dob" class="form-label">{{ __('Company Address') }}</label>
+                        <input type="text" class="company-input form-control form--control" id="company_address"name="company_address" placeholder="{{ __('Enter Company Address') }}" value="">
+                    </div>
+
+                    <div class="form-group mt-2">
                         <label for="dob" class="form-label">{{ __('Date of Birth') }}</label>
-                        <input type="text" class="form-control form--control datepicker" id="dob" data-provide="datepicker" readonly data-date-format="yyyy-mm-dd" name="dob" placeholder="{{ __('yyyy-mm-dd') }}" value="" required>
+                        <input type="date" class="company-input form-control form--control" id="company_dob" name="company_dob" placeholder="{{ __('yyyy-mm-dd') }}" value="">
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group mt-2">
                         <label for="personal-code" class="form-label">{{ __('Personal Code/Number') }}</label>
-                        <input type="text" class="form-control form--control" id="personal-code" name="personal_code" placeholder="{{ __('Enter Personal Code/Number') }}" value="">
+                        <input type="text" class="company-input form-control form--control" id="personal_code" name="personal_code" placeholder="{{ __('Enter Personal Code/Number') }}" value="">
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group mt-2">
                         <label for="your-id" class="form-label">{{ __('Your ID Number') }}</label>
-                        <input type="text" class="form-control form--control" id="your-id" name="your_id" placeholder="{{ __('Enter Your ID Number') }}" value="">
+                        <input type="text" class="company-input form-control form--control" id="your_id" name="your_id" placeholder="{{ __('Enter Your ID Number') }}" value="">
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group mt-2">
                         <label for="your-id" class="form-label" required>{{ __('Provider Authority Name') }}</label>
-                        <input type="text" class="form-control form--control" id="issued_authority" name="issued_authority" placeholder="{{ __('Enter Provider Authority Name') }}" value="">
+                        <input type="text" class="company-input form-control form--control" id="issued_authority" name="issued_authority" placeholder="{{ __('Enter Provider Authority Name') }}" value="">
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group mt-2">
                         <label for="date-of-issue" class="form-label">{{ __('Date of Issue') }}</label>
-                        <input type="text" class="form-control form--control datepicker" id="date_of_issue" name="date_of_issue" data-provide="datepicker" readonly data-date-format="yyyy-mm-dd" placeholder="{{ __('yyyy-mm-dd') }}" value="" required>
+                        <input type="date" class="company-input form-control form--control datepicker" id="date_of_issue" name="date_of_issue" placeholder="{{ __('yyyy-mm-dd') }}" value="">
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group mt-2">
                         <label for="date-of-expire" class="form-label">{{ __('Date of Expire') }}</label>
-                        <input type="text" class="form-control form--control datepicker" id="date_of_expire" name="date_of_expire" data-provide="datepicker" readonly data-date-format="yyyy-mm-dd" placeholder="{{ __('yyyy-mm-dd') }}" value="" required>
+                        <input type="date" class="company-input form-control form--control datepicker" id="date_of_expire" name="date_of_expire" placeholder="{{ __('yyyy-mm-dd') }}" value="">
                     </div>
 
                 </div>
