@@ -52,19 +52,25 @@ class ExchangeMoneyController extends Controller
 
         $toWallet = Wallet::where('currency_id',$request->to_wallet_id)->where('user_id',auth()->id())->where('wallet_type',$request->wallet_type)->where('user_type',1)->first();
         $currency =  Currency::findOrFail($request->to_wallet_id);
-        if ($currency->type == 2) {
-            $address = RPC_ETH('personal_newAccount',['123123']);
-            if ($address == 'error') {
-                return back()->with('error','You can not create this wallet because there is some issue in crypto node.');
-            }
-            $keyword = '123123';
-        }
-        else {
-            $gs = Generalsetting::first();
-            $address = $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
-            $keyword = '';
-        }
+        $gs = Generalsetting::first();
         if(!$toWallet){
+            if ($currency->type == 2) {
+                if ($currency->code == 'BTC') {
+                    $address = RPC_BTC_Create('createwallet',[$user->email]);
+                    $keyword = $user->email;
+                }
+                else {
+                    $address = RPC_ETH('personal_newAccount',['123123']);
+                    $keyword = '123123';
+                }
+                if ($address == 'error') {
+                    return back()->with('error','You can not create this wallet because there is some issue in crypto node.');
+                }
+            }
+            else {
+                $address = $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
+                $keyword = '';
+            }
             $toWallet = Wallet::create([
                 'user_id'     => auth()->id(),
                 'user_type'   => 1,
@@ -145,9 +151,6 @@ class ExchangeMoneyController extends Controller
 
         $fromWallet->balance -=  $totalAmount;
         $fromWallet->update();
-        if (check_user_type(4)) {
-            user_wallet_increment($user->id, $fromWallet->currency_id, $transaction_custom_cost, 6);
-        }
 
         $toWallet->balance += $finalAmount;
         $toWallet->update();
