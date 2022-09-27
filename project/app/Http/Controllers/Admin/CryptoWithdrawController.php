@@ -109,6 +109,7 @@ class CryptoWithdrawController extends Controller
         // $trans->save();
         $data->status = $id2;
         $data->update();
+        $currency = Currency::findOrFail($data->currency_id);
         if ($id2 == 2) {
             $user = $data->user;
             //$wallet = Wallet::where('user_id',$data->user_id)->where('user_type',1)->where('currency_id',$data->currency_id)->firstOrFail();
