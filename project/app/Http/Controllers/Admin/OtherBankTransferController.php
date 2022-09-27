@@ -148,27 +148,12 @@ class OtherBankTransferController extends Controller
         } else {
           $status_sign = 'warning';
         }
-
-        return '<div class="btn-group mb-1">
-          <button type="button" class="btn btn-' . $status_sign . ' btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            ' . $status . '
-          </button>
-          <div class="dropdown-menu" x-placement="bottom-start">
-            <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="' . route('admin.other.banks.transfer.status', ['id1' => $data->id, 'status' => 1]) . '">' . __("completed") . '</a>
-            <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="' . route('admin.other.banks.transfer.status', ['id1' => $data->id, 'status' => 2]) . '">' . __("rejected") . '</a>
-          </div>
-        </div>';
+        return '<span class="badge badge-'.$status_sign.'">'.$status.'</span>';
       })
 
       ->addColumn('action', function (BalanceTransfer $data) {
-
         return '<div class="btn-group mb-1">
-          <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            ' . 'Actions' . '
-          </button>
-          <div class="dropdown-menu" x-placement="bottom-start">
-            <a href="' . route('admin.other.banks.transfer.show', $data->id) . '"  class="dropdown-item">' . __("Details") . '</a>
-          </div>
+          <button type="button" class="btn btn-primary btn-sm" onclick="getDetails(event)" id="'.$data->id.'">Details</button>
         </div>';
       })
 
@@ -238,7 +223,7 @@ class OtherBankTransferController extends Controller
                 $auth_token = $res_body->access_token;
                 $accounter_id = $res_body->accountHolderId;
             } catch (\Throwable $th) {
-                 return response()->json($th->getMessage());
+              return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
             }
 
 
@@ -256,7 +241,7 @@ class OtherBankTransferController extends Controller
                 $account_id = $res_body->id;
                 $amount = $res_body->availableBalance->value;
             } catch (\Throwable $th) {
-                 return response()->json($th->getMessage());
+              return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
             }
 
             try {
@@ -273,10 +258,10 @@ class OtherBankTransferController extends Controller
                 $master_account_id = $res_body->id;
                 $master_amount = $res_body->availableBalance->value;
                 if ($master_amount < $data->amount) {
-                    return response()->json(('Your balance is Insufficient '));
+                    return response()->json(array('errors' => [ 0 => __('Your balance is Insufficient') ]));
                 }
             } catch (\Throwable $th) {
-                 return response()->json($th->getMessage());
+                 return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
             }
 
             try {
@@ -310,7 +295,7 @@ class OtherBankTransferController extends Controller
                 $res_body = json_decode($response->getBody());
                 $transaction_id = $res_body->transactionId  ;
             } catch (\Throwable $th) {
-                 return response()->json($th->getMessage());
+              return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
             }
         }
         else {
@@ -330,7 +315,7 @@ class OtherBankTransferController extends Controller
                     return redirect()->back()->with(array('warning' => 'Insufficient Balance.'));
                 }
             } catch (\Throwable $th) {
-                return response()->json($th->getMessage());
+              return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
             }
             try {
 
@@ -356,7 +341,7 @@ class OtherBankTransferController extends Controller
 
                 $beneficiary = json_decode($response->getBody())->beneficiary_id;
             } catch (\Throwable $th) {
-                return response()->json($th->getMessage());
+              return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
             }
             try {
                 $response = $client->request('POST', 'https://play.railsbank.com/v1/customer/transactions', [
@@ -374,7 +359,7 @@ class OtherBankTransferController extends Controller
                   ]);
                 $transaction_id = json_decode($response->getBody())->transaction_id;
             } catch (\Throwable $th) {
-                return response()->json($th->getMessage());
+              return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
             }
         }
 
