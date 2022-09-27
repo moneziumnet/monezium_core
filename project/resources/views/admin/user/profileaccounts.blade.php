@@ -84,8 +84,8 @@
                             <div class="row align-items-center">
                             <div class="col">
                                 <div class="d-flex mb-1 mr-1 align-items-start">
-                                    <div class='font-weight-bold text-gray-900 mr-auto'>{{$value}}<br/>{{$wallet->wallet_no}}</div>
-                                    <div class='font-weight-bold text-gray-900'>
+                                    <div class='font-weight-bold text-gray-900 w-75 mr-auto'>{{$value}}<br/>{{$wallet->wallet_no}}</div>
+                                    <div class='font-weight-bold text-gray-900 w-25 text-right'>
                                         <div class="dropdown">
                                             <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" style="padding: 6px 11px 1px 7px; border-radius: 50%;">
                                                 <span class="caret"></span>
@@ -137,8 +137,8 @@
                             <div class="row align-items-center">
                             <div class="col">
                                 <div class="d-flex mb-1 mr-1 align-items-start">
-                                    <div class='font-weight-bold text-gray-900 mr-auto'>{{'Crypto'}} {{$wallet->wallet_no}}</div>
-                                    <div class='col font-weight-bold text-gray-900'>
+                                    <div class='font-weight-bold text-gray-900 w-75 mr-auto'>{{'Crypto'}} {{$wallet->wallet_no}}</div>
+                                    <div class='col font-weight-bold text-gray-900 w-25 text-right'>
                                         <div class="dropdown">
                                             <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" style="padding: 6px 11px 1px 7px; border-radius: 50%;">
                                                 <span class="caret"></span>
@@ -305,42 +305,42 @@ $('#addpayment').on('click', function() {
                                 <div class="row align-items-center"> \
                                     <div class="col mr-2"> \
                                         <div class="row mb-1 mr-1"> \
-                                        <div class="col font-weight-bold text-gray-900">' + accounttype[`${item.wallet_type}`] + '</div>\
-                                                <div class="col font-weight-bold text-gray-900">' + item.wallet_no +'</div> \
-                                        </div> \
-                            <div class="text-xs font-weight-bold text-uppercase mb-1">' + item.currency.curr_name + '</div> \
-                            <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">' + parseFloat(item.balance).toFixed(2) + " " + item.currency.code + " " + item.currency.symbol + '</div> \
-                            <div class="row mb-1 mr-1"> \
-                            <button class="col btn btn-primary ml-2 w-25 mt-2" onclick="getDetails('+ item.id +')">{{ __('Fee') }}</button> \
-                            <button class="col btn btn-primary ml-1 w-25 mt-2" onclick="Deposit('+ item.id +')">{{ __('Deposit') }}</button> \
+                                            <div class="col font-weight-bold text-gray-900">' + accounttype[`${item.wallet_type}`] + '</div>\
+                                                    <div class="col font-weight-bold text-gray-900">' + item.wallet_no +'</div> \
+                                            </div> \
+                                            <div class="text-xs font-weight-bold text-uppercase mb-1">' + item.currency.curr_name + '</div> \
+                                            <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">' + parseFloat(item.balance).toFixed(2) + " " + item.currency.code + " " + item.currency.symbol + '</div> \
+                                            <div class="row mb-1 mr-1"> \
+                                                <button class="col btn btn-primary ml-2 w-25 mt-2" onclick="getDetails('+ item.id +')">{{ __('Fee') }}</button> \
+                                                <button class="col btn btn-primary ml-1 w-25 mt-2" onclick="Deposit('+ item.id +')">{{ __('Deposit') }}</button> \
+                                            </div> \
+                                         </div> \
+                                    </div> \
+                                </div> \
                             </div> \
-                            </div> \
-                            </div> \
-                            </div> \
-                            </div> \
-                            </div>'
+                        </div>'
                         });
             }
             else {
                 var createurl = `${mainurl}/admin/user/${data}/accounts/wallet/create/${wallet_type}/${value.id}`;
 
 
-                _divhtml += '              <a href="javascript:;" data-toggle="modal" data-target="#statusModal" data-href='+ createurl + ' class = "col-xl-3 col-md-6 mb-4" style="text-decoration: none;"> \
+                _divhtml += '<a href="javascript:;" data-toggle="modal" data-target="#statusModal" data-href='+ createurl + ' class = "col-xl-3 col-md-6 mb-4" style="text-decoration: none;"> \
                         <div class="card h-100" style="background-color: #a2b2c5;"> \
                             <div class="card-body"> \
                                 <div class="row align-items-center"> \
                                     <div class="col mr-2"> \
                                         <div class="row mb-1 mr-1"> \
-                                        <div class="col font-weight-bold text-gray-900">' + accounttype[`${wallet_type}`] + '</div>\
-                                                <div class="col font-weight-bold text-gray-900">' + "" +'</div> \
+                                            <div class="col font-weight-bold text-gray-900">' + accounttype[`${wallet_type}`] + '</div>\
+                                            <div class="col font-weight-bold text-gray-900">' + "" +'</div> \
                                         </div> \
-                            <div class="text-xs font-weight-bold text-uppercase mb-1">' + value.curr_name + '</div> \
-                            <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">'  + value.code + " " + value.symbol + '</div> \
+                                        <div class="text-xs font-weight-bold text-uppercase mb-1">' + value.curr_name + '</div> \
+                                        <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">'  + value.code + " " + value.symbol + '</div> \
+                                    </div> \
+                                </div> \
                             </div> \
-                            </div> \
-                            </div> \
-                            </div> \
-                            </a>'
+                        </div> \
+                    </a>'
 
             }
             if(wallet_type==0){

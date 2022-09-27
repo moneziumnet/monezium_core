@@ -48,7 +48,7 @@ class SystemAccountController extends Controller
                     $address = $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
                     $keyword = '';
                 }
-                if ($address == 'error') {
+                if (!isset($address) || $address == 'error') {
                     return response()->json(array('errors' => [0 => __('You can not create this wallet because there is some issue in crypto node.')]));
                 }
                 if(!$wallet)

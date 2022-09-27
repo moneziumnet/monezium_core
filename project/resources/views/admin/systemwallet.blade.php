@@ -15,7 +15,10 @@
   <div class="col-lg-12">
     <div class="card mt-1 tab-card">
       <div class="tab-content" id="myTabContent">
-        @include('includes.admin.form-success')
+        <div class="mt-3 mx-4">
+          @include('includes.admin.form-error')
+          @include('includes.admin.form-success')
+        </div>
         <div class="tab-pane fade show p-3 active" id="accounts" role="tabpanel" aria-labelledby="accounts-tab">
           <div class="card-body">
             <div class="row mb-3" id="walletlist">

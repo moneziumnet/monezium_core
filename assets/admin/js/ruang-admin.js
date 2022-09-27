@@ -402,9 +402,21 @@
       success:function(data)
       {
           $('.status-modal').modal('hide');
-          $('.alert-danger').hide();
-          $('.alert-success').show();
-          $('.alert-success p').html(data);
+
+          if(data.errors) {
+            $('.alert-danger').show();
+            $('.alert-danger').show();
+            $('.alert-danger ul').html('');
+            for(var error in data.errors)
+            {
+              $('.alert-danger ul').html(data.errors[error]);
+              break;
+            }
+          } else {
+            $('.alert-danger').hide();
+            $('.alert-success').show();
+            $('.alert-success p').html(data);
+          }
 
           if(admin_loader == 1)
           {
