@@ -41,7 +41,7 @@
                         </div>
                     </div>
                     @else
-                    <a href="javascript:;" data-toggle="modal" data-target="#statusModal" data-href="{{ route('admin.system.account.create',['currency_id' =>$dcurr->id ]) }}" class = "col-xl-3 col-md-6 mb-4" style="text-decoration: none;">
+                    <a href="javascript:;" data-toggle="modal" data-target="#statusModal" data-href="{{ route('admin.system.account.create',$dcurr->id) }}" class = "col-xl-3 col-md-6 mb-4" style="text-decoration: none;">
                         <div class="card h-100" style="background-color: #a2b2c5;">
                         <div class="card-body">
                             <div class="row align-items-center">

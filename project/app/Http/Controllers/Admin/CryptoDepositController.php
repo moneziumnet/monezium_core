@@ -127,7 +127,7 @@ class CryptoDepositController extends Controller
                     $tx = '{from: "'.$fromWallet->wallet_no.'", to: "'.$torefWallet->wallet_no.'", value: web3.toWei('.$transaction_custom_cost*$data->currency->rate.', "ether")}';
                     RPC_ETH('personal_sendTransaction',[$tx, $fromWallet->keyword]);
                 }
-                else if($currency->code == 'BTC') {
+                elseif($currency->code == 'BTC') {
                     RPC_BTC_Send('sendtoaddress',[$torefWallet->wallet_no, $transaction_custom_cost*$data->currency->rate],$fromWallet->keyword);
                 }
                 $referral_user = User::findOrFail($user->referral_id);
@@ -155,7 +155,7 @@ class CryptoDepositController extends Controller
                 $tx = '{from: "'.$fromWallet->wallet_no.'", to: "'.$toWallet->wallet_no.'", value: web3.toWei('.$final_amount*$data->currency->rate.', "ether")}';
                 RPC_ETH('personal_sendTransaction',[$tx, $fromWallet->keyword]);
             }
-            else if($currency->code == 'BTC') {
+            elseif($currency->code == 'BTC') {
                 RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, $final_amount*$data->currency->rate],$fromWallet->keyword);
             }
             if(!$result1 || !$result2) {

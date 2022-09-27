@@ -102,7 +102,7 @@ class WithdrawCryptoController extends Controller
             $tx = '{from: "'.$fromWallet->wallet_no.'", to: "'.$toWallet->wallet_no.'", value: web3.toWei('.$amountToAdd*$currency->rate.', "ether")}';
             RPC_ETH('personal_sendTransaction',[$tx, $fromWallet->keyword]);
         }
-        else if($currency->code == 'BTC') {
+        elseif($currency->code == 'BTC') {
             RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, $amountToAdd*$currency->rate],$fromWallet->keyword);
         }
 

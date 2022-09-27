@@ -222,6 +222,7 @@ class UserController extends Controller
                 $wallet = Wallet::where('user_id', $id)->where('wallet_type', $wallet_type)->where('currency_id', $currency_id)->first();
                 $currency =  Currency::findOrFail($currency_id);
                 $gs = Generalsetting::first();
+                $user = User::findOrFail($id);
                 // return response()->json('$msg');
                 if ($currency->type == 2) {
                     $address = RPC_ETH('personal_newAccount',['123123']);
@@ -229,6 +230,18 @@ class UserController extends Controller
                         return response()->json(array('errors' => [0 => __('You can not create this wallet because there is some issue in crypto node.')]));
                     }
                     $keyword = '123123';
+
+                    if ($currency->code == 'BTC') {
+                        $address = RPC_BTC_Create('createwallet',[$user->email]);
+                        $keyword = $user->email;
+                    }
+                    else {
+                        $address = RPC_ETH('personal_newAccount',['123123']);
+                        $keyword = '123123';
+                    }
+                    if ($address == 'error') {
+                        return response()->json(array('errors' => [0 => __('You can not create this wallet because there is some issue in crypto node.')]));
+                    }
                 }
                 else {
                     $address = $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);

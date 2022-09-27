@@ -40,7 +40,7 @@ class DepositBankController extends Controller
             ->editColumn('status', function(DepositBank $data) {
                 if($data->status == 'pending') {
                     $status = '<span class="badge badge-warning">pending</span>';
-                } else if ($data->status == 'complete') {
+                } elseif ($data->status == 'complete') {
                     $status = '<span class="badge badge-success">completed</span>';
                 } else {
                     $status = '<span class="badge badge-danger">rejected</span>';

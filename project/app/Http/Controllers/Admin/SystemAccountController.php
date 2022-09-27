@@ -31,7 +31,6 @@ class SystemAccountController extends Controller
 
     public function create($currency_id)
         {
-            {
                 $wallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $currency_id)->first();
                 $currency =  Currency::findOrFail($currency_id);
                 if ($currency->type == 2) {
@@ -39,7 +38,7 @@ class SystemAccountController extends Controller
                         $address = RPC_BTC_Create('createwallet',['system_btc']);
                         $keyword = 'system_btc';
                     }
-                    else if ($currency->code == 'ETH'){
+                    elseif ($currency->code == 'ETH'){
                         $address = RPC_ETH('personal_newAccount',[$request->keyword]);
                         $keyword = '123123';
                     }
@@ -73,7 +72,6 @@ class SystemAccountController extends Controller
                     return response()->json(array('errors' => [0 =>'This wallet has already been created.']));
                 }
 
-              }
         }
 
 }

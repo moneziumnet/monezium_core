@@ -349,7 +349,7 @@ if(!function_exists('getModule')){
                     }
                     $keyword = '123123';
                 }
-                else if ($currency->code == 'BTC') {
+                elseif ($currency->code == 'BTC') {
                     $address = RPC_BTC_Create('createwallet',[$user->email]);
                     if ($address == 'error') {
                         return false;
@@ -441,7 +441,7 @@ if(!function_exists('getModule')){
                   }
                   $keyword = '123123';
               }
-              else if ($currency->code == 'BTC') {
+              elseif ($currency->code == 'BTC') {
                   $address = RPC_BTC_Create('createwallet',[$user->email]);
                   if ($address == 'error') {
                       return false;
