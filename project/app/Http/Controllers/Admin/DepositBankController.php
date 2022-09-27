@@ -39,7 +39,7 @@ class DepositBankController extends Controller
             })
             ->editColumn('status', function(DepositBank $data) {
                 if($data->status == 'pending') {
-                    $status = '<span class="badge badge-warning">pending</span>'; 
+                    $status = '<span class="badge badge-warning">pending</span>';
                 } else if ($data->status == 'complete') {
                     $status = '<span class="badge badge-success">completed</span>';
                 } else {
@@ -65,16 +65,16 @@ class DepositBankController extends Controller
                 }
 
                 return '<div class="btn-group mb-1">
-                    <a href="javascript:;" 
-                        data-detail = \''.json_encode($detail).'\' 
-                        data-bank= \''.json_encode($bankaccount).'\' 
-                        data-docu="'.$doc_url.'" 
+                    <a href="javascript:;"
+                        data-detail = \''.json_encode($detail).'\'
+                        data-bank= \''.json_encode($bankaccount).'\'
+                        data-docu="'.$doc_url.'"
                         data-number="'.$data->deposit_number.'"
                         data-description="'.$data->details.'"
                         data-status="'.$data->status.'"
                         data-complete-url="'.route('admin.deposits.bank.status',['id1' => $data->id, 'id2' => 'complete']).'"
                         data-reject-url="'.route('admin.deposits.bank.status',['id1' => $data->id, 'id2' => 'reject']).'"
-                        onclick=getDetails(event) 
+                        onclick=getDetails(event)
                         class="btn btn-sm btn-primary detailsBtn">' . __("Details") . '</a>
                 </div>';
             })
@@ -90,7 +90,7 @@ class DepositBankController extends Controller
         $data = DepositBank::findOrFail($id1);
 
         if($data->status == 'complete' || $data->status == 'reject'){
-          $msg = $data->status == 'complete' 
+          $msg = $data->status == 'complete'
             ? 'Deposits already completed'
             : 'Deposits already rejected';
           return redirect()->back()->with("error", $msg);
@@ -148,7 +148,7 @@ class DepositBankController extends Controller
         $final_amount = amount($amount - $final_chargefee, $data->currency->type );
 
         user_wallet_increment($user->id, $data->currency_id, $final_amount, 1);
-        user_wallet_increment(0, 1, $transaction_global_cost, 9);
+        user_wallet_increment(0, $data->currency_id, $transaction_global_cost, 9);
 
         $trans = new Transaction();
         $trans->trnx = $data->deposit_number;
