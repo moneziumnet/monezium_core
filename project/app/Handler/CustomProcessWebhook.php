@@ -1,7 +1,7 @@
 <?php
 namespace App\Handler;
 
-use \Spatie\WebhookClient\ProcessWebhookJob;
+use \Spatie\WebhookClient\Jobs\ProcessWebhookJob;
 
 //The class extends "ProcessWebhookJob" class as that is the class //that will handle the job of processing our webhook before we have //access to it.
 class CustomProcessWebhook extends ProcessWebhookJob

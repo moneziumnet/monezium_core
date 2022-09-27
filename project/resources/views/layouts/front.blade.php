@@ -75,7 +75,7 @@
     @include('partials.front.footer')
     <!-- Footer -->
 
-    @include('cookieConsent::index')
+    @include('cookie-consent::index')
 
     <!-- Modal -->
     <div class="modal fade" id="modal-apply">

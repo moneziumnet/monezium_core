@@ -274,6 +274,7 @@ class GeneralSettingController extends Controller
     }
 
     public function nexmo(){
+        // Update Nexmo
         return view('admin.generalsetting.nexmo');
     }
 
