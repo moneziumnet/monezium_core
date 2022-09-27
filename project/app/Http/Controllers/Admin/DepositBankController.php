@@ -12,6 +12,7 @@ use App\Models\BankAccount;
 use App\Models\Generalsetting;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Models\Wallet;
 use Illuminate\Http\Request;
 use Datatables;
 
@@ -124,10 +125,12 @@ class DepositBankController extends Controller
             $remark = 'Deposit_create_supervisor_fee';
             if (check_user_type_by_id(4, $user->referral_id)) {
                 user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost, 6);
+                $trans_wallet = get_wallet($user->referral_id, $data->currency_id, 6);
             }
             elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
                 $remark = 'Deposit_create_manager_fee';
                 user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost, 10);
+                $trans_wallet = get_wallet($user->referral_id, $data->currency_id, 10);
             }
             $referral_user = User::findOrFail($user->referral_id);
 
@@ -137,6 +140,9 @@ class DepositBankController extends Controller
             $trans->user_type   = 1;
             $trans->currency_id = $data->currency_id;
             $trans->amount      = $transaction_custom_cost;
+            
+            $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+            
             $trans->charge      = 0;
             $trans->type        = '+';
             $trans->remark      = $remark;
@@ -148,6 +154,8 @@ class DepositBankController extends Controller
         $final_amount = amount($amount - $final_chargefee, $data->currency->type );
 
         user_wallet_increment($user->id, $data->currency_id, $final_amount, 1);
+        $trans_wallet = get_wallet($user->id, $data->currency_id, 1);
+        
         user_wallet_increment(0, $data->currency_id, $transaction_global_cost, 9);
 
         $trans = new Transaction();
@@ -158,6 +166,9 @@ class DepositBankController extends Controller
         $trans->amount      = $amount;
         $trans->charge      = $final_chargefee;
         $trans->type        = '+';
+        
+        $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+        
         $trans->remark      = 'Deposit_create';
         $trans->details     = trans('Deposit complete');
         $trans->data        = '{"sender":"System Account", "receiver":"'.$user->name.'"}';

@@ -118,6 +118,8 @@ class UserFdrController extends Controller
                         $trans->user_id     = $user_id;
                         $trans->user_type   = 1;
                         $trans->currency_id = $currency_id;
+                        $trans_wallet = get_wallet($user_id,$currency_id,4);
+                        $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
                         $trans->amount      = $amount;
                         $trans->charge      = 0;
                         $trans->type        = '-';

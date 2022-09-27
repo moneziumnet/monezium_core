@@ -88,6 +88,8 @@ class MerchantSendController extends Controller
         $trans->user_type   = 1;
         $trans->currency_id = $wallet->currency_id;
         $trans->amount      = $request->amount;
+        $trans_wallet       = get_wallet($user->id, $wallet->currency_id);
+        $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
         $trans->charge      = 0;
         $trans->type        = '+';
         $trans->remark      = 'Merchant to own';

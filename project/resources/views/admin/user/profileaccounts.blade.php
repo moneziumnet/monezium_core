@@ -21,7 +21,10 @@
         @php
         $currency = defaultCurr();
         @endphp
-        @include('includes.admin.form-success')
+        <div class="mt-3 mx-4">
+            @include('includes.admin.form-success')
+            @include('includes.admin.form-error')
+        </div>
         <div class="tab-pane fade show p-3 active" id="accounts" role="tabpanel" aria-labelledby="accounts-tab">
             @php
                 $userType = explode(',', $data->user_type);
@@ -93,6 +96,7 @@
                                             <div class="dropdown-menu dropdown-menu-right">
                                                 <a class="dropdown-item" href="javascript:;" onclick="getDetails({{$wallet->id}})">{{ __('Fee') }}</a>
                                                 <a class="dropdown-item" href="javascript:;" onclick="Deposit({{$wallet->id}})">{{ __('Deposit') }}</a>
+                                                <a class="dropdown-item" href="{{route('admin-wallet-transactions', ['user_id' => $data->id, 'wallet_id'=>$wallet->id])}}">{{ __('Transaction View') }}</a>
                                             </div>
                                         </div>
                                     </div>
@@ -146,6 +150,7 @@
                                             <div class="dropdown-menu dropdown-menu-right">
                                                 <a class="dropdown-item" href="javascript:;" onclick="getDetails({{$wallet->id}})">{{ __('Fee') }}</a>
                                                 <a class="dropdown-item" href="javascript:;" onclick="Deposit({{$wallet->id}})">{{ __('Deposit') }}</a>
+                                                <a class="dropdown-item" href="{{route('admin-wallet-transactions', ['user_id' => $data->id, 'wallet_id'=>$wallet->id])}}">{{ __('Transaction View') }}</a>
                                             </div>
                                         </div>
                                     </div>
@@ -250,39 +255,39 @@
 @section('scripts')
 <script type="text/javascript">
 
-function getDetails (id)
-{
-        var url = "{{url('admin/user/accounts/fee')}}"+'/'+id
-        $.get(url,function (res) {
-            if(res == 'empty'){
-            $('.list-group').html('<p>@lang('No details found!')</p>')
-            }else{
-            $('.list-group').html(res)
-            }
-        });
+    function getDetails (id)
+    {
+            var url = "{{url('admin/user/accounts/fee')}}"+'/'+id
+            $.get(url,function (res) {
+                if(res == 'empty'){
+                $('.list-group').html('<p>@lang('No details found!')</p>')
+                }else{
+                $('.list-group').html(res)
+                }
+            });
 
-        $('#modal-success').modal('show')
-}
+            $('#modal-success').modal('show')
+    }
 
 
-function Deposit(id) {
-    console.log(id);
-    $('#wallet_id').val(id);
-    var url = "{{url('admin/user/accounts/deposit/form')}}"
-        $.get(url,function (res) {
-            if(res == 'empty'){
-            $('.list-group').html('<p>@lang('No details found!')</p>')
-            }else{
-            $('.list-group').html(res)
-            }
-        });
-    $('#modal-success-2').modal('show')
+    function Deposit(id) {
+        console.log(id);
+        $('#wallet_id').val(id);
+        var url = "{{url('admin/user/accounts/deposit/form')}}"
+            $.get(url,function (res) {
+                if(res == 'empty'){
+                $('.list-group').html('<p>@lang('No details found!')</p>')
+                }else{
+                $('.list-group').html(res)
+                }
+            });
+        $('#modal-success-2').modal('show')
+    }
 
-}
+    $('#addpayment').on('click', function() {
+        window.location.reload();
+    });
 
-$('#addpayment').on('click', function() {
-    window.location.reload();
-});
     let accounttype = {'0':'All', '1':'Current', '2':'Card', '3':'Deposit', '4':'Loan', '5':'Escrow', '6':'Supervisor', '7':'Merchant', '8':'Crypto', '10':'Manager'};
     let _orignhtml = $('div#walletlist').html();
     $('#wallet_type').on('change', function() {

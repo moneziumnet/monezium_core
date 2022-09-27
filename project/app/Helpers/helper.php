@@ -384,6 +384,8 @@ if(!function_exists('getModule')){
                 $trans->user_type   = 1;
                 $trans->currency_id = 1;
                 $trans->amount      = $chargefee->data->fixed_charge;
+                $trans_wallet       = get_wallet($auth_id, 1, 1);
+                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
                 $trans->charge      = 0;
                 $trans->type        = '-';
                 $trans->remark      = 'card_issuance';
@@ -400,6 +402,8 @@ if(!function_exists('getModule')){
                 $trans->user_type   = 1;
                 $trans->currency_id = 1;
                 $trans->amount      = $chargefee->data->fixed_charge;
+                $trans_wallet       = get_wallet($auth_id, 1, 1);
+                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
                 $trans->charge      = 0;
                 $trans->type        = '-';
                 $trans->remark      = 'wallet_create';
@@ -576,6 +580,8 @@ if(!function_exists('getModule')){
                     $trans->amount      = $chargefee->data->fixed_charge;
                     $trans->charge      = 0;
                     $trans->type        = '-';
+                    $trans_wallet       = get_wallet($user->id, $value->currency_id, 1);
+                    $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
                     $trans->remark      = 'wallet_monthly_fee';
                     $trans->details     = trans('Wallet Maintenance');
                     $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
@@ -609,6 +615,8 @@ if(!function_exists('getModule')){
                 $trans->amount      = $chargefee->data->fixed_charge;
                 $trans->charge      = 0;
                 $trans->type        = '-';
+                $trans_wallet       = get_wallet($user->id, 1, 1);
+                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
                 $trans->remark      = 'card_monthly_fee';
                 $trans->details     = trans('Card Maintenance');
                 $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
@@ -733,6 +741,13 @@ if(!function_exists('getModule')){
             }
             return 'success';
       }
+  }
+
+  if(!function_exists('get_wallet'))
+  {
+    function get_wallet($user_id, $currency_id, $wallet_type = 1) {
+      return Wallet::where('user_id', $user_id)->where('wallet_type', $wallet_type)->where('currency_id',$currency_id)->first();
+    }
   }
 
 ?>

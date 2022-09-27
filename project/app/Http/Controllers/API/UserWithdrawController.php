@@ -163,6 +163,8 @@ class UserWithdrawController extends Controller
             $trans->user_type   = 1;
             $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
             $trans->amount      = $request->amount;
+            $trans_wallet = get_wallet($user->id, $currency->id);
+            $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
             $trans->charge      = $messagefee;
             $trans->type        = '-';
             $trans->remark      = 'Payout';

@@ -108,6 +108,10 @@ class ManageEscrowController extends Controller
             $trans->user_type   = 1;
             $trans->currency_id = 1;
             $trans->amount      = $chargefee->data->fixed_charge;
+
+            $trans_wallet       = get_wallet($request->id, 1, 5);
+            $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+
             $trans->charge      = 0;
             $trans->type        = '-';
             $trans->remark      = 'wallet_create';
@@ -130,6 +134,7 @@ class ManageEscrowController extends Controller
         $trnx->currency_id = $escrow->currency_id;
         $trnx->amount      = $escrow->amount;
         $trnx->charge      = 0;
+        $trnx->wallet_id   = $wallet->id;
         $trnx->type        = '+';
         $trnx->remark      = 'escrow_return';
         $trnx->details     = trans('Escrow fund returned');

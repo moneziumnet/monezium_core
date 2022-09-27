@@ -94,10 +94,12 @@ class DepositController extends Controller
             $remark = 'Deposit_create_supervisor_fee';
             if (check_user_type_by_id(4, $user->referral_id)) {
                 user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost, 6);
+                $trans_wallet = get_wallet($user->referral_id, $data->currency_id, 6);
             }
             elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
                 $remark = 'Deposit_create_manager_fee';
                 user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost, 10);
+                $trans_wallet = get_wallet($user->referral_id, $data->currency_id, 10);
             }
             $referral_user = User::findOrFail($user->referral_id);
             $trans = new Transaction();
@@ -106,6 +108,9 @@ class DepositController extends Controller
             $trans->user_type   = 1;
             $trans->currency_id = $data->currency_id;
             $trans->amount      = $transaction_custom_cost;
+
+            $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+
             $trans->charge      = 0;
             $trans->type        = '+';
             $trans->remark      = $remark;
@@ -119,12 +124,17 @@ class DepositController extends Controller
         user_wallet_increment(0, $data->currency_id, $transaction_global_cost, 9);
         user_wallet_increment($user->id, $data->currency_id, $final_amount, 1);
 
+        $trans_wallet = get_wallet($user->id, $data->currency_id, 1);
+
         $trans = new Transaction();
         $trans->trnx = $data->deposit_number;
         $trans->user_id     = $user->id;
         $trans->user_type   = 1;
         $trans->currency_id = $data->currency_id;
         $trans->amount      = $amount;
+
+        $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+        
         $trans->charge      = $final_chargefee;
         $trans->type        = '+';
         $trans->remark      = 'Deposit_create';

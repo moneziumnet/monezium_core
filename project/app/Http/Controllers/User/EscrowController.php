@@ -105,10 +105,12 @@ class EscrowController extends Controller
             $remark = 'Make_Escrow_supervisor_fee';
             if (check_user_type_by_id(4, $user->referral_id)) {
                 user_wallet_increment($user->referral_id, $currency->id, $transaction_custom_cost, 6);
+                $trans_wallet = get_wallet($user->referral_id, $currency->id, 6);
             }
             elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
                 $remark = 'Make_Escrow_manager_fee';
                 user_wallet_increment($user->referral_id, $currency->id, $transaction_custom_cost, 10);
+                $trans_wallet = get_wallet($user->referral_id, $currency->id, 10);
             }
             $trans = new Transaction();
             $trans->trnx = str_rand();
@@ -116,6 +118,7 @@ class EscrowController extends Controller
             $trans->user_type   = 1;
             $trans->currency_id = $currency->id;
             $trans->amount      = $transaction_custom_cost;
+            $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
             $trans->charge      = 0;
             $trans->type        = '+';
             $trans->remark      = $remark;
@@ -260,6 +263,8 @@ class EscrowController extends Controller
             $trans->user_type   = 1;
             $trans->currency_id = 1;
             $trans->amount      = $chargefee->data->fixed_charge;
+            $trans_wallet = get_wallet($recipient->id, 1);
+            $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
             $trans->charge      = 0;
             $trans->type        = '-';
             $trans->remark      = 'wallet_create';
@@ -282,6 +287,7 @@ class EscrowController extends Controller
         $trnx->user_id     = $recipient->id;
         $trnx->user_type   = 1;
         $trnx->currency_id = $escrow->currency_id;
+        $trans->wallet_id   = $recipientWallet->id;
         $trnx->amount      = $amount;
         $trnx->charge      = $escrow->pay_charge == 0 ? $escrow->charge : 0;
         $trnx->remark      = 'make_escrow';

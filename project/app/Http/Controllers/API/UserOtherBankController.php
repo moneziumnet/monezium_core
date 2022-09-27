@@ -170,6 +170,10 @@ class UserOtherBankController extends Controller
                 $trans->user_id     = $user->id;
                 $trans->user_type   = 1;
                 $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
+
+                $trans_wallet = get_wallet($user_id,$currency->id);
+                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+
                 $trans->amount      = $finalAmount;
                 $trans->charge      = $cost;
                 $trans->type        = '-';

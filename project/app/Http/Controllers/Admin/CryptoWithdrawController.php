@@ -143,10 +143,14 @@ class CryptoWithdrawController extends Controller
                 $remark = 'withdraw_reject_supervisor_fee';
                 if (check_user_type_by_id(4, $user->referral_id)) {
                     user_wallet_decrement($user->referral_id, $data->currency_id, $transaction_custom_cost*$data->currency->rate, 6);
+
+                    $trans_wallet  = get_wallet($user->referral_id, $data->currency_id, 6);
                 }
                 elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
                     $remark = 'withdraw_reject_manager_fee';
                     user_wallet_decrement($user->referral_id, $data->currency_id, $transaction_custom_cost*$data->currency->rate, 10);
+                    
+                    $trans_wallet  = get_wallet($user->referral_id, $data->currency_id, 10);
                 }
 
                 $trans = new Transaction();
@@ -157,6 +161,9 @@ class CryptoWithdrawController extends Controller
                 $trans->amount      = $transaction_custom_cost*$data->currency->rate;
                 $trans->charge      = 0;
                 $trans->type        = '-';
+
+                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+
                 $trans->remark      = $remark;
                 $trans->details     = trans('Withdraw request rejected');
                 $trans->data        = '{"sender":"'.User::findOrFail($user->referral_id)->name.'", "receiver":"'.$user->name.'"}';
@@ -168,6 +175,10 @@ class CryptoWithdrawController extends Controller
             $trnx->user_type   = 1;
             $trnx->currency_id = $data->currency->id;
             $trnx->amount      = $data->amount;
+
+            $trans_wallet      = get_wallet($data->user_id, $data->currency_id, 8);
+            $trnx->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+            
             $trnx->charge      = 0;
             $trnx->remark      = 'withdraw_reject';
             $trnx->type        = '+';

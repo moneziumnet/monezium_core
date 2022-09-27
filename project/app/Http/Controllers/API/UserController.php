@@ -109,6 +109,8 @@ class UserController extends Controller
                         $mainUserTrans->user_type   = 1;
                         $mainUserTrans->currency_id = $currency;
                         $mainUserTrans->amount      = $gs->affilate_user;
+                        $trans_wallet = get_wallet($mainUser->id, $currency);
+                        $mainUserTrans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
                         $mainUserTrans->charge      = 0;
                         $mainUserTrans->type        = '+';
                         $mainUserTrans->remark      = 'Referral Bonus';
@@ -122,6 +124,8 @@ class UserController extends Controller
                         $newUserTrans->user_type   = 1;
                         $newUserTrans->currency_id = $currency;
                         $newUserTrans->amount      = $gs->affilate_new_user;
+                        $trans_wallet = get_wallet($user->id, $currency);
+                        $newUserTrans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
                         $newUserTrans->charge      = 0;
                         $newUserTrans->type        = '+';
                         $newUserTrans->remark      = 'Referral Bonus';

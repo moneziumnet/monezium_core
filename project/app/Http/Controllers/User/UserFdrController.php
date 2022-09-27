@@ -88,6 +88,8 @@ class UserFdrController extends Controller
             $trans->user_type   = 1;
             $trans->currency_id = $request->currency_id;
             $trans->amount      = $request->fdr_amount;
+            $trans_wallet = get_wallet(auth()->id(),$request->input('currency_id'),3);
+            $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
             $trans->charge      = 0;
             $trans->type        = '-';
             $trans->remark      = 'Fdr_create';

@@ -96,6 +96,8 @@ class UserICOController extends Controller
         $trans->user_type   = 1;
         $trans->currency_id = $ico_token->currency->id;
         $trans->amount      = $request->amount;
+        $trans_wallet = get_wallet($user->id, $ico_token->currency->id, 8);
+        $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
         $trans->charge      = 0;
         $trans->type        = '+';
         $trans->remark      = 'ico_token_buy';
@@ -108,6 +110,8 @@ class UserICOController extends Controller
         $trans->user_id     = $user->id;
         $trans->user_type   = 1;
         $trans->currency_id = $currency_id;
+        $trans_wallet = get_wallet($user->id, $currency_id, 1);
+        $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
         $trans->amount      = $transaction_amount;
         $trans->charge      = 0;
         $trans->type        = '-';
@@ -122,6 +126,8 @@ class UserICOController extends Controller
         $trans->user_type   = 1;
         $trans->currency_id = $currency_id;
         $trans->amount      = $transaction_amount;
+        $trans_wallet = get_wallet($ico_token->user_id, $currency_id, 1);
+        $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
         $trans->charge      = 0;
         $trans->type        = '+';
         $trans->remark      = 'ico_token_sell';

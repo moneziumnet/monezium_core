@@ -473,6 +473,8 @@ class ManageInvoiceController extends Controller
                 $trans->user_type   = 1;
                 $trans->currency_id = 1;
                 $trans->amount      = $chargefee->data->fixed_charge;
+                $trans_wallet = get_wallet($user->id, 1, 1);
+                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
                 $trans->charge      = 0;
                 $trans->type        = '-';
                 $trans->remark      = 'wallet_create';
@@ -501,6 +503,7 @@ class ManageInvoiceController extends Controller
             $trans->currency_id = $invoice->currency_id;
             $trans->amount      = $tax_value;
             $trans->charge      = 0;
+            $trans->wallet_id   = $wallet->id;
             $trans->type        = '-';
             $trans->remark      = 'invoice_tax_fee';
             $trans->details     = trans('Invoice Tax Fee');
@@ -549,6 +552,8 @@ class ManageInvoiceController extends Controller
                 $trans->user_id     = $invoice->user_id;
                 $trans->user_type   = 1;
                 $trans->currency_id = 1;
+                $trans_wallet = get_wallet($invoice->user_id, 1, 1);
+                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
                 $trans->amount      = $chargefee->data->fixed_charge;
                 $trans->charge      = 0;
                 $trans->type        = '-';

@@ -110,16 +110,21 @@ class WithdrawCryptoController extends Controller
             $remark = 'withdraw_money_supervisor_fee';
             if (check_user_type_by_id(4, $user->referral_id)) {
                 user_wallet_increment($user->referral_id, $request->currency_id, $transaction_custom_cost*$currency->rate, 6);
+                $trans_wallet = get_wallet($user->referral_id, $request->currency_id, 6);
             }
             elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
                 $remark = 'withdraw_money_manager_fee';
                 user_wallet_increment($user->referral_id, $request->currency_id, $transaction_custom_cost*$currency->rate, 10);
+                $trans_wallet = get_wallet($user->referral_id, $request->currency_id, 10);
             }
             $trans = new Transaction();
             $trans->trnx = str_rand();
             $trans->user_id     = $user->referral_id;
             $trans->user_type   = 1;
             $trans->currency_id = $request->currency_id;
+            
+            $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+
             $trans->amount      = $transaction_custom_cost*$currency->rate;
             $trans->charge      = 0;
             $trans->type        = '+';
@@ -145,6 +150,10 @@ class WithdrawCryptoController extends Controller
         $trans->currency_id = $request->currency_id;
         $trans->amount      = $request->amount;
         $trans->charge      = $messagefee*$currency->rate;
+        
+        $trans_wallet = get_wallet($user->id, $currency->id, 8);
+        $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+
         $trans->type        = '-';
         $trans->remark      = 'withdraw_money';
         $trans->details     = trans('Withdraw money');

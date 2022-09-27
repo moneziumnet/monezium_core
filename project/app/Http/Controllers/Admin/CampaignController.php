@@ -190,6 +190,10 @@ class CampaignController extends Controller
                 $trans->amount      = $chargefee->data->fixed_charge;
                 $trans->charge      = 0;
                 $trans->type        = '-';
+
+                $trans_wallet       = get_wallet($user->id, 1, 1);
+                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+                
                 $trans->remark      = 'wallet_create';
                 $trans->details     = trans('Wallet Create');
                 $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';

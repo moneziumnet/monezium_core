@@ -252,6 +252,9 @@ Route::prefix('admin')->group(function () {
     Route::post('/users/{id}/changepassword', [UserController::class, 'changePassword'])->name('admin-user-changepassword');
     Route::post('/users/{id}/updatemodules', [UserController::class, 'updateModules'])->name('admin-user-updatemodules');
 
+    Route::get('/wallet/{user_id}/{wallet_id}/transactions', [UserController::class, 'walletTransctions'])->name('admin-wallet-transactions');
+    Route::get('/wallet/transactions/datatables/{id}', [UserController::class, 'walletTrandatatables'])->name('admin-wallet.transactions-datatables');
+
     Route::get('/user/accounts/fee/{id}', [UserController::class, 'profileAccountFee'])->name('admin-user-accounts-fee');
     Route::post('/user/cal/manual/fee/', [UserController::class, 'calmanualfee'])->name('admin.cal.manual.charge');
     Route::post('/user/accounts/deposit', [UserController::class, 'profileAccountDeposit'])->name('admin-user-accounts-deposit');

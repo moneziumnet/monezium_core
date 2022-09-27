@@ -82,6 +82,8 @@ class UserDpsController extends Controller
             $trans->trnx = $data->transaction_no;
             $trans->user_id     = auth()->id();
             $trans->user_type   = 1;
+            $trans_wallet = get_wallet(auth()->id(),$request->input('currency_id'),3);
+            $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
             $trans->currency_id = $request->currency_id;
             $trans->amount      = $request->per_installment;
             $trans->charge      = 0;

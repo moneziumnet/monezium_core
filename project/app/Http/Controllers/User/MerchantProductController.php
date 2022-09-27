@@ -248,6 +248,8 @@ class MerchantProductController extends Controller
                 $trans->user_type   = 1;
                 $trans->currency_id = 1;
                 $trans->amount      = $chargefee->data->fixed_charge;
+                $trans_wallet = get_wallet($user->id, 1);
+                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
                 $trans->charge      = 0;
                 $trans->type        = '-';
                 $trans->remark      = 'wallet_create';

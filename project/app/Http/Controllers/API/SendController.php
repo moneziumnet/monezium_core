@@ -102,6 +102,8 @@ class SendController extends Controller
                 $trans->user_type   = 1;
                 $trans->currency_id = $currency_id;
                 $trans->amount      = $request->amount;
+                $trans_wallet       = get_wallet($user->id, $currency_id, $wallet->wallet_type);
+                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
                 $trans->charge      = 0;
                 $trans->type        = '-';
                 $trans->remark      = 'Send_Money';
@@ -115,6 +117,8 @@ class SendController extends Controller
                 $trans->user_type   = 1;
                 $trans->currency_id = $currency_id;
                 $trans->amount      = $request->amount;
+                $trans_wallet       = get_wallet($receiver->id, $currency_id, $wallet->wallet_type);
+                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
                 $trans->charge      = 0;
                 $trans->type        = '+';
                 $trans->remark      = 'Recieve_Money';
@@ -272,6 +276,8 @@ class SendController extends Controller
             $trans->user_id     = $user_id;
             $trans->user_type   = $data->user_type;
             $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
+            $trans_wallet = get_wallet($sender->id, $currency_id);
+            $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
             $trans->amount      = $data->amount;
             $trans->charge      = 0;
             $trans->type        = '-';
@@ -286,6 +292,8 @@ class SendController extends Controller
             $trans->user_type   = $data->user_type;
             $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
             $trans->amount      = $data->amount;
+            $trans_wallet = get_wallet($receiver->id, $currency_id);
+            $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
             $trans->charge      = 0;
             $trans->type        = '+';
             $trans->remark      = 'Request_Money';

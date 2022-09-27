@@ -119,6 +119,8 @@ class MerchantOtherBankController extends Controller
             $trans->user_type   = 2;
             $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
             $trans->amount      = $finalAmount;
+            $trans_wallet = get_wallet(auth()->id(),$currency->id);
+            $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
             $trans->charge      = $transaction_global_cost;
             $trans->type        = '-';
             $trans->remark      = 'Send_Money';

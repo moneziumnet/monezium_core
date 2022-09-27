@@ -117,11 +117,15 @@ class CryptoDepositController extends Controller
                 if (check_user_type_by_id(4, $user->referral_id)) {
                     $torefWallet = Wallet::where('user_id', $user->referral_id)->where('wallet_type', 6)->where('currency_id', $data->currency_id)->first();
                     user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost*$data->currency->rate, 6);
+
+                    $trans_wallet = get_wallet($user->referral_id, $data->currency_id, 6);
                 }
                 elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
                     $torefWallet = Wallet::where('user_id', $user->referral_id)->where('wallet_type', 10)->where('currency_id', $data->currency_id)->first();
                     user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost*$data->currency->rate, 10);
                     $remark = 'Deposit_create_manager_fee';
+
+                    $trans_wallet = get_wallet($user->referral_id, $data->currency_id, 10);
                 }
                 if($currency->code == 'ETH') {
                     RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword, 30]);
@@ -139,10 +143,13 @@ class CryptoDepositController extends Controller
                 $trans->currency_id = $data->currency_id;
                 $trans->amount      = $transaction_custom_cost*$data->currency->rate;
                 $trans->charge      = 0;
+                
+                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+
                 $trans->type        = '+';
                 $trans->remark      = $remark;
                 $trans->details     = trans('Deposit complete');
-                $trans->data        = '{"sender":"System Account", "receiver":"'.$referal_user->name.'"}';
+                $trans->data        = '{"sender":"System Account", "receiver":"'.$referral_user->name.'"}';
                 $trans->save();
             }
 
@@ -170,6 +177,8 @@ class CryptoDepositController extends Controller
             $trans->currency_id = $data->currency_id;
             $trans->amount      = $data->amount;
             $trans->charge      = ($transaction_custom_cost + $transaction_global_cost)*$data->currency->rate;
+            $trans_wallet       = get_wallet($user->id, $data->currency_id, 8);
+            $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
             $trans->type        = '+';
             $trans->remark      = 'Deposit_create';
             $trans->details     = trans('Deposit complete');

@@ -83,6 +83,10 @@ class OwnTransferController extends Controller
                 $trans->user_type   = 1;
                 $trans->currency_id = 1;
                 $trans->amount      = $chargefee->data->fixed_charge;
+
+                $trans_wallet = get_wallet($user->id, 1, 1);
+                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+
                 $trans->charge      = 0;
                 $trans->type        = '-';
                 $trans->remark      = 'card_issuance';
@@ -98,6 +102,10 @@ class OwnTransferController extends Controller
                 $trans->user_id     = $user->id;
                 $trans->user_type   = 1;
                 $trans->currency_id = 1;
+
+                $trans_wallet = get_wallet($user->id, 1, 1);
+                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+                
                 $trans->amount      = $chargefee->data->fixed_charge;
                 $trans->charge      = 0;
                 $trans->type        = '-';
@@ -126,6 +134,7 @@ class OwnTransferController extends Controller
         $trnx->user_id     = auth()->id();
         $trnx->user_type   = 1;
         $trnx->currency_id = $fromWallet->currency->id;
+        $trnx->wallet_id   = $fromWallet->id;
         $trnx->amount      = $request->amount ;
         $trnx->charge      = 0;
         $trnx->remark      = 'Own_transfer';
@@ -139,6 +148,7 @@ class OwnTransferController extends Controller
         $toTrnx->user_id     = auth()->id();
         $toTrnx->user_type   = 1;
         $toTrnx->currency_id = $toWallet->currency->id;
+        $toTrnx->wallet_id   = $toWallet->id;
         $toTrnx->amount      = $request->amount;
         $toTrnx->charge      = 0;
         $toTrnx->remark      = 'Own_transfer';

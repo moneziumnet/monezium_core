@@ -105,6 +105,10 @@ class VoucherController extends Controller
         $trnx->user_type   = 1;
         $trnx->currency_id = $wallet->currency->id;
         $trnx->amount      = $finalAmount;
+        
+        $trans_wallet = get_wallet(auth()->id(),$wallet->currency_id);
+        $trnx->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+        
         $trnx->charge      = $finalCharge;
         $trnx->remark      = 'create_voucher';
         $trnx->type        = '-';
@@ -178,6 +182,8 @@ class VoucherController extends Controller
           $trans->user_type   = 1;
           $trans->currency_id = 1;
           $trans->amount      = $chargefee->data->fixed_charge;
+          $trans_wallet = get_wallet($user->id, 1, 1);
+          $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
           $trans->charge      = 0;
           $trans->type        = '-';
           $trans->remark      = 'wallet_create';
@@ -197,6 +203,7 @@ class VoucherController extends Controller
        $trnx->user_id     = auth()->id();
        $trnx->user_type   = 1;
        $trnx->currency_id = $wallet->currency->id;
+       $trnx->wallet_id   = $wallet->id;
        $trnx->amount      = $voucher->amount;
        $trnx->charge      = 0;
        $trnx->type        = '+';

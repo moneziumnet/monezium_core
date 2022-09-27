@@ -192,6 +192,10 @@ class RegisterController extends Controller
                     $mainUserTrans->trnx        = str_rand();
                     $mainUserTrans->user_id     = $mainUser->id;
                     $mainUserTrans->user_type   = 1;
+                    
+                    $trans_wallet = get_wallet($mainUser->id, $currency);
+                    $mainUserTrans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+                    
                     $mainUserTrans->currency_id = $currency;
                     $mainUserTrans->amount      = $gs->affilate_user;
                     $mainUserTrans->charge      = 0;
@@ -215,6 +219,10 @@ class RegisterController extends Controller
                     $newUserTrans->user_id     = $user->id;
                     $newUserTrans->user_type   = 1;
                     $newUserTrans->currency_id = $currency;
+                    
+                    $trans_wallet = get_wallet($user->id, $currency);
+                    $newUserTrans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+
                     $newUserTrans->amount      = $gs->affilate_new_user;
                     $newUserTrans->charge      = 0;
                     $newUserTrans->type        = '+';

@@ -365,6 +365,8 @@ class OtherBankTransferController extends Controller
 
 
             user_wallet_decrement($user->id, $data->currency_id, $data->final_amount);
+            $trans_wallet = get_wallet($user->id, $data->currency_id);
+            
             user_wallet_increment(0, $data->currency_id, $data->cost, 9);
 
             $trans = new Transaction();
@@ -373,6 +375,9 @@ class OtherBankTransferController extends Controller
             $trans->user_type   = 1;
             $trans->currency_id = $data->currency_id;
             $trans->amount      = $data->final_amount;
+
+            $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+
             $trans->charge      = $data->cost;
             $trans->type        = '-';
             $trans->remark      = 'External_Payment';

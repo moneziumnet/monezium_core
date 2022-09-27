@@ -190,6 +190,7 @@ class UserController extends Controller
             $trans->trnx = Str::random(4).time();
             $trans->user_id     = $wallet->user_id;
             $trans->user_type   = 1;
+            $trans->wallet_id   = $wallet->id;
             $trans->currency_id = $wallet->currency_id;
             $trans->amount      = $request->amount;
             $trans->charge      = 0;
@@ -270,6 +271,8 @@ class UserController extends Controller
                     $trans->user_id     = $id;
                     $trans->user_type   = 1;
                     $trans->currency_id = 1;
+                    $trans_wallet = get_wallet($id, 1, 1);
+                    $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
                     $trans->amount      = $chargefee->data->fixed_charge;
                     $trans->charge      = 0;
                     $trans->type        = '-';
@@ -286,6 +289,8 @@ class UserController extends Controller
                     $trans->user_type   = 1;
                     $trans->currency_id = 1;
                     $trans->amount      = $chargefee->data->fixed_charge;
+                    $trans_wallet = get_wallet($id, 1, 1);
+                    $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
                     $trans->charge      = 0;
                     $trans->type        = '-';
                     $trans->remark      = 'wallet_create';
@@ -455,6 +460,8 @@ class UserController extends Controller
             $trnx->user_type   = 1;
             $trnx->currency_id = $currency_id;
             $trnx->amount      = $plan->amount;
+            $trans_wallet = get_wallet($id, $currency_id);
+            $trnx->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
             $trnx->charge      = 0;
             $trnx->remark      = 'upgrade_plan';
             $trnx->type        = '-';
@@ -479,6 +486,14 @@ class UserController extends Controller
             $user = User::findOrFail($id);
             $data['data'] = $user;
             return view('admin.user.profiletransactions',$data);
+        }
+
+        public function walletTransctions($user_id, $wallet_id)
+        {
+            $data['wallet'] = Wallet::findOrFail($wallet_id);
+            $user = User::findOrFail($user_id);
+            $data['data'] = $user;
+            return view('admin.user.wallettransactions',$data);
         }
 
         public function profileBanks($id)
@@ -740,6 +755,45 @@ class UserController extends Controller
                             ->toJson();
         }
 
+        public function walletTrandatatables($id)
+        {
+            $datas = Transaction::where('wallet_id',$id)->orderBy('id','desc')->get();
+
+            return Datatables::of($datas)
+                            ->editColumn('amount', function(Transaction $data) {
+                                $currency = Currency::whereId($data->currency_id)->first();
+                                return $data->type.amount($data->amount,$currency->type,2).$currency->code;
+                            })
+                            ->editColumn('trnx', function(Transaction $data) {
+                                $trnx = $data->trnx;
+                                return $trnx;
+                            })
+                            ->editColumn('sender', function(Transaction $data) {
+                                return ucwords(json_decode($data->data)->sender ?? "");
+                            })
+                            ->editColumn('receiver', function(Transaction $data) {
+                                return ucwords(json_decode($data->data)->receiver ?? "");
+                            })
+                            ->editColumn('created_at', function(Transaction $data) {
+                                $date = date('d-m-Y',strtotime($data->created_at));
+                                return $date;
+                            })
+                            ->editColumn('remark', function(Transaction $data) {
+                                return ucwords(str_replace('_',' ',$data->remark));
+                            })
+                            ->editColumn('charge', function(Transaction $data) {
+                                $currency = Currency::whereId($data->currency_id)->first();
+                                return $data->type.amount($data->charge,$currency->type,2).$currency->code;
+                            })
+                            ->addColumn('action', function (Transaction $data) {
+                                return ' <a href="javascript:;"  data-href="" onclick="getDetails('.$data->id.')" class="detailsBtn" >
+                                ' . __("Details") . '</a>';
+                            })
+
+                            ->rawColumns(['action'])
+                            ->toJson();
+        }
+
 
         public function profilePricingplandatatables($id)
         {
@@ -834,6 +888,8 @@ class UserController extends Controller
             $trans->user_type   = 1;
             $trans->currency_id = $wallet->currency->id;
             $trans->amount      = $manualfee->data->fixed_charge;
+            
+            $trans->wallet_id   = $wallet->id;
             $trans->charge      = 0;
             $trans->type        = '-';
             $trans->remark      = 'manual_fee_'.str_replace(' ', '_', $manualfee->name);

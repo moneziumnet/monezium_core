@@ -192,10 +192,12 @@ class MoneyRequestController extends Controller
             $remark = 'Request_money_supervisor_fee';
             if (check_user_type_by_id(4, $receiver->referral_id)) {
                 user_wallet_increment($receiver->referral_id, $currency_id, $data->supervisor_cost,6);
+                $trans_wallet = get_wallet($receiver->referral_id, $currency_id,6);
             }
             elseif (DB::table('managers')->where('manager_id', $receiver->referral_id)->first()) {
                 $remark = 'Request_money_manager_fee';
                 user_wallet_increment($receiver->referral_id, $currency_id, $data->supervisor_cost,10);
+                $trans_wallet = get_wallet($receiver->referral_id, $currency_id,10);
             }
             $referral_user = User::findOrFail($receiver->referral_id);
             $trans = new Transaction();
@@ -206,6 +208,7 @@ class MoneyRequestController extends Controller
             $trans->amount      = $data->supervisor_cost;
             $trans->charge      = 0;
             $trans->type        = '+';
+            $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
             $trans->remark      = $remark;
             $trans->details     = trans('Request Money');
             $trans->data        = '{"sender":"'.$sender->name.'", "receiver":"'.$referral_user->name.'"}';
@@ -227,6 +230,10 @@ class MoneyRequestController extends Controller
         $trans->user_type   = $data->user_type;
         $trans->currency_id = $currency_id;
         $trans->amount      = $data->amount;
+        
+        $trans_wallet       = get_wallet($sender->id, $currency_id);
+        $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+
         $trans->charge      = 0;
         $trans->type        = '-';
         $trans->remark      = 'Request_Money';
@@ -240,6 +247,10 @@ class MoneyRequestController extends Controller
         $trans->user_id     = $receiver->id;
         $trans->user_type   = $data->user_type;
         $trans->currency_id = $currency_id;
+        
+        $trans_wallet       = get_wallet($receiver->id, $currency_id);
+        $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+
         $trans->amount      = $data->amount;
         $trans->charge      = $data->cost + $data->supervisor_cost;
         $trans->type        = '+';
