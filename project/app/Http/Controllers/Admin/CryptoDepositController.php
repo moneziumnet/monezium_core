@@ -128,12 +128,12 @@ class CryptoDepositController extends Controller
                     $trans_wallet = get_wallet($user->referral_id, $data->currency_id, 10);
                 }
                 if($currency->code == 'ETH') {
-                    RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
+                    @RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
                     $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$torefWallet->wallet_no.'", "value": "0x'.dechex($transaction_custom_cost*$data->currency->rate*pow(10,18)).'"}';
-                    RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
+                    @RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
                 }
                 elseif($currency->code == 'BTC') {
-                    RPC_BTC_Send('sendtoaddress',[$torefWallet->wallet_no, $transaction_custom_cost*$data->currency->rate],$fromWallet->keyword);
+                    @RPC_BTC_Send('sendtoaddress',[$torefWallet->wallet_no, $transaction_custom_cost*$data->currency->rate],$fromWallet->keyword);
                 }
                 $referral_user = User::findOrFail($user->referral_id);
                 $trans = new Transaction();
@@ -164,7 +164,10 @@ class CryptoDepositController extends Controller
                 $res = RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
             }
             elseif($currency->code == 'BTC') {
-                RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, $final_amount*$data->currency->rate],$fromWallet->keyword);
+                $res = RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, amount($final_amount*$data->currency->rate,1,5)],$fromWallet->keyword);
+                if($res == 'error') {
+                    return response()->json(array('errors' => [ 0 =>  __('you can not create crypto wallet.') ]));
+                }
             }
             if(!$result1 || !$result2) {
               return response()->json(array('errors' => [ 0 =>  __('Crypto node is not installed.') ]));

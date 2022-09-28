@@ -757,10 +757,22 @@ if(!function_exists('getModule')){
             "id": 1,
             "jsonrpc": "2.0"
             }';
+            // return $body;
             try {
                 $response = $client->request('POST', $link.'/wallet/'.$wallet_name, ["headers"=>$headers, "body"=>$body]);
                 $res =json_decode($response->getBody());
-                $wallet_name =  $res->result->name;
+            } catch (\Throwable $th) {
+                return 'error';
+            }
+            $body = '{
+                "method": "generatetoaddress",
+                "params": [1,"'.json_decode($args,true)[0].'"],
+                "id": 1,
+                "jsonrpc": "2.0"
+                }';
+            try {
+                $response = $client->request('POST', $link.'/wallet/'.$wallet_name, ["headers"=>$headers, "body"=>$body]);
+                $res =json_decode($response->getBody());
             } catch (\Throwable $th) {
                 return 'error';
             }
