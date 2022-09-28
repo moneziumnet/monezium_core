@@ -166,7 +166,7 @@ class CryptoDepositController extends Controller
             elseif($currency->code == 'BTC') {
                 $res = RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, amount($final_amount*$data->currency->rate,1,5)],$fromWallet->keyword);
                 if($res == 'error') {
-                    return response()->json(array('errors' => [ 0 =>  __('you can not create crypto wallet.') ]));
+                    return response()->json(array('errors' => [ 0 =>  __('you can not deposit.') ]));
                 }
             }
             if(!$result1 || !$result2) {
