@@ -128,9 +128,9 @@ class CryptoDepositController extends Controller
                     $trans_wallet = get_wallet($user->referral_id, $data->currency_id, 10);
                 }
                 if($currency->code == 'ETH') {
-                    RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword, 30]);
-                    $tx = '{from: "'.$fromWallet->wallet_no.'", to: "'.$torefWallet->wallet_no.'", value: web3.toWei('.$transaction_custom_cost*$data->currency->rate.', "ether")}';
-                    RPC_ETH('personal_sendTransaction',[$tx, $fromWallet->keyword]);
+                    RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
+                    $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$torefWallet->wallet_no.'", "value": "0x'.dechex($transaction_custom_cost*$data->currency->rate*pow(10,18)).'"}';
+                    RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
                 }
                 elseif($currency->code == 'BTC') {
                     RPC_BTC_Send('sendtoaddress',[$torefWallet->wallet_no, $transaction_custom_cost*$data->currency->rate],$fromWallet->keyword);
@@ -143,7 +143,7 @@ class CryptoDepositController extends Controller
                 $trans->currency_id = $data->currency_id;
                 $trans->amount      = $transaction_custom_cost*$data->currency->rate;
                 $trans->charge      = 0;
-                
+
                 $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
 
                 $trans->type        = '+';
@@ -159,9 +159,9 @@ class CryptoDepositController extends Controller
             $result2 = user_wallet_increment(0, $data->currency_id, $transaction_global_cost*$data->currency->rate, 9);
 
             if($currency->code == 'ETH') {
-                RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword, 30]);
-                $tx = '{from: "'.$fromWallet->wallet_no.'", to: "'.$toWallet->wallet_no.'", value: web3.toWei('.$final_amount*$data->currency->rate.', "ether")}';
-                RPC_ETH('personal_sendTransaction',[$tx, $fromWallet->keyword]);
+                RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
+                $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$toWallet->wallet_no.'", "value": "0x'.dechex($final_amount*$data->currency->rate*pow(10,18)).'"}';
+                $res = RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
             }
             elseif($currency->code == 'BTC') {
                 RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, $final_amount*$data->currency->rate],$fromWallet->keyword);

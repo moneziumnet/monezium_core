@@ -98,9 +98,9 @@ class WithdrawCryptoController extends Controller
         $fromWallet = Wallet::where('user_id', $user->id)->where('wallet_type', 8)->where('currency_id', $currency->id)->first();
         $toWallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $currency->id)->first();
         if($currency->code == 'ETH') {
-            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword, 30]);
-            $tx = '{from: "'.$fromWallet->wallet_no.'", to: "'.$toWallet->wallet_no.'", value: web3.toWei('.$amountToAdd*$currency->rate.', "ether")}';
-            RPC_ETH('personal_sendTransaction',[$tx, $fromWallet->keyword]);
+            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
+            $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$toWallet->wallet_no.'", "value": "0x'.dechex($amountToAdd*$currency->rate*pow(10,18)).'"}';
+            RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
         }
         elseif($currency->code == 'BTC') {
             RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, $amountToAdd*$currency->rate],$fromWallet->keyword);
@@ -122,7 +122,7 @@ class WithdrawCryptoController extends Controller
             $trans->user_id     = $user->referral_id;
             $trans->user_type   = 1;
             $trans->currency_id = $request->currency_id;
-            
+
             $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
 
             $trans->amount      = $transaction_custom_cost*$currency->rate;
@@ -150,7 +150,7 @@ class WithdrawCryptoController extends Controller
         $trans->currency_id = $request->currency_id;
         $trans->amount      = $request->amount;
         $trans->charge      = $messagefee*$currency->rate;
-        
+
         $trans_wallet = get_wallet($user->id, $currency->id, 8);
         $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
 

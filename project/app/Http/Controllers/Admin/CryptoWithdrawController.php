@@ -100,9 +100,9 @@ class CryptoWithdrawController extends Controller
             $toWallet = Wallet::where('user_id', $user->id)->where('wallet_type', 8)->where('currency_id', $data->currency_id)->first();
             $fromWallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $data->currency_id)->first();
             if($currency->code == 'ETH') {
-                RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword, 30]);
-                $tx = '{from: "'.$fromWallet->wallet_no.'", to: "'.$toWallet->wallet_no.'", value: web3.toWei('.$data->amount.', "ether")}';
-                RPC_ETH('personal_sendTransaction',[$tx, $fromWallet->keyword]);
+                RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
+                $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$toWallet->wallet_no.'", "value": "0x'.dechex($data->amount*pow(10,18)).'"}';
+                RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
             }
             elseif($currency->code == 'BTC') {
                 RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, $data->amount],$fromWallet->keyword);
@@ -133,7 +133,7 @@ class CryptoWithdrawController extends Controller
                 elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
                     $remark = 'withdraw_reject_manager_fee';
                     user_wallet_decrement($user->referral_id, $data->currency_id, $transaction_custom_cost*$data->currency->rate, 10);
-                    
+
                     $trans_wallet  = get_wallet($user->referral_id, $data->currency_id, 10);
                 }
 
@@ -162,7 +162,7 @@ class CryptoWithdrawController extends Controller
 
             $trans_wallet      = get_wallet($data->user_id, $data->currency_id, 8);
             $trnx->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-            
+
             $trnx->charge      = 0;
             $trnx->remark      = 'withdraw_reject';
             $trnx->type        = '+';

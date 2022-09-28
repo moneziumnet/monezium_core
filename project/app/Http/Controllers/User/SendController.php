@@ -234,10 +234,10 @@ class SendController extends Controller
             // user_wallet_increment($receiver->id, $currency_id, $request->amount);
 
             if($wallet->currency->code == 'ETH') {
-                RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword, 30]);
+                RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
                 $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
-                $tx = '{from: "'.$wallet->wallet_no.'", to: "'.$towallet->wallet_no.'", value: web3.toWei('.$request->amount.', "ether")}';
-                RPC_ETH('personal_sendTransaction',[$tx, $wallet->keyword]);
+                $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex($request->amount*pow(10,18)).'"}';
+                RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
             }
             if($wallet->currency->code == 'BTC') {
                 $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();

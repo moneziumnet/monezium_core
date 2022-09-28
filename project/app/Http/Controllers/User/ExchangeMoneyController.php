@@ -165,10 +165,10 @@ class ExchangeMoneyController extends Controller
         $toWallet->update();
 
         if($fromWallet->currency->code == 'ETH' && $toWallet->currency->type == 1) {
-            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword, 30]);
+            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
             $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
-            $tx = '{from: "'.$fromWallet->wallet_no.'", to: "'.$tosystemwallet->wallet_no.'", value: web3.toWei('.$totalAmount.', "ether")}';
-            RPC_ETH('personal_sendTransaction',[$tx, $fromWallet->keyword]);
+            $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$tosystemwallet->wallet_no.'", "value": "0x'.dechex($totalAmount*pow(10,18)).'"}';
+            RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
             $tosystemwallet1 = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
             $tosystemwallet1->balance -= $finalAmount;
             $tosystemwallet1->update();
@@ -182,9 +182,9 @@ class ExchangeMoneyController extends Controller
         }
         if($toWallet->currency->code == 'ETH' && $fromWallet->currency->type == 1) {
             $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
-            RPC_ETH('personal_unlockAccount',[$tosystemwallet->wallet_no, $tosystemwallet->keyword, 30]);
-            $tx = '{from: "'.$tosystemwallet->wallet_no.'", to: "'.$toWallet->wallet_no.'", value: web3.toWei('.$finalAmount.', "ether")}';
-            RPC_ETH('personal_sendTransaction',[$tx, $tosystemwallet->keyword]);
+            RPC_ETH('personal_unlockAccount',[$tosystemwallet->wallet_no, $tosystemwallet->keyword ?? '', 30]);
+            $tx = '{"from": "'.$tosystemwallet->wallet_no.'", "to": "'.$toWallet->wallet_no.'", "value": "0x'.dechex($finalAmount*pow(10,18)).'"}';
+            RPC_ETH_Send('personal_sendTransaction',$tx, $tosystemwallet->keyword ?? '');
             $fromsystemwallet1 = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
             $fromsystemwallet1->balance += $totalAmount;
             $fromsystemwallet1->update();
@@ -197,18 +197,18 @@ class ExchangeMoneyController extends Controller
             $fromsystemwallet1->update();
         }
         if($fromWallet->currency->code == 'ETH' && $toWallet->currency->code == 'ETH') {
-            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword, 30]);
-            $tx = '{from: "'.$fromWallet->wallet_no.'", to: "'.$toWallet->wallet_no.'", value: web3.toWei('.$totalAmount.', "ether")}';
-            RPC_ETH('personal_sendTransaction',[$tx, $fromWallet->keyword]);
+            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
+            $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$toWallet->wallet_no.'", "value": "0x'.dechex($totalAmount*pow(10,18)).'"}';
+            RPC_ETH('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
         }
         if($fromWallet->currency->code == 'BTC' && $toWallet->currency->code == 'BTC') {
             RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, $totalAmount],$fromWallet->keyword);
         }
         if($fromWallet->currency->code == 'ETH' && $toWallet->currency->code == 'BTC') {
-            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword, 30]);
+            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
             $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
-            $tx = '{from: "'.$fromWallet->wallet_no.'", to: "'.$tosystemwallet->wallet_no.'", value: web3.toWei('.$totalAmount.', "ether")}';
-            RPC_ETH('personal_sendTransaction',[$tx, $fromWallet->keyword]);
+            $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$tosystemwallet->wallet_no.'", "value": "0x'.dechex($totalAmount*pow(10,18)).'"}';
+            RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
             $fromsystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
             RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, $finalAmount],$fromsystemwallet->keyword);
         }
@@ -216,9 +216,9 @@ class ExchangeMoneyController extends Controller
             $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
             RPC_BTC_Send('sendtoaddress',[$tosystemwallet->wallet_no, $totalAmount],$fromWallet->keyword);
             $fromsystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
-            RPC_ETH('personal_unlockAccount',[$fromsystemwallet->wallet_no, $fromsystemwallet->keyword, 30]);
-            $tx = '{from: "'.$fromsystemwallet->wallet_no.'", to: "'.$toWallet->wallet_no.'", value: web3.toWei('.$finalAmount.', "ether")}';
-            RPC_ETH('personal_sendTransaction',[$tx, $fromsystemwallet->keyword]);
+            RPC_ETH('personal_unlockAccount',[$fromsystemwallet->wallet_no, $fromsystemwallet->keyword ?? '', 30]);
+            $tx = '{"from": "'.$fromsystemwallet->wallet_no.'", "to": "'.$toWallet->wallet_no.'", "value": "0x'.dechex($finalAmount*pow(10,18)).'"}';
+            RPC_ETH_Send('personal_sendTransaction',$tx, $fromsystemwallet->keyword ?? '');
         }
 
         $exchange = new ExchangeMoney();

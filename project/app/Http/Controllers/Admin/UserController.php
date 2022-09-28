@@ -226,11 +226,6 @@ class UserController extends Controller
                 $user = User::findOrFail($id);
                 // return response()->json('$msg');
                 if ($currency->type == 2) {
-                    $address = RPC_ETH('personal_newAccount',['123123']);
-                    if ($address == 'error') {
-                        return response()->json(array('errors' => [0 => __('You can not create this wallet because there is some issue in crypto node.')]));
-                    }
-                    $keyword = '123123';
 
                     if ($currency->code == 'BTC') {
                         $address = RPC_BTC_Create('createwallet',[$user->email]);
@@ -888,7 +883,7 @@ class UserController extends Controller
             $trans->user_type   = 1;
             $trans->currency_id = $wallet->currency->id;
             $trans->amount      = $manualfee->data->fixed_charge;
-            
+
             $trans->wallet_id   = $wallet->id;
             $trans->charge      = 0;
             $trans->type        = '-';
