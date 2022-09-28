@@ -44,7 +44,6 @@
                                     <th>{{ __('Date') }}</th>
                                     <th>{{ __('Bank Name') }}</th>
                                     <th>{{ __('Account Name') }}</th>
-                                    <th>{{ __('Account Number') }}</th>
                                     <th>{{ __('Amount') }}</th>
                                     <th>{{ __('Status') }}</th>
                                     <th>{{ __('Details') }}</th>
@@ -66,11 +65,6 @@
                                           <td data-label="{{ __('Account Name') }}">
                                             <div>
                                               {{ $data->account_holder_name }}
-                                            </div>
-                                          </td>
-                                          <td data-label="{{ __('Account Number') }}">
-                                            <div>
-                                              {{ $data->account_number }}
                                             </div>
                                           </td>
                                           <td data-label="{{ __('Amount') }}">

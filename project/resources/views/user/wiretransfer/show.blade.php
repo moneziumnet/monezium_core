@@ -61,13 +61,6 @@
                                     <td width="10%">:</td>
                                     <td width="45%">{{ $data->account_holder_name }}</td>
                                 </tr>
-    
-                                <tr>
-                                    <th width="45%">{{__('Receiver Account Number')}}</th>
-                                    <td width="10%">:</td>
-                                    <td width="45%">{{ $data->account_number }}</td>
-                                </tr>
-
                                 <tr>
                                     <th width="45%">{{__('Status')}}</th>
                                     <td width="10%">:</td>

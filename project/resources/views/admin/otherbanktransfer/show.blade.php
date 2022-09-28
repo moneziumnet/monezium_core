@@ -41,12 +41,6 @@
                                 </tr>
 
                                 <tr>
-                                    <th width="45%">{{__('Account Number')}}</th>
-                                    <td width="10%">:</td>
-                                    <td width="45%">{{$data->beneficiary->account_number}}</td>
-                                </tr>
-
-                                <tr>
                                     <th width="45%">{{__('Beneficiary Address')}}</th>
                                     <td width="10%">:</td>
                                     <td width="45%">{{$data->beneficiary->address}}</td>

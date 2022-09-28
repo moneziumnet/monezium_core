@@ -89,16 +89,6 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group mb-3 mt-3">
-                                    <label class="form-label">{{__('Account Number')}}</label>
-                                    <input type="text" name="account_number" class="form-control" autocomplete="off" placeholder="{{__('Enter Account Number')}}" value="{{ old('account_number') }}">
-                                </div>
-                                @error('account_number')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group mb-3 mt-3">
                                     <label class="form-label">{{__('Account Holder Name')}}</label>
                                     <input type="text" name="account_holder_name" class="form-control" autocomplete="off" placeholder="{{__('Enter Account Holder Name')}}" value="{{ old('account_holder_name') }}">
                                 </div>

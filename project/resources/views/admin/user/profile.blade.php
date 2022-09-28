@@ -187,12 +187,6 @@
                       </div>
                       <div class="col-md-6">
                         <div class="form-group">
-                          <label for="inp-email">{{ __('Account Number') }}</label>
-                          <input type="text" class="form-control" id="inp-acc" name="account_number" value="{{ $data->account_number }}" disabled="">
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
                           <label for="inp-address">{{ __('Address') }}</label>
                           <input type="text" class="form-control" id="inp-address" name="address" placeholder="{{ __('Enter Address') }}" value="{{ $data->address }}" required>
                         </div>

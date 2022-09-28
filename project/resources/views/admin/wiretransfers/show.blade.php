@@ -66,23 +66,10 @@
                                 </tr>
     
                                 <tr>
-                                    <th width="45%">{{__('Receiver Account Number')}}</th>
-                                    <td width="10%">:</td>
-                                    <td width="45%">{{ $data->account_number }}</td>
-                                </tr>
-
-                                <tr>
                                     <th width="45%">{{__('Sender Account Name')}}</th>
                                     <td width="10%">:</td>
                                     <td width="45%">{{ $data->user->name }}</td>
                                 </tr>
-    
-                                <tr>
-                                    <th width="45%">{{__('Sender Account Number')}}</th>
-                                    <td width="10%">:</td>
-                                    <td width="45%">{{ $data->user->account_number }}</td>
-                                </tr>
-    `
                                 </tbody>
                             </table>
                         </div>
