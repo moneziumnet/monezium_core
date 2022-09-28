@@ -22,4 +22,9 @@ class SubInsBank extends Model
     public function transfers(){
         return $this->hasMany(BalanceTransfer::class);
     }
+
+    public function hasGateway(){
+        $gateway = BankGateway::where('subbank_id', $this->id)->first();
+        return isset($gateway);
+    }
 }

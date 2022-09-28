@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Models\PaymentGateway;
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
+use App\Models\BankPoolAccount;
 use App\Models\SubInsBank;
 use Auth;
 use Illuminate\Support\Facades\DB;
@@ -34,14 +35,19 @@ class DepositBankController extends Controller
 
     public function create(){
         $data['bankaccounts'] = BankAccount::whereUserId(auth()->id())->pluck('subbank_id');
-        $data['banks'] = SubInsBank::whereIn('id', $data['bankaccounts'])->get();
+        $data['banks'] = SubInsBank::all();
         $data['other_bank_limit'] = Generalsetting::first()->other_bank_limit;
         $data['user'] = auth()->user();
         return view('user.depositbank.create',$data);
     }
 
     public function bankcurrency($id) {
-        return BankAccount::whereUserId(auth()->id())->where('subbank_id', $id)->with('currency')->get();
+        $subbank = SubInsBank::find($id);
+        if($subbank->hasGateway()){
+            return BankAccount::whereUserId(auth()->id())->where('subbank_id', $id)->with('currency')->get();
+        } else {
+            return BankPoolAccount::where('bank_id', $id)->with('currency')->get();
+        }
     }
 
     public function store(Request $request){
@@ -51,7 +57,7 @@ class DepositBankController extends Controller
                 return redirect()->back()->with('unsuccess','Verification code is not matched.');
             }
         }
-        $other_bank_limit =Generalsetting::first()->other_bank_limit;
+        $other_bank_limit = Generalsetting::first()->other_bank_limit;
         if ($request->amount >= $other_bank_limit) {
             $rules = [
                 'document' => 'required|mimes:xls,xlsx,pdf,jpg,png,doc,docx'

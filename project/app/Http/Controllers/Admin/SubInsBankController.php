@@ -123,16 +123,17 @@ class SubInsBankController extends Controller
 
         $data->fill($input)->save();
 
-        $bank_gateway = new BankGateway();
-        $info_data = $input['key'];
-        $bank_gateway->subbank_id = $data->id;
-        $request->bankgateway = json_decode($request->bankgateway);
-        $bank_gateway->name = $request->bankgateway->name;
-        $bank_gateway->currency_id = $request->bankgateway->currency_id;
-        $bank_gateway->keyword = $request->bankgateway->keyword;
-        $bank_gateway->information = $info_data;
-        $bank_gateway->save();
-
+        if(isset($input['key'])){
+            $info_data = $input['key'];
+            $bank_gateway = new BankGateway();
+            $bank_gateway->subbank_id = $data->id;
+            $request->bankgateway = json_decode($request->bankgateway);
+            $bank_gateway->name = $request->bankgateway->name;
+            $bank_gateway->currency_id = $request->bankgateway->currency_id;
+            $bank_gateway->keyword = $request->bankgateway->keyword;
+            $bank_gateway->information = $info_data;
+            $bank_gateway->save();
+        }
         $msg = 'New Bank Added Successfully.<a href="'.route('admin.subinstitution.banks',$data->ins_id).'">View Bank Lists.</a>';
         return response()->json($msg);
     }
@@ -147,6 +148,7 @@ class SubInsBankController extends Controller
 
     public function account(Request $request, $id){
         $data['data'] = SubInsBank::findOrFail($id);
+        $data['bank_gateway'] = BankGateway::where('subbank_id', $id)->first();
         $data['bank_account'] = BankPoolAccount::where('bank_id', $id)->get();
         $data['currencylist'] = Currency::wherestatus(1)->where('type', 1)->get();
 

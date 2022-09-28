@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Exports\AdminExportTransaction;
 use App\Models\BankPlan;
+use App\Models\BankPoolAccount;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use Auth;
@@ -505,6 +506,24 @@ class UserController extends Controller
             $data['currencylist'] = Currency::wherestatus(1)->where('type', 1)->get();
             $data['bankaccount'] = BankAccount::where('user_id', $id)->get();
             return view('admin.user.profilebankaccount',$data);
+        }
+
+        public function storeBankAccount(Request $request) {
+            
+            $bankaccount = BankPoolAccount::where('bank_id', $request->subbank)->where('currency_id', $request->currency)->first();
+            if ($bankaccount){
+                return redirect()->back()->with(array('warning' => 'This bank account already exists.'));
+            }
+
+            $data = new BankPoolAccount();
+            $data->bank_id = $request->subbank;
+            $data->currency_id = $request->currency;
+            $data->iban = $request->iban;
+            $data->swift = $request->swift;
+
+            $data->save();
+
+            return redirect()->back()->with(array('message' => 'Bank Account has been created successfully'));
         }
 
         public function profilekycinfo($id) {

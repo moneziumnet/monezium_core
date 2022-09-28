@@ -13,55 +13,52 @@
 </div>
 
 <div class="row justify-content-center mt-3">
-<div class="col-md-10">
-  <div class="card mb-4">
-    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-      <h6 class="m-0 font-weight-bold text-primary">{{ __('Show Bank Account') }}</h6>
-    </div>
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">{{ __('Show Bank Account') }}</h6>
+            </div>
 
-    <div class="card-body">
-            <div class="row mb-3">
-                <div class=" ml-5 text-right">
-                    <button class="btn btn-primary" id="create_account" onclick="CreateAccount()" ><i class="fas fa-plus"></i> {{__('Add New Bank Account')}} </button>
-                </div>
-            @if (count($bank_account) == 0)
-					  <div class="col-12 text-center">
-							<h5 class="m-0">{{__('No Account Found')}}</h5>
-					  </div>
-				    @else
-            <div class="col-12 ">
-                <div class = "row mt-3 ml-2 mr-2">
-                    @foreach ($bank_account as $item)
-                    <div class="col-xl-4 col-md-6 mb-4">
-                        <div class="card h-100" >
-                        <div class="card-body">
-                            <div class="row align-items-center">
-                            <div class="col mr-2">
-                                <div class="row mb-1 mr-1">
-                                    <div class='col font-weight-bold text-gray-900'>{{__($item->iban)}}</div>
-                                </div>
-                                <div class="row mb-1 mr-1">
-
-                                    <div class='col font-weight-bold text-gray-900'>{{__($item->swift)}}</div>
-                                </div>
-                                <div class="row mb-1 mr-1">
-                                    <div class='col font-weight-bold text-gray-900'>{{__($item->currency->code)}}</div>
-                                </div>
-                            </div>
-                            </div>
-                        </div>
-                        </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="ml-5 text-right">
+                        <button class="btn btn-primary" id="create_account" onclick="CreateAccount()" ><i class="fas fa-plus"></i> {{__('Add New Bank Account')}} </button>
                     </div>
-                    @endforeach
+                    @if (count($bank_account) == 0)
+                        <div class="col-12 text-center">
+                            <h5 class="m-0">{{__('No Account Found')}}</h5>
+                        </div>
+                    @else
+                        <div class="col-12 ">
+                            <div class = "row mt-3 ml-2 mr-2">
+                                @foreach ($bank_account as $item)
+                                <div class="col-xl-4 col-md-6 mb-4">
+                                    <div class="card h-100" >
+                                    <div class="card-body">
+                                        <div class="row align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="row mb-1 mr-1">
+                                                <div class='col font-weight-bold text-gray-900'>{{__($item->iban)}}</div>
+                                            </div>
+                                            <div class="row mb-1 mr-1">
+                                                <div class='col font-weight-bold text-gray-900'>{{__($item->swift)}}</div>
+                                            </div>
+                                            <div class="row mb-1 mr-1">
+                                                <div class='col font-weight-bold text-gray-900'>{{__($item->currency->code)}}</div>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
-            @endif
-            </div>
-          </div>
-
+        </div>
     </div>
-</div>
-
 </div>
 
 
@@ -69,22 +66,34 @@
     <div class="modal-dialog modal-md modal-dialog-centered" role="document">
     <div class="modal-content">
         <div class="modal-status bg-primary"></div>
-        <div class="modal-body text-center py-4">
-        <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
-        <h3>@lang('Bank Account')</h3>
-        <form class="bankaccount  mt-4 mr-3" action="{{route('admin.subinstitution.banks.account.create')}}" method="POST" >
+        <div class="modal-body py-4">
+            <div class="text-center">
+                <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+                <h3>@lang('Bank Account')</h3>
+            </div>
+            <form class="bankaccount  mt-4 mx-3" action="{{isset($bank_gateway) ? route('admin.subinstitution.banks.account.create') : route('admin.user.bank.nogateway')}}" method="POST" >
 
-            {{ csrf_field() }}
+                {{ csrf_field() }}
 
                 <div class="form-group">
                     <label for="inp-name">{{ __('Currency') }}</label>
-                        <select class="form-control" name="currency" id="currency" required>
-                        <option value="">{{ __('Select Currency') }}</option>
-                        @foreach ($currencylist as $value )
-                            <option value="{{$value->id}}">{{ __($value->code) }}</option>
-                        @endforeach
-                        </select>
+                    <select class="form-control" name="currency" id="currency" required>
+                    <option value="">{{ __('Select Currency') }}</option>
+                    @foreach ($currencylist as $value )
+                        <option value="{{$value->id}}">{{ __($value->code) }}</option>
+                    @endforeach
+                    </select>
                 </div>
+                @if(!isset($bank_gateway))
+                    <div class="form-group">
+                        <label for="inp-name">{{ __('IBAN') }}</label>
+                        <input type="text" class="form-control" name="iban" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="inp-name">{{ __('SWIFT') }}</label>
+                        <input type="text" class="form-control" name="swift" required />
+                    </div>
+                @endif
                 <input type="hidden" name="subbank" value="{{$data->id}}">
                 <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Create') }}</button>
             </form>

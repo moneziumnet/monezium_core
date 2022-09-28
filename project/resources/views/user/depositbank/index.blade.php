@@ -55,8 +55,12 @@
                                 <tbody>
                                 @foreach($deposits as $deposit)
                                     @php
-                                        @$subbank = DB::table('sub_ins_banks')->where('id', $deposit->sub_bank_id)->first();
-                                        @$data = DB::table('bank_accounts')->whereUserId(auth()->id())->where('subbank_id', $subbank->id)->where('currency_id', $deposit->currency_id)->first();
+                                        @$subbank = App\Models\SubInsBank::where('id', $deposit->sub_bank_id)->first();
+                                        if($subbank->hasGateway()){
+                                          @$data = App\Models\BankAccount::whereUserId(auth()->id())->where('subbank_id', $subbank->id)->where('currency_id', $deposit->currency_id)->first();
+                                        } else {
+                                          @$data = App\Models\BankPoolAccount::where('bank_id', $subbank->id)->where('currency_id', $deposit->currency_id)->first();
+                                        }
                                     @endphp
                                     <tr>
                                         <td data-label="{{ __('Incoming Date') }}">
