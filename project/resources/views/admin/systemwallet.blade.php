@@ -33,7 +33,7 @@
                             <div class="row align-items-center">
                             <div class="col mr-2">
                                 <div class="row mb-1 mr-1">
-                                    <div class='col font-weight-bold text-gray-900'>{{__('System')}}</div>l
+                                    <div class='col font-weight-bold text-gray-900'>{{__('System')}}</div>
                                     <div class='col font-weight-bold text-gray-900'>{{$wallet->wallet_no}}</div>
                                 </div>
                                 <div class="text-xs font-weight-bold text-uppercase mb-1"> {{$dcurr->curr_name}}</div>
