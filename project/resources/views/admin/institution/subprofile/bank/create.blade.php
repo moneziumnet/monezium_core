@@ -40,14 +40,14 @@
               <div class="col-md-6">
                 <div class="form-group">
                     <label for="address">{{ __('Bank Address') }}</label>
-                    <input type="text" class="form-control" id="address" name="address" placeholder="{{ __('Bank Address') }}" min="1" value="" required>
+                    <input type="text" class="form-control" id="address" name="address" placeholder="{{ __('Bank Address') }}"  value="" required>
                   </div>
               </div>
 
               <div class="col-md-6">
                 <div class="form-group">
                     <label for="min_limit">{{ __('Minimum Amount') }} </label>
-                    <input type="number" step="any" class="form-control" id="min_limit" name="min_limit" placeholder="{{ __('0') }}" min="1" value="" required>
+                    <input type="number" step="any" class="form-control" id="min_limit" name="min_limit" placeholder="{{ __('0') }}" min="0" value="" required>
                   </div>
               </div>
 
@@ -61,14 +61,14 @@
               <div class="col-md-6">
                 <div class="form-group">
                     <label for="fixed_charge">{{ __('Fixed Charge') }}</label>
-                    <input type="number" step="any" class="form-control" id="fixed_charge" name="fixed_charge" placeholder="{{ __('0') }}" min="1" value="" required>
+                    <input type="number" step="any" class="form-control" id="fixed_charge" name="fixed_charge" placeholder="{{ __('0') }}" min="0" value="" required>
                   </div>
               </div>
 
               <div class="col-md-6">
                 <div class="form-group">
                     <label for="percent_charge">{{ __('Percent Charge') }} (%)</label>
-                    <input type="number" step="any" class="form-control" id="percent_charge" name="percent_charge" placeholder="{{ __('0') }}" min="1" value="" required>
+                    <input type="number" step="any" class="form-control" id="percent_charge" name="percent_charge" placeholder="{{ __('0') }}" min="0" value="" required>
                   </div>
               </div>
 

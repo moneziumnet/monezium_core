@@ -117,6 +117,10 @@ class SubInsBankController extends Controller
         if($request->form_builder){
             $input['required_information'] = json_encode(array_values($request->form_builder));
         }
+        if(!$request->key){
+            $input['key'] ='';
+        }
+
         $data->fill($input)->save();
 
         $bank_gateway = new BankGateway();
