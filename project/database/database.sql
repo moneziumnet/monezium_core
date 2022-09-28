@@ -121,6 +121,30 @@ INSERT INTO `bank_plans` VALUES (13, 'Standard', 50, 1000000, 1000000, 1000000, 
 INSERT INTO `bank_plans` VALUES (14, 'Professional', 100, 10000, 10000, 10000, 10000, 10000, 10000, 10000, NULL, 90, '2022-06-18 08:20:57', '2022-06-18 08:20:57');
 
 -- ----------------------------
+-- Table structure for bank_gateways
+-- ----------------------------
+DROP TABLE IF EXISTS `bank_gateways`;
+CREATE TABLE `bank_gateways`  (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `information` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
+  `keyword` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `currency_id` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '1',
+  `subbank_id` int(11) NULL DEFAULT NULL,
+  `created_at` timestamp(0) NULL DEFAULT NULL,
+  `updated_at` timestamp(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of bank_gateways
+-- ----------------------------
+INSERT INTO `bank_gateways` VALUES (1, 'RailsBank', '{\"API_Key\":\"\"}', 'railsbank', '[\"1\"]', 0, '2022-08-05 11:22:08', '2022-08-05 11:22:08');
+INSERT INTO `bank_gateways` VALUES (2, 'ClearJunction', '{\"API_Key\":\"\", \"api_password\":\"\"}', 'clearjunction', '[\"1\",\"4\",\"17\"]', 0, '2022-08-05 11:22:08', '2022-08-05 11:22:08');
+INSERT INTO `bank_gateways` VALUES (3, 'OpenPayd', '{\"Auth\":\"\"}', 'openpayd', '[\"8\"]', 0, '2022-08-05 11:22:08', '2022-08-05 11:22:08');
+
+
+-- ----------------------------
 -- Table structure for blog_categories
 -- ----------------------------
 DROP TABLE IF EXISTS `blog_categories`;
