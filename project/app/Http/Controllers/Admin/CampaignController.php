@@ -182,6 +182,9 @@ class CampaignController extends Controller
 
                 $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
 
+                user_wallet_decrement($user->id, 1, $chargefee->data->fixed_charge, 1);
+                user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
+
                 $trans = new Transaction();
                 $trans->trnx = str_rand();
                 $trans->user_id     = $user->id;
@@ -198,9 +201,7 @@ class CampaignController extends Controller
                 $trans->details     = trans('Wallet Create');
                 $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
                 $trans->save();
-
-                user_wallet_decrement($user->id, 1, $chargefee->data->fixed_charge, 1);
-                user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
+                
             }
 
             if($wallet->balance < $donation->amount) {

@@ -569,6 +569,8 @@ if(!function_exists('getModule')){
                 $user->wallet_maintenance = Carbontime::now()->addDays(30);
                 $chargefee = Charge::where('slug', 'account-maintenance')->where('plan_id', $user->bank_plan_id)->first();
                 foreach ($wallets as $key => $value) {
+                    user_wallet_decrement($user->id, $value->currency_id, $chargefee->data->fixed_charge, 1);
+                    user_wallet_increment(0, $value->currency_id, $chargefee->data->fixed_charge, 9);
                     # code...
                     $trans = new Transaction();
                     $trans->trnx = str_rand();
@@ -584,9 +586,7 @@ if(!function_exists('getModule')){
                     $trans->details     = trans('Wallet Maintenance');
                     $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
                     $trans->save();
-
-                    user_wallet_decrement($user->id, $value->currency_id, $chargefee->data->fixed_charge, 1);
-                    user_wallet_increment(0, $value->currency_id, $chargefee->data->fixed_charge, 9);
+                    
                     $user->update();
                 }
 
@@ -605,6 +605,9 @@ if(!function_exists('getModule')){
                 $user->card_maintenance = Carbontime::now()->addDays(30);
                 $chargefee = Charge::where('slug', 'card-maintenance')->where('plan_id', $user->bank_plan_id)->first();
 
+                user_wallet_decrement($user->id, 1, $chargefee->data->fixed_charge, 1);
+                user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
+
                 $trans = new Transaction();
                 $trans->trnx = str_rand();
                 $trans->user_id     = $user->id;
@@ -620,8 +623,6 @@ if(!function_exists('getModule')){
                 $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
                 $trans->save();
 
-                user_wallet_decrement($user->id, 1, $chargefee->data->fixed_charge, 1);
-                user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
                 $user->update();
 
             }

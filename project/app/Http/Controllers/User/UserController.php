@@ -154,6 +154,20 @@ class UserController extends Controller
         ]);
 
         $input = $request->all();
+
+        if($request->form_select == 0) {
+            $input['company_name'] = null;
+            $input['company_reg_no'] = null;
+            $input['company_vat_no'] = null;
+            $input['company_address'] = null;
+            $input['company_dob'] = null;
+            $input['personal_code'] = null;
+            $input['your_id'] = null;
+            $input['issued_authority'] = null;
+            $input['date_of_issue'] = null;
+            $input['date_of_expire'] = null;
+        }
+
         $input['name'] = trim($request->firstname)." ".trim($request->lastname);
         $data = Auth::user();
         if ($file = $request->file('photo'))

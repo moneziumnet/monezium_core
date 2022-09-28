@@ -185,7 +185,7 @@ return [
         Intervention\Image\ImageServiceProvider::class,
         Cartalyst\Stripe\Laravel\StripeServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
-        Nexmo\Laravel\NexmoServiceProvider::class,
+        // Nexmo\Laravel\NexmoServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
     ],
 

@@ -102,6 +102,9 @@ class ManageEscrowController extends Controller
 
             $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
 
+            user_wallet_decrement($request->id, 1, $chargefee->data->fixed_charge, 5);
+            user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
+
             $trans = new Transaction();
             $trans->trnx = str_rand();
             $trans->user_id     = $request->id;
@@ -118,9 +121,6 @@ class ManageEscrowController extends Controller
             $trans->details     = trans('Wallet Create');
             $trans->data        = '{"sender":"'.User::findOrFail($request->id)->name.'", "receiver":"System Account"}';
             $trans->save();
-
-            user_wallet_decrement($request->id, 1, $chargefee->data->fixed_charge, 5);
-            user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
         }
 
         $wallet->balance += $escrow->amount;

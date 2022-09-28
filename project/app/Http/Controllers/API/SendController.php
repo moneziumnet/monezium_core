@@ -96,6 +96,9 @@ class SendController extends Controller
             if($receiver = User::where('account_number',$request->account_number)->first()){
                 $txnid = Str::random(4).time();
 
+                user_wallet_decrement($user->id, $currency_id, $request->amount, $wallet->wallet_type);
+                user_wallet_increment($receiver->id, $currency_id, $request->amount, $wallet->wallet_type);
+
                 $trans = new Transaction();
                 $trans->trnx = $txnid;
                 $trans->user_id     = $user->id;
@@ -128,9 +131,7 @@ class SendController extends Controller
                 session(['sendstatus'=>1, 'saveData'=>$trans]);
                 // user_wallet_decrement($user->id, $currency_id, $request->amount);
                 // user_wallet_increment($receiver->id, $currency_id, $request->amount);
-
-                user_wallet_decrement($user->id, $currency_id, $request->amount, $wallet->wallet_type);
-                user_wallet_increment($receiver->id, $currency_id, $request->amount, $wallet->wallet_type);
+                
                 if(SaveAccount::whereUserId($user_id)->where('receiver_id',$receiver->id)->exists()){
                     return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Money Send Successfully.']);
                 }

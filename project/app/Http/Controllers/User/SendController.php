@@ -195,6 +195,9 @@ class SendController extends Controller
             // $receiver->increment('balance',$request->amount);
             // $user->decrement('balance',$request->amount);
 
+            user_wallet_decrement($user->id, $currency_id, $finalamount, $wallet->wallet_type);
+            user_wallet_increment($receiver->id, $currency_id, $request->amount, $wallet->wallet_type);
+
             $trans = new Transaction();
             $trans->trnx = $txnid;
             $trans->user_id     = $user->id;
@@ -230,8 +233,6 @@ class SendController extends Controller
             // user_wallet_decrement($user->id, $currency_id, $request->amount);
             // user_wallet_increment($receiver->id, $currency_id, $request->amount);
 
-            user_wallet_decrement($user->id, $currency_id, $finalamount, $wallet->wallet_type);
-            user_wallet_increment($receiver->id, $currency_id, $request->amount, $wallet->wallet_type);
             if($wallet->currency->code == 'ETH') {
                 RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword, 30]);
                 $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();

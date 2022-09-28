@@ -91,22 +91,6 @@ class CryptoWithdrawController extends Controller
 
         $user = User::findOrFail($data->user_id);
 
-        // user_wallet_increment($user->id, $data->currency_id, $data->amount, 8);
-
-
-
-        // $trans = new Transaction();
-        // $trans->trnx = $data->hash;
-        // $trans->user_id     = $user->id;
-        // $trans->user_type   = 1;
-        // $trans->currency_id = $data->currency_id;
-        // $trans->amount      = $data->amount;
-        // $trans->charge      = 0;
-        // $trans->type        = '+';
-        // $trans->remark      = 'Deposit_create';
-        // $trans->details     = trans('Deposit complete');
-        // $trans->data        = '{"sender":"System Account", "receiver":"'.$user->name.'"}';
-        // $trans->save();
         $data->status = $id2;
         $data->update();
         $currency = Currency::findOrFail($data->currency_id);

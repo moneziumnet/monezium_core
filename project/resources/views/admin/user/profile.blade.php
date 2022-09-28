@@ -149,7 +149,7 @@
                     {{ csrf_field() }}
 
                     <div class="row g-3">
-                      <div class="col-md-6">
+                      <div class="col-md-6 mb-3">
                         <div class="form-group">
                           <label>{{ __('Set Picture') }} <small class="small-font">({{ __('Maximum size is 2 MB.') }})</small></label>
                           <div class="wrapper-image-preview">
@@ -163,7 +163,7 @@
                           </div>
                         </div>
                       </div>
-                      <div class="col-md-6">
+                      <div class="col-md-6 mb-3">
                         <div class="form-group">
                           <label for="inp-name">{{ __('First Name') }}</label>
                           <input type="text" class="form-control" id="inp-name" name="firstname" placeholder="{{ __('Enter First Name') }}" value="{{ explode(" ",$data->name)[0] ?? $data->name }}" required>
@@ -178,17 +178,18 @@
                             <label class="form-label required">{{__('Birthday ')}}</label>
                             <input name="dob" class="form-control form--control" autocomplete="off" placeholder="{{__('Your BirthDay')}}" type="date" value="{{$data->dob }}" required>
                         </div>
-
+                      </div>
+                      <div class="col-md-6">
                         <div class="form-group">
                           <label for="inp-email">{{ __('Email') }}</label>
                           <input type="text" class="form-control" id="inp-email" name="email" placeholder="{{ __('Enter Email') }}" value="{{ $data->email }}" disabled="">
                         </div>
-
+                      </div>
+                      <div class="col-md-6">
                         <div class="form-group">
                           <label for="inp-email">{{ __('Account Number') }}</label>
                           <input type="text" class="form-control" id="inp-acc" name="account_number" value="{{ $data->account_number }}" disabled="">
                         </div>
-
                       </div>
                       <div class="col-md-6">
                         <div class="form-group">
@@ -216,13 +217,91 @@
                           <input type="text" class="form-control" id="inp-vat" name="vat" placeholder="{{ __('Enter VAT') }}" value="{{ $data->vat }}">
                         </div>
                       </div>
-                      <div class="col-md-6">
+                      {{-- <div class="col-md-6">
                         <div class="form-group">
                           <label for="inp-zip">{{ __('Postal Code') }}</label>
                           <input type="text" class="form-control" id="inp-zip" name="zip" placeholder="{{ __('Enter Zip') }}" value="{{ $data->zip }}" required>
                         </div>
+                      </div> --}}
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label for="inp-user-type" class="form-label">{{ __('Select Type') }}</label>
+                          <select id="test" class="form-control form--control mb-3" name="form_select" onchange="showCompanyInput( this)">
+                              <option value="0" {{isset($data->company_name) ? '' : 'selected'}}> Private</option>
+                              <option value="1" {{isset($data->company_name) ? 'selected' : ''}}> Corporate</option>
+                          </select>
+                        </div>
                       </div>
-                      <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Submit') }}</button>
+
+                      @php
+                        $required = isset($data->company_name) ? 'required' : '';
+                      @endphp
+
+                      <div id="hidden_div" class="col-md-12" style="{{isset($data->company_name) ? '' : 'display:none;'}}">
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group mt-2">
+                                <label for="dob" class="form-label">{{ __('Company Name') }}</label>
+                                <input type="text" class="company-input form-control form--control" id="company_name"name="company_name" placeholder="{{ __('Enter Company Name') }}" value="{{ $data->company_name }}" required>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group mt-2">
+                                <label for="dob" class="form-label">{{ __('Registration No') }}</label>
+                                <input type="text" class="company-input form-control form--control" id="company_reg_no"name="company_reg_no" placeholder="{{ __('Enter Company Registration No') }}" value="{{ $data->company_reg_no }}" required>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group mt-2">
+                                <label for="dob" class="form-label">{{ __('VAT No') }}</label>
+                                <input type="text" class="company-input form-control form--control" id="company_vat_no"name="company_vat_no" placeholder="{{ __('Enter Company VAT No') }}" value="{{ $data->company_vat_no }}" required>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group mt-2">
+                                <label for="dob" class="form-label">{{ __('Company Address') }}</label>
+                                <input type="text" class="company-input form-control form--control" id="company_address"name="company_address" placeholder="{{ __('Enter Company Address') }}" value="{{$data->company_address}}" required>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group mt-2">
+                                <label for="dob" class="form-label">{{ __('Date of Birth') }}</label>
+                                <input type="date" class="company-input form-control form--control" id="company_dob" name="company_dob" placeholder="{{ __('yyyy-mm-dd') }}" value="{{date("Y-m-d", strtotime($data->company_dob))}}" required>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group mt-2">
+                                <label for="personal-code" class="form-label">{{ __('Personal Code/Number') }}</label>
+                                <input type="text" class="company-input form-control form--control" id="personal_code" name="personal_code" placeholder="{{ __('Enter Personal Code/Number') }}" value="{{$data->personal_code}}" required>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group mt-2">
+                                <label for="your-id" class="form-label">{{ __('Your ID Number') }}</label>
+                                <input type="text" class="company-input form-control form--control" id="your_id" name="your_id" placeholder="{{ __('Enter Your ID Number') }}" value="{{$data->your_id}}" required>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group mt-2">
+                                <label for="your-id" class="form-label" required>{{ __('Provider Authority Name') }}</label>
+                                <input type="text" class="company-input form-control form--control" id="issued_authority" name="issued_authority" placeholder="{{ __('Enter Provider Authority Name') }}" value="{{$data->issued_authority}}" required>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group mt-2">
+                                <label for="date-of-issue" class="form-label">{{ __('Date of Issue') }}</label>
+                                <input type="date" class="company-input form-control form--control datepicker" id="date_of_issue" name="date_of_issue" placeholder="{{ __('yyyy-mm-dd') }}" value="{{date("Y-m-d", strtotime($data->date_of_issue))}}" required>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group mt-2">
+                                <label for="date-of-expire" class="form-label">{{ __('Date of Expire') }}</label>
+                                <input type="date" class="company-input form-control form--control datepicker" id="date_of_expire" name="date_of_expire" placeholder="{{ __('yyyy-mm-dd') }}" value="{{ date("Y-m-d", strtotime($data->date_of_expire)) }}" required>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <button type="submit" id="submit-btn" class="btn btn-primary w-100 mt-3 mx-2">{{ __('Submit') }}</button>
 
                   </form>
                 </div>
@@ -317,5 +396,21 @@
     columns: 1,
     placeholder: 'Select User Type'
   });
+  function showCompanyInput(select) {
+      var company_input_list = $('.company-input');
+      if (select.value == 1) {
+          document.getElementById('hidden_div').style.display = "block";
+          for (let i = 0; i < company_input_list.length; i++) {
+              const item = company_input_list[i];
+              item.required = true;
+          }
+      } else {
+          document.getElementById('hidden_div').style.display = "none";
+          for (let i = 0; i < company_input_list.length; i++) {
+              const item = company_input_list[i];
+              item.required = false;
+          }
+      }
+  }
 </script>
 @endsection

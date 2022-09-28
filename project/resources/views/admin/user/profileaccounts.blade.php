@@ -305,24 +305,31 @@
 
                 $.each(res, function(i, item) {
                     _divhtml += '<div class="col-xl-3 col-md-6 mb-4"> \
-                        <div class="card h-100"> \
-                            <div class="card-body"> \
-                                <div class="row align-items-center"> \
-                                    <div class="col mr-2"> \
-                                        <div class="row mb-1 mr-1"> \
-                                            <div class="col font-weight-bold text-gray-900">' + accounttype[`${item.wallet_type}`] + '</div>\
-                                                    <div class="col font-weight-bold text-gray-900">' + item.wallet_no +'</div> \
+                            <div class="card h-100"> \
+                                <div class="card-body"> \
+                                    <div class="row align-items-center"> \
+                                        <div class="col"> \
+                                            <div class="d-flex mb-1 mr-1 align-items-start"> \
+                                                <div class="font-weight-bold text-gray-900 w-75 mr-auto">' + accounttype[`${item.wallet_type}`] + '<br/>' + item.wallet_no +'</div>\
+                                                <div class="font-weight-bold text-gray-900 w-25 text-right">\
+                                                    <div class="dropdown">\
+                                                        <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" style="padding: 6px 11px 1px 7px; border-radius: 50%;">\
+                                                            <span class="caret"></span>\
+                                                        </button>\
+                                                        <div class="dropdown-menu dropdown-menu-right">\
+                                                            <a class="dropdown-item" href="javascript:;" onclick="getDetails('+ item.id +')">{{ __("Fee") }}</a>\
+                                                            <a class="dropdown-item" href="javascript:;" onclick="Deposit('+ item.id +')">{{ __("Deposit") }}</a>\
+                                                            <a class="dropdown-item" href="{{url("admin/wallet/$data->id")}}/'+ item.id +'/transactions">{{ __("Transaction View") }}</a>\
+                                                        </div>\
+                                                    </div>\
+                                                </div>\
                                             </div> \
-                                            <div class="text-xs font-weight-bold text-uppercase mb-1">' + item.currency.curr_name + '</div> \
+                                            <div class="text-xs font-weight-bold text-uppercase mb-1">' + item.currency.curr_name + '</div>\
                                             <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">' + parseFloat(item.balance).toFixed(2) + " " + item.currency.code + " " + item.currency.symbol + '</div> \
-                                            <div class="row mb-1 mr-1"> \
-                                                <button class="col btn btn-primary ml-2 w-25 mt-2" onclick="getDetails('+ item.id +')">{{ __('Fee') }}</button> \
-                                                <button class="col btn btn-primary ml-1 w-25 mt-2" onclick="Deposit('+ item.id +')">{{ __('Deposit') }}</button> \
-                                            </div> \
-                                         </div> \
+                                        </div> \
                                     </div> \
                                 </div> \
-                            </div> \
+                            </div>\
                         </div>'
                         });
             }
@@ -336,7 +343,7 @@
                                 <div class="row align-items-center"> \
                                     <div class="col mr-2"> \
                                         <div class="row mb-1 mr-1"> \
-                                            <div class="col font-weight-bold text-gray-900">' + accounttype[`${wallet_type}`] + '</div>\
+                                            <div class="col font-weight-bold text-gray-900">' + accounttype[`${wallet_type}`] + '<br/><br/></div>\
                                             <div class="col font-weight-bold text-gray-900">' + "" +'</div> \
                                         </div> \
                                         <div class="text-xs font-weight-bold text-uppercase mb-1">' + value.curr_name + '</div> \
