@@ -148,8 +148,8 @@ class ExchangeMoneyController extends Controller
         $result = json_decode($response->getBody());
         $fromrate = $fromWallet->currency->code;
         $torate = $toWallet->currency->code;
-        $defaultAmount = $request->amount * $result->data->rates->$fromrate;
-        $finalAmount   = amount($defaultAmount / $result->data->rates->$torate,$toWallet->currency->type);
+        $defaultAmount = $request->amount / $result->data->rates->$fromrate;
+        $finalAmount   = amount($defaultAmount * $result->data->rates->$torate,$toWallet->currency->type);
 
         $charge = amount($transaction_global_cost+$transaction_custom_cost,$fromWallet->currency->type);
         $totalAmount = amount(($request->amount +  $charge),$fromWallet->currency->type);
