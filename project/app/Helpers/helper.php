@@ -586,7 +586,7 @@ if(!function_exists('getModule')){
                     $trans->details     = trans('Wallet Maintenance');
                     $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
                     $trans->save();
-                    
+
                     $user->update();
                 }
 
@@ -674,6 +674,30 @@ if(!function_exists('getModule')){
             }
       }
   }
+  if(!function_exists('RPC_ETH_Send'))
+  {
+      function RPC_ETH_Send($method, $args, $keyword, $link = 'localhost:8545')
+      {
+          $client = new Client();
+            $headers = [
+            'Content-Type' => 'application/json'
+            ];
+            $body = '{
+            "method": "'.$method.'",
+            "params": ['.$args.',"'.$keyword.'"],
+            "id": 1,
+            "jsonrpc": "2.0"
+            }';
+            try {
+                $response = $client->request('POST', $link, ["headers"=>$headers, "body"=>$body]);
+                $res =json_decode($response->getBody());
+                return $res->result;
+            } catch (\Throwable $th) {
+                return 'error';
+            }
+      }
+  }
+
 
   if(!function_exists('RPC_BTC_Create'))
   {
