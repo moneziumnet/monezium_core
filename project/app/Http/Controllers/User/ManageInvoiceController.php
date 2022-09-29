@@ -13,6 +13,7 @@ use App\Models\Tax;
 use App\Models\Contract;
 use App\Models\Product;
 use App\Models\Transaction;
+use App\Models\CryptoDeposit;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
@@ -477,6 +478,19 @@ class ManageInvoiceController extends Controller
         } else if($request->payment == 'bank_pay'){
             return redirect(route('user.invoice.incoming.index'))->with('message','Bank Payment completed');
         } else if($request->payment == 'crypto'){
+            $data = new CryptoDeposit();
+            $data->currency_id = $request->currency_id;
+            $data->amount = $request->amount;
+            $invoice = Invoice::findOrFail($request->id);
+            $data->user_id = $invoice->user_id;
+            $data->hash = $request->hash;
+            $data->address = $request->address;
+            $data->sender_address = $request->sender_address;
+            $data->proof = '';
+            $data->save();
+            $invoice->payment_status = 1;
+            $invoice->update();
+
             return redirect(route('user.invoice.incoming.index'))->with('message','Crypto Payment completed');
         } else if($request->payment == 'wallet'){
             try {
@@ -673,6 +687,18 @@ class ManageInvoiceController extends Controller
         } else if($request->payment == 'bank_pay'){
             return redirect($url)->with('message','Bank Payment completed');
         } else if($request->payment == 'crypto'){
+            $data = new CryptoDeposit();
+            $data->currency_id = $request->currency_id;
+            $data->amount = $request->amount;
+            $invoice = Invoice::findOrFail($request->id);
+            $data->user_id = $invoice->user_id;
+            $data->hash = $request->hash;
+            $data->address = $request->address;
+            $data->sender_address = $request->sender_address;
+            $data->proof = '';
+            $data->save();
+            $invoice->payment_status = 1;
+            $invoice->update();
             return redirect($url)->with('message','Crypto Payment completed');
         } elseif($request->payment == 'wallet'){
             try {
