@@ -156,11 +156,20 @@ class UserController extends Controller
         $input = $request->all();
 
         if($request->form_select == 0) {
+            $input['personal_code'] = $request->personal_code;
+            $input['your_id'] = $request->your_id;
+            $input['issued_authority'] = $request->issued_authority;
+            $input['date_of_issue'] = $request->date_of_issue;
+            $input['date_of_expire'] = $request->date_of_expire;
             $input['company_name'] = null;
             $input['company_reg_no'] = null;
             $input['company_vat_no'] = null;
-            $input['company_address'] = null;
             $input['company_dob'] = null;
+        } else {
+            $input['company_name'] = $request->company_name;
+            $input['company_reg_no'] = $request->company_reg_no;
+            $input['company_vat_no'] = $request->company_vat_no;
+            $input['company_dob'] = $request->company_dob;
             $input['personal_code'] = null;
             $input['your_id'] = null;
             $input['issued_authority'] = null;

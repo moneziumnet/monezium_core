@@ -42,8 +42,15 @@
                             </div>
                           </div>
                         </div>
-
+                        
                         <div class="row g-3">
+                          <div class="col-md-12 form-group">
+                            <label for="inp-user-type" class="form-label">{{ __('Select Type') }}</label>
+                            <select id="test" class="form-control form--control mb-3" name="form_select" onchange="showCompanyInput( this)">
+                                <option value="0" {{isset($user->company_name) ? '' : 'selected'}}> Private</option>
+                                <option value="1" {{isset($user->company_name) ? 'selected' : ''}}> Corporate</option>
+                            </select>
+                          </div>
                           <div class="col-md-6">
                             <div class="form-group">
                               <label class="form-label required">{{__('First Name')}}</label>
@@ -91,17 +98,77 @@
                               <input name="city" class="form-control form--control" autocomplete="off" placeholder="{{__('City')}}" type="text" value="{{ $user->city }}" required>
                             </div>
                           </div>
-
                           <div class="col-md-6">
-                            <div class="form-group">
-                              <label class="form-label required">{{__('VAT Number')}}</label>
-                              <input name="vat" class="form-control form--control" autocomplete="off" placeholder="{{__('VAT')}}" type="text" value="{{ $user->vat }}" required>
-                            </div>
-                          </div>
-                          <div class="col-md-12">
                             <div class="form-group">
                               <label class="form-label required">{{__('Address')}}</label>
                               <input name="address" class="form-control form--control" autocomplete="off" placeholder="{{__('Address')}}" type="text" value="{{ $user->address }}" required>
+                            </div>
+                          </div>
+
+                          @php
+                            $private_required = isset($user->company_name) ? '' : 'required';
+                            $corporate_required = isset($user->company_name) ? 'required' : '';
+                          @endphp
+                          <div id="private_div" class="col-md-12" style="{{isset($user->company_name) ? 'display:none;' : ''}}">
+                            <div class="row">
+                              <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="personal-code" class="form-label">{{ __('Personal Code/Number') }}</label>
+                                    <input type="text" class="private-input form-control form--control" id="personal_code" name="personal_code" placeholder="{{ __('Enter Personal Code/Number') }}" value="{{$user->personal_code}}" {{$private_required}}>
+                                </div>
+                              </div>
+                              <div class="col-md-6 mt-3">
+                                <div class="form-group">
+                                    <label for="your-id" class="form-label">{{ __('Your ID Number') }}</label>
+                                    <input type="text" class="private-input form-control form--control" id="your_id" name="your_id" placeholder="{{ __('Enter Your ID Number') }}" value="{{$user->your_id}}" {{$private_required}}>
+                                </div>
+                              </div>
+                              <div class="col-md-6 mt-3">
+                                <div class="form-group">
+                                    <label for="your-id" class="form-label">{{ __('Provider Authority Name') }}</label>
+                                    <input type="text" class="private-input form-control form--control" id="issued_authority" name="issued_authority" placeholder="{{ __('Enter Provider Authority Name') }}" value="{{$user->issued_authority}}" {{$private_required}}>
+                                </div>
+                              </div>
+                              <div class="col-md-6 mt-3">
+                                <div class="form-group">
+                                    <label for="date-of-issue" class="form-label">{{ __('Date of Issue') }}</label>
+                                    <input type="date" class="private-input form-control form--control datepicker" id="date_of_issue" name="date_of_issue" placeholder="{{ __('yyyy-mm-dd') }}" value="{{date("Y-m-d", strtotime($user->date_of_issue))}}" {{$private_required}}>
+                                </div>
+                              </div>
+                              <div class="col-md-6 mt-3">
+                                <div class="form-group">
+                                    <label for="date-of-expire" class="form-label">{{ __('Date of Expire') }}</label>
+                                    <input type="date" class="private-input form-control form--control datepicker" id="date_of_expire" name="date_of_expire" placeholder="{{ __('yyyy-mm-dd') }}" value="{{ date("Y-m-d", strtotime($user->date_of_expire)) }}" {{$private_required}}>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div id="corporate_div" class="col-md-12" style="{{isset($user->company_name) ? '' : 'display:none;'}}">
+                            <div class="row">
+                              <div class="col-md-6">
+                                <div class="form-group mt-2">
+                                    <label for="dob" class="form-label">{{ __('Company Name') }}</label>
+                                    <input type="text" class="company-input form-control form--control" id="company_name"name="company_name" placeholder="{{ __('Enter Company Name') }}" value="{{ $user->company_name }}" {{$corporate_required}}>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group mt-2">
+                                    <label for="dob" class="form-label">{{ __('Registration No') }}</label>
+                                    <input type="text" class="company-input form-control form--control" id="company_reg_no"name="company_reg_no" placeholder="{{ __('Enter Company Registration No') }}" value="{{ $user->company_reg_no }}" {{$corporate_required}}>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group mt-3">
+                                    <label for="dob" class="form-label">{{ __('VAT No') }}</label>
+                                    <input type="text" class="company-input form-control form--control" id="company_vat_no"name="company_vat_no" placeholder="{{ __('Enter Company VAT No') }}" value="{{ $user->company_vat_no }}" {{$corporate_required}}>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group mt-3">
+                                    <label for="dob" class="form-label">{{ __('Registration Date') }}</label>
+                                    <input type="date" class="company-input form-control form--control" id="company_dob" name="company_dob" placeholder="{{ __('yyyy-mm-dd') }}" value="{{date("Y-m-d", strtotime($user->company_dob))}}" {{$corporate_required}}>
+                                </div>
+                              </div>
                             </div>
                           </div>
 
@@ -139,84 +206,6 @@
                               </div>
                             </div>
                           </div>
-
-                          <hr/>
-                          <div class="col-md-12 form-group">
-                            <label for="inp-user-type" class="form-label">{{ __('Select Type') }}</label>
-                            <select id="test" class="form-control form--control mb-3" name="form_select" onchange="showCompanyInput( this)">
-                                <option value="0" {{isset($user->company_name) ? '' : 'selected'}}> Private</option>
-                                <option value="1" {{isset($user->company_name) ? 'selected' : ''}}> Corporate</option>
-                            </select>
-                          </div>
-
-                          @php
-                            $required = isset($user->company_name) ? 'required' : '';
-                          @endphp
-                          
-                          <div id="hidden_div" class="" style="{{isset($user->company_name) ? '' : 'display:none;'}}">
-                            <div class="row">
-                              <div class="col-md-6">
-                                <div class="form-group mt-2">
-                                    <label for="dob" class="form-label">{{ __('Company Name') }}</label>
-                                    <input type="text" class="company-input form-control form--control" id="company_name"name="company_name" placeholder="{{ __('Enter Company Name') }}" value="{{ $user->company_name }}" {{$required}}>
-                                </div>
-                              </div>
-                              <div class="col-md-6">
-                                <div class="form-group mt-2">
-                                    <label for="dob" class="form-label">{{ __('Registration No') }}</label>
-                                    <input type="text" class="company-input form-control form--control" id="company_reg_no"name="company_reg_no" placeholder="{{ __('Enter Company Registration No') }}" value="{{ $user->company_reg_no }}" {{$required}}>
-                                </div>
-                              </div>
-                              <div class="col-md-6">
-                                <div class="form-group mt-2">
-                                    <label for="dob" class="form-label">{{ __('VAT No') }}</label>
-                                    <input type="text" class="company-input form-control form--control" id="company_vat_no"name="company_vat_no" placeholder="{{ __('Enter Company VAT No') }}" value="{{ $user->company_vat_no }}" {{$required}}>
-                                </div>
-                              </div>
-                              <div class="col-md-6">
-                                <div class="form-group mt-2">
-                                    <label for="dob" class="form-label">{{ __('Company Address') }}</label>
-                                    <input type="text" class="company-input form-control form--control" id="company_address"name="company_address" placeholder="{{ __('Enter Company Address') }}" value="{{$user->company_address}}" {{$required}}>
-                                </div>
-                              </div>
-                              <div class="col-md-6">
-                                <div class="form-group mt-2">
-                                    <label for="dob" class="form-label">{{ __('Date of Birth') }}</label>
-                                    <input type="date" class="company-input form-control form--control" id="company_dob" name="company_dob" placeholder="{{ __('yyyy-mm-dd') }}" value="{{date("Y-m-d", strtotime($user->company_dob))}}" {{$required}}>
-                                </div>
-                              </div>
-                              <div class="col-md-6">
-                                <div class="form-group mt-2">
-                                    <label for="personal-code" class="form-label">{{ __('Personal Code/Number') }}</label>
-                                    <input type="text" class="company-input form-control form--control" id="personal_code" name="personal_code" placeholder="{{ __('Enter Personal Code/Number') }}" value="{{$user->personal_code}}" {{$required}}>
-                                </div>
-                              </div>
-                              <div class="col-md-6">
-                                <div class="form-group mt-2">
-                                    <label for="your-id" class="form-label">{{ __('Your ID Number') }}</label>
-                                    <input type="text" class="company-input form-control form--control" id="your_id" name="your_id" placeholder="{{ __('Enter Your ID Number') }}" value="{{$user->your_id}}" {{$required}}>
-                                </div>
-                              </div>
-                              <div class="col-md-6">
-                                <div class="form-group mt-2">
-                                    <label for="your-id" class="form-label">{{ __('Provider Authority Name') }}</label>
-                                    <input type="text" class="company-input form-control form--control" id="issued_authority" name="issued_authority" placeholder="{{ __('Enter Provider Authority Name') }}" value="{{$user->issued_authority}}" {{$required}}>
-                                </div>
-                              </div>
-                              <div class="col-md-6">
-                                <div class="form-group mt-2">
-                                    <label for="date-of-issue" class="form-label">{{ __('Date of Issue') }}</label>
-                                    <input type="date" class="company-input form-control form--control datepicker" id="date_of_issue" name="date_of_issue" placeholder="{{ __('yyyy-mm-dd') }}" value="{{date("Y-m-d", strtotime($user->date_of_issue))}}" {{$required}}>
-                                </div>
-                              </div>
-                              <div class="col-md-6">
-                                <div class="form-group mt-2">
-                                    <label for="date-of-expire" class="form-label">{{ __('Date of Expire') }}</label>
-                                    <input type="date" class="company-input form-control form--control datepicker" id="date_of_expire" name="date_of_expire" placeholder="{{ __('yyyy-mm-dd') }}" value="{{ date("Y-m-d", strtotime($user->date_of_expire)) }}" {{$required}}>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
                         </div>
 
                         <div class="form-footer">
@@ -241,20 +230,31 @@
   });
 
   function showCompanyInput(select) {
-      var company_input_list = $('.company-input');
-      if (select.value == 1) {
-          document.getElementById('hidden_div').style.display = "block";
-          for (let i = 0; i < company_input_list.length; i++) {
-              const item = company_input_list[i];
-              item.required = true;
-          }
-      } else {
-          document.getElementById('hidden_div').style.display = "none";
-          for (let i = 0; i < company_input_list.length; i++) {
-              const item = company_input_list[i];
-              item.required = false;
-          }
-      }
+    var company_input_list = $('.company-input');
+    var private_input_list = $('.private-input');
+    if (select.value == 1) {
+        document.getElementById('corporate_div').style.display = "block";
+        document.getElementById('private_div').style.display = "none";
+        for (let i = 0; i < company_input_list.length; i++) {
+            const item = company_input_list[i];
+            item.required = true;
+        }
+        for (let i = 0; i < private_input_list.length; i++) {
+            const item = private_input_list[i];
+            item.required = false;
+        }
+    } else {
+        document.getElementById('corporate_div').style.display = "none";
+        document.getElementById('private_div').style.display = "block";
+        for (let i = 0; i < company_input_list.length; i++) {
+            const item = company_input_list[i];
+            item.required = false;
+        }
+        for (let i = 0; i < private_input_list.length; i++) {
+            const item = private_input_list[i];
+            item.required = true;
+        }
+    }
   }
 
 </script>

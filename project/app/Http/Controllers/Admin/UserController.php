@@ -1014,6 +1014,28 @@ class UserController extends Controller
                 $data['name'] = trim($request->firstname)." ".trim($request->lastname);
             }
 
+            if($request->form_select == 0) {
+                $data['personal_code'] = $request->personal_code;
+                $data['your_id'] = $request->your_id;
+                $data['issued_authority'] = $request->issued_authority;
+                $data['date_of_issue'] = $request->date_of_issue;
+                $data['date_of_expire'] = $request->date_of_expire;
+                $data['company_name'] = null;
+                $data['company_reg_no'] = null;
+                $data['company_vat_no'] = null;
+                $data['company_dob'] = null;
+            } else {
+                $data['company_name'] = $request->company_name;
+                $data['company_reg_no'] = $request->company_reg_no;
+                $data['company_vat_no'] = $request->company_vat_no;
+                $data['company_dob'] = $request->company_dob;
+                $data['personal_code'] = null;
+                $data['your_id'] = null;
+                $data['issued_authority'] = null;
+                $data['date_of_issue'] = null;
+                $data['date_of_expire'] = null;
+            }
+
             if ($file = $request->file('photo'))
             {
                 $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
@@ -1029,7 +1051,7 @@ class UserController extends Controller
             if (!empty($request->input('user_type'))) {
                 $data['user_type'] = implode(',',$request->input('user_type'));
             }
-//dd($data);
+            
             $user->update($data);
             $msg = 'Customer Information Updated Successfully.';
             return response()->json($msg);

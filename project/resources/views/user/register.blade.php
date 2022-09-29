@@ -35,6 +35,13 @@
                 @includeIf('includes.user.form-both')
                 @csrf
                 <input type="hidden" name="reff" id="reff" value="{{Session::get('affilate')}}">
+                <div class="form-group">
+                    <label for="inp-user-type" class="form-label">{{ __('Select Type') }}</label>
+                    <select id="test" class="form-control form--control mb-3" name="form_select" onchange="showDiv( this)">
+                        <option value="0"> Private</option>
+                        <option value="1"> Corporate</option>
+                    </select>
+                </div>
                 <div class="col-sm-6">
                     <label for="name" class="form-label">@lang('Your First Name')</label>
                     <input type="text" id="name" name="firstname" class="form-control form--control" required>
@@ -43,7 +50,7 @@
                     <label for="name" class="form-label">@lang('Your Last Name')</label>
                     <input type="text" id="name" name="lastname" class="form-control form--control" required>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-12">
                     <label for="customer_dob" class="form-label">@lang('Your Birthday')</label>
                     <input type="date" id="customer_dob" name="customer_dob" class="form-control form--control" required>
                 </div>
@@ -54,13 +61,6 @@
                 <div class="col-sm-6">
                     <label for="phone" class="form-label">@lang('Your Phone')</label>
                     <input type="text" id="phone" name="phone" class="form-control form--control" required>
-                </div>
-
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        <label for="inp-name" class="form-label">{{ __('VAT Number') }}</label>
-                        <input type="text" class="form-control form--control" id="vat" name="vat" placeholder="{{ __('Enter VAT Number') }}" value="" required>
-                    </div>
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group">
@@ -103,66 +103,67 @@
                         <input type="password" id="confirm-password" name="password_confirmation" class="form-control form--control" required>
                     </div>
                 </div>
-                
-
-
-                <div class="form-group">
-                    <label for="inp-user-type" class="form-label">{{ __('Select Type') }}</label>
-                    <select id="test" class="form-control form--control mb-3" name="form_select" onchange="showDiv( this)">
-                        <option value="0"> Private</option>
-                        <option value="1"> Corporate</option>
-                    </select>
+                <div id="private_div" class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="personal-code" class="form-label">{{ __('Personal Code/Number') }}</label>
+                                <input type="text" class="private-input form-control form--control" id="personal_code" name="personal_code" placeholder="{{ __('Enter Personal Code/Number') }}" value="" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 mt-3">
+                            <div class="form-group">
+                                <label for="your-id" class="form-label">{{ __('Your ID Number') }}</label>
+                                <input type="text" class="private-input form-control form--control" id="your_id" name="your_id" placeholder="{{ __('Enter Your ID Number') }}" value="" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 mt-3">
+                            <div class="form-group">
+                                <label for="your-id" class="form-label" required>{{ __('Provider Authority Name') }}</label>
+                                <input type="text" class="private-input form-control form--control" id="issued_authority" name="issued_authority" placeholder="{{ __('Enter Provider Authority Name') }}" value="" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 mt-3">
+                            <div class="form-group">
+                                <label for="date-of-issue" class="form-label">{{ __('Date of Issue') }}</label>
+                                <input type="date" class="private-input form-control form--control datepicker" id="date_of_issue" name="date_of_issue" placeholder="{{ __('yyyy-mm-dd') }}" value="" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 mt-3">
+                            <div class="form-group">
+                                <label for="date-of-expire" class="form-label">{{ __('Date of Expire') }}</label>
+                                <input type="date" class="private-input form-control form--control datepicker" id="date_of_expire" name="date_of_expire" placeholder="{{ __('yyyy-mm-dd') }}" value="" required>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-                <div id="hidden_div" style="display: none;">
-
-                    <div class="form-group mt-2">
-                        <label for="dob" class="form-label">{{ __('Company Name') }}</label>
-                        <input type="text" class="company-input form-control form--control" id="company_name"name="company_name" placeholder="{{ __('Enter Company Name') }}" value="">
+                <div id="corporate_div" style="display: none;" class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="dob" class="form-label">{{ __('Company Name') }}</label>
+                                <input type="text" class="company-input form-control form--control" id="company_name"name="company_name" placeholder="{{ __('Enter Company Name') }}" value="">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="dob" class="form-label">{{ __('Registration No') }}</label>
+                                <input type="text" class="company-input form-control form--control" id="company_reg_no"name="company_reg_no" placeholder="{{ __('Enter Company Registration No') }}" value="">
+                            </div>
+                        </div>
+                        <div class="col-sm-6 mt-3">
+                            <div class="form-group">
+                                <label for="dob" class="form-label">{{ __('VAT No') }}</label>
+                                <input type="text" class="company-input form-control form--control" id="company_vat_no"name="company_vat_no" placeholder="{{ __('Enter Company VAT No') }}" value="">
+                            </div>
+                        </div>
+                        <div class="col-sm-6 mt-3">
+                            <div class="form-group">
+                                <label for="dob" class="form-label">{{ __('Registration Date') }}</label>
+                                <input type="date" class="company-input form-control form--control" id="company_dob" name="company_dob" placeholder="{{ __('yyyy-mm-dd') }}" value="">
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group mt-2">
-                        <label for="dob" class="form-label">{{ __('Registration No') }}</label>
-                        <input type="text" class="company-input form-control form--control" id="company_reg_no"name="company_reg_no" placeholder="{{ __('Enter Company Registration No') }}" value="">
-                    </div>
-                    <div class="form-group mt-2">
-                        <label for="dob" class="form-label">{{ __('VAT No') }}</label>
-                        <input type="text" class="company-input form-control form--control" id="company_vat_no"name="company_vat_no" placeholder="{{ __('Enter Company VAT No') }}" value="">
-                    </div>
-                    <div class="form-group mt-2">
-                        <label for="dob" class="form-label">{{ __('Company Address') }}</label>
-                        <input type="text" class="company-input form-control form--control" id="company_address"name="company_address" placeholder="{{ __('Enter Company Address') }}" value="">
-                    </div>
-
-                    <div class="form-group mt-2">
-                        <label for="dob" class="form-label">{{ __('Date of Birth') }}</label>
-                        <input type="date" class="company-input form-control form--control" id="company_dob" name="company_dob" placeholder="{{ __('yyyy-mm-dd') }}" value="">
-                    </div>
-
-                    <div class="form-group mt-2">
-                        <label for="personal-code" class="form-label">{{ __('Personal Code/Number') }}</label>
-                        <input type="text" class="company-input form-control form--control" id="personal_code" name="personal_code" placeholder="{{ __('Enter Personal Code/Number') }}" value="">
-                    </div>
-
-                    <div class="form-group mt-2">
-                        <label for="your-id" class="form-label">{{ __('Your ID Number') }}</label>
-                        <input type="text" class="company-input form-control form--control" id="your_id" name="your_id" placeholder="{{ __('Enter Your ID Number') }}" value="">
-                    </div>
-
-                    <div class="form-group mt-2">
-                        <label for="your-id" class="form-label" required>{{ __('Provider Authority Name') }}</label>
-                        <input type="text" class="company-input form-control form--control" id="issued_authority" name="issued_authority" placeholder="{{ __('Enter Provider Authority Name') }}" value="">
-                    </div>
-
-                    <div class="form-group mt-2">
-                        <label for="date-of-issue" class="form-label">{{ __('Date of Issue') }}</label>
-                        <input type="date" class="company-input form-control form--control datepicker" id="date_of_issue" name="date_of_issue" placeholder="{{ __('yyyy-mm-dd') }}" value="">
-                    </div>
-
-                    <div class="form-group mt-2">
-                        <label for="date-of-expire" class="form-label">{{ __('Date of Expire') }}</label>
-                        <input type="date" class="company-input form-control form--control datepicker" id="date_of_expire" name="date_of_expire" placeholder="{{ __('yyyy-mm-dd') }}" value="">
-                    </div>
-
                 </div>
 
                 <div class="col-sm-12 d-flex flex-wrap justify-content-between align-items-center">

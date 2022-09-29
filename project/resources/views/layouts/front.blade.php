@@ -200,17 +200,28 @@
         'use strict';
         function showDiv(select) {
             var company_input_list = $('.company-input');
+            var private_input_list = $('.private-input');
             if (select.value == 1) {
-                document.getElementById('hidden_div').style.display = "block";
+                document.getElementById('corporate_div').style.display = "block";
+                document.getElementById('private_div').style.display = "none";
                 for (let i = 0; i < company_input_list.length; i++) {
                     const item = company_input_list[i];
                     item.required = true;
                 }
+                for (let i = 0; i < private_input_list.length; i++) {
+                    const item = private_input_list[i];
+                    item.required = false;
+                }
             } else {
-                document.getElementById('hidden_div').style.display = "none";
+                document.getElementById('corporate_div').style.display = "none";
+                document.getElementById('private_div').style.display = "block";
                 for (let i = 0; i < company_input_list.length; i++) {
                     const item = company_input_list[i];
                     item.required = false;
+                }
+                for (let i = 0; i < private_input_list.length; i++) {
+                    const item = private_input_list[i];
+                    item.required = true;
                 }
             }
         }
