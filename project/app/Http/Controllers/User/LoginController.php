@@ -74,13 +74,16 @@ class LoginController extends Controller
 
     public function logout()
     {
+      if(Auth::check()){
         $user = auth()->user();
         $user->verified = 0;
         $user->save();
-        Auth::guard('web')->logout();
-        session()->forget('setredirectroute');
-        session()->forget('affilate');
-        return redirect('/');
+      }
+      Auth::guard('web')->logout();
+      session()->forget('setredirectroute');
+      session()->forget('affilate');
+    
+      return redirect('/');
     }
 
     private function  code_image()
