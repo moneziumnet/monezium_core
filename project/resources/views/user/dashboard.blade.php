@@ -21,10 +21,17 @@
           <div class="card-body">
             <div class="form-group w-100 d-flex flex-wrap align-items-center justify-content-evenly justify-content-sm-between">
               @if (auth()->user()->kyc_status != 3)
-              <h3 class="my-1 text-center text-sm-start">{{ __('You have a information to submit for kyc verification.') }}</h3>
-              <div class="my-1">
-                <a href="{{ route('user.kyc.form') }}" class="btn btn-warning">@lang('Submit')</a>
-              </div>
+                @if (auth()->user()->kyc_token)
+                    <h3 class="my-1 text-center text-sm-start">{{ __('You have already submitted kyc for auto verification. Please check verificiation status') }}</h3>
+                    <div class="my-1">
+                        <a href="{{ route('user.kyc.form') }}" class="btn btn-warning">@lang('Check')</a>
+                    </div>
+                @else
+                    <h3 class="my-1 text-center text-sm-start">{{ __('You have a information to submit for kyc verification.') }}</h3>
+                    <div class="my-1">
+                        <a href="{{ route('user.kyc.form') }}" class="btn btn-warning">@lang('Submit')</a>
+                    </div>
+                @endif
               @elseif(auth()->user()->kyc_status == 3)
               <h3 class="my-1 text-center text-sm-start">{{ __('You have submitted kyc for verification.') }}</h3>
               @endif

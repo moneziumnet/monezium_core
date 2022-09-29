@@ -102,6 +102,7 @@
             console.log('onError', payload)
         })
         .onMessage((type, payload) => {
+            console.log('onMessage', type, payload)
             if (payload.reviewResult.reviewAnswer == "GREEN") {
                 $('#kyc_status').val(1);
                 $('#status_form').submit();
@@ -112,7 +113,6 @@
                 $('#status_form').submit();
                 console.log('onMessage::::', payload.reviewResult.reviewAnswer)
             }
-            console.log('onMessage', type, payload)
         })
         .build();
     snsWebSdkInstance.launch('#sumsub-websdk-container')

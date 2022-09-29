@@ -32,7 +32,12 @@ class KYCController extends Controller
                 $token = '';
                 if($user->kyc_method == 'auto') {
                     if($user->kyc_token) {
-                        $token = $user->kyc_token;
+
+                        $levelName = 'basic-kyc-level';
+                        $externalUserId = $user->kyc_token;
+                        $testObject = new SumsubKYC();
+                        $accessTokenStr = $testObject->getAccessToken($externalUserId, $levelName);
+                        $token = json_decode($accessTokenStr)->token;
                     }
                     else {
                         $externalUserId = uniqid();
@@ -45,7 +50,7 @@ class KYCController extends Controller
 
                         $accessTokenStr = $testObject->getAccessToken($externalUserId, $levelName);
                         $token = json_decode($accessTokenStr)->token;
-                        $user->kyc_token = $token;
+                        $user->kyc_token = $externalUserId;
                         $user->save();
                     }
                 }
