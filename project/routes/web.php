@@ -36,6 +36,7 @@ Route::get('/faq', [FrontendController::class, 'faq'])->name('front.faq');
 Route::get('/{slug}', [FrontendController::class, 'page'])->name('front.page');
 Route::post('/subscriber', [FrontendController::class, 'subscriber'])->name('front.subscriber');
 Route::get('view-invoice/{number}',   [ManageInvoiceController::class,'invoiceView'])->name('invoice.view');
+Route::get('pay-invoice/{number}',   [ManageInvoiceController::class,'invoicePaymentByLink'])->name('invoice.pay');
 Route::get('view-contract/{id}/{role}',   [UserContractManageController::class,'contract_view'])->name('contract.view');
 Route::get('view-aoa/{id}/{role}',   [UserContractManageController::class,'aoa_sign_view'])->name('aoa.view');
 Route::get('/currency/{id}', [FrontendController::class, 'currency'])->name('front.currency');

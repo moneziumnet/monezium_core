@@ -145,8 +145,15 @@
             $('#bank_address').text(res_data.address.replace(/-/gi, ' '));
             $('#bank_iban').text(bankaccount.iban);
             $('#bank_swift').text(bankaccount.swift);
-            $('#user_name').text(bankaccount.user.name);
-            $('#user_addr').text(bankaccount.user.address);
+            
+            if(e.target.getAttribute('data-hasgateway') == "true") {
+                $('#user_name').text(bankaccount.user.name);
+                $('#user_addr').text(bankaccount.user.address);
+            } else {
+                $('#user_name').text(res_data.sub_institution.name);
+                $('#user_addr').text(res_data.sub_institution.address);
+            }
+            
             $('#deposit_number').text(deposit_number);
             $('#deposit_description').text(deposit_description);
             if(deposit_status == "pending"){

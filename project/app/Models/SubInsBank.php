@@ -23,6 +23,10 @@ class SubInsBank extends Model
         return $this->hasMany(BalanceTransfer::class);
     }
 
+    public function subInstitution() {
+        return $this->belongsTo(Admin::class, 'ins_id');
+    }
+
     public function hasGateway(){
         $gateway = BankGateway::where('subbank_id', $this->id)->first();
         return isset($gateway);

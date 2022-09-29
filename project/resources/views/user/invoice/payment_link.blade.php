@@ -3,7 +3,7 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-    <title>{{__($gs->title)}} - @lang('Campaign : '.$data->name) </title>
+    <title>{{__($gs->title)}} - @lang('Invoice : '.$data->number) </title>
     <!-- CSS files -->
     {{-- <link rel="shortcut icon" href="{{getPhoto($gs->favicon)}}"> --}}
 
@@ -13,7 +13,7 @@
     <link href="{{asset('assets/user/css/tabler-flags.min.css')}}" rel="stylesheet"/>
     <link href="{{asset('assets/user/css/tabler-payments.min.css')}}" rel="stylesheet"/>
     <link href="{{asset('assets/user/css/tabler-vendors.min.css')}}" rel="stylesheet"/>
-	<link rel="stylesheet" href="{{asset('assets/front/css/toastr.min.css')}}">
+	  <link href="{{asset('assets/front/css/toastr.min.css')}}" rel="stylesheet">
     <link href="{{asset('assets/user/css/demo.min.css')}}" rel="stylesheet"/>
     <link href="{{asset('assets/user/css/custom.css')}}" rel="stylesheet"/>
     @stack('css')
@@ -27,8 +27,8 @@
               <div class="page-header text-white d-print-none">
                 <div class="row align-items-center">
                   <div class="col">
-                    <h2 class="page-title text-dark">
-                        @lang('Campaign Pay')
+                    <h2 class="page-title">
+                        @lang('Invoice Payment')
                     </h2>
                   </div>
                 </div>
@@ -39,35 +39,22 @@
                     <div class="card card-lg">
                       <div class="card-body">
                         <div class="row">
-                          <div class="col-md-4">
-                            <div class="card">
-                                <img class="back-preview-image"
-                                    src="{{asset('assets/images')}}/{{$data->logo}}"
-                                alt="Campaign Logo">
-                                <!-- Card body -->
-                                <div class="card-body">
-                                    <div class="row mb-3">
-                                        <div class="col-12">
-                                        <h5 class="h4 mb-2 font-weight-bolder">{{__('Campaign Title: ')}}{{$data->title}}</h5>
-                                        <h5 class="mb-1">{{__('Category: ')}} {{$data->category->name}}</h5>
-                                        <h5 class="mb-1">{{__('Organizer: ')}} {{$data->user->name}}</h5>
-                                        <h5 class="mb-1">{{__('Goal: ')}} {{$data->currency->symbol}}{{$data->goal}}</h5>
-                                        @php
-                                            $total = DB::table('campaign_donations')->where('campaign_id', $data->id)->where('status', 1)->sum('amount');
-                                        @endphp
-                                        <h5 class="mb-1">{{__('FundsRaised: ')}} {{$data->currency->symbol}}{{$total}}</h5>
-                                        <h5 class="mb-1">{{__('Deadline: ')}} {{$data->deadline}}</h5>
-                                        <h5 class="mb-3">{{__('Created Date:')}} {{$data->created_at}}</h5>
-                                        <h6 class="mb-3">{{__('Description:')}} {{$data->description}}</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                          <div class="col-md-12 mb-3">
+                              <div class="d-flex align-items-end">
+                                  <h2 class="me-3">{{$data->type}}</h2>
+                                  <h4>{{$data->number}}</h4>
+                              </div>
                           </div>
-                          <div class="col-md-3">
+                          <div class="col-md-5">
+                            <ul class="list-group">
+                                <li class="list-group-item d-flex justify-content-between">{{__('Name :')}} <span class="font-weight-bold">{{$data->invoice_to}}</span> </li>
+                                <li class="list-group-item d-flex justify-content-between">{{__('Email :')}} <span class="font-weight-bold">{{$data->email}}</span> </li>
+                                <li class="list-group-item d-flex justify-content-between">{{__('Amount :')}} <span class="font-weight-bold">{{amount($data->final_amount,$data->currency->type,2).' '.$data->currency->code}}</span> </li>
+                                <li class="list-group-item d-flex justify-content-between">{{__('Tax :')}} <span class="font-weight-bold">{{amount($tax_value,$data->currency->type,2).' '.$data->currency->code}}</span> </li>
+                            </ul>
                           </div>
-                          <div class="col-md-5 ">
-                            <form action="{{route('user.merchant.campaign.pay')}}" method="post" id="form_submit" class="text-end">
+                          <div class="offset-md-2 col-md-5 text-end">
+                            <form action="{{route('user.invoice.link.pay')}}" id="pay_form_submit"  method="post" enctype="multipart/form-data" name="pay_form_submit">
                                 @csrf
                                 <div class="form-selectgroup row">
                                     <label class="form-selectgroup-item">
@@ -98,21 +85,20 @@
 
                                 </div>
                                 <div class="form-group ms-5 mt-5 text-start" id="bank_part" style="display: none">
-                                    <label class="form-label required">{{__('Bank Account')}}</label>
+                                    <label class="form-label">{{__('Bank Account')}}</label>
                                     <select name="bank_account" id="bank_account" class="form-control">
-                                        @if(count($bankaccounts) != 0)
-                                        <option value="">{{__('Select')}}</option>
+                                      @if(count($bankaccounts) != 0)
+                                          <option value="">{{__('Select')}}</option>
                                           @foreach($bankaccounts as $account)
-                                              <option value="{{$account->id}}" data-data="{{$account}}" data-bank="{{$account->subbank}}" data-user="{{$account->user->name}}">{{$account->subbank->name}}</option>
-
+                                              <option value="{{$account->id}}" data-data="{{$account}}" data-bank="{{$account->subbank}}" data-user="{{$account->user->name}}">
+                                                {{$account->subbank->name}}
+                                              </option>
                                           @endforeach
-                                        @else
-                                        <option value="">{{__('There is no bank account for this currency.')}}</option>
-
-                                        @endif
-                                      </select>
+                                      @else
+                                          <option value="">{{__('There is no bank account for this currency.')}}</option>
+                                      @endif
+                                    </select>
                                 </div>
-
                                 <div id="bank_account_part" style="display: none;">
                                     <div class="form-group ms-5 mt-2 text-start" >
                                         <label class="form-label">{{__('Receiver Name')}}</label>
@@ -136,16 +122,7 @@
                                     </div >
                                 </div>
 
-                                <div class="form-group ms-5 mt-5 text-start" >
-                                    <label class="form-label required">{{__('Amount')}}</label>
-                                    <input name="amount" id="amount" class="form-control shadow-none col-md-4"  type="number" min="1" max="{{$data->goal}}" required>
-                                </div >
-                                <div class="form-group ms-5 mt-5 text-start" >
-                                    <label class="form-label required">{{__('description')}}</label>
-                                    <input name="description" id="description" class="form-control shadow-none col-md-4"  type="text"  required>
-                                </div >
-                                <input type="hidden" name="campaign_id" value="{{$data->id}}">
-                                <input type="hidden" name="user_id" value="{{auth()->id()}}">
+                                <input type="hidden" name="invoice_id" value="{{$data->id}}">
 
                                 <div class="mt-4" id="default_pay" style="display: block;">
                                     <button type="submit" class="btn btn-primary btn-block" id="btn-pay">{{__('Pay')}} <i class="ms-2 fas fa-long-arrow-alt-right"></i></button>
@@ -182,22 +159,21 @@
                   <li class="list-group-item">@lang('Bank Address')<span id="detail_bank_address"></span></li>
                   <li class="list-group-item">@lang('Bank IBAN')<span id="detail_bank_iban"></span></li>
                   <li class="list-group-item">@lang('Bank SWIFT')<span id="detail_bank_swift"></span></li>
-                  <li class="list-group-item">@lang('Amount')<span id="detail_amount"></span></li>
-                  <li class="list-group-item">@lang('Description')<span id="detail_bank_details"></span></li>
+                  <li class="list-group-item">@lang('Total Price')<span id="detail_total_price"></span></li>
               </ul>
-              <button class="btn btn-primary w-100 mt-3" id="payment_submit">Submit</button>
+              <span class="btn btn-primary w-100 mt-3" id="payment_submit">Submit</span>
               </div>
           </div>
         </div>
       </div>
       <!-- Tabler Core -->
       <script src="{{asset('assets/front/js/toastr.min.js')}}"></script>
-    <script src="{{asset('assets/user/js/jquery-3.6.0.min.js')}}"></script>
-    <script src="{{asset('assets/user/js/tabler.min.js')}}"></script>
-    <script src="{{asset('assets/user/js/demo.min.js')}}"></script>
-    <script src="{{asset('assets/front/js/custom.js')}}"></script>
-    <script src="{{asset('assets/user/js/notify.min.js')}}"></script>
-    <script src="{{asset('assets/front/js/toastr.min.js')}}"></script>
+      <script src="{{asset('assets/user/js/jquery-3.6.0.min.js')}}"></script>
+      <script src="{{asset('assets/user/js/tabler.min.js')}}"></script>
+      <script src="{{asset('assets/user/js/demo.min.js')}}"></script>
+      <script src="{{asset('assets/front/js/custom.js')}}"></script>
+      <script src="{{asset('assets/user/js/notify.min.js')}}"></script>
+      <script src="{{asset('assets/front/js/toastr.min.js')}}"></script>
 
       {{-- @include('notify.alert') --}}
       <script>
@@ -240,52 +216,54 @@
         @endif
         $('.select_method').on('click', function() {
             if ($(this).attr('id') == 'bank_pay') {
-                $('#form_submit').attr('action', "{{route('user.merchant.campaign.pay')}}");
-                $('#form_submit').attr('method', "POST");
+                $('#pay_form_submit').attr('action', "{{route('user.invoice.link.pay')}}");
+                $('#pay_form_submit').attr('method', "POST");
                 document.getElementById("crypto_pay").style.display = "none";
                 document.getElementById("default_pay").style.display = "block";
                 $("#bank_account").prop('required',true);
                 document.getElementById("bank_part").style.display = "block";
             }
             else if ($(this).attr('id') == 'crypto') {
-                $('#form_submit').attr('action',"{{route('user.merchant.campaign.crypto.link.pay', $data->id)}}");
-                $('#form_submit').attr('method', "GET");
+                $('#pay_form_submit').attr('action',"{{route('user.invoice.link.crypto', $data->id)}}");
+                $('#pay_form_submit').attr('method', "GET");
                 document.getElementById("crypto_pay").style.display = "block";
                 document.getElementById("default_pay").style.display = "none";
                 $("#bank_account").prop('required',false);
+                $("#description").prop('required',false);
                 document.getElementById('bank_account_part').style.display = "none";
                 document.getElementById("bank_part").style.display = "none";
             }
             else {
-                $('#form_submit').attr('action', "{{route('user.merchant.campaign.pay')}}");
-                $('#form_submit').attr('method', "POST");
+                $('#pay_form_submit').attr('action', "{{route('user.invoice.link.pay')}}");
+                $('#pay_form_submit').attr('method', "POST");
                 document.getElementById("crypto_pay").style.display = "none";
                 document.getElementById("default_pay").style.display = "block";
                 $("#bank_account").prop('required',false);
+                $("#description").prop('required',false);
                 document.getElementById('bank_account_part').style.display = "none";
                 document.getElementById("bank_part").style.display = "none";
             }
         })
         $('#bank_account').on('change', function() {
-            console.log('test');
             var selected = $('#bank_account option:selected').data('data');
             var bank = $('#bank_account option:selected').data('bank');
             var user = $('#bank_account option:selected').data('user');
             if(selected){
-            $('#receiver_name').val(user);
-            $('#bank_name').val(bank.name);
-            $('#bank_address').val(bank.address);
-            $('#bank_iban').val(selected.iban);
-            $('#bank_swift').val(selected.swift);
-            $('#bank_swift').val(selected.swift);
+                $('#receiver_name').val(user);
+                $('#bank_name').val(bank.name);
+                $('#bank_address').val(bank.address);
+                $('#bank_iban').val(selected.iban);
+                $('#bank_swift').val(selected.swift);
                 document.getElementById('bank_account_part').style.display = "block";
             } else{
+                $("#description").prop('required',false);
                 document.getElementById('bank_account_part').style.display = "none";
             }
         })
+
         $('#btn-pay').on('click', function(e) {
-            var payment_type = $('input[name=payment]:checked', '#form_submit').val();
-            if(payment_type == "bank_pay" && document.getElementById('form_submit').checkValidity()) {
+            var payment_type = $('input[name=payment]:checked', '#pay_form_submit').val();
+            if(payment_type == "bank_pay" && document.getElementById('pay_form_submit').checkValidity()) {
                 e.preventDefault();
                 $('#modal-details').modal('show');
                 $('#detail_user_name').html($('#receiver_name').val());
@@ -293,16 +271,14 @@
                 $('#detail_bank_address').html($('#bank_address').val());
                 $('#detail_bank_iban').html($('#bank_iban').val());
                 $('#detail_bank_swift').html($('#bank_swift').val());
-                $('#detail_quantity').html($('#quantity').val());
-                $('#detail_amount').html("{{$data->currency->symbol}}" + $('#amount').val());
-                $('#detail_bank_details').html($('#description').val());
+                $('#detail_total_price').html("{{$data->currency->symbol}}" + "{{$data->final_amount + $tax_value}}");
             }
         });
-        $('#payment_submit').on('click', function () {            
-            $('#form_submit').submit();
+        $('#payment_submit').on('click', function () {
+          $('#pay_form_submit').submit();
         });
-        $('.crypto-submit').on('click', function () {
-            $('#form_submit').submit();
+        $('.crypto-submit').on('click', function() {
+          $('#pay_form_submit').submit();
         });
       </script>
       @stack('js')

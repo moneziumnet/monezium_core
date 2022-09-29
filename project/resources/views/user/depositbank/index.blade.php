@@ -55,7 +55,7 @@
                                 <tbody>
                                 @foreach($deposits as $deposit)
                                     @php
-                                        @$subbank = App\Models\SubInsBank::where('id', $deposit->sub_bank_id)->first();
+                                        @$subbank = App\Models\SubInsBank::where('id', $deposit->sub_bank_id)->with('subInstitution')->first();
                                         if($subbank->hasGateway()){
                                           @$data = App\Models\BankAccount::whereUserId(auth()->id())->where('subbank_id', $subbank->id)->where('currency_id', $deposit->currency_id)->first();
                                         } else {
@@ -92,7 +92,13 @@
                                           @endif
                                         </td>
                                         <td data-label="@lang('Details')" class="text-end">
-                                          <button class="btn btn-primary btn-sm details" data-data="{{json_encode($data ?? '')}}" data-subbank="{{json_encode($subbank ?? '')}}" data-deposit="{{json_encode($deposit)}}" data-amount="{{showprice($deposit->amount,$deposit->currency)}}">@lang('Details')</button>
+                                          <button class="btn btn-primary btn-sm details" 
+                                            data-data="{{json_encode($data ?? '')}}"
+                                            data-hasgateway = "{{json_encode($subbank->hasGateway())}}"
+                                            data-subbank="{{json_encode($subbank ?? '')}}" 
+                                            data-deposit="{{json_encode($deposit)}}" 
+                                            data-amount="{{showprice($deposit->amount,$deposit->currency)}}"
+                                          >@lang('Details')</button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -118,6 +124,7 @@
         <p class="bank_details"></p>
         <ul class="list-group details-list mt-2">
             <li class="list-group-item">@lang('Receiver Name')<span id="user_name"></span></li>
+            <li class="list-group-item">@lang('Receiver Address')<span id="user_address"></span></li>
             <li class="list-group-item">@lang('Bank Name')<span id="bank_name"></span></li>
             <li class="list-group-item">@lang('Bank Address')<span id="bank_address"></span></li>
             <li class="list-group-item">@lang('Bank IBAN')<span id="bank_iban"></span></li>
@@ -138,8 +145,13 @@
 <script type="text/javascript">
     'use strict';
       $('.details').on('click', function() {
-        console.log($(this));
-          $('#user_name').text($(this).data('deposit').user.name);
+          if($(this).data('hasgateway')) {
+            $('#user_name').text($(this).data('deposit').user.name);
+            $('#user_address').text($(this).data('deposit').user.address);
+          } else {
+            $('#user_name').text($(this).data('subbank').sub_institution.name);
+            $('#user_address').text($(this).data('subbank').sub_institution.address);
+          }
           $('#bank_name').text($(this).data('subbank').name);
           $('#bank_address').text($(this).data('subbank').address);
           $('#bank_iban').text($(this).data('data').iban);

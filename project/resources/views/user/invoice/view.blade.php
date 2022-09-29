@@ -36,7 +36,7 @@
                   </div>
                   <!-- Page title actions -->
                   <div class="col-auto ms-auto d-print-none">
-                    <a href="{{route('user.invoice.payment',encrypt($invoice->number))}}" class="btn btn-secondary">
+                    <a href="{{route('invoice.pay',encrypt($invoice->number))}}" class="btn btn-secondary">
                      <i class="fas fa-file-invoice-dollar me-2"></i>
                       @lang('Pay Invoice')
                     </a>

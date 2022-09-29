@@ -19,7 +19,7 @@
       <div class="col-auto ms-auto d-print-none">
         <div class="btn-list">
 
-          <a href="{{route('user.invoice.index')}}" class="btn btn-primary"><i class="fas fa-backward me-1"></i> {{__(' Back')}}</a>
+          <a href="{{route('user.invoice.incoming.index')}}" class="btn btn-primary"><i class="fas fa-backward me-1"></i> {{__(' Back')}}</a>
         </div>
       </div>
     </div>

@@ -144,11 +144,11 @@
                                 <input type="hidden" name="product_id" value="{{$data->id}}">
 
                                 <div class="mt-4" id="default_pay" style="display: block;">
-                                    <button class="btn btn-primary btn-block" id="btn-pay">{{__('Pay')}} <i class="ms-2 fas fa-long-arrow-alt-right"></i></button>
+                                    <button type="submit" class="btn btn-primary btn-block" id="btn-pay">{{__('Pay')}} <i class="ms-2 fas fa-long-arrow-alt-right"></i></button>
                                 </div>
                                 <div class="mt-4 ms-5" id="crypto_pay" style="display: none;">
                                     @foreach($cryptolist as $currency)
-                                        <button id="submit" name="link_pay_submit" value="{{$currency->id}}" class="col btn btn-primary w-100 mb-2"> {{__('Pay with ')}}{{$currency->curr_name}} - {{$currency->code}}</button>
+                                        <button name="link_pay_submit" value="{{$currency->id}}" class="col btn btn-primary w-100 mb-2 crypto-submit"> {{__('Pay with ')}}{{$currency->curr_name}} - {{$currency->code}}</button>
                                     @endforeach
                                 </div>
                             </form>
@@ -286,6 +286,7 @@
         $('#btn-pay').on('click', function(e) {
             var payment_type = $('input[name=payment]:checked', '#form_submit').val();
             if(payment_type == "bank_pay" && document.getElementById('form_submit').checkValidity()) {
+                e.preventDefault();
                 $('#modal-details').modal('show');
                 $('#detail_user_name').html($('#receiver_name').val());
                 $('#detail_bank_name').html($('#bank_name').val());
@@ -296,14 +297,11 @@
                 $('#detail_total_price').html("{{$data->currency->symbol}}" + $('#quantity').val() * "{{$data->amount}}");
                 $('#detail_bank_details').html($('#description').val());
             }
-            if(payment_type != "bank_pay") {
-                $('#form_submit').submit();
-            }
         });
         $('#payment_submit').on('click', function () {
           $('#form_submit').submit();
         });
-        $('#submit').on('click', function() {
+        $('.crypto-submit').on('click', function() {
           $('#form_submit').submit();
         });
       </script>

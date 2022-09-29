@@ -9,6 +9,7 @@ use App\Models\DepositBank;
 use App\Models\PlanDetail;
 use App\Models\SubInsBank;
 use App\Models\BankAccount;
+use App\Models\BankPoolAccount;
 use App\Models\Generalsetting;
 use App\Models\Transaction;
 use App\Models\User;
@@ -50,8 +51,13 @@ class DepositBankController extends Controller
             })
             ->editColumn('action', function(DepositBank $data) {
 
-                @$detail = SubInsBank::where('id', $data->sub_bank_id)->first();
-                @$bankaccount = BankAccount::where('subbank_id', $detail->id)->where('currency_id', $data->currency_id)->with('user')->first();
+                @$detail = SubInsBank::where('id', $data->sub_bank_id)->with('subInstitution')->first();
+                if($detail->hasGateway()){
+                @$bankaccount = BankAccount::whereUserId(auth()->id())->where('subbank_id', $detail->id)->where('currency_id', $data->currency_id)->with('user')->first();
+                } else {
+                @$bankaccount = BankPoolAccount::where('bank_id', $detail->id)->where('currency_id', $data->currency_id)->first();
+                }
+
                 $detail->address = str_replace(' ', '-', $detail->address);
                 $detail->name = str_replace(' ', '-', $detail->name);
                 $doc_url = $data->document ? $data->document : null;
@@ -72,6 +78,7 @@ class DepositBankController extends Controller
                         data-docu="'.$doc_url.'"
                         data-number="'.$data->deposit_number.'"
                         data-description="'.$data->details.'"
+                        data-hasgateway = "'.json_encode($detail->hasGateway()).'"
                         data-status="'.$data->status.'"
                         data-complete-url="'.route('admin.deposits.bank.status',['id1' => $data->id, 'id2' => 'complete']).'"
                         data-reject-url="'.route('admin.deposits.bank.status',['id1' => $data->id, 'id2' => 'reject']).'"

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\User;
 
-use Auth;
 use App\Models\User;
 use App\Models\Wallet;
 use App\Models\Charge;
@@ -19,6 +18,9 @@ use Illuminate\Http\Request;
 use App\Models\Generalsetting;
 use App\Models\InvoiceSetting;
 use App\Http\Controllers\Controller;
+use App\Models\BankAccount;
+use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Auth;
 
 class ManageInvoiceController extends Controller
 {
@@ -29,7 +31,7 @@ class ManageInvoiceController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['invoiceView']]);
+        $this->middleware('auth', ['except' => ['invoiceView','invoicePaymentByLink','invoice_link_crypto','invoice_link_pay']]);
     }
 
     public function index()
@@ -418,6 +420,10 @@ class ManageInvoiceController extends Controller
     {
         try {
             $invoice = Invoice::where('number',decrypt($number))->firstOrFail();
+            $user = User::where('id',$invoice->user_id)->firstOrFail();
+            $bankaccounts = BankAccount::where('user_id', $user->id)->where('currency_id', $invoice->currency_id)->get();
+            $cryptolist = Currency::whereStatus(1)->where('type', 2)->get();
+
             $inv_items = InvItem::where('invoice_id', $invoice->id)->get();
             $tax_value = 0;
             foreach ($inv_items as $value) {
@@ -435,15 +441,44 @@ class ManageInvoiceController extends Controller
             return back()->with('error','You can not pay your own invoice.');
         }
 
-        return view('user.invoice.invoice_payment',compact('invoice', 'tax_value'));
+        return view('user.invoice.invoice_payment',compact('invoice', 'tax_value','bankaccounts', 'cryptolist'));
     }
 
-    public function invoicePaymentSubmit(Request $request,$number)
+    public function invoicePaymentByLink($number)
+    {
+        try {
+
+            $data = Invoice::where('number',decrypt($number))->firstOrFail();
+            $user = User::where('id',$data->user_id)->firstOrFail();
+
+            $bankaccounts = BankAccount::where('user_id', $user->id)->where('currency_id', $data->currency_id)->get();
+            $cryptolist = Currency::whereStatus(1)->where('type', 2)->get();
+
+            $inv_items = InvItem::where('invoice_id', $data->id)->get();
+            $tax_value = 0;
+            foreach ($inv_items as $value) {
+                $tax_value += $value->tax->rate * $value->amount / 100;
+            }
+            if($data->payment_status == 1){
+                return back()->with('error','Invoice already been paid');
+            }
+            session()->put('invoice',encrypt($data));
+        } catch (\Throwable $th) {
+           return back()->with('error','Something went wrong');
+        }
+
+        return view('user.invoice.payment_link',compact('data', 'tax_value','bankaccounts', 'cryptolist'));
+    }
+
+    public function invoicePaymentSubmit(Request $request)
     {
         if($request->payment == 'gateway'){
-            return redirect(route('user.pay.invoice'));
-        }
-        elseif($request->payment == 'wallet'){
+            return redirect(route('user.invoice.incoming.index'))->with('message','Gateway Payment completed');
+        } else if($request->payment == 'bank_pay'){
+            return redirect(route('user.invoice.incoming.index'))->with('message','Bank Payment completed');
+        } else if($request->payment == 'crypto'){
+            return redirect(route('user.invoice.incoming.index'))->with('message','Crypto Payment completed');
+        } else if($request->payment == 'wallet'){
             try {
                 $invoice = decrypt(session('invoice'));
             } catch (\Throwable $th) {
@@ -600,11 +635,229 @@ class ManageInvoiceController extends Controller
             ],$invoice->user);
 
             session()->forget('invoice');
-            return redirect(route('user.dashboard'))->with('message','Payment completed');
+            return redirect(route('user.invoice.incoming.index'))->with('message','Payment completed');
         }
-        else{
-            abort(404);
+    }
+
+    public function invoicePaymentCrypto($id, Request $request)
+    {
+        $data['invoice'] = Invoice::where('id', $id)->first();
+
+        $inv_items = InvItem::where('invoice_id', $id)->get();
+        $tax_value = 0;
+        foreach ($inv_items as $value) {
+            $tax_value += $value->tax->rate * $value->amount / 100;
         }
+
+        $data['total_amount'] = $data['invoice']->final_amount + $tax_value;
+        $pre_currency = Currency::findOrFail($data['invoice']->currency_id)->code;
+        $select_currency = Currency::findOrFail($request->link_pay_submit);
+        $client = New Client();
+        $code = $select_currency->code;
+        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency='.$code);
+        $result = json_decode($response->getBody());
+        $data['cal_amount'] = floatval($result->data->rates->$pre_currency);
+        $data['wallet'] =  Wallet::where('user_id', $data['invoice']->user_id)->where('user_type',1)->where('wallet_type', 8)->where('currency_id', $select_currency->id)->first();
+        if(!$data['wallet']) {
+            return back()->with('error', $select_currency->code .' Crypto wallet does not existed in sender.');
+        }
+        return view('user.invoice.crypto_payment', $data);
+    }
+
+    public function invoice_link_pay(Request $request)
+    {
+        $url = Auth::check() ? route('user.dashboard') : route('user.login');
+
+        if($request->payment == 'gateway'){
+            return redirect($url)->with('message','Gateway Payment completed');
+        } else if($request->payment == 'bank_pay'){
+            return redirect($url)->with('message','Bank Payment completed');
+        } else if($request->payment == 'crypto'){
+            return redirect($url)->with('message','Crypto Payment completed');
+        } elseif($request->payment == 'wallet'){
+            try {
+                $invoice = decrypt(session('invoice'));
+            } catch (\Throwable $th) {
+               return back()->with('error','Something went wrong');
+            }
+
+            $wallet = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('currency_id',$invoice->currency_id)->where('wallet_type', 1)->first();
+
+            if(!$wallet){
+                $gs = Generalsetting::first();
+                $wallet =  Wallet::create([
+                    'user_id'     => auth()->id(),
+                    'user_type'   => 1,
+                    'currency_id' => $invoice->currency_id,
+                    'balance'     => 0,
+                    'wallet_type' => 1,
+                    'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
+                ]);
+
+                $user = User::findOrFail(auth()->id());
+
+                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+
+                $trans = new Transaction();
+                $trans->trnx = str_rand();
+                $trans->user_id     = $user->id;
+                $trans->user_type   = 1;
+                $trans->currency_id = 1;
+                $trans->amount      = $chargefee->data->fixed_charge;
+                $trans_wallet = get_wallet($user->id, 1, 1);
+                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+                $trans->charge      = 0;
+                $trans->type        = '-';
+                $trans->remark      = 'wallet_create';
+                $trans->details     = trans('Wallet Create');
+                $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+                $trans->save();
+
+                user_wallet_decrement($user->id, 1, $chargefee->data->fixed_charge, 1);
+                user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
+            }
+
+            if($wallet->balance < $invoice->final_amount) {
+                return back()->with('error','Insufficient balance to your wallet');
+            }
+            $inv_items = InvItem::where('invoice_id', $invoice->id)->get();
+            $tax_value = 0;
+            foreach ($inv_items as $value) {
+                $tax_value += $value->tax->rate * $value->amount / 100;
+            }
+            user_wallet_increment(0, $invoice->currency_id, $tax_value, 9);
+
+            $trans = new Transaction();
+            $trans->trnx = str_rand();
+            $trans->user_id     = auth()->id();
+            $trans->user_type   = 1;
+            $trans->currency_id = $invoice->currency_id;
+            $trans->amount      = $tax_value;
+            $trans->charge      = 0;
+            $trans->wallet_id   = $wallet->id;
+            $trans->type        = '-';
+            $trans->remark      = 'invoice_tax_fee';
+            $trans->details     = trans('Invoice Tax Fee');
+            $trans->invoice_num = $invoice->number;
+            $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"System Account"}';
+            $trans->save();
+
+            $wallet->balance -= $invoice->final_amount;
+            $wallet->balance -= $tax_value;
+            $wallet->update();
+
+            $trnx              = new Transaction();
+            $trnx->trnx        = str_rand();
+            $trnx->user_id     = auth()->id();
+            $trnx->user_type   = 1;
+            $trnx->currency_id = $invoice->currency_id;
+            $trnx->wallet_id   = $wallet->id;
+            $trnx->amount      = $invoice->final_amount;
+            $trnx->charge      = 0;
+            $trnx->remark      = 'invoice_payment';
+            $trnx->invoice_num = $invoice->number;
+            $trnx->type        = '-';
+            $trnx->details     = trans('Payment to invoice : '). $invoice->number;
+            $trnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($invoice->user_id)->name.'"}';
+            $trnx->save();
+
+            $rcvWallet = Wallet::where('user_id',$invoice->user_id)->where('user_type',1)->where('currency_id',$invoice->currency_id)->where('wallet_type', 1)->first();
+
+            if(!$rcvWallet){
+                $gs = Generalsetting::first();
+                $rcvWallet =  Wallet::create([
+                    'user_id'     => $invoice->user_id,
+                    'user_type'   => 1,
+                    'currency_id' => $invoice->currency_id,
+                    'balance'     => 0,
+                    'wallet_type' => 1,
+                    'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
+                ]);
+
+                $user = User::findOrFail($invoice->user_id);
+
+                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+
+                $trans = new Transaction();
+                $trans->trnx = str_rand();
+                $trans->user_id     = $invoice->user_id;
+                $trans->user_type   = 1;
+                $trans->currency_id = 1;
+                $trans_wallet = get_wallet($invoice->user_id, 1, 1);
+                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+                $trans->amount      = $chargefee->data->fixed_charge;
+                $trans->charge      = 0;
+                $trans->type        = '-';
+                $trans->remark      = 'wallet_create';
+                $trans->details     = trans('Wallet Create');
+                $trans->data        = '{"sender":"'.User::findOrFail($invoice->user_id)->name.'", "receiver":"System Account"}';
+                $trans->save();
+
+                user_wallet_decrement($invoice->user_id, 1, $chargefee->data->fixed_charge, 1);
+                user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
+            }
+
+            $rcvWallet->balance += $invoice->get_amount;
+            $rcvWallet->update();
+
+            $rcvTrnx              = new Transaction();
+            $rcvTrnx->trnx        = $trnx->trnx;
+            $rcvTrnx->user_id     = $invoice->user_id;
+            $rcvTrnx->user_type   = 1;
+            $rcvTrnx->currency_id = $invoice->currency_id;
+            $rcvTrnx->wallet_id   = $rcvWallet->id;
+            $rcvTrnx->amount      = $invoice->get_amount;
+            $rcvTrnx->charge      = $invoice->charge;
+            $rcvTrnx->remark      = 'invoice_payment';
+            $rcvTrnx->invoice_num = $invoice->number;
+            $rcvTrnx->type        = '+';
+            $rcvTrnx->details     = trans('Receive Payment from invoice : '). $invoice->number;
+            $rcvTrnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($invoice->user_id)->name.'"}';
+            $rcvTrnx->save();
+
+            $invoice->payment_status = 1;
+            $invoice->update();
+
+
+            @mailSend('received_invoice_payment',[
+                'amount' => amount($invoice->get_amount,$invoice->currency->type,2),
+                'curr'   => $invoice->currency->code,
+                'trnx'   => $rcvTrnx->trnx,
+                'from_user' => $invoice->email,
+                'inv_num'  => $invoice->number,
+                'after_balance' => amount($rcvWallet->balance,$invoice->currency->type,2),
+                'charge' => amount($invoice->charge,$invoice->currency->type,2),
+                'date_time' => dateFormat($rcvTrnx->created_at)
+            ],$invoice->user);
+
+            session()->forget('invoice');
+            return redirect($url)->with('message','Wallet Payment completed');
+        }
+    }
+
+    public function invoice_link_crypto($id, Request $request)
+    {
+        $data['invoice'] = Invoice::where('id', $id)->first();
+
+        $inv_items = InvItem::where('invoice_id', $id)->get();
+        $tax_value = 0;
+        foreach ($inv_items as $value) {
+            $tax_value += $value->tax->rate * $value->amount / 100;
+        }
+
+        $data['total_amount'] = $data['invoice']->final_amount + $tax_value;
+        $pre_currency = Currency::findOrFail($data['invoice']->currency_id)->code;
+        $select_currency = Currency::findOrFail($request->link_pay_submit);
+        $client = New Client();
+        $code = $select_currency->code;
+        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency='.$code);
+        $result = json_decode($response->getBody());
+        $data['cal_amount'] = floatval($result->data->rates->$pre_currency);
+        $data['wallet'] =  Wallet::where('user_id', $data['invoice']->user_id)->where('user_type',1)->where('wallet_type', 8)->where('currency_id', $select_currency->id)->first();
+        if(!$data['wallet']) {
+            return back()->with('error', $select_currency->code .' Crypto wallet does not existed in sender.');
+        }
+        return view('user.invoice.crypto_link_pay', $data);
     }
 
     /**
