@@ -18,8 +18,8 @@ class BeneficiaryController extends Controller
     }
 
     public function index(){
-        $data['beneficiaries'] = Beneficiary::whereUserId(auth()->id())->orderBy('id','desc')->paginate(1);
-        $data['logs'] = BalanceTransfer::whereUserId(auth()->id())->whereType('other')->orderBy('id','desc')->paginate(1, ['*'], 'transfer');
+        $data['beneficiaries'] = Beneficiary::whereUserId(auth()->id())->orderBy('id','desc')->paginate(10);
+        $data['logs'] = BalanceTransfer::whereUserId(auth()->id())->whereType('other')->orderBy('id','desc')->paginate(10, ['*'], 'transfer');
         $data['logs']->setPageName('transfer');
         return view('user.beneficiaries.index',$data);
     }
