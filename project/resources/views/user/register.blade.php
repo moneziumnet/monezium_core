@@ -56,7 +56,7 @@
                 </div>
                 <div class="col-sm-6">
                     <label for="email" class="form-label">@lang('Your Email')</label>
-                    <input type="text" id="email" name="email" class="form-control form--control" required>
+                    <input type="email" id="email" name="email" class="form-control form--control" required>
                 </div>
                 <div class="col-sm-6">
                     <label for="phone" class="form-label">@lang('Your Phone')</label>

@@ -152,7 +152,6 @@
                                             @endphp
                                             <td data-label="{{ __('Beneficiary Name') }}">{{ $beneficiary != NULL ? $beneficiary->name : 'deleted' }}</td>
                                           @endif
-                                          {{var_dump($data->subbank)}}
                                           @php
                                             $subbank = App\Models\SubInsBank::whereId($data->subbank)->first();
                                           @endphp

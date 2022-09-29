@@ -96,7 +96,7 @@ class SubInsBankController extends Controller
             'name' => 'required|max:255',
             'address' => 'required',
             'min_limit' => 'required',
-            'max_limit' => 'required',
+            'max_limit' => 'required|numeric|max:9999999999',
             'fixed_charge' => 'required',
             'percent_charge' => 'required',
         ];
@@ -106,32 +106,35 @@ class SubInsBankController extends Controller
         if ($validator->fails()) {
             return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
         }
-
+        
         if (SubInsBank::where('ins_id', $request->ins_id)->where('name', $request->name)->first()) {
             return response()->json(array('errors'=>[0 =>'The same name exist. Please write other name.']));
         }
+        try{
+            $input = $request->all();
+            $data = new SubInsBank();
 
-        $input = $request->all();
-        $data = new SubInsBank();
+            if($request->form_builder){
+                $input['required_information'] = json_encode(array_values($request->form_builder));
+            }
+            $data->fill($input)->save();
 
-        if($request->form_builder){
-            $input['required_information'] = json_encode(array_values($request->form_builder));
+            if(isset($input['key'])){
+                $info_data = $input['key'];
+                $bank_gateway = new BankGateway();
+                $bank_gateway->subbank_id = $data->id;
+                $request->bankgateway = json_decode($request->bankgateway);
+                $bank_gateway->name = $request->bankgateway->name;
+                $bank_gateway->currency_id = $request->bankgateway->currency_id;
+                $bank_gateway->keyword = $request->bankgateway->keyword;
+                $bank_gateway->information = $info_data;
+                $bank_gateway->save();
+            }
+            $msg = 'New Bank Added Successfully.<a href="'.route('admin.subinstitution.banks',$data->ins_id).'">View Bank Lists.</a>';
+            return response()->json($msg);
+        } catch (\Exception $e){
+            return response()->json(array('errors'=>[0 =>$e->errorInfo[2]]));
         }
-        $data->fill($input)->save();
-
-        if(isset($input['key'])){
-            $info_data = $input['key'];
-            $bank_gateway = new BankGateway();
-            $bank_gateway->subbank_id = $data->id;
-            $request->bankgateway = json_decode($request->bankgateway);
-            $bank_gateway->name = $request->bankgateway->name;
-            $bank_gateway->currency_id = $request->bankgateway->currency_id;
-            $bank_gateway->keyword = $request->bankgateway->keyword;
-            $bank_gateway->information = $info_data;
-            $bank_gateway->save();
-        }
-        $msg = 'New Bank Added Successfully.<a href="'.route('admin.subinstitution.banks',$data->ins_id).'">View Bank Lists.</a>';
-        return response()->json($msg);
     }
 
     public function edit(Request $request, $id){
