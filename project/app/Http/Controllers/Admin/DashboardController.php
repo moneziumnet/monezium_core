@@ -94,9 +94,9 @@ class DashboardController extends Controller
         $data = tenancy()->central(function ($tenant){
             return Admin::findOrFail($tenant->id);
         });
-        // $data = Auth::guard('admin')->user();
-        // $modules = Generalsetting::first();
-        // return view('admin.profile', compact('data', 'modules'));
+        $data = Auth::guard('admin')->user();
+        $modules = Generalsetting::first();
+        return view('admin.profile', compact('data', 'modules'));
     }
 
     public function profileupdate(Request $request)
@@ -136,7 +136,7 @@ class DashboardController extends Controller
         $input['slug'] = str_replace(" ", "-", $input['name']);
 
         $data->update($input);
-        
+
         $data = Auth::guard('admin')->user();
         $data->update($input);
 

@@ -3,7 +3,7 @@
 
 <div class="card">
   <div class="d-sm-flex align-items-center justify-content-between py-3">
-    <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Edit Profile') }} <a class="btn btn-primary btn-rounded btn-sm" href="{{route('admin.profile')}}"><i class="fas fa-arrow-left"></i> {{ __('Back') }}</a></h5>
+    <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Edit Profile') }} </h5>
     <ol class="breadcrumb py-0 m-0">
       <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
       <li class="breadcrumb-item"><a href="{{ route('admin.profile') }}">{{ __('Edit Profile') }}</a></li>
@@ -15,7 +15,7 @@
 
 
   <div class="card mt-1 tab-card">
-    <div class="card-header tab-card-header">
+    {{-- <div class="card-header tab-card-header">
       <ul class="nav nav-pills card-header-tabs" id="pills-tab" role="tablist">
         <li class="nav-item">
           <a class="nav-link active" id="one-tab" data-toggle="tab" href="#one" role="tab" aria-controls="One" aria-selected="true">Information</a>
@@ -31,7 +31,7 @@
         </li>
 
       </ul>
-    </div>
+    </div> --}}
 
     <div class="tab-content" id="myTabContent">
       <div class="tab-pane fade show p-3 active" id="one" role="tabpanel" aria-labelledby="one-tab">
