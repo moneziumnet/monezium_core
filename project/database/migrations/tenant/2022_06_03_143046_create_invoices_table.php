@@ -26,11 +26,11 @@ class CreateInvoicesTable extends Migration
             $table->decimal('charge', 20, 10);
             $table->decimal('final_amount', 20, 10);
             $table->decimal('get_amount', 20, 10);
-            $table->integer('product_id')->nullable;
-            $table->integer('contract_id')->nullable;
-            $table->integer('contract_aoa_id')->nullable;
+            $table->integer('product_id')->nullable();
+            $table->integer('contract_id')->nullable();
+            $table->integer('contract_aoa_id')->nullable();
             $table->mediumText('description');
-            $table->mediumText('documents')->nullable;
+            $table->mediumText('documents')->nullable();
             $table->tinyInteger('payment_status')->default(0)->comment('1 => paid, 0 => not paid');
             $table->tinyInteger('status')->default(0)->comment('1 => published, 0 => not published , 2 => cancel');
             $table->timestamps();
