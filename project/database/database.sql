@@ -121,6 +121,40 @@ INSERT INTO `bank_plans` VALUES (2, 'Standard', 50, 1000000, 1000000, 1000000, 1
 INSERT INTO `bank_plans` VALUES (3, 'Professional', 100, 10000, 10000, 10000, 10000, 10000, 10000, 10000, NULL, 90, '2022-06-18 08:20:57', '2022-06-18 08:20:57');
 
 
+DROP TABLE IF EXISTS `plan_details`;
+CREATE TABLE `plan_details`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `plan_id` int(11) NULL DEFAULT NULL,
+  `min` double NULL DEFAULT NULL,
+  `max` double NULL DEFAULT NULL,
+  `daily_limit` double NULL DEFAULT NULL,
+  `monthly_limit` double NULL DEFAULT NULL,
+  `created_at` timestamp(0) NULL DEFAULT NULL,
+  `updated_at` timestamp(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of plan_details
+-- ----------------------------
+INSERT INTO `plan_details` VALUES (1, 'deposit', 1, 100, 10000, 10000, 100002, '2022-07-07 18:58:02', '2022-07-28 11:28:59');
+INSERT INTO `plan_details` VALUES (2, 'send', 1, 1000, 100000, 10000, 100000, '2022-07-15 19:33:11', '2022-07-15 19:33:11');
+INSERT INTO `plan_details` VALUES (3, 'recieve', 1, 1000, 10000, 1000, 10005, '2022-07-26 22:41:57', '2022-07-28 11:29:04');
+INSERT INTO `plan_details` VALUES (4, 'escrow', 1, 1000, 10000, 1000, 10000, '2022-07-26 22:41:57', '2022-07-26 22:41:57');
+INSERT INTO `plan_details` VALUES (5, 'withdraw', 1, 1000, 10000, 1000, 10000, '2022-07-26 22:41:57', '2022-07-26 22:41:57');
+INSERT INTO `plan_details` VALUES (6, 'deposit', 2, 100, 10000, 10000, 250000, '2022-07-07 18:58:02', '2022-07-07 18:58:02');
+INSERT INTO `plan_details` VALUES (7, 'send', 2, 100, 10000, 10000, 250000, '2022-07-07 18:58:02', '2022-07-07 18:58:02');
+INSERT INTO `plan_details` VALUES (8, 'recieve', 2, 100, 10000, 10000, 250000, '2022-07-07 18:58:02', '2022-07-07 18:58:02');
+INSERT INTO `plan_details` VALUES (9, 'escrow', 2, 100, 10000, 10000, 250000, '2022-07-07 18:58:02', '2022-07-07 18:58:02');
+INSERT INTO `plan_details` VALUES (10, 'withdraw', 2, 100, 10000, 10000, 250000, '2022-07-07 18:58:02', '2022-07-07 18:58:02');
+INSERT INTO `plan_details` VALUES (11, 'deposit', 3, 100, 10000, 10000, 250000, '2022-07-07 18:58:02', '2022-07-07 18:58:02');
+INSERT INTO `plan_details` VALUES (12, 'send', 3, 100, 10000, 10000, 250000, '2022-07-07 18:58:02', '2022-07-07 18:58:02');
+INSERT INTO `plan_details` VALUES (13, 'recieve', 3, 100, 10000, 10000, 250000, '2022-07-07 18:58:02', '2022-07-07 18:58:02');
+INSERT INTO `plan_details` VALUES (14, 'escrow', 3, 100, 10000, 10000, 250000, '2022-07-07 18:58:02', '2022-07-07 18:58:02');
+INSERT INTO `plan_details` VALUES (15, 'withdraw', 3, 100, 10000, 10000, 250000, '2022-07-07 18:58:02', '2022-07-07 18:58:02');
+
+
 -- ----------------------------
 -- Table structure for charges
 -- ----------------------------
