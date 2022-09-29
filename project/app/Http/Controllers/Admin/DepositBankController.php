@@ -49,7 +49,7 @@ class DepositBankController extends Controller
                 }
                 return $status;
             })
-            ->editColumn('action', function(DepositBank $data) {
+            ->addColumn('action', function(DepositBank $data) {
 
                 @$detail = SubInsBank::where('id', $data->sub_bank_id)->with('subInstitution')->first();
                 if($detail->hasGateway()){
@@ -86,7 +86,7 @@ class DepositBankController extends Controller
                         class="btn btn-sm btn-primary detailsBtn">' . __("Details") . '</a>
                 </div>';
             })
-            ->rawColumns(['created_at','customer_name','customer_email','amount','status','action'])
+            ->rawColumns(['created_at','customer_name','customer_email','amount','status', 'action'])
             ->toJson();
     }
 
@@ -147,9 +147,9 @@ class DepositBankController extends Controller
             $trans->user_type   = 1;
             $trans->currency_id = $data->currency_id;
             $trans->amount      = $transaction_custom_cost;
-            
+
             $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-            
+
             $trans->charge      = 0;
             $trans->type        = '+';
             $trans->remark      = $remark;
@@ -162,7 +162,7 @@ class DepositBankController extends Controller
 
         user_wallet_increment($user->id, $data->currency_id, $final_amount, 1);
         user_wallet_increment(0, $data->currency_id, $transaction_global_cost, 9);
-        
+
         $trans_wallet = get_wallet($user->id, $data->currency_id, 1);
 
         $trans = new Transaction();
@@ -173,9 +173,9 @@ class DepositBankController extends Controller
         $trans->amount      = $amount;
         $trans->charge      = $final_chargefee;
         $trans->type        = '+';
-        
+
         $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-        
+
         $trans->remark      = 'Deposit_create';
         $trans->details     = trans('Deposit complete');
         $trans->data        = '{"sender":"System Account", "receiver":"'.$user->name.'"}';
