@@ -117,8 +117,95 @@ CREATE TABLE `bank_plans`  (
 -- Records of bank_plans
 -- ----------------------------
 INSERT INTO `bank_plans` VALUES (1, 'Free', 0, 10000, 10000, 10000, 100000, 100000, 100000, 100000, NULL, 30, '2022-06-07 21:21:12', '2022-06-07 21:21:12');
-INSERT INTO `bank_plans` VALUES (13, 'Standard', 50, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, NULL, 30, '2022-06-18 04:55:10', '2022-06-18 08:20:18');
-INSERT INTO `bank_plans` VALUES (14, 'Professional', 100, 10000, 10000, 10000, 10000, 10000, 10000, 10000, NULL, 90, '2022-06-18 08:20:57', '2022-06-18 08:20:57');
+INSERT INTO `bank_plans` VALUES (2, 'Standard', 50, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, NULL, 30, '2022-06-18 04:55:10', '2022-06-18 08:20:18');
+INSERT INTO `bank_plans` VALUES (3, 'Professional', 100, 10000, 10000, 10000, 10000, 10000, 10000, 10000, NULL, 90, '2022-06-18 08:20:57', '2022-06-18 08:20:57');
+
+
+-- ----------------------------
+-- Table structure for charges
+-- ----------------------------
+DROP TABLE IF EXISTS `charges`;
+CREATE TABLE `charges`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `data` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `plan_id` int(11) NOT NULL,
+  `created_at` timestamp(0) NULL DEFAULT NULL,
+  `updated_at` timestamp(0) NULL DEFAULT NULL,
+  `user_id` int(11) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 113 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of charges
+-- ----------------------------
+INSERT INTO `charges` VALUES (1, 'Deposit 1', 'deposit', '{\"percent_charge\":\"1\",\"fixed_charge\":4,\"from\":\"1\",\"till\":\"5000\"}', 1, '2022-07-07 18:58:02', '2022-07-07 18:58:02', 0);
+INSERT INTO `charges` VALUES (2, 'Deposit 2', 'deposit', '{\"percent_charge\":\"1\",\"fixed_charge\":\"3\",\"from\":\"5001\",\"till\":\"20000\"}', 1, '2022-07-07 18:58:03', '2022-07-07 18:58:03', 0);
+INSERT INTO `charges` VALUES (3, 'Deposit 3', 'deposit', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\",\"from\":\"20001\",\"till\":\"50000\"}', 1, '2022-07-07 18:58:03', '2022-07-07 18:58:03', 0);
+INSERT INTO `charges` VALUES (4, 'Send 1', 'send', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\",\"from\":\"1\",\"till\":\"5000\"}', 1, '2022-07-07 18:58:03', '2022-07-07 18:58:03', 0);
+INSERT INTO `charges` VALUES (5, 'Send 2', 'send', '{\"percent_charge\":\"1\",\"fixed_charge\":\"3\",\"from\":\"5001\",\"till\":\"20000\"}', 1, '2022-07-07 18:58:03', '2022-07-07 18:58:03', 0);
+INSERT INTO `charges` VALUES (6, 'Send 3', 'send', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\",\"from\":\"20001\",\"till\":\"50000\"}', 1, '2022-07-07 18:58:03', '2022-07-07 18:58:03', 0);
+INSERT INTO `charges` VALUES (7, 'Recieve 1', 'recieve', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\",\"from\":\"1\",\"till\":\"5000\"}', 1, '2022-07-07 18:58:03', '2022-07-07 18:58:03', 0);
+INSERT INTO `charges` VALUES (8, 'Recieve 2', 'recieve', '{\"percent_charge\":\"1\",\"fixed_charge\":\"3\",\"from\":\"5001\",\"till\":\"20000\"}', 1, '2022-07-07 18:58:03', '2022-07-07 18:58:03', 0);
+INSERT INTO `charges` VALUES (9, 'Recieve 3', 'recieve', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\",\"from\":\"20001\",\"till\":\"50000\"}', 1, '2022-07-07 18:58:03', '2022-07-07 18:58:03', 0);
+INSERT INTO `charges` VALUES (10, 'Escrow 1', 'escrow', '{\"percent_charge\":\"1\",\"fixed_charge\":4,\"from\":\"1\",\"till\":\"5000\"}', 1, '2022-07-07 18:58:02', '2022-07-07 18:58:02', 0);
+INSERT INTO `charges` VALUES (11, 'Escrow 2', 'escrow', '{\"percent_charge\":\"1\",\"fixed_charge\":\"3\",\"from\":\"5001\",\"till\":\"20000\"}', 1, '2022-07-07 18:58:03', '2022-07-07 18:58:03', 0);
+INSERT INTO `charges` VALUES (12, 'Escrow 3', 'escrow', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\",\"from\":\"20001\",\"till\":\"50000\"}', 1, '2022-07-07 18:58:03', '2022-07-07 18:58:03', 0);
+INSERT INTO `charges` VALUES (13, 'Withdraw 1', 'withdraw', '{\"percent_charge\":\"1\",\"fixed_charge\":4,\"from\":\"1\",\"till\":\"5000\"}', 1, '2022-07-07 18:58:02', '2022-07-07 18:58:02', 0);
+INSERT INTO `charges` VALUES (14, 'Withdraw 2', 'withdraw', '{\"percent_charge\":\"1\",\"fixed_charge\":\"3\",\"from\":\"5001\",\"till\":\"20000\"}', 1, '2022-07-07 18:58:03', '2022-07-07 18:58:03', 0);
+INSERT INTO `charges` VALUES (15, 'Withdraw 3', 'withdraw', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\",\"from\":\"20001\",\"till\":\"50000\"}', 1, '2022-07-07 18:58:03', '2022-07-07 18:58:03', 0);
+INSERT INTO `charges` VALUES (16, 'Account Maintenance', 'account-maintenance', '{\"percent_charge\":\"2\",\"fixed_charge\":\"2\"}', 1, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (17, 'Card Maintenance', 'card-maintenance', '{\"percent_charge\":\"2\",\"fixed_charge\":\"2\"}', 1, NULL, '2022-07-16 15:13:56', 0);
+INSERT INTO `charges` VALUES (18, 'Account Opening', 'account-open', '{\"percent_charge\":\"2\",\"fixed_charge\":\"5\"}', 1, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (19, 'Card Issuance', 'card-issuance', '{\"percent_charge\":\"2\",\"fixed_charge\":\"6\"}', 1, NULL, '2022-07-16 15:16:21', 0);
+INSERT INTO `charges` VALUES (20, 'Password reset by Staff', 'manual', '{\"percent_charge\":\"2\",\"fixed_charge\":\"5\"}', 1, '2022-07-22 01:52:11', '2022-07-22 01:52:11', 0);
+INSERT INTO `charges` VALUES (21, 'Payment tracking', 'manual', '{\"percent_charge\":\"2\",\"fixed_charge\":\"5\"}', 1, '2022-07-22 01:52:21', '2022-07-22 01:52:21', 0);
+INSERT INTO `charges` VALUES (22, 'Security key reset', 'manual', '{\"percent_charge\":\"2\",\"fixed_charge\":\"5\"}', 1, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (23, 'Deposit 1', 'deposit', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\",\"from\":\"1\",\"till\":\"5000\"}', 2, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (24, 'Deposit 2', 'deposit', '{\"percent_charge\":\"1\",\"fixed_charge\":\"3\",\"from\":\"5001\",\"till\":\"20000\"}', 2, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (25, 'Deposit 3', 'deposit', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\",\"from\":\"20001\",\"till\":\"50000\"}', 2, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (26, 'Send 1', 'send', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\",\"from\":\"1\",\"till\":\"5000\"}', 2, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (27, 'Send 2', 'send', '{\"percent_charge\":\"1\",\"fixed_charge\":\"3\",\"from\":\"5001\",\"till\":\"20000\"}', 2, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (28, 'Send 3', 'send', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\",\"from\":\"20001\",\"till\":\"50000\"}', 2, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (29, 'Recieve 1', 'recieve', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\",\"from\":\"1\",\"till\":\"5000\"}', 2, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (30, 'Recieve 2', 'recieve', '{\"percent_charge\":\"1\",\"fixed_charge\":\"3\",\"from\":\"5001\",\"till\":\"20000\"}', 2, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (31, 'Recieve 3', 'recieve', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\",\"from\":\"20001\",\"till\":\"50000\"}', 2, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (32, 'Escrow 1', 'escrow', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\",\"from\":\"1\",\"till\":\"5000\"}', 2, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (33, 'Escrow 2', 'escrow', '{\"percent_charge\":\"1\",\"fixed_charge\":\"3\",\"from\":\"5001\",\"till\":\"20000\"}', 2, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (34, 'Escrow 3', 'escrow', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\",\"from\":\"20001\",\"till\":\"50000\"}', 2, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (35, 'Withdraw 1', 'withdraw', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\",\"from\":\"1\",\"till\":\"5000\"}', 2, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (36, 'Withdraw 2', 'withdraw', '{\"percent_charge\":\"1\",\"fixed_charge\":\"3\",\"from\":\"5001\",\"till\":\"20000\"}', 2, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (37, 'Withdraw 3', 'withdraw', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\",\"from\":\"20001\",\"till\":\"50000\"}', 2, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (38, 'Account Maintenance', 'account-maintenance', '{\"percent_charge\":\"2\",\"fixed_charge\":\"2\"}', 2, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (39, 'Card Maintenance', 'card-maintenance', '{\"percent_charge\":\"2\",\"fixed_charge\":\"2\"}', 2, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (40, 'Account Opening', 'account-open', '{\"percent_charge\":\"2\",\"fixed_charge\":\"2\"}', 2, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (41, 'Card Issuance', 'card-issuance', '{\"percent_charge\":\"2\",\"fixed_charge\":\"2\"}', 2, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (42, 'Password reset by Staff', 'manual', '{\"percent_charge\":\"2\",\"fixed_charge\":\"2\"}', 2, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (43, 'Payment tracking', 'manual', '{\"percent_charge\":\"2\",\"fixed_charge\":\"2\"}', 2, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (44, 'Security key reset', 'manual', '{\"percent_charge\":\"2\",\"fixed_charge\":\"2\"}', 2, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (45, 'Deposit 1', 'deposit', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\",\"from\":\"1\",\"till\":\"5000\"}', 3, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (46, 'Deposit 2', 'deposit', '{\"percent_charge\":\"1\",\"fixed_charge\":\"3\",\"from\":\"5001\",\"till\":\"20000\"}', 3, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (47, 'Deposit 3', 'deposit', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\",\"from\":\"20001\",\"till\":\"50000\"}', 3, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (48, 'Send 1', 'send', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\",\"from\":\"1\",\"till\":\"5000\"}', 3, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (49, 'Send 2', 'send', '{\"percent_charge\":\"1\",\"fixed_charge\":\"3\",\"from\":\"5001\",\"till\":\"20000\"}', 3, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (50, 'Send 3', 'send', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\",\"from\":\"20001\",\"till\":\"50000\"}', 3, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (51, 'Recieve 1', 'recieve', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\",\"from\":\"1\",\"till\":\"5000\"}', 3, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (52, 'Recieve 2', 'recieve', '{\"percent_charge\":\"1\",\"fixed_charge\":\"3\",\"from\":\"5001\",\"till\":\"20000\"}', 3, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (53, 'Recieve 3', 'recieve', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\",\"from\":\"20001\",\"till\":\"50000\"}', 3, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (54, 'Escrow 1', 'escrow', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\",\"from\":\"1\",\"till\":\"5000\"}', 3, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (55, 'Escrow 2', 'escrow', '{\"percent_charge\":\"1\",\"fixed_charge\":\"3\",\"from\":\"5001\",\"till\":\"20000\"}', 3, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (56, 'Escrow 3', 'escrow', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\",\"from\":\"20001\",\"till\":\"50000\"}', 3, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (57, 'Withdraw 1', 'withdraw', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\",\"from\":\"1\",\"till\":\"5000\"}', 3, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (58, 'Withdraw 2', 'withdraw', '{\"percent_charge\":\"1\",\"fixed_charge\":\"3\",\"from\":\"5001\",\"till\":\"20000\"}', 3, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (59, 'Withdraw 3', 'withdraw', '{\"percent_charge\":\"1\",\"fixed_charge\":\"2\",\"from\":\"20001\",\"till\":\"50000\"}', 3, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (60, 'Account Maintenance', 'account-maintenance', '{\"percent_charge\":\"2\",\"fixed_charge\":\"2\"}', 3, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (61, 'Card Maintenance', 'card-maintenance', '{\"percent_charge\":\"2\",\"fixed_charge\":\"2\"}', 3, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (62, 'Account Opening', 'account-open', '{\"percent_charge\":\"2\",\"fixed_charge\":\"2\"}', 3, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (63, 'Card Issuance', 'card-issuance', '{\"percent_charge\":\"2\",\"fixed_charge\":\"2\"}', 3, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (64, 'Password reset by Staff', 'manual', '{\"percent_charge\":\"2\",\"fixed_charge\":\"2\"}', 3, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (65, 'Payment tracking', 'manual', '{\"percent_charge\":\"2\",\"fixed_charge\":\"2\"}', 3, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (66, 'Security key reset', 'manual', '{\"percent_charge\":\"2\",\"fixed_charge\":\"2\"}', 3, NULL, NULL, 0);
 
 -- ----------------------------
 -- Table structure for bank_gateways
@@ -568,39 +655,10 @@ CREATE TABLE `currencies`  (
 -- Records of currencies
 -- ----------------------------
 INSERT INTO `currencies` VALUES (1, 1, '$', 'USD', 'United State Dollar', 1, 1, 1.0000000000, '2021-12-20 05:12:58', '2022-02-16 04:02:37');
-INSERT INTO `currencies` VALUES (4, 0, '€', 'EUR', 'European Currency', 1, 1, 0.8790350000, '2021-12-20 05:12:58', '2022-02-16 04:02:35');
-INSERT INTO `currencies` VALUES (5, 0, '£', 'GBP', 'Greate British Pound', 1, 1, 0.7376150000, '2021-12-21 01:45:51', '2022-02-16 04:02:35');
-INSERT INTO `currencies` VALUES (9, 0, '₿', 'BTC', 'Bitcoin', 2, 1, 0.0000225900, '2021-12-21 01:48:53', '2022-02-16 04:02:36');
-INSERT INTO `currencies` VALUES (13, 0, '₦', 'NGN', 'Nigerian naira', 1, 1, 1.0000000000, '2022-02-06 06:41:35', '2022-02-16 04:02:35');
-INSERT INTO `currencies` VALUES (17, 0, 'Ð', 'ETH', 'Ethereum', 2, 1, 0.0005300000, NULL, NULL);
-
--- ----------------------------
--- Table structure for disputes
--- ----------------------------
-DROP TABLE IF EXISTS `disputes`;
-CREATE TABLE `disputes`  (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `escrow_id` int(11) NOT NULL,
-  `user_id` int(11) NULL DEFAULT NULL,
-  `admin_id` int(11) NULL DEFAULT NULL,
-  `message` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `file` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-  `created_at` timestamp(0) NULL DEFAULT NULL,
-  `updated_at` timestamp(0) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Table structure for documents
--- ----------------------------
-DROP TABLE IF EXISTS `documents`;
-CREATE TABLE `documents`  (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `ins_id` int(11) NULL DEFAULT NULL,
-  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `file` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 55 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+INSERT INTO `currencies` VALUES (2, 0, '€', 'EUR', 'European Currency', 1, 1, 0.8790350000, '2021-12-20 05:12:58', '2022-02-16 04:02:35');
+INSERT INTO `currencies` VALUES (3, 0, '£', 'GBP', 'Greate British Pound', 1, 1, 0.7376150000, '2021-12-21 01:45:51', '2022-02-16 04:02:35');
+INSERT INTO `currencies` VALUES (4, 0, '₿', 'BTC', 'Bitcoin', 2, 1, 0.0000225900, '2021-12-21 01:48:53', '2022-02-16 04:02:36');
+INSERT INTO `currencies` VALUES (5, 0, 'Ð', 'ETH', 'Ethereum', 2, 1, 0.0005300000, NULL, NULL);
 
 
 -- ----------------------------
@@ -1242,51 +1300,6 @@ INSERT INTO `payment_gateways` VALUES (14, NULL, NULL, NULL, 'Stripe', 'automati
 INSERT INTO `payment_gateways` VALUES (15, NULL, NULL, NULL, 'Paypal', 'automatic', '{\"client_id\":\"AcWYnysKa_elsQIAnlfsJXokR64Z31CeCbpis9G3msDC-BvgcbAwbacfDfEGSP-9Dp9fZaGgD05pX5Qi\",\"client_secret\":\"EGZXTq6d6vBPq8kysVx8WQA5NpavMpDzOLVOb9u75UfsJ-cFzn6aeBXIMyJW2lN1UZtJg5iDPNL9ocYE\",\"sandbox_check\":1,\"text\":\"Pay via your PayPal account.\"}', 'paypal', '[\"1\"]', 1, NULL);
 
 -- ----------------------------
--- Table structure for plans
--- ----------------------------
-DROP TABLE IF EXISTS `plans`;
-CREATE TABLE `plans`  (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `price` double(8, 2) NOT NULL DEFAULT 0,
-  `duration` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `durationtype` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `max_users` int(11) NOT NULL DEFAULT 0,
-  `tenant_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-  `created_at` timestamp(0) NULL DEFAULT NULL,
-  `updated_at` timestamp(0) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE INDEX `plans_name_unique`(`name`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of plans
--- ----------------------------
-INSERT INTO `plans` VALUES (1, 'Free', 0.00, '1', 'month', 0, NULL, '2022-05-05 07:20:38', '2022-05-05 07:20:38');
-INSERT INTO `plans` VALUES (2, 'STARTER', 50.00, '6', 'Month', 0, NULL, '2022-05-05 08:12:26', '2022-05-05 08:12:26');
-INSERT INTO `plans` VALUES (3, 'PRO', 100.00, '1', 'Year', 0, NULL, '2022-05-05 08:12:47', '2022-05-05 08:12:47');
-
--- ----------------------------
--- Table structure for request_domains
--- ----------------------------
-DROP TABLE IF EXISTS `request_domains`;
-CREATE TABLE `request_domains`  (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `domain_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `tenant_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-  `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `is_approved` tinyint(1) NOT NULL DEFAULT 0,
-  `created_at` timestamp(0) NULL DEFAULT NULL,
-  `updated_at` timestamp(0) NULL DEFAULT NULL,
-  `reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 68 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
-
-
--- ----------------------------
 -- Table structure for reviews
 -- ----------------------------
 DROP TABLE IF EXISTS `reviews`;
@@ -1304,22 +1317,6 @@ CREATE TABLE `reviews`  (
 -- ----------------------------
 INSERT INTO `reviews` VALUES (5, 'PME52yRz1645070778.png', 'Jhon Smith', 'CEO & Founder', 'The is just awesome,  best quality service ever I had. You can trust them and deposit your funds. Their Loan plans are really helpful. Easy to use their online banking system.');
 INSERT INTO `reviews` VALUES (6, 'AjOD94Yk1645070744.png', 'Jazmin Sultana', 'CEO & Founder', 'The is just awesome,  best quality service ever I had. You can trust them and deposit your funds. Their Loan plans are really helpful. Easy to use their online banking system.');
-
--- ----------------------------
--- Table structure for seotools
--- ----------------------------
-DROP TABLE IF EXISTS `seotools`;
-CREATE TABLE `seotools`  (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `google_analytics` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
-  `meta_keys` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of seotools
--- ----------------------------
-INSERT INTO `seotools` VALUES (1, '<script async src=\"https://www.googletagmanager.com/gtag/js?id=UA-137437974-1\"></script>  <script>    window.dataLayer = window.dataLayer || [];    function gtag(){dataLayer.push(arguments);}    gtag(\'js\', new Date());    gtag(\'config\', \'UA-137437974-1\');  </script>', 'Genius,Ocean,Sea,Etc,Genius,Ocean,SeaGenius,Ocean,Sea,Etc,Genius,Ocean,SeaGenius,Ocean,Sea,Etc,Genius,Ocean,Sea');
 
 -- ----------------------------
 -- Table structure for services
@@ -1342,19 +1339,6 @@ INSERT INTO `services` VALUES (17, 'MOBILE APP', 'Trading via our Mobile App, Av
 INSERT INTO `services` VALUES (18, 'PAYMENT OPTIONS', 'Popular methods: Visa, MasterCard,</br>\r\nbank transfer, cryptocurrency', '1639476937payment-options.png');
 INSERT INTO `services` VALUES (19, 'WORLD COVERAGE', 'Providing services in 99% countries</br>\r\naround all the globe', '1639476969world-coverage.png');
 INSERT INTO `services` VALUES (20, 'STRONG SECURITY', 'Protection against DDoS attacks,</br>\r\nfull data encryption', '1639476998strong-security.png');
-
--- ----------------------------
--- Table structure for sitemaps
--- ----------------------------
-DROP TABLE IF EXISTS `sitemaps`;
-CREATE TABLE `sitemaps`  (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `sitemap_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-  `filename` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-  `created_at` timestamp(0) NULL DEFAULT NULL,
-  `updated_at` timestamp(0) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for sliders
