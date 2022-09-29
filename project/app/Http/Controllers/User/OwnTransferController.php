@@ -48,6 +48,7 @@ class OwnTransferController extends Controller
             return back()->with('error','Please select Wallet');
         }
 
+        $gs = Generalsetting::first();
         $fromWallet = Wallet::where('id',$request->from_wallet_id)->where('user_id',auth()->id())->where('user_type',1)->firstOrFail();
 
         $toWallet = Wallet::where('currency_id',$fromWallet->currency_id)->where('user_id',auth()->id())->where('wallet_type',$request->wallet_type)->where('user_type',1)->first();
@@ -64,7 +65,6 @@ class OwnTransferController extends Controller
             $keyword = '';
         }
         if(!$toWallet){
-            $gs = Generalsetting::first();
             $toWallet = Wallet::create([
                 'user_id'     => auth()->id(),
                 'user_type'   => 1,
