@@ -121,7 +121,9 @@ class OpenPaydController extends Controller
         }
 
 
-
+        if ($iban == null || $bic_swift == null) {
+            return redirect()->back()->with(array('warning' => 'Sorry, You create New Bank Account succesfully because iban or swift code is not generated correctly by API'));
+        }
         $data = New BankAccount();
         $data->user_id = $request->user;
         $data->subbank_id = $request->subbank;
