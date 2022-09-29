@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -17,13 +17,13 @@ class CreateProductsTable extends Migration
             $table->id();
             $table->integer('user_id');
             $table->integer('shop_id');
-            $table->integer('cat_id')->nullable;
+            $table->integer('cat_id')->nullable();
             $table->string('name');
-            $table->string('description')->nullable;
+            $table->string('description')->nullable();
             $table->integer('currency_id');
             $table->double('amount');
             $table->integer('quantity');
-            $table->integer('sold')->nullable;
+            $table->integer('sold')->nullable();
             $table->string('ref_id');
             $table->integer('status')->default(1);
             $table->timestamps();
