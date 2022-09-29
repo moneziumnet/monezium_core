@@ -251,10 +251,14 @@ $(document).ready(function() {
         }
     });
     $('#payment_submit').on('click', function () {
-        $('#form_submit').submit();
+        if(document.getElementById('form_submit').checkValidity()) {
+            $('#form_submit').submit();
+        }
     });
     $('.crypto-submit').on('click', function() {
-        $('#form_submit').submit();
+        if(document.getElementById('form_submit').checkValidity()) {
+            $('#form_submit').submit();
+        }
     });
 })
 </script>
