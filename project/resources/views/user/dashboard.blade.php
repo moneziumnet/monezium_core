@@ -228,7 +228,9 @@
                             <select class="form-control" name="subbank" id="subbank" required>
                             <option value="">{{ __('Select SubInstitions Bank') }}</option>
                             @foreach ($subbank as $bank )
+                              @if($bank->hasGateway())
                                 <option value="{{$bank->id}}">{{ __($bank->name) }}</option>
+                              @endif
                             @endforeach
                             </select>
                         </div>
