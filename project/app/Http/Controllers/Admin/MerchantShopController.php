@@ -74,7 +74,7 @@ class MerchantShopController extends Controller
             $msg = 'Merchant shop already approved';
             return response()->json($msg);
         }
-        $currencies = $data['currencylist'] = Currency::wherestatus(1)->get();
+        $currencies = Currency::wherestatus(1)->get();
         $gs = Generalsetting::first();
         foreach ($currencies as $key => $value) {
             if($value->type == 2) {
