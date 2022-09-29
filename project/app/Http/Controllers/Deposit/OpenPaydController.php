@@ -44,7 +44,7 @@ class OpenPaydController extends Controller
             $auth_token = $res_body->access_token;
             $accounter_id = $res_body->accountHolderId;
         } catch (\Throwable $th) {
-            return response()->json($th->getMessage());
+            return redirect()->back()->with(array('warning' => $th->getMessage()));
         }
         $country = Country::findOrFail($user->country);
 
@@ -77,7 +77,7 @@ class OpenPaydController extends Controller
             $res_body = json_decode($response->getBody());
             $linked_accountid = $res_body->accountHolderId;
         } catch (\Throwable $th) {
-            return response()->json($th->getMessage());
+            return redirect()->back()->with(array('warning' => $th->getMessage()));
         }
         $user->holder_id = $linked_accountid;
         $user->update();
@@ -100,7 +100,7 @@ class OpenPaydController extends Controller
             $res_body = json_decode($response->getBody());
             $internal_id = $res_body->internalAccountId;
         } catch (\Throwable $th) {
-            return response()->json($th->getMessage());
+            return redirect()->back()->with(array('warning' => $th->getMessage()));
         }
 
         try {
@@ -117,7 +117,7 @@ class OpenPaydController extends Controller
             $bic_swift = $res_body->bic;
             $iban = $res_body->iban;
         } catch (\Throwable $th) {
-            return response()->json($th->getMessage());
+            return redirect()->back()->with(array('warning' => $th->getMessage()));
         }
 
 
