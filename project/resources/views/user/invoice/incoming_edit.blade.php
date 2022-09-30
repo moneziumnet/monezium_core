@@ -81,12 +81,13 @@
                             @if ($loop->first)
                             <div class="form-label"> {{__("Tax")}}</div>
                             @endif
-                            @if ($item)
-                            <input type="text"  class="form-control shadow-none" value={{$item->name}} readonly required>
+                            @if($item)
+                            <input type="text"  class="form-control shadow-none tax" value="{{$item->name}} {{$item->rate}}%" data-rate="{{$item->rate}}" readonly required>
                             <input type="hidden" name="tax_id[]" class="form-control shadow-none" value={{$item->id}}  required>
                             @else
-                            <div id="tax_append"></div>
-                            <a class="btn btn-primary w-100 add-tax" href="javascript:void(0)">{{__('Add Tax')}}</a>
+                            <div id="tax_append" tax-count="{{$loop->count}}"></div>
+                            <input type="hidden" name="tax_id[]" value="0" class="add-tax tax" data-rate="0" tax-count="{{$loop->count}}">
+                            <a class="btn btn-primary w-100 add-tax" href="javascript:void(0)" tax-count="{{$loop->count}}">{{__('Add Tax')}}</a>
                             @endif
 
                         </div>
@@ -172,25 +173,94 @@
     </div>
     </div>
 </div>
-
+<div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-status bg-primary"></div>
+        <div class="modal-body text-center py-4">
+            <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+            <h3>{{__('Create New Beneficiary')}}</h3>
+            <div class="row text-start">
+                <div class="col">
+                    <form action="{{route('user.invoice.beneficiary.create')}}" method="post" enctype="multipart/form-data">
+                        @csrf
+                        <div class="form-group mt-2">
+                            <label class="form-label required">{{__('Name')}}</label>
+                            <input name="name" id="name" class="form-control shadow-none" placeholder="{{__('Name')}}" type="text" value="{{ old('name') }}" required>
+                        </div>
+                        <div class="form-group mt-2">
+                            <label class="form-label required">{{__('Email')}}</label>
+                            <input name="email" id="email" class="form-control shadow-none" placeholder="{{__('user@email.com')}}" type="email" value="{{ old('email') }}" required>
+                        </div>
+                        <div class="form-group mt-2">
+                            <label class="form-label required">{{__('Phone Number')}}</label>
+                            <input name="phone" id="phone" class="form-control shadow-none" placeholder="{{__('+123456789')}}" type="text" value="{{ old('phone') }}" required>
+                        </div>
+                        <div class="form-group mt-2">
+                            <label class="form-label required">{{__('Registration NO')}}</label>
+                            <input name="registration_no" id="registration_no" class="form-control shadow-none" placeholder="{{__('Registration NO')}}" type="text" value="{{ old('registration_no') }}" required>
+                        </div>
+                        <div class="form-group mt-2">
+                            <label class="form-label required">{{__('VAT NO')}}</label>
+                            <input name="vat_no" id="vat_no" class="form-control shadow-none" placeholder="{{__('VAT NO')}}" type="text" value="{{ old('vat_no') }}" required>
+                        </div>
+                        <div class="form-group mt-2">
+                            <label class="form-label required">{{__('Contact Person')}}</label>
+                            <input name="contact_person" id="contact_person" class="form-control shadow-none" placeholder="{{__('Contact Person')}}" type="text" value="{{ old('contact_person') }}" required>
+                        </div>
+                        <input type="hidden" name="user_id" value="{{auth()->id()}}">
+                        <div class="row mt-3">
+                            <div class="col"><a href="#" class="btn w-100" data-bs-dismiss="modal">
+                                {{__('Cancel')}}
+                                </a>
+                            </div>
+                            <div class="col">
+                                <button type="submit" class="btn btn-primary w-100 confirm">
+                                {{__('Confirm')}}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
 @endsection
 
 @push('js')
-    <script>
+<script>
         'use strict';
+        var tax_count = {{count($invoice->items)}};
+
+        function calcAmount() {
+            var total = 0;
+            $('.amount').each(function(e){
+                if($(this).val()!=''){
+                    var rate = parseFloat($(this).parent().parent().find('.tax').data('rate'))
+                    total += parseFloat($(this).val()) + rate *  parseFloat($(this).val()) / 100;
+                }
+                $('.totalAmount').text(total.toFixed(4))
+            })
+        }
+
         $('.add').on('click',function(){
+            tax_count++;
             $('.extra-container').append(`
 
                    <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-5 mb-3">
                             <input type="text" name="item[]" class="form-control shadow-none itemname" required>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <input type="text" name="amount[]" class="form-control shadow-none amount" required>
+                            <input type="number" step="any" name="amount[]" class="form-control shadow-none amount" required>
                         </div>
-                        <div class="col-md-1 mb-3">
-                            <div id="tax_append"></div>
-                            <a class="btn btn-primary w-100 add-tax" href="javascript:void(0)">{{__('Add Tax')}}</a>
+                        <div class="col-md-2 mb-3">
+                            <div id="tax_append" tax-count="${tax_count}"></div>
+                            <input type="hidden" name="tax_id[]" value="0" class="add-tax tax" data-rate="0" tax-count="${tax_count}">
+                            <a class="btn btn-primary w-100 add-tax" tax-count="${tax_count}" href="javascript:void(0)">{{__('Add Tax')}}</a>
                         </div>
                         <div class="col-md-1 mb-3">
                             <button type="button" class="btn btn-danger w-100 remove"><i class="fas fa-times"></i></button>
@@ -200,12 +270,53 @@
             `);
         })
 
+        $('.doc_add').on('click',function(){
+            $('.doc-extra-container').append(`
+
+            <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-label required">{{__('Document')}}</div>
+                            <input class= "document" name="document[]" class="form-control" type="file" accept=".doc,.docx,.pdf">
+                        </div>
+                        <div class="col-md-1 mb-3">
+                            <div class="form-label">&nbsp;</div>
+                            <button type="button" class="btn btn-danger w-100 doc_remove"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>
+
+            `);
+        })
+
+        $('#contract').on('click', function() {
+            var contract = $('#contract option:selected');
+            let _optionHtml = '<option value="">Select</option>';
+            $.each(contract.data('aoa'), function(i, item) {
+                _optionHtml += '<option value="' + item.id + '">' + item.title + '</option>';
+            });
+            $('select#aoa').html(_optionHtml);
+
+        })
+
+        $('#product').on('click', function() {
+            if($('#product').val()) {
+                document.getElementById("contract_part").style.display = "flex";
+            }
+            else {
+                document.getElementById("contract_part").style.display = "none";
+                $('#contract').val('');
+                $('#aoa').val('');
+            }
+        })
 
 
         $(document).on('click','.remove',function () {
-            $(this).closest('.row').remove()
+            $(this).closest('.row').remove();
+            calcAmount();
         })
 
+        $(document).on('click','.doc_remove',function () {
+            $(this).closest('.row').remove()
+        })
 
         $('.currency').on('change',function () {
             var selected = $('.currency option:selected')
@@ -227,22 +338,22 @@
 
 
         $(document).on('keyup','.amount',function () {
-            var total = 0;
-            $('.amount').each(function(e){
-                if($(this).val()!=''){
-                    total += parseFloat($(this).val());
-                }
-                $('.totalAmount').text(total.toFixed(4))
-            })
+            calcAmount();
         })
-
+        $('.beneficiary').on('click',function() {
+            $('#modal-success').modal('show')
+        })
         $(document).on('click', '.add-tax', function() {
+            $('#modal-success-tax #customerSubmit').attr('tax-count',$(this).attr('tax-count'));
             $('#modal-success-tax').modal('show')
         })
 
         $(document).ready(function(){
-            // document.getElementById("contract_part").style.display = "none";
-
+            calcAmount();
+            var product_id = '{{$invoice->product_id}}';
+            if(product_id == '') {
+                document.getElementById("contract_part").style.display = "none";
+            }
             $(document).on('submit','#customerSubmit',function(e){
                 e.preventDefault();
                 // AJAX request
@@ -253,34 +364,27 @@
                     url: "{{route('user.invoice.tax')}}",
                     data: $(this).serialize(),
                     success: function(msg) {
+                        console.log(msg);
                         $(`#tax_append[tax-count="${tax_count}"]`).append(`
                             <input type="text"  class="form-control shadow-none tax" value="${msg.name} ${msg.rate}%" data-rate="${msg.rate}" readonly required>
                             <input type="hidden" name="tax_id[]" class="form-control shadow-none" value=${msg.id}  required>
-
                             `);
                         $(`.add-tax[tax-count="${tax_count}"]`).remove();
                         $(`#tax_append[tax-count="${tax_count}"]`).attr('id', 'un_tax_append');
                         $('#modal-success-tax').modal('hide');
-                        computeTotalAmount();
+                        calcAmount();
                     },
                     error: function(XMLHttpRequest, textStatus, errorThrown) {
                         console.log("some error");
                     }
                 });
             });
-
-            function computeTotalAmount() {
-                var total = 0;
-                $('.amount').each(function(e){
-                    if($(this).val()!=''){
-                        var rate = parseFloat($(this).parent().parent().find('.tax').data('rate'))
-                        total += parseFloat($(this).val()) + rate *  parseFloat($(this).val()) / 100;
-                    }
-                    $('.totalAmount').text(total.toFixed(4))
-                })
-            }
         });
-
+        $('.send-email').on('click', function() {
+            $('#modal-send-email').modal('show');
+            $('#modal-send-email #email').val($(this).data('email'));
+            $('#modal-send-email #invoice_id').val($(this).data('id'));
+        });
 
     </script>
 @endpush
