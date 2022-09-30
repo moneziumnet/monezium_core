@@ -167,6 +167,13 @@
                               <label class="form-label required">{{__('Email Address')}}</label>
                               <input name="email" id="email" class="form-control shadow-none" placeholder="{{__('test@gmail.com')}}" type="email" required>
                           </div>
+                          <div class="form-group mt-2">
+                            <label class="form-label required">{{__('Select Type')}}</label>
+                            <select name="role" id="role" class="form-select" required>
+                                <option value="contractor">{{ __('Contractor') }}</option>
+                                <option value="client">{{ __('Client') }}</option>
+                            </select>
+                          </div>
                       </div>
                       <input name="contract_id" id="contract_id" type="hidden" required>
                       <div class="row mt-3">

@@ -227,30 +227,35 @@ class UserContractManageController extends Controller
     {
         $contract = Contract::findOrFail($request->contract_id);
         $gs = Generalsetting::first();
+        if ($request->role == 'contractor') {
+            email([
 
-        email([
+                'email'   => $request->email,
+                "subject" => 'New Contract from '.$gs->from_name,
+                'message' => "Hello". $contract->contractor->name.",<br/></br>".
 
-            'email'   => $request->email,
-            "subject" => 'New Contract from '.$gs->from_name,
-            'message' => "Hello". $contract->contractor->name.",<br/></br>".
+                    "You have received new contract as contractor. <br/>"." The Contract Title is <b>$contract->title</b>."."<br/>Please sign the contract." .".<br/></br>".
 
-                "You have received new contract as contractor. <br/>"." The Contract Title is <b>$contract->title</b>."."<br/>Please sign the contract." .".<br/></br>".
+                    "New Contract Url"  .": ".route('contract.view',['id' => encrypt($contract->id), 'role' => encrypt('contractor')]) ."<br/>
+                "
+            ]);
+        }
+        elseif($request->role == 'client') {
 
-                "New Contract Url"  .": ".route('contract.view',['id' => encrypt($contract->id), 'role' => encrypt('contractor')]) ."<br/>
-            "
-        ]);
+            email([
 
-        email([
+                'email'   => $request->email,
+                "subject" => 'New Contract from '.$gs->from_name,
+                'message' => "Hello". $contract->beneficiary->name.",<br/></br>".
 
-            'email'   => $contract->beneficiary->email,
-            "subject" => 'New Contract from '.$gs->from_name,
-            'message' => "Hello". $contract->beneficiary->name.",<br/></br>".
+                    "You have received new contract as client.  <br/>"." The Contract Title is <b>$contract->title</b>."."<br/>Please sign the contract." .".<br/></br>".
 
-                "You have received new contract as client.  <br/>"." The Contract Title is <b>$contract->title</b>."."<br/>Please sign the contract." .".<br/></br>".
+                    "New Contract Url"  .": ".route('contract.view',['id' => encrypt($contract->id), 'role' => encrypt('client')]) ."<br/>
+                "
+            ]);
+        }
 
-                "New Contract Url"  .": ".route('contract.view',['id' => encrypt($contract->id), 'role' => encrypt('client')]) ."<br/>
-            "
-        ]);
+
 
         return back()->with('message','The Contract has been sent to the contractor and client.');
     }
@@ -407,34 +412,37 @@ class UserContractManageController extends Controller
         return  redirect()->back()->with('success','AoA has been deleted successfully');
     }
 
-    public function aoa_sendToMail($id)
+    public function aoa_sendToMail(Request $request)
     {
-        $contract = ContractAoa::findOrFail($id);
+        $contract = ContractAoa::findOrFail($request->contract_id);
         $gs = Generalsetting::first();
+        if ($request->role == 'contractor') {
+            email([
 
-        email([
+                'email'   => $request->email,
+                "subject" => 'New AoA from '.$gs->from_name,
+                'message' => "Hello". $contract->contractor->name.",<br/></br>".
 
-            'email'   => $contract->contractor->email,
-            "subject" => 'New AoA from '.$gs->from_name,
-            'message' => "Hello". $contract->contractor->name.",<br/></br>".
+                    "You have received new AoA as contractor. <br/>"." The AoA Title is <b>$contract->title</b>."."<br/>Please sign the AoA." .".<br/></br>".
 
-                "You have received new AoA as contractor. <br/>"." The AoA Title is <b>$contract->title</b>."."<br/>Please sign the AoA." .".<br/></br>".
+                    "New AoA Url"  .": ".route('aoa.view',['id' => encrypt($contract->id), 'role' => encrypt('contractor')]) ."<br/>
+                "
+            ]);
+        }
+        elseif($request->role == 'client') {
 
-                "New AoA Url"  .": ".route('aoa.view',['id' => encrypt($contract->id), 'role' => encrypt('contractor')]) ."<br/>
-            "
-        ]);
+            email([
 
-        email([
+                'email'   => $request->email,
+                "subject" => 'New Contract from '.$gs->from_name,
+                'message' => "Hello". $contract->beneficiary->name.",<br/></br>".
 
-            'email'   => $contract->beneficiary->email,
-            "subject" => 'New Contract from '.$gs->from_name,
-            'message' => "Hello". $contract->beneficiary->name.",<br/></br>".
+                    "You have received new AoA as client.  <br/>"." The AoA Title is <b>$contract->title</b>."."<br/>Please sign the AoA." .".<br/></br>".
 
-                "You have received new AoA as client.  <br/>"." The AoA Title is <b>$contract->title</b>."."<br/>Please sign the AoA." .".<br/></br>".
-
-                "New AoA Url"  .": ".route('aoa.view',['id' => encrypt($contract->id), 'role' => encrypt('client')]) ."<br/>
-            "
-        ]);
+                    "New AoA Url"  .": ".route('aoa.view',['id' => encrypt($contract->id), 'role' => encrypt('client')]) ."<br/>
+                "
+            ]);
+        }
 
         return back()->with('message','The AoA has been sent to the contractor and client.');
     }
