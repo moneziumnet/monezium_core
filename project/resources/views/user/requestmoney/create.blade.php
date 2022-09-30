@@ -92,7 +92,7 @@
 
                                     <div class="form-group mt-3" id="otp_body">
                                         <label class="form-label required">{{__('OTP Code')}}</label>
-                                        <input name="otp_code" id="otp_code" class="form-control" placeholder="{{__('OTP Code')}}" type="text" step="any" value="{{ old('opt_code') }}" required>
+                                        <input name="otp_code" id="otp_code" class="form-control" placeholder="{{__('OTP Code')}}" type="text" step="any" value="{{ old('opt_code') }}" >
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -134,12 +134,13 @@
     })
 
     $('#submit').on('click', function() {
-        if(!document.getElementById("request-form").checkValidity()) {
-            return;
-        }
+        // if(!document.getElementById("request-form").checkValidity()) {
+        //     return;
+        // }
         if (($('#account_email').val().length != 0) && ($('#wallet_id').val().length != 0) && ($('#amount').val().length != 0) && ($('#account_name').val().length != 0)  && ($('#details').val().length != 0)) {
             var verify = "{{$user->paymentCheck('Request Money')}}";
             event.preventDefault();
+            $('#otp_code').prop('required',false);
             $('#receiver_email').text($('#account_email').val());
             $('#receiver_name').text($('#account_name').val());
             $('#currency').text($('#wallet_id option:selected').text().split('--')[0]);
