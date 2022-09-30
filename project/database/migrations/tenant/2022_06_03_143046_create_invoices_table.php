@@ -33,6 +33,7 @@ class CreateInvoicesTable extends Migration
             $table->mediumText('documents')->nullable();
             $table->tinyInteger('payment_status')->default(0)->comment('1 => paid, 0 => not paid');
             $table->tinyInteger('status')->default(0)->comment('1 => published, 0 => not published , 2 => cancel');
+            $table->tinyInteger('template')->comment('0 => basic, 1=> classic, 2=> pro');
             $table->timestamps();
         });
     }
