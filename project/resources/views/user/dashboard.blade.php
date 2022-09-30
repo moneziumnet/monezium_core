@@ -241,6 +241,7 @@
                 {{__('Bank Account list')}}
               </h1>
             </div>
+            @if ($user->kyc_status == 1)
             <div class="col-auto ms-auto d-print-none">
                 <div class="btn-list">
 
@@ -249,6 +250,7 @@
                   </a>
                 </div>
               </div>
+            @endif
           </div>
         </div>
     </div>
