@@ -59,14 +59,14 @@
               <div class="col-md-6">
                 <div class="form-group">
                     <label for="fixed_charge">{{ __('Fixed Charge') }}</label>
-                    <input type="number" class="form-control" id="fixed_charge" name="fixed_charge" placeholder="{{ __('0') }}" min="0" value="{{$data->fixed_charge}}" required>
+                    <input type="number" step="any" class="form-control" id="fixed_charge" name="fixed_charge" placeholder="{{ __('0') }}" min="0" value="{{$data->fixed_charge}}" required>
                   </div>
               </div>
 
               <div class="col-md-6">
                 <div class="form-group">
                     <label for="percent_charge">{{ __('Percent Charge') }} (%)</label>
-                    <input type="number" class="form-control" id="percent_charge" name="percent_charge" placeholder="{{ __('0') }}" min="0" value="{{$data->percent_charge}}" required>
+                    <input type="number" step="any" class="form-control" id="percent_charge" name="percent_charge" placeholder="{{ __('0') }}" min="0" value="{{$data->percent_charge}}" required>
                   </div>
               </div>
 

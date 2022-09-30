@@ -203,10 +203,12 @@ class SubInsBankController extends Controller
             $input['required_information'] = json_encode(array_values($request->form_builder));
         }
         $data->update($input);
-        $info_data = $input['key'];
-        $bank_gateway = BankGateway::where('subbank_id', $id)->first();
-        $bank_gateway->information = $info_data;
-        $bank_gateway->update();
+        if(isset($input['key'])) {
+            $info_data = $input['key'];
+            $bank_gateway = BankGateway::where('subbank_id', $id)->first();
+            $bank_gateway->information = $info_data;
+            $bank_gateway->update();
+        }
 
         $msg = 'Bank Updated Successfully.<a href="'.route('admin.subinstitution.banks',$data->ins_id).'">View Bank Lists.</a>';
         return response()->json($msg);
