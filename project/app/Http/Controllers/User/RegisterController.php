@@ -13,6 +13,7 @@ use App\Models\BankPlan;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
 use App\Models\Notification;
+use App\Models\Charge;
 use Illuminate\Http\Request;
 use App\Classes\GeniusMailer;
 use App\Models\ReferralBonus;
@@ -33,11 +34,11 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
-    public function showRegisterForm(Request $request)
+    public function showRegisterForm(Request $request, $id)
     {
         //$data = BankPlan::findOrFail($id);
         //return view('user.register', compact('data'));
-        return view('user.register');
+        return view('user.register', compact('id'));
     }
 
     public function showDomainRegisterForm($id)
@@ -89,7 +90,7 @@ class RegisterController extends Controller
         return response()->json($msg);
     }
 
-    public function register(Request $request)
+    public function register(Request $request, $id)
     {
         $value = session('captcha_string');
         if ($request->codes != $value) {
@@ -109,7 +110,7 @@ class RegisterController extends Controller
 
         $gs = Generalsetting::first();
         //$subscription = BankPlan::findOrFail($id);
-        $subscription = BankPlan::findOrFail(1);
+        $subscription = BankPlan::findOrFail($id);
 
         $user = new User;
         $input = $request->all();
@@ -151,16 +152,48 @@ class RegisterController extends Controller
         $user->fill($input)->save();
 
         $default_currency = Currency::where('is_default','1')->first();
+        $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+
         $user_wallet = new Wallet();
         $user_wallet->user_id = $user->id;
         $user_wallet->user_type = 1;
         $user_wallet->currency_id = $default_currency->id;
-        $user_wallet->balance = 0;
+        $user_wallet->balance = -1 * ($chargefee->data->fixed_charge + $subscription->amount);
         $user_wallet->wallet_type = 1;
         $user_wallet->wallet_no =$gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
         $user_wallet->created_at = date('Y-m-d H:i:s');
         $user_wallet->updated_at = date('Y-m-d H:i:s');
         $user_wallet->save();
+
+        $trans = new Transaction();
+        $trans->trnx = str_rand();
+        $trans->user_id     = $user->id;
+        $trans->user_type   = 1;
+        $trans->currency_id = $default_currency->id;
+        $trans->amount      = $chargefee->data->fixed_charge;
+        $trans_wallet       = get_wallet($user->id, 1, 1);
+        $trans->wallet_id   = $user_wallet->id;
+        $trans->charge      = 0;
+        $trans->type        = '-';
+        $trans->remark      = 'wallet_create';
+        $trans->details     = trans('Wallet Create');
+        $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+        $trans->save();
+
+        $trans = new Transaction();
+        $trans->trnx = str_rand();
+        $trans->user_id     = $user->id;
+        $trans->user_type   = 1;
+        $trans->currency_id = $default_currency->id;
+        $trans->amount      = $subscription->amount;
+        $trans_wallet       = get_wallet($user->id, 1, 1);
+        $trans->wallet_id   = $user_wallet->id;
+        $trans->charge      = 0;
+        $trans->type        = '-';
+        $trans->remark      = 'wallet_create';
+        $trans->details     = trans('Wallet Create');
+        $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+        $trans->save();
 
         if ($gs->is_verification_email == 1) {
             $verificationLink = "<a href=" . url('user/register/verify/' . $token) . ">Simply click here to verify. </a>";
@@ -203,10 +236,10 @@ class RegisterController extends Controller
                     $mainUserTrans->trnx        = str_rand();
                     $mainUserTrans->user_id     = $mainUser->id;
                     $mainUserTrans->user_type   = 1;
-                    
+
                     $trans_wallet = get_wallet($mainUser->id, $currency);
                     $mainUserTrans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-                    
+
                     $mainUserTrans->currency_id = $currency;
                     $mainUserTrans->amount      = $gs->affilate_user;
                     $mainUserTrans->charge      = 0;
@@ -230,7 +263,7 @@ class RegisterController extends Controller
                     $newUserTrans->user_id     = $user->id;
                     $newUserTrans->user_type   = 1;
                     $newUserTrans->currency_id = $currency;
-                    
+
                     $trans_wallet = get_wallet($user->id, $currency);
                     $newUserTrans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
 

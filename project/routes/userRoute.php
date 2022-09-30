@@ -88,8 +88,8 @@ Route::prefix('user')->group(function() {
     Route::post('/googleotp', [OTPController::class,'googleotp'])->name('user.googleotp.submit');
     Route::get('/sendotp',   [OTPController::class,'sendotp'])->name('user.send.otp');
 
-    Route::get('/register', [RegisterController::class,'showRegisterForm'])->name('user.register');
-    Route::post('/register', [RegisterController::class,'register'])->name('user.register.submit');
+    Route::get('/register/{id}', [RegisterController::class,'showRegisterForm'])->name('user.register');
+    Route::post('/register/{id}', [RegisterController::class,'register'])->name('user.register.submit');
 
     Route::get('/domain-register/{id}', [RegisterController::class,'showDomainRegisterForm'])->name('user.domain.register');
     Route::post('/domain-register/{id}', [RegisterController::class,'domainRegister'])->name('user.domain.register.submit');
@@ -101,6 +101,7 @@ Route::prefix('user')->group(function() {
       Route::get('/dashboard', [UserController::class,'index'])->name('user.dashboard');
       Route::post('/user/wallet', [UserController::class,'wallet_create'])->name('user.wallet.create');
       Route::POST('/user/bankaccount/openpayd',[OpenPaydController::class,'store'])->name('user.bankaccount.openpayd.store');
+      Route::POST('/user/bankaccount/railsbank',[RailsBankController::class,'store'])->name('user.bankaccount.railsbank.store');
       Route::POST('/user/bankaccount/gateway',[UserController::class,'gateway'])->name('user.bankaccount.gateway');
 
       Route::get('/username/{number}', [UserController::class,'username'])->name('user.username');
@@ -165,7 +166,7 @@ Route::prefix('user')->group(function() {
       Route::post('/merchant/setting/{tab?}', [MerchantController::class,'setting_update'])->name('user.merchant.settingUpdate');
       Route::post('/merchant/cryptowallet/update', [MerchantController::class,'address_edit'])->name('user.merchant.cryptowallet.update');
       Route::post('/merchant/download-qr',  [MerchantController::class,'downloadQR'])->name('user.merchant.download.qr');
-      
+
       Route::get('/merchant/send-money',[MerchantSendController::class,'create'])->name('user.merchant.send.money.create');
       Route::post('/merchant/send-money',[MerchantSendController::class,'store'])->name('user.merchant.send.money.store');
       Route::get('/merchant/send/money/success',[MerchantSendController::class,'success'])->name('user.merchant.send.money.success');
@@ -306,7 +307,7 @@ Route::prefix('user')->group(function() {
       Route::get('invoices-payment/submit/crypto/{id}',   [ManageInvoiceController::class,'invoicePaymentCrypto'])->name('user.invoice.payment.crypto');;
       Route::post('invoices-payment/link/pay',   [ManageInvoiceController::class,'invoice_link_pay'])->name('user.invoice.link.pay');
       Route::get('invoices-payment/link/crypto/{id}',   [ManageInvoiceController::class,'invoice_link_crypto'])->name('user.invoice.link.crypto');
-      
+
       Route::post('invoice/beneficiary/create',   [ManageInvoiceController::class,'beneficiary_create'])->name('user.invoice.beneficiary.create');
       Route::get('invoices/incoming',   [ManageInvoiceController::class,'incoming_index'])->name('user.invoice.incoming.index');
       Route::get('invoices/incoming/edit/{id}',   [ManageInvoiceController::class,'incoming_edit'])->name('user.invoice.incoming.edit');
