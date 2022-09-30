@@ -100,7 +100,7 @@ class OtherBankController extends Controller
             }
 
             if($global_range->max_limit < $request->amount){
-                return redirect()->back()->with('unsuccess','Request Amount should be less than this'.$global_range->max);
+                return redirect()->back()->with('unsuccess','Request Amount should be less than this '.$global_range->max);
             }
 
             $currency = defaultCurr();
