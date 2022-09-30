@@ -21,9 +21,9 @@ class MerchantShopController extends Controller
     }
 
     //*** JSON Request
-    public function datatables()
+    public function datatables($id)
     {
-        $datas = MerchantShop::orderBy('id','desc');
+        $datas = MerchantShop::where('merchant_id', $id)->orderBy('id','desc');
          return Datatables::of($datas)
                             ->editColumn('merchant_id', function(MerchantShop $data){
                                 $user = User::findOrFail($data->merchant_id);
@@ -52,9 +52,10 @@ class MerchantShopController extends Controller
     }
 
     //*** GET Request
-    public function index()
+    public function index($id)
     {
-        return view('admin.merchantshop.index');
+        $data['data'] = User::findOrFail($id);
+        return view('admin.merchantshop.index', $data);
     }
 
 

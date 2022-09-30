@@ -288,8 +288,8 @@ Route::prefix('admin')->group(function () {
     Route::post('/plan/store', [PlanController::class, 'store'])->name('admin.plan.store');
     Route::post('/plan/update/{id}', [PlanController::class, 'update'])->name('admin.plan.update');
 
-    Route::get('/merchant/shop', [MerchantShopController::class, 'index'])->name('admin.merchant.shop.index');
-    Route::get('/merchant/shop/datatables', [MerchantShopController::class, 'datatables'])->name('admin.merchant.shop.datatables');
+    Route::get('/merchant/shop/{id}', [MerchantShopController::class, 'index'])->name('admin.merchant.shop.index');
+    Route::get('/merchant/shop/datatables/{id}', [MerchantShopController::class, 'datatables'])->name('admin.merchant.shop.datatables');
     Route::get('/merchant/shop/status/{id1}/{id2}', [MerchantShopController::class, 'status'])->name('admin.merchant.shop.status');
 
   });
