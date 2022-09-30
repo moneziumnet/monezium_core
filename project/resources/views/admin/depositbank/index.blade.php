@@ -75,7 +75,6 @@
             <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank Address')<span id="bank_address" style="margin-left: 60px"></span></li>
             <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank IBAN')<span id="bank_iban" style="margin-left: 60px"></span></li>
             <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank SWIFT')<span id="bank_swift" style="margin-left: 60px"></span></li>
-            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Deposit No.')<span id="deposit_number" style="margin-left: 60px"></span></li>
             <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Description')<span id="deposit_description" style="margin-left: 60px"></span></li>
             <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;" id="li_document" >@lang('Document')<span  style="margin-left: 60px"> <a id="document" target="_blank"> </a> </span></li>
         </ul>
@@ -154,8 +153,7 @@
                 $('#user_addr').text(res_data.sub_institution.address);
             }
             
-            $('#deposit_number').text(deposit_number);
-            $('#deposit_description').text(deposit_description);
+            $('#deposit_description').text(deposit_description + " / DepositNo : " + deposit_number);
             if(deposit_status == "pending"){
                 $('#complete_deposit').attr('data-href', complete_url);
                 $('#reject_deposit').attr('data-href', reject_url);

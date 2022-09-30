@@ -131,7 +131,6 @@
             <li class="list-group-item">@lang('Bank SWIFT')<span id="bank_swift"></span></li>
             <li class="list-group-item">@lang('Amount')<span id="amount"></span></li>
             <li class="list-group-item">@lang('Description')<span id="bank_details"></span></li>
-            <li class="list-group-item">@lang('Deposit No.')<span id="deposit_no"></span></li>
         </ul>
         </div>
     </div>
@@ -156,8 +155,7 @@
           $('#bank_address').text($(this).data('subbank').address);
           $('#bank_iban').text($(this).data('data').iban);
           $('#bank_swift').text($(this).data('data').swift);
-          $('#bank_details').text($(this).data('deposit').details);
-          $('#deposit_no').text($(this).data('deposit').deposit_number);
+          $('#bank_details').text($(this).data('deposit').details + " / DepositNo : " + $(this).data('deposit').deposit_number);
           $('#amount').text($(this).data('amount'));
           $('#modal-success').modal('show');
       })
