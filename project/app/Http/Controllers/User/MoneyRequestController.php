@@ -61,9 +61,9 @@ class MoneyRequestController extends Controller
             return redirect()->back()->with('unsuccess','You have to buy a plan to withdraw.');
         }
 
-        // if(now()->gt($user->plan_end_date)){
-        //     return redirect()->back()->with('unsuccess','Plan Date Expired.');
-        // }
+        if(now()->gt($user->plan_end_date)){
+            return redirect()->back()->with('unsuccess','Plan Date Expired.');
+        }
 
         $bank_plan = BankPlan::whereId($user->bank_plan_id)->first();
         $dailyRequests = MoneyRequest::whereUserId(auth()->id())->whereDate('created_at', '=', date('Y-m-d'))->whereStatus('success')->sum('amount');
