@@ -42,6 +42,7 @@ class UserContractManageController extends Controller
         $data->user_id = $request->user_id;
         $data->contractor_id = $request->contractor_id;
         $data->client_id = $request->client_id;
+        $data->amount = $request->amount;
 
         if(isset($request->item)){
             $items = array_combine($request->item,$request->value);
@@ -165,6 +166,7 @@ class UserContractManageController extends Controller
 
         $data = Contract::findOrFail($id);
         $data->title = $request->title;
+        $data->amount = $request->amount;
         $data->information = json_encode(array_combine($request->desc_title,$request->desc_text));
         $data->user_id = $request->user_id;
         $contractor_info = explode(' ', $request->contractor);
@@ -324,6 +326,7 @@ class UserContractManageController extends Controller
         $data->client_id = $request->client_id;
 
         $data->title = $request->title;
+        $data->amount = $request->amount;
         $data->information = json_encode(array_combine($request->desc_title,$request->desc_text));
         $data->contract_id = $request->contract_id;
         if(isset($request->item)){
@@ -446,6 +449,7 @@ class UserContractManageController extends Controller
         }
         $data->client_id = $request->client_id;
         $data->title = $request->title;
+        $data->amount = $request->amount;
         $data->information = json_encode(array_combine($request->desc_title,$request->desc_text));
         $data->contract_id = $request->contract_id;
         if(isset($request->item)){

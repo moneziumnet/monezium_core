@@ -81,9 +81,19 @@
                             </div>
                         </div>
 
-                        <div class="form-group mb-3 mt-3">
-                            <label class="form-label required">{{__('Contract Name')}}</label>
-                            <input name="title" id="title" class="form-control" autocomplete="off" placeholder="{{__('Enter Title')}}" type="text" value="{{$data->title}}" required>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3 mt-3">
+                                    <label class="form-label required">{{__('Contract Name')}}</label>
+                                    <input name="title" id="title" class="form-control" autocomplete="off" placeholder="{{__('Enter Title')}}" type="text" value="{{$data->title}}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3 mt-3">
+                                    <label class="form-label required">{{__('Amount')}}</label>
+                                    <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('Enter Amount')}}" type="number" step="any" value="{{$data->amount}}" required>
+                                </div>
+                            </div>
                         </div>
                         @php
                             $information = $data->information ? json_decode($data->information, True) : array("" => null);
@@ -133,6 +143,14 @@
                                     <div class="row form-group mb-3 mt-3">
                                         <div class="col-md-4 mb-3"><div class="form-label">{{__('Pattern name')}}</div></div>
                                         <div class="col-md-8 mb-3"><div class="form-label">{{__('Value')}}</div></div>
+                                    </div>
+                                    <div class="row form-group my-3">
+                                        <div class="col-md-4 mb-3">
+                                            <input type="text" class="form-control shadow-none itemname" readonly value="Amount" >
+                                        </div>
+                                        <div class="col-md-7 mb-3">
+                                            <input type="number" id="amount2" step="any" name="amount2" class="form-control shadow-none itemvalue" value="{{$data->amount}}" readonly >
+                                        </div>
                                     </div>
                                     <div class="default-contractor-pattern-container">
                                         @foreach (json_decode($data->default_pattern) as $key =>$value)
@@ -464,5 +482,8 @@ I need 1000 from you.')}}</textarea>
     $('.pattern-help').on('click', function(){
         $("#modal-pattern-help").modal('show')
     })
+    $('#amount').on('change', function() {
+        $('#amount2').val($('#amount').val());
+    });
 </script>
 @endpush

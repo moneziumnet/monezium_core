@@ -93,9 +93,19 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group mb-3 mt-3">
-                            <label class="form-label required">{{__('Contract AOA Name')}}</label>
-                            <input name="title" id="title" class="form-control" autocomplete="off" placeholder="{{__('Enter Title')}}" type="text" required>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3 mt-3">
+                                    <label class="form-label required">{{__('Contract AOA Name')}}</label>
+                                    <input name="title" id="title" class="form-control" autocomplete="off" placeholder="{{__('Enter Title')}}" type="text" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3 mt-3">
+                                    <label class="form-label required">{{__('Amount')}}</label>
+                                    <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('Enter Amount')}}" type="number" step="any" required>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row form-group mb-3 mt-3">
@@ -130,6 +140,14 @@
                                     <div class="row form-group mt-3 text-start">
                                         <div class="col-md-4"><div class="form-label">{{__('Pattern name')}}</div></div>
                                         <div class="col-md-8"><div class="form-label">{{__('Value')}}</div></div>
+                                    </div>
+                                    <div class="row form-group my-3">
+                                        <div class="col-md-4 mb-3">
+                                            <input type="text" class="form-control shadow-none itemname" readonly value="Amount" >
+                                        </div>
+                                        <div class="col-md-7 mb-3">
+                                            <input type="number" id="amount2" step="any" name="amount2" class="form-control shadow-none itemvalue" readonly >
+                                        </div>
                                     </div>
                                     <div class="default-contractor-pattern-container">
                                     </div>
@@ -416,7 +434,9 @@ $('.desc-add').on('click',function(){
         </div>
     `);
 })
-
+$('#amount').on('change', function() {
+    $('#amount2').val($('#amount').val());
+});
 $(document).on('click','.remove',function () {
     $(this).closest('.row').remove()
 })
