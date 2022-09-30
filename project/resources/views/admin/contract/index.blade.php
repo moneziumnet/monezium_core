@@ -31,7 +31,6 @@
                                 <tr>
                                     <th>{{__('No.')}}</th>
                                     <th>{{__('Title')}}</th>
-                                    <th>{{__('Description')}}</th>
                                     <th>{{__('E-Sign')}}</th>
                                     <th>{{__('Status')}}</th>
                                     <th>{{__('Action')}}</th>
@@ -120,7 +119,6 @@
                     }
                 },
 				{ data: 'title', name: 'title' },
-				{ data: 'description', name: 'description' },
 				{ data: 'image_path', name: 'image_path' },
 				{ data: 'status', name: 'status' },
 				{ data: 'action', name: 'action' }

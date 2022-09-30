@@ -24,20 +24,17 @@
             {{ csrf_field() }}
 
 
-              <div class="form-group">
-                <label for="inp-title">{{ __('Title') }}</label>
-                <input type="text" class="form-control" id="inp-title" name="title"  placeholder="{{ __('Enter Title') }}" value="{{$data->title}}" readonly>
-              </div>
-
-              <div class="form-group">
-                <label for="inp-amount">{{ __('Amount') }}</label>
-                <input type="text" class="form-control" id="inp-amount" name="amount"   value="{{$data->amount}}" readonly>
-              </div>
-
-              <div class="form-group">
-                <label for="inp-details">{{ __('Description') }}</label>
-                <textarea name="description" class="form-control summernote" id="inp-details" cols="30" rows="10" placeholder="{{__('Description')}}" readonly>{{$data->description}}</textarea>
-              </div>
+            <div class="text-center">
+                <h1>
+                    {{__($data->title)}}
+                </h1>
+            </div>
+            <div class="mt-5 mb-3">
+                @foreach ($information as $title => $text)
+                    <h2 class="ms-1">{{ $title }}</h2>
+                    <p>{!!nl2br($text)!!}</p>
+                @endforeach
+            </div>
 
       </div>
     </div>

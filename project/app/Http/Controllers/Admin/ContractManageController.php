@@ -22,14 +22,6 @@ class ContractManageController extends Controller
                         ->addColumn('title',function(Contract $data){
                             return $data->title;
                         })
-                        ->addColumn('description',function(Contract $data){
-                            if ( strlen($data->description) > 20 ) {
-                                return htmlentities(substr($data->description, 0, 10)).' ...';
-                            }
-                            else {
-                                return htmlentities($data->description);
-                            }
-                        })
                         ->editColumn('image_path', function(Contract $data){
                             if (isset($data->image_path)) {
                                 return '<a href ="'.asset('assets/images/'.$data->image_path).'" attributes-list download > Download E-Sign </a>';
@@ -65,7 +57,23 @@ class ContractManageController extends Controller
 
     public function view($id) {
         $data = Contract::findOrFail($id);
-        return view('admin.contract.view', compact('data'));
+        $information = $data->information ? json_decode($data->information) : array("" => null);
+        foreach ($information as $title => $text) {
+            if(isset($data->default_pattern)){
+
+                foreach (json_decode($data->default_pattern, True) as $key => $value) {
+                    if(strpos($text, "{".$key."}" ) !== false) {
+                        $information->$title = str_replace("{".$key."}", $value ,$information->$title);
+                    }
+                }
+            }
+            foreach (json_decode($data->pattern, True) as $key => $value) {
+                if(strpos($text, "{".$key."}" ) !== false) {
+                    $information->$title = str_replace("{".$key."}", $value ,$information->$title);
+                }
+            }
+        }
+        return view('admin.contract.view', compact('data', 'information'));
     }
 
     public function aoa_index($id) {
@@ -82,14 +90,6 @@ class ContractManageController extends Controller
         return Datatables::of($datas)
                         ->addColumn('title',function(ContractAoa $data){
                             return $data->title;
-                        })
-                        ->addColumn('description',function(ContractAoa $data){
-                            if ( strlen($data->description) > 20 ) {
-                                return htmlentities(substr($data->description, 0, 10)).' ...';
-                            }
-                            else {
-                                return htmlentities($data->description);
-                            }
                         })
                         ->editColumn('contracter_image_path', function(ContractAoa $data){
                             if (isset($data->contracter_image_path)) {
@@ -127,7 +127,23 @@ class ContractManageController extends Controller
 
     public function aoa_view($id) {
         $data = ContractAoa::findOrFail($id);
-        return view('admin.aoa.view', compact('data'));
+        $information = $data->information ? json_decode($data->information) : array("" => null);
+        foreach ($information as $title => $text) {
+            if(isset($data->default_pattern)){
+
+                foreach (json_decode($data->default_pattern, True) as $key => $value) {
+                    if(strpos($text, "{".$key."}" ) !== false) {
+                        $information->$title = str_replace("{".$key."}", $value ,$information->$title);
+                    }
+                }
+            }
+            foreach (json_decode($data->pattern, True) as $key => $value) {
+                if(strpos($text, "{".$key."}" ) !== false) {
+                    $information->$title = str_replace("{".$key."}", $value ,$information->$title);
+                }
+            }
+        }
+        return view('admin.aoa.view', compact('data', 'information'));
     }
 }
 
