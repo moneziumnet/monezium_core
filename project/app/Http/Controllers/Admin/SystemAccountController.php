@@ -36,8 +36,8 @@ class SystemAccountController extends Controller
                 $gs = Generalsetting::first();
                 if ($currency->type == 2) {
                     if ($currency->code == 'BTC') {
-                        $address = RPC_BTC_Create('createwallet',['system_btc']);
-                        $keyword = 'system_btc';
+                        $keyword = str_rand();
+                        $address = RPC_BTC_Create('createwallet',[$keyword]);
                     }
                     elseif ($currency->code == 'ETH'){
                         $address = RPC_ETH('personal_newAccount',['123123']);

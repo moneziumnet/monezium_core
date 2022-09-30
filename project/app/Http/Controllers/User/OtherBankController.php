@@ -96,11 +96,11 @@ class OtherBankController extends Controller
             $finalAmount = $request->amount + $transaction_global_cost;
 
             if($global_range->min > $request->amount){
-                return redirect()->back()->with('unsuccess','Request Amount should be greater than this');
+                return redirect()->back()->with('unsuccess','Request Amount should be greater than this '.$global_range->min);
             }
 
             if($global_range->max_limit < $request->amount){
-                return redirect()->back()->with('unsuccess','Request Amount should be less than this');
+                return redirect()->back()->with('unsuccess','Request Amount should be less than this'.$global_range->max);
             }
 
             $currency = defaultCurr();
