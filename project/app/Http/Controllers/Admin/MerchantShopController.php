@@ -80,7 +80,8 @@ class MerchantShopController extends Controller
             if($value->type == 2) {
                 $address = RPC_ETH('personal_newAccount',['123123']);
                 if ($address == 'error') {
-                    return response()->json(array('errors' => [0 => __('You can not create this shop because there is some issue in crypto node.')]));
+                    continue;
+                    // return response()->json(array('errors' => [0 => __('You can not create this shop because there is some issue in crypto node.')]));
                 }
                 $keyword = '123123';
             }
