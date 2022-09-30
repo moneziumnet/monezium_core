@@ -25,7 +25,11 @@ class Contract extends Model
 
     public function contractor()
     {
-        // return $this->belongsTo(User::class, 'contractor_id')->withDefault();
+        return $this->morphTo();
+    }
+
+    public function client()
+    {
         return $this->morphTo();
     }
 

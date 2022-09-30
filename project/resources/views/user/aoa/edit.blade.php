@@ -68,7 +68,7 @@
                             <div class="col-md-6 mb-3">
                                 <div class="form-label required">@lang('Select Client')</div>
                                 <div class="input-group">
-                                    <select class="form-select shadow-none" id="client_id" name="client_id" required>
+                                    <select class="form-select shadow-none" id="client" name="client" required>
                                         <option value="" selected>@lang('Select')</option>
                                         @foreach ($clientlist as $user)
                                         @php
@@ -82,8 +82,13 @@
                                                 'contact_person' => $user->contact_person
                                             )
                                         @endphp
-                                        <option value="{{$user->id}}" data="{{json_encode($client_item)}}" {{$user->id == $data->client_id ? 'selected' : ''}}>{{$user->name}}</option>
+                                        <option value="{{$user->id}}" type="beneficiary" data="{{json_encode($client_item)}}" {{ $data->client_type == 'App\Models\Beneficiary' && $user->id == $data->contractor_id ? 'selected' : ''}} >{{$user->name}}</option>
                                         @endforeach
+                                        @php
+                                        $client_item = App\Models\User::select('name','email','address','phone')
+                                            ->find(auth()->id());
+                                        @endphp
+                                        <option value="User {{auth()->user()->id}}" type="user" data="{{json_encode($client_item)}}" {{ $data->client_type == 'App\Models\User' && $user->id == auth()->user()->id ? 'selected' : ''}} >{{auth()->user()->name}}</option>
                                     </select>
                                     <button type="button"  data-bs-toggle="tooltip" data-bs-original-title="@lang('Add New Beneficiary')" class="input-group-text beneficiary"><i class="fas fa-plus"></i></button>
                                 </div>
@@ -299,157 +304,60 @@ I need 1000 from you.')}}</textarea>
         var contractor = $('#contractor option:selected');
         if(contractor.attr('type') == 'user') {
             const data = JSON.parse(contractor.attr('data'));
-            $('.default-contractor-pattern-container').html(`
-                <div class="row form-group mb-3 mt-3">
-                    <div class="col-md-4 mb-3">
-                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Contractor Name" readonly>
-                    </div>
-                    <div class="col-md-7 mb-3">
-                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.name}" readonly>
-                    </div>
-                </div>
-                <div class="row form-group mb-3 mt-3">
-                    <div class="col-md-4 mb-3">
-                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Contractor Email" readonly>
-                    </div>
-                    <div class="col-md-7 mb-3">
-                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.email}" readonly>
-                    </div>
-                </div>
-                <div class="row form-group mb-3 mt-3">
-                    <div class="col-md-4 mb-3">
-                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Contractor Address" readonly>
-                    </div>
-                    <div class="col-md-7 mb-3">
-                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.address}" readonly >
-                    </div>
-                </div>
-                <div class="row form-group mb-3 mt-3">
-                    <div class="col-md-4 mb-3">
-                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Contractor Phone" readonly>
-                    </div>
-                    <div class="col-md-7 mb-3">
-                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.phone}" readonly>
-                    </div>
-                </div>
-            `);
+            setDefaultDiv(
+                'default-contractor-pattern-container',
+                ['Contractor Name', 'Contractor Email', 'Contractor Address', 'Contractor Phone'],
+                [data.name, data.email, data.address, data.phone, ]
+            );
         } else if(contractor.attr('type') == 'beneficiary') {
             const data = JSON.parse(contractor.attr('data'));
-
-            $('.default-contractor-pattern-container').html(`
-                <div class="row form-group mb-3 mt-3">
-                    <div class="col-md-4 mb-3">
-                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Contractor Name" readonly>
-                    </div>
-                    <div class="col-md-7 mb-3">
-                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.name}" readonly >
-                    </div>
-                </div>
-                <div class="row form-group mb-3 mt-3">
-                    <div class="col-md-4 mb-3">
-                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Contractor Email" readonly>
-                    </div>
-                    <div class="col-md-7 mb-3">
-                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.email}" readonly >
-                    </div>
-                </div>
-                <div class="row form-group mb-3 mt-3">
-                    <div class="col-md-4 mb-3">
-                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Contractor Address" readonly>
-                    </div>
-                    <div class="col-md-7 mb-3">
-                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.address}" readonly >
-                    </div>
-                </div>
-                <div class="row form-group mb-3 mt-3">
-                    <div class="col-md-4 mb-3">
-                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Contractor Phone" readonly>
-                    </div>
-                    <div class="col-md-7 mb-3">
-                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.phone}" readonly >
-                    </div>
-                </div>
-                <div class="row form-group mb-3 mt-3">
-                    <div class="col-md-4 mb-3">
-                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Contractor Registration No" readonly>
-                    </div>
-                    <div class="col-md-7 mb-3">
-                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.registration_no}" readonly>
-                    </div>
-                </div>
-                <div class="row form-group mb-3 mt-3">
-                    <div class="col-md-4 mb-3">
-                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Contractor VAT No" readonly>
-                    </div>
-                    <div class="col-md-7 mb-3">
-                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.vat_no}" readonly >
-                    </div>
-                </div>
-            `);
+            setDefaultDiv(
+                'default-contractor-pattern-container',
+                ['Contractor Name', 'Contractor Email', 'Contractor Address', 'Contractor Phone', 'Contractor Registration No','Contractor VAT No'],
+                [data.name, data.email, data.address, data.phone, data.registration_no,data.vat_no]
+            );
         } else {
             $('.default-contractor-pattern-container').html('');
         }
-    });
+    })
 
-    $('#client_id').on('change', function() {
-        var client = $('#client_id option:selected');
-        if(client.attr('data')) {
+    $('#client').on('change', function() {
+        var client = $('#client option:selected');
+        if(client.attr('type') == 'user') {
             const data = JSON.parse(client.attr('data'));
-
-            $('.default-client-pattern-container').html(`
-                <div class="row form-group mb-3 mt-3">
-                    <div class="col-md-4 mb-3">
-                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Client Name" readonly>
-                    </div>
-                    <div class="col-md-7 mb-3">
-                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.name}" readonly >
-                    </div>
-                </div>
-                <div class="row form-group mb-3 mt-3">
-                    <div class="col-md-4 mb-3">
-                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Client Email" readonly>
-                    </div>
-                    <div class="col-md-7 mb-3">
-                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.email}" readonly >
-                    </div>
-                </div>
-                <div class="row form-group mb-3 mt-3">
-                    <div class="col-md-4 mb-3">
-                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Client Address" readonly>
-                    </div>
-                    <div class="col-md-7 mb-3">
-                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.address}" readonly >
-                    </div>
-                </div>
-                <div class="row form-group mb-3 mt-3">
-                    <div class="col-md-4 mb-3">
-                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Client Phone" readonly>
-                    </div>
-                    <div class="col-md-7 mb-3">
-                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.phone}" readonly >
-                    </div>
-                </div>
-                <div class="row form-group mb-3 mt-3">
-                    <div class="col-md-4 mb-3">
-                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Client Registration No" readonly>
-                    </div>
-                    <div class="col-md-7 mb-3">
-                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.registration_no}" readonly >
-                    </div>
-                </div>
-                <div class="row form-group mb-3 mt-3">
-                    <div class="col-md-4 mb-3">
-                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Client VAT No" readonly>
-                    </div>
-                    <div class="col-md-7 mb-3">
-                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.vat_no}" readonly >
-                    </div>
-                </div>
-            `);
+            setDefaultDiv(
+                'default-client-pattern-container',
+                ['Client Name', 'Client Email', 'Client Address', 'Client Phone'],
+                [data.name, data.email, data.address, data.phone, ]
+            );
+        } else if(client.attr('type') == 'beneficiary') {
+            const data = JSON.parse(client.attr('data'));
+            setDefaultDiv(
+                'default-client-pattern-container',
+                ['Client Name', 'Client Email', 'Client Address', 'Client Phone', 'Client Registration No','Client VAT No'],
+                [data.name, data.email, data.address, data.phone, data.registration_no,data.vat_no]
+            );
         } else {
             $('.default-client-pattern-container').html('');
         }
     });
+    var setDefaultDiv = function(div_name, keys, values){
+        let str_html = "";
+        for (let index = 0; index < keys.length; index++) {
+            str_html += `
+            <div class="row form-group mb-3 mt-3">
+                <div class="col-md-4 mb-3">
+                    <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="${keys[index]}" readonly>
+                </div>
+                <div class="col-md-7 mb-3">
+                    <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${values[index]}" readonly >
+                </div>
+            </div>
+            `;
+            
+        }
+        $('.' + div_name).html(str_html);
+    }
     $('.add').on('click',function(){
         $('.extra-container').append(`
             <div class="row form-group mb-3 mt-3">

@@ -41,7 +41,7 @@ class UserContractManageController extends Controller
         $data->information = json_encode(array_combine($request->desc_title,$request->desc_text));
         $data->user_id = $request->user_id;
         $data->contractor_id = $request->contractor_id;
-        $data->client_id = $request->client_id;
+        
         $data->amount = $request->amount;
 
         if(isset($request->item)){
@@ -58,6 +58,11 @@ class UserContractManageController extends Controller
             $data->contractor_type = 'App\\Models\\'.$contractor_info[0];
             $data->contractor_id = $contractor_info[1];
         }
+        $client_info = explode(' ', $request->client);
+        if(count($client_info) == 2) {
+            $data->client_type = 'App\\Models\\'.$client_info[0];
+            $data->client_id = $client_info[1];
+        }
         $data->save();
 
         return redirect(route('user.contract.index'))->with('message','Contract has been created successfully');
@@ -67,9 +72,11 @@ class UserContractManageController extends Controller
         $data = Contract::findOrFail($id);
         $information = $data->information ? json_decode($data->information) : array("" => null);
         foreach ($information as $title => $text) {
-            foreach (json_decode($data->default_pattern, True) as $key => $value) {
-                if(strpos($text, "{".$key."}" ) !== false) {
-                    $information->$title = str_replace("{".$key."}", $value ,$information->$title);
+            if(isset($data->default_pattern)){
+                foreach (json_decode($data->default_pattern, True) as $key => $value) {
+                    if(strpos($text, "{".$key."}" ) !== false) {
+                        $information->$title = str_replace("{".$key."}", $value ,$information->$title);
+                    }
                 }
             }
             foreach (json_decode($data->pattern, True) as $key => $value) {
@@ -99,10 +106,11 @@ class UserContractManageController extends Controller
         }
         $information = $data->information ? json_decode($data->information) : array("" => null);
         foreach ($information as $title => $text) {
-            
-            foreach (json_decode($data->default_pattern, True) as $key => $value) {
-                if(strpos($text, "{".$key."}" ) !== false) {
-                    $information->$title = str_replace("{".$key."}", $value ,$information->$title);
+            if(isset($data->default_pattern)){
+                foreach (json_decode($data->default_pattern, True) as $key => $value) {
+                    if(strpos($text, "{".$key."}" ) !== false) {
+                        $information->$title = str_replace("{".$key."}", $value ,$information->$title);
+                    }
                 }
             }
             foreach (json_decode($data->pattern, True) as $key => $value) {
@@ -174,7 +182,11 @@ class UserContractManageController extends Controller
             $data->contractor_type = 'App\\Models\\'.$contractor_info[0];
             $data->contractor_id = $contractor_info[1];
         }
-        $data->client_id = $request->client_id;
+        $client_info = explode(' ', $request->client);
+        if(count($client_info) == 2) {
+            $data->client_type = 'App\\Models\\'.$client_info[0];
+            $data->client_id = $client_info[1];
+        }
         if(isset($request->item)){
             $items = array_combine($request->item,$request->value);
             $data->pattern = json_encode($items);
@@ -323,7 +335,11 @@ class UserContractManageController extends Controller
             $data->contractor_type = 'App\\Models\\'.$contractor_info[0];
             $data->contractor_id = $contractor_info[1];
         }
-        $data->client_id = $request->client_id;
+        $client_info = explode(' ', $request->client);
+        if(count($client_info) == 2) {
+            $data->client_type = 'App\\Models\\'.$client_info[0];
+            $data->client_id = $client_info[1];
+        }
 
         $data->title = $request->title;
         $data->amount = $request->amount;
@@ -346,9 +362,11 @@ class UserContractManageController extends Controller
         $data = ContractAoa::findOrFail($id);
         $information = $data->information ? json_decode($data->information) : array("" => null);
         foreach ($information as $title => $text) {
-            foreach (json_decode($data->default_pattern, True) as $key => $value) {
-                if(strpos($text, "{".$key."}" ) !== false) {
-                    $information->$title = str_replace("{".$key."}", $value ,$information->$title);
+            if(isset($data->default_pattern)){
+                foreach (json_decode($data->default_pattern, True) as $key => $value) {
+                    if(strpos($text, "{".$key."}" ) !== false) {
+                        $information->$title = str_replace("{".$key."}", $value ,$information->$title);
+                    }
                 }
             }
             foreach (json_decode($data->pattern, True) as $key => $value) {
@@ -377,9 +395,11 @@ class UserContractManageController extends Controller
         }
         $information = $data->information ? json_decode($data->information) : array("" => null);
         foreach ($information as $title => $text) {
-            foreach (json_decode($data->default_pattern, True) as $key => $value) {
-                if(strpos($text, "{".$key."}" ) !== false) {
-                    $information->$title = str_replace("{".$key."}", $value ,$information->$title);
+            if(isset($data->default_pattern)){
+                foreach (json_decode($data->default_pattern, True) as $key => $value) {
+                    if(strpos($text, "{".$key."}" ) !== false) {
+                        $information->$title = str_replace("{".$key."}", $value ,$information->$title);
+                    }
                 }
             }
             foreach (json_decode($data->pattern, True) as $key => $value) {
@@ -447,7 +467,11 @@ class UserContractManageController extends Controller
             $data->contractor_type = 'App\\Models\\'.$contractor_info[0];
             $data->contractor_id = $contractor_info[1];
         }
-        $data->client_id = $request->client_id;
+        $client_info = explode(' ', $request->client);
+        if(count($client_info) == 2) {
+            $data->client_type = 'App\\Models\\'.$client_info[0];
+            $data->client_id = $client_info[1];
+        }
         $data->title = $request->title;
         $data->amount = $request->amount;
         $data->information = json_encode(array_combine($request->desc_title,$request->desc_text));
