@@ -187,14 +187,34 @@
 @push('js')
 <script>
   'use strict';
-
+  var send_money_user = null;
   $("#email").on('change',function(){
     $.post("{{ route('user.username.email') }}",{email: $("#email").val(),_token:'{{csrf_token()}}'}, function(data){
-      $("#account_name").val(data['name']);
+      send_money_user = data;
+      if(data['name']){
+        $("#account_name").val(data['name']);
+      } else {
+        toastr.options =
+        {
+            "closeButton" : true,
+            "progressBar" : true
+        }
+        toastr.error("This uer doesn't exist.");
+      }
     });
   })
 
   $('#submit').on('click', function() {
+        if(!send_money_user['name']) {
+          toastr.options =
+          {
+              "closeButton" : true,
+              "progressBar" : true
+          }
+          toastr.error("This uer doesn't exist.Try again.");
+          $("#email").focus();
+          return;
+        }
         if (($('#email').val().length != 0) && ($('#wallet_id').val().length != 0) && ($('#amount').val().length != 0) && ($('#account_name').val().length != 0)  && ($('#description').val().length != 0)) {
             var verify = "{{$user->paymentCheck('Internal Payment')}}";
             event.preventDefault();
