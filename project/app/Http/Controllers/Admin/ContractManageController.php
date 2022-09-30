@@ -22,6 +22,9 @@ class ContractManageController extends Controller
                         ->addColumn('title',function(Contract $data){
                             return $data->title;
                         })
+                        ->addColumn('amount',function(Contract $data){
+                            return $data->amount;
+                        })
                         ->editColumn('image_path', function(Contract $data){
                             if (isset($data->image_path)) {
                                 return '<a href ="'.asset('assets/images/'.$data->image_path).'" attributes-list download > Download E-Sign </a>';
@@ -45,7 +48,7 @@ class ContractManageController extends Controller
                             </div>
                         </div>';
                         })
-                        ->rawColumns(['title','description','status', 'action', 'image_path'])
+                        ->rawColumns(['title','amount','status', 'action', 'image_path'])
                         ->toJson();
     }
 
@@ -91,6 +94,9 @@ class ContractManageController extends Controller
                         ->addColumn('title',function(ContractAoa $data){
                             return $data->title;
                         })
+                        ->addColumn('amount',function(Contract $data){
+                            return $data->amount;
+                        })
                         ->editColumn('contracter_image_path', function(ContractAoa $data){
                             if (isset($data->contracter_image_path)) {
                                 return '<a href ="'.asset('assets/images/'.$data->contracter_image_path).'" attributes-list download > Download E-Sign </a>';
@@ -121,7 +127,7 @@ class ContractManageController extends Controller
                             </div>
                         </div>';
                         })
-                        ->rawColumns(['title','description','status', 'action', 'contracter_image_path', 'customer_image_path'])
+                        ->rawColumns(['title','amount','status', 'action', 'contracter_image_path', 'customer_image_path'])
                         ->toJson();
     }
 

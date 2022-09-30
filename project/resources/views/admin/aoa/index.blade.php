@@ -33,6 +33,7 @@
                                 <tr>
                                     <th>{{__('No.')}}</th>
                                     <th>{{__('Title')}}</th>
+									<th>{{__('Amount')}}</th>
                                     <th>{{__('Contracter E-Sign')}}</th>
                                     <th>{{__('Customer E-Sign')}}</th>
                                     <th>{{__('Status')}}</th>
@@ -122,6 +123,7 @@
                     }
                 },
 				{ data: 'title', name: 'title' },
+				{ data: 'amount', name: 'amount' },
 				{ data: 'contracter_image_path', name: 'contracter_image_path' },
 				{ data: 'customer_image_path', name: 'customer_image_path' },
 				{ data: 'status', name: 'status' },

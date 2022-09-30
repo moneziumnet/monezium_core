@@ -31,8 +31,8 @@
                                         <th>{{ __('Shop Name') }}</th>
                                         <th>{{ __('Merchant') }}</th>
                                         <th>{{ __('URL') }}</th>
-                                        <th>{{ __('Status') }}</th>
                                         <th>{{ __('Document') }}</th>
+                                        <th>{{ __('Status') }}</th>
                                     </tr>
                                     </thead>
                                 </table>

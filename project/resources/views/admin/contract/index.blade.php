@@ -31,6 +31,7 @@
                                 <tr>
                                     <th>{{__('No.')}}</th>
                                     <th>{{__('Title')}}</th>
+									<th>{{__('Amount')}}</th>
                                     <th>{{__('E-Sign')}}</th>
                                     <th>{{__('Status')}}</th>
                                     <th>{{__('Action')}}</th>
@@ -119,6 +120,7 @@
                     }
                 },
 				{ data: 'title', name: 'title' },
+				{ data: 'amount', name: 'amount' },
 				{ data: 'image_path', name: 'image_path' },
 				{ data: 'status', name: 'status' },
 				{ data: 'action', name: 'action' }
