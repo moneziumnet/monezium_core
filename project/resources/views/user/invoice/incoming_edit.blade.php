@@ -81,8 +81,13 @@
                             @if ($loop->first)
                             <div class="form-label"> {{__("Tax")}}</div>
                             @endif
+                            @if ($item)
                             <input type="text"  class="form-control shadow-none" value={{$item->name}} readonly required>
                             <input type="hidden" name="tax_id[]" class="form-control shadow-none" value={{$item->id}}  required>
+                            @else
+                            <div id="tax_append"></div>
+                            <a class="btn btn-primary w-100 add-tax" href="javascript:void(0)">{{__('Add Tax')}}</a>
+                            @endif
 
                         </div>
                         @if ($loop->first)
@@ -126,7 +131,47 @@
         </div>
     </div>
 </div>
-
+<div class="modal modal-blur fade" id="modal-success-tax" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-status bg-primary"></div>
+        <div class="modal-body text-center py-4">
+            <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+            <h3>{{__('Add New Tax')}}</h3>
+            <div class="row text-start">
+                <div class="col">
+                    <form action="" method="post" id="customerSubmit" enctype="multipart/form-data">
+                        @csrf
+                        <div class = "row">
+                            <div class="form-group mt-2">
+                                <label class="form-label required">{{__('Tax Name')}}</label>
+                                <input name="name" id="name" class="form-control shadow-none" placeholder="{{__('Tax Name')}}" type="text" value="{{ old('name') }}" required>
+                            </div>
+                            <div class="form-group mt-2">
+                                <label class="form-label required">{{__('Tax rate')}}</label>
+                                <input name="rate" id="rate" class="form-control shadow-none" placeholder="{{__('0.0')}}" type="number" step="any" value="{{ old('rate') }}" required>
+                            </div>
+                        </div>
+                        <input type="hidden" name="user_id" value="{{auth()->id()}}">
+                        <div class="row mt-3">
+                            <div class="col"><a href="#" class="btn w-100" data-bs-dismiss="modal">
+                                {{__('Cancel')}}
+                                </a>
+                            </div>
+                            <div class="col">
+                                <button type="submit" class="btn btn-primary w-100 confirm">
+                                {{__('Confirm')}}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
 
 @endsection
 
@@ -196,31 +241,44 @@
         })
 
         $(document).ready(function(){
+            // document.getElementById("contract_part").style.display = "none";
 
             $(document).on('submit','#customerSubmit',function(e){
                 e.preventDefault();
                 // AJAX request
                 console.log($(this).serialize())
+                var tax_count = $(this).attr('tax-count');
                 $.ajax({
                     method: 'post',
                     url: "{{route('user.invoice.tax')}}",
                     data: $(this).serialize(),
                     success: function(msg) {
-                        console.log(msg);
-                        $('#tax_append').append(`
-                            <input type="text"  class="form-control shadow-none" value=${msg.name} readonly required>
+                        $(`#tax_append[tax-count="${tax_count}"]`).append(`
+                            <input type="text"  class="form-control shadow-none tax" value="${msg.name} ${msg.rate}%" data-rate="${msg.rate}" readonly required>
                             <input type="hidden" name="tax_id[]" class="form-control shadow-none" value=${msg.id}  required>
 
                             `);
-                        $('.add-tax').remove();
-                        $('#tax_append').attr('id', 'un_tax_append');
-                        $('#modal-success-tax').modal('hide')
+                        $(`.add-tax[tax-count="${tax_count}"]`).remove();
+                        $(`#tax_append[tax-count="${tax_count}"]`).attr('id', 'un_tax_append');
+                        $('#modal-success-tax').modal('hide');
+                        computeTotalAmount();
                     },
                     error: function(XMLHttpRequest, textStatus, errorThrown) {
                         console.log("some error");
                     }
                 });
             });
+
+            function computeTotalAmount() {
+                var total = 0;
+                $('.amount').each(function(e){
+                    if($(this).val()!=''){
+                        var rate = parseFloat($(this).parent().parent().find('.tax').data('rate'))
+                        total += parseFloat($(this).val()) + rate *  parseFloat($(this).val()) / 100;
+                    }
+                    $('.totalAmount').text(total.toFixed(4))
+                })
+            }
         });
 
 

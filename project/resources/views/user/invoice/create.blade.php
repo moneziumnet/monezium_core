@@ -184,7 +184,7 @@
             <h3>{{__('Add New Tax')}}</h3>
             <div class="row text-start">
                 <div class="col">
-                    <form action="{{route('user.invoice.beneficiary.create')}}" method="post" id="customerSubmit" enctype="multipart/form-data">
+                    <form action="" method="post" id="customerSubmit" enctype="multipart/form-data">
                         @csrf
                         <div class = "row">
                             <div class="form-group mt-2">
