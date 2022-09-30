@@ -28,7 +28,7 @@ use Illuminate\Support\Facades\Input;
 use App\Exports\ExportTransaction;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Carbon as Carbontime;
-
+use PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel\Current;
 
 class UserController extends Controller
 {
@@ -77,10 +77,23 @@ class UserController extends Controller
     }
 
     public function crypto_wallet_create(Request $request) {
-        $check =  Wallet::where('user_id', $request->user_id)->where('wallet_type', 1)->where('currency_id', $request->crypto_currency_id)->first();
+        $check =  Wallet::where('user_id', $request->user_id)->where('wallet_type', 8)->where('currency_id', $request->crypto_currency_id)->first();
         if($check){
             return back()->with('error', 'This wallet already exist');
         }
+        $currency = Currency::findOrFail($request->crypto_currency_id);
+        if ($currency->code == 'BTC') {
+            $address = RPC_BTC_Create('createwallet',[auth()->user()->email]);
+            $keyword = auth()->user()->email;
+        }
+        else {
+            $address = RPC_ETH('personal_newAccount',['123123']);
+            $keyword = '123123';
+        }
+        if ($address == 'error') {
+            return back()->with('error','You can not create this wallet because there is some issue in crypto node.');
+        }
+
         $gs = Generalsetting::first();
         $user_wallet = new Wallet();
         $user_wallet->user_id = $request->user_id;
@@ -88,7 +101,8 @@ class UserController extends Controller
         $user_wallet->currency_id = $request->crypto_currency_id;
         $user_wallet->balance = 0;
         $user_wallet->wallet_type = 8;
-        $user_wallet->wallet_no =$gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
+        $user_wallet->wallet_no = $address;
+        $user_wallet->keyword = $keyword;
         $user_wallet->created_at = date('Y-m-d H:i:s');
         $user_wallet->updated_at = date('Y-m-d H:i:s');
         $user_wallet->save();
