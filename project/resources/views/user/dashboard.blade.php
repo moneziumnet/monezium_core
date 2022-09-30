@@ -511,6 +511,10 @@
                     {
                         $('.bankaccount').prop('action','{{ route('user.bankaccount.openpayd.store') }}');
                     }
+                if(res.keyword == 'railsbank')
+                {
+                    $('.bankaccount').prop('action','{{ route('user.bankaccount.railsbank.store') }}');
+                }
              });
         })
     </script>

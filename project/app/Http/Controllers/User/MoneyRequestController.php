@@ -77,11 +77,6 @@ class MoneyRequestController extends Controller
             return redirect()->back()->with('unsuccess','You can not send money yourself!');
         }
 
-        $receiver = User::where('email',$request->account_email)->first();
-        if($receiver->id == $user->id){
-            return redirect()->back()->with('unsuccess','You can not send money request to you.');
-        }
-
 
         if($dailyRequests > $global_range->daily_limit){
             return redirect()->back()->with('unsuccess','Daily request limit over.');
@@ -230,7 +225,7 @@ class MoneyRequestController extends Controller
         $trans->user_type   = $data->user_type;
         $trans->currency_id = $currency_id;
         $trans->amount      = $data->amount;
-        
+
         $trans_wallet       = get_wallet($sender->id, $currency_id);
         $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
 
@@ -247,7 +242,7 @@ class MoneyRequestController extends Controller
         $trans->user_id     = $receiver->id;
         $trans->user_type   = $data->user_type;
         $trans->currency_id = $currency_id;
-        
+
         $trans_wallet       = get_wallet($receiver->id, $currency_id);
         $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
 
