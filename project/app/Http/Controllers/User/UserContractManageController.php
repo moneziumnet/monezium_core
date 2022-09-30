@@ -59,12 +59,12 @@ class UserContractManageController extends Controller
         $information = $data->information ? json_decode($data->information) : array("" => null);
         foreach ($information as $title => $text) {
             foreach (json_decode($data->pattern, True) as $key => $value) {
-                if(strpos($text, "{".$key."}" ) != false) {
+                if(strpos($text, "{".$key."}" ) !== false) {
                     $information->$title = preg_replace("/{".$key."}/", $value ,$information->$title);
                 }
             }
         }
-        
+
         return view('user.contract.view', compact('data', 'information'));
     }
 
@@ -86,7 +86,7 @@ class UserContractManageController extends Controller
         $information = $data->information ? json_decode($data->information) : array("" => null);
         foreach ($information as $title => $text) {
             foreach (json_decode($data->pattern, True) as $key => $value) {
-                if(strpos($text, "{".$key."}" ) != false) {
+                if(strpos($text, "{".$key."}" ) !== false) {
                     $information->$title = preg_replace("/{".$key."}/", $value ,$information->$title);
                 }
             }
@@ -181,7 +181,7 @@ class UserContractManageController extends Controller
         $information = $contract->information ? json_decode($contract->information) : array("" => null);
         foreach ($information as $title => $text) {
             foreach (json_decode($contract->pattern, True) as $key => $value) {
-                if(strpos($text, "{".$key."}" ) != false) {
+                if(strpos($text, "{".$key."}" ) !== false) {
                     $information->$title = preg_replace("/{".$key."}/", $value ,$information->$title);
                 }
             }
@@ -199,7 +199,7 @@ class UserContractManageController extends Controller
         $information = $contract->information ? json_decode($contract->information) : array("" => null);
         foreach ($information as $title => $text) {
             foreach (json_decode($contract->pattern, True) as $key => $value) {
-                if(strpos($text, "{".$key."}" ) != false) {
+                if(strpos($text, "{".$key."}" ) !== false) {
                     $information->$title = preg_replace("/{".$key."}/", $value ,$information->$title);
                 }
             }
@@ -297,7 +297,7 @@ class UserContractManageController extends Controller
         $information = $data->information ? json_decode($data->information) : array("" => null);
         foreach ($information as $title => $text) {
             foreach (json_decode($data->pattern, True) as $key => $value) {
-                if(strpos($text, "{".$key."}" ) != false) {
+                if(strpos($text, "{".$key."}" ) !== false) {
                     $information->$title = preg_replace("/{".$key."}/", $value ,$information->$title);
                 }
             }
@@ -323,7 +323,7 @@ class UserContractManageController extends Controller
         $information = $data->information ? json_decode($data->information) : array("" => null);
         foreach ($information as $title => $text) {
             foreach (json_decode($data->pattern, True) as $key => $value) {
-                if(strpos($text, "{".$key."}" ) != false) {
+                if(strpos($text, "{".$key."}" ) !==  false) {
                     $information->$title = preg_replace("/{".$key."}/", $value ,$information->$title);
                 }
             }
