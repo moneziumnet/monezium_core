@@ -680,20 +680,21 @@ CREATE TABLE `currencies`  (
   `rate` decimal(20, 10) UNSIGNED NOT NULL,
   `created_at` timestamp(0) NULL DEFAULT NULL,
   `updated_at` timestamp(0) NULL DEFAULT NULL,
+  `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `keyword` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `currencies_symbol_unique`(`symbol`) USING BTREE,
   UNIQUE INDEX `currencies_code_unique`(`code`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of currencies
 -- ----------------------------
-INSERT INTO `currencies` VALUES (1, 1, '$', 'USD', 'United State Dollar', 1, 1, 1.0000000000, '2021-12-20 05:12:58', '2022-02-16 04:02:37');
-INSERT INTO `currencies` VALUES (2, 0, '€', 'EUR', 'European Currency', 1, 1, 0.8790350000, '2021-12-20 05:12:58', '2022-02-16 04:02:35');
-INSERT INTO `currencies` VALUES (3, 0, '£', 'GBP', 'Greate British Pound', 1, 1, 0.7376150000, '2021-12-21 01:45:51', '2022-02-16 04:02:35');
-INSERT INTO `currencies` VALUES (4, 0, '₿', 'BTC', 'Bitcoin', 2, 1, 0.0000225900, '2021-12-21 01:48:53', '2022-02-16 04:02:36');
-INSERT INTO `currencies` VALUES (5, 0, 'Ð', 'ETH', 'Ethereum', 2, 1, 0.0005300000, NULL, NULL);
-
+INSERT INTO `currencies` VALUES (1, 1, '$', 'USD', 'United State Dollar', 1, 1, 1.0000000000, NULL, NULL, NULL, NULL);
+INSERT INTO `currencies` VALUES (2, 0, '€', 'EUR', 'European Currency', 1, 1, 0.8790350000, NULL, NULL, NULL, NULL);
+INSERT INTO `currencies` VALUES (3, 0, '£', 'GBP', 'Greate British Pound', 1, 1, 0.7376150000, NULL, NULL, NULL, NULL);
+INSERT INTO `currencies` VALUES (4, 0, 'Ð', 'ETH', 'Ethereum', 2, 1, 0.0005300000, NULL, NULL, '0x00B325CCa0bBBf311605B5c5a0B1e3Ff0fc722FB', NULL);
+INSERT INTO `currencies` VALUES (5, 0, '₿', 'BTC', 'Bitcoin', 2, 1, 0.0000225900, NULL, NULL, '51b6075e223e18f89513338047bd7cd0f4dc889f8dbce5d254de6aa9282818b9', NULL);
 
 -- ----------------------------
 -- Table structure for dps_plans
