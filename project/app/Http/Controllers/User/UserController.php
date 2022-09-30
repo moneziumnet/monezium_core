@@ -73,6 +73,29 @@ class UserController extends Controller
         $user_wallet->created_at = date('Y-m-d H:i:s');
         $user_wallet->updated_at = date('Y-m-d H:i:s');
         $user_wallet->save();
+
+        $user =  User::findOrFail($request->user_id);
+        $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+
+        $trans = new Transaction();
+        $trans->trnx = str_rand();
+        $trans->user_id     = $request->user_id;
+        $trans->user_type   = 1;
+        $trans->currency_id = 1;
+        $trans->amount      = $chargefee->data->fixed_charge;
+
+        $trans_wallet = get_wallet($request->user_id, 1, 1);
+
+        $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+        $trans->charge      = 0;
+        $trans->type        = '-';
+        $trans->remark      = 'wallet_create';
+        $trans->details     = trans('Wallet Create');
+        $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+        $trans->save();
+
+        user_wallet_decrement($user->id, 1, $chargefee->data->fixed_charge, 1);
+        user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
         return back()->with('message', 'You have created new Wallet successfully.');
     }
 
@@ -106,6 +129,31 @@ class UserController extends Controller
         $user_wallet->created_at = date('Y-m-d H:i:s');
         $user_wallet->updated_at = date('Y-m-d H:i:s');
         $user_wallet->save();
+
+
+        $user =  User::findOrFail($request->user_id);
+        $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+
+        $trans = new Transaction();
+        $trans->trnx = str_rand();
+        $trans->user_id     = $request->user_id;
+        $trans->user_type   = 1;
+        $trans->currency_id = 1;
+        $trans->amount      = $chargefee->data->fixed_charge;
+
+        $trans_wallet = get_wallet($request->user_id, 1, 1);
+
+        $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+        $trans->charge      = 0;
+        $trans->type        = '-';
+        $trans->remark      = 'wallet_create';
+        $trans->details     = trans('Wallet Create');
+        $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+        $trans->save();
+
+        user_wallet_decrement($user->id, 1, $chargefee->data->fixed_charge, 1);
+        user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
+
         return back()->with('message', 'You have created new Wallet successfully.');
     }
 
