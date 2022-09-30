@@ -142,7 +142,7 @@
                                         <div class="col-md-4 mb-3">
                                             <input type="text" class="form-control shadow-none itemname" readonly value="Amount" >
                                         </div>
-                                        <div class="col-md-7 mb-3">
+                                        <div class="col-md-8 mb-3">
                                             <input type="number" id="amount2" step="any" name="amount2" class="form-control shadow-none itemvalue" readonly >
                                         </div>
                                     </div>
@@ -164,8 +164,8 @@
                                     <div class="extra-container"></div>
                                     <div class="row form-group mt-3 text-start">
                                             <label class="form-label">{{__('Description')}}</label>
-                                            <textarea name="description" class="form-control" readonly>{{__('Hello, {name}. 
-I need {amount} from you.')}}</textarea>
+                                            <textarea name="description" class="form-control" readonly>{{__('Hello, {Client Name}. 
+I need {Amount} from you.')}}</textarea>
                                     </div>
                                     <div class="row form-group mt-3 text-start">
                                         <label class="form-label">{{__('Preview')}}</label>
@@ -311,7 +311,7 @@ I need 1000 from you.')}}</textarea>
                 <div class="col-md-4 mb-3">
                     <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="${keys[index]}" readonly>
                 </div>
-                <div class="col-md-7 mb-3">
+                <div class="col-md-8 mb-3">
                     <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${values[index]}" readonly >
                 </div>
             </div>
