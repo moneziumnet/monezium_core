@@ -17,9 +17,9 @@ class CreateContractAoasTable extends Migration
             $table->id();
             $table->integer('contract_id');
             $table->integer('contractor_id');
-            $table->string('contractor_type', 255)->default('App\Models\User');
+            $table->string('contractor_type', 255)->default('App\\Models\\User');
             $table->integer('client_id');
-            $table->string('client_type', 255)->default('App\Models\Beneficiary');
+            $table->string('client_type', 255)->default('App\\Models\\Beneficiary');
             $table->string('title', 255);
             $table->mediumText('information')->nullable();
             $table->mediumText('default_pattern')->nullable();
