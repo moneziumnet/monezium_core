@@ -71,7 +71,7 @@
                 <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
                 <h3>@lang('Bank Account')</h3>
             </div>
-            <form class="bankaccount  mt-4 mx-3" action="{{isset($bank_gateway) ? route('admin.subinstitution.banks.account.create') : route('admin.user.bank.nogateway')}}" method="POST" >
+            <form class="mt-4 mx-3" action="{{isset($bank_gateway) ? $bank_gateway->keyword == 'openpayd' ? route('admin.subinstitution.banks.account.create') : route('admin.subinstitution.banks.account.railsbank.create') : route('admin.user.bank.nogateway')}}" method="POST"  enctype="multipart/form-data" >
 
                 {{ csrf_field() }}
 

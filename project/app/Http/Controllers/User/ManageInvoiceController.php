@@ -14,6 +14,7 @@ use App\Models\Contract;
 use App\Models\Product;
 use App\Models\Transaction;
 use App\Models\CryptoDeposit;
+use App\Models\DepositBank;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
@@ -476,6 +477,18 @@ class ManageInvoiceController extends Controller
         if($request->payment == 'gateway'){
             return redirect(route('user.invoice.incoming.index'))->with('message','Gateway Payment completed');
         } else if($request->payment == 'bank_pay'){
+            $invoice = Invoice::findOrFail($request->id);
+            $deposit = new DepositBank();
+            $deposit['deposit_number'] = Str::random(12);
+            $deposit['user_id'] = $invoice->user_id;
+            $deposit['currency_id'] = $request->currency_id;
+            $deposit['amount'] = $amountToAdd;
+            $deposit['method'] = $request->method;
+            $deposit['sub_bank_id'] = $request->bank;
+            $deposit['txnid'] = $request->txnid;
+            $deposit['details'] = $request->details;
+            $deposit['status'] = "pending";
+            $deposit->save();
             return redirect(route('user.invoice.incoming.index'))->with('message','Bank Payment completed');
         } else if($request->payment == 'crypto'){
             $data = new CryptoDeposit();
