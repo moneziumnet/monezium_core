@@ -253,8 +253,15 @@ I need 1000 from you.')}}</textarea>
 @push('js')
 <script>
 'use strict';
+var contractor_select_html = "";
+var client_select_html = "";
+$(document).ready(function() {
+    contractor_select_html = $('#contractor').html();
+    client_select_html = $('#client').html();
+})
 $('#contractor').on('change', function() {
     var contractor = $('#contractor option:selected');
+    var old_value = $('#client').val();
     if(contractor.attr('type') == 'user') {
         const data = JSON.parse(contractor.attr('data'));
         setDefaultDiv(
@@ -262,6 +269,9 @@ $('#contractor').on('change', function() {
             ['Contractor Name', 'Contractor Email', 'Contractor Address', 'Contractor Phone'],
             [data.name, data.email, data.address, data.phone, ]
         );
+        $('#client').html(client_select_html);
+        var option_list = $('#client option[type="user"]');
+        option_list.remove();
     } else if(contractor.attr('type') == 'beneficiary') {
         const data = JSON.parse(contractor.attr('data'));
         setDefaultDiv(
@@ -269,13 +279,17 @@ $('#contractor').on('change', function() {
             ['Contractor Name', 'Contractor Email', 'Contractor Address', 'Contractor Phone', 'Contractor Registration No','Contractor VAT No'],
             [data.name, data.email, data.address, data.phone, data.registration_no,data.vat_no]
         );
+        $('#client').html(client_select_html);
     } else {
         $('.default-contractor-pattern-container').html('');
+        $('#client').html(client_select_html);
     }
+    $('#client').val(old_value);
 })
 
 $('#client').on('change', function() {
     var client = $('#client option:selected');
+    var old_value = $('#contractor').val();
     if(client.attr('type') == 'user') {
         const data = JSON.parse(client.attr('data'));
         setDefaultDiv(
@@ -283,6 +297,9 @@ $('#client').on('change', function() {
             ['Client Name', 'Client Email', 'Client Address', 'Client Phone'],
             [data.name, data.email, data.address, data.phone, ]
         );
+        $('#contractor').html(contractor_select_html);
+        var option_list = $('#contractor option[type="user"]');
+        option_list.remove();
     } else if(client.attr('type') == 'beneficiary') {
         const data = JSON.parse(client.attr('data'));
         setDefaultDiv(
@@ -290,9 +307,12 @@ $('#client').on('change', function() {
             ['Client Name', 'Client Email', 'Client Address', 'Client Phone', 'Client Registration No','Client VAT No'],
             [data.name, data.email, data.address, data.phone, data.registration_no,data.vat_no]
         );
+        $('#contractor').html(contractor_select_html);
     } else {
         $('.default-client-pattern-container').html('');
+        $('#contractor').html(contractor_select_html);
     }
+    $('#contractor').val(old_value);
 });
 var setDefaultDiv = function(div_name, keys, values){
     let str_html = "";

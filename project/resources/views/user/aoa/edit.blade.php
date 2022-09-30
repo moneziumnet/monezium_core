@@ -61,7 +61,7 @@
                                         @endphp
                                       <option value="Beneficiary {{$user->id}}" type="beneficiary" data="{{json_encode($client_item)}}" {{ $data->contractor_type == 'App\Models\Beneficiary' && $user->id == $data->contractor_id ? 'selected' : ''}} >{{$user->name}}</option>
                                     @endforeach
-                                    <option value="User {{auth()->user()->id}}" {{ $data->contractor_type == 'App\Models\User' && $user->id == auth()->user()->id ? 'selected' : ''}} >{{auth()->user()->name}}</option>
+                                    <option type="user" value="User {{auth()->user()->id}}" data="{{json_encode($client_item)}}" {{ $data->contractor_type == 'App\Models\User' && $user->id == auth()->user()->id ? 'selected' : ''}} >{{auth()->user()->name}}</option>
                                 </select>
                             </div>
 
@@ -300,8 +300,31 @@ I need 1000 from you.')}}</textarea>
 @push('js')
 <script>
     'use strict';
+    var contractor_select_html = "";
+    var client_select_html = "";
+    $(document).ready(function() {
+        contractor_select_html = $('#contractor').html().replace(/selected/g, '');
+        client_select_html = $('#client').html().replace(/selected/g, '');
+        var old_value1 = $('#contractor').val();
+        var old_value2 = $('#client').val();
+        var client = $('#client option:selected');
+        if(client.attr('type') == 'user') {
+            $('#contractor').html(contractor_select_html);
+            var option_list = $('#contractor option[type="user"]');
+            option_list.remove();
+        }
+        var contractor = $('#contractor option:selected');
+        if(contractor.attr('type') == 'user') {
+            $('#client').html(client_select_html);
+            var option_list = $('#client option[type="user"]');
+            option_list.remove();
+        }
+        $('#contractor').val(old_value1);
+        $('#client').val(old_value2);
+    })
     $('#contractor').on('change', function() {
         var contractor = $('#contractor option:selected');
+        var old_value = $('#client').val();
         if(contractor.attr('type') == 'user') {
             const data = JSON.parse(contractor.attr('data'));
             setDefaultDiv(
@@ -309,6 +332,9 @@ I need 1000 from you.')}}</textarea>
                 ['Contractor Name', 'Contractor Email', 'Contractor Address', 'Contractor Phone'],
                 [data.name, data.email, data.address, data.phone, ]
             );
+            $('#client').html(client_select_html);
+            var option_list = $('#client option[type="user"]');
+            option_list.remove();
         } else if(contractor.attr('type') == 'beneficiary') {
             const data = JSON.parse(contractor.attr('data'));
             setDefaultDiv(
@@ -316,13 +342,17 @@ I need 1000 from you.')}}</textarea>
                 ['Contractor Name', 'Contractor Email', 'Contractor Address', 'Contractor Phone', 'Contractor Registration No','Contractor VAT No'],
                 [data.name, data.email, data.address, data.phone, data.registration_no,data.vat_no]
             );
+            $('#client').html(client_select_html);
         } else {
             $('.default-contractor-pattern-container').html('');
+            $('#client').html(client_select_html);
         }
+        $('#client').val(old_value);
     })
 
     $('#client').on('change', function() {
         var client = $('#client option:selected');
+        var old_value = $('#contractor').val();
         if(client.attr('type') == 'user') {
             const data = JSON.parse(client.attr('data'));
             setDefaultDiv(
@@ -330,6 +360,9 @@ I need 1000 from you.')}}</textarea>
                 ['Client Name', 'Client Email', 'Client Address', 'Client Phone'],
                 [data.name, data.email, data.address, data.phone, ]
             );
+            $('#contractor').html(contractor_select_html);
+            var option_list = $('#contractor option[type="user"]');
+            option_list.remove();
         } else if(client.attr('type') == 'beneficiary') {
             const data = JSON.parse(client.attr('data'));
             setDefaultDiv(
@@ -337,9 +370,12 @@ I need 1000 from you.')}}</textarea>
                 ['Client Name', 'Client Email', 'Client Address', 'Client Phone', 'Client Registration No','Client VAT No'],
                 [data.name, data.email, data.address, data.phone, data.registration_no,data.vat_no]
             );
+            $('#contractor').html(contractor_select_html);
         } else {
             $('.default-client-pattern-container').html('');
+            $('#contractor').html(contractor_select_html);
         }
+        $('#contractor').val(old_value);
     });
     var setDefaultDiv = function(div_name, keys, values){
         let str_html = "";
