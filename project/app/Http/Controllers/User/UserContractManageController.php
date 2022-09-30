@@ -42,8 +42,16 @@ class UserContractManageController extends Controller
         $data->user_id = $request->user_id;
         $data->contractor_id = $request->contractor_id;
         $data->client_id = $request->client_id;
-        $items = array_combine($request->item,$request->value);
-        $data->pattern = json_encode($items);
+
+        if(isset($request->item)){
+            $items = array_combine($request->item,$request->value);
+            $data->pattern = json_encode($items);
+        }
+        if(isset($request->default_item)){
+            $default_items = array_combine($request->default_item,$request->default_value);
+            $data->default_pattern = json_encode($default_items);
+        }
+
         $contractor_info = explode(' ', $request->contractor);
         if(count($contractor_info) == 2) {
             $data->contractor_type = 'App\\Models\\'.$contractor_info[0];
@@ -58,6 +66,11 @@ class UserContractManageController extends Controller
         $data = Contract::findOrFail($id);
         $information = $data->information ? json_decode($data->information) : array("" => null);
         foreach ($information as $title => $text) {
+            foreach (json_decode($data->default_pattern, True) as $key => $value) {
+                if(strpos($text, "{".$key."}" ) !== false) {
+                    $information->$title = str_replace("{".$key."}", $value ,$information->$title);
+                }
+            }
             foreach (json_decode($data->pattern, True) as $key => $value) {
                 if(strpos($text, "{".$key."}" ) !== false) {
                     $information->$title = str_replace("{".$key."}", $value ,$information->$title);
@@ -85,6 +98,12 @@ class UserContractManageController extends Controller
         }
         $information = $data->information ? json_decode($data->information) : array("" => null);
         foreach ($information as $title => $text) {
+            
+            foreach (json_decode($data->default_pattern, True) as $key => $value) {
+                if(strpos($text, "{".$key."}" ) !== false) {
+                    $information->$title = str_replace("{".$key."}", $value ,$information->$title);
+                }
+            }
             foreach (json_decode($data->pattern, True) as $key => $value) {
                 if(strpos($text, "{".$key."}" ) !== false) {
                     $information->$title = str_replace("{".$key."}", $value ,$information->$title);
@@ -154,8 +173,14 @@ class UserContractManageController extends Controller
             $data->contractor_id = $contractor_info[1];
         }
         $data->client_id = $request->client_id;
-        $items = array_combine($request->item,$request->value);
-        $data->pattern = json_encode($items);
+        if(isset($request->item)){
+            $items = array_combine($request->item,$request->value);
+            $data->pattern = json_encode($items);
+        }
+        if(isset($request->default_item)){
+            $default_items = array_combine($request->default_item,$request->default_value);
+            $data->default_pattern = json_encode($default_items);
+        }
         $data->update();
 
         return redirect(route('user.contract.index'))->with('success','Contract has been updated successfully');
@@ -180,6 +205,12 @@ class UserContractManageController extends Controller
 
         $information = $contract->information ? json_decode($contract->information) : array("" => null);
         foreach ($information as $title => $text) {
+            
+            foreach (json_decode($contract->default_pattern, True) as $key => $value) {
+                if(strpos($text, "{".$key."}" ) !== false) {
+                    $information->$title = str_replace("{".$key."}", $value ,$information->$title);
+                }
+            }
             foreach (json_decode($contract->pattern, True) as $key => $value) {
                 if(strpos($text, "{".$key."}" ) !== false) {
                     $information->$title = str_replace("{".$key."}", $value ,$information->$title);
@@ -198,6 +229,11 @@ class UserContractManageController extends Controller
         $contract = ContractAoa::where('id', $id)->first();
         $information = $contract->information ? json_decode($contract->information) : array("" => null);
         foreach ($information as $title => $text) {
+            foreach (json_decode($contract->default_pattern, True) as $key => $value) {
+                if(strpos($text, "{".$key."}" ) !== false) {
+                    $information->$title = str_replace("{".$key."}", $value ,$information->$title);
+                }
+            }
             foreach (json_decode($contract->pattern, True) as $key => $value) {
                 if(strpos($text, "{".$key."}" ) !== false) {
                     $information->$title = str_replace("{".$key."}", $value ,$information->$title);
@@ -290,8 +326,14 @@ class UserContractManageController extends Controller
         $data->title = $request->title;
         $data->information = json_encode(array_combine($request->desc_title,$request->desc_text));
         $data->contract_id = $request->contract_id;
-        $items = array_combine($request->item,$request->value);
-        $data->pattern = json_encode($items);
+        if(isset($request->item)){
+            $items = array_combine($request->item,$request->value);
+            $data->pattern = json_encode($items);
+        }
+        if(isset($request->default_item)){
+            $default_items = array_combine($request->default_item,$request->default_value);
+            $data->default_pattern = json_encode($default_items);
+        }
         $data->save();
 
         return redirect(route('user.contract.aoa', $id))->with('message','AoA has been created successfully');
@@ -301,6 +343,11 @@ class UserContractManageController extends Controller
         $data = ContractAoa::findOrFail($id);
         $information = $data->information ? json_decode($data->information) : array("" => null);
         foreach ($information as $title => $text) {
+            foreach (json_decode($data->default_pattern, True) as $key => $value) {
+                if(strpos($text, "{".$key."}" ) !== false) {
+                    $information->$title = str_replace("{".$key."}", $value ,$information->$title);
+                }
+            }
             foreach (json_decode($data->pattern, True) as $key => $value) {
                 if(strpos($text, "{".$key."}" ) !== false) {
                     $information->$title = str_replace("{".$key."}", $value ,$information->$title);
@@ -327,6 +374,11 @@ class UserContractManageController extends Controller
         }
         $information = $data->information ? json_decode($data->information) : array("" => null);
         foreach ($information as $title => $text) {
+            foreach (json_decode($data->default_pattern, True) as $key => $value) {
+                if(strpos($text, "{".$key."}" ) !== false) {
+                    $information->$title = str_replace("{".$key."}", $value ,$information->$title);
+                }
+            }
             foreach (json_decode($data->pattern, True) as $key => $value) {
                 if(strpos($text, "{".$key."}" ) !==  false) {
                     $information->$title = str_replace("{".$key."}", $value ,$information->$title);
@@ -396,8 +448,14 @@ class UserContractManageController extends Controller
         $data->title = $request->title;
         $data->information = json_encode(array_combine($request->desc_title,$request->desc_text));
         $data->contract_id = $request->contract_id;
-        $items = array_combine($request->item,$request->value);
-        $data->pattern = json_encode($items);
+        if(isset($request->item)){
+            $items = array_combine($request->item,$request->value);
+            $data->pattern = json_encode($items);
+        }
+        if(isset($request->default_item)){
+            $default_items = array_combine($request->default_item,$request->default_value);
+            $data->default_pattern = json_encode($default_items);
+        }
         $data->update();
 
         return redirect(route('user.contract.aoa', $request->contract_id))->with('message','AoA has been updated successfully');

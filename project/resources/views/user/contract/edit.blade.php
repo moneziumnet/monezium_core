@@ -36,10 +36,21 @@
                         <div class="row form-group mb-3 mt-3">
                             <div class="col-md-6 mb-3">
                                 <div class="form-label required">@lang('Select Contractor')</div>
-                                <select class="form-select shadow-none" name="contractor" required>
+                                <select class="form-select shadow-none" id="contractor" name="contractor" required>
                                     <option value="" selected>@lang('Select')</option>
                                     @foreach ($clientlist as $user)
-                                      <option value="Beneficiary {{$user->id}}" {{ $data->contractor_type == 'App\Models\Beneficiary' && $user->id == $data->contractor_id ? 'selected' : ''}} >{{$user->name}}</option>
+                                        @php
+                                            $client_item = array(
+                                                'name' => $user->name,
+                                                'email' => $user->email,
+                                                'address' => $user->address,
+                                                'phone' => $user->phone,
+                                                'registration_no' => $user->registration_no,
+                                                'vat_no' => $user->vat_no,
+                                                'contact_person' => $user->contact_person
+                                            )
+                                        @endphp
+                                      <option value="Beneficiary {{$user->id}}" type="beneficiary" data="{{json_encode($client_item)}}" {{ $data->contractor_type == 'App\Models\Beneficiary' && $user->id == $data->contractor_id ? 'selected' : ''}} >{{$user->name}}</option>
                                     @endforeach
                                     <option value="User {{auth()->user()->id}}" {{ $data->contractor_type == 'App\Models\User' && $user->id == auth()->user()->id ? 'selected' : ''}} >{{auth()->user()->name}}</option>
                                 </select>
@@ -48,10 +59,21 @@
                             <div class="col-md-6 mb-3">
                                 <div class="form-label required">@lang('Select Client')</div>
                                 <div class="input-group">
-                                    <select class="form-select shadow-none" name="client_id" required>
+                                    <select class="form-select shadow-none" id="client_id" name="client_id" required>
                                         <option value="" selected>@lang('Select')</option>
                                         @foreach ($clientlist as $user)
-                                        <option value="{{$user->id}}" {{$user->id == $data->client_id ? 'selected' : ''}}>{{$user->name}}</option>
+                                        @php
+                                            $client_item = array(
+                                                'name' => $user->name,
+                                                'email' => $user->email,
+                                                'address' => $user->address,
+                                                'phone' => $user->phone,
+                                                'registration_no' => $user->registration_no,
+                                                'vat_no' => $user->vat_no,
+                                                'contact_person' => $user->contact_person
+                                            )
+                                        @endphp
+                                        <option value="{{$user->id}}" data="{{json_encode($client_item)}}" {{$user->id == $data->client_id ? 'selected' : ''}}>{{$user->name}}</option>
                                         @endforeach
                                     </select>
                                     <button type="button"  data-bs-toggle="tooltip" data-bs-original-title="@lang('Add New Beneficiary')" class="input-group-text beneficiary"><i class="fas fa-plus"></i></button>
@@ -63,34 +85,6 @@
                             <label class="form-label required">{{__('Contract Name')}}</label>
                             <input name="title" id="title" class="form-control" autocomplete="off" placeholder="{{__('Enter Title')}}" type="text" value="{{$data->title}}" required>
                         </div>
-                        @foreach (json_decode($data->pattern, True) as $key => $value)
-
-                            <div class="row form-group mb-3 mt-3">
-                                <div class="col-md-4 mb-3">
-                                    @if ($loop->first)
-                                    <div class="form-label">{{__('Pattern name')}}</div>
-                                    @endif
-                                    <input type="text" name="item[]" class="form-control shadow-none itemname" value="{{$key}}" >
-                                </div>
-                                <div class="col-md-7 mb-3">
-                                    @if ($loop->first)
-                                    <div class="form-label">{{__('Value')}}</div>
-                                    @endif
-                                    <input type="text" name="value[]" class="form-control shadow-none itemvalue" value="{{$value}}" >
-                                </div>
-                                @if ($loop->first)
-                                    <div class="col-md-1 mb-3">
-                                        <div class="form-label">&nbsp;</div>
-                                        <button type="button" class="btn btn-primary w-100 add"><i class="fas fa-plus"></i></button>
-                                    </div>
-                                @else
-                                    <div class="col-md-1 mb-3">
-                                        <button type="button" class="btn btn-danger w-100 remove"><i class="fas fa-times"></i></button>
-                                    </div>
-                                @endif
-                            </div>
-                        @endforeach
-                        <div class="extra-container"></div>
                         @php
                             $information = $data->information ? json_decode($data->information, True) : array("" => null);
                         @endphp
@@ -128,7 +122,84 @@
                         <div class="form-footer">
                             <button type="submit" class="btn btn-primary submit-btn w-100" >{{__('Update')}}</button>
                         </div>
-
+                        <div class="modal modal-blur fade" id="modal-pattern-help" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <div class="modal-status bg-primary"></div>
+                                <div class="modal-body text-center py-4">
+                                    <i  class="fas fa-question-circle fa-3x text-primary mb-2"></i>
+                                    <h3>{{__('How to write text')}}</h3>
+                                    <div class="row form-group mb-3 mt-3">
+                                        <div class="col-md-4 mb-3"><div class="form-label">{{__('Pattern name')}}</div></div>
+                                        <div class="col-md-8 mb-3"><div class="form-label">{{__('Value')}}</div></div>
+                                    </div>
+                                    <div class="default-contractor-pattern-container">
+                                        @foreach (json_decode($data->default_pattern) as $key =>$value)
+                                        @if(str_contains($key, 'Contractor'))
+                                        <div class="row form-group mb-3 mt-3">
+                                            <div class="col-md-4 mb-3">
+                                                <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="{{$key}}" readonly>
+                                            </div>
+                                            <div class="col-md-7 mb-3">
+                                                <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="{{$value}}" readonly>
+                                            </div>
+                                        </div>
+                                        @endif
+                                        @endforeach
+                                    </div>
+                                    <div class="default-client-pattern-container">
+                                        @foreach (json_decode($data->default_pattern) as $key =>$value)
+                                        @if(str_contains($key, 'Client'))
+                                        <div class="row form-group mb-3 mt-3">
+                                            <div class="col-md-4 mb-3">
+                                                <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="{{$key}}" readonly>
+                                            </div>
+                                            <div class="col-md-7 mb-3">
+                                                <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="{{$value}}" readonly>
+                                            </div>
+                                        </div>
+                                        @endif
+                                        @endforeach
+                                    </div>
+                                    @foreach (json_decode($data->pattern, True) as $key => $value)
+                                        <div class="row form-group mb-3 mt-3">
+                                            <div class="col-md-4 mb-3">
+                                                <input type="text" name="item[]" class="form-control shadow-none itemname" value="{{$key}}" >
+                                            </div>
+                                            <div class="col-md-7 mb-3">
+                                                <input type="text" name="value[]" class="form-control shadow-none itemvalue" value="{{$value}}" >
+                                            </div>
+                                            @if ($loop->first)
+                                                <div class="col-md-1 mb-3">
+                                                    <button type="button" class="btn btn-primary w-100 add"><i class="fas fa-plus"></i></button>
+                                                </div>
+                                            @else
+                                                <div class="col-md-1 mb-3">
+                                                    <button type="button" class="btn btn-danger w-100 remove"><i class="fas fa-times"></i></button>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                    <div class="extra-container"></div>
+                                    <div class="row form-group mt-3 text-start">
+                                        <div class="col-12">
+                                            <label class="form-label">{{__('Text')}}</label>
+                                            <textarea name="description" class="form-control" readonly>{{__('Hello, {name}. 
+I need {amount} from you.')}}</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group mt-3 text-start">
+                                        <div class="col-12">
+                                            <label class="form-label">{{__('Preview')}}</label>
+                                            <textarea name="description" class="form-control" readonly>{{__('Hello, Aleksander.
+I need 1000 from you.')}}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -190,62 +261,168 @@
     </div>
     </div>
 </div>
-<div class="modal modal-blur fade" id="modal-pattern-help" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-    <div class="modal-content">
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        <div class="modal-status bg-primary"></div>
-        <div class="modal-body text-center py-4">
-            <i  class="fas fa-question-circle fa-3x text-primary mb-2"></i>
-            <h3>{{__('How to write text')}}</h3>
-            <div class="row form-group mt-3 text-start">
-                <div class="col-md-6">
-                    <div class="form-label">{{__('Pattern name')}}</div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-label">{{__('Value')}}</div>
-                </div>
-            </div>
-            <div class="row form-group mb-1">
-                <div class="col-md-6">
-                    <input type="text" class="form-control shadow-none" value="name" readonly>
-                </div>
-                <div class="col-md-6">
-                    <input type="text" class="form-control shadow-none" value="Aleksander" readonly>
-                </div>
-            </div>
-            <div class="row form-group mb-1">
-                <div class="col-md-6">
-                    <input type="text" class="form-control shadow-none" value="amount" readonly>
-                </div>
-                <div class="col-md-6">
-                    <input type="text" class="form-control shadow-none" value="1000"readonly >
-                </div>
-            </div>
-            <div class="row form-group mt-3 text-start">
-                <div class="col-12">
-                    <label class="form-label">{{__('Text')}}</label>
-                    <textarea name="description" class="form-control" readonly>{{__('Hello, {name}. 
-I need {amount} from you.')}}</textarea>
-                </div>
-            </div>
-            <div class="row form-group mt-3 text-start">
-                <div class="col-12">
-                    <label class="form-label">{{__('Preview')}}</label>
-                    <textarea name="description" class="form-control" readonly>{{__('Hello, Aleksander.
-I need 1000 from you.')}}</textarea>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
-</div>
 
 @endsection
 
 @push('js')
 <script>
     'use strict';
+    $('#contractor').on('change', function() {
+        var contractor = $('#contractor option:selected');
+        if(contractor.attr('type') == 'user') {
+            const data = JSON.parse(contractor.attr('data'));
+            $('.default-contractor-pattern-container').html(`
+                <div class="row form-group mb-3 mt-3">
+                    <div class="col-md-4 mb-3">
+                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Contractor Name" readonly>
+                    </div>
+                    <div class="col-md-7 mb-3">
+                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.name}" readonly>
+                    </div>
+                </div>
+                <div class="row form-group mb-3 mt-3">
+                    <div class="col-md-4 mb-3">
+                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Contractor Email" readonly>
+                    </div>
+                    <div class="col-md-7 mb-3">
+                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.email}" readonly>
+                    </div>
+                </div>
+                <div class="row form-group mb-3 mt-3">
+                    <div class="col-md-4 mb-3">
+                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Contractor Address" readonly>
+                    </div>
+                    <div class="col-md-7 mb-3">
+                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.address}" readonly >
+                    </div>
+                </div>
+                <div class="row form-group mb-3 mt-3">
+                    <div class="col-md-4 mb-3">
+                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Contractor Phone" readonly>
+                    </div>
+                    <div class="col-md-7 mb-3">
+                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.phone}" readonly>
+                    </div>
+                </div>
+            `);
+        } else if(contractor.attr('type') == 'beneficiary') {
+            const data = JSON.parse(contractor.attr('data'));
+
+            $('.default-contractor-pattern-container').html(`
+                <div class="row form-group mb-3 mt-3">
+                    <div class="col-md-4 mb-3">
+                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Contractor Name" readonly>
+                    </div>
+                    <div class="col-md-7 mb-3">
+                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.name}" readonly >
+                    </div>
+                </div>
+                <div class="row form-group mb-3 mt-3">
+                    <div class="col-md-4 mb-3">
+                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Contractor Email" readonly>
+                    </div>
+                    <div class="col-md-7 mb-3">
+                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.email}" readonly >
+                    </div>
+                </div>
+                <div class="row form-group mb-3 mt-3">
+                    <div class="col-md-4 mb-3">
+                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Contractor Address" readonly>
+                    </div>
+                    <div class="col-md-7 mb-3">
+                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.address}" readonly >
+                    </div>
+                </div>
+                <div class="row form-group mb-3 mt-3">
+                    <div class="col-md-4 mb-3">
+                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Contractor Phone" readonly>
+                    </div>
+                    <div class="col-md-7 mb-3">
+                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.phone}" readonly >
+                    </div>
+                </div>
+                <div class="row form-group mb-3 mt-3">
+                    <div class="col-md-4 mb-3">
+                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Contractor Registration No" readonly>
+                    </div>
+                    <div class="col-md-7 mb-3">
+                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.registration_no}" readonly>
+                    </div>
+                </div>
+                <div class="row form-group mb-3 mt-3">
+                    <div class="col-md-4 mb-3">
+                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Contractor VAT No" readonly>
+                    </div>
+                    <div class="col-md-7 mb-3">
+                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.vat_no}" readonly >
+                    </div>
+                </div>
+            `);
+        } else {
+            $('.default-contractor-pattern-container').html('');
+        }
+    });
+
+    $('#client_id').on('change', function() {
+        var client = $('#client_id option:selected');
+        if(client.attr('data')) {
+            const data = JSON.parse(client.attr('data'));
+
+            $('.default-client-pattern-container').html(`
+                <div class="row form-group mb-3 mt-3">
+                    <div class="col-md-4 mb-3">
+                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Client Name" readonly>
+                    </div>
+                    <div class="col-md-7 mb-3">
+                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.name}" readonly >
+                    </div>
+                </div>
+                <div class="row form-group mb-3 mt-3">
+                    <div class="col-md-4 mb-3">
+                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Client Email" readonly>
+                    </div>
+                    <div class="col-md-7 mb-3">
+                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.email}" readonly >
+                    </div>
+                </div>
+                <div class="row form-group mb-3 mt-3">
+                    <div class="col-md-4 mb-3">
+                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Client Address" readonly>
+                    </div>
+                    <div class="col-md-7 mb-3">
+                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.address}" readonly >
+                    </div>
+                </div>
+                <div class="row form-group mb-3 mt-3">
+                    <div class="col-md-4 mb-3">
+                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Client Phone" readonly>
+                    </div>
+                    <div class="col-md-7 mb-3">
+                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.phone}" readonly >
+                    </div>
+                </div>
+                <div class="row form-group mb-3 mt-3">
+                    <div class="col-md-4 mb-3">
+                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Client Registration No" readonly>
+                    </div>
+                    <div class="col-md-7 mb-3">
+                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.registration_no}" readonly >
+                    </div>
+                </div>
+                <div class="row form-group mb-3 mt-3">
+                    <div class="col-md-4 mb-3">
+                        <input type="text" name="default_item[]" class="form-control shadow-none itemname" value="Client VAT No" readonly>
+                    </div>
+                    <div class="col-md-7 mb-3">
+                        <input type="text" name="default_value[]" class="form-control shadow-none itemvalue" value="${data.vat_no}" readonly >
+                    </div>
+                </div>
+            `);
+        } else {
+            $('.default-client-pattern-container').html('');
+        }
+    });
+
     $('.add').on('click',function(){
         $('.extra-container').append(`
             <div class="row form-group mb-3 mt-3">
