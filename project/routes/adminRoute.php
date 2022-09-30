@@ -197,8 +197,8 @@ Route::prefix('admin')->group(function () {
   });
 
   Route::group(['middleware' => 'permissions:Contract Management'], function () {
-    Route::get('/contract/management', [ContractManageController::class, 'index'])->name('admin.contract.management');
-    Route::get('/contract/datatables', [ContractManageController::class, 'datatables'])->name('admin.contract.datatables');
+    Route::get('/contract/management/{id}', [ContractManageController::class, 'index'])->name('admin.contract.management');
+    Route::get('/contract/datatables/{id}', [ContractManageController::class, 'datatables'])->name('admin.contract.datatables');
     Route::get('/contract/view/{id}', [ContractManageController::class, 'view'])->name('admin.contract.view');
     Route::get('/contract/aoa/{id}', [ContractManageController::class, 'aoa_index'])->name('admin.aoa.index');
     Route::get('/contract/aoa/{id}/datatables', [ContractManageController::class, 'aoa_datatables'])->name('admin.aoa.datatables');

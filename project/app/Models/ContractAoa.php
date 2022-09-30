@@ -23,6 +23,12 @@ class ContractAoa extends Model
 
     public function contractor()
     {
-        return $this->belongsTo(User::class, 'contractor_id')->withDefault();
+        // return $this->belongsTo(User::class, 'contractor_id')->withDefault();
+        return $this->morphTo();
+    }
+    public function contract()
+    {
+        return $this->belongsTo(Contract::class, 'contract_id')->withDefault();
+
     }
 }

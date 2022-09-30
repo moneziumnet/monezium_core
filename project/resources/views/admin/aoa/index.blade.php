@@ -8,7 +8,7 @@
 	<ol class="breadcrumb">
 		<li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
 
-		<li class="breadcrumb-item"><a href="{{ route('admin.contract.management') }}">{{ __('Contracts') }}</a></li>
+		<li class="breadcrumb-item"><a href="{{ route('admin.contract.management', $data->id) }}">{{ __('Contracts') }}</a></li>
 
         <li class="breadcrumb-item"><a href="{{ route('admin.aoa.index', $id) }}">{{ __('AoA') }}</a></li>
 	</ol>
@@ -18,26 +18,35 @@
 
 <div class="row mt-3">
   <div class="col-lg-12">
+    <div class="card  tab-card">
+        @include('admin.user.profiletab')
 
-	@include('includes.admin.form-success')
+        <div class="tab-content" id="myTabContent">
 
-	<div class="card mb-4">
-	  <div class="table-responsive p-3">
-		<table id="geniustable" class="table table-hover dt-responsive" cellspacing="0" width="100%">
-		  <thead class="thead-light">
-			<tr>
-				<th>{{__('No.')}}</th>
-				<th>{{__('Title')}}</th>
-				<th>{{__('Description')}}</th>
-				<th>{{__('Contracter E-Sign')}}</th>
-				<th>{{__('Customer E-Sign')}}</th>
-				<th>{{__('Status')}}</th>
-				<th>{{__('Action')}}</th>
-			</tr>
-		  </thead>
-		</table>
-	  </div>
-	</div>
+            @include('includes.admin.form-success')
+            <div class="tab-pane fade show active" id="modules" role="tabpanel" aria-labelledby="modules-tab">
+                <div class="card-body">
+                    <div class="card mb-4">
+                        <div class="table-responsive p-3">
+                            <table id="geniustable" class="table table-hover dt-responsive" cellspacing="0" width="100%">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>{{__('No.')}}</th>
+                                    <th>{{__('Title')}}</th>
+                                    <th>{{__('Description')}}</th>
+                                    <th>{{__('Contracter E-Sign')}}</th>
+                                    <th>{{__('Customer E-Sign')}}</th>
+                                    <th>{{__('Status')}}</th>
+                                    <th>{{__('Action')}}</th>
+                                </tr>
+                            </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
   </div>
 </div>
 

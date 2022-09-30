@@ -14,9 +14,9 @@ use Datatables;
 
 class ContractManageController extends Controller
 {
-    public function datatables()
+    public function datatables($id)
     {
-        $datas = Contract::orderBy('id','desc');
+        $datas = Contract::where('user_id', $id)->orderBy('id','desc');
 
         return Datatables::of($datas)
                         ->addColumn('title',function(Contract $data){
@@ -57,8 +57,10 @@ class ContractManageController extends Controller
                         ->toJson();
     }
 
-    public function index(){
-        return view('admin.contract.index');
+    public function index($id){
+        $data = User::findOrFail($id);
+        $data['data'] = $data;
+        return view('admin.contract.index', $data);
     }
 
     public function view($id) {
@@ -67,7 +69,10 @@ class ContractManageController extends Controller
     }
 
     public function aoa_index($id) {
-        return view('admin.aoa.index', compact('id'));
+        $contract = Contract::findOrFail($id);
+        $data['data'] = User::findOrFail($contract->user_id);
+        $data['id'] = $id;
+        return view('admin.aoa.index', $data);
     }
 
     public function aoa_datatables($id)
