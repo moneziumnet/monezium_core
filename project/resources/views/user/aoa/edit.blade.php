@@ -125,7 +125,7 @@
                                     @if ($loop->first)
                                     <div class="form-label">{{__('Text')}} <span class="pattern-help"><i class="fas fa-question-circle"></i></span></div>
                                     @endif
-                                    <textarea type="text" name="desc_text[]" class="form-control shadow-none itemvalue">{{$value}}</textarea>
+                                    <textarea type="text" rows="5" name="desc_text[]" class="form-control shadow-none itemvalue">{{$value}}</textarea>
                                 </div>
                                 @if ($loop->first)
                                     <div class="col-md-1 mb-3">
@@ -228,6 +228,9 @@ I need {Amount} from you.')}}</textarea>
                                             <textarea name="description" class="form-control" readonly>{{__('Hello, Aleksander.
 I need 1000 from you.')}}</textarea>
                                         </div>
+                                    </div>
+                                    <div class="row form-group mt-3 text-start">
+                                        <button type="button" class="btn w-100" data-bs-dismiss="modal">Close</button>
                                     </div>
                                 </div>
                             </div>
@@ -417,7 +420,7 @@ I need 1000 from you.')}}</textarea>
                     <input type="text" name="desc_title[]" class="form-control shadow-none itemname">
                 </div>
                 <div class="col-md-7 mb-3">
-                    <textarea type="text" name="desc_text[]" class="form-control shadow-none itemvalue"></textarea>
+                    <textarea type="text" rows="5" name="desc_text[]" class="form-control shadow-none itemvalue"></textarea>
                 </div>
                 <div class="col-md-1 mb-3">
                     <button type="button" class="btn btn-danger w-100 remove"><i class="fas fa-times"></i></button>
