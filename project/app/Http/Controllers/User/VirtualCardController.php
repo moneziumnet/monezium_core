@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Generalsetting;
 use App\Models\User;
 use App\Models\Currency;
+use App\Models\Wallet;
+use App\Models\Charge;
 use App\Models\VirtualCard;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
@@ -34,6 +36,46 @@ class VirtualCardController extends Controller
 
         $user=auth()->user();
         $currency=Currency::where('id', $request->currency_id)->first();
+
+        $check =  Wallet::where('user_id', $request->user_id)->where('wallet_type', 1)->where('currency_id', $request->currency_id)->first();
+        if($check){
+            return back()->with('error', 'This wallet already exist');
+        }
+        $gs = Generalsetting::first();
+        $user_wallet = new Wallet();
+        $user_wallet->user_id = auth()->id();
+        $user_wallet->user_type = 1;
+        $user_wallet->currency_id = $request->currency_id;
+        $user_wallet->balance = 0;
+        $user_wallet->wallet_type = 2;
+        $user_wallet->wallet_no =$gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
+        $user_wallet->created_at = date('Y-m-d H:i:s');
+        $user_wallet->updated_at = date('Y-m-d H:i:s');
+        $user_wallet->save();
+
+        $user =  User::findOrFail(auth()->id());
+        $chargefee = Charge::where('slug', 'card-issuance')->where('plan_id', $user->bank_plan_id)->first();
+
+        $trans = new Transaction();
+        $trans->trnx = str_rand();
+        $trans->user_id     = $user->id;
+        $trans->user_type   = 1;
+        $trans->currency_id = 1;
+        $trans->amount      = $chargefee->data->fixed_charge;
+
+        $trans_wallet = get_wallet($user->id, 1, 1);
+
+        $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+        $trans->charge      = 0;
+        $trans->type        = '-';
+        $trans->remark      = 'card_issuance';
+        $trans->details     = trans('Card Issuance');
+        $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+        $trans->save();
+
+        user_wallet_decrement($user->id, 1, $chargefee->data->fixed_charge, 1);
+        user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
+
         $coin=$currency->code;
         $trx='VC-'.Str::random(6);
         $name=$request->first_name." ".$request->last_name;
@@ -57,6 +99,7 @@ class VirtualCardController extends Controller
         $response = curl_exec($curl);
         curl_close($curl);
         $result = json_decode($response, true);
+
         if (array_key_exists('data', $result) && ($result['status'] === 'success')) {
 
             //Save Card
@@ -78,7 +121,8 @@ class VirtualCardController extends Controller
             $sav['state']=$result['data']['state'];
             $sav['zip_code']=$result['data']['zip_code'];
             $sav['address']=$result['data']['address_1'];
-            $sav['amount']=$request->amount;
+            $sav['amount']=0;
+            $sav['currency_id']=$request->currency_id;
             $sav['charge']=0;
             VirtualCard::create($sav);
             return back()->with('success', 'Virtual card was successfully created');
@@ -100,7 +144,8 @@ class VirtualCardController extends Controller
             $sav['city']=$user->city;
             $sav['zip_code']=$user->zip;
             $sav['address']=$user->address;
-            $sav['amount']='0';
+            $sav['amount']=0;
+            $sav['currency_id']=$request->currency_id;
             $sav['charge']=0;
             VirtualCard::create($sav);
             return back()->with('success', 'Virtual card was successfully created');

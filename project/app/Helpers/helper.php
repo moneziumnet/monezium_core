@@ -412,6 +412,7 @@ if(!function_exists('getModule')){
                 $trans->save();
               }
               user_wallet_decrement($auth_id, 1, $chargefee->data->fixed_charge, 1);
+              user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
               return $user_wallet->balance;
           }
 

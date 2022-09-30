@@ -27,14 +27,14 @@
     </div>
     <div class="row justify-content " style="max-height: 800px;overflow-y: scroll;">
         @if (count($virtualcards) != 0)
-            @foreach ($virtualcards as $item)
+            @foreach ($virtualcards as $key => $item)
             <div class="col-lg-4 mb-2">
                 <div class="card">
                   <!-- Card body -->
                   <div class="card-body">
                     <div class="row justify-content-between align-items-center">
                       <div class="col">
-                        <span class="text-primary ">{{$currency->symbol.number_format($item->amount, 2, '.', '')}}</span> @if($item->status==0) <span class="badge badge-pill badge-danger">Terminated</span> @elseif($item->status==1) <span class="badge badge-pill badge-success">Active</span> @elseif($item->status==2) <span class="badge badge-pill badge-danger">Blocked</span>@endif
+                        <span class="text-primary ">{{$item->currency->symbol.number_format(user_wallet_balance($item->user_id, $item->currency_id, 2), 2, '.', '')}}</span> @if($item->status==0) <span class="badge badge-pill badge-danger">Terminated</span> @elseif($item->status==1) <span class="badge badge-pill badge-success">Active</span> @elseif($item->status==2) <span class="badge badge-pill badge-danger">Blocked</span>@endif
                       </div>
                       <div class="col-auto nav-item dropdown">
                         <a class="mr-0 nav-link" data-bs-toggle="dropdown">
