@@ -50,7 +50,7 @@
                     <label for="name" class="form-label">@lang('Your Last Name')</label>
                     <input type="text" id="name" name="lastname" class="form-control form--control" required>
                 </div>
-                <div class="col-sm-12">
+                <div class="col-sm-6">
                     <label for="customer_dob" class="form-label">@lang('Your Birthday')</label>
                     <input type="date" id="customer_dob" name="customer_dob" class="form-control form--control" required>
                 </div>
@@ -61,12 +61,6 @@
                 <div class="col-sm-6">
                     <label for="phone" class="form-label">@lang('Your Phone')</label>
                     <input type="text" id="phone" name="phone" class="form-control form--control" required>
-                </div>
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        <label for="inp-name" class="form-label">{{ __('Address') }}</label>
-                        <input type="text" class="form-control form--control" id="address" name="address" placeholder="{{ __('Enter Address') }}" value="" required>
-                    </div>
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group">
@@ -105,7 +99,13 @@
                 </div>
                 <div id="private_div" class="col-sm-12">
                     <div class="row">
-                        <div class="col-sm-12">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="inp-name" class="form-label">{{ __('Address') }}</label>
+                                <input type="text" class="private-input form-control form--control" id="address" name="address" placeholder="{{ __('Enter Address') }}" value="" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="personal-code" class="form-label">{{ __('Personal Code/Number') }}</label>
                                 <input type="text" class="private-input form-control form--control" id="personal_code" name="personal_code" placeholder="{{ __('Enter Personal Code/Number') }}" value="" required>
@@ -147,6 +147,12 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
+                                <label for="inp-name" class="form-label">{{ __('Company Address') }}</label>
+                                <input type="text" class="company-input form-control form--control" id="company_address" name="company_address" placeholder="{{ __('Enter Company Address') }}" value="" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 mt-3">
+                            <div class="form-group">
                                 <label for="dob" class="form-label">{{ __('Registration No') }}</label>
                                 <input type="text" class="company-input form-control form--control" id="company_reg_no"name="company_reg_no" placeholder="{{ __('Enter Company Registration No') }}" value="">
                             </div>
@@ -157,7 +163,7 @@
                                 <input type="text" class="company-input form-control form--control" id="company_vat_no"name="company_vat_no" placeholder="{{ __('Enter Company VAT No') }}" value="">
                             </div>
                         </div>
-                        <div class="col-sm-6 mt-3">
+                        <div class="col-sm-12 mt-3">
                             <div class="form-group">
                                 <label for="dob" class="form-label">{{ __('Registration Date') }}</label>
                                 <input type="date" class="company-input form-control form--control" id="company_dob" name="company_dob" placeholder="{{ __('yyyy-mm-dd') }}" value="">

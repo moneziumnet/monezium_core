@@ -1020,6 +1020,7 @@ class UserController extends Controller
                 $data['issued_authority'] = $request->issued_authority;
                 $data['date_of_issue'] = $request->date_of_issue;
                 $data['date_of_expire'] = $request->date_of_expire;
+                $data['address'] = $request->address;
                 $data['company_name'] = null;
                 $data['company_reg_no'] = null;
                 $data['company_vat_no'] = null;
@@ -1029,6 +1030,7 @@ class UserController extends Controller
                 $data['company_reg_no'] = $request->company_reg_no;
                 $data['company_vat_no'] = $request->company_vat_no;
                 $data['company_dob'] = $request->company_dob;
+                $data['address'] = $request->company_address;
                 $data['personal_code'] = null;
                 $data['your_id'] = null;
                 $data['issued_authority'] = null;

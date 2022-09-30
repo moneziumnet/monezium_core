@@ -170,25 +170,27 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="inp-name">{{ __('Last Name') }}</label>
-                            <input type="text" class="form-control" id="inp-name" name="lastname" placeholder="{{ __('Enter Second Name') }}" value="{{ explode(" ",$data->name)[1] ?? '' }}" required>
-                          </div>
+                          <label for="inp-name">{{ __('Last Name') }}</label>
+                          <input type="text" class="form-control" id="inp-name" name="lastname" placeholder="{{ __('Enter Second Name') }}" value="{{ explode(" ",$data->name)[1] ?? '' }}" required>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="inp-email">{{ __('Email') }}</label>
+                          <input type="text" class="form-control" id="inp-email" name="email" placeholder="{{ __('Enter Email') }}" value="{{ $data->email }}" disabled="">
+                        </div>
 
                         <div class="form-group">
                             <label class="form-label required">{{__('Birthday ')}}</label>
                             <input name="dob" class="form-control form--control" autocomplete="off" placeholder="{{__('Your BirthDay')}}" type="date" value="{{$data->dob }}" required>
                         </div>
                       </div>
-                      <div class="col-md-6">
+                      <div class="col-md-12">
                         <div class="form-group">
-                          <label for="inp-email">{{ __('Email') }}</label>
-                          <input type="text" class="form-control" id="inp-email" name="email" placeholder="{{ __('Enter Email') }}" value="{{ $data->email }}" disabled="">
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label for="inp-address">{{ __('Address') }}</label>
-                          <input type="text" class="form-control" id="inp-address" name="address" placeholder="{{ __('Enter Address') }}" value="{{ $data->address }}" required>
+                          <label for="inp-user-type" class="form-label">{{ __('Select Type') }}</label>
+                          <select id="test" class="form-control form--control mb-3" name="form_select" onchange="showCompanyInput( this)">
+                              <option value="0" {{isset($data->company_name) ? '' : 'selected'}}> Private</option>
+                              <option value="1" {{isset($data->company_name) ? 'selected' : ''}}> Corporate</option>
+                          </select>
                         </div>
                       </div>
                       <div class="col-md-6">
@@ -204,15 +206,6 @@
                           <input type="text" class="form-control" id="inp-zip" name="zip" placeholder="{{ __('Enter Zip Code') }}" value="{{ $data->zip }}" required>
                         </div>
                       </div>
-                      <div class="col-md-12">
-                        <div class="form-group">
-                          <label for="inp-user-type" class="form-label">{{ __('Select Type') }}</label>
-                          <select id="test" class="form-control form--control mb-3" name="form_select" onchange="showCompanyInput( this)">
-                              <option value="0" {{isset($data->company_name) ? '' : 'selected'}}> Private</option>
-                              <option value="1" {{isset($data->company_name) ? 'selected' : ''}}> Corporate</option>
-                          </select>
-                        </div>
-                      </div>
 
                       @php
                         $private_required = isset($data->company_name) ? '' : 'required';
@@ -220,10 +213,17 @@
                       @endphp
                       <div id="private_div" class="col-md-12" style="{{isset($data->company_name) ? 'display:none;' : ''}}">
                         <div class="row">
-                          <div class="col-md-12">
+                          <div class="col-md-6">
                             <div class="form-group">
                                 <label for="personal-code" class="form-label">{{ __('Personal Code/Number') }}</label>
                                 <input type="text" class="private-input form-control form--control" id="personal_code" name="personal_code" placeholder="{{ __('Enter Personal Code/Number') }}" value="{{$data->personal_code}}" {{$private_required}}>
+                            </div>
+                          </div>
+                          
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label for="inp-address">{{ __('Address') }}</label>
+                              <input type="text" class="private-input form-control" id="inp-address" name="address" placeholder="{{ __('Enter Address') }}" value="{{ $data->address }}" required>
                             </div>
                           </div>
                           <div class="col-md-6 mt-3">
@@ -262,6 +262,12 @@
                           </div>
                           <div class="col-md-6">
                             <div class="form-group mt-2">
+                                <label for="dob" class="form-label">{{ __('Company Address') }}</label>
+                                <input type="text" class="company-input form-control form--control" id="company_address"name="company_address" placeholder="{{ __('Enter Company Name') }}" value="{{ $data->address }}" {{$corporate_required}}>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group mt-3">
                                 <label for="dob" class="form-label">{{ __('Registration No') }}</label>
                                 <input type="text" class="company-input form-control form--control" id="company_reg_no"name="company_reg_no" placeholder="{{ __('Enter Company Registration No') }}" value="{{ $data->company_reg_no }}" {{$corporate_required}}>
                             </div>
@@ -272,7 +278,7 @@
                                 <input type="text" class="company-input form-control form--control" id="company_vat_no"name="company_vat_no" placeholder="{{ __('Enter Company VAT No') }}" value="{{ $data->company_vat_no }}" {{$corporate_required}}>
                             </div>
                           </div>
-                          <div class="col-md-6">
+                          <div class="col-md-12">
                             <div class="form-group mt-3">
                                 <label for="dob" class="form-label">{{ __('Registration Date') }}</label>
                                 <input type="date" class="company-input form-control form--control" id="company_dob" name="company_dob" placeholder="{{ __('yyyy-mm-dd') }}" value="{{date("Y-m-d", strtotime($data->company_dob))}}" {{$corporate_required}}>

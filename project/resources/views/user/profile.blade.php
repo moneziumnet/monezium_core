@@ -98,12 +98,6 @@
                               <input name="city" class="form-control form--control" autocomplete="off" placeholder="{{__('City')}}" type="text" value="{{ $user->city }}" required>
                             </div>
                           </div>
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <label class="form-label required">{{__('Address')}}</label>
-                              <input name="address" class="form-control form--control" autocomplete="off" placeholder="{{__('Address')}}" type="text" value="{{ $user->address }}" required>
-                            </div>
-                          </div>
 
                           @php
                             $private_required = isset($user->company_name) ? '' : 'required';
@@ -111,7 +105,14 @@
                           @endphp
                           <div id="private_div" class="col-md-12" style="{{isset($user->company_name) ? 'display:none;' : ''}}">
                             <div class="row">
-                              <div class="col-md-12">
+                              
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label class="form-label required">{{__('Address')}}</label>
+                                  <input name="address" class="private-input form-control form--control" autocomplete="off" placeholder="{{__('Address')}}" type="text" value="{{ $user->address }}" required>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="personal-code" class="form-label">{{ __('Personal Code/Number') }}</label>
                                     <input type="text" class="private-input form-control form--control" id="personal_code" name="personal_code" placeholder="{{ __('Enter Personal Code/Number') }}" value="{{$user->personal_code}}" {{$private_required}}>
@@ -149,6 +150,12 @@
                                 <div class="form-group mt-2">
                                     <label for="dob" class="form-label">{{ __('Company Name') }}</label>
                                     <input type="text" class="company-input form-control form--control" id="company_name"name="company_name" placeholder="{{ __('Enter Company Name') }}" value="{{ $user->company_name }}" {{$corporate_required}}>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group mt-2">
+                                    <label for="dob" class="form-label">{{ __('Company Address') }}</label>
+                                    <input type="text" class="company-input form-control form--control" id="company_address"name="company_address" placeholder="{{ __('Enter Company Address') }}" value="{{ $user->address }}" {{$corporate_required}}>
                                 </div>
                               </div>
                               <div class="col-md-6">
