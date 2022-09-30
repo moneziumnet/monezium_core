@@ -47,6 +47,7 @@ class UserController extends Controller
         $data['transactions'] = Transaction::whereUserId(auth()->id())->orderBy('id','desc')->limit(5)->get();
         $data['bankaccountlist'] = BankAccount::whereUserId(auth()->id())->get();
         $data['currencies'] = Currency::where('type', 1)->where('status', 1)->get();
+        $data['crypto_currencies'] = Currency::where('type', 2)->where('status', 1)->get();
         $data['subbank'] = SubInsBank::wherestatus(1)->get();
 
         foreach ($data['transactions'] as $key => $transaction) {
@@ -68,6 +69,25 @@ class UserController extends Controller
         $user_wallet->currency_id = $request->currency_id;
         $user_wallet->balance = 0;
         $user_wallet->wallet_type = 1;
+        $user_wallet->wallet_no =$gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
+        $user_wallet->created_at = date('Y-m-d H:i:s');
+        $user_wallet->updated_at = date('Y-m-d H:i:s');
+        $user_wallet->save();
+        return back()->with('message', 'You have created new Wallet successfully.');
+    }
+
+    public function crypto_wallet_create(Request $request) {
+        $check =  Wallet::where('user_id', $request->user_id)->where('wallet_type', 1)->where('currency_id', $request->crypto_currency_id)->first();
+        if($check){
+            return back()->with('error', 'This wallet already exist');
+        }
+        $gs = Generalsetting::first();
+        $user_wallet = new Wallet();
+        $user_wallet->user_id = $request->user_id;
+        $user_wallet->user_type = 1;
+        $user_wallet->currency_id = $request->crypto_currency_id;
+        $user_wallet->balance = 0;
+        $user_wallet->wallet_type = 8;
         $user_wallet->wallet_no =$gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
         $user_wallet->created_at = date('Y-m-d H:i:s');
         $user_wallet->updated_at = date('Y-m-d H:i:s');

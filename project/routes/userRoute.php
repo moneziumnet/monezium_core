@@ -100,6 +100,7 @@ Route::prefix('user')->group(function() {
 
       Route::get('/dashboard', [UserController::class,'index'])->name('user.dashboard');
       Route::post('/user/wallet', [UserController::class,'wallet_create'])->name('user.wallet.create');
+      Route::post('/user/crypto/wallet', [UserController::class,'crypto_wallet_create'])->name('user.wallet.crypto.create');
       Route::POST('/user/bankaccount/openpayd',[OpenPaydController::class,'store'])->name('user.bankaccount.openpayd.store');
       Route::POST('/user/bankaccount/railsbank',[RailsBankController::class,'store'])->name('user.bankaccount.railsbank.store');
       Route::POST('/user/bankaccount/gateway',[UserController::class,'gateway'])->name('user.bankaccount.gateway');

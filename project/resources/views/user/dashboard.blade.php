@@ -161,7 +161,6 @@
         @else
             <p class="text-center">@lang('NO Wallet FOUND')</p>
         @endif
-
     </div>
     <hr>
     <div class="container-xl">
@@ -172,10 +171,44 @@
                 {{__('Crypto Wallet list')}}
               </h1>
             </div>
+            <div class="col-auto ms-auto d-print-none">
+              <div class="btn-list">
+                <a  data-bs-toggle="modal" data-bs-target="#modal-crypto-wallet-create" class="btn btn-primary d-sm-inline-block">
+                  <i class="fas fa-plus me-1"></i> {{__('Create Crypto Wallet')}}
+                </a>
+              </div>
+            </div>
           </div>
         </div>
     </div>
-
+    <div class="modal modal-blur fade" id="modal-crypto-wallet-create" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+          <h5 class="modal-title">{{('Crypto Wallet Create')}}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form action="{{route('user.wallet.crypto.create')}}" method="POST" enctype="multipart/form-data">
+              @csrf
+              <div class="modal-body">
+                  <div class="form-group">
+                      <label class="form-label required">{{__('Crypto Currency')}}</label>
+                      <select name="crypto_currency_id" class="form-select" required>
+                          <option value="">{{ __('Select Currency') }}</option>
+                          @foreach ($crypto_currencies as $key => $value)
+                            <option value="{{$value->id}}">{{$value->code}}</option>
+                          @endforeach
+                      </select>
+                  </div>
+              </div>
+              <input type="hidden" name="user_id" value="{{$user->id}}">
+              <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">{{ __('Create') }}</button>
+              </div>
+          </form>
+      </div>
+      </div>
+    </div>
     <div class="row justify-content " style="max-height: 368px;overflow-y: scroll;">
         @if (count($cryptowallets) != 0)
             @foreach ($cryptowallets as $item)
