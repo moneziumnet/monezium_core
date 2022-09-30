@@ -49,7 +49,7 @@
 
 
                         <div class="form-group mb-3 mt-3">
-                            <label class="form-label required">{{__('Your Crypto Address')}}</label>
+                            <label class="form-label required">{{__('Receiver Crypto Address')}}</label>
                             <input name="sender_address" id="sender_address" class="form-control" autocomplete="off" placeholder="{{__('0x....')}}" type="text" value="{{ old('sender_address') }}" required>
                         </div>
 
