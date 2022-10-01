@@ -43,11 +43,8 @@
                                 <thead>
                                 <tr>
                                     <th>{{ __('Incoming Date') }}</th>
-                                    <th>{{ __('Hash') }}</th>
                                     <th>{{ __('Crypto Address') }}</th>
-                                    <th>{{ __('Your Crypto Address') }}</th>
                                     <th>{{ __('Amount') }}</th>
-                                    <th>{{ __('Status') }}</th>
                                     <th class="text-end">{{ __('Details') }}</th>
                                 </tr>
                                 </thead>
@@ -59,19 +56,9 @@
                                           {{date('d-M-Y',strtotime($deposit->created_at))}}
                                         </div>
                                       </td>
-                                      <td data-label="{{ __('Hash') }}">
-                                        <div>
-                                          {{str_dis($deposit->hash)}}
-                                        </div>
-                                      </td>
                                         <td data-label="{{ __('Crypto Address') }}">
                                           <div>
                                             {{str_dis($deposit->address)}}
-                                          </div>
-                                        </td>
-                                        <td data-label="{{ __('Your Crypto Address') }}">
-                                          <div>
-                                            {{ str_dis($deposit->sender_address) }}
                                           </div>
                                         </td>
 
@@ -81,20 +68,6 @@
                                           </div>
                                         </td>
 
-                                        <td data-label="{{ __('Status') }}">
-                                          <div>
-                                            @php
-                                            if ($deposit->status == 1) {
-                                                $status  = __('Completed');
-                                            } elseif ($deposit->status == 2) {
-                                                $status  = __('Rejected');
-                                            } else {
-                                                $status  = __('Pending');
-                                            }
-                                            @endphp
-                                            {{ ucfirst($status) }}
-                                          </div>
-                                        </td>
                                         <td data-label="@lang('Details')" class="text-end">
                                             <button class="btn btn-primary btn-sm details" data-data="{{json_encode($deposit)}}" >@lang('Details')</button>
                                         </td>
@@ -120,9 +93,7 @@
         <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
         <h3>@lang('Bank Details')</h3>
         <ul class="list-group mt-2">
-            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Hash')<span id="hash" style="margin-left: 60px"></span></li>
             <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Receiver Crypto Address')<span id="address"  style="margin-left: 60px"></span></li>
-            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Your Crypto Address')<span id="sender_address" style="margin-left: 60px"></span></li>
             <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Amount')<span id="amount" style="margin-left: 60px"></span></li>
             <li class="list-group-item d-flex justify-content-center" style="word-break:break-all;"><img id="qrcode"></li>
         </ul>
@@ -138,9 +109,7 @@
 <script type="text/javascript">
     'use strict';
       $('.details').on('click', function() {
-          $('#hash').text($(this).data('data').hash);
           $('#address').text($(this).data('data').address);
-          $('#sender_address').text($(this).data('data').sender_address);
           $('#amount').text($(this).data('data').amount+ $(this).data('data').currency.code);
           $('#qrcode').attr('src', `https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=${$(this).data('data').address}&choe=UTF-8`);
           $('#modal-success').modal('show');

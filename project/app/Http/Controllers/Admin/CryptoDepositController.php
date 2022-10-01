@@ -34,45 +34,12 @@ class CryptoDepositController extends Controller
                         ->editColumn('address', function(CryptoDeposit $data) {
                             return str_dis($data->address);
                         })
-                        ->editColumn('sender_address', function(CryptoDeposit $data) {
-                            return str_dis($data->sender_address);
-                        })
-                        ->editColumn('hash', function(CryptoDeposit $data) {
-                            return str_dis($data->hash);
-                        })
-                        ->editColumn('status', function(CryptoDeposit $data) {
-                            if ($data->status == 1) {
-                                $status  = __('Completed');
-                              } elseif ($data->status == 2) {
-                                $status  = __('Rejected');
-                              } else {
-                                $status  = __('Pending');
-                              }
-
-                              if ($data->status == 1) {
-                                $status_sign  = 'success';
-                              } elseif ($data->status == 2) {
-                                $status_sign  = 'danger';
-                              } else {
-                                $status_sign = 'warning';
-                              }
-
-                              return '<div class="btn-group mb-1">
-                                                      <button type="button" class="btn btn-' . $status_sign . ' btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        ' . $status . '
-                                                      </button>
-                                                      <div class="dropdown-menu" x-placement="bottom-start">
-                                                        <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="' . route('admin.deposits.crypto.status', ['id1' => $data->id, 'id2' => 1]) . '">' . __("completed") . '</a>
-                                                        <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="' . route('admin.deposits.crypto.status', ['id1' => $data->id, 'id2' => 2]) . '">' . __("rejected") . '</a>
-                                                      </div>
-                                                    </div>';
-                            })
                         ->editColumn('action', function(CryptoDeposit $data) {
                             $doc_url = $data->proof ? $data->proof : null;
                             return '<input type="hidden", id="sub_data", value ='.json_encode($data).'>'.' <a href="javascript:;" data=\''.json_encode($data).'\' url="'.$doc_url.'" onclick="getDetails(this)" class="detailsBtn" >
                             ' . __("Details") . '</a>';
                         })
-                        ->rawColumns(['created_at','customer_name','amount','status', 'action'])
+                        ->rawColumns(['created_at','customer_name','amount','action'])
                         ->toJson();
     }
 

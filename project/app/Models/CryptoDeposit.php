@@ -10,11 +10,8 @@ class CryptoDeposit extends Model
         'currency_id',
         'user_id',
         'amount',
-        'hash',
-        'sender_address',
         'address',
         'status',
-        'proof'
     ];
 
     public function user(){

@@ -8,6 +8,7 @@ use App\Models\Generalsetting;
 use App\Models\CryptoDeposit;
 use App\Models\Currency;
 use App\Models\PlanDetail;
+use App\Models\Wallet;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\SubInsBank;
@@ -42,17 +43,6 @@ class DepositCryptoController extends Controller
                 return redirect()->back()->with('unsuccess','Verification code is not matched.');
             }
         }
-        $rules = [
-            'proof' => 'required|mimes:png,jpg,gif'
-        ];
-
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return redirect()->back()->with('unsuccess',$validator->getMessageBag()->toArray()['proof'][0]);
-        }
-
         $currency = Currency::where('id',$request->currency_id)->first();
         $amountToAdd = $request->amount/$currency->rate;
         $user = auth()->user();
@@ -78,12 +68,6 @@ class DepositCryptoController extends Controller
 
         $deposit = new CryptoDeposit();
         $input = $request->all();
-        if ($file = $request->file('proof'))
-        {
-            $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
-            $file->move('assets/doc',$name);
-            $input['proof'] = $name;
-        }
 
         $deposit->fill($input)->save();
 
@@ -96,12 +80,12 @@ class DepositCryptoController extends Controller
            $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
            mail($to,$subject,$msg,$headers);
 
-        return redirect(route('user.cryptodeposit.index'))->with('success','Deposit amount '.$request->amount.' ('.$currency->code.') successfully!');
+        return redirect(route('user.cryptodeposit.index'))->with('message','Deposit amount '.$request->amount.' ('.$currency->code.') successfully!');
     }
 
     public function getcurrency(Request $request ) {
-        $data = Currency::findOrFail($request->id);
-        return $data->address;
+        $data = Wallet::where('currency_id',$request->id)->where('wallet_type', 8)->where('user_id', auth()->id())->first();
+        return $data->wallet_no;
     }
 
 }

@@ -25,12 +25,9 @@
 		  <thead class="thead-light">
 			<tr>
         <th>{{__('Date')}}</th>
-        <th>{{__('Hash')}}</th>
         <th>{{__('Crypto Address')}}</th>
         <th>{{__('Customer Name')}}</th>
-        <th>{{__('Customer Crypto Address')}}</th>
         <th>{{__('Amount')}}</th>
-        <th>{{__('Status')}}</th>
         <th>{{__('Action')}}</th>
 			</tr>
 		  </thead>
@@ -72,11 +69,8 @@
         <h3>@lang('Bank Details')</h3>
         <p class="bank_details"></p>
         <ul class="list-group mt-2">
-            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Hash')<span id="hash" style="margin-left: 60px"></span></li>
             <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Receiver Crypto Address')<span id="address" style="margin-left: 60px"></span></li>
-            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Customer Crypto Address')<span id="sender_address" style="margin-left: 60px"></span></li>
             <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Amount')<span id="amount" style="margin-left: 60px"></span></li>
-            <li class="list-group-item d-flex justify-content-between" id="li_document" >@lang('Proof')<span > <a id="proof" attributes-list download > {{__('Download Proof')}} </a> </span></li>
         </ul>
         </div>
         <div class="modal-footer">
@@ -110,12 +104,9 @@
            ajax: '{{ route('admin.deposits.crypto.datatables') }}',
            columns: [
                 { data: 'created_at', name: 'created_at' },
-                { data: 'hash', name: 'hash' },
                 { data: 'address', name: 'address' },
                 { data: 'customer_name', name: 'customer_name' },
-                { data: 'sender_address', name: 'sender_address' },
                 { data: 'amount', name: 'amount' },
-                { data: 'status', name: 'status' },
                 { data: 'action', name: 'action' },
             ],
             language : {
@@ -126,9 +117,7 @@
         function getDetails(e) {
             var res_data = JSON.parse($(e).attr('data'));
             var document_url = $(e).attr('url');
-            $('#hash').text(res_data.hash);
             $('#address').text(res_data.address);
-            $('#sender_address').text(res_data.sender_address);
             $('#amount').text(res_data.amount + res_data.currency.code);
             if(document_url) {
                 $("#li_document").attr("style","display: block");

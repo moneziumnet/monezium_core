@@ -69,21 +69,6 @@
                                         <span id="qrdetails" class="ms-2 check"></span>
                                     </div>
 
-                                    <div class="form-group mb-3 mt-3">
-                                        <label class="form-label required">{{__('Transaction Hash')}}</label>
-                                        <input name="hash" id="hash" class="form-control" autocomplete="off" placeholder="{{__('abcd....')}}" type="text" value="{{ old('hash') }}" required>
-                                    </div>
-
-                                    <div class="form-group mb-3 mt-3">
-                                        <label class="form-label required">{{__('Your Crypto Address')}}</label>
-                                        <input name="sender_address" id="sender_address" class="form-control" autocomplete="off" placeholder="{{__('0x....')}}" type="text" value="{{ old('sender_address') }}" required>
-                                    </div>
-
-                                    <div class="form-group mb-3 mt-3">
-                                        <label class="form-label proof required" id="proof_label">{{__('Proof')}}</label>
-                                        <input class= "proof" name="proof" id="proof" class="form-control" autocomplete="off" type="file" accept=".jpg,.png,.gif" required>
-                                    </div>
-
                                     <div class="form-group mt-3" id="otp_body">
                                         <label class="form-label required">{{__('OTP Code')}}</label>
                                         <input name="otp_code" id="otp_code" class="form-control" placeholder="{{__('OTP Code')}}" type="text" step="any" value="{{ old('opt_code') }}" required>
