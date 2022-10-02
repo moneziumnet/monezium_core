@@ -14,6 +14,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Exports\AdminExportTransaction;
+use App\Classes\KrakenAPI;
 
 
 class SystemAccountController extends Controller
@@ -78,6 +79,18 @@ class SystemAccountController extends Controller
     public function setting($keyword)
     {
         $data['api'] = CryptoApi::where('keyword', $keyword)->first();
+        if($data['api'])
+        {
+            $beta = false;
+            $url = $beta ? 'https://api.beta.kraken.com' : 'https://api.kraken.com';
+            $sslverify = $beta ? false : true;
+            $version = 0;
+            $key = $data['api']->api_key;
+            $secret = $data['api']->api_secret;
+            $kraken = new KrakenAPI($key, $secret, $url, $version, $sslverify);
+            $res = $kraken->QueryPrivate('Balance');
+            $data['balance'] =(object)$res['result'];
+        }
         $data['keyword'] = $keyword;
         return view('admin.system.cryptosettings', $data);
     }

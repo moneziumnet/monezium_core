@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Classes;
+
 /**
  * Reference implementation for Kraken's REST API.
  *

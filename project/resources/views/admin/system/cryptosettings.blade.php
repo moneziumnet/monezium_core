@@ -21,7 +21,7 @@
           <div class="col">
             <h3 class="page-title">
               {{__('Api Setting')}}
-              </h2>
+              </h3>
           </div>
 
           <div class="card-body">
@@ -50,13 +50,55 @@
               </div>
             </form>
           </div>
+
+          <div class="col">
+            <h3 class="page-title">
+              {{__($keyword.(' Accounts'))}}
+              </h2>
+          </div>
+          @php
+                $accounttype = array('ZUSD'=>'USD', 'ZEUR'=>'EUR', 'ZGBP'=>'GBP', 'XETH'=>'ETH', 'XXBT'=>'BTC');
+          @endphp
+          <div class="row mb-3">
+            @foreach ($accounttype as $key => $type )
+
+            <div class="col-xl-3 col-md-6  mt-3  mb-4">
+                <div class="card h-100" >
+                <div class="card-body">
+                    <div class="row align-items-center">
+                    <div class="col">
+                        <div class="d-flex mb-1 mr-1 align-items-start">
+                            <div class='font-weight-bold text-gray-900 w-75 mr-auto'>{{$type}}<br/></div>
+                            <div class='font-weight-bold text-gray-900 w-25 text-right'>
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" style="padding: 6px 11px 1px 7px; border-radius: 50%;">
+                                        <span class="caret"></span>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        {{-- <a class="dropdown-item" href="javascript:;" onclick="getDetails({{$wallet->id}})">{{ __('Fee') }}</a>
+                                        <a class="dropdown-item" href="javascript:;" onclick="Deposit({{$wallet->id}})">{{ __('Deposit') }}</a>
+                                        <a class="dropdown-item" href="{{route('admin-wallet-transactions', ['user_id' => $data->id, 'wallet_id'=>$wallet->id])}}">{{ __('Transaction View') }}</a> --}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{$balance->$key ?? '0.000000'}} </div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            @endforeach
+          </div>
+
         </div>
       </div>
     </div>
   </div>
 </div>
-</div>
-</div>
+
+
+
 <!--Row-->
 @endsection
 
