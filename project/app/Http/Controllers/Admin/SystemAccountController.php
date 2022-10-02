@@ -107,4 +107,50 @@ class SystemAccountController extends Controller
         return response()->json($msg);
     }
 
+    public function order(Request $request)
+    {
+        $data['api'] = CryptoApi::where('keyword', $request->keyword)->first();
+        if($data['api'])
+        {
+            $beta = false;
+            $url = $beta ? 'https://api.beta.kraken.com' : 'https://api.kraken.com';
+            $sslverify = $beta ? false : true;
+            $version = 0;
+            $key = $data['api']->api_key;
+            $secret = $data['api']->api_secret;
+            $kraken = new KrakenAPI($key, $secret, $url, $version, $sslverify);
+            $res = $kraken->QueryPrivate('AddOrder', array(
+                'pair' => $request->pair,
+                'type' => $request->order_type,
+                'ordertype' => 'market',
+                'oflags' => 'viqc',
+                'volume' => $request->amount,
+            ));
+        }
+        $msg = __('Crypto Exchange Successfully.');
+        return response()->json($msg);
+    }
+
+    public function withdraw(Request $request)
+    {
+        $data['api'] = CryptoApi::where('keyword', $request->keyword)->first();
+        if($data['api'])
+        {
+            $beta = false;
+            $url = $beta ? 'https://api.beta.kraken.com' : 'https://api.kraken.com';
+            $sslverify = $beta ? false : true;
+            $version = 0;
+            $key = $data['api']->api_key;
+            $secret = $data['api']->api_secret;
+            $kraken = new KrakenAPI($key, $secret, $url, $version, $sslverify);
+            $res = $kraken->QueryPrivate('Withdraw', array(
+                'asset' => $request->asset,
+                'key' => $request->withdraw_key,
+                'volume' => $request->amount,
+            ));
+        }
+        $msg = __('Crypto Withdraw Successfully.');
+        return response()->json($msg);
+    }
+
 }

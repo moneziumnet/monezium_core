@@ -75,9 +75,16 @@
                                         <span class="caret"></span>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right">
-                                        {{-- <a class="dropdown-item" href="javascript:;" onclick="getDetails({{$wallet->id}})">{{ __('Fee') }}</a>
-                                        <a class="dropdown-item" href="javascript:;" onclick="Deposit({{$wallet->id}})">{{ __('Deposit') }}</a>
-                                        <a class="dropdown-item" href="{{route('admin-wallet-transactions', ['user_id' => $data->id, 'wallet_id'=>$wallet->id])}}">{{ __('Transaction View') }}</a> --}}
+                                        <a class="dropdown-item" href="javascript:;" onclick="deposit()" >{{ __('From Bank Deposit') }}</a>
+                                        @if($type == 'ETH' || $type == 'BTC')
+                                            <a class="dropdown-item" href="javascript:;" onclick="exchange('{{$key}}', '{{__('XETH')}}')">{{ __('Exchange To') }} {{$type=='ETH' ? 'BTC' : 'ETH'}}</a>
+                                        @else
+                                            <a class="dropdown-item" href="javascript:;" onclick="exchange('{{$key}}', '{{__('XETH')}}')">{{ __('Exchange To ETH') }}</a>
+                                            <a class="dropdown-item" href="javascript:;" onclick="exchange('{{$key}}', '{{__('XXBT')}}')">{{ __('Exchange To BTC') }}</a>
+                                        @endif
+                                        @if($type == 'ETH' || $type == 'BTC')
+                                            <a class="dropdown-item" href="javascript:;" onclick="withdraw('{{$key}}')">{{ __('Withdraw To System') }}</a>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -97,9 +104,125 @@
   </div>
 </div>
 
+<div class="modal modal-blur fade" id="modal-deposit" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-status bg-primary"></div>
+        <div class="modal-body py-4">
+        <div class="text-center"><i  class="fas fa-info-circle fa-3x text-primary mb-2"></i></div>
+        <h3 class="text-center">@lang('Deposit from Bank')</h3>
+        <form action="" method="post" class="m-3" enctype="multipart/form-data">
+            @csrf
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary w-100">{{__('Submit')}}</button>
+              </div>
+
+            </form>
+        </div>
+    </div>
+    </div>
+</div>
+
+<div class="modal modal-blur fade" id="modal-exchange" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-status bg-primary"></div>
+        <div class="modal-body py-4">
+        <div class="text-center"><i  class="fas fa-info-circle fa-3x text-primary mb-2"></i></div>
+        <h3 class="text-center">@lang('Exchange')</h3>
+        <form action="" method="post" class="m-3" enctype="multipart/form-data">
+            @csrf
+
+            <div class="form-group">
+                <label for="inp-name">{{ __('Exchange Amount') }}</label>
+                <input name="amount" class="form-control" autocomplete="off" placeholder="{{__('Amount')}}" value="" type="number" step="any">
+            </div>
+            <input name="pair" id="pair" type="hidden">
+            <input name="order_type" id="order_type" type="hidden">
+            <input name="keyword" value="{{$keyword}}" type="hidden">
+
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary w-100">{{__('Exchange')}}</button>
+              </div>
+
+            </form>
+        </div>
+    </div>
+    </div>
+</div>
+
+<div class="modal modal-blur fade" id="modal-withdraw" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-status bg-primary"></div>
+        <div class="modal-body py-4">
+        <div class="text-center"><i  class="fas fa-info-circle fa-3x text-primary mb-2"></i></div>
+        <h3 class="text-center">@lang('Withdraw To System')</h3>
+        <form action="" method="post" class="m-3" enctype="multipart/form-data">
+            @csrf
+            <div class="form-group">
+                <label for="inp-name">{{ __('Key') }}</label>
+                <input name="withdraw_key" class="form-control" autocomplete="off" placeholder="{{__('New Withdraw Key')}}" value="{{$api->withdraw_eth ?? ''}}" type="text" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="inp-name">{{ __('Avaliable Amount') }}</label>
+                <input name="available_amount" class="form-control" autocomplete="off" placeholder="{{__('Amount')}}" value="{{$balace->XETH ?? ''}}" type="number"  readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="inp-name">{{ __('Withdraw Amount') }}</label>
+                <input name="amount" class="form-control" autocomplete="off" placeholder="{{__('Amount')}}" value="" type="number" step="any">
+            </div>
+
+            <div class="form-group">
+                <label for="inp-name">{{ __('Withdraw Fee') }}</label>
+                <input name="fee" class="form-control" autocomplete="off" placeholder="{{__('Fee')}}" value="" type="number" step="any">
+            </div>
+            <input name="keyword" value="{{$keyword}}" type="hidden">
+            <input name="asset" id="asset" type="hidden">
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary w-100">{{__('Submit')}}</button>
+              </div>
+
+            </form>
+        </div>
+    </div>
+    </div>
+</div>
+
 
 
 <!--Row-->
 @endsection
+@section('scripts')
+<script type="text/javascript">
+    "use strict";
+    function deposit() {
+        $('#modal-deposit').modal('show')
+    }
+
+    function exchange(to, from='XETH') {
+        if (to='XETH') {
+            $('#pair').val(from+'XXBT')
+            $('#order_type').val('sell')
+        }
+        else {
+            $('#pair').val(from+to)
+            $('#order_type').val('buy')
+        }
+        $('#modal-exchange').modal('show')
+    }
+
+    function withdraw(asset) {
+        $('#asset').val(asset)
+        $('#modal-withdraw').modal('show')
+    }
+</script>
+@endsection
+
 
 
