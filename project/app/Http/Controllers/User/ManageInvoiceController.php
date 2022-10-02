@@ -501,10 +501,7 @@ class ManageInvoiceController extends Controller
             $data->amount = $request->amount;
             $invoice = Invoice::findOrFail($request->id);
             $data->user_id = $invoice->user_id;
-            $data->hash = $request->hash;
             $data->address = $request->address;
-            $data->sender_address = $request->sender_address;
-            $data->proof = '';
             $data->save();
             $invoice->payment_status = 1;
             $invoice->update();
@@ -710,8 +707,6 @@ class ManageInvoiceController extends Controller
             $data->amount = $request->amount;
             $invoice = Invoice::findOrFail($request->id);
             $data->user_id = $invoice->user_id;
-            $data->hash = $request->hash;
-            $data->address = $request->address;
             $data->sender_address = $request->sender_address;
             $data->proof = '';
             $data->save();

@@ -83,7 +83,7 @@
                                 <label class="form-label required">{{__('Hash')}}</label>
                                 <input name="hash" id="hash" class="form-control" autocomplete="off"  type="text" placeholder="0x...." required>
                             </div>
-                            <input type="hidden" name="id" value="{{$product->id}}">
+                            <input type="hidden" name="product_id" value="{{$product->id}}">
                             <input type="hidden" name="currency_id" value="{{$merchantwallet->currency->id}}">
 
                             <div class="form-footer">

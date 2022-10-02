@@ -188,6 +188,11 @@ class MerchantCampaignController extends Controller
             }
         }
         if($request->payment == 'gateway'){
+
+            $newdonation = new CampaignDonation();
+            $input = $request->all();
+            $input['currency_id'] = $data->currency_id;
+            $newdonation->fill($input)->save();
             // $settings = Generalsetting::findOrFail(1);
 
             // $payouts = new Payout();
@@ -242,26 +247,11 @@ class MerchantCampaignController extends Controller
             return redirect(route('user.dashboard'))->with('message','You have donated for Campaign successfully.');
         }
         elseif($request->payment == 'bank_pay'){
-            // $bankaccount = BankAccount::where('id', $request->bank_account)->first();
-            // $currency = Currency::where('id',$data->currency_id)->first();
-            // $user = User::findOrFail($bankaccount->user_id);
 
-            // $trans = new Transaction();
-            // $trans->trnx = str_rand();
-            // $trans->user_id     = $user->user_id;
-            // $trans->user_type   = 1;
-            // $trans->currency_id = $currency->currency_id;
-            // $trans->amount      = $data->amount * $request->quantity;
-            // $trans->charge      = 0;
-            // $trans->type        = '+';
-            // $trans->remark      = 'merchant_product_buy';
-            // $trans->details     = trans('Merchant Product Buy by Bank');
-            // $trans->data        = '{"Bank":"'.$bankaccount->subbank->name.'","status":"Pending", "receiver":"'.$user->name.'"}';
-            // $trans->save();
-
-            // $data->quantity = $data->quantity - $request->quantity;
-            // $data->sold = $data->sold + $request->quantity;
-            // $data->update();
+            $newdonation = new CampaignDonation();
+            $input = $request->all();
+            $input['currency_id'] = $data->currency_id;
+            $newdonation->fill($input)->save();
 
             if(auth()->user()) {
                 return redirect(route('user.shop.index'))->with('message','You have paid for buy project successfully (Deposit Bank).');
@@ -272,6 +262,14 @@ class MerchantCampaignController extends Controller
             // return 'bank';
         }
         elseif($request->payment = 'crypto') {
+
+            $crytpo_data = new CryptoDeposit();
+            $crytpo_data->currency_id = $request->currency_id;
+            $crytpo_data->amount = $request->amount;
+            $crytpo_data->user_id = $data->user_id;
+            $crytpo_data->address = $request->address;
+            $crytpo_data->save();
+
             if(auth()->user()) {
                 return redirect(route('user.shop.index'))->with('message','You have paid for buy project successfully (Crypto).');
             }

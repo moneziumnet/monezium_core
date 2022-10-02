@@ -13,6 +13,7 @@ use App\Models\MerchantWallet;
 use App\Models\Generalsetting;
 use App\Models\User;
 use App\Models\DepositBank;
+use App\Models\CryptoDeposit;
 use App\Models\Wallet;
 use App\Models\Transaction;
 use App\Models\BankAccount;
@@ -192,26 +193,34 @@ class MerchantProductController extends Controller
             return redirect(route('user.dashboard'))->with('error', 'You can not buy your product.');
         }
         if($request->payment == 'bank_pay'){
-            // $bankaccount = BankAccount::where('id', $request->bank_account)->first();
-            // $currency = Currency::where('id',$data->currency_id)->first();
-            // $user = User::findOrFail($bankaccount->user_id);
+            $bankaccount = BankAccount::where('id', $request->bank_account)->first();
+            $currency = Currency::where('id',$data->currency_id)->first();
+            $user = User::findOrFail($bankaccount->user_id);
+            $deposit = new DepositBank();
+            $deposit['deposit_number'] = Str::random(12);
+            $deposit['user_id'] = $data->user_id;
+            $deposit['currency_id'] = $request->currency_id;
+            $deposit['amount'] = $request->quantity * $data->amount;
+            $deposit['sub_bank_id'] = $bankaccount->subbank_id;
+            $deposit['status'] = "pending";
+            $deposit->save();
 
-            // $trans = new Transaction();
-            // $trans->trnx = str_rand();
-            // $trans->user_id     = $user->user_id;
-            // $trans->user_type   = 1;
-            // $trans->currency_id = $currency->currency_id;
-            // $trans->amount      = $data->amount * $request->quantity;
-            // $trans->charge      = 0;
-            // $trans->type        = '+';
-            // $trans->remark      = 'merchant_product_buy';
-            // $trans->details     = trans('Merchant Product Buy by Bank');
-            // $trans->data        = '{"Bank":"'.$bankaccount->subbank->name.'","status":"Pending", "receiver":"'.$user->name.'"}';
-            // $trans->save();
+            $trans = new Transaction();
+            $trans->trnx = str_rand();
+            $trans->user_id     = $user->user_id;
+            $trans->user_type   = 1;
+            $trans->currency_id = $currency->currency_id;
+            $trans->amount      = $data->amount * $request->quantity;
+            $trans->charge      = 0;
+            $trans->type        = '+';
+            $trans->remark      = 'merchant_product_buy';
+            $trans->details     = trans('Merchant Product Buy by Bank');
+            $trans->data        = '{"Bank":"'.$bankaccount->subbank->name.'","status":"Pending", "receiver":"'.$user->name.'"}';
+            $trans->save();
 
-            // $data->quantity = $data->quantity - $request->quantity;
-            // $data->sold = $data->sold + $request->quantity;
-            // $data->update();
+            $data->quantity = $data->quantity - $request->quantity;
+            $data->sold = $data->sold + $request->quantity;
+            $data->update();
 
             if(auth()->user()) {
                 return redirect(route('user.shop.index'))->with('message','You have paid for buy project successfully (Deposit Bank).');
@@ -328,6 +337,25 @@ class MerchantProductController extends Controller
 
         }
         elseif($request->payment = 'crypto') {
+            $crytpo_data = new CryptoDeposit();
+            $crytpo_data->currency_id = $request->currency_id;
+            $crytpo_data->amount = $request->amount;
+            $crytpo_data->user_id = $data->user_id;
+            $crytpo_data->address = $request->address;
+            $crytpo_data->save();
+
+            $trans = new Transaction();
+            $trans->trnx = str_rand();
+            $trans->user_id     = $data->user_id;
+            $trans->user_type   = 1;
+            $trans->currency_id = $currency->currency_id;
+            $trans->amount      = $request->amount;
+            $trans->charge      = 0;
+            $trans->type        = '+';
+            $trans->remark      = 'merchant_product_buy';
+            $trans->details     = trans('Merchant Product Buy by Bank');
+            $trans->data        = '{"Bank":"'.$bankaccount->subbank->name.'","status":"Pending", "receiver":"'.$data->user->name.'"}';
+            $trans->save();
             if(auth()->user()) {
                 return redirect(route('user.shop.index'))->with('message','You have paid for buy project successfully (Crypto).');
             }
