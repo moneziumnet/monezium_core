@@ -781,6 +781,31 @@ if(!function_exists('getModule')){
       }
   }
 
+  if(!function_exists('RPC_BTC_Balance'))
+  {
+      function RPC_BTC_Balance($method, $wallet_name, $link = 'http://127.0.0.1:18443')
+      {
+          $client = new Client();
+            $headers = [
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Basic ZGV2b3BzOjEyMzEyMw=='
+            ];
+            $body = '{
+            "method": "'.$method.'",
+            "params": [],
+            "id": 1,
+            "jsonrpc": "2.0"
+            }';
+            try {
+                $response = $client->request('POST', $link.'/wallet/'.$wallet_name, ["headers"=>$headers, "body"=>$body]);
+                $res =json_decode($response->getBody());
+            } catch (\Throwable $th) {
+                return 'error';
+            }
+            return $res->result;
+      }
+  }
+
   if(!function_exists('get_wallet'))
   {
     function get_wallet($user_id, $currency_id, $wallet_type = 1) {
