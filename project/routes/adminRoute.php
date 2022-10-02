@@ -476,6 +476,8 @@ Route::prefix('admin')->group(function () {
   });
   Route::get('/system-settings', [SystemAccountController::class, 'systemAccounts'])->name('admin.system.accounts');
   Route::get('/system-settings/create/{currency_id}', [SystemAccountController::class, 'create'])->name('admin.system.account.create');
+  Route::get('/system-settings/{keyword}', [SystemAccountController::class, 'setting'])->name('admin.system.crypto.api');
+  Route::post('/system-settings/save', [SystemAccountController::class, 'setting_save'])->name('admin.system.crypto.api.save');
   Route::group(['middleware' => 'permissions:General Setting'], function () {
     Route::get('/general-settings/logo', [GeneralSettingController::class, 'logo'])->name('admin.gs.logo');
     Route::get('/general-settings/favicon', [GeneralSettingController::class, 'fav'])->name('admin.gs.fav');
