@@ -9,4 +9,8 @@ class UserApiCred extends Model
 {
     protected $fillable = ['user_id,access_key,mode'];
     use HasFactory;
+
+    public function user() {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

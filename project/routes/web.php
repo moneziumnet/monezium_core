@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers;
+use App\Http\Controllers\API\AccessController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Frontend\FrontendController;
@@ -18,6 +19,12 @@ Route::post('the/genius/ocean/2441139', [FrontendController::class, 'subscriptio
 Route::get('finalize', [FrontendController::class, 'finalize']);
 
 Route::get('/', [FrontendController::class, 'index'])->name('front.index');
+
+Route::get('/access', [AccessController::class, 'index'])->name('api.pay.index');
+Route::get('/access/login', [AccessController::class, 'login'])->name('api.pay.login');
+Route::post('/access/login_submit', [AccessController::class, 'login_submit'])->name('api.pay.login.submit');
+Route::get('/access/crypto', [AccessController::class, 'crypto_pay'])->name('api.pay.crypto');
+Route::post('/access/submit', [AccessController::class, 'pay_submit'])->name('api.pay.submit');
 
 Route::get('blogs', [FrontendController::class, 'blog'])->name('front.blog');
 Route::get('blog/{slug}', [FrontendController::class, 'blogdetails'])->name('blog.details');
