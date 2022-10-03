@@ -177,6 +177,7 @@ class SendController extends Controller
 
         $finalCharge = amount($transaction_global_cost+$transaction_custom_cost, $wallet->currency->type);
         $finalamount = amount( $request->amount + $finalCharge, $wallet->currency->type);
+        user_wallet_increment(0, $currency->id, $transaction_global_cost, 9);
 
         if($receiver = User::where('email',$request->email)->first()){
             $txnid = Str::random(4).time();

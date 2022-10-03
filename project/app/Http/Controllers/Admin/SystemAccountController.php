@@ -90,6 +90,9 @@ class SystemAccountController extends Controller
             $kraken = new KrakenAPI($key, $secret, $url, $version, $sslverify);
             $res = $kraken->QueryPrivate('Balance');
             $data['balance'] =(object)$res['result'];
+            if(count($res['error']) > 0) {
+                return redirect()->back()->with(array('warning' => json_encode((object)$res['error']) ));
+            }
         }
         $data['keyword'] = $keyword;
         return view('admin.system.cryptosettings', $data);

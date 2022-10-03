@@ -128,19 +128,46 @@ class ExchangeMoneyController extends Controller
         // if ($request->amount < $global_range->min || $request->amount > $global_range->max) {
         //     return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
         // }
-        // $transaction_global_fee = check_global_transaction_fee($request->amount, $user, 'send');
-        // if($transaction_global_fee)
-        // {
-        //     $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/100) * $transaction_global_fee->data->percent_charge;
-        // }
+        $transaction_global_fee = check_global_transaction_fee($request->amount, $user, 'exchange');
+        if($transaction_global_fee)
+        {
+            $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/100) * $transaction_global_fee->data->percent_charge;
+        }
+        user_wallet_increment(0, $fromWallet->currency->id, $transaction_global_cost, 9);
         $transaction_custom_cost = 0;
-        // if(check_user_type(3))l
-        // {
-        //     $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user,  'send');
-        //     if($transaction_custom_fee) {
-        //         $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/100) * $transaction_custom_fee->data->percent_charge;
-        //     }
-        // }
+        if($user->referral_id != 0)
+        {
+            $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user,  'exchange');
+            if($transaction_custom_fee) {
+                $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/100) * $transaction_custom_fee->data->percent_charge;
+            }
+            $remark = 'Exchange_money_supervisor_fee';
+            if (check_user_type_by_id(4, $user->referral_id)) {
+                user_wallet_increment($user->referral_id, $fromWallet->currency->id, $transaction_custom_cost, 6);
+                $trans_wallet = get_wallet($user->referral_id, $fromWallet->currency->id, 6);
+            }
+            elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
+                $remark = 'Exchange_money_manager_fee';
+                user_wallet_increment($user->referral_id, $fromWallet->currency->id, $transaction_custom_cost, 10);
+                $trans_wallet = get_wallet($user->referral_id, $fromWallet->currency->id, 10);
+            }
+            $trans = new Transaction();
+            $trans->trnx = str_rand();
+            $trans->user_id     = $user->referral_id;
+            $trans->user_type   = 1;
+
+            $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+
+            $trans->currency_id = $fromWallet->currency->id;
+            $trans->amount      = $transaction_custom_cost;
+            $trans->charge      = 0;
+            $trans->type        = '+';
+            $trans->remark      = $remark;
+            $trans->details     = trans('Exchange Money');
+            $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($user->referral_id)->name.'"}';
+            $trans->save();
+        }
+
 
 
         $client = New Client();
@@ -244,12 +271,19 @@ class ExchangeMoneyController extends Controller
         // if ($amount < $global_range->min || $amount > $global_range->max) {
         //     return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
         // }
-        // $transaction_global_fee = check_global_transaction_fee($amount, $user, 'send');
-        // if($transaction_global_fee)
-        // {
-        //     $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($amount/100) * $transaction_global_fee->data->percent_charge;
-        // }
+        $transaction_global_fee = check_global_transaction_fee($amount, $user, 'exchange');
+        if($transaction_global_fee)
+        {
+            $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($amount/100) * $transaction_global_fee->data->percent_charge;
+        }
         $transaction_custom_cost = 0;
+        if($user->referral_id != 0)
+        {
+            $transaction_custom_fee = check_custom_transaction_fee($amount, $user,  'exchange');
+            if($transaction_custom_fee) {
+                $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($amount/100) * $transaction_custom_fee->data->percent_charge;
+            }
+        }
         // if(check_user_type(3))
         // {
         //     $transaction_custom_fee = check_custom_transaction_fee($amount, $user, 'send');
