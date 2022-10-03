@@ -103,7 +103,7 @@
                 <input type="hidden" name="currency_id" id="modal_currency" value="">
                 <input type="hidden" name="details" id="modal_details" value="">
                 <input type="hidden" name="bank" id="modal_bank" value="">
-                <input type="hidden" name="deposit_no" id="deposit_no" />
+                <input type="hidden" name="deposit_no" id="deposit_no" value="{{Str::random(12)}}" />
                 <input name="document" id="modal_document" type="file" style="display: none;" accept=".xls,.xlsx,.pdf,.jpg,.png">
                </div>
             </div>
@@ -123,16 +123,6 @@
 
   <script type="text/javascript">
   'use strict';
-    const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    function generateRandomString(length) {
-        let result = ' ';
-        const charactersLength = characters.length;
-        for ( let i = 0; i < length; i++ ) {
-            result += characters.charAt(Math.floor(Math.random() * charactersLength));
-        }
-        return result;
-    }
-
     $('#withmethod').on('change', function() {
         var pos = $('#withmethod').val();
 
@@ -146,7 +136,6 @@
             $('select#currency').html(_optionHtml);
         })
     })
-
     $('#submit').on('click', function() {
         var verify = "{{$user->paymentCheck('Bank Incoming')}}";
 
@@ -155,7 +144,6 @@
         $('#bank_address').text(JSON.parse(pos)['address']);
         $('#bank_iban').text(JSON.parse(($('#currency').val()))['iban']);
         $('#bank_swift').text(JSON.parse(($('#currency').val()))['swift']);
-        $('#deposit_no').val(generateRandomString(12));
         $('#bank_description').text($('#details').val() + " / DepositNo : " + $('#deposit_no').val());
         $('#modal_method').val(JSON.parse(pos)['name']);
         $('#modal_bank').val(JSON.parse(pos)['id']);
