@@ -480,6 +480,8 @@ Route::prefix('admin')->group(function () {
   Route::post('/system-settings/save', [SystemAccountController::class, 'setting_save'])->name('admin.system.crypto.api.save');
   Route::post('/system-settings/depositAddresses', [SystemAccountController::class, 'depositAddresses'])->name('admin.system.crypto.depositaddress');
   Route::post('/system-settings/depositMethods', [SystemAccountController::class, 'depositMethods'])->name('admin.system.crypto.depositMethods');
+  Route::post('/system-settings/order', [SystemAccountController::class, 'order'])->name('admin.system.crypto.order');
+  Route::post('/system-settings/withdraw', [SystemAccountController::class, 'withdraw'])->name('admin.system.crypto.withdraw');
 
   Route::group(['middleware' => 'permissions:General Setting'], function () {
     Route::get('/general-settings/logo', [GeneralSettingController::class, 'logo'])->name('admin.gs.logo');

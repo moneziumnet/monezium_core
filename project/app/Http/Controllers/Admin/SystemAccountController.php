@@ -119,15 +119,19 @@ class SystemAccountController extends Controller
             $key = $data['api']->api_key;
             $secret = $data['api']->api_secret;
             $kraken = new KrakenAPI($key, $secret, $url, $version, $sslverify);
+
             $res = $kraken->QueryPrivate('AddOrder', array(
-                'pair' => $request->pair,
+                'pair' => $request->pair_type,
                 'type' => $request->order_type,
                 'ordertype' => 'market',
                 'volume' => $request->amount,
             ));
+            if(count($res['error']) > 0) {
+                return redirect()->back()->with(array('warning' => json_encode((object)$res['error']) ));
+            }
         }
         $msg = __('Crypto Exchange Successfully.');
-        return response()->json($msg);
+        return redirect()->back()->with(array('message' => $msg));
     }
 
     public function withdraw(Request $request)
@@ -147,9 +151,12 @@ class SystemAccountController extends Controller
                 'key' => $request->withdraw_key,
                 'volume' => $request->amount,
             ));
+            if(count($res['error']) > 0) {
+                return redirect()->back()->with(array('warning' => json_encode((object)$res['error']) ));
+            }
         }
         $msg = __('Crypto Withdraw Successfully.');
-        return response()->json($msg);
+        return redirect()->back()->with(array('message' => $msg));
     }
 
     public function depositMethods(Request $request)

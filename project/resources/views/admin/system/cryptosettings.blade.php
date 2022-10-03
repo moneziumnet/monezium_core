@@ -122,7 +122,7 @@
             <div id="address_list" class="mb-3">
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-primary w-100">{{__('Confirm')}}</button>
+                <button id="deposit_confirm" class="btn btn-primary w-100">{{__('Confirm')}}</button>
               </div>
 
         </div>
@@ -137,15 +137,15 @@
         <div class="modal-body py-4">
         <div class="text-center"><i  class="fas fa-info-circle fa-3x text-primary mb-2"></i></div>
         <h3 class="text-center">@lang('Exchange')</h3>
-        <form action="" method="post" class="m-3" enctype="multipart/form-data">
+        <form action="{{route('admin.system.crypto.order')}}" method="post" class="m-3" enctype="multipart/form-data">
             @csrf
 
             <div class="form-group">
                 <label for="inp-name">{{ __('Exchange Amount') }}</label>
-                <input name="amount" class="form-control" autocomplete="off" placeholder="{{__('Amount')}}" value="" type="number" step="any">
+                <input name="amount" class="form-control" autocomplete="off" placeholder="{{__('Eth Amount')}}" value="" type="number" min="0.01" step="any" required>
             </div>
-            <input name="asset" value="xxbt" type="hidden">
-            <input name="method" value="Bitcoin" type="hidden">
+            <input name="pair_type" id="pair_type" type="hidden" value="">
+            <input name="order_type" id="order_type" type="hidden" value="">
             <input name="keyword" value="{{$keyword}}" type="hidden">
 
 
@@ -166,16 +166,16 @@
         <div class="modal-body py-4">
         <div class="text-center"><i  class="fas fa-info-circle fa-3x text-primary mb-2"></i></div>
         <h3 class="text-center">@lang('Withdraw To System')</h3>
-        <form action="" method="post" class="m-3" enctype="multipart/form-data">
+        <form action="{{route('admin.system.crypto.withdraw')}}" method="post" class="m-3" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
                 <label for="inp-name">{{ __('Key') }}</label>
-                <input name="withdraw_key" class="form-control" autocomplete="off" placeholder="{{__('New Withdraw Key')}}" value="{{$api->withdraw_eth ?? ''}}" type="text" readonly>
+                <input name="withdraw_key" id="withdraw_key" class="form-control" autocomplete="off" placeholder="{{__('New Withdraw Key')}}" value="" type="text" readonly>
             </div>
 
             <div class="form-group">
                 <label for="inp-name">{{ __('Avaliable Amount') }}</label>
-                <input name="available_amount" class="form-control" autocomplete="off" placeholder="{{__('Amount')}}" value="{{$balace->XETH ?? ''}}" type="number"  readonly>
+                <input name="available_amount" id="available_amount" class="form-control" autocomplete="off" placeholder="{{__('Amount')}}" value="{{$balance->XXBT ?? ''}}" type="number"  readonly>
             </div>
 
             <div class="form-group">
@@ -183,10 +183,6 @@
                 <input name="amount" class="form-control" autocomplete="off" placeholder="{{__('Amount')}}" value="" type="number" step="any">
             </div>
 
-            <div class="form-group">
-                <label for="inp-name">{{ __('Withdraw Fee') }}</label>
-                <input name="fee" class="form-control" autocomplete="off" placeholder="{{__('Fee')}}" value="" type="number" step="any">
-            </div>
             <input name="keyword" value="{{$keyword}}" type="hidden">
             <input name="asset" id="asset" type="hidden">
 
@@ -228,18 +224,28 @@
     }
 
     function exchange(to, from='XETH') {
-        if (to='XETH') {
-            $('#pair').val(from+'XXBT')
+        if (to=='XETH') {
+            $('#pair_type').val(from+'XXBT')
             $('#order_type').val('sell')
         }
         else {
-            $('#pair').val(from+to)
+            $('#pair_type').val(from+to)
             $('#order_type').val('buy')
         }
         $('#modal-exchange').modal('show')
     }
 
     function withdraw(asset) {
+        if (asset == 'XETH') {
+            $('#withdraw_key').val('{{$api->withdraw_eth}}')
+            $('#available_amount').val('{{$balance->XETH}}')
+        }
+        else {
+            $('#withdraw_key').val('{{$api->withdraw_btc}}')
+            $('#available_amount').val('{{$balance->XXBT}}')
+        }
+        $('#asset').val(asset)
+
         $('#asset').val(asset)
         $('#modal-withdraw').modal('show')
     }
@@ -255,13 +261,11 @@
         var data  = {asset:asset.data('asset'),keyword:keyword,method:method,_token:token}
         var _divHtml = '';
         $.post(url,data, function(res) {
-            console.log(data)
             if(res.length == 0) {
                 _divHtml = '<h5 class="text-center">There is no available address.</h5>';
             }
             else {
                 $.each(res, function(i, item) {
-                    console.log(item)
                     _divHtml += '<div class="form-group"> \
                         <label for="inp-name">Address</label> \
                         <input class="form-control" autocomplete="off" value="'+ item.address +'" type="text"  readonly> \
@@ -270,6 +274,10 @@
             }
             $('#address_list').html(_divHtml);
           })
+    })
+    $('#deposit_confirm').on('click', function() {
+        $('#modal-deposit').modal('hide')
+
     })
 </script>
 @endsection
