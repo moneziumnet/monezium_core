@@ -124,8 +124,8 @@
                                 <p class="me-auto">{{ __('Integrating Website Payment') }}</p>
                                 <button class="btn" onclick="cpSampleCode()"><i class="fa fa-copy"></i></button>
                             </div>
-                            <pre><code id="api-sample-code" class="language-html">&lt;div id="mt-payment-system" 
-    data-sitekey="{{@$cred->access_key}}" 
+                            <pre><code id="api-sample-code" class="language-html">&lt;div id="mt-payment-system"
+    data-sitekey="{{@$cred->access_key}}"
     data-currency="USD"
     data-amount="500"
     fn-success="success"
@@ -174,10 +174,10 @@
                                 <form action="{{route('user.merchant.download.qr')}}" method="POST" enctype="multipart/form-data">
                                 {{ csrf_field() }}
                                     <div >
-                                        <img src="{{generateQR($user->email)}}" class="" alt="">
+                                        <img src="{{generateQR(url('/qr/access?site_key=').$cred->access_key)}}" class="" alt="">
                                     </div>
-                                    <h6 class="mt-4">{{$user->email}}</h6>
-                                    <input type="hidden" name="email" value="{{$user->email}}">
+                                    <h6 class="mt-4">{{url('/qr/access?site_key=').$cred->access_key}}</h6>
+                                    <input type="hidden" name="email" value="{{url('/qr/access?site_key=').$cred->access_key}}">
                                     <div class="mt-3">
                                         <button type="submit" class="btn btn-primary btn-lg">@lang('Download')</button>
                                     </div>
