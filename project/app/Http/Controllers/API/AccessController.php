@@ -22,8 +22,8 @@ class AccessController extends Controller
 {
     public function index(Request $request) {
         $site_key = $request->site_key ?? Session::get('site_key');
-        $amount = 500;
-        $currency = Currency::where('code', 'USD')->first();
+        $amount = $request->amount;
+        $currency = Currency::where('code', $request->currency)->first();
         $user_api = UserApiCred::where('access_key', $site_key)->first();
         if($user_api) {
             Session::put('site_key', $site_key);
