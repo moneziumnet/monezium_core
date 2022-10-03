@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('currency_id')->nullable();
             $table->enum('status', ['processing', 'completed', 'failed'])->default('processing');
             $table->string('failure_reason')->nullable();
+            $table->string('gateway_type');
             $table->timestamps();
         });
     }
