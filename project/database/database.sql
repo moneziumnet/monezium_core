@@ -240,6 +240,16 @@ INSERT INTO `charges` VALUES (63, 'Card Issuance', 'card-issuance', '{\"percent_
 INSERT INTO `charges` VALUES (64, 'Password reset by Staff', 'manual', '{\"percent_charge\":\"2\",\"fixed_charge\":\"2\"}', 3, NULL, NULL, 0);
 INSERT INTO `charges` VALUES (65, 'Payment tracking', 'manual', '{\"percent_charge\":\"2\",\"fixed_charge\":\"2\"}', 3, NULL, NULL, 0);
 INSERT INTO `charges` VALUES (66, 'Security key reset', 'manual', '{\"percent_charge\":\"2\",\"fixed_charge\":\"2\"}', 3, NULL, NULL, 0);
+INSERT INTO `charges` VALUES (67, 'Exchange 1', 'exchange', '{\"percent_charge\":\"1\",\"fixed_charge\":4,\"from\":\"1\",\"till\":\"5000\"}', 1, '2022-07-07 18:58:02', '2022-07-07 18:58:02', 0);
+INSERT INTO `charges` VALUES (68, 'Exchange 2', 'exchange', '{\"percent_charge\":\"1\",\"fixed_charge\":\"3\",\"from\":\"5001\",\"till\":\"20000\"}', 1, '2022-07-07 18:58:03', '2022-07-07 18:58:03', 0);
+INSERT INTO `charges` VALUES (69, 'Exchange 3', 'exchange', '{\"percent_charge\":\"1\",\"fixed_charge\":\"10\",\"from\":\"20001\",\"till\":\"50000\"}', 1, '2022-07-07 18:58:03', '2022-07-07 18:58:03', 0);
+INSERT INTO `charges` VALUES (70, 'Exchange 1', 'exchange', '{\"percent_charge\":\"1\",\"fixed_charge\":4,\"from\":\"1\",\"till\":\"5000\"}', 2, '2022-07-07 18:58:02', '2022-07-07 18:58:02', 0);
+INSERT INTO `charges` VALUES (71, 'Exchange 2', 'exchange', '{\"percent_charge\":\"1\",\"fixed_charge\":\"3\",\"from\":\"5001\",\"till\":\"20000\"}', 2, '2022-07-07 18:58:03', '2022-07-07 18:58:03', 0);
+INSERT INTO `charges` VALUES (72, 'Exchange 3', 'exchange', '{\"percent_charge\":\"1\",\"fixed_charge\":\"10\",\"from\":\"20001\",\"till\":\"50000\"}', 2, '2022-07-07 18:58:03', '2022-07-07 18:58:03', 0);
+INSERT INTO `charges` VALUES (73, 'Exchange 1', 'exchange', '{\"percent_charge\":\"1\",\"fixed_charge\":4,\"from\":\"1\",\"till\":\"5000\"}', 3, '2022-07-07 18:58:02', '2022-07-07 18:58:02', 0);
+INSERT INTO `charges` VALUES (74, 'Exchange 2', 'exchange', '{\"percent_charge\":\"1\",\"fixed_charge\":\"3\",\"from\":\"5001\",\"till\":\"20000\"}', 3, '2022-07-07 18:58:03', '2022-07-07 18:58:03', 0);
+INSERT INTO `charges` VALUES (75, 'Exchange 3', 'exchange', '{\"percent_charge\":\"1\",\"fixed_charge\":\"10\",\"from\":\"20001\",\"till\":\"50000\"}', 3, '2022-07-07 18:58:03', '2022-07-07 18:58:03', 0);
+
 
 -- ----------------------------
 -- Table structure for bank_gateways
