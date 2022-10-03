@@ -198,12 +198,13 @@
           </div>
           <div class="modal-footer">
               <div class="w-100">
-                  <div class="row">
-                      <div class="col">
-                          <a href="#" class="btn w-100" data-bs-dismiss="modal">
+                  <div class="d-flex">
+                          <a href="#" class="btn w-50 me-2" data-bs-dismiss="modal">
                               @lang('Close')
                           </a>
-                      </div>
+                          <a href="" id="copy_transfer" class="btn w-50" >
+                            @lang('Copy Transaction')
+                          </a>
                   </div>
               </div>
           </div>
@@ -246,8 +247,10 @@
 
 $('.details').on('click', function() {
     var url = "{{url('user/beneficiaries/details/')}}"+'/'+$(this).data('id')
+    var copy_url = "{{url('user/other-bank/copy')}}" + '/' + $(this).data('id')
     $.get(url,function (res) {
         $('.transfer-log-details').html(res)
+        $('#copy_transfer').attr('href', copy_url)
         $('#modal-details').modal('show')
     })
 })

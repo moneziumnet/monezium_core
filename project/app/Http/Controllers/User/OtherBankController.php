@@ -32,6 +32,18 @@ class OtherBankController extends Controller
         return view('user.otherbank.send',$data);
     }
 
+    public function copysend($id){
+        $data['beneficiary'] = BalanceTransfer::findOrFail($id);
+        $data['bankaccounts'] = BankAccount::whereUserId(auth()->id())->pluck('subbank_id');
+        $data['banks'] = SubInsBank::whereIn('id', $data['bankaccounts'])->get();
+        $data['data'] = Beneficiary::findOrFail($data['beneficiary']->beneficiary_id);
+        $data['other_bank_limit'] = Generalsetting::first()->other_bank_limit;
+        $data['user'] = auth()->user();
+
+
+        return view('user.otherbank.copy',$data);
+    }
+
     public function store(Request $request){
         $user = auth()->user();
         if($user->paymentCheck('External Payments')) {

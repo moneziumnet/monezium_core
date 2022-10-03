@@ -376,6 +376,7 @@ Route::prefix('user')->group(function() {
         Route::get('tranfer-logs',[TransferLogController::class,'index'])->name('tranfer.logs.index');
 
         Route::get('/other-bank/{id}',[UserOtherBankController::class,'othersend'])->name('user.other.send');
+        Route::get('/other-bank/copy/{id}',[UserOtherBankController::class,'copysend'])->name('user.other.copy');
         Route::post('/other-bank/store', [UserOtherBankController::class,'store'])->name('user.other.send.store');
 
         Route::get('/beneficiaries', [BeneficiaryController::class,'index'])->name('user.beneficiaries.index');
