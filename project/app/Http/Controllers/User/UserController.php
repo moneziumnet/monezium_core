@@ -179,11 +179,13 @@ class UserController extends Controller
         $user = Auth::user();
         $search = request('search');
         $remark = request('remark');
+        $wallet_id = request('wallet_id');
         $s_time = request('s_time');
         $e_time = request('e_time');
         $s_time = $s_time ? $s_time : '';
         $e_time = $e_time ? $e_time : Carbontime::now()->addDays(1)->format('Y-m-d');
         $transactions = Transaction::where('user_id',auth()->id())
+        ->where('wallet_id', $wallet_id)
         ->when($remark,function($q) use($remark){
             return $q->where('remark',$remark);
         })
@@ -194,7 +196,11 @@ class UserController extends Controller
         ->with('currency')->latest()->paginate(20);
         $remark_list = Transaction::where('user_id',auth()->id())->pluck('remark');
         $remark_list = array_unique($remark_list->all());
-        return view('user.transactions',compact('user','transactions', 'search', 'remark_list', 's_time', 'e_time'));
+
+        $wallet_list = Transaction::where('user_id',auth()->id())->pluck('wallet_id');
+        $wallet_list = array_unique($wallet_list->all());
+
+        return view('user.transactions',compact('user','transactions', 'search', 'remark_list', 's_time', 'e_time', 'wallet_list'));
     }
 
     public function transactionExport()
@@ -203,8 +209,8 @@ class UserController extends Controller
         $remark = request('remark');
         $s_time = request('s_time');
         $e_time = request('e_time');
-
-        return Excel::download( new ExportTransaction($search, $remark, $s_time, $e_time), 'transaction.xlsx');
+        $wallet_id = request('wallet_id');
+        return Excel::download( new ExportTransaction($search, $remark, $s_time, $e_time,$wallet_id), 'transaction.xlsx');
         // foreach ($transactions as $key => $transaction) {
         //     $transaction->currency = Currency::whereId($transaction->currency_id)->first();
         // }
@@ -417,8 +423,9 @@ class UserController extends Controller
         $search = request('search');
         $remark = request('remark');
         $s_time = request('s_time');
+        $wallet_id = request('wallet_id');
         $e_time = request('e_time');
-        return Excel::download( new ExportTransaction($search, $remark, $s_time, $e_time), 'transaction.pdf',\Maatwebsite\Excel\Excel::DOMPDF);
+        return Excel::download( new ExportTransaction($search, $remark, $s_time, $e_time, $wallet_id), 'transaction.pdf',\Maatwebsite\Excel\Excel::DOMPDF);
     }
 
     public function affilate_code()

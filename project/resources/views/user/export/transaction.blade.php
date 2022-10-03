@@ -41,7 +41,7 @@
         <tr>
             <td>{{$i}}</td>
             <td>{{date('d-m-Y', strtotime($tran->created_at))}}</td>
-            <td>{{$tran->trnx}}</td>
+            <td style="width:125px;">{{$tran->trnx}}</td>
             <td>{{__(json_decode($tran->data)->sender ?? "")}}</td>
             <td>{{__(json_decode($tran->data)->receiver ?? "")}}</td>
             <td>{{ucwords(str_replace('_',' ',$tran->remark))}}</td>

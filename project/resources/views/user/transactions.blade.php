@@ -19,7 +19,7 @@
 			</div>
 		  </div> -->
       </div>
-      <div class="col-auto ms-auto d-print-none">
+      <div class="col-auto ms-auto d-print-none mt-3">
 
         <div class="btn-list align-items-center">
             <form action=""  class="d-flex justify-content-end">
@@ -42,6 +42,16 @@
                         @endforeach
                     </select>
                 </div>
+                <div class="form-group me-3">
+                    <select  class="form-control me-2 shadow-none" onChange="window.location.href=this.value">
+                        <option value="{{filter('wallet_id','')}}">@lang('All Account')</option>
+                        @foreach ($wallet_list as $value)
+                         @if($value != null && DB::table('wallets')->where('id', $value)->first() != null)
+                            <option value="{{filter('wallet_id',$value)}}" {{request('wallet_id') == $value ? 'selected':''}}>@lang(DB::table('wallets')->where('id', $value)->first()->wallet_no)</option>
+                        @endif
+                        @endforeach
+                    </select>
+                </div>
                 <div class="form-group">
                     <div class="input-group">
                         <input class="form-control shadow-none" type="text" placeholder="{{__('Transaction Id')}}" name="search" value="{{$search ?? ''}}">
@@ -61,10 +71,10 @@
             @php
               $str_end_time = $e_time ?? '';
             @endphp
-            <a href="{{url('user/transactions-pdf?search='.request('search').'&remark='.request('remark').'&s_time='.request('s_time').'&e_time='.$str_end_time)}}" id="download_pdf">
+            <a href="{{url('user/transactions-pdf?search='.request('search').'&wallet_id='.request('wallet_id').'&remark='.request('remark').'&s_time='.request('s_time').'&e_time='.$str_end_time)}}" id="download_pdf">
               <i class="fas fa-file-pdf" aria-hidden="true"></i> {{__('PDF')}}
             </a> &nbsp;
-            <a href="{{url('user/transactions-export?search='.request('search').'&remark='.request('remark').'&s_time='.request('s_time').'&e_time='.$str_end_time)}}">
+            <a href="{{url('user/transactions-export?search='.request('search').'&wallet_id='.request('wallet_id').'&remark='.request('remark').'&s_time='.request('s_time').'&e_time='.$str_end_time)}}">
               <i class="fas fa-file-excel" aria-hidden="true"></i> {{__('Export')}}
             </a>
           </div>

@@ -20,9 +20,11 @@ class ExportTransaction implements FromView,ShouldAutoSize
     private $remark;
     private $s_time;
     private $e_time;
-    public function __construct($search, $remark, $s_time, $e_time)
+    private $wallet_id;
+    public function __construct($search, $remark, $s_time, $e_time, $wallet_id)
     {
         $this->search = $search;
+        $this->wallet_id = $wallet_id;
         $this->remark = $remark;
         $this->s_time = $s_time ? $s_time : '';
         $this->e_time = $e_time;
@@ -45,6 +47,7 @@ class ExportTransaction implements FromView,ShouldAutoSize
     {
         $user = Auth::user();
         $transactions = Transaction::with('currency')->whereUserId(auth()->id())
+        ->where('wallet_id', $this->wallet_id)
         ->when($this->remark,function($q){
             return $q->where('remark',$this->remark);
         })

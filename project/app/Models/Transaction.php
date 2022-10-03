@@ -15,4 +15,9 @@ class Transaction extends Model
     {
         return $this->belongsTo(Currency::class,'currency_id');
     }
+
+    public function wallet()
+    {
+        return $this->belongsTo(Wallet::class,'wallet_id')->withDefault();
+    }
 }
