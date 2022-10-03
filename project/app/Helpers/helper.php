@@ -813,4 +813,15 @@ if(!function_exists('getModule')){
     }
   }
 
+  if(!function_exists('str2obj'))
+  {
+    function str2obj($str) {
+      $str = preg_replace("/\r|\n/", "", $str);
+      $str = str_replace("\\n", "", $str);
+      $str = str_replace('\\"', '"', $str);
+      $str = mb_substr($str, 1, -1);
+      return json_decode($str);
+    }
+  }
+
 ?>

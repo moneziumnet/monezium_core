@@ -14,6 +14,7 @@ use App\Models\Generalsetting;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Wallet;
+use App\Models\WebhookRequest;
 use Illuminate\Http\Request;
 use Datatables;
 
@@ -24,6 +25,17 @@ class DepositBankController extends Controller
         $datas = DepositBank::orderBy('id','desc');
 
         return Datatables::of($datas)
+            ->setRowAttr([
+                'style' => function(DepositBank $data) {
+                    $reference = $data->deposit_number;
+                    $webhook_request = WebhookRequest::where('reference', $reference)->first();
+                    if($data->status == 'pending' && (!$webhook_request || $webhook_request->status == "processing")) {
+                        return "background-color: #ffcaca;";
+                    } else {
+                        return "background-color: #ffffff;";
+                    }
+                },
+            ])
             ->editColumn('created_at', function(DepositBank $data) {
                 $date = date('d-m-Y',strtotime($data->created_at));
                 return $date;
@@ -53,11 +65,11 @@ class DepositBankController extends Controller
 
                 @$detail = SubInsBank::where('id', $data->sub_bank_id)->with('subInstitution')->first();
                 if($detail->hasGateway()){
-                @$bankaccount = BankAccount::whereUserId(auth()->id())->where('subbank_id', $detail->id)->where('currency_id', $data->currency_id)->with('user')->first();
+                @$bankaccount = BankAccount::whereUserId($data->user_id)->where('subbank_id', $detail->id)->where('currency_id', $data->currency_id)->with('user')->first();
                 } else {
                 @$bankaccount = BankPoolAccount::where('bank_id', $detail->id)->where('currency_id', $data->currency_id)->first();
                 }
-
+                $send_info = WebhookRequest::where('reference', $data->deposit_number)->with('currency')->first();
                 $detail->address = str_replace(' ', '-', $detail->address);
                 $detail->name = str_replace(' ', '-', $detail->name);
                 $doc_url = $data->document ? $data->document : null;
@@ -74,6 +86,7 @@ class DepositBankController extends Controller
                 return '<div class="btn-group mb-1">
                     <a href="javascript:;"
                         data-detail = \''.json_encode($detail).'\'
+                        data-sendinfo = \''.json_encode($send_info).'\'
                         data-bank= \''.json_encode($bankaccount).'\'
                         data-docu="'.$doc_url.'"
                         data-number="'.$data->deposit_number.'"
@@ -103,7 +116,10 @@ class DepositBankController extends Controller
             : 'Deposits already rejected';
           return redirect()->back()->with("error", $msg);
         }
-
+        $webhook_request = WebhookRequest::where('reference', $data->deposit_number)->first();
+        if($webhook_request) {
+            $data->amount = $webhook_request->amount;
+        }
         $data->status = $id2;
         $data->save();
         if($id2 == 'reject') {
@@ -112,7 +128,7 @@ class DepositBankController extends Controller
         }
 
         $user = User::findOrFail($data->user_id);
-        $amount = $data->amount*$data->currency->rate;
+        $amount = $data->amount * $data->currency->rate;
         $transaction_global_cost = 0;
         $transaction_global_fee = check_global_transaction_fee($amount, $user, 'deposit');
         if($transaction_global_fee)

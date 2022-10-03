@@ -14,7 +14,9 @@ use App\Http\Controllers\User\MerchantCampaignController;
 use Illuminate\Http\Request;
 
 Route::redirect('admin', 'admin/login');
-Route::webhooks('/webhook-receiving-url');
+
+Route::webhooks('webhook-receiving-url','openpayd');
+
 Route::post('the/genius/ocean/2441139', [FrontendController::class, 'subscription']);
 Route::get('finalize', [FrontendController::class, 'finalize']);
 

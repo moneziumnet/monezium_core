@@ -69,14 +69,18 @@
         <h3>@lang('Bank Details')</h3>
         <p class="bank_details"></p>
         <ul class="list-group details-list mt-2">
-            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Receiver Name')<span id="user_name" style="margin-left: 60px"></span></li>
-            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Receiver Address')<span id="user_addr" style="margin-left: 60px"></span></li>
-            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank Name')<span id="bank_name" style="margin-left: 60px"></span></li>
-            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank Address')<span id="bank_address" style="margin-left: 60px"></span></li>
-            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank IBAN')<span id="bank_iban" style="margin-left: 60px"></span></li>
-            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Bank SWIFT')<span id="bank_swift" style="margin-left: 60px"></span></li>
-            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Description')<span id="deposit_description" style="margin-left: 60px"></span></li>
-            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;" id="li_document" >@lang('Document')<span  style="margin-left: 60px"> <a id="document" target="_blank"> </a> </span></li>
+            <li class="list-group-item">@lang('Receiver Name')<span id="user_name"></span></li>
+            <li class="list-group-item">@lang('Receiver Address')<span id="user_addr"></span></li>
+            <li class="list-group-item">@lang('Bank Name')<span id="bank_name"></span></li>
+            <li class="list-group-item">@lang('Bank Address')<span id="bank_address"></span></li>
+            <li class="list-group-item">@lang('Bank IBAN')<span id="bank_iban"></span></li>
+            <li class="list-group-item">@lang('Bank SWIFT')<span id="bank_swift"></span></li>
+            <li class="list-group-item send-info">@lang('Sender Name')<span id="sender_name"></span></li>
+            <li class="list-group-item send-info">@lang('Sender Address')<span id="sender_address"></span></li>
+            <li class="list-group-item send-info">@lang('Amount')<span id="real_amount"></span></li>
+            <li class="list-group-item send-info">@lang('Gateway Status')<span id="gateway_status"></span></li>
+            <li class="list-group-item">@lang('Description')<span id="deposit_description"></span></li>
+            <li class="list-group-item" id="li_document" >@lang('Document')<span> <a id="document" target="_blank"> </a> </span></li>
         </ul>
         </div>
         <div class="modal-footer">
@@ -134,6 +138,7 @@
         function getDetails(e) {
             var res_data = JSON.parse(e.target.getAttribute('data-detail'));
             var bankaccount = JSON.parse(e.target.getAttribute('data-bank'));
+            var send_info = JSON.parse(e.target.getAttribute('data-sendinfo'));
             var document_url = e.target.getAttribute('data-docu');
             var deposit_number = e.target.getAttribute('data-number');
             var deposit_description = e.target.getAttribute('data-description');
@@ -151,6 +156,24 @@
             } else {
                 $('#user_name').text(res_data.sub_institution.name);
                 $('#user_addr').text(res_data.sub_institution.address);
+            }
+
+            if(send_info) {
+                let status_color = "primary";
+                $('.send-info').removeClass('d-none');
+                $('#sender_name').text(send_info.sender_name);
+                $('#sender_address').text(send_info.sender_address);
+                $('#real_amount').text(send_info.currency.symbol + send_info.amount + " " + send_info.currency.code);
+                
+                if(send_info.status == "processing")
+                    status_color = "warning";
+                if(send_info.status == "completed")
+                    status_color = "success";
+                if(send_info.status == "failed")
+                    status_color = "danger";
+                $('#gateway_status').html(`<span class="badge badge-${status_color}">${send_info.status}</span>`);
+            }else {
+                $('.send-info').addClass('d-none');
             }
             
             $('#deposit_description').text(deposit_description + " / " + deposit_number);

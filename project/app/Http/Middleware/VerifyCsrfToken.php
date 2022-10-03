@@ -24,6 +24,6 @@ class VerifyCsrfToken extends Middleware
         '/user/subscription/razorpay-notify',
         '/user/subscription/flutter/notify*',
         '/user/globalpass/callback',
-        '/webhook-receiving-url',
+        'webhook-receiving-url',
     ];
 }
