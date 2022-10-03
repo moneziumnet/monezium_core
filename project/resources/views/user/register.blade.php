@@ -148,7 +148,7 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="inp-name" class="form-label">{{ __('Company Address') }}</label>
-                                <input type="text" class="company-input form-control form--control" id="company_address" name="company_address" placeholder="{{ __('Enter Company Address') }}" value="" required>
+                                <input type="text" class="company-input form-control form--control" id="company_address" name="company_address" placeholder="{{ __('Enter Company Address') }}" value="">
                             </div>
                         </div>
                         <div class="col-sm-6 mt-3">
