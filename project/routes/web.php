@@ -12,6 +12,7 @@ use App\Http\Controllers\User\MerchantCheckoutController;
 use App\Http\Controllers\User\MerchantProductController;
 use App\Http\Controllers\User\MerchantCampaignController;
 use Illuminate\Http\Request;
+use App\Http\Controllers\API\QRAccessController;
 
 Route::redirect('admin', 'admin/login');
 
@@ -59,3 +60,7 @@ Route::get('/merchant/campaign/link/{id}', [MerchantCampaignController::class,'l
 Route::get('/merchant/campaign/link/crypto/{id}', [MerchantCampaignController::class,'crypto_link'])->name('user.merchant.campaign.crypto.link');
 Route::get('/merchant/campaign/link/crypto/pay/{id}', [MerchantCampaignController::class,'crypto_link_pay'])->name('user.merchant.campaign.crypto.link.pay');
 Route::get('kyc-take-selfie/{id}', [KYCController::class,'onlineSelfie'])->name('user.kyc.selfie');
+
+Route::get('/qr/access', [QRAccessController::class, 'index'])->name('qr.pay.index');
+Route::get('/qr/access/crypto', [QRAccessController::class, 'crypto_pay'])->name('qr.pay.crypto');
+Route::post('/qr/access/submit', [QRAccessController::class, 'pay_submit'])->name('qr.pay.submit');
