@@ -16,7 +16,8 @@ use App\Http\Controllers\API\QRAccessController;
 
 Route::redirect('admin', 'admin/login');
 
-Route::webhooks('webhook-receiving-url','openpayd');
+Route::webhooks('webhook-openpayd','openpayd');
+Route::webhooks('webhook-railsbank','railsbank');
 
 Route::post('the/genius/ocean/2441139', [FrontendController::class, 'subscription']);
 Route::get('finalize', [FrontendController::class, 'finalize']);
