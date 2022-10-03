@@ -153,4 +153,47 @@ class SystemAccountController extends Controller
         return response()->json($msg);
     }
 
+    public function depositMethods(Request $request)
+    {
+        $data['api'] = CryptoApi::where('keyword', $request->keyword)->first();
+        if($data['api'])
+        {
+            $beta = false;
+            $url = $beta ? 'https://api.beta.kraken.com' : 'https://api.kraken.com';
+            $sslverify = $beta ? false : true;
+            $version = 0;
+            $key = $data['api']->api_key;
+            $secret = $data['api']->api_secret;
+            $kraken = new KrakenAPI($key, $secret, $url, $version, $sslverify);
+            $res = $kraken->QueryPrivate('DepositMethods', array(
+                'asset' => $request->asset,
+            ));
+        }
+        $msg = __('Crypto DepositMethods Successfully.');
+        return response()->json($msg);
+    }
+
+    public function depositAddresses(Request $request)
+    {
+        $data['api'] = CryptoApi::where('keyword', $request->keyword)->first();
+        if($data['api'])
+        {
+            $beta = false;
+            $url = $beta ? 'https://api.beta.kraken.com' : 'https://api.kraken.com';
+            $sslverify = $beta ? false : true;
+            $version = 0;
+            $key = $data['api']->api_key;
+            $secret = $data['api']->api_secret;
+            $kraken = new KrakenAPI($key, $secret, $url, $version, $sslverify);
+
+            $res = $kraken->QueryPrivate('DepositAddresses', array(
+                'asset' => $request->assets,
+                'method' => $request->method
+            ));
+            dd($res);
+        }
+        $msg = __('Crypto DepositAddresses Successfully.');
+        return response()->json($msg);
+    }
+
 }

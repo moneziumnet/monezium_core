@@ -111,8 +111,10 @@
         <div class="modal-body py-4">
         <div class="text-center"><i  class="fas fa-info-circle fa-3x text-primary mb-2"></i></div>
         <h3 class="text-center">@lang('Deposit from Bank')</h3>
-        <form action="" method="post" class="m-3" enctype="multipart/form-data">
+        <form action="{{ route('admin.system.crypto.depositaddress') }}" method="post" class="m-3" enctype="multipart/form-data">
             @csrf
+            <input name="pair" id="pair" type="hidden">
+            <input name="keyword" value="{{$keyword}}" type="hidden">
 
             <div class="form-group">
                 <button type="submit" class="btn btn-primary w-100">{{__('Submit')}}</button>
@@ -138,8 +140,8 @@
                 <label for="inp-name">{{ __('Exchange Amount') }}</label>
                 <input name="amount" class="form-control" autocomplete="off" placeholder="{{__('Amount')}}" value="" type="number" step="any">
             </div>
-            <input name="pair" id="pair" type="hidden">
-            <input name="order_type" id="order_type" type="hidden">
+            <input name="asset" value="xxbt" type="hidden">
+            <input name="method" value="Bitcoin" type="hidden">
             <input name="keyword" value="{{$keyword}}" type="hidden">
 
 
