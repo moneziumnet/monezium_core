@@ -86,7 +86,6 @@ class DepositBankController extends Controller
 
         if ( $request->amount < $global_range->min ||  $request->amount > $global_range->max) {
            return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
-
         }
 
          if ($subbank->max_limit == 0) {
@@ -123,7 +122,7 @@ class DepositBankController extends Controller
             $deposit['document'] = $name;
         }
 
-        $deposit['deposit_number'] = Str::random(12);
+        $deposit['deposit_number'] = $request->deposit_no;//Str::random(12);
         $deposit['user_id'] = auth()->id();
         $deposit['currency_id'] = $request->currency_id;
         $deposit['amount'] = $amountToAdd;

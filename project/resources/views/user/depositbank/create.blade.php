@@ -103,6 +103,7 @@
                 <input type="hidden" name="currency_id" id="modal_currency" value="">
                 <input type="hidden" name="details" id="modal_details" value="">
                 <input type="hidden" name="bank" id="modal_bank" value="">
+                <input type="hidden" name="deposit_no" id="deposit_no" value="{{Str::random(12)}}" />
                 <input name="document" id="modal_document" type="file" style="display: none;" accept=".xls,.xlsx,.pdf,.jpg,.png">
                </div>
             </div>
@@ -143,7 +144,7 @@
         $('#bank_address').text(JSON.parse(pos)['address']);
         $('#bank_iban').text(JSON.parse(($('#currency').val()))['iban']);
         $('#bank_swift').text(JSON.parse(($('#currency').val()))['swift']);
-        $('#bank_description').text($('#details').val());
+        $('#bank_description').text($('#details').val() + " / DepositNo : " + $('#deposit_no').val());
         $('#modal_method').val(JSON.parse(pos)['name']);
         $('#modal_bank').val(JSON.parse(pos)['id']);
         $('#modal_amount').val($('#amount').val());
@@ -152,45 +153,34 @@
         }
         $('#modal_currency').val(JSON.parse(($('#currency').val()))['currency_id']);
         $('#modal_details').val($('#details').val());
-        // $.post("{{ route('user.depositbank.gateway') }}",{id:JSON.parse(pos)['id'],_token:'{{csrf_token()}}'},function (res) {
-        //     if(res.keyword == 'railsbank')
-        //         {
-        //             $('#depositbank_gateway').prop('action','{{ route('user.depositbank.railsbank') }}');
-        //         }
-        //     if(res.keyword == 'openpayd')
-        //         {
-        //             $('#depositbank_gateway').prop('action','{{ route('user.depositbank.openpayd') }}');
-        //         }
+        if (verify) {
+            var url = "{{url('user/sendotp')}}";
+            $.get(url,function (res) {
+                console.log(res)
+                if(res=='success') {
+                    $('#modal-success').modal('show');
+                }
+                else {
+                    toastr.options = { "closeButton" : true, "progressBar" : true }
+                    toastr.error('The OTP code can not be sent to you.');
+                }
+            });
+        } else {
+            $('#otp_body').remove();
+            $('#modal-success').modal('show');
+        }
+        $('#modal-success').modal('show');
+    });
+    $('#amount').on('change', function() {
 
-        //      });
-             if (verify) {
-                var url = "{{url('user/sendotp')}}";
-                $.get(url,function (res) {
-                    console.log(res)
-                    if(res=='success') {
-                        $('#modal-success').modal('show');
-                    }
-                    else {
-                        toastr.options = { "closeButton" : true, "progressBar" : true }
-                        toastr.error('The OTP code can not be sent to you.');
-                    }
-                });
-            } else {
-                $('#otp_body').remove();
-                $('#modal-success').modal('show');
-            }
-             $('#modal-success').modal('show');
-        });
-        $('#amount').on('change', function() {
-
-            if ($('#amount').val() >= parseFloat('{{$other_bank_limit}}')) {
-                document.getElementById("document").style.display = "block";
-                document.getElementById("document_label").style.display = "block";
-            }
-            else {
-                document.getElementById("document").style.display = "none";
-                document.getElementById("document_label").style.display = "none";
-            }
+        if ($('#amount').val() >= parseFloat('{{$other_bank_limit}}')) {
+            document.getElementById("document").style.display = "block";
+            document.getElementById("document_label").style.display = "block";
+        }
+        else {
+            document.getElementById("document").style.display = "none";
+            document.getElementById("document_label").style.display = "none";
+        }
     });
 
   </script>
