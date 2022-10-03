@@ -123,7 +123,6 @@ class SystemAccountController extends Controller
                 'pair' => $request->pair,
                 'type' => $request->order_type,
                 'ordertype' => 'market',
-                'oflags' => 'viqc',
                 'volume' => $request->amount,
             ));
         }
@@ -168,9 +167,9 @@ class SystemAccountController extends Controller
             $res = $kraken->QueryPrivate('DepositMethods', array(
                 'asset' => $request->asset,
             ));
+            $data['result'] =(object)$res['result'];
         }
-        $msg = __('Crypto DepositMethods Successfully.');
-        return response()->json($msg);
+        return $data['result'];
     }
 
     public function depositAddresses(Request $request)
@@ -187,13 +186,12 @@ class SystemAccountController extends Controller
             $kraken = new KrakenAPI($key, $secret, $url, $version, $sslverify);
 
             $res = $kraken->QueryPrivate('DepositAddresses', array(
-                'asset' => $request->assets,
+                'asset' => $request->asset,
                 'method' => $request->method
             ));
-            dd($res);
+            $data['result'] =(object)$res['result'];
         }
-        $msg = __('Crypto DepositAddresses Successfully.');
-        return response()->json($msg);
+        return $data['result'];
     }
 
 }

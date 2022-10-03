@@ -57,7 +57,7 @@
               </h2>
           </div>
           @php
-                $accounttype = array('ZUSD'=>'USD', 'ZEUR'=>'EUR', 'ZGBP'=>'GBP', 'XETH'=>'ETH', 'XXBT'=>'BTC');
+                $accounttype = array('XETH'=>'ETH', 'XXBT'=>'BTC');
           @endphp
           <div class="row mb-3">
             @foreach ($accounttype as $key => $type )
@@ -75,7 +75,7 @@
                                         <span class="caret"></span>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right">
-                                        <a class="dropdown-item" href="javascript:;" onclick="deposit()" >{{ __('From Bank Deposit') }}</a>
+                                        <a class="dropdown-item" href="javascript:;" onclick="deposit('{{$key}}', '{{$keyword}}')">{{ __('Deposit') }}</a>
                                         @if($type == 'ETH' || $type == 'BTC')
                                             <a class="dropdown-item" href="javascript:;" onclick="exchange('{{$key}}', '{{__('XETH')}}')">{{ __('Exchange To') }} {{$type=='ETH' ? 'BTC' : 'ETH'}}</a>
                                         @else
@@ -110,17 +110,21 @@
         <div class="modal-status bg-primary"></div>
         <div class="modal-body py-4">
         <div class="text-center"><i  class="fas fa-info-circle fa-3x text-primary mb-2"></i></div>
-        <h3 class="text-center">@lang('Deposit from Bank')</h3>
-        <form action="{{ route('admin.system.crypto.depositaddress') }}" method="post" class="m-3" enctype="multipart/form-data">
-            @csrf
+        <h3 class="text-center">@lang('Deposit')</h3>
             <input name="pair" id="pair" type="hidden">
             <input name="keyword" value="{{$keyword}}" type="hidden">
-
+            <div class="form-group mt-3">
+                <label class="form-label required">{{__('Deposit Method')}}</label>
+                <select name="method" id="depositmethod" class="form-control" required>
+                    <option value="">{{ __('Select Deposit Method') }}</option>
+                </select>
+            </div>
+            <div id="address_list" class="mb-3">
+            </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-primary w-100">{{__('Submit')}}</button>
+                <button type="submit" class="btn btn-primary w-100">{{__('Confirm')}}</button>
               </div>
 
-            </form>
         </div>
     </div>
     </div>
@@ -203,8 +207,24 @@
 @section('scripts')
 <script type="text/javascript">
     "use strict";
-    function deposit() {
-        $('#modal-deposit').modal('show')
+    function deposit(asset, keyword) {
+        $('#address_list').html('');
+        var url = '{{route('admin.system.crypto.depositMethods')}}'
+        var token = '{{ csrf_token() }}';
+        var data  = {asset:asset,keyword:keyword,_token:token}
+        let _optionHtml = '<option value="">Select method.</option>' ;
+        $.post(url,data, function(res) {
+            if(res.length == 0) {
+                _optionHtml = '<option value="">There is no method.</option>';
+            }
+            else {
+                $.each(res, function(i, item) {
+                    _optionHtml += '<option value="'+ item.method +'" data-asset="'+ asset +'">'+ item.method +'</option>';
+                })
+            }
+            $('select#depositmethod').html(_optionHtml);
+            $('#modal-deposit').modal('show');
+          })
     }
 
     function exchange(to, from='XETH') {
@@ -223,6 +243,34 @@
         $('#asset').val(asset)
         $('#modal-withdraw').modal('show')
     }
+
+    $('#depositmethod').on('change', function() {
+        var url = '{{route('admin.system.crypto.depositaddress')}}'
+        var token = '{{ csrf_token() }}';
+        var keyword = '{{$keyword}}';
+        var method = $('#depositmethod').val();
+        var asset = $('#depositmethod option:selected');
+
+
+        var data  = {asset:asset.data('asset'),keyword:keyword,method:method,_token:token}
+        var _divHtml = '';
+        $.post(url,data, function(res) {
+            console.log(data)
+            if(res.length == 0) {
+                _divHtml = '<h5 class="text-center">There is no available address.</h5>';
+            }
+            else {
+                $.each(res, function(i, item) {
+                    console.log(item)
+                    _divHtml += '<div class="form-group"> \
+                        <label for="inp-name">Address</label> \
+                        <input class="form-control" autocomplete="off" value="'+ item.address +'" type="text"  readonly> \
+                    </div>'
+                })
+            }
+            $('#address_list').html(_divHtml);
+          })
+    })
 </script>
 @endsection
 
