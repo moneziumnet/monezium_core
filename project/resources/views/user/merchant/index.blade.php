@@ -125,7 +125,7 @@
                                 <button class="btn" onclick="cpSampleCode()"><i class="fa fa-copy"></i></button>
                             </div>
                             <pre><code id="api-sample-code" class="language-html">&lt;div id="mt-payment-system" 
-    data-sitekey="your_site_key" 
+    data-sitekey="{{@$cred->access_key}}" 
     data-currency="USD"
     data-amount="500"
     fn-success="success"

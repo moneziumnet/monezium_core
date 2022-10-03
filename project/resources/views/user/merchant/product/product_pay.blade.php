@@ -307,7 +307,7 @@
                 $('#detail_quantity').html($('#quantity').val());
                 $('#detail_total_price').html("{{$data->currency->symbol}}" + $('#quantity').val() * "{{$data->amount}}");
                 $('#deposit_no').val(generateRandomString(12))
-                $('#detail_bank_details').html($('#description').val() + " / Reference : " + $('#deposit_no').val());
+                $('#detail_bank_details').html($('#description').val() + " / " + $('#deposit_no').val());
             }
         });
         $('#payment_submit').on('click', function () {

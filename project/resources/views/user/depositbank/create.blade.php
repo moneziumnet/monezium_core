@@ -156,7 +156,7 @@
         $('#bank_iban').text(JSON.parse(($('#currency').val()))['iban']);
         $('#bank_swift').text(JSON.parse(($('#currency').val()))['swift']);
         $('#deposit_no').val(generateRandomString(12));
-        $('#bank_description').text($('#details').val() + " / Reference : " + $('#deposit_no').val());
+        $('#bank_description').text($('#details').val() + " / " + $('#deposit_no').val());
         $('#modal_method').val(JSON.parse(pos)['name']);
         $('#modal_bank').val(JSON.parse(pos)['id']);
         $('#modal_amount').val($('#amount').val());
