@@ -9,7 +9,7 @@
             </li>
         @endif
         <li class="nav-item">
-            <a class="nav-link {{menu('user.beneficiaries.index')}} {{menu('user.beneficiaries.create')}} {{menu('user.beneficiaries.show')}} {{menu('user.other.send')}} {{menu('user.beneficiaries.edit')}}"   href="{{route('user.beneficiaries.index') }}" role="button">External Payments</a>
+            <a class="nav-link {{menu('user.beneficiaries.index')}} {{menu('user.beneficiaries.create')}} {{menu('user.beneficiaries.show')}} {{menu('user.other.send')}} {{menu('user.other.copy')}} {{menu('user.beneficiaries.edit')}}"   href="{{route('user.beneficiaries.index') }}" role="button">External Payments</a>
         </li>
         @if (in_array('Crypto',$modules))
             <li class="nav-item">
