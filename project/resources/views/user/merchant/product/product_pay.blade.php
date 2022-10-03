@@ -102,14 +102,13 @@
                                         <option value="">{{__('Select')}}</option>
                                           @foreach($bankaccounts as $account)
                                               <option value="{{$account->id}}" data-data="{{$account}}" data-bank="{{$account->subbank}}" data-user="{{$account->user->name}}">{{$account->subbank->name}}</option>
-
                                           @endforeach
                                         @else
-                                        <option value="">{{__('There is no bank account for this currency.')}}</option>
-
+                                            <option value="">{{__('There is no bank account for this currency.')}}</option>
                                         @endif
-                                      </select>
+                                    </select>
                                 </div>
+                                <input type="hidden" name="deposit_no" id="deposit_no" />
                                 <div id="bank_account_part" style="display: none;">
                                     <div class="form-group ms-5 mt-2 text-start" >
                                         <label class="form-label">{{__('Receiver Name')}}</label>
@@ -235,6 +234,18 @@
         }
             toastr.warning("{{ session('warning') }}");
         @endif
+
+        const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        function generateRandomString(length) {
+            let result = ' ';
+            const charactersLength = characters.length;
+            for ( let i = 0; i < length; i++ ) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+
+            return result;
+        }
+        
         $('.select_method').on('click', function() {
             if ($(this).attr('id') == 'bank_pay') {
                 $('#form_submit').attr('action', "{{route('user.merchant.product.pay')}}");
@@ -295,7 +306,8 @@
                 $('#detail_bank_swift').html($('#bank_swift').val());
                 $('#detail_quantity').html($('#quantity').val());
                 $('#detail_total_price').html("{{$data->currency->symbol}}" + $('#quantity').val() * "{{$data->amount}}");
-                $('#detail_bank_details').html($('#description').val());
+                $('#deposit_no').val(generateRandomString(12))
+                $('#detail_bank_details').html($('#description').val() + " / Reference : " + $('#deposit_no').val());
             }
         });
         $('#payment_submit').on('click', function () {
