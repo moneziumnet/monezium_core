@@ -185,7 +185,10 @@ class UserController extends Controller
         $s_time = $s_time ? $s_time : '';
         $e_time = $e_time ? $e_time : Carbontime::now()->addDays(1)->format('Y-m-d');
         $transactions = Transaction::where('user_id',auth()->id())
-        ->where('wallet_id', $wallet_id)
+        // ->where('wallet_id', $wallet_id)
+        ->when($wallet_id,function($q) use($wallet_id){
+            return $q->where('wallet_id',$wallet_id);
+        })
         ->when($remark,function($q) use($remark){
             return $q->where('remark',$remark);
         })
