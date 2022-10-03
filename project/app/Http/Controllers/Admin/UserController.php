@@ -509,7 +509,7 @@ class UserController extends Controller
         }
 
         public function storeBankAccount(Request $request) {
-            
+
             $bankaccount = BankPoolAccount::where('bank_id', $request->subbank)->where('currency_id', $request->currency)->first();
             if ($bankaccount){
                 return redirect()->back()->with(array('warning' => 'This bank account already exists.'));
@@ -812,7 +812,7 @@ class UserController extends Controller
         public function profilePricingplandatatables($id)
         {
             $user = User::findOrFail($id);
-            $globals = Charge::where('plan_id', $user->bank_plan_id)->whereIn('slug', ['deposit', 'send', 'recieve', 'escrow', 'withdraw'])->orderBy('name','desc')->get();
+            $globals = Charge::where('plan_id', $user->bank_plan_id)->whereIn('slug', ['deposit', 'send', 'recieve', 'escrow', 'withdraw', 'exchange'])->orderBy('name','desc')->get();
             $datas = $globals;
             return Datatables::of($datas)
                             ->editColumn('name', function(Charge $data) {
@@ -1053,7 +1053,7 @@ class UserController extends Controller
             if (!empty($request->input('user_type'))) {
                 $data['user_type'] = implode(',',$request->input('user_type'));
             }
-            
+
             $user->update($data);
             $msg = 'Customer Information Updated Successfully.';
             return response()->json($msg);
