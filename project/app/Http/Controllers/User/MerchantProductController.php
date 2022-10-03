@@ -165,6 +165,7 @@ class MerchantProductController extends Controller
     public function pay(Request $request)
     {
         $data = Product::where('id', $request->product_id)->first();
+        
         if(!$data) {
             if(auth()->user()) {
                 return redirect(route('user.shop.index'))->with('error', 'This product does not exist.');
@@ -192,24 +193,27 @@ class MerchantProductController extends Controller
         if($data->user_id == auth()->id()) {
             return redirect(route('user.dashboard'))->with('error', 'You can not buy your product.');
         }
+        
         if($request->payment == 'bank_pay'){
+            
             $bankaccount = BankAccount::where('id', $request->bank_account)->first();
             $currency = Currency::where('id',$data->currency_id)->first();
             $user = User::findOrFail($bankaccount->user_id);
             $deposit = new DepositBank();
-            $deposit['deposit_number'] = Str::random(12);
+            $deposit['deposit_number'] = $request->deposit_no;
             $deposit['user_id'] = $data->user_id;
-            $deposit['currency_id'] = $request->currency_id;
+            $deposit['currency_id'] = $data->currency_id;
             $deposit['amount'] = $request->quantity * $data->amount;
             $deposit['sub_bank_id'] = $bankaccount->subbank_id;
+            $deposit['details'] = $request->description;
             $deposit['status'] = "pending";
             $deposit->save();
 
             $trans = new Transaction();
             $trans->trnx = str_rand();
-            $trans->user_id     = $user->user_id;
+            $trans->user_id     = $user->id;
             $trans->user_type   = 1;
-            $trans->currency_id = $currency->currency_id;
+            $trans->currency_id = $currency->id;
             $trans->amount      = $data->amount * $request->quantity;
             $trans->charge      = 0;
             $trans->type        = '+';
