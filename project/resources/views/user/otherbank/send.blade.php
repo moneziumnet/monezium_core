@@ -229,7 +229,7 @@
             } else {
                 $('#otp_body').remove();
                 $('#modal-verify').modal('show');
-                $('#otp_amount').html($('#amount').val() + " " + $('#currency').val());
+                $('#otp_amount').html($('#currency option:selected').attr('symbol') +$('#amount').val() + " " + $('#currency option:selected').text());
                 $('#otp_description').html($('#des').val());
             }
         })

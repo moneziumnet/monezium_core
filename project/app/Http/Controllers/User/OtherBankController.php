@@ -99,16 +99,16 @@ class OtherBankController extends Controller
                 return redirect()->back()->with('unsuccess','Request Amount should be greater than this '.$global_range->min);
             }
 
-            if($global_range->max_limit < $request->amount){
+            if($global_range->max < $request->amount){
                 return redirect()->back()->with('unsuccess','Request Amount should be less than this '.$global_range->max);
             }
 
             $currency = defaultCurr();
             $balance = user_wallet_balance(auth()->id(), $currency->id);
 
-            // if($balance<0 && $finalAmount > $balance){
-            //     return redirect()->back()->with('unsuccess','Insufficient Balance!');
-            // }
+            if($balance<0 || $finalAmount > $balance){
+                return redirect()->back()->with('unsuccess','Insufficient Balance!');
+            }
 
             if($global_range->daily_limit <= $finalAmount){
                 return redirect()->back()->with('unsuccess','Your daily limitation of transaction is over.');
