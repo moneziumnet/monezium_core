@@ -155,7 +155,7 @@
           $('#bank_address').text($(this).data('subbank').address);
           $('#bank_iban').text($(this).data('data').iban);
           $('#bank_swift').text($(this).data('data').swift);
-          $('#bank_details').text($(this).data('deposit').details + " / DepositNo : " + $(this).data('deposit').deposit_number);
+          $('#bank_details').text($(this).data('deposit').details + " / " + $(this).data('deposit').deposit_number);
           $('#amount').text($(this).data('amount'));
           $('#modal-success').modal('show');
       })

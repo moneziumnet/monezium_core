@@ -153,7 +153,7 @@
                 $('#user_addr').text(res_data.sub_institution.address);
             }
             
-            $('#deposit_description').text(deposit_description + " / DepositNo : " + deposit_number);
+            $('#deposit_description').text(deposit_description + " / " + deposit_number);
             if(deposit_status == "pending"){
                 $('#complete_deposit').attr('data-href', complete_url);
                 $('#reject_deposit').attr('data-href', reject_url);
