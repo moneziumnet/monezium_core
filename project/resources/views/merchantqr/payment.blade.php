@@ -118,7 +118,7 @@
                     </div>
                     <div class="form-group mb-3 mt-3">
                         <label class="form-label required">{{__('Select Currency')}}</label>
-                        <select name="wallet_id" id="wallet_id" class="form-control" required>
+                        <select name="currency_id" id="currency_id" class="form-control" required>
                           <option value="">Select Currency</option>
                           @foreach($currencylist as $currency)
                           <option value="{{$currency->id}}">{{$currency->code}}</option>
