@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-
+<link href="{{asset('assets/front/css/default.min.css')}}" rel="stylesheet"/>
 @endpush
 
 @section('contents')
@@ -113,9 +113,36 @@
                                 <p>{{ __('API Access Key') }}</p>
                                 <div class="input-group input--group">
                                 <input type="text" name="key" value="{{@$cred->access_key}}" class="form-control" id="cronjobURL" readonly>
-                                <button class="btn btn-sm copytext input-group-text" id="copyBoard" onclick="myFunction()"> <i class="fa fa-copy"></i> </button>
+                                <button class="btn btn-sm copytext input-group-text" id="copyBoard" onclick="cpApiKey()"> <i class="fa fa-copy"></i> </button>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-2">
+                                <p class="me-auto">{{ __('Integrating Website Payment') }}</p>
+                                <button class="btn" onclick="cpSampleCode()"><i class="fa fa-copy"></i></button>
+                            </div>
+                            <pre><code id="api-sample-code" class="language-html">&lt;div id="mt-payment-system" 
+    data-sitekey="your_site_key" 
+    data-currency="USD"
+    data-amount="500"
+    fn-success="success"
+    fn-error="error"&gt;
+    &lt;button&gt;Buy&lt;/button&gt;
+&lt;/div&gt;
+&lt;script src="http://lion.saas.test/genius/assets/api/payment.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  var onsuccess = function (message) {
+    // This param is a success message, e.g:; "Wallet Payment Completed."
+    alert(message);
+  }
+  var onerror = function (message) {
+    // This param is a error message, e.g:; "Insufficient balance."
+    alert(message);
+  }
+&lt;/script&gt;</code></pre>
                         </div>
                     </div>
                 </div>
@@ -168,10 +195,11 @@
 @endsection
 
 @push('js')
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
 <script>
     'use strict';
-
-    function myFunction() {
+    hljs.highlightAll();
+    function cpApiKey() {
       var copyText = document.getElementById("cronjobURL");
       copyText.select();
       copyText.setSelectionRange(0, 99999);
@@ -182,6 +210,24 @@
         "progressBar" : true
       }
       toastr.success("Copied.");
+    }
+    function cpSampleCode() {
+        var copyText = document.getElementById("api-sample-code").textContent;
+        console.log(copyText);
+        const textArea = document.createElement('textarea');
+        textArea.textContent = copyText;
+        textArea.style.position = "absolute";
+        textArea.style.left = "-100%";
+        document.body.append(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        toastr.options =
+        {
+            "closeButton" : true,
+            "progressBar" : true
+        }
+        toastr.success("Copied.");
+        textArea.remove();
     }
   </script>
 @endpush
