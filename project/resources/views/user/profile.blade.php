@@ -44,13 +44,13 @@
                         </div>
                         
                         <div class="row g-3">
-                          <div class="col-md-12 form-group">
+                          <!-- <div class="col-md-12 form-group">
                             <label for="inp-user-type" class="form-label">{{ __('Select Type') }}</label>
                             <select id="test" class="form-control form--control mb-3" name="form_select" onchange="showCompanyInput( this)">
                                 <option value="0" {{isset($user->company_name) ? '' : 'selected'}}> Private</option>
                                 <option value="1" {{isset($user->company_name) ? 'selected' : ''}}> Corporate</option>
                             </select>
-                          </div>
+                          </div> -->
                           <div class="col-md-6">
                             <div class="form-group">
                               <label class="form-label required">{{__('First Name')}}</label>
