@@ -29,7 +29,7 @@ class AccessController extends Controller
         if($user_api) {
             Session::put('site_key', $site_key);
             $user = $user_api->user;
-            $bankaccounts = BankAccount::where('user_id', $user->id)->get();
+            $bankaccounts = BankAccount::where('user_id', $user->id)->where('currency_id', $currency->id)->get();
             $cryptolist = Currency::whereStatus(1)->where('type', 2)->get();
             return view('api.payment', compact('bankaccounts','cryptolist','amount','currency','user'));
         } else {
@@ -181,7 +181,7 @@ class AccessController extends Controller
             $trnx->wallet_id   = $wallet->id;
             $trnx->amount      = $request->amount;
             $trnx->charge      = 0;
-            $trnx->remark      = 'merchant_payment';
+            $trnx->remark      = 'merchant_api_payment';
             $trnx->type        = '-';
             $trnx->details     = trans('Payment to merchant');
             $trnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($request->user_id)->name.'"}';
@@ -234,7 +234,7 @@ class AccessController extends Controller
             $rcvTrnx->wallet_id   = $rcvWallet->id;
             $rcvTrnx->amount      = $request->amount;
             $rcvTrnx->charge      = 0;
-            $rcvTrnx->remark      = 'merchant_payment';
+            $rcvTrnx->remark      = 'merchant_api_payment';
             $rcvTrnx->type        = '+';
             $rcvTrnx->details     = trans('Receive Merchant Payment');
             $rcvTrnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($request->user_id)->name.'"}';

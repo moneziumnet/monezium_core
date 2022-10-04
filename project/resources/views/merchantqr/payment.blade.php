@@ -78,9 +78,14 @@
                             @if (count($bankaccounts) != 0)
                                 <option value="">{{ __('Select') }}</option>
                                 @foreach ($bankaccounts as $account)
-                                    <option value="{{ $account->id }}" data-data="{{ $account }}"
-                                        data-bank="{{ $account->subbank }}" data-user="{{ $account->user->name }}">
-                                        {{ $account->subbank->name }}
+                                    <option 
+                                        value="{{ $account->id }}" 
+                                        data-data="{{ $account }}"
+                                        data-currency="{{ $account->currency->id }}"
+                                        data-bank="{{ $account->subbank }}" 
+                                        data-user="{{ $account->user->name }}"
+                                    >
+                                        {{ $account->subbank->name }} - {{ $account->currency->code }}
                                     </option>
                                 @endforeach
                             @else
@@ -116,7 +121,7 @@
                                 type="text" readonly>
                         </div>
                     </div>
-                    <div class="form-group mb-3 mt-3">
+                    <div class="form-group mb-3 mt-3 currency-select">
                         <label class="form-label required">{{__('Select Currency')}}</label>
                         <select name="currency_id" id="currency_id" class="form-control" required>
                           <option value="">Select Currency</option>
@@ -125,7 +130,7 @@
                           @endforeach
                         </select>
                     </div>
-                    <div class="form-group mb-3">
+                    <div class="form-group mb-3 mt-3">
                         <label class="form-label required">{{__('Amount')}}</label>
                         <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" step="any" value="" min="1" required>
                     </div>
@@ -145,6 +150,7 @@
                     </div>
 
                     <input type="hidden" name="user_id" value={{$user->id}} />
+                    <input type="hidden" name="deposit_no" id="deposit_no" />
                 </form>
 
                 <p class="text-muted text-center mt-5">
@@ -168,7 +174,8 @@
                   <li class="list-group-item">@lang('Bank Address')<span id="detail_bank_address"></span></li>
                   <li class="list-group-item">@lang('Bank IBAN')<span id="detail_bank_iban"></span></li>
                   <li class="list-group-item">@lang('Bank SWIFT')<span id="detail_bank_swift"></span></li>
-              </ul>
+                  <li class="list-group-item">@lang('Deposit No')<span id="detail_deposit_no"></span></li>
+                </ul>
               <span class="btn btn-primary w-100 mt-3" id="payment_submit">Submit</span>
               </div>
           </div>
@@ -202,7 +209,15 @@
         }
         toastr.error("{{ session('error') }}");
         @endif
-
+        const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        function generateRandomString(length) {
+            let result = ' ';
+            const charactersLength = characters.length;
+            for ( let i = 0; i < length; i++ ) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result;
+        }
         $('.select_method').on('click', function() {
             if ($(this).attr('id') == 'bank_pay') {
                 $('#pay_form_submit').attr('action', "{{route('qr.pay.submit')}}");
@@ -210,12 +225,14 @@
                 document.getElementById("crypto_pay").style.display = "none";
                 document.getElementById("default_pay").style.display = "block";
                 $("#bank_account").prop('required', true);
+                $('.currency-select').addClass('d-none');
                 document.getElementById("bank_part").style.display = "block";
             } else if ($(this).attr('id') == 'crypto') {
                 $('#pay_form_submit').attr('action',"{{route('qr.pay.crypto')}}");
                 $('#pay_form_submit').attr('method', "GET");
                 document.getElementById("crypto_pay").style.display = "block";
                 document.getElementById("default_pay").style.display = "none";
+                $('.currency-select').removeClass('d-none');
                 $("#bank_account").prop('required', false);
                 $("#description").prop('required', false);
                 document.getElementById('bank_account_part').style.display = "none";
@@ -227,6 +244,7 @@
                 document.getElementById("default_pay").style.display = "block";
                 $("#bank_account").prop('required', false);
                 $("#description").prop('required', false);
+                $('.currency-select').removeClass('d-none');
                 document.getElementById('bank_account_part').style.display = "none";
                 document.getElementById("bank_part").style.display = "none";
             }
@@ -235,12 +253,14 @@
             var selected = $('#bank_account option:selected').data('data');
             var bank = $('#bank_account option:selected').data('bank');
             var user = $('#bank_account option:selected').data('user');
+            var currency_id = $('#bank_account option:selected').data('currency');
             if (selected) {
                 $('#receiver_name').val(user);
                 $('#bank_name').val(bank.name);
                 $('#bank_address').val(bank.address);
                 $('#bank_iban').val(selected.iban);
                 $('#bank_swift').val(selected.swift);
+                $('#currency_id').val(currency_id);
                 document.getElementById('bank_account_part').style.display = "block";
             } else {
                 $("#description").prop('required', false);
@@ -258,6 +278,8 @@
                 $('#detail_bank_address').html($('#bank_address').val());
                 $('#detail_bank_iban').html($('#bank_iban').val());
                 $('#detail_bank_swift').html($('#bank_swift').val());
+                $('#deposit_no').val(generateRandomString(12));
+                $('#detail_deposit_no').text($('#deposit_no').val());
             }
         });
         $('#payment_submit').on('click', function() {
@@ -268,22 +290,6 @@
         $('.crypto-submit').on('click', function() {
             if (document.getElementById('pay_form_submit').checkValidity()) {
                 $('#pay_form_submit').submit();
-            }
-        });
-
-        $(document).on('submit','#pay_form_submit',function(e){
-            if($(this).attr('method').toUpperCase() == "POST") {
-                e.preventDefault();
-
-                $.ajax({
-                    method: $(this).attr('method'),
-                    url: $(this).attr('action'),
-                    data: $(this).serialize(),
-                    success: function(msg) {
-                        window.close();
-                        window.opener.postMessage(msg,"*");
-                    }
-                });
             }
         });
     </script>

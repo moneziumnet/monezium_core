@@ -7,6 +7,7 @@ use App\Models\BankAccount;
 use App\Models\Charge;
 use App\Models\CryptoDeposit;
 use App\Models\Currency;
+use App\Models\DepositBank;
 use App\Models\Generalsetting;
 use App\Models\Transaction;
 use App\Models\User;
@@ -62,10 +63,18 @@ class QRAccessController extends Controller
                 'payload' => 'Gateway Payment completed'
             ]);
         } else if($request->payment == 'bank_pay'){
-            return response()->json([
-                'type' => 'mt_payment_success',
-                'payload' => 'Bank Payment completed'
-            ]);
+            $bankaccount = BankAccount::where('id', $request->bank_account)->first();
+
+            $deposit = new DepositBank();
+            $deposit['deposit_number'] = $request->deposit_no;
+            $deposit['user_id'] = $request->user_id;
+            $deposit['currency_id'] = $request->currency_id;
+            $deposit['amount'] = $request->amount;
+            $deposit['sub_bank_id'] = $bankaccount->subbank_id;
+            $deposit['status'] = "pending";
+            $deposit->save();
+
+            return redirect(route('user.dashboard'))->with('message', 'Bank Payment completed');
         } else if($request->payment == 'crypto'){
             $data = new CryptoDeposit();
             $data->currency_id = $request->currency_id;
@@ -74,10 +83,121 @@ class QRAccessController extends Controller
             $data->address = $request->address;
             // $data->proof = '';
             $data->save();
-            return response()->json([
-                'type' => 'mt_payment_success',
-                'payload' => 'Crypto Payment completed'
-            ]);
+            return redirect(route('user.dashboard'))->with('message', 'Crypto Payment completed');
+        } else if($request->payment == 'wallet'){
+            if(Auth::guest()) {
+                return redirect(route('user.login'))->with('error', 'You need to login MT Payment System.');
+            }
+            $wallet = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('currency_id',$request->currency_id)->where('wallet_type', 1)->first();
+
+            if(!$wallet){
+                $gs = Generalsetting::first();
+                $wallet =  Wallet::create([
+                    'user_id'     => auth()->id(),
+                    'user_type'   => 1,
+                    'currency_id' => $request->currency_id,
+                    'balance'     => 0,
+                    'wallet_type' => 1,
+                    'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
+                ]);
+
+                $user = User::findOrFail(auth()->id());
+
+                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+
+                $trans = new Transaction();
+                $trans->trnx = str_rand();
+                $trans->user_id     = $user->id;
+                $trans->user_type   = 1;
+                $trans->currency_id = defaultCurr();
+                $trans->amount      = $chargefee->data->fixed_charge;
+                $trans_wallet = get_wallet($user->id, defaultCurr(), 1);
+                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+                $trans->charge      = 0;
+                $trans->type        = '-';
+                $trans->remark      = 'wallet_create';
+                $trans->details     = trans('Wallet Create');
+                $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+                $trans->save();
+
+                user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
+                user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
+            }
+            if($wallet->balance < $request->amount) {
+                return redirect(route('user.dashboard'))->with('error', 'Insufficient balance to your wallet');
+            }
+
+            $wallet->balance -= $request->amount;
+            $wallet->update();
+
+            $trnx              = new Transaction();
+            $trnx->trnx        = str_rand();
+            $trnx->user_id     = auth()->id();
+            $trnx->user_type   = 1;
+            $trnx->currency_id = $request->currency_id;
+            $trnx->wallet_id   = $wallet->id;
+            $trnx->amount      = $request->amount;
+            $trnx->charge      = 0;
+            $trnx->remark      = 'merchant_qr_payment';
+            $trnx->type        = '-';
+            $trnx->details     = trans('Payment to merchant');
+            $trnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($request->user_id)->name.'"}';
+            $trnx->save();
+
+            $rcvWallet = Wallet::where('user_id',$request->user_id)->where('user_type',1)->where('currency_id',$request->currency_id)->where('wallet_type', 1)->first();
+
+            if(!$rcvWallet){
+                $gs = Generalsetting::first();
+                $rcvWallet =  Wallet::create([
+                    'user_id'     => $request->user_id,
+                    'user_type'   => 1,
+                    'currency_id' => $request->currency_id,
+                    'balance'     => 0,
+                    'wallet_type' => 1,
+                    'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
+                ]);
+
+                $user = User::findOrFail($request->user_id);
+
+                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+
+                $trans = new Transaction();
+                $trans->trnx = str_rand();
+                $trans->user_id     = $request->user_id;
+                $trans->user_type   = 1;
+                $trans->currency_id = defaultCurr();
+                $trans_wallet = get_wallet($request->user_id, defaultCurr(), 1);
+                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+                $trans->amount      = $chargefee->data->fixed_charge;
+                $trans->charge      = 0;
+                $trans->type        = '-';
+                $trans->remark      = 'wallet_create';
+                $trans->details     = trans('Wallet Create');
+                $trans->data        = '{"sender":"'.User::findOrFail($request->user_id)->name.'", "receiver":"System Account"}';
+                $trans->save();
+
+                user_wallet_decrement($request->user_id, defaultCurr(), $chargefee->data->fixed_charge, 1);
+                user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
+            }
+
+            $rcvWallet->balance += $request->amount;
+            $rcvWallet->update();
+
+            $rcvTrnx              = new Transaction();
+            $rcvTrnx->trnx        = $trnx->trnx;
+            $rcvTrnx->user_id     = $request->user_id;
+            $rcvTrnx->user_type   = 1;
+            $rcvTrnx->currency_id = $request->currency_id;
+            $rcvTrnx->wallet_id   = $rcvWallet->id;
+            $rcvTrnx->amount      = $request->amount;
+            $rcvTrnx->charge      = 0;
+            $rcvTrnx->remark      = 'merchant_qr_payment';
+            $rcvTrnx->type        = '+';
+            $rcvTrnx->details     = trans('Receive Merchant Payment');
+            $rcvTrnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($request->user_id)->name.'"}';
+            $rcvTrnx->save();
+            
+            return redirect(route('user.dashboard'))->with('message', 'Wallet Payment completed');
         }
     }
 }

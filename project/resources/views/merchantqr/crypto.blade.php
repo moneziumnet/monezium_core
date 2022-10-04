@@ -53,19 +53,10 @@
                         <input name="amount" id="amount" class="form-control" autocomplete="off"  type="number" value="{{ $total_amount / $cal_amount }}" readonly required>
                     </div>
 
-                    <!-- <div class="form-group mb-3 mt-3">
-                        <label class="form-label required">{{__('Hash')}}</label>
-                        <input name="hash" id="hash" class="form-control" autocomplete="off"  type="text" placeholder="0x...." required>
-                    </div>
-
-                    <div class="form-group mb-3 mt-3">
-                        <label class="form-label required">{{$wallet->currency->code}} {{__('Your Address')}}</label>
-                        <input name="sender_address" id="sender_address" class="form-control" autocomplete="off"  type="text"  required>
-                    </div> -->
-
                     <input type="hidden" name="currency_id" value="{{$wallet->currency->id}}">
                     <input type="hidden" name="user_id" value="{{$wallet->user_id}}">
                     <input type="hidden" name="payment" value="crypto">
+
                     <div class="form-footer">
                         <button type="submit" class="btn btn-primary w-100">{{__('Done')}}</button>
                     </div>
@@ -88,21 +79,6 @@
 
     <script>
         'use strict';
-        $(document).on('submit','#pay_form_submit',function(e){
-            if($(this).attr('method').toUpperCase() == "POST") {
-                e.preventDefault();
-
-                $.ajax({
-                    method: $(this).attr('method'),
-                    url: $(this).attr('action'),
-                    data: $(this).serialize(),
-                    success: function(msg) {
-                        window.close();
-                        window.opener.postMessage(msg,"*");
-                    }
-                });
-            }
-        });
     </script>
     @stack('js')
 </body>
