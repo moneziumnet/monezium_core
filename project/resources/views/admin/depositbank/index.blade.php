@@ -75,6 +75,7 @@
             <li class="list-group-item">@lang('Bank Address')<span id="bank_address"></span></li>
             <li class="list-group-item">@lang('Bank IBAN')<span id="bank_iban"></span></li>
             <li class="list-group-item">@lang('Bank SWIFT')<span id="bank_swift"></span></li>
+            <li class="list-group-item send-info">@lang('Transaction No')<span id="transaction_no"></span></li>
             <li class="list-group-item send-info">@lang('Sender Name')<span id="sender_name"></span></li>
             <li class="list-group-item send-info">@lang('Sender Address')<span id="sender_address"></span></li>
             <li class="list-group-item send-info">@lang('Amount')<span id="real_amount"></span></li>
@@ -163,6 +164,7 @@
                 $('.send-info').removeClass('d-none');
                 $('#sender_name').text(send_info.sender_name);
                 $('#sender_address').text(send_info.sender_address);
+                $('#transaction_no').text(send_info.transaction_id)
                 $('#real_amount').text(send_info.currency.symbol + send_info.amount + " " + send_info.currency.code);
                 
                 if(send_info.status == "processing")
