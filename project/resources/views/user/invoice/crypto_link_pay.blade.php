@@ -71,7 +71,7 @@
                                 <input name="amount" id="amount" class="form-control" autocomplete="off"  type="text" value="{{ $total_amount/$cal_amount }}" readonly required>
                             </div>
 
-                            <div class="form-group mb-3 mt-3">
+                            <!-- <div class="form-group mb-3 mt-3">
                                 <label class="form-label required">{{__('Hash')}}</label>
                                 <input name="hash" id="hash" class="form-control" autocomplete="off"  type="text" placeholder="0x...." required>
                             </div>
@@ -79,7 +79,7 @@
                             <div class="form-group mb-3 mt-3">
                                 <label class="form-label required">{{$wallet->currency->code}} {{__('Your Address')}}</label>
                                 <input name="sender_address" id="sender_address" class="form-control" autocomplete="off"  type="text"  required>
-                            </div>
+                            </div> -->
 
                             <input type="hidden" name="id" value="{{$invoice->id}}">
                             <input type="hidden" name="currency_id" value="{{$wallet->currency->id}}">
