@@ -25,7 +25,7 @@ class OtherBankController extends Controller
 
     public function othersend($id){
         $data['bankaccounts'] = BankAccount::whereUserId(auth()->id())->pluck('subbank_id');
-        $data['banks'] = SubInsBank::whereIn('id', $data['bankaccounts'])->get();
+        $data['banks'] = SubInsBank::where('status', 1)->get();
         $data['data'] = Beneficiary::findOrFail($id);
         $data['other_bank_limit'] = Generalsetting::first()->other_bank_limit;
         $data['user'] = auth()->user();

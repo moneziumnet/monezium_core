@@ -3,7 +3,7 @@
         @php
             $modules = explode(" , ", auth()->user()->section);
         @endphp
-        @if (in_array('Withdraw',$modules))
+        @if (in_array('External Payments',$modules))
             <li class="nav-item mr-3">
                 <a class="nav-link {{menu('user.withdraw.index')}} {{menu('user.withdraw.create')}} {{menu('user.withdraw.details')}}"  href="{{route('user.withdraw.index') }}" role="button" >Withdrawal</a>
             </li>

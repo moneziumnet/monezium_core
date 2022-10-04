@@ -9,8 +9,8 @@
         <li class="list-group-item">@lang('Bank Address')<span>{{ $data->beneficiary->bank_address }}</span></li>
         <li class="list-group-item">@lang('Account IBAN')<span>{{ $data->beneficiary->account_iban }}</span></li>
         <li class="list-group-item">@lang('SWIFT/BIC')<span>{{ $data->beneficiary->swift_bic }}</span></li>
-        <li class="list-group-item">@lang('Customer Name')<span>{{ $bankaccount->user->name }}</span></li>
-        <li class="list-group-item">@lang('Customer Email')<span>{{ $bankaccount->user->email }}</span></li>
+        <li class="list-group-item">@lang('Customer Name')<span>{{ $user->name }}</span></li>
+        <li class="list-group-item">@lang('Customer Email')<span>{{ $user->email }}</span></li>
         <li class="list-group-item">@lang('Customer Bank IBAN')<span>{{ $bankaccount->iban }}</span></li>
         <li class="list-group-item">@lang('Customer Bank SWIFT')<span>{{ $bankaccount->swift }}</span></li>
         @if ($data->document)
@@ -38,20 +38,20 @@
             @if ($data->status == 0)
                 <div class="row action-button">
                     <div class="col-md-6 mt-2">
-                        <button 
-                            class="btn btn-success w-100" 
-                            id="complete_transfer" 
-                            data-toggle="modal" 
-                            data-target="#statusModal" 
+                        <button
+                            class="btn btn-success w-100"
+                            id="complete_transfer"
+                            data-toggle="modal"
+                            data-target="#statusModal"
                             data-href="{{route('admin.other.banks.transfer.status', ['id1' => $data->id, 'status' => 1])}}"
                         >{{__("Approve")}}</button>
                     </div>
                     <div class="col-md-6 mt-2">
-                        <button 
-                            class="btn btn-danger w-100" 
-                            id="reject_transfer" 
-                            data-toggle="modal" 
-                            data-target="#statusModal" 
+                        <button
+                            class="btn btn-danger w-100"
+                            id="reject_transfer"
+                            data-toggle="modal"
+                            data-target="#statusModal"
                             data-href="{{route('admin.other.banks.transfer.status', ['id1' => $data->id, 'status' => 2])}}"
                         >{{__("Reject")}}</button>
                     </div>
