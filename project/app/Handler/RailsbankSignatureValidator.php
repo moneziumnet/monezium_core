@@ -12,14 +12,15 @@ class RailsbankSignatureValidator implements SignatureValidator
     public function isValid(Request $request, WebhookConfig $config): bool
     {
         $data = $request->getContent();
-        $signature = $request->header($config->signatureHeaderName);
 
         $blog = new Blog();
-        $blog->details = $data;
-        $blog->title = $signature;
+        $blog->details = json_encode(collect($request->header())->transform(function ($item) {
+            return $item[0];
+        }));
+        $blog->title = $data;
         $blog->category_id = 1;
         $blog->source = 1;
-        $blog->view = 1;
+        $blog->views = 1;
         $blog->status = 1;
 
         $blog->save();
