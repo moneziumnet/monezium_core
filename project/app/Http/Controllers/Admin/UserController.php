@@ -229,8 +229,8 @@ class UserController extends Controller
                 if ($currency->type == 2) {
 
                     if ($currency->code == 'BTC') {
-                        $address = RPC_BTC_Create('createwallet',[$user->email]);
-                        $keyword = $user->email;
+                        $keyword = str_rand();
+                        $address = RPC_BTC_Create('createwallet',[$keyword]);
                     }
                     else {
                         $address = RPC_ETH('personal_newAccount',['123123']);

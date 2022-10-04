@@ -107,8 +107,8 @@ class UserController extends Controller
         }
         $currency = Currency::findOrFail($request->crypto_currency_id);
         if ($currency->code == 'BTC') {
-            $address = RPC_BTC_Create('createwallet',[auth()->user()->email]);
-            $keyword = auth()->user()->email;
+            $keyword = str_rand();
+            $address = RPC_BTC_Create('createwallet',[$keyword]);
         }
         else {
             $address = RPC_ETH('personal_newAccount',['123123']);
