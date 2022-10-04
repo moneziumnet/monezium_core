@@ -535,9 +535,9 @@ class ManageInvoiceController extends Controller
                 $trans->trnx = str_rand();
                 $trans->user_id     = $user->id;
                 $trans->user_type   = 1;
-                $trans->currency_id = 1;
+                $trans->currency_id = defaultCurr();
                 $trans->amount      = $chargefee->data->fixed_charge;
-                $trans_wallet = get_wallet($user->id, 1, 1);
+                $trans_wallet = get_wallet($user->id, defaultCurr(), 1);
                 $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
                 $trans->charge      = 0;
                 $trans->type        = '-';
@@ -546,8 +546,8 @@ class ManageInvoiceController extends Controller
                 $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
                 $trans->save();
 
-                user_wallet_decrement($user->id, 1, $chargefee->data->fixed_charge, 1);
-                user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
+                user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
+                user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
             }
 
             if($wallet->balance < $invoice->final_amount) {
@@ -615,8 +615,8 @@ class ManageInvoiceController extends Controller
                 $trans->trnx = str_rand();
                 $trans->user_id     = $invoice->user_id;
                 $trans->user_type   = 1;
-                $trans->currency_id = 1;
-                $trans_wallet = get_wallet($invoice->user_id, 1, 1);
+                $trans->currency_id = defaultCurr();
+                $trans_wallet = get_wallet($invoice->user_id, defaultCurr(), 1);
                 $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
                 $trans->amount      = $chargefee->data->fixed_charge;
                 $trans->charge      = 0;
@@ -626,8 +626,8 @@ class ManageInvoiceController extends Controller
                 $trans->data        = '{"sender":"'.User::findOrFail($invoice->user_id)->name.'", "receiver":"System Account"}';
                 $trans->save();
 
-                user_wallet_decrement($invoice->user_id, 1, $chargefee->data->fixed_charge, 1);
-                user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
+                user_wallet_decrement($invoice->user_id, defaultCurr(), $chargefee->data->fixed_charge, 1);
+                user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
             }
 
             $rcvWallet->balance += $invoice->get_amount;
@@ -707,7 +707,6 @@ class ManageInvoiceController extends Controller
             $data->amount = $request->amount;
             $invoice = Invoice::findOrFail($request->id);
             $data->user_id = $invoice->user_id;
-            $data->sender_address = $request->sender_address;
             $data->proof = '';
             $data->save();
             $invoice->payment_status = 1;
@@ -741,9 +740,9 @@ class ManageInvoiceController extends Controller
                 $trans->trnx = str_rand();
                 $trans->user_id     = $user->id;
                 $trans->user_type   = 1;
-                $trans->currency_id = 1;
+                $trans->currency_id = defaultCurr();
                 $trans->amount      = $chargefee->data->fixed_charge;
-                $trans_wallet = get_wallet($user->id, 1, 1);
+                $trans_wallet = get_wallet($user->id, defaultCurr(), 1);
                 $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
                 $trans->charge      = 0;
                 $trans->type        = '-';
@@ -752,8 +751,8 @@ class ManageInvoiceController extends Controller
                 $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
                 $trans->save();
 
-                user_wallet_decrement($user->id, 1, $chargefee->data->fixed_charge, 1);
-                user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
+                user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
+                user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
             }
 
             if($wallet->balance < $invoice->final_amount) {
@@ -821,8 +820,8 @@ class ManageInvoiceController extends Controller
                 $trans->trnx = str_rand();
                 $trans->user_id     = $invoice->user_id;
                 $trans->user_type   = 1;
-                $trans->currency_id = 1;
-                $trans_wallet = get_wallet($invoice->user_id, 1, 1);
+                $trans->currency_id = defaultCurr();
+                $trans_wallet = get_wallet($invoice->user_id, defaultCurr(), 1);
                 $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
                 $trans->amount      = $chargefee->data->fixed_charge;
                 $trans->charge      = 0;
@@ -832,8 +831,8 @@ class ManageInvoiceController extends Controller
                 $trans->data        = '{"sender":"'.User::findOrFail($invoice->user_id)->name.'", "receiver":"System Account"}';
                 $trans->save();
 
-                user_wallet_decrement($invoice->user_id, 1, $chargefee->data->fixed_charge, 1);
-                user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
+                user_wallet_decrement($invoice->user_id, defaultCurr(), $chargefee->data->fixed_charge, 1);
+                user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
             }
 
             $rcvWallet->balance += $invoice->get_amount;

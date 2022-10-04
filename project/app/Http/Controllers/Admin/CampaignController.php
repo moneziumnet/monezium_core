@@ -182,26 +182,26 @@ class CampaignController extends Controller
 
                 $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
 
-                user_wallet_decrement($user->id, 1, $chargefee->data->fixed_charge, 1);
-                user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
+                user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
+                user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
 
                 $trans = new Transaction();
                 $trans->trnx = str_rand();
                 $trans->user_id     = $user->id;
                 $trans->user_type   = 1;
-                $trans->currency_id = 1;
+                $trans->currency_id =  defaultCurr();
                 $trans->amount      = $chargefee->data->fixed_charge;
                 $trans->charge      = 0;
                 $trans->type        = '-';
 
-                $trans_wallet       = get_wallet($user->id, 1, 1);
+                $trans_wallet       = get_wallet($user->id,  defaultCurr(), 1);
                 $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-                
+
                 $trans->remark      = 'wallet_create';
                 $trans->details     = trans('Wallet Create');
                 $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
                 $trans->save();
-                
+
             }
 
             if($wallet->balance < $donation->amount) {

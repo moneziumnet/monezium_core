@@ -82,10 +82,10 @@ class UserController extends Controller
         $trans->trnx = str_rand();
         $trans->user_id     = $request->user_id;
         $trans->user_type   = 1;
-        $trans->currency_id = 1;
+        $trans->currency_id = defaultCurr();
         $trans->amount      = $chargefee->data->fixed_charge;
 
-        $trans_wallet = get_wallet($request->user_id, 1, 1);
+        $trans_wallet = get_wallet($request->user_id, defaultCurr(), 1);
 
         $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
         $trans->charge      = 0;
@@ -95,8 +95,8 @@ class UserController extends Controller
         $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
         $trans->save();
 
-        user_wallet_decrement($user->id, 1, $chargefee->data->fixed_charge, 1);
-        user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
+        user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
+        user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
         return back()->with('message', 'You have created new Wallet successfully.');
     }
 
@@ -139,10 +139,10 @@ class UserController extends Controller
         $trans->trnx = str_rand();
         $trans->user_id     = $request->user_id;
         $trans->user_type   = 1;
-        $trans->currency_id = 1;
+        $trans->currency_id = defaultCurr();
         $trans->amount      = $chargefee->data->fixed_charge;
 
-        $trans_wallet = get_wallet($request->user_id, 1, 1);
+        $trans_wallet = get_wallet($request->user_id, defaultCurr(), 1);
 
         $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
         $trans->charge      = 0;
@@ -152,8 +152,8 @@ class UserController extends Controller
         $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
         $trans->save();
 
-        user_wallet_decrement($user->id, 1, $chargefee->data->fixed_charge, 1);
-        user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
+        user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
+        user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
 
         return back()->with('message', 'You have created new Wallet successfully.');
     }

@@ -383,9 +383,9 @@ if(!function_exists('getModule')){
                 $trans->trnx = str_rand();
                 $trans->user_id     = $auth_id;
                 $trans->user_type   = 1;
-                $trans->currency_id = 1;
+                $trans->currency_id = defaultCurr();
                 $trans->amount      = $chargefee->data->fixed_charge;
-                $trans_wallet       = get_wallet($auth_id, 1, 1);
+                $trans_wallet       = get_wallet($auth_id, defaultCurr(), 1);
                 $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
                 $trans->charge      = 0;
                 $trans->type        = '-';
@@ -412,8 +412,8 @@ if(!function_exists('getModule')){
                 $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
                 $trans->save();
               }
-              user_wallet_decrement($auth_id, 1, $chargefee->data->fixed_charge, 1);
-              user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
+              user_wallet_decrement($auth_id, defaultCurr(), $chargefee->data->fixed_charge, 1);
+              user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
               return $user_wallet->balance;
           }
 
@@ -609,26 +609,28 @@ if(!function_exists('getModule')){
             if($user->card_maintenance && $now->gt($user->card_maintenance)) {
                 $user->card_maintenance = Carbontime::now()->addDays(30);
                 $chargefee = Charge::where('slug', 'card-maintenance')->where('plan_id', $user->bank_plan_id)->first();
+                foreach ($wallets as $key => $value) {
 
-                user_wallet_decrement($user->id, 1, $chargefee->data->fixed_charge, 1);
-                user_wallet_increment(0, 1, $chargefee->data->fixed_charge, 9);
+                    user_wallet_decrement($user->id, $value->currency_id, $chargefee->data->fixed_charge, 1);
+                    user_wallet_increment(0, $value->currency_id, $chargefee->data->fixed_charge, 9);
 
-                $trans = new Transaction();
-                $trans->trnx = str_rand();
-                $trans->user_id     = $user->id;
-                $trans->user_type   = 1;
-                $trans->currency_id = 1;
-                $trans->amount      = $chargefee->data->fixed_charge;
-                $trans->charge      = 0;
-                $trans->type        = '-';
-                $trans_wallet       = get_wallet($user->id, 1, 1);
-                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-                $trans->remark      = 'card_monthly_fee';
-                $trans->details     = trans('Card Maintenance');
-                $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
-                $trans->save();
+                    $trans = new Transaction();
+                    $trans->trnx = str_rand();
+                    $trans->user_id     = $user->id;
+                    $trans->user_type   = 1;
+                    $trans->currency_id = $value->currency_id;
+                    $trans->amount      = $chargefee->data->fixed_charge;
+                    $trans->charge      = 0;
+                    $trans->type        = '-';
+                    $trans_wallet       = get_wallet($user->id, $value->currency_id, 1);
+                    $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+                    $trans->remark      = 'card_monthly_fee';
+                    $trans->details     = trans('Card Maintenance');
+                    $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+                    $trans->save();
 
-                $user->update();
+                    $user->update();
+                }
 
             }
             elseif ( $user->card_maintenance == null) {
