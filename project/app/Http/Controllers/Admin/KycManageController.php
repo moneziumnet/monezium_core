@@ -15,11 +15,11 @@ class KycManageController extends Controller
 {
     public function datatables()
     {
-        $datas = User::where('kyc_info','!=',NULL)->orderBy('id','desc');
+        $datas = User::where('kyc_info','!=',NULL)->OrWhere('kyc_token', '!=', NULL)->orderBy('id','desc');
 
         return Datatables::of($datas)
                             ->addColumn('action', function(User $data) {
-                                $url = $data->kyc_method == 'auto' ? '#' : route('admin.kyc.details',$data->id);
+                                $url = route('admin.kyc.details',$data->id);
                                 return '<div class="btn-group mb-1">
                                     <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     '.'Actions' .'
@@ -158,6 +158,9 @@ class KycManageController extends Controller
     public function kycDetails($id)
     {
         $data['user'] = User::findOrFail($id);
+        if ($data['user']->kyc_method == 'auto'){
+            return back()->with('warning', 'You can not see the details of this user because this user\'s kyc method is "auto"'  );
+        }
         $data['kycInformations'] = json_decode($data['user']->kyc_info,true);
         return view('admin.kyc.details',$data);
     }
