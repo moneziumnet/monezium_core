@@ -245,7 +245,7 @@ class UserContractManageController extends Controller
         $contract = ContractAoa::where('id', $id)->first();
         $information = $contract->information ? json_decode($contract->information) : array("" => null);
         foreach ($information as $title => $text) {
-            $information->$title = str_replace("{Amount}", $data->amount, $information->$title);
+            $information->$title = str_replace("{Amount}", $contract->amount, $information->$title);
             foreach (json_decode($contract->default_pattern, True) as $key => $value) {
                 if(strpos($text, "{".$key."}" ) !== false) {
                     $information->$title = str_replace("{".$key."}", $value ,$information->$title);
@@ -365,6 +365,7 @@ class UserContractManageController extends Controller
         $data = ContractAoa::findOrFail($id);
         $information = $data->information ? json_decode($data->information) : array("" => null);
         foreach ($information as $title => $text) {
+            $information->$title = str_replace("{Amount}", $data->amount, $information->$title);
             if(isset($data->default_pattern)){
                 foreach (json_decode($data->default_pattern, True) as $key => $value) {
                     if(strpos($text, "{".$key."}" ) !== false) {
@@ -398,6 +399,7 @@ class UserContractManageController extends Controller
         }
         $information = $data->information ? json_decode($data->information) : array("" => null);
         foreach ($information as $title => $text) {
+            $information->$title = str_replace("{Amount}", $data->amount, $information->$title);
             if(isset($data->default_pattern)){
                 foreach (json_decode($data->default_pattern, True) as $key => $value) {
                     if(strpos($text, "{".$key."}" ) !== false) {
