@@ -25,6 +25,7 @@
           $count = count($modules);
           @endphp
 
+          @if (in_array('Shop',$modules))
         <li class="nav-item dropdown {{ request()->routeIs('user.shop.index', 'user.shop.order', 'user.campaign.donate', 'user.merchant.product.crypto.pay', 'user.merchant.product.crypto') ? 'active' : '' }}">
         <a class="nav-link" href="{{route('user.shop.index')}}">
             <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -35,6 +36,7 @@
             </span>
         </a>
         </li>
+         @endif
 
           @if (in_array('Loan',$modules) && !(auth()->user()->kyc_status != 1 && in_array('Loan',$kyc_modules)))
           <li class="nav-item dropdown {{ request()->routeIs('user.loans.plan') ? 'active' : '' }}">
@@ -78,11 +80,11 @@
                     {{__('Incoming')}}
                 </a>
                 @endif
-                @if (in_array('Wire Transfer',$modules))
+                <!-- @if (in_array('Wire Transfer',$modules))
                 <a class="dropdown-item" href="{{route('user.wire.transfer.index')}}">
                   {{__('Wire Transfer')}}
                 </a>
-                @endif
+                @endif -->
                 @if (in_array('Cards',$modules))
                 <a class="dropdown-item" href="{{route('user.card.index')}}">
                     {{__('Cards')}}
@@ -92,11 +94,8 @@
                 <a class="dropdown-item" href="{{route('user.beneficiaries.index')}}">
                   {{__('External Payments')}}
                 </a>
-                <!-- <a class="dropdown-item" href="{{ route('tranfer.logs.index') }}">
-                  {{__('Transfer History')}}
-                </a> -->
                 @endif
-                @if (in_array('Request Money',$modules) && !(auth()->user()->kyc_status != 1 && in_array('Request Money',$kyc_modules)))
+                @if (in_array('Payment between accounts',$modules))
                 <a class="dropdown-item" href="{{ route('ownaccounttransfer-index') }}">
                     {{__('Payment between accounts')}}
                 </a>
@@ -117,10 +116,11 @@
                   {{__('Exchange')}}
                 </a>
                 @endif
+                @if (in_array('Transactions',$modules))
                 <a class="dropdown-item" href="{{route('user.transaction')}}">
                   {{__('Transactions')}}
                 </a>
-
+                @endif
               </div>
             </li>
             @endif
@@ -170,23 +170,28 @@
                   {{__('Merchant Setting')}}
                 </a>
 
+                @if (in_array('Merchant Shop',$modules))
                 <a class="dropdown-item" href="{{route('user.merchant.shop.index')}}">
                     {{__('Merchant Shop')}}
                 </a>
+                @endif
 
+                @if (in_array('Merchant own Account',$modules))
                 <a class="dropdown-item" href="{{route('user.merchant.send.money.create')}}">
                     {{__('Payment to own Account')}}
                 </a>
+                @endif
 
+                @if (in_array('Merchant Request Money',$modules))
                 <a class="dropdown-item" href="{{route('user.merchant.money.request.index')}}">
                     {{__('Request Money')}}
                 </a>
-
-                @if (in_array('Bank Transfer',$modules))
-                <a class="dropdown-item" href="{{route('user.merchant.other.bank')}}">
-                  {{__('Other Bank Transfer')}}
-                </a>
                 @endif
+                
+                <!-- <a class="dropdown-item" href="{{route('user.merchant.other.bank')}}">
+                  {{__('Other Bank Transfer')}}
+                </a> -->
+                
               </div>
             </li>
             @endif
@@ -225,11 +230,11 @@
                 <a class="dropdown-item" href="{{route('user.invoice.invoic_setting')}}">
                     {{__('Invoice Setting')}}
                   </a>
+                @if (in_array('Contracts',$modules))
                 <a class="dropdown-item" href="{{route('user.contract.index')}}">
                     {{__('Contracts')}}
                 </a>
-
-
+                @endif
               </div>
             </li>
             @endif

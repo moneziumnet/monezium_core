@@ -41,6 +41,14 @@
                       <label class="custom-control-label" for="manage_customers">{{__('Manage Customers')}}</label>
                     </div>
                   </div>
+                </div>                
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" name="section[]" value="KYC Management" {{ $data->sectionCheck('KYC Management') ? 'checked' : '' }} class="custom-control-input" id="manage_kyc">
+                      <label class="custom-control-label" for="manage_kyc">{{__('AML/KYC Management')}}</label>
+                      </div>
+                  </div>
                 </div>
 
                 <div class="col-md-6">
@@ -88,6 +96,33 @@
               </div>
             </div> -->
 
+            <div class="col-md-6">
+                <div class="form-group">
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox" name="section[]" value="ICO Management" {{ $data->sectionCheck('ICO Management') ? 'checked' : '' }} class="custom-control-input" id="manage_ico">
+                    <label class="custom-control-label" for="manage_ico">{{__('ICO Management')}}</label>
+                    </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                  <div class="form-group">
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" name="section[]" value="Deposits" {{ $data->sectionCheck('Deposits') ? 'checked' : '' }} class="custom-control-input" id="management_deposits">
+                      <label class="custom-control-label" for="management_deposits">{{__('Deposits')}}</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" name="section[]" value="Withdraw" {{ $data->sectionCheck('Withdraw') ? 'checked' : '' }} class="custom-control-input" id="management_withdraw">
+                      <label class="custom-control-label" for="management_withdraw">{{__('Withdraw')}}</label>
+                    </div>
+                  </div>
+                </div>
+
                 <div class="col-md-6">
                   <div class="form-group">
                     <div class="custom-control custom-switch">
@@ -112,24 +147,6 @@
                     <div class="custom-control custom-switch">
                       <input type="checkbox" name="section[]" value="Request Money" {{ $data->sectionCheck('Request Money') ? 'checked' : '' }} class="custom-control-input" id="request_money">
                       <label class="custom-control-label" for="request_money">{{__('Request Money')}}</label>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <div class="custom-control custom-switch">
-                      <input type="checkbox" name="section[]" value="Withdraw" {{ $data->sectionCheck('Withdraw') ? 'checked' : '' }} class="custom-control-input" id="management_withdraw">
-                      <label class="custom-control-label" for="management_withdraw">{{__('Withdraw')}}</label>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <div class="custom-control custom-switch">
-                      <input type="checkbox" name="section[]" value="Deposits" {{ $data->sectionCheck('Deposits') ? 'checked' : '' }} class="custom-control-input" id="management_deposits">
-                      <label class="custom-control-label" for="management_deposits">{{__('Deposits')}}</label>
                     </div>
                   </div>
                 </div>
@@ -205,24 +222,6 @@
                   </div>
               </div>
             </div> -->
-
-                <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="section[]" value="KYC Management" {{ $data->sectionCheck('KYC Management') ? 'checked' : '' }} class="custom-control-input" id="manage_kyc">
-                  <label class="custom-control-label" for="manage_kyc">{{__('KYC Management')}}</label>
-                  </div>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="form-group">
-                  <div class="custom-control custom-switch">
-                    <input type="checkbox" name="section[]" value="ICO Management" {{ $data->sectionCheck('ICO Management') ? 'checked' : '' }} class="custom-control-input" id="manage_ico">
-                    <label class="custom-control-label" for="manage_ico">{{__('ICO Management')}}</label>
-                    </div>
-                </div>
-              </div>
 
                 <div class="col-md-6">
                   <div class="form-group">

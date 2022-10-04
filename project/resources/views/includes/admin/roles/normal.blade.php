@@ -33,7 +33,7 @@
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#kyc_manage" aria-expanded="true"
       aria-controls="collapseTable">
       <i class="fas fa-child"></i>
-      <span>{{  __('KYC Management') }}</span>
+      <span>{{  __('AML/KYC Management') }}</span>
     </a>
     <div id="kyc_manage" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">

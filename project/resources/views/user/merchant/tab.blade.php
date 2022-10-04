@@ -1,5 +1,10 @@
+@php
+   $modules = explode(" , ", auth()->user()->section);
+ @endphp
+
 <div class="card-header tab-card-header mb-3">
     <ul class="nav nav-pills card-header-tabs" id="pills-tab" role="tablist">
+        @if (in_array('Merchant Shop',$modules))
         <li class="nav-item">
             <a class="nav-link 
                     {{ menu('user.merchant.shop.index') }}
@@ -11,6 +16,8 @@
                 {{ __('Merchant Shop') }}
             </a>
         </li>
+        @endif
+        @if (in_array('Merchant Product',$modules))
         <li class="nav-item">
             <a class="nav-link 
                     {{ menu('user.merchant.product.index') }}
@@ -21,6 +28,8 @@
                 {{ __('Merchant Product') }}
             </a>
         </li>
+        @endif
+        @if (in_array('Merchant Product',$modules))
         <li class="nav-item">
             <a class="nav-link 
                     {{ menu('user.merchant.product.order') }}
@@ -29,6 +38,8 @@
                 {{ __('Merchant Product Order') }}
             </a>
         </li>
+        @endif
+        @if (in_array('Merchant Checkout',$modules))
         <li class="nav-item">
             <a class="nav-link 
                     {{ menu('user.merchant.checkout.index') }}
@@ -38,12 +49,16 @@
                 {{ __('Merchant Checkout') }}
             </a>
         </li>
+        @endif
+        @if (in_array('Merchant Transaction',$modules))
         <li class="nav-item">
             <a class="nav-link {{ menu('user.merchant.checkout.transactionhistory') }}"
                 href="{{ route('user.merchant.checkout.transactionhistory') }}" role="button">
-                {{ __('Merchant Transaciton') }}
+                {{ __('Merchant Transaction') }}
             </a>
         </li>
+        @endif
+        @if (in_array('Merchant Campaign',$modules))
         <li class="nav-item">
             <a class="nav-link 
                 {{ menu('user.merchant.campaign.index') }}
@@ -54,5 +69,6 @@
                 {{ __('Merchant Campaign') }}
             </a>
         </li>
+        @endif
     </ul>
 </div>

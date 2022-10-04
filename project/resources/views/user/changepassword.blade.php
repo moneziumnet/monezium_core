@@ -11,7 +11,7 @@
       <div class="row align-items-center">
         <div class="col">
           <h2 class="page-title">
-            {{__('Changed Password')}}
+            {{__('Change Password')}}
           </h2>
         </div>
       </div>
@@ -28,8 +28,8 @@
                         @csrf
 
                         <div class="form-group mb-3 mt-3">
-                            <label class="form-label required">{{__('Change Password')}}</label>
-                            <input name="cpass" class="form-control form--control" autocomplete="off" placeholder="{{__('Change Password')}}" type="password" required>
+                            <label class="form-label required">{{__('Current Password')}}</label>
+                            <input name="cpass" class="form-control form--control" autocomplete="off" placeholder="{{__('Current Password')}}" type="password" required>
                         </div>
 
                         <div class="form-group mb-3 mt-3">

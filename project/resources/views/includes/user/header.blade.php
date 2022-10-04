@@ -50,9 +50,9 @@
           {{-- <a class="dropdown-item" href="{{route('user.show2faForm')}}">
             {{__('2FA Security')}}
           </a> --}}
-          <a class="dropdown-item" href="{{route('user.message.index')}}">
+          {{--  <a class="dropdown-item" href="{{route('user.message.index')}}">
             {{__('Support Tickets')}}
-          </a>
+          </a> --}}
           <a href="{{ route('user.logout') }}" class="dropdown-item">{{__('Logout')}}</a>
         </div>
       </div>

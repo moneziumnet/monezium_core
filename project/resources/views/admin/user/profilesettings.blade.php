@@ -21,7 +21,7 @@
         <div class="tab-pane fade show p-3 active" id="settings" role="tabpanel" aria-labelledby="settings-tab">
           <div class="col">
             <h3 class="page-title">
-              {{__('Changed Password')}}
+              {{__('Change Password')}}
               </h2>
           </div>
 

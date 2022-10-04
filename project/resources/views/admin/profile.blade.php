@@ -336,7 +336,7 @@
               <div class="form-group">
                 <div class="custom-control custom-switch">
                   <input type="checkbox" name="section[]" value="KYC Management" {{ $data->sectionCheck('KYC Management') ? 'checked' : '' }} class="custom-control-input" id="manage_kyc">
-                  <label class="custom-control-label" for="manage_kyc">{{__('KYC Management')}}</label>
+                  <label class="custom-control-label" for="manage_kyc">{{__('AML/KYC Management')}}</label>
                   </div>
               </div>
             </div>
