@@ -474,7 +474,6 @@ class ManageInvoiceController extends Controller
 
     public function invoicePaymentSubmit(Request $request)
     {
-        $invoice = Invoice::findOrFail($request->id);
 
         if (auth()->user() && auth()->id() == $invoice->user_id) {
             redirect(route('user.dashboard'))->with('error','You can not pay yourself.');
@@ -482,18 +481,19 @@ class ManageInvoiceController extends Controller
         if($request->payment == 'gateway'){
             return redirect(route('user.invoice.incoming.index'))->with('message','Gateway Payment completed');
         } else if($request->payment == 'bank_pay'){
-            $invoice = Invoice::findOrFail($request->id);
+            
+            $bankaccount = BankAccount::where('id', $request->bank_account)->first();
+            $invoice = Invoice::findOrFail($request->invoice_id);
+
             $deposit = new DepositBank();
-            $deposit['deposit_number'] = Str::random(12);
+            $deposit['deposit_number'] = $request->deposit_no;
             $deposit['user_id'] = $invoice->user_id;
-            $deposit['currency_id'] = $request->currency_id;
-            $deposit['amount'] = $amountToAdd;
-            $deposit['method'] = $request->method;
-            $deposit['sub_bank_id'] = $request->bank;
-            $deposit['txnid'] = $request->txnid;
-            $deposit['details'] = $request->details;
+            $deposit['currency_id'] = $invoice->currency_id;
+            $deposit['amount'] = $invoice->final_amount;
+            $deposit['sub_bank_id'] = $bankaccount->subbank_id;
             $deposit['status'] = "pending";
             $deposit->save();
+            
             return redirect(route('user.invoice.incoming.index'))->with('message','Bank Payment completed');
         } else if($request->payment == 'crypto'){
             $data = new CryptoDeposit();
@@ -700,6 +700,19 @@ class ManageInvoiceController extends Controller
         if($request->payment == 'gateway'){
             return redirect($url)->with('message','Gateway Payment completed');
         } else if($request->payment == 'bank_pay'){
+            
+            $invoice = Invoice::findOrFail($request->invoice_id);
+            $bankaccount = BankAccount::where('id', $request->bank_account)->first();
+
+            $deposit = new DepositBank();
+            $deposit['deposit_number'] = $request->deposit_no;
+            $deposit['user_id'] = $invoice->user_id;
+            $deposit['currency_id'] = $invoice->currency_id;
+            $deposit['amount'] = $invoice->final_amount;
+            $deposit['sub_bank_id'] = $bankaccount->subbank_id;
+            $deposit['status'] = "pending";
+            $deposit->save();
+            
             return redirect($url)->with('message','Bank Payment completed');
         } else if($request->payment == 'crypto'){
             $data = new CryptoDeposit();
@@ -707,8 +720,8 @@ class ManageInvoiceController extends Controller
             $data->amount = $request->amount;
             $invoice = Invoice::findOrFail($request->id);
             $data->user_id = $invoice->user_id;
-            // $data->proof = '';
             $data->save();
+            
             $invoice->payment_status = 1;
             $invoice->update();
             return redirect($url)->with('message','Crypto Payment completed');

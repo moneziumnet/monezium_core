@@ -348,18 +348,6 @@ class MerchantProductController extends Controller
             $crytpo_data->address = $request->address;
             $crytpo_data->save();
 
-            $trans = new Transaction();
-            $trans->trnx = str_rand();
-            $trans->user_id     = $data->user_id;
-            $trans->user_type   = 1;
-            $trans->currency_id = $currency->currency_id;
-            $trans->amount      = $request->amount;
-            $trans->charge      = 0;
-            $trans->type        = '+';
-            $trans->remark      = 'merchant_product_buy';
-            $trans->details     = trans('Merchant Product Buy by Bank');
-            $trans->data        = '{"Bank":"'.$bankaccount->subbank->name.'","status":"Pending", "receiver":"'.$data->user->name.'"}';
-            $trans->save();
             if(auth()->user()) {
                 return redirect(route('user.shop.index'))->with('message','You have paid for buy project successfully (Crypto).');
             }
