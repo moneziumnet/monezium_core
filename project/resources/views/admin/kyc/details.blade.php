@@ -28,7 +28,7 @@
                             <tbody>
                                 @if ($kycInformations != NULL)
                                     @foreach ($kycInformations as $key=>$value)
-                                        @if ($value[1] == 'file')
+                                        @if (isset($value[1]) && $value[1] == 'file')
                                         <tr>
                                             <th width="45%">{{$key}}</th>
                                             <td width="10%">:</td>
@@ -38,7 +38,7 @@
                                             <tr>
                                                 <th width="45%">{{$key}}</th>
                                                 <td width="10%">:</td>
-                                                <td width="45%">{{ $value[0] }}</td>
+                                                <td width="45%">{{ $value[0] ?? "" }}</td>
                                             </tr>
                                         @endif
                                     @endforeach
