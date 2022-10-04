@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('transaction_id')->nullable();
             $table->string('reference')->nullable();
-            $table->integer('sender_address')->nullable();
+            $table->string('sender_address')->nullable();
             $table->string('sender_name')->nullable();
             $table->double('amount')->nullable();
             $table->integer('currency_id')->nullable();
