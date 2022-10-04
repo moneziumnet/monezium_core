@@ -13,7 +13,7 @@ class RailsbankResponse implements RespondsToWebhook
 {
     public function respondToValidWebhook(Request $request, WebhookConfig $config): Response
     {
-        $obj = str2obj($request->getContent());
+        $obj = json_decode($request->getContent());
 
         $webrequest = WebhookRequest::where('transaction_id', $obj->transaction_id)
             ->where('gateway_type', 'railsbank')
@@ -25,32 +25,37 @@ class RailsbankResponse implements RespondsToWebhook
         switch($obj->type) {
             case "transaction-pending":
                 $webrequest->status = "processing";
+                break;
             case "transaction-accepted":
                 $webrequest->status = "completed";
+                break;
             case "transaction-declined":
                 $webrequest->status = "failed";
+                break;
+            default:
+                break;
         }
         $webrequest->gateway_type = "railsbank";
 
         $client = new Client();
-        $response = $client->request('POST', 'https://play.railsbank.com/v1/customer/transactions/'.$obj->transaction_id, [
+        $response = $client->request('get', 'https://play.railsbank.com/v1/customer/transactions/'.$obj->transaction_id, [
             'headers' => [
                 'Accept'=> 'application/json',
                 'Content-Type' => 'application/json',
+                'Authorization' => 'API-Key x9zx3980azu8edv2h9sve52kyog6c8g3#t4ugygi8yogyat4dlgu9a9jye4jbhx2ggz68yj4a4e49xqdu7d38erc2128yoqdq',
             ],
         ]);
         $details = json_decode($response->getBody());
 
         $webrequest->sender_name = $details->transaction_info->sender->name;
         
-        $address = $details->transaction_info->sender->address;
-        $webrequest->sender_address = $address->lines.", ".$address->country;
+        $address = $details->transaction_printout->pspofsenderaddress;
+        $webrequest->sender_address = $address->address_street.', '.$address->address_city.', '.$address->address_iso_country;
 
-        $currency = Currency::where('code', $details->transaction_currency)->first();
+        $currency = Currency::where('code', $details->transaction_info->currency)->first();
         $webrequest->currency_id = $currency ? $currency->id : 0;
         $webrequest->amount = $details->amount;
         $webrequest->reference = $details->reference;
-        $webrequest->failure_reason = count($details->failure_reasons) > 0 ? $details->failure_reasons[0] : null;
 
         $webrequest->save();
 
