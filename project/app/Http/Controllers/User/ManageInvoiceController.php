@@ -494,6 +494,9 @@ class ManageInvoiceController extends Controller
             $deposit['status'] = "pending";
             $deposit->save();
             
+            $invoice->payment_status = 1;
+            $invoice->update();
+            
             return redirect(route('user.invoice.incoming.index'))->with('message','Bank Payment completed');
         } else if($request->payment == 'crypto'){
             $data = new CryptoDeposit();
@@ -712,7 +715,9 @@ class ManageInvoiceController extends Controller
             $deposit['sub_bank_id'] = $bankaccount->subbank_id;
             $deposit['status'] = "pending";
             $deposit->save();
-            
+
+            $invoice->payment_status = 1;
+            $invoice->update();            
             return redirect($url)->with('message','Bank Payment completed');
         } else if($request->payment == 'crypto'){
             $data = new CryptoDeposit();

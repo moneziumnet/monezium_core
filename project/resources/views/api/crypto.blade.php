@@ -34,7 +34,7 @@
                     
                 </div>
 
-                <form action="{{route('api.pay.submit')}}" method="POST" enctype="multipart/form-data">
+                <form action="{{route('api.pay.submit')}}" method="POST" enctype="multipart/form-data" id="pay_form_submit">
                     @csrf
                     <div class="text-center">
                         <img id="qrcode" src="{{'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl='.$wallet->wallet_no.'&choe=UTF-8'}}" class="" alt="">

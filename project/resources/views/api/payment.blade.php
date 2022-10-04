@@ -133,6 +133,7 @@
                     <input type="hidden" name="user_id" value={{$user->id}} />
                     <input type="hidden" name="amount" value={{$amount}} />
                     <input type="hidden" name="currency_id" value={{$currency->id}} />
+                    <input type="hidden" name="deposit_no" id="deposit_no" />
                 </form>
 
                 <p class="text-muted text-center mt-5">
@@ -156,6 +157,7 @@
                   <li class="list-group-item">@lang('Bank Address')<span id="detail_bank_address"></span></li>
                   <li class="list-group-item">@lang('Bank IBAN')<span id="detail_bank_iban"></span></li>
                   <li class="list-group-item">@lang('Bank SWIFT')<span id="detail_bank_swift"></span></li>
+                  <li class="list-group-item">@lang('Deposit No')<span id="detail_deposit_no"></span></li>
               </ul>
               <span class="btn btn-primary w-100 mt-3" id="payment_submit">Submit</span>
               </div>
@@ -190,7 +192,15 @@
         }
         toastr.error("{{ session('error') }}");
         @endif
-
+        const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        function generateRandomString(length) {
+            let result = ' ';
+            const charactersLength = characters.length;
+            for ( let i = 0; i < length; i++ ) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result;
+        }
         $('.select_method').on('click', function() {
             if ($(this).attr('id') == 'bank_pay') {
                 $('#pay_form_submit').attr('action', "{{route('api.pay.submit')}}");
@@ -246,6 +256,8 @@
                 $('#detail_bank_address').html($('#bank_address').val());
                 $('#detail_bank_iban').html($('#bank_iban').val());
                 $('#detail_bank_swift').html($('#bank_swift').val());
+                $('#deposit_no').val(generateRandomString(12));
+                $('#detail_deposit_no').text($('#deposit_no').val());
             }
         });
         $('#payment_submit').on('click', function() {

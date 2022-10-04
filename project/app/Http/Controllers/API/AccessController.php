@@ -7,6 +7,7 @@ use App\Models\BankAccount;
 use App\Models\Charge;
 use App\Models\CryptoDeposit;
 use App\Models\Currency;
+use App\Models\DepositBank;
 use App\Models\Generalsetting;
 use App\Models\Transaction;
 use App\Models\User;
@@ -95,6 +96,18 @@ class AccessController extends Controller
                 'payload' => 'Gateway Payment completed'
             ]);
         } else if($request->payment == 'bank_pay'){
+            
+            $bankaccount = BankAccount::where('id', $request->bank_account)->first();
+
+            $deposit = new DepositBank();
+            $deposit['deposit_number'] = $request->deposit_no;
+            $deposit['user_id'] = $request->user_id;
+            $deposit['currency_id'] = $request->currency_id;
+            $deposit['amount'] = $request->amount;
+            $deposit['sub_bank_id'] = $bankaccount->subbank_id;
+            $deposit['status'] = "pending";
+            $deposit->save();
+
             return response()->json([
                 'type' => 'mt_payment_success',
                 'payload' => 'Bank Payment completed'
