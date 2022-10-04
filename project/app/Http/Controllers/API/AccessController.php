@@ -105,7 +105,7 @@ class AccessController extends Controller
             $data->amount = $request->amount;
             $data->user_id = $request->user_id;
             $data->address = $request->address;
-            $data->proof = '';
+            // $data->proof = '';
             $data->save();
             return response()->json([
                 'type' => 'mt_payment_success',

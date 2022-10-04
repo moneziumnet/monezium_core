@@ -707,7 +707,7 @@ class ManageInvoiceController extends Controller
             $data->amount = $request->amount;
             $invoice = Invoice::findOrFail($request->id);
             $data->user_id = $invoice->user_id;
-            $data->proof = '';
+            // $data->proof = '';
             $data->save();
             $invoice->payment_status = 1;
             $invoice->update();
