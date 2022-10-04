@@ -58,9 +58,15 @@
                     <label for="email" class="form-label">@lang('Your Email')</label>
                     <input type="email" id="email" name="email" class="form-control form--control" required>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-12">
                     <label for="phone" class="form-label">@lang('Your Phone')</label>
                     <input type="text" id="phone" name="phone" class="form-control form--control" required>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="inp-name" class="form-label">{{ __('Address') }}</label>
+                        <input type="text" class="form-control form--control" id="address" name="address" placeholder="{{ __('Enter Address') }}" value="" required>
+                    </div>
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group">
@@ -101,17 +107,11 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="inp-name" class="form-label">{{ __('Address') }}</label>
-                                <input type="text" class="private-input form-control form--control" id="address" name="address" placeholder="{{ __('Enter Address') }}" value="" required>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
                                 <label for="personal-code" class="form-label">{{ __('Personal Code/Number') }}</label>
                                 <input type="text" class="private-input form-control form--control" id="personal_code" name="personal_code" placeholder="{{ __('Enter Personal Code/Number') }}" value="" required>
                             </div>
                         </div>
-                        <div class="col-sm-6 mt-3">
+                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="your-id" class="form-label">{{ __('Your ID Number') }}</label>
                                 <input type="text" class="private-input form-control form--control" id="your_id" name="your_id" placeholder="{{ __('Enter Your ID Number') }}" value="" required>

@@ -85,7 +85,12 @@
                               <input name="phone" class="form-control form--control" autocomplete="off" placeholder="{{__('Phone Number')}}" type="tel" value="{{ $user->phone }}" required>
                             </div>
                           </div>
-
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="form-label required">{{__('Address')}}</label>
+                              <input name="address" class="form-control form--control" autocomplete="off" placeholder="{{__('Address')}}" type="text" value="{{ $user->address }}" required>
+                            </div>
+                          </div>
                           <div class="col-md-6">
                             <div class="form-group">
                               <label class="form-label required">{{__('Zip Code')}}</label>
@@ -105,13 +110,6 @@
                           @endphp
                           <div id="private_div" class="col-md-12" style="{{isset($user->company_name) ? 'display:none;' : ''}}">
                             <div class="row">
-                              
-                              <div class="col-md-6">
-                                <div class="form-group">
-                                  <label class="form-label required">{{__('Address')}}</label>
-                                  <input name="address" class="private-input form-control form--control" autocomplete="off" placeholder="{{__('Address')}}" type="text" value="{{ $user->address }}" required>
-                                </div>
-                              </div>
                               <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="personal-code" class="form-label">{{ __('Personal Code/Number') }}</label>
@@ -155,11 +153,11 @@
                               <div class="col-md-6">
                                 <div class="form-group mt-2">
                                     <label for="dob" class="form-label">{{ __('Company Address') }}</label>
-                                    <input type="text" class="company-input form-control form--control" id="company_address"name="company_address" placeholder="{{ __('Enter Company Address') }}" value="{{ $user->address }}" {{$corporate_required}}>
+                                    <input type="text" class="company-input form-control form--control" id="company_address"name="company_address" placeholder="{{ __('Enter Company Address') }}" value="{{ $user->company_address }}" {{$corporate_required}}>
                                 </div>
                               </div>
                               <div class="col-md-6">
-                                <div class="form-group mt-2">
+                                <div class="form-group mt-3">
                                     <label for="dob" class="form-label">{{ __('Registration No') }}</label>
                                     <input type="text" class="company-input form-control form--control" id="company_reg_no"name="company_reg_no" placeholder="{{ __('Enter Company Registration No') }}" value="{{ $user->company_reg_no }}" {{$corporate_required}}>
                                 </div>
