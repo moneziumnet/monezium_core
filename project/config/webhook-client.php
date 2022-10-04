@@ -17,7 +17,7 @@ return [
             'name' => 'railsbank',
             'signing_secret' => env('WEBHOOK_CLIENT_SECRET'),
             'signature_header_name' => 'signature',
-            'signature_validator' => App\Handler\RailsbankSignatureValidator::class,
+            'signature_validator' => \Spatie\WebhookClient\SignatureValidator\DefaultSignatureValidator::class,
             'webhook_profile' => App\Handler\CustomWebhookProfile::class,
             'webhook_response' => App\Handler\RailsbankResponse::class,
             'webhook_model' => \Spatie\WebhookClient\Models\WebhookCall::class,

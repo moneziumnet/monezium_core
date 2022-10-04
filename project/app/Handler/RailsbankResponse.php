@@ -15,6 +15,9 @@ class RailsbankResponse implements RespondsToWebhook
     {
         $obj = json_decode($request->getContent());
 
+        if(!isset($obj->transaction_id)) {
+            return response()->json('error');
+        }
         $webrequest = WebhookRequest::where('transaction_id', $obj->transaction_id)
             ->where('gateway_type', 'railsbank')
             ->first();        
@@ -33,7 +36,7 @@ class RailsbankResponse implements RespondsToWebhook
                 $webrequest->status = "failed";
                 break;
             default:
-                break;
+                return response()->json('error');
         }
         $webrequest->gateway_type = "railsbank";
 
