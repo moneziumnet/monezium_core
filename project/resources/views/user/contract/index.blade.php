@@ -72,7 +72,7 @@
                                       </td>
                                       <td data-label="{{ __('Beneficiary') }}">
                                         <div>
-                                          {{$item->beneficiary->name.' ('.$item->beneficiary->email.')'}}
+                                          {{$item->client->name.' ('.$item->client->email.')'}}
                                         </div>
                                       </td>
                                       <td data-label="{{ __('Title') }}">

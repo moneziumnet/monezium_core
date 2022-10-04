@@ -73,13 +73,13 @@
                                                 'contact_person' => $user->contact_person
                                             )
                                         @endphp
-                                        <option type="beneficiary" value="{{$user->id}}" data="{{json_encode($client_item)}}" {{ $data->client_type == 'App\Models\Beneficiary' && $user->id == $data->contractor_id ? 'selected' : ''}} >{{$user->name}}</option>
+                                        <option type="beneficiary" value="Beneficiary {{$user->id}}" data="{{json_encode($client_item)}}" {{ $data->client_type == 'App\Models\Beneficiary' && $user->id == $data->client_id ? 'selected' : ''}} >{{$user->name}}</option>
                                         @endforeach
                                         @php
                                         $client_item = App\Models\User::select('name','email','address','phone')
                                             ->find(auth()->id());
                                         @endphp
-                                        <option value="User {{auth()->user()->id}}" type="user" data="{{json_encode($client_item)}}" {{ $data->client_type == 'App\Models\User' && $user->id == auth()->user()->id ? 'selected' : ''}} >{{auth()->user()->name}}</option>
+                                        <option value="User {{auth()->user()->id}}" type="user" data="{{json_encode($client_item)}}" {{ $data->client_type == 'App\Models\User' && $data->client_id == auth()->user()->id ? 'selected' : ''}} >{{auth()->user()->name}}</option>
                                     </select>
                                     <button type="button"  data-bs-toggle="tooltip" data-bs-original-title="@lang('Add New Beneficiary')" class="input-group-text beneficiary"><i class="fas fa-plus"></i></button>
                                 </div>
