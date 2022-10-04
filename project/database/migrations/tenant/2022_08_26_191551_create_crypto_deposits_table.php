@@ -18,7 +18,7 @@ class CreateCryptoDepositsTable extends Migration
             $table->integer('currency_id');
             $table->integer('user_id');
             $table->double('amount');
-            $table->string('address');
+            $table->string('address')->nullable();
             $table->tinyInteger('status')->default(1)->comment('0 == pending , 1 == approve , 2 == rejected');
             $table->timestamps();
         });
