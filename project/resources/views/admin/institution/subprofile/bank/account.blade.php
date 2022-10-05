@@ -71,7 +71,7 @@
                 <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
                 <h3>@lang('Bank Account')</h3>
             </div>
-            <form class="mt-4 mx-3" action="{{isset($bank_gateway) ? $bank_gateway->keyword == 'openpayd' ? route('admin.subinstitution.banks.account.create') : route('admin.subinstitution.banks.account.railsbank.create') : route('admin.user.bank.nogateway')}}" method="POST"  enctype="multipart/form-data" >
+            <form class="mt-4 mx-3" action="{{isset($bank_gateway) ? $bank_gateway->keyword == 'openpayd' ? route('admin.user.bank.nogateway') : route('admin.subinstitution.banks.account.railsbank.create') : route('admin.user.bank.nogateway')}}" method="POST"  enctype="multipart/form-data" >
 
                 {{ csrf_field() }}
 
@@ -84,7 +84,7 @@
                     @endforeach
                     </select>
                 </div>
-                @if(!isset($bank_gateway))
+                @if(!isset($bank_gateway) || $bank_gateway->keyword == 'openpayd')
                     <div class="form-group">
                         <label for="inp-name">{{ __('IBAN') }}</label>
                         <input type="text" class="form-control" name="iban" required />
