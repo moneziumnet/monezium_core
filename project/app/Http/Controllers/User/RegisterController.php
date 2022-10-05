@@ -131,6 +131,8 @@ class RegisterController extends Controller
             $input['company_vat_no'] = $request->company_vat_no;
             $input['company_dob'] = $request->company_dob;
             $input['company_type'] = $request->company_type;
+            $input['company_city'] = $request->company_city;
+            $input['company_country'] = $request->company_country;
             $input['company_address'] = $request->company_address;
             $input['personal_code'] = null;
             $input['your_id'] = null;

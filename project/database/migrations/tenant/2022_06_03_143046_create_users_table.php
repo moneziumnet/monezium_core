@@ -76,6 +76,8 @@ class CreateUsersTable extends Migration
             $table->string('company_type', 255)->nullable();
             $table->string('company_vat_no', 255)->nullable();
             $table->string('company_address', 255)->nullable();
+            $table->string('company_city', 255)->nullable();
+            $table->string('company_country', 255)->nullable();
             $table->dateTime('company_dob')->nullable();
             $table->string('personal_code', 255)->nullable();
             $table->string('your_id', 255)->nullable();

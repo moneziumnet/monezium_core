@@ -33,6 +33,7 @@ use App\Exports\AdminExportTransaction;
 use App\Models\BalanceTransfer;
 use App\Models\BankPlan;
 use App\Models\BankPoolAccount;
+use App\Models\Beneficiary;
 use App\Models\PlanDetail;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
@@ -673,12 +674,123 @@ class UserController extends Controller
             $data['wallet'] = Wallet::findOrFail($wallet_id);
             $user = User::findOrFail($user_id);
             $data['data'] = $user;
+            $data['bankaccounts'] = BankAccount::whereUserId($user_id)->where('currency_id', $data['wallet']->currency_id)->pluck('subbank_id');
+            $data['banks'] = SubInsBank::where('status', 1)->whereIn('id', $data['bankaccounts'])->get();
+            $data['beneficiaries'] = Beneficiary::where('user_id', $user_id)->get();
+            $data['other_bank_limit'] = Generalsetting::first()->other_bank_limit;
+
             return view('admin.user.external',$data);
         }
 
         public function external_send(Request $request)
         {
-            return 'success';
+            $wallet = Wallet::where('id',$request->wallet_id)->with('currency')->first();
+            $user = User::find($wallet->user_id);
+            $beneficiary = Beneficiary::find($request->beneficiary_id);
+            
+            $other_bank_limit = Generalsetting::first()->other_bank_limit;
+            if ($request->amount >= $other_bank_limit) {
+                $rules = ['document' => 'required|mimes:xls,xlsx,pdf,jpg,png'];
+            } else {
+                $rules = ['document' => 'mimes:xls,xlsx,pdf,jpg,png'];
+            }
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                return redirect()->back()->with('error',$validator->getMessageBag()->toArray()['document'][0]);
+            }
+
+
+            if($user->bank_plan_id === null){
+                return redirect()->back()->with('error','This user has to buy a plan to withdraw.');
+            }
+
+            if(now()->gt($user->plan_end_date)){
+                return redirect()->back()->with('error','Plan Date Expired.');
+            }
+
+            $bank_plan = BankPlan::whereId($user->bank_plan_id)->first();
+            $dailySend = BalanceTransfer::whereUserId($user->id)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus(1)->sum('amount');
+            $monthlySend = BalanceTransfer::whereUserId($user->id)->whereMonth('created_at', '=', date('m'))->whereStatus(1)->sum('amount');
+
+            if($dailySend > $bank_plan->daily_send){
+                return redirect()->back()->with('error','Daily send limit over.');
+            }
+
+            if($monthlySend > $bank_plan->monthly_send){
+                return redirect()->back()->with('error','Monthly send limit over.');
+            }
+
+            $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'withdraw')->first();
+
+            $dailyTransactions = BalanceTransfer::whereType('other')->whereUserId($user->id)->whereDate('created_at', now())->get();
+            $monthlyTransactions = BalanceTransfer::whereType('other')->whereUserId($user->id)->whereMonth('created_at', now()->month())->get();
+            $transaction_global_cost = 0;
+            $transaction_global_fee = check_global_transaction_fee($request->amount, $user, 'withdraw');
+
+            if ($global_range) {
+                if($transaction_global_fee)
+                {
+                    $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/100) * $transaction_global_fee->data->percent_charge;
+                }
+                $finalAmount = $request->amount + $transaction_global_cost;
+
+                if($global_range->min > $request->amount){
+                    return redirect()->back()->with('error','Request Amount should be greater than this '.$global_range->min);
+                }
+
+                if($global_range->max < $request->amount){
+                    return redirect()->back()->with('error','Request Amount should be less than this '.$global_range->max);
+                }
+
+                $currency = defaultCurr();
+                $balance = user_wallet_balance($user->id, $currency->id);
+
+                if($balance<0 || $finalAmount > $balance){
+                    return redirect()->back()->with('error','Insufficient Balance!');
+                }
+
+                if($global_range->daily_limit <= $finalAmount){
+                    return redirect()->back()->with('error','Your daily limitation of transaction is over.');
+                }
+
+                if($global_range->daily_limit <= $dailyTransactions->sum('final_amount')){
+                    return redirect()->back()->with('error','Your daily limitation of transaction is over.');
+                }
+
+
+                if($global_range->monthly_limit < $monthlyTransactions->sum('final_amount')){
+                    return redirect()->back()->with('error','Your monthly limitation of transaction is over.');
+                }
+
+                $data = new BalanceTransfer();
+
+                $txnid = Str::random(4).time();
+                if ($file = $request->file('document'))
+                {
+                    $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
+                    $file->move('assets/doc',$name);
+                    $data->document = $name;
+                }
+
+                $data->user_id = $user->id;
+                $data->transaction_no = $txnid;
+                $data->currency_id = $wallet->currency_id;
+                $data->subbank = $request->subbank;
+                $data->iban = $beneficiary->account_iban;
+                $data->swift_bic = $beneficiary->swift_bic;
+                $data->beneficiary_id = $request->beneficiary_id;
+                $data->type = 'other';
+                $data->cost = $transaction_global_cost;
+                $data->payment_type = $request->payment_type;
+                $data->amount = $request->amount;
+                $data->final_amount = $finalAmount;
+                $data->description = $request->des;
+                $data->status = 0;
+                $data->save();
+
+                return redirect()->back()->with('message','Money Send successfully.');
+
+            }
         }
 
         public function between($user_id, $wallet_id)

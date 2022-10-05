@@ -165,6 +165,23 @@
                                 <input type="text" class="company-input form-control form--control" id="company_address" name="company_address" placeholder="{{ __('Enter Company Address') }}" value="">
                             </div>
                         </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="inp-name" class="form-label">{{ __('Company City') }}</label>
+                                <input type="text" class="company-input form-control form--control" id="company_city" name="company_city" placeholder="{{ __('Enter Company City') }}" value="">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="inp-name" class="form-label">{{ __('Company Country') }}</label>
+                                <select class="form-control form--control" name="company_country" required>
+                                    <option value="">{{ __('Select Country') }}</option>
+                                    @foreach(DB::table('countries')->get() as $dta)
+                                    <option value="{{ $dta->id }}">{{ $dta->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
                         <div class="col-sm-6 mt-3">
                             <div class="form-group">
                                 <label for="dob" class="form-label">{{ __('Registration No') }}</label>

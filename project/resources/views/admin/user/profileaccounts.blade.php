@@ -96,6 +96,9 @@
                                             <div class="dropdown-menu dropdown-menu-right">
                                                 <a class="dropdown-item" href="javascript:;" onclick="getDetails({{$wallet->id}})">{{ __('Fee') }}</a>
                                                 <a class="dropdown-item" href="javascript:;" onclick="Deposit({{$wallet->id}})">{{ __('Deposit') }}</a>
+                                                <a class="dropdown-item" href="{{route('admin-wallet-between', ['user_id' => $data->id, 'wallet_id'=>$wallet->id])}}">{{ __('Payment between accounts') }}</a>
+                                                <a class="dropdown-item" href="{{route('admin-wallet-internal', ['user_id' => $data->id, 'wallet_id'=>$wallet->id])}}">{{ __('Internal Payment') }}</a>
+                                                <a class="dropdown-item" href="{{route('admin-wallet-external', ['user_id' => $data->id, 'wallet_id'=>$wallet->id])}}">{{ __('External Payment') }}</a>
                                                 <a class="dropdown-item" href="{{route('admin-wallet-transactions', ['user_id' => $data->id, 'wallet_id'=>$wallet->id])}}">{{ __('Transaction View') }}</a>
                                             </div>
                                         </div>
@@ -150,6 +153,8 @@
                                             <div class="dropdown-menu dropdown-menu-right">
                                                 <a class="dropdown-item" href="javascript:;" onclick="getDetails({{$wallet->id}})">{{ __('Fee') }}</a>
                                                 <a class="dropdown-item" href="javascript:;" onclick="Deposit({{$wallet->id}})">{{ __('Deposit') }}</a>
+                                                <a class="dropdown-item" href="{{route('admin-wallet-between', ['user_id' => $data->id, 'wallet_id'=>$wallet->id])}}">{{ __('Payment between accounts') }}</a>
+                                                <a class="dropdown-item" href="{{route('admin-wallet-internal', ['user_id' => $data->id, 'wallet_id'=>$wallet->id])}}">{{ __('Internal Payment') }}</a>
                                                 <a class="dropdown-item" href="{{route('admin-wallet-transactions', ['user_id' => $data->id, 'wallet_id'=>$wallet->id])}}">{{ __('Transaction View') }}</a>
                                             </div>
                                         </div>

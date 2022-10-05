@@ -85,7 +85,7 @@ if(!function_exists('getModule')){
 
   if(!function_exists('defaultCurr')){
     function defaultCurr(){
-      return Currency::where('is_default','=',1)->first();
+      return Currency::where('is_default','=',1)->first()->id;
     }
   }
 
