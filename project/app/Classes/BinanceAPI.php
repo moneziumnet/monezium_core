@@ -289,7 +289,7 @@ class BinanceAPI {
      * @param $orderid string the orderid to cancel
      * @param $flags array of optional options like ["side"=>"sell"]
      * @return array with error message or the order details
-     * @throws \Exception
+     * @throws BinanceAPIException
      */
     public function cancel(string $symbol, $orderid, $flags = [])
     {
@@ -309,7 +309,7 @@ class BinanceAPI {
      * @param $symbol string the currency symbol
      * @param $orderid string the orderid to cancel
      * @return array with error message or the order details
-     * @throws \Exception
+     * @throws BinanceAPIException
      */
     public function orderStatus(string $symbol, $orderid)
     {
@@ -327,7 +327,7 @@ class BinanceAPI {
      *
      * @param $symbol string the currency symbol
      * @return array with error message or the order details
-     * @throws \Exception
+     * @throws BinanceAPIException
      */
     public function openOrders(string $symbol = null)
     {
@@ -350,7 +350,7 @@ class BinanceAPI {
      * @param $fromOrderId string return the orders from this order onwards
      * @param $params array optional startTime, endTime parameters
      * @return array with error message or array of orderDetails array
-     * @throws \Exception
+     * @throws BinanceAPIException
      */
     public function orders(string $symbol, int $limit = 500, int $fromOrderId = -1, array $params = []) {
 	$params["symbol"] = $symbol;
@@ -371,7 +371,7 @@ class BinanceAPI {
      * @param $limit int the amount of orders returned
      * @param $fromTradeId int (optional) return the orders from this order onwards. negative for all
      * @return array with error message or array of orderDetails array
-     * @throws \Exception
+     * @throws BinanceAPIException
      */
     public function history(string $symbol, int $limit = 500, int $fromTradeId = -1)
     {
@@ -392,7 +392,7 @@ class BinanceAPI {
      * $api->useServerTime();
      *
      * @return null
-     * @throws \Exception
+     * @throws BinanceAPIException
      */
     public function useServerTime()
     {
@@ -408,7 +408,7 @@ class BinanceAPI {
      * $time = $api->time();
      *
      * @return array with error message or array with server time key
-     * @throws \Exception
+     * @throws BinanceAPIException
      */
     public function time()
     {
@@ -421,7 +421,7 @@ class BinanceAPI {
      * $info = $api->exchangeInfo();
      *
      * @return array with error message or exchange info array
-     * @throws \Exception
+     * @throws BinanceAPIException
      */
     public function exchangeInfo()
     {
@@ -484,7 +484,7 @@ class BinanceAPI {
      * @param $amount double the amount of the asset to transfer
      * @param $addressTag string adtional transactionid required by some assets
      * @return array with error message or array transaction
-     * @throws \Exception
+     * @throws BinanceAPIException
      */
     public function withdraw(string $asset, string $address, $amount, $addressTag = null, $addressName = "API Withdraw", bool $transactionFeeFlag = false,$network = null)
     {
@@ -514,7 +514,7 @@ class BinanceAPI {
      *
      * @param $asset string the currency such as BTC
      * @return array with error message or array deposit address information
-     * @throws \Exception
+     * @throws BinanceAPIException
      */
     public function depositAddress(string $asset)
     {
@@ -535,7 +535,7 @@ class BinanceAPI {
      * @param $asset string empty or the currency such as BTC
      * @param $params array optional startTime, endTime, status parameters
      * @return array with error message or array deposit history information
-     * @throws \Exception
+     * @throws BinanceAPIException
      */
     public function depositHistory(string $asset = null, array $params = [])
     {
@@ -556,7 +556,7 @@ class BinanceAPI {
      * @param $asset string empty or the currency such as BTC
      * @param $params array optional startTime, endTime, status parameters
      * @return array with error message or array deposit history information
-     * @throws \Exception
+     * @throws BinanceAPIException
      */
     public function withdrawHistory(string $asset = null, array $params = [])
     {
@@ -574,7 +574,7 @@ class BinanceAPI {
      *
      * @param $asset string currency such as BTC
      * @return array with error message or array containing withdrawFee
-     * @throws \Exception
+     * @throws BinanceAPIException
      */
     public function withdrawFee(string $asset)
     {
@@ -595,7 +595,7 @@ class BinanceAPI {
      * $price = $api->price( "ETHBTC" );
      *
      * @return array with error message or array with symbol price
-     * @throws \Exception
+     * @throws BinanceAPIException
      */
     public function price(string $symbol)
     {
@@ -610,7 +610,7 @@ class BinanceAPI {
      * $account = $api->account();
      *
      * @return array with error message or array of all the account information
-     * @throws \Exception
+     * @throws BinanceAPIException
      */
     public function account()
     {
@@ -631,12 +631,12 @@ class BinanceAPI {
      * @param $params array addtional options for the request
      * @param $signed bool true or false sign the request with api secret
      * @return array containing the response
-     * @throws \Exception
+     * @throws BinanceAPIException
      */
     protected function httpRequest(string $url, string $method = "GET", array $params = [], bool $signed = false)
     {
         if (function_exists('curl_init') === false) {
-            throw new \Exception("Sorry cURL is not installed!");
+            throw new BinanceAPIException("Sorry cURL is not installed!");
         }
 
         // if ($this->caOverride === false) {
@@ -652,11 +652,11 @@ class BinanceAPI {
         // signed with params
         if ($signed === true) {
             if (empty($this->api_key)) {
-                throw new \Exception("signedRequest error: API Key not set!");
+                throw new BinanceAPIException("signedRequest error: API Key not set!");
             }
 
             if (empty($this->api_secret)) {
-                throw new \Exception("signedRequest error: API Secret not set!");
+                throw new BinanceAPIException("signedRequest error: API Secret not set!");
             }
 
             $base = $this->base;
@@ -797,7 +797,7 @@ class BinanceAPI {
      * @param $flags array additional transaction options
      * @param $test bool whether to test or not, test only validates the query
      * @return array containing the response
-     * @throws \Exception
+     * @throws BinanceAPIException
      */
     public function order(string $side, string $symbol, $quantity, $price, string $type = "LIMIT", array $flags = [], bool $test = false)
     {
