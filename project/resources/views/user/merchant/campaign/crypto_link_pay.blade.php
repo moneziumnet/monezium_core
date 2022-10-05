@@ -79,7 +79,8 @@
                                 <input name="amount" id="amount" class="form-control" autocomplete="off"  type="text" value="{{ $total_amount/$cal_amount }}" readonly required>
                             </div>
 
-                            <input type="hidden" name="id" value="{{$campaign->id}}">
+                            <input type="hidden" name="campaign_id" value="{{$campaign->id}}">
+                            <input type="hidden" name="payment" value="crypto">
                             <input type="hidden" name="currency_id" value="{{$wallet->currency->id}}">
 
                             <div class="form-footer">

@@ -136,11 +136,12 @@
                         <input name="amount" id="amount" class="form-control shadow-none col-md-4"  type="number" min="1" max="{{$data->goal}}" required>
                     </div >
                     <div class="form-group ms-5 mt-5 text-start" >
-                        <label class="form-label required">{{__('description')}}</label>
+                        <label class="form-label required">{{__('Description')}}</label>
                         <input name="description" id="description" class="form-control shadow-none col-md-4"  type="text"  required>
                     </div >
                     <input type="hidden" name="campaign_id" value="{{$data->id}}">
-                    <input type="hidden" name="user_id" value="{{auth()->id()}}">
+                    <input type="hidden" name="user_name" value="{{auth()->user()->name}}">
+                    <input type="hidden" name="deposit_no" id="deposit_no">
 
                     <div class="mt-4" id="default_pay" style="display: block;">
                         <button type="submit" class="btn btn-primary btn-block" id="btn-pay">{{__('Pay')}} <i class="ms-2 fas fa-long-arrow-alt-right"></i></button>
@@ -186,6 +187,15 @@
 @push('js')
 <script type="text/javascript">
 "use strict";
+const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+function generateRandomString(length) {
+    let result = ' ';
+    const charactersLength = characters.length;
+    for ( let i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
 $('.select_method').on('click', function() {
     if ($(this).attr('id') == 'bank_pay') {
         $('#form_submit').attr('action', "{{route('user.merchant.campaign.pay')}}");
@@ -244,7 +254,8 @@ $('#btn-pay').on('click', function(e) {
         $('#detail_bank_swift').html($('#bank_swift').val());
         $('#detail_quantity').html($('#quantity').val());
         $('#detail_amount').html("{{$data->currency->symbol}}" + $('#amount').val());
-        $('#detail_bank_details').html($('#description').val());
+        $('#deposit_no').val(generateRandomString(12));
+        $('#detail_bank_details').html($('#description').val() + " / " + $('#deposit_no').val());
     }
 });
 $('#payment_submit').on('click', function () {

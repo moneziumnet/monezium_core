@@ -70,7 +70,7 @@
 
                                           <td data-label="{{ __('Donator') }}">
                                             <div>
-                                              {{$item->user->name}}
+                                              {{$item->user_name}}
                                             </div>
                                         </td>
 

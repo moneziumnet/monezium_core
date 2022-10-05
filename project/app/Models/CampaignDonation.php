@@ -8,7 +8,7 @@ class CampaignDonation extends Model
 {
     protected $fillable = [
         'campaign_id',
-        'user_id',
+        'user_name',
         'payment',
         'amount',
         'currency_id',
@@ -18,10 +18,6 @@ class CampaignDonation extends Model
 
     public function campaign(){
         return $this->belongsTo(Campaign::class, 'campaign_id')->withDefault();
-    }
-
-    public function user(){
-        return $this->belongsTo(User::class, 'user_id')->withDefault();
     }
 
     public function currency(){

@@ -117,7 +117,7 @@ class CampaignController extends Controller
                             return $data->campaign->title;
                         })
                         ->editColumn('donator',function(CampaignDonation $data){
-                            return $data->user->name;
+                            return $data->user_name;
                         })
                         ->editColumn('amount', function(CampaignDonation $data) {
                             return $data->currency->symbol.$data->amount;

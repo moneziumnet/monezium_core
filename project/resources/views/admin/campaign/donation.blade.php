@@ -147,7 +147,7 @@
             var organizer = e.target.getAttribute('data-organizer');
 
         $('#title').text(res_data.campaign.title);
-        $('#donator').text(res_data.user.name);
+        $('#donator').text(res_data.user_name);
         $('#organizer').text(organizer);
         $('#amount').text(res_data.currency.symbol+res_data.amount);
         $('#payment').text(res_data.payment);
