@@ -33,7 +33,7 @@ class OpenPaydController extends Controller
 
         }
         try {
-            $response = $client->request('POST', 'https://sandbox.openpayd.com/api/oauth/token?grant_type=client_credentials', [
+            $response = $client->request('POST', 'https://secure.openpayd.com/api/oauth/token?grant_type=client_credentials', [
                 'headers' => [
                    'Accept'=> 'application/json',
                   'Authorization' => 'Basic '.$bankgateway->information->Auth,
@@ -55,7 +55,7 @@ class OpenPaydController extends Controller
         if (!$user->holder_id){
         try {
             $currency = Currency::whereId($request->currency)->first();
-            $response = $client->request('POST', 'https://sandbox.openpayd.com/api/linkedClient', [
+            $response = $client->request('POST', 'https://secure.openpayd.com/api/linkedClient', [
                 'body' => '{
                     "individual": {
                          "address": {
@@ -95,7 +95,7 @@ class OpenPaydController extends Controller
     }
         try {
             $currency = Currency::whereId($request->currency)->first();
-            $response = $client->request('POST', 'https://sandbox.openpayd.com/api/accounts', [
+            $response = $client->request('POST', 'https://secure.openpayd.com/api/accounts', [
                 'body' => '{"currency":"'.$currency->code.'","friendlyName":"Billing Account('.$currency->code.')"}',
                 'headers' => [
                   'Accept' => 'application/json',
@@ -114,7 +114,7 @@ class OpenPaydController extends Controller
         }
 
         try {
-            $response = $client->request('GET', 'https://sandbox.openpayd.com/api/bank-accounts?internalAccountId='.$internal_id, [
+            $response = $client->request('GET', 'https://secure.openpayd.com/api/bank-accounts?internalAccountId='.$internal_id, [
                 'headers' => [
                   'Accept' => 'application/json',
                   'Authorization' => 'Bearer '.$auth_token,
@@ -181,7 +181,7 @@ class OpenPaydController extends Controller
 
         }
         try {
-            $response = $client->request('POST', 'https://sandbox.openpayd.com/api/oauth/token?grant_type=client_credentials', [
+            $response = $client->request('POST', 'https://secure.openpayd.com/api/oauth/token?grant_type=client_credentials', [
                 'headers' => [
                    'Accept'=> 'application/json',
                   'Authorization' => 'Basic '.$bankgateway->information->Auth,
@@ -202,7 +202,7 @@ class OpenPaydController extends Controller
 
         try {
             $currency = Currency::whereId($request->currency)->first();
-            $response = $client->request('POST', 'https://sandbox.openpayd.com/api/accounts', [
+            $response = $client->request('POST', 'https://secure.openpayd.com/api/accounts', [
                 'body' => '{"currency":"'.$currency->code.'","friendlyName":"Billing Account('.$currency->code.')"}',
                 'headers' => [
                   'Accept' => 'application/json',
@@ -222,7 +222,7 @@ class OpenPaydController extends Controller
         }
 
         try {
-            $response = $client->request('GET', 'https://sandbox.openpayd.com/api/bank-accounts?internalAccountId='.$internal_id, [
+            $response = $client->request('GET', 'https://secure.openpayd.com/api/bank-accounts?internalAccountId='.$internal_id, [
                 'headers' => [
                   'Accept' => 'application/json',
                   'Authorization' => 'Bearer '.$auth_token,
@@ -323,7 +323,7 @@ class OpenPaydController extends Controller
         $client = New Client();
 
         try {
-            $response = $client->request('POST', 'https://sandbox.openpayd.com/api/oauth/token?grant_type=client_credentials', [
+            $response = $client->request('POST', 'https://secure.openpayd.com/api/oauth/token?grant_type=client_credentials', [
                 'headers' => [
                    'Accept'=> 'application/json',
                   'Authorization' => 'Basic '.$bankgateway->information->Auth,
@@ -339,7 +339,7 @@ class OpenPaydController extends Controller
 
 
         try {
-            $response = $client->request('GET', 'https://sandbox.openpayd.com/api/accounts?iban='.$customer_bank->iban, [
+            $response = $client->request('GET', 'https://secure.openpayd.com/api/accounts?iban='.$customer_bank->iban, [
                 'headers' => [
                   'Accept' => 'application/json',
                   'Authorization' => 'Bearer '.$auth_token,
@@ -359,7 +359,7 @@ class OpenPaydController extends Controller
         }
 
         try {
-            $response = $client->request('POST', 'https://sandbox.openpayd.com/api/beneficiaries', [
+            $response = $client->request('POST', 'https://secure.openpayd.com/api/beneficiaries', [
                 'body' => '{
                     "beneficiaryType":"CORPORATE",
                     "friendlyName":"'.$subbank->name.'",
@@ -379,7 +379,7 @@ class OpenPaydController extends Controller
         }
 
         try {
-            $response = $client->request('POST', 'https://sandbox.openpayd.com/api/beneficiaries/'.$beneficiary_id.'/bank-beneficiaries', [
+            $response = $client->request('POST', 'https://secure.openpayd.com/api/beneficiaries/'.$beneficiary_id.'/bank-beneficiaries', [
                 'body' => '{
                     "paymentTypes":["SWIFT"],
                     "bankAccountCurrency":"'.$currency->code.'",
@@ -405,7 +405,7 @@ class OpenPaydController extends Controller
         }
 
         try {
-            $response = $client->request('POST', 'https://sandbox.openpayd.com/api/transactions/bank-payouts', [
+            $response = $client->request('POST', 'https://secure.openpayd.com/api/transactions/bank-payouts', [
                 'body' => '{
                     "accountId":"'.$account_id.'",
                     "beneficiaryId":"'.$beneficiary_id.'",
