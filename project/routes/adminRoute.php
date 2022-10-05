@@ -483,6 +483,7 @@ Route::prefix('admin')->group(function () {
   Route::get('/system-settings', [SystemAccountController::class, 'systemAccounts'])->name('admin.system.accounts');
   Route::get('/system-settings/create/{currency_id}', [SystemAccountController::class, 'create'])->name('admin.system.account.create');
   Route::get('/system-settings/{keyword}', [SystemAccountController::class, 'setting'])->name('admin.system.crypto.api');
+  Route::get('/crypto/binanace', [SystemAccountController::class, 'binance_setting'])->name('admin.system.crypto.binance.api');
   Route::post('/system-settings/save', [SystemAccountController::class, 'setting_save'])->name('admin.system.crypto.api.save');
   Route::post('/system-settings/depositAddresses', [SystemAccountController::class, 'depositAddresses'])->name('admin.system.crypto.depositaddress');
   Route::post('/system-settings/depositMethods', [SystemAccountController::class, 'depositMethods'])->name('admin.system.crypto.depositMethods');

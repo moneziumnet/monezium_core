@@ -98,6 +98,13 @@ class SystemAccountController extends Controller
         return view('admin.system.cryptosettings', $data);
     }
 
+    public function binance_setting()
+    {
+        $data['api'] = CryptoApi::where('keyword', 'binanace')->first();
+        $data['keyword'] = 'binanace';
+        return view('admin.system.cryptobinancesettings', $data);
+    }
+
     public function setting_save(Request $request)
     {
         $data = CryptoApi::where('keyword', $request->keyword)->first();
