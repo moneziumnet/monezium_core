@@ -19,7 +19,8 @@
 
       <div class="tab-content" id="myTabContent">
         @php
-        $currency = defaultCurr();
+        $currency = DB::table('currencies')->where('id', defaultCurr())->first();
+
         @endphp
         @include('includes.admin.form-success')
         <div class="tab-pane fade show p-3 active" id="modules" role="tabpanel" aria-labelledby="modules-tab">

@@ -120,7 +120,7 @@ class UserOtherBankController extends Controller
                 }
 
                 $currency = defaultCurr();
-                $balance = user_wallet_balance($user_id, $currency->id);
+                $balance = user_wallet_balance($user_id, $currency);
 
                 if($balance<0 && $finalAmount > $balance){
                     return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Insufficient Balance!']);
@@ -171,7 +171,7 @@ class UserOtherBankController extends Controller
                 $trans->user_type   = 1;
                 $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
 
-                $trans_wallet = get_wallet($user_id,$currency->id);
+                $trans_wallet = get_wallet($user_id,$currency);
                 $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
 
                 $trans->amount      = $finalAmount;
@@ -190,7 +190,7 @@ class UserOtherBankController extends Controller
 
                 // $user->decrement('balance',$finalAmount);
                 // $currency = defaultCurr();
-                user_wallet_decrement($user_id,$currency->id,$finalAmount);
+                user_wallet_decrement($user_id,$currency,$finalAmount);
                 return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Money Send successfully.']);
 
             }

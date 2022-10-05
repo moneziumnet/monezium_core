@@ -79,7 +79,7 @@ class MerchantOtherBankController extends Controller
             }
 
             $currency = defaultCurr();
-            $balance = user_wallet_balance(auth()->id(), $currency->id);
+            $balance = user_wallet_balance(auth()->id(), $currency);
 
 
             if($global_range->daily_limit <= $finalAmount){
@@ -119,7 +119,7 @@ class MerchantOtherBankController extends Controller
             $trans->user_type   = 2;
             $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
             $trans->amount      = $finalAmount;
-            $trans_wallet = get_wallet(auth()->id(),$currency->id);
+            $trans_wallet = get_wallet(auth()->id(),$currency);
             $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
             $trans->charge      = $transaction_global_cost;
             $trans->type        = '-';
@@ -137,7 +137,7 @@ class MerchantOtherBankController extends Controller
 
             // $user->decrement('balance',$finalAmount);
             // $currency = defaultCurr();
-            user_wallet_decrement(auth()->id(),$currency->id,$finalAmount);
+            user_wallet_decrement(auth()->id(),$currency,$finalAmount);
 
             return redirect()->back()->with('success','Money Send successfully.');
 
