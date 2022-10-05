@@ -256,6 +256,12 @@ Route::prefix('admin')->group(function () {
 
     Route::get('/wallet/{user_id}/{wallet_id}/transactions', [UserController::class, 'walletTransctions'])->name('admin-wallet-transactions');
     Route::get('/wallet/transactions/datatables/{id}', [UserController::class, 'walletTrandatatables'])->name('admin-wallet.transactions-datatables');
+    Route::get('/wallet/{user_id}/{wallet_id}/internal', [UserController::class, 'internal'])->name('admin-wallet-internal');
+    Route::post('/wallet/{user_id}/{wallet_id}/internal/send', [UserController::class, 'internal_send'])->name('admin-wallet-internal-send');
+    Route::get('/wallet/{user_id}/{wallet_id}/external', [UserController::class, 'external'])->name('admin-wallet-external');
+    Route::post('/wallet/{user_id}/{wallet_id}/external/send', [UserController::class, 'external_send'])->name('admin-wallet-external-send');
+    Route::get('/wallet/{user_id}/{wallet_id}/between', [UserController::class, 'between'])->name('admin-wallet-between');
+    Route::post('/wallet/{user_id}/{wallet_id}/between/send', [UserController::class, 'between_send'])->name('admin-wallet-between-send');
 
     Route::get('/user/accounts/fee/{id}', [UserController::class, 'profileAccountFee'])->name('admin-user-accounts-fee');
     Route::post('/user/cal/manual/fee/', [UserController::class, 'calmanualfee'])->name('admin.cal.manual.charge');
