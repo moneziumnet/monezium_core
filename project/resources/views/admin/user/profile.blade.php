@@ -280,6 +280,12 @@
                             </div>
                           </div>
                           <div class="col-md-6">
+                            <div class="form-group mt-2">
+                                <label for="dob" class="form-label">{{ __('Company City') }}</label>
+                                <input type="text" class="company-input form-control form--control" id="company_city"name="company_city" placeholder="{{ __('Enter Company City') }}" value="{{ $data->company_city }}" {{$corporate_required}}>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
                             <div class="form-group mt-3">
                                 <label for="dob" class="form-label">{{ __('Registration No') }}</label>
                                 <input type="text" class="company-input form-control form--control" id="company_reg_no"name="company_reg_no" placeholder="{{ __('Enter Company Registration No') }}" value="{{ $data->company_reg_no }}" {{$corporate_required}}>
