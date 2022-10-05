@@ -284,7 +284,7 @@ class FrontendController extends Controller
     public function currency($id)
     {
         Session::put('currency', $id);
-        cache()->forget('session_currency');
+        // cache()->forget('session_currency');
         return redirect()->back();
     }
 

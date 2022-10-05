@@ -58,13 +58,13 @@
 
                     </div>
                     <div class="col-md-4 change-language">
-                        <select name="currency" class="currency selectors nice language-bar">
-                            @foreach(DB::table('currencies')->where('type', 1)->get() as $value)
-                            <option value="{{route('front.currency',$value->id)}}" {{ Session::has('currency') ? ( Session::get('currency') == $value->id ? 'selected' : '' ) : (DB::table('currencies')->where('is_default','=',1)->first()->id == $value->id ? 'selected' : '') }}>
-                              {{$value->code}}
-                            </option>
-                            @endforeach
-                          </select>
+                      <select name="currency" class="currency selectors nice language-bar">
+                        @foreach(DB::table('currencies')->where('type', 1)->get() as $value)
+                        <option value="{{route('front.currency',$value->id)}}" {{ Session::has('currency') ? ( Session::get('currency') == $value->id ? 'selected' : '' ) : (DB::table('currencies')->where('is_default','=',1)->first()->id == $value->id ? 'selected' : '') }}>
+                          {{$value->code}}
+                        </option>
+                        @endforeach
+                      </select>
                     </div>
                 </div>
                 <div class="h1 mb-0 mt-2">{{ showprice($userBalance->total_amount,$currency) }}</div>
