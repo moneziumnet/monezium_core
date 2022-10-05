@@ -150,6 +150,7 @@ class MerchantProductController extends Controller
 
     public function crypto_link_pay(Request $request, $id) {
         $data['product'] = Product::where('id', $id)->first();
+        $data['quantity'] = $request->quantity;
         $data['total_amount'] = $data['product']->amount * $request->quantity;
         $pre_currency = Currency::findOrFail($data['product']->currency_id)->code;
         $select_currency = Currency::findOrFail($request->link_pay_submit);
@@ -197,7 +198,6 @@ class MerchantProductController extends Controller
         if($request->payment == 'bank_pay'){
 
             $bankaccount = BankAccount::where('id', $request->bank_account)->first();
-            $currency = Currency::where('id',$data->currency_id)->first();
             $user = User::findOrFail($bankaccount->user_id);
             $deposit = new DepositBank();
             $deposit['deposit_number'] = $request->deposit_no;
@@ -208,19 +208,6 @@ class MerchantProductController extends Controller
             $deposit['details'] = $request->description;
             $deposit['status'] = "pending";
             $deposit->save();
-
-            $trans = new Transaction();
-            $trans->trnx = str_rand();
-            $trans->user_id     = $user->id;
-            $trans->user_type   = 1;
-            $trans->currency_id = $currency->id;
-            $trans->amount      = $data->amount * $request->quantity;
-            $trans->charge      = 0;
-            $trans->type        = '+';
-            $trans->remark      = 'merchant_product_buy';
-            $trans->details     = trans('Merchant Product Buy by Bank');
-            $trans->data        = '{"Bank":"'.$bankaccount->subbank->name.'","status":"Pending", "receiver":"'.$user->name.'"}';
-            $trans->save();
 
             $data->quantity = $data->quantity - $request->quantity;
             $data->sold = $data->sold + $request->quantity;
@@ -348,6 +335,10 @@ class MerchantProductController extends Controller
             $crytpo_data->address = $request->address;
             $crytpo_data->save();
 
+            $data->quantity = $data->quantity - $request->quantity;
+            $data->sold = $data->sold + $request->quantity;
+            $data->update();
+
             if(auth()->user()) {
                 return redirect(route('user.shop.index'))->with('message','You have paid for buy project successfully (Crypto).');
             }
@@ -375,6 +366,7 @@ class MerchantProductController extends Controller
 
     public function crypto_pay(Request $request, $id) {
         $data['product'] = Product::where('id', $id)->first();
+        $data['quantity'] = $request->quantity;
         $data['total_amount'] = $data['product']->amount * $request->quantity;
         $pre_currency = Currency::findOrFail($data['product']->currency_id)->code;
         $select_currency = Currency::findOrFail($request->link_pay_submit);
