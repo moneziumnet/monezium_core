@@ -116,7 +116,7 @@ class OtherBankController extends Controller
             }
 
             $currency = defaultCurr();
-            $balance = user_wallet_balance(auth()->id(), $currency->id);
+            $balance = user_wallet_balance(auth()->id(), $currency);
 
             if($balance<0 || $finalAmount > $balance){
                 return redirect()->back()->with('unsuccess','Insufficient Balance!');

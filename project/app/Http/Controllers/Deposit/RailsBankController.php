@@ -8,6 +8,7 @@ use App\Models\BankGateway;
 use App\Models\BankAccount;
 use App\Models\Currency;
 use App\Models\Charge;
+use App\Models\Transaction;
 use App\Models\PlanDetail;
 use App\Models\DepositBank;
 use App\Models\Admin;
@@ -114,6 +115,8 @@ class RailsBankController extends Controller
         $data->currency_id = $request->currency;
         $data->save();
 
+        $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+
         $trans = new Transaction();
         $trans->trnx = str_rand();
         $trans->user_id     = $user->id;
@@ -129,7 +132,7 @@ class RailsBankController extends Controller
         $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
         $trans->save();
 
-        user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 5);
+        user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
         user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
 
         return redirect()->back()->with(array('message' => 'Bank Account has been created successfully'));

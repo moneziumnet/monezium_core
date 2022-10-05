@@ -10,6 +10,7 @@ use App\Models\Charge;
 use App\Models\Currency;
 use App\Models\PlanDetail;
 use App\Models\DepositBank;
+use App\Models\Transaction;
 use App\Models\Generalsetting;
 use App\Models\Admin;
 use App\Models\SubInsBank;
@@ -56,7 +57,8 @@ class OpenPaydController extends Controller
         if (!$user->holder_id){
         try {
             $currency = Currency::whereId($request->currency)->first();
-            if(isset($user->company_name)) {
+
+            if(!isset($user->company_name)) {
                 $body = '{
                     "individual": {
                          "address": {
@@ -70,42 +72,38 @@ class OpenPaydController extends Controller
                          "email": "'.$user->email.'"
                     },
                     "clientType": "INDIVIDUAL",
-                    "friendlyName": "'.$user->company_name.'"
+                    "friendlyName": "'.$user->name.'"
                }';
             }
             else {
-                $body = '{
-                    "individual": {
-                         "address": {
-                              "addressLine1": "'.$user->address.'",
-                              "city": "'.$user->city.'",
-                              "country": "'.$country->iso2.'"
-                         },
-                         "firstName": "'.explode(" ",$user->name)[0].'",
-                         "lastName": "'.explode(" ",$user->name)[1].'",
-                         "dateOfBirth": "'.$user->dob.'",
-                         "email": "'.$user->email.'"
-                    },
-                    "clientType": "INDIVIDUAL",
-                    "friendlyName": "'.$user->name.'"
-               }';
+                $company_country = Country::findOrFail($user->company_country);
+
+               $body = '{
+                "company": {
+                     "registeredAddress": {
+                          "addressLine1": "'.$user->company_address.'",
+                          "city": "'.$user->company_city.'",
+                          "country": "'.$company_country->iso2.'"
+                     },
+                     "tradingAddress": {
+                          "addressLine1": "'.$user->company_address.'",
+                          "city": "'.$user->company_city.'",
+                          "country": "'.$company_country->iso2.'"
+                     },
+                     "companyName": "'.$user->company_name.'",
+                     "companyType": "'.$user->company_type.'",
+                     "registrationNumber": "'.$user->company_reg_no.'",
+                     "contactName": "'.$user->name.'",
+                     "email": "'.$user->email.'",
+                     "phone": "'.$user->phone.'"
+                },
+                "clientType": "BUSINESS",
+                "friendlyName": "'.$user->company_name.'"
+           }';
             }
+            // dd($body);
             $response = $client->request('POST', 'https://secure-mt.openpayd.com/api/linkedClient', [
-                'body' => '{
-                    "individual": {
-                         "address": {
-                              "addressLine1": "'.$user->address.'",
-                              "city": "'.$user->city.'",
-                              "country": "'.$country->iso2.'"
-                         },
-                         "firstName": "'.explode(" ",$user->name)[0].'",
-                         "lastName": "'.explode(" ",$user->name)[1].'",
-                         "dateOfBirth": "'.$user->dob.'",
-                         "email": "'.$user->email.'"
-                    },
-                    "clientType": "INDIVIDUAL",
-                    "friendlyName": "'.$user->name.'"
-               }',
+                'body' => $body,
                 'headers' => [
                   'Accept' => 'application/json',
                   'Authorization' => 'Bearer '.$auth_token,
@@ -194,7 +192,7 @@ class OpenPaydController extends Controller
         $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
         $trans->save();
 
-        user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 5);
+        user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
         user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
 
         return redirect()->back()->with(array('message' => 'Bank Account has been created successfully'));

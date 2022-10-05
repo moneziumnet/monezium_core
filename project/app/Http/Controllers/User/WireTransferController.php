@@ -19,7 +19,7 @@ class WireTransferController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     public function index(){
         $data['transfers'] = WireTransfer::where('user_id',auth()->id())->orderBy('id','desc')->paginate(20);
         return view('user.wiretransfer.index',$data);
@@ -31,7 +31,7 @@ class WireTransferController extends Controller
     }
 
     public function store(Request $request){
-        
+
         $request->validate([
             'wire_transfer_bank_id' => 'required',
             'currency' => 'required',
@@ -65,7 +65,7 @@ class WireTransferController extends Controller
         }
         $currency = defaultCurr();
 
-        if($request->amount > user_wallet_balance(auth()->id(),$currency->id)){
+        if($request->amount > user_wallet_balance(auth()->id(),$currency)){
             return redirect()->back()->with('unsuccess','Insufficient Account Balance.');
         }
 
@@ -84,9 +84,9 @@ class WireTransferController extends Controller
         $data->save();
 
        // $user->decrement('balance',$request->amount);
-       user_wallet_decrement(auth()->id(),$currency->id,$request->amount); 
-       
-       
+       user_wallet_decrement(auth()->id(),$currency,$request->amount);
+
+
         return redirect()->back()->with('success','Wire Transfer Request Sent Successfully');
     }
 
