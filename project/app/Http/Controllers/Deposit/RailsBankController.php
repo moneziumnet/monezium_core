@@ -7,6 +7,7 @@ use App\Classes\GeniusMailer;
 use App\Models\BankGateway;
 use App\Models\BankAccount;
 use App\Models\Currency;
+use App\Models\Charge;
 use App\Models\PlanDetail;
 use App\Models\DepositBank;
 use App\Models\Admin;
@@ -112,6 +113,25 @@ class RailsBankController extends Controller
         $data->swift = $bic_swift;
         $data->currency_id = $request->currency;
         $data->save();
+
+        $trans = new Transaction();
+        $trans->trnx = str_rand();
+        $trans->user_id     = $user->id;
+        $trans->user_type   = 1;
+        $trans->currency_id =  defaultCurr();
+        $trans->amount      = $chargefee->data->fixed_charge;
+        $trans_wallet       = get_wallet($user->id, defaultCurr(), 1);
+        $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+        $trans->charge      = 0;
+        $trans->type        = '-';
+        $trans->remark      = 'bank_account_create';
+        $trans->details     = trans('Bank Account Create');
+        $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+        $trans->save();
+
+        user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 5);
+        user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
+
         return redirect()->back()->with(array('message' => 'Bank Account has been created successfully'));
 
 
