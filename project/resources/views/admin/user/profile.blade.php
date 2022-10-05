@@ -262,6 +262,19 @@
                           </div>
                           <div class="col-md-6">
                             <div class="form-group mt-2">
+                                @php
+                                    $companytype = ['LIMITED_LIABILITY', 'SOLE_TRADER', 'PARTNERSHIP', 'PUBLIC_LIMITED_COMPANY', 'JOINT_STOCK_COMPANY', 'CHARITY']
+                                @endphp
+                                <label for="inp-user-type" class="form-label">{{ __('Select Company Type') }}</label>
+                                <select id="company_type" class="form-control" name="company_type">
+                                    @foreach ( $companytype as $type )
+                                        <option value="{{$type}}" {{$data->company_type == $type ? 'selected' : ''}}> {{$type}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group mt-2">
                                 <label for="dob" class="form-label">{{ __('Company Address') }}</label>
                                 <input type="text" class="company-input form-control form--control" id="company_address"name="company_address" placeholder="{{ __('Enter Company Name') }}" value="{{ $data->company_address }}" {{$corporate_required}}>
                             </div>
@@ -286,7 +299,6 @@
                           </div>
                         </div>
                       </div>
-                      
                       <button type="submit" id="submit-btn" class="btn btn-primary w-100 mt-3 mx-2">{{ __('Submit') }}</button>
 
                   </form>

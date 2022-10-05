@@ -56,6 +56,40 @@ class OpenPaydController extends Controller
         if (!$user->holder_id){
         try {
             $currency = Currency::whereId($request->currency)->first();
+            if(isset($user->company_name)) {
+                $body = '{
+                    "individual": {
+                         "address": {
+                              "addressLine1": "'.$user->address.'",
+                              "city": "'.$user->city.'",
+                              "country": "'.$country->iso2.'"
+                         },
+                         "firstName": "'.explode(" ",$user->name)[0].'",
+                         "lastName": "'.explode(" ",$user->name)[1].'",
+                         "dateOfBirth": "'.$user->dob.'",
+                         "email": "'.$user->email.'"
+                    },
+                    "clientType": "INDIVIDUAL",
+                    "friendlyName": "'.$user->company_name.'"
+               }';
+            }
+            else {
+                $body = '{
+                    "individual": {
+                         "address": {
+                              "addressLine1": "'.$user->address.'",
+                              "city": "'.$user->city.'",
+                              "country": "'.$country->iso2.'"
+                         },
+                         "firstName": "'.explode(" ",$user->name)[0].'",
+                         "lastName": "'.explode(" ",$user->name)[1].'",
+                         "dateOfBirth": "'.$user->dob.'",
+                         "email": "'.$user->email.'"
+                    },
+                    "clientType": "INDIVIDUAL",
+                    "friendlyName": "'.$user->name.'"
+               }';
+            }
             $response = $client->request('POST', 'https://secure-mt.openpayd.com/api/linkedClient', [
                 'body' => '{
                     "individual": {

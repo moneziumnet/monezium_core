@@ -42,7 +42,7 @@
                             </div>
                           </div>
                         </div>
-                        
+
                         <div class="row g-3">
                           <!-- <div class="col-md-12 form-group">
                             <label for="inp-user-type" class="form-label">{{ __('Select Type') }}</label>
@@ -152,6 +152,19 @@
                               </div>
                               <div class="col-md-6">
                                 <div class="form-group mt-2">
+                                    @php
+                                        $companytype = ['LIMITED_LIABILITY', 'SOLE_TRADER', 'PARTNERSHIP', 'PUBLIC_LIMITED_COMPANY', 'JOINT_STOCK_COMPANY', 'CHARITY']
+                                    @endphp
+                                    <label for="inp-user-type" class="form-label">{{ __('Select Company Type') }}</label>
+                                    <select id="company_type" class="form-control" name="company_type">
+                                        @foreach ( $companytype as $type )
+                                            <option value="{{$type}}" {{$user->company_type == $type ? 'selected' : ''}}> {{$type}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group mt-2">
                                     <label for="dob" class="form-label">{{ __('Company Address') }}</label>
                                     <input type="text" class="company-input form-control form--control" id="company_address"name="company_address" placeholder="{{ __('Enter Company Address') }}" value="{{ $user->company_address }}" {{$corporate_required}}>
                                 </div>
@@ -182,8 +195,8 @@
                               <label class="form-label">{{__('Signature')}}</label>
                               <div class="wrapper-image-preview">
                                 <div class="box">
-                                    <div 
-                                      class="back-preview-image mx-auto" 
+                                    <div
+                                      class="back-preview-image mx-auto"
                                       style="height: 120px;width:75%;background-image: url({{auth()->user()->signature ? asset('assets/images/'.auth()->user()->signature) : asset('assets/images/placeholder.jpg') }});"></div>
                                     <div class="upload-options">
                                         <label class="img-upload-label" for="signature-upload"> <i class="fa fa-camera"></i> {{ __('Upload Picture') }} </label>
@@ -200,8 +213,8 @@
                               {{-- <input name="stamp" class="form-control shadow-none" type="file" accept=".png,.jpg"> --}}
                               <div class="wrapper-image-preview">
                                 <div class="box">
-                                  <div 
-                                    class="back-preview-image mx-auto" 
+                                  <div
+                                    class="back-preview-image mx-auto"
                                     style="height: 120px;width:75%;background-image: url({{auth()->user()->stamp ? asset('assets/images/'.auth()->user()->stamp) : asset('assets/images/placeholder.jpg') }});"></div>
                                   <div class="upload-options">
                                       <label class="img-upload-label" for="stamp-upload"> <i class="fa fa-camera"></i> {{ __('Upload Picture') }} </label>

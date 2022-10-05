@@ -130,6 +130,7 @@ class RegisterController extends Controller
             $input['company_reg_no'] = $request->company_reg_no;
             $input['company_vat_no'] = $request->company_vat_no;
             $input['company_dob'] = $request->company_dob;
+            $input['company_type'] = $request->company_type;
             $input['company_address'] = $request->company_address;
             $input['personal_code'] = null;
             $input['your_id'] = null;
@@ -192,8 +193,8 @@ class RegisterController extends Controller
         $trans->wallet_id   = $user_wallet->id;
         $trans->charge      = 0;
         $trans->type        = '-';
-        $trans->remark      = 'wallet_create';
-        $trans->details     = trans('Wallet Create');
+        $trans->remark      = 'price_plan';
+        $trans->details     = trans('Price Plan');
         $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
         $trans->save();
 

@@ -147,6 +147,20 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
+                                @php
+                                    $companytype = ['LIMITED_LIABILITY', 'SOLE_TRADER', 'PARTNERSHIP', 'PUBLIC_LIMITED_COMPANY', 'JOINT_STOCK_COMPANY', 'CHARITY']
+                                @endphp
+                                <label for="inp-user-type" class="form-label">{{ __('Select Company Type') }}</label>
+                                <select id="company_type" class="form-control" name="company_type" required>
+                                    <option value=""> {{__('Select Company Type')}}</option>
+                                    @foreach ( $companytype as $type )
+                                        <option value="{{$type}}"> {{$type}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
                                 <label for="inp-name" class="form-label">{{ __('Company Address') }}</label>
                                 <input type="text" class="company-input form-control form--control" id="company_address" name="company_address" placeholder="{{ __('Enter Company Address') }}" value="">
                             </div>
