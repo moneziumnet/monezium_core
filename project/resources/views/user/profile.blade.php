@@ -116,7 +116,7 @@
                                     <input type="text" class="private-input form-control form--control" id="personal_code" name="personal_code" placeholder="{{ __('Enter Personal Code/Number') }}" value="{{$user->personal_code}}" {{$private_required}}>
                                 </div>
                               </div>
-                              <div class="col-md-6 mt-3">
+                              <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="your-id" class="form-label">{{ __('Your ID Number') }}</label>
                                     <input type="text" class="private-input form-control form--control" id="your_id" name="your_id" placeholder="{{ __('Enter Your ID Number') }}" value="{{$user->your_id}}" {{$private_required}}>

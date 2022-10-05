@@ -246,8 +246,8 @@ class UserController extends Controller
         ]);
 
         $input = $request->all();
-
-        if($request->form_select == 0) {
+        
+        if(!isset(auth()->user()->company_name)) {
             $input['personal_code'] = $request->personal_code;
             $input['your_id'] = $request->your_id;
             $input['issued_authority'] = $request->issued_authority;

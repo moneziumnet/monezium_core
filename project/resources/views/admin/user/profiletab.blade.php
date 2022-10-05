@@ -4,7 +4,12 @@
             <a class="nav-link {{menu('admin-user-profile')}}" id="information" href="{{route('admin-user-profile',$data->id) }}" role="button" >Information</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{menu('admin-user-accounts')}} {{menu('admin-wallet-transactions')}}" id="accounts" href="{{route('admin-user-accounts',$data->id) }}" role="button">Accounts</a>
+            <a class="nav-link 
+                {{menu('admin-user-accounts')}} 
+                {{menu('admin-wallet-internal')}} 
+                {{menu('admin-wallet-external')}} 
+                {{menu('admin-wallet-between')}} 
+                {{menu('admin-wallet-transactions')}}" id="accounts" href="{{route('admin-user-accounts',$data->id) }}" role="button">Accounts</a>
         </li>
         <li class="nav-item">
             <a class="nav-link {{menu('admin-user-documents')}} {{menu('admin-user.createfile')}}" id="documents" href="{{route('admin-user-documents',$data->id) }}" role="button" >Documents</a>

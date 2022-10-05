@@ -30,12 +30,15 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Exports\AdminExportTransaction;
+use App\Models\BalanceTransfer;
 use App\Models\BankPlan;
 use App\Models\BankPoolAccount;
+use App\Models\PlanDetail;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use Auth;
 use Illuminate\Contracts\Auth\Authenticatable as OtherAuth;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -490,6 +493,325 @@ class UserController extends Controller
             $user = User::findOrFail($user_id);
             $data['data'] = $user;
             return view('admin.user.wallettransactions',$data);
+        }
+
+        public function internal($user_id, $wallet_id)
+        {
+            $data['wallet'] = Wallet::findOrFail($wallet_id);
+            $user = User::findOrFail($user_id);
+            $data['data'] = $user;
+            return view('admin.user.internal',$data);
+        }
+
+        public function internal_send(Request $request){
+            $request->validate([
+                'email'    => 'required',
+                'wallet_id'         => 'required',
+                'account_name'      => 'required',
+                'amount'            => 'required|numeric|min:0',
+                'description'       => 'required',
+            ]);
+            
+            $wallet = Wallet::where('id',$request->wallet_id)->with('currency')->first();
+            $user = User::find($wallet->user_id);
+    
+            if($user->bank_plan_id === null){
+                return redirect()->back()->with('error','This user have to buy a plan to withdraw.');
+            }
+    
+            if(now()->gt($user->plan_end_date)){
+                return redirect()->back()->with('error','Plan Date Expired.');
+            }
+    
+            $currency_id = $wallet->currency->id;
+    
+            $dailySend = BalanceTransfer::whereUserId($user->id)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus(1)->sum('amount');
+            $monthlySend = BalanceTransfer::whereUserId($user->id)->whereMonth('created_at', '=', date('m'))->whereStatus(1)->sum('amount');
+            $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'send')->first();
+    
+            if($dailySend > $global_range->daily_limit){
+                return redirect()->back()->with('error','Daily send limit over.');
+            }
+    
+            if($monthlySend > $global_range->monthly_limit){
+                return redirect()->back()->with('error','Monthly send limit over.');
+            }
+    
+            $gs = Generalsetting::first();
+    
+            if($request->email == $user->email){
+                return redirect()->back()->with('error','Can not send money to himself!!');
+            }
+    
+            if($request->amount < 0){
+                return redirect()->back()->with('error','Request Amount should be greater than this!');
+            }
+    
+            if($request->amount > user_wallet_balance($user->id, $currency_id, $wallet->wallet_type)){
+                return redirect()->back()->with('error','Insufficient Balance.');
+            }
+            $transaction_global_cost = 0;
+            if ($request->amount / $wallet->currency->rate < $global_range->min || $request->amount / $wallet->currency->rate > $global_range->max) {
+                return redirect()->back()->with('error','Amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
+            }
+            $transaction_global_fee = check_global_transaction_fee($request->amount, $user, 'send');
+            if($transaction_global_fee)
+            {
+                $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/100) * $transaction_global_fee->data->percent_charge;
+            }
+            $transaction_custom_cost = 0;
+            if($user->referral_id != 0)
+            {
+                $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user, 'send');
+                if($transaction_custom_fee) {
+                    $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/100) * $transaction_custom_fee->data->percent_charge;
+                }
+                $remark = 'Send_money_supervisor_fee';
+                if (check_user_type_by_id(4, $user->referral_id)) {
+                    user_wallet_increment($user->referral_id, $currency_id, $transaction_custom_cost, 6);
+                    $trans_wallet = get_wallet($user->referral_id, $currency_id, 6);
+                }
+                elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
+                    $remark = 'Send_money_manager_fee';
+                    user_wallet_increment($user->referral_id, $currency_id, $transaction_custom_cost, 10);
+                    $trans_wallet = get_wallet($user->referral_id, $currency_id, 10);
+                }
+                $trans = new Transaction();
+                $trans->trnx = str_rand();
+                $trans->user_id     = $user->referral_id;
+                $trans->user_type   = 1;
+    
+                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+    
+                $trans->currency_id = $currency_id;
+                $trans->amount      = $transaction_custom_cost;
+                $trans->charge      = 0;
+                $trans->type        = '+';
+                $trans->remark      = $remark;
+                $trans->details     = trans('Send Money');
+                $trans->data        = '{"sender":"'.$user->name.'", "receiver":"'.User::findOrFail($user->referral_id)->name.'"}';
+                $trans->save();
+            }
+            
+            $finalCharge = amount($transaction_global_cost+$transaction_custom_cost, $wallet->currency->type);
+            $finalamount = amount( $request->amount + $finalCharge, $wallet->currency->type);
+            user_wallet_increment(0, $currency_id, $transaction_global_cost, 9);
+            
+            if($receiver = User::where('email',$request->email)->first()){
+                
+                $txnid = Str::random(4).time();
+                $data = new BalanceTransfer();
+                $data->user_id = $user->id;
+                $data->receiver_id = $receiver->id;
+                $data->transaction_no = $txnid;
+                $data->currency_id = $request->wallet_id;
+                $data->type = 'own';
+                $data->cost = $finalCharge;
+                $data->amount = $finalamount;
+                $data->description = $request->description;
+                $data->status = 1;
+                $data->save();
+    
+                user_wallet_decrement($user->id, $currency_id, $finalamount, $wallet->wallet_type);
+                user_wallet_increment($receiver->id, $currency_id, $request->amount, $wallet->wallet_type);
+    
+                $trans = new Transaction();
+                $trans->trnx = $txnid;
+                $trans->user_id     = $user->id;
+                $trans->user_type   = 1;
+                $trans->currency_id = $currency_id;
+                $trans_wallet = get_wallet($user->id, $currency_id, $wallet->wallet_type);
+                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+                $trans->amount      = $finalamount;
+                $trans->charge      = $finalCharge;
+                $trans->type        = '-';
+                $trans->remark      = 'Internal Payment';
+                $trans->details     = trans('Send Money');
+                $trans->data        = '{"sender":"'.$user->name.'", "receiver":"'.$receiver->name.'"}';
+                $trans->save();
+    
+                $trans = new Transaction();
+                $trans->trnx = $txnid;
+                $trans->user_id     = $receiver->id;
+                $trans->user_type   = 1;
+                $trans->currency_id = $currency_id;
+                $trans->amount      = $request->amount;
+                $trans_wallet = get_wallet($receiver->id, $currency_id, $wallet->wallet_type);
+                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+                $trans->charge      = 0;
+                $trans->type        = '+';
+                $trans->remark      = 'Internal Payment';
+                $trans->details     = trans('Send Money');
+                $trans->data        = '{"sender":"'.$user->name.'", "receiver":"'.$receiver->name.'"}';
+                $trans->save();
+    
+                if($wallet->currency->code == 'ETH') {
+                    RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
+                    $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
+                    $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex($request->amount*pow(10,18)).'"}';
+                    RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
+                }
+                if($wallet->currency->code == 'BTC') {
+                    $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
+                    RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, $request->amount],$wallet->keyword);
+                }
+    
+                $to = $receiver->email;
+                $subject = " Money send successfully.";
+                $msg = "Hello ".$receiver->name."!\nMoney send successfully.\nThank you.";
+                $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
+                @mail($to,$subject,$msg,$headers);
+    
+                return redirect(route('admin-user-accounts',$user->id))->with('message', 'Send money successfully.');
+            }else{
+                return redirect()->back()->with('error','Sender not found!');
+            }
+        }
+
+        public function external($user_id, $wallet_id)
+        {
+            $data['wallet'] = Wallet::findOrFail($wallet_id);
+            $user = User::findOrFail($user_id);
+            $data['data'] = $user;
+            return view('admin.user.external',$data);
+        }
+
+        public function external_send(Request $request)
+        {
+            return 'success';
+        }
+
+        public function between($user_id, $wallet_id)
+        {
+            $data['wallet'] = Wallet::findOrFail($wallet_id);
+            $data['data'] = User::findOrFail($user_id);
+            return view('admin.user.between',$data);
+        }
+
+        public function between_send(Request $request)
+        {
+            $wallet = Wallet::where('id',$request->wallet_id)->with('currency')->first();
+            $user = User::find($wallet->user_id);
+
+            if(!isset($request->amount)) {
+                return back()->with('error','Please input amount');
+            }
+            if(!isset($request->wallet_type)) {
+                return back()->with('error','Please select Wallet');
+            }
+
+            $gs = Generalsetting::first();
+            $fromWallet = Wallet::findOrFail($request->wallet_id);
+
+            $toWallet = Wallet::where('currency_id', $fromWallet->currency_id)->where('user_id',$user->id)->where('wallet_type',$request->wallet_type)->where('user_type',1)->first();
+            $currency =  Currency::findOrFail($fromWallet->currency_id);
+            if ($currency->type == 2) {
+                $address = RPC_ETH('personal_newAccount',['123123']);
+                if ($address == 'error') {
+                    return back()->with('error','You can not create this wallet because there is some issue in crypto node.');
+                }
+                $keyword = '123123';
+            }
+            else {
+                $address = $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
+                $keyword = '';
+            }
+            if(!$toWallet){
+                $toWallet = Wallet::create([
+                    'user_id'     => $user->id,
+                    'user_type'   => 1,
+                    'currency_id' => $fromWallet->currency_id,
+                    'balance'     => 0,
+                    'wallet_type' => $request->wallet_type,
+                    'wallet_no' => $address,
+                    'keyword' => $keyword
+                ]);
+                if($request->wallet_type == 2) {
+                    $chargefee = Charge::where('slug', 'card-issuance')->where('plan_id', $user->bank_plan_id)->first();
+
+                    $trans = new Transaction();
+                    $trans->trnx = str_rand();
+                    $trans->user_id     = $user->id;
+                    $trans->user_type   = 1;
+                    $trans->currency_id = 1;
+                    $trans->amount      = $chargefee->data->fixed_charge;
+
+                    $trans_wallet = get_wallet($user->id, 1, 1);
+                    $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+
+                    $trans->charge      = 0;
+                    $trans->type        = '-';
+                    $trans->remark      = 'card_issuance';
+                    $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+                    $trans->details     = trans('Card Issuance');
+                    $trans->save();
+                }
+                else {
+                    $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+
+                    $trans = new Transaction();
+                    $trans->trnx = str_rand();
+                    $trans->user_id     = $user->id;
+                    $trans->user_type   = 1;
+                    $trans->currency_id = defaultCurr();
+
+                    $trans_wallet = get_wallet($user->id, defaultCurr(), 1);
+                    $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+
+                    $trans->amount      = $chargefee->data->fixed_charge;
+                    $trans->charge      = 0;
+                    $trans->type        = '-';
+                    $trans->remark      = 'wallet_create';
+                    $trans->details     = trans('Wallet Create');
+                    $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+                    $trans->save();
+                }
+                user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
+                user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
+            }
+
+            if($fromWallet->balance < $request->amount){
+                return back()->with('error','Insufficient balance to your '.$fromWallet->currency->code.' wallet');
+            }
+
+            $fromWallet->balance -=  $request->amount;
+            $fromWallet->update();
+
+            $toWallet->balance += $request->amount;
+            $toWallet->update();
+
+
+            $trnx              = new Transaction();
+            $trnx->trnx        = str_rand();
+            $trnx->user_id     = $user->id;
+            $trnx->user_type   = 1;
+            $trnx->currency_id = $fromWallet->currency->id;
+            $trnx->wallet_id   = $fromWallet->id;
+            $trnx->amount      = $request->amount ;
+            $trnx->charge      = 0;
+            $trnx->remark      = 'Own_transfer';
+            $trnx->type        = '-';
+            $trnx->details     = trans('Transfer  '.$fromWallet->currency->code.'money other wallet');
+            $trnx->data        = '{"sender":"'.$user->name.'", "receiver":"'.$user->name.'"}';
+            $trnx->save();
+
+            $toTrnx              = new Transaction();
+            $toTrnx->trnx        = $trnx->trnx;
+            $toTrnx->user_id     = $user->id;
+            $toTrnx->user_type   = 1;
+            $toTrnx->currency_id = $toWallet->currency->id;
+            $toTrnx->wallet_id   = $toWallet->id;
+            $toTrnx->amount      = $request->amount;
+            $toTrnx->charge      = 0;
+            $toTrnx->remark      = 'Own_transfer';
+            $toTrnx->type          = '+';
+            $toTrnx->details     = trans('Transfer  '.$fromWallet->currency->code.'money other wallet');
+            $toTrnx->data        = '{"sender":"'.$user->name.'", "receiver":"'.$user->name.'"}';
+            $toTrnx->save();
+
+            @mailSend('exchange_money',['from_curr'=>$fromWallet->currency->code,'to_curr'=>$toWallet->currency->code,'charge'=> amount($charge,$fromWallet->currency->type,3),'from_amount'=> amount($request->amount,$fromWallet->currency->type,3),'to_amount'=> amount($finalAmount,$toWallet->currency->type,3),'date_time'=> dateFormat($trnx->created_at)],auth()->user());
+
+            return back()->with('message','Money exchanged successfully.');
         }
 
         public function profileBanks($id)
