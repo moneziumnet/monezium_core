@@ -64,6 +64,7 @@ class OpenPaydController extends Controller
                          "address": {
                               "addressLine1": "'.$user->address.'",
                               "city": "'.$user->city.'",
+                              "postCode": "'.$user->zip.'",
                               "country": "'.$country->iso2.'"
                          },
                          "firstName": "'.explode(" ",$user->name)[0].'",
@@ -83,11 +84,13 @@ class OpenPaydController extends Controller
                      "registeredAddress": {
                           "addressLine1": "'.$user->company_address.'",
                           "city": "'.$user->company_city.'",
+                          "postCode": "'.$user->company_zipcode.'",
                           "country": "'.$company_country->iso2.'"
                      },
                      "tradingAddress": {
                           "addressLine1": "'.$user->company_address.'",
                           "city": "'.$user->company_city.'",
+                          "postCode": "'.$user->company_zipcode.'",
                           "country": "'.$company_country->iso2.'"
                      },
                      "companyName": "'.$user->company_name.'",
