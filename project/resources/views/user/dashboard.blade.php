@@ -554,6 +554,10 @@
                 {
                     $('.bankaccount').prop('action','{{ route('user.bankaccount.railsbank.store') }}');
                 }
+                if(res.keyword == 'clearjunction')
+                {
+                    $('.bankaccount').prop('action','{{ route('user.clearjunction.api.ibancreate') }}');
+                }
              });
         })
     </script>

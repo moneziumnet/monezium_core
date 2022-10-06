@@ -5,6 +5,11 @@ namespace App\Http\Controllers\User;
 use App\Models\BankPlan;
 use App\Models\Currency;
 use App\Models\Beneficiary;
+use App\Models\BankGateway;
+use App\Models\User;
+use App\Models\Charge;
+use App\Models\BankAccount;
+use App\Models\Country;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -20,12 +25,12 @@ class UserClearJunctionController extends Controller
     private $wallet_uuid = '8f297da3-8838-437f-b4e1-ce9f7714c61b'; // Sandbwallet_uuid
     private $API_Key = '8f299ac0-1543-41f6-b094-70a5fd837bed';
     private $apiPassword = 'eydy8qv9ui0o';
-
+    private $key = '{"API_Key":"8f299ac0-1543-41f6-b094-70a5fd837bed","api_password":"eydy8qv9ui0o","wallet_uuid":"8f297da3-8838-437f-b4e1-ce9f7714c61b"}';
 
 	//echo $hashed = hash("sha512", $password);
-    public function getToken($request) {
-        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
-        $secret = hash('sha512', $bankgateway->information->apiPassword);
+    public function getToken($request, $subbank) {
+        $bankgateway = BankGateway::where('subbank_id', $subbank)->first();
+        $secret = hash('sha512', $bankgateway->information->api_password);
         $datetime = new DateTime();
         $now = $datetime->format(DateTime::ATOM);
         // $body = json_encode($request);
@@ -33,12 +38,13 @@ class UserClearJunctionController extends Controller
         return array($signature, $now);
     }
 
-    public function CheckBankWallet(Request $request) {
+    public function CheckBankWallet($subbank) {
         $client = new  Client();
-        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
-        $param = $this->getToken(json_encode($request->all()));
+        $bankgateway = BankGateway::where('subbank_id', $subbank)->first();
+        $param = $this->getToken('{}', $subbank);
+        // dd($param);
         $response = $client->request('GET',  $this->url.'bank/wallets/'.$bankgateway->information->wallet_uuid.'?returnPaymentMethods=true', [
-            'body' => json_encode($request->all()),
+            'body' => '{}',
             'headers' => [
                'Accept'=> '*/*',
               'X-API-KEY' => $bankgateway->information->API_Key,
@@ -47,7 +53,166 @@ class UserClearJunctionController extends Controller
               'Content-Type' => 'application/json',
             ],
           ]);
-        return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+          $res_body = json_decode($response->getBody());
+        return $res_body;
+    }
+
+    public function AllocateIbanCreate(Request $request) {
+        $client = New Client();
+        $user = User::findOrFail($request->user);
+        $bankgateway = BankGateway::where('subbank_id', $request->subbank)->first();
+        $banklastindex = BankAccount::orderBy('id', 'DESC')->first()->id + rand(10000,99999);
+        $bankaccount = BankAccount::where('user_id', $request->user)->where('subbank_id', $request->subbank)->where('currency_id', $request->currency)->first();
+        $country = Country::findOrFail($user->country);
+
+        if ($bankaccount){
+            return redirect()->back()->with(array('warning' => 'This bank account already exists.'));
+
+        }
+        if(!isset($user->company_name)) {
+        $body = '{
+            "clientOrder": "'.$banklastindex.'",
+              "walletUuid": "'.$bankgateway->information->wallet_uuid.'",
+              "ibansGroup": "DEFAULT",
+              "ibanCountry": "GB",
+              "registrant": {
+                "clientCustomerId": "'.$banklastindex.'",
+                "individual": {
+                  "phone": "+'.$user->phone.'",
+                  "email": "'.$user->email.'",
+                  "birthDate": "'.$user->dob.'",
+                  "address": {
+                    "country": "'.$country->iso2.'",
+                    "zip": "'.$user->zip.'",
+                    "city": "'.$user->city.'",
+                    "street": "'.$user->address.'"
+                  },
+                  "document": {
+                    "type": "passport",
+                    "number": "'.$user->your_id.'",
+                    "issuedCountryCode": "'.$country->iso2.'",
+                    "issuedBy": "'.$user->issued_authority.'",
+                    "issuedDate": "'.$user->date_of_issue.'",
+                    "expirationDate": "'.$user->date_of_expire.'"
+                  },
+                  "lastName": "'.explode(" ",$user->name)[1].'",
+                  "firstName": "'.explode(" ",$user->name)[0].'"
+                }
+              }
+            }';
+            $param = $this->getToken($body, $request->subbank);
+            // dd(json_encode($body));
+            try {
+                $response = $client->request('POST',  $this->url.'gate/allocate/v2/create/iban', [
+                    'body' => $body,
+                    'headers' => [
+                       'Accept'=> '*/*',
+                      'X-API-KEY' => $bankgateway->information->API_Key,
+                      'Authorization' => 'Bearer '.$param[0],
+                      'Date' => $param[1],
+                      'Content-Type' => 'application/json',
+                    ],
+                  ]);
+                  $res_body = json_decode($response->getBody());
+                  $orderid = $res_body->clientOrder;
+                //   dd($response);
+                //   return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+            } catch (\Throwable $th) {
+                return redirect()->back()->with(array('warning' => $th->getMessage()));
+
+            }
+            sleep(10);
+            $param = $this->getToken('{}', $request->subbank);
+            try {
+                $response = $client->request('GET',  $this->url.'gate/allocate/v2/status/iban/clientOrder/'.$orderid, [
+                    'body' => '{}',
+                    'headers' => [
+                       'Accept'=> '*/*',
+                      'X-API-KEY' => $bankgateway->information->API_Key,
+                      'Authorization' => 'Bearer '.$param[0],
+                      'Date' => $param[1],
+                      'Content-Type' => 'application/json',
+                    ],
+                  ]);
+                  $res_body = json_decode($response->getBody());
+                  $iban = $res_body->iban;
+                //   dd($response);
+                //   return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
+            } catch (\Throwable $th) {
+                return redirect()->back()->with(array('warning' => $th->getMessage()));
+            }
+
+            $res = $this->CheckBankWallet($request->subbank);
+            // dd($orderid);
+            $bic_swift = 'CLJUGB21';
+            foreach ($res->paymentMethods as $key => $value) {
+                if ($value->accountNumber == $iban) {
+                    $bic_swift = $value->bankCode;
+                }
+            }
+
+            $data = New BankAccount();
+            $data->user_id = $request->user;
+            $data->subbank_id = $request->subbank;
+            $data->iban = $iban;
+            $data->swift = $bic_swift;
+            $data->currency_id = $request->currency;
+            $data->save();
+
+
+            $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+
+            $trans = new Transaction();
+            $trans->trnx = str_rand();
+            $trans->user_id     = $user->id;
+            $trans->user_type   = 1;
+            $trans->currency_id =  defaultCurr();
+            $trans->amount      = $chargefee->data->fixed_charge;
+            $trans_wallet       = get_wallet($user->id, defaultCurr(), 1);
+            $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+            $trans->charge      = 0;
+            $trans->type        = '-';
+            $trans->remark      = 'bank_account_create';
+            $trans->details     = trans('Bank Account Create');
+            $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+            $trans->save();
+
+            user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
+            user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
+            return redirect()->back()->with(array('message' => 'Bank Account has been created successfully'));
+
+        }
+        else {
+            $data = New BankAccount();
+            $data->user_id = $request->user;
+            $data->subbank_id = $request->subbank;
+            $data->iban = '';
+            $data->swift = '';
+            $data->currency_id = $request->currency;
+            $data->save();
+
+
+            $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+
+            $trans = new Transaction();
+            $trans->trnx = str_rand();
+            $trans->user_id     = $user->id;
+            $trans->user_type   = 1;
+            $trans->currency_id =  defaultCurr();
+            $trans->amount      = $chargefee->data->fixed_charge;
+            $trans_wallet       = get_wallet($user->id, defaultCurr(), 1);
+            $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+            $trans->charge      = 0;
+            $trans->type        = '-';
+            $trans->remark      = 'bank_account_create';
+            $trans->details     = trans('Bank Account Create');
+            $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+            $trans->save();
+
+            user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
+            user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
+            return redirect()->back()->with(array('message' => 'Bank Account has been created successfully'));
+        }
     }
 
     public function ClientWalletBalance(Request $request) {
@@ -135,22 +300,7 @@ class UserClearJunctionController extends Controller
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
     }
 
-    public function AllocateIbanCreate(Request $request) {
-        $client = new  Client();
-        $bankgateway = BankGateway::where('subbank_id', $request->subid)->first();
-        $param = $this->getToken(json_encode($request->all()));
-        $response = $client->request('POST',  $this->url.'gate/allocate/v2/create/iban', [
-            'body' => json_encode($request->all()),
-            'headers' => [
-               'Accept'=> '*/*',
-              'X-API-KEY' => $bankgateway->information->API_Key,
-              'Authorization' => 'Bearer '.$param[0],
-              'Date' => $param[1],
-              'Content-Type' => 'application/json',
-            ],
-          ]);
-        return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
-    }
+
 
     public function AllocateBecsCreate(Request $request) {
         $client = new  Client();

@@ -89,11 +89,11 @@ class User extends Authenticatable
 
     public function country()
     {
-        return $this->belongsTo('App\Models\Country','country');
+        return $this->belongsTo('App\Models\Country','country')->withDefault();
     }
 
     public function company_country()
     {
-        return $this->belongsTo('App\Models\Country','company_country');
+        return $this->belongsTo('App\Models\Country','company_country')->withDefault();
     }
 }

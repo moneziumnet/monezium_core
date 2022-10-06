@@ -419,7 +419,7 @@ Route::prefix('user')->group(function() {
         Route::get('/clearjunction/bankwallet', [UserClearJunctionController::class, 'CheckBankWallet'])->name('user.clearjunction.api.bankwallet');
         Route::get('/clearjunction/walletstatement', [UserClearJunctionController::class, 'GetWalletStatement'])->name('user.clearjunction.api.walletstatement');
         Route::get('/clearjunction/ibanindividual', [UserClearJunctionController::class, 'AllocateIbanIndividual'])->name('user.clearjunction.api.ibanindividual');
-        Route::get('/clearjunction/ibancreate', [UserClearJunctionController::class, 'AllocateIbanCreate'])->name('user.clearjunction.api.ibancreate');
+        Route::post('/clearjunction/ibancreate', [UserClearJunctionController::class, 'AllocateIbanCreate'])->name('user.clearjunction.api.ibancreate');
         Route::get('/clearjunction/becscreate', [UserClearJunctionController::class, 'AllocateBecsCreate'])->name('user.clearjunction.api.becscreate');
         Route::get('/clearjunction/ibanstatusclientorder', [UserClearJunctionController::class, 'GetIbanStatusByClientOrder'])->name('user.clearjunction.api.ibanstatusclientorder');
         Route::get('/clearjunction/ibanstatusorderref', [UserClearJunctionController::class, 'GetIbanStatusByOrderRef'])->name('user.clearjunction.api.ibanstatusorderref');
