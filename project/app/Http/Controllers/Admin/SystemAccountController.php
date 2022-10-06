@@ -102,14 +102,17 @@ class SystemAccountController extends Controller
     public function binance_setting()
     {
         $data['api'] = CryptoApi::where('keyword', 'binance')->first();
-        if($data['api']->api_key && $data['api']->api_secret) {
-            $key = $data['api']->api_key;
-            $secret = $data['api']->api_secret;
-            $binance = new BinanceAPI($key, $secret);
-            $tickers = $binance->prices();
-            $balances = $binance->balances($tickers);
-            $data['balance'] =(object)$balances;
-            // dd($data['balance']);
+        if($data['api']) {
+
+            if($data['api']->api_key && $data['api']->api_secret) {
+                $key = $data['api']->api_key;
+                $secret = $data['api']->api_secret;
+                $binance = new BinanceAPI($key, $secret);
+                $tickers = $binance->prices();
+                $balances = $binance->balances($tickers);
+                $data['balance'] =(object)$balances;
+                // dd($data['balance']);
+            }
         }
         $data['keyword'] = 'binance';
         return view('admin.system.cryptobinancesettings', $data);

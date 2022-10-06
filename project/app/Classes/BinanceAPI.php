@@ -772,7 +772,7 @@ class BinanceAPI {
         if(isset($json['msg'])){
             // should always output error, not only on httpdebug
             // not outputing errors, hides it from users and ends up with tickets on github
-            echo "signedRequest error: {$output}" . PHP_EOL;
+            // echo "signedRequest error: {$output}" . PHP_EOL;
         }
         $this->transfered += strlen($output);
         $this->requestCount++;
@@ -867,11 +867,11 @@ class BinanceAPI {
         $account = $this->httpRequest("v3/account", "GET", [], true);
 
         if (is_array($account) === false) {
-            echo "Error: unable to fetch your account details" . PHP_EOL;
+            // echo "Error: unable to fetch your account details" . PHP_EOL;
         }
 
         if (isset($account['balances']) === false) {
-            echo "Error: your balances were empty or unset" . PHP_EOL;
+            // echo "Error: your balances were empty or unset" . PHP_EOL;
         }
 
         return $this->balanceData($account, $priceData);
@@ -887,8 +887,8 @@ class BinanceAPI {
 
         if (empty($array) || empty($array['balances'])) {
             // WPCS: XSS OK.
-            echo "balanceData error: Please make sure your system time is synchronized: call \$api->useServerTime() before this function" . PHP_EOL;
-            echo "ERROR: Invalid request. Please double check your API keys and permissions." . PHP_EOL;
+            // echo "balanceData error: Please make sure your system time is synchronized: call \$api->useServerTime() before this function" . PHP_EOL;
+            // echo "ERROR: Invalid request. Please double check your API keys and permissions." . PHP_EOL;
             return [];
         }
 
