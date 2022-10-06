@@ -7,14 +7,15 @@
 
     <div class="page-body">
         <div class="container-xl">
+            <div class="d-flex my-3">
+              <h2 class="me-auto">Transaction details</h2>
+              <a class="btn btn-primary" href="{{route('user.card.index')}}">Back</a>
+            </div>
             <div class="row row-deck row-cards">
                 <div class="col-lg-12">
                     <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">@lang('Recent Transaction')</h3>
-                        </div>
                         @if (count($transactions) == 0)
-                            <p class="text-center p-2">@lang('NO DATA FOUND')</p>
+                            <p class="text-center p-5">@lang('NO DATA FOUND')</p>
                         @else
                             <div class="table-responsive">
                                 <table class="table card-table table-vcenter text-nowrap datatable">
