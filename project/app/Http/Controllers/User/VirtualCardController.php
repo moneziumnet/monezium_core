@@ -156,25 +156,26 @@ class VirtualCardController extends Controller
     }
 
     public function transaction($id) {
-        $val=VirtualCard::whereid($id)->first();
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-        CURLOPT_URL => "https://api.flutterwave.com/v3/virtual-cards/".$val->card_hash."/transactions?from=".date('Y-m-d', strtotime($val['created_at']))."&to=".Carbon::tomorrow()->format('Y-m-d')."&index=1&size=100",
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => "",
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => "GET",
-        CURLOPT_HTTPHEADER => array(
-            "Content-Type: application/json",
-            "Authorization: Bearer ".env('SECRET_KEY')
-        ),
-        ));
-        $response = curl_exec($curl);
-        curl_close($curl);
-        $data['transactions']=$response;
+        $v_card=VirtualCard::whereid($id)->first();
+        // $curl = curl_init();
+        // curl_setopt_array($curl, array(
+        // CURLOPT_URL => "https://api.flutterwave.com/v3/virtual-cards/".$val->card_hash."/transactions?from=".date('Y-m-d', strtotime($val['created_at']))."&to=".Carbon::tomorrow()->format('Y-m-d')."&index=1&size=100",
+        // CURLOPT_RETURNTRANSFER => true,
+        // CURLOPT_ENCODING => "",
+        // CURLOPT_MAXREDIRS => 10,
+        // CURLOPT_TIMEOUT => 0,
+        // CURLOPT_FOLLOWLOCATION => true,
+        // CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        // CURLOPT_CUSTOMREQUEST => "GET",
+        // CURLOPT_HTTPHEADER => array(
+        //     "Content-Type: application/json",
+        //     "Authorization: Bearer ".env('SECRET_KEY')
+        // ),
+        // ));
+        // $response = curl_exec($curl);
+        // curl_close($curl);
+        // $data['transactions']=$response;
+        $data['transactions'] = Transaction::where('wallet_id',$v_card->wallet_id)->orderBy('id','desc')->paginate(15);
         return view('user.virtualcard.transaction', $data);
     }
 
