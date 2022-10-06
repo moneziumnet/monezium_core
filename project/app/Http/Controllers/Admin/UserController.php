@@ -675,7 +675,8 @@ class UserController extends Controller
             $user = User::findOrFail($user_id);
             $data['data'] = $user;
             $data['bankaccounts'] = BankAccount::whereUserId($user_id)->where('currency_id', $data['wallet']->currency_id)->pluck('subbank_id');
-            $data['banks'] = SubInsBank::where('status', 1)->whereIn('id', $data['bankaccounts'])->get();
+            $data['bankpoolaccounts'] = BankPoolAccount::where('currency_id', $data['wallet']->currency_id)->pluck('bank_id');
+            $data['banks'] = SubInsBank::where('status', 1)->whereIn('id', array_merge($data['bankaccounts']->toArray(), $data['bankpoolaccounts']->toArray()))->get();
             $data['beneficiaries'] = Beneficiary::where('user_id', $user_id)->get();
             $data['other_bank_limit'] = Generalsetting::first()->other_bank_limit;
 
