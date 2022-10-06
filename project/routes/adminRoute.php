@@ -483,12 +483,15 @@ Route::prefix('admin')->group(function () {
   Route::get('/system-settings', [SystemAccountController::class, 'systemAccounts'])->name('admin.system.accounts');
   Route::get('/system-settings/create/{currency_id}', [SystemAccountController::class, 'create'])->name('admin.system.account.create');
   Route::get('/system-settings/{keyword}', [SystemAccountController::class, 'setting'])->name('admin.system.crypto.api');
-  Route::get('/crypto/binanace', [SystemAccountController::class, 'binance_setting'])->name('admin.system.crypto.binance.api');
+  Route::get('/crypto/binance', [SystemAccountController::class, 'binance_setting'])->name('admin.system.crypto.binance.api');
   Route::post('/system-settings/save', [SystemAccountController::class, 'setting_save'])->name('admin.system.crypto.api.save');
   Route::post('/system-settings/depositAddresses', [SystemAccountController::class, 'depositAddresses'])->name('admin.system.crypto.depositaddress');
+  Route::post('/system-settings/binance/depositAddresses', [SystemAccountController::class, 'binance_depositAddresses'])->name('admin.system.crypto.binance.depositaddress');
   Route::post('/system-settings/depositMethods', [SystemAccountController::class, 'depositMethods'])->name('admin.system.crypto.depositMethods');
   Route::post('/system-settings/order', [SystemAccountController::class, 'order'])->name('admin.system.crypto.order');
+  Route::post('/system-settings/binance/order', [SystemAccountController::class, 'binance_order'])->name('admin.system.crypto.binance.order');
   Route::post('/system-settings/withdraw', [SystemAccountController::class, 'withdraw'])->name('admin.system.crypto.withdraw');
+  Route::post('/system-settings/binance/withdraw', [SystemAccountController::class, 'binance_withdraw'])->name('admin.system.crypto.binance.withdraw');
 
   Route::group(['middleware' => 'permissions:General Setting'], function () {
     Route::get('/general-settings/logo', [GeneralSettingController::class, 'logo'])->name('admin.gs.logo');

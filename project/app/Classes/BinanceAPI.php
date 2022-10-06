@@ -12,7 +12,7 @@ namespace App\Classes;
 class BinanceAPIException extends \ErrorException {};
 
 class BinanceAPI {
-    
+
     protected $base = 'https://api.binance.com/api/'; // /< REST endpoint for the currency exchange
     protected $wapi = 'https://api.binance.com/wapi/'; // /< REST endpoint for the withdrawals
     protected $sapi = 'https://api.binance.com/sapi/'; // /< REST endpoint for the supporting network API
@@ -34,7 +34,7 @@ class BinanceAPI {
     protected $btc_total = 0.00;
 
     // /< value of available onOrder assets
-    
+
     protected $exchangeInfo = NULL;
     protected $lastRequest = [];
 
@@ -96,7 +96,7 @@ class BinanceAPI {
         $this->$member = $value;
     }
 
-   
+
 
     /**
      * buy attempts to create a currency order
@@ -222,8 +222,8 @@ class BinanceAPI {
     {
         return $this->order("BUY", $symbol, $quantity, 0, "MARKET", $flags, true);
     }
-	
-	
+
+
     /**
      * numberOfDecimals() returns the signifcant digits level based on the minimum order amount.
      *
@@ -234,7 +234,7 @@ class BinanceAPI {
      */
     public function numberOfDecimals($val = 0.00000001){
         $val = sprintf("%.14f", $val);
-        $parts = explode('.', $val); 
+        $parts = explode('.', $val);
         $parts[1] = rtrim($parts[1], "0");
         return strlen($parts[1]);
     }
@@ -259,7 +259,7 @@ class BinanceAPI {
     }
 
     protected function floorDecimal($n, $decimals=2)
-    {   
+    {
         return floor($n * pow(10, $decimals)) / pow(10, $decimals);
     }
 
@@ -426,18 +426,18 @@ class BinanceAPI {
     public function exchangeInfo()
     {
         if(!$this->exchangeInfo){
-            
+
             $arr = $this->httpRequest("v1/exchangeInfo");
-            
+
             $this->exchangeInfo = $arr;
             $this->exchangeInfo['symbols'] = null;
-            
+
             foreach($arr['symbols'] as $key => $value){
                 $this->exchangeInfo['symbols'][$value['symbol']] = $value;
             }
-            
+
         }
-        
+
         return $this->exchangeInfo;
     }
 
@@ -446,8 +446,8 @@ class BinanceAPI {
         $params["wapi"] = true;
         return $this->httpRequest("v3/assetDetail.html", 'GET', $params, true);
     }
-	
-	
+
+
     /**
      * Fetch current(daily) trade fee of symbol, values in percentage.
      * for more info visit binance official api document
@@ -462,7 +462,7 @@ class BinanceAPI {
             "symbol" => $symbol,
             "wapi" => true,
         ];
-	    
+
         return $this->httpRequest("v3/tradeFee.html", 'GET', $params, true);
     }
 
@@ -489,22 +489,21 @@ class BinanceAPI {
     public function withdraw(string $asset, string $address, $amount, $addressTag = null, $addressName = "API Withdraw", bool $transactionFeeFlag = false,$network = null)
     {
         $options = [
-            "asset" => $asset,
+            "coin" => $asset,
             "address" => $address,
             "amount" => $amount,
-            "transactionFeeFlag" => $transactionFeeFlag,
-            "wapi" => true,
+            "sapi" => true,
         ];
-        if (is_null($addressName) === false && empty($addressName) === false) {
-            $options['name'] = $addressName;
-        }
-        if (is_null($addressTag) === false && empty($addressTag) === false) {
-            $options['addressTag'] = $addressTag;
-        }
-        if (is_null($network) === false && empty($network) === false) {
-            $options['network'] = $network;
-        }
-        return $this->httpRequest("v3/withdraw.html", "POST", $options, true);
+        // if (is_null($addressName) === false && empty($addressName) === false) {
+        //     $options['name'] = $addressName;
+        // }
+        // if (is_null($addressTag) === false && empty($addressTag) === false) {
+        //     $options['addressTag'] = $addressTag;
+        // }
+        // if (is_null($network) === false && empty($network) === false) {
+        //     $options['network'] = $network;
+        // }
+        return $this->httpRequest("v1/capital/withdraw/apply", "POST", $options, true);
     }
 
     /**
@@ -519,10 +518,10 @@ class BinanceAPI {
     public function depositAddress(string $asset)
     {
         $params = [
-            "wapi" => true,
-            "asset" => $asset,
+            "sapi" => true,
+            "coin" => $asset,
         ];
-        return $this->httpRequest("v3/depositAddress.html", "GET", $params, true);
+        return $this->httpRequest("v1/capital/deposit/address", "GET", $params, true);
     }
 
     /**
@@ -666,12 +665,12 @@ class BinanceAPI {
                 unset($params['wapi']);
                 $base = $this->wapi;
             }
-		
+
             if (isset($params['sapi'])) {
                 unset($params['sapi']);
                 $base = $this->sapi;
             }
-		
+
             $query = http_build_query($params, '', '&');
             $signature = hash_hmac('sha256', $query, $this->api_secret);
             if ($method === "POST") {
@@ -745,15 +744,15 @@ class BinanceAPI {
             echo 'Curl error: ' . curl_error($curl) . "\n";
             return [];
         }
-    
+
         $header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
         $header = substr($output, 0, $header_size);
         $output = substr($output, $header_size);
-        
+
         curl_close($curl);
-        
+
         $json = json_decode($output, true);
-        
+
         $this->lastRequest = [
             'url' => $url,
             'method' => $method,
@@ -799,7 +798,7 @@ class BinanceAPI {
      * @return array containing the response
      * @throws BinanceAPIException
      */
-    public function order(string $side, string $symbol, $quantity, $price, string $type = "LIMIT", array $flags = [], bool $test = false)
+    public function order(string $side, string $symbol, $quantity, string $type = "LIMIT", array $flags = [], bool $test = false)
     {
         $opt = [
             "symbol" => $symbol,
@@ -811,23 +810,22 @@ class BinanceAPI {
 
         // someone has preformated there 8 decimal point double already
         // dont do anything, leave them do whatever they want
-        if (gettype($price) !== "string") {
-            // for every other type, lets format it appropriately
-            $price = number_format($price, 8, '.', '');
-        }
+        // if (gettype($price) !== "string") {
+        //     // for every other type, lets format it appropriately
+        //     $price = number_format($price, 8, '.', '');
+        // }
 
         if (is_numeric($quantity) === false) {
             // WPCS: XSS OK.
             echo "warning: quantity expected numeric got " . gettype($quantity) . PHP_EOL;
         }
 
-        if (is_string($price) === false) {
-            // WPCS: XSS OK.
-            echo "warning: price expected string got " . gettype($price) . PHP_EOL;
-        }
+        // if (is_string($price) === false) {
+        //     // WPCS: XSS OK.
+        //     echo "warning: price expected string got " . gettype($price) . PHP_EOL;
+        // }
 
         if ($type === "LIMIT" || $type === "STOP_LOSS_LIMIT" || $type === "TAKE_PROFIT_LIMIT") {
-            $opt["price"] = $price;
             $opt["timeInForce"] = "GTC";
         }
 
@@ -845,5 +843,112 @@ class BinanceAPI {
 
         $qstring = ($test === false) ? "v3/order" : "v3/order/test";
         return $this->httpRequest($qstring, "POST", $opt, true);
+    }
+
+    public function prices()
+    {
+        return $this->priceData($this->httpRequest("v3/ticker/price"));
+    }
+    protected function priceData(array $array)
+    {
+        $prices = [];
+        foreach ($array as $obj) {
+            $prices[$obj['symbol']] = $obj['price'];
+        }
+        return $prices;
+    }
+
+    public function balances($priceData = false)
+    {
+        if (is_array($priceData) === false) {
+            $priceData = false;
+        }
+
+        $account = $this->httpRequest("v3/account", "GET", [], true);
+
+        if (is_array($account) === false) {
+            echo "Error: unable to fetch your account details" . PHP_EOL;
+        }
+
+        if (isset($account['balances']) === false) {
+            echo "Error: your balances were empty or unset" . PHP_EOL;
+        }
+
+        return $this->balanceData($account, $priceData);
+    }
+
+    protected function balanceData(array $array, $priceData)
+    {
+        $balances = [];
+
+        if (is_array($priceData)) {
+            $btc_value = $btc_total = 0.00;
+        }
+
+        if (empty($array) || empty($array['balances'])) {
+            // WPCS: XSS OK.
+            echo "balanceData error: Please make sure your system time is synchronized: call \$api->useServerTime() before this function" . PHP_EOL;
+            echo "ERROR: Invalid request. Please double check your API keys and permissions." . PHP_EOL;
+            return [];
+        }
+
+        foreach ($array['balances'] as $obj) {
+            $asset = $obj['asset'];
+            $balances[$asset] = [
+                "available" => $obj['free'],
+                "onOrder" => $obj['locked'],
+                "btcValue" => 0.00000000,
+                "btcTotal" => 0.00000000,
+            ];
+
+            if (is_array($priceData) === false) {
+                continue;
+            }
+
+            if ($obj['free'] + $obj['locked'] < 0.00000001) {
+                continue;
+            }
+
+            if ($asset === 'BTC') {
+                $balances[$asset]['btcValue'] = $obj['free'];
+                $balances[$asset]['btcTotal'] = $obj['free'] + $obj['locked'];
+                $btc_value += $obj['free'];
+                $btc_total += $obj['free'] + $obj['locked'];
+                continue;
+            } elseif ( $asset === 'USDT' || $asset === 'USDC' || $asset === 'PAX' || $asset === 'BUSD' ) {
+                $btcValue = $obj['free'] / $priceData['BTCUSDT'];
+                $btcTotal = ($obj['free'] + $obj['locked']) / $priceData['BTCUSDT'];
+                $balances[$asset]['btcValue'] = $btcValue;
+                $balances[$asset]['btcTotal'] = $btcTotal;
+                $btc_value += $btcValue;
+                $btc_total += $btcTotal;
+                continue;
+            }
+
+            $symbol = $asset . 'BTC';
+
+            if ($symbol === 'BTCUSDT') {
+                $btcValue = number_format($obj['free'] / $priceData['BTCUSDT'], 8, '.', '');
+                $btcTotal = number_format(($obj['free'] + $obj['locked']) / $priceData['BTCUSDT'], 8, '.', '');
+            } elseif (isset($priceData[$symbol]) === false) {
+                $btcValue = $btcTotal = 0;
+            } else {
+                $btcValue = number_format($obj['free'] * $priceData[$symbol], 8, '.', '');
+                $btcTotal = number_format(($obj['free'] + $obj['locked']) * $priceData[$symbol], 8, '.', '');
+            }
+
+            $balances[$asset]['btcValue'] = $btcValue;
+            $balances[$asset]['btcTotal'] = $btcTotal;
+            $btc_value += $btcValue;
+            $btc_total += $btcTotal;
+        }
+        if (is_array($priceData)) {
+            uasort($balances, function ($opA, $opB) {
+                return $opA['btcValue'] < $opB['btcValue'];
+            });
+            $this->btc_value = $btc_value;
+            $this->btc_total = $btc_total;
+        }
+        return $balances;
     }
 }

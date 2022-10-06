@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Exports\AdminExportTransaction;
 use App\Classes\KrakenAPI;
+use App\Classes\BinanceAPI;
 
 
 class SystemAccountController extends Controller
@@ -100,8 +101,17 @@ class SystemAccountController extends Controller
 
     public function binance_setting()
     {
-        $data['api'] = CryptoApi::where('keyword', 'binanace')->first();
-        $data['keyword'] = 'binanace';
+        $data['api'] = CryptoApi::where('keyword', 'binance')->first();
+        if($data['api']) {
+            $key = $data['api']->api_key;
+            $secret = $data['api']->api_secret;
+            $binance = new BinanceAPI($key, $secret);
+            $tickers = $binance->prices();
+            $balances = $binance->balances($tickers);
+            $data['balance'] =(object)$balances;
+            // dd($data['balance']);
+        }
+        $data['keyword'] = 'binance';
         return view('admin.system.cryptobinancesettings', $data);
     }
 
@@ -144,6 +154,28 @@ class SystemAccountController extends Controller
         return redirect()->back()->with(array('message' => $msg));
     }
 
+    public function binance_order(Request $request)
+    {
+        $data['api'] = CryptoApi::where('keyword', $request->keyword)->first();
+        if($data['api'])
+        {
+            $key = $data['api']->api_key;
+            $secret = $data['api']->api_secret;
+            $binance = new BinanceAPI($key, $secret);
+
+            $res = $binance->order($request->order_type,
+                $request->pair_type,
+                $request->amount,
+                'MARKET',
+            );
+            if(isset($res['code'])) {
+                return redirect()->back()->with(array('warning' => json_encode((object)$res['msg']) ));
+            }
+        }
+        $msg = __('Crypto Exchange Successfully.');
+        return redirect()->back()->with(array('message' => $msg));
+    }
+
     public function withdraw(Request $request)
     {
         $data['api'] = CryptoApi::where('keyword', $request->keyword)->first();
@@ -164,6 +196,27 @@ class SystemAccountController extends Controller
             if(count($res['error']) > 0) {
                 return redirect()->back()->with(array('warning' => json_encode((object)$res['error']) ));
             }
+        }
+        $msg = __('Crypto Withdraw Successfully.');
+        return redirect()->back()->with(array('message' => $msg));
+    }
+
+    public function binance_withdraw(Request $request)
+    {
+        $data['api'] = CryptoApi::where('keyword', $request->keyword)->first();
+        if($data['api'])
+        {
+            $key = $data['api']->api_key;
+            $secret = $data['api']->api_secret;
+            $binance = new BinanceAPI($key, $secret);
+            $res = $binance->withdraw(
+                $request->asset,
+                $request->address,
+                $request->amount
+                );
+                if(isset($res['code'])) {
+                    return redirect()->back()->with(array('warning' => json_encode((object)$res['msg']) ));
+                }
         }
         $msg = __('Crypto Withdraw Successfully.');
         return redirect()->back()->with(array('message' => $msg));
@@ -207,6 +260,20 @@ class SystemAccountController extends Controller
                 'method' => $request->method
             ));
             $data['result'] =(object)$res['result'];
+        }
+        return $data['result'];
+    }
+
+    public function binance_depositAddresses(Request $request)
+    {
+        $data['api'] = CryptoApi::where('keyword', $request->keyword)->first();
+        if($data['api'])
+        {
+            $key = $data['api']->api_key;
+            $secret = $data['api']->api_secret;
+            $binance = new BinanceAPI($key, $secret);
+            $data['result'] = $binance->depositAddress($request->asset);
+
         }
         return $data['result'];
     }

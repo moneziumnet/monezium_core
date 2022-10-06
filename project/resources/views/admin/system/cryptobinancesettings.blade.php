@@ -81,7 +81,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{$balance->$key ?? '0.000000'}} </div>
+                        @php
+                            $amount = $balance->$key;
+                            $amount = (object)$amount;
+                        @endphp
+                        <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{$amount->available ?? '0.000000'}} </div>
                     </div>
                     </div>
                 </div>
@@ -105,12 +109,6 @@
         <h3 class="text-center">@lang('Deposit')</h3>
             <input name="pair" id="pair" type="hidden">
             <input name="keyword" value="{{$keyword}}" type="hidden">
-            <div class="form-group mt-3">
-                <label class="form-label required">{{__('Deposit Method')}}</label>
-                <select name="method" id="depositmethod" class="form-control" required>
-                    <option value="">{{ __('Select Deposit Method') }}</option>
-                </select>
-            </div>
             <div id="address_list" class="mb-3">
             </div>
             <div class="form-group">
@@ -129,12 +127,12 @@
         <div class="modal-body py-4">
         <div class="text-center"><i  class="fas fa-info-circle fa-3x text-primary mb-2"></i></div>
         <h3 class="text-center">@lang('Exchange')</h3>
-        <form action="{{route('admin.system.crypto.order')}}" method="post" class="m-3" enctype="multipart/form-data">
+        <form action="{{route('admin.system.crypto.binance.order')}}" method="post" class="m-3" enctype="multipart/form-data">
             @csrf
 
             <div class="form-group">
                 <label for="inp-name">{{ __('Exchange Amount') }}</label>
-                <input name="amount" class="form-control" autocomplete="off" placeholder="{{__('Eth Amount')}}" value="" type="number" min="0.01" step="any" required>
+                <input name="amount" class="form-control" autocomplete="off" placeholder="{{__('Please input Eth Amount')}}" value="" type="number" min="0.01" step="any" required>
             </div>
             <input name="pair_type" id="pair_type" type="hidden" value="">
             <input name="order_type" id="order_type" type="hidden" value="">
@@ -158,16 +156,11 @@
         <div class="modal-body py-4">
         <div class="text-center"><i  class="fas fa-info-circle fa-3x text-primary mb-2"></i></div>
         <h3 class="text-center">@lang('Withdraw To System')</h3>
-        <form action="{{route('admin.system.crypto.withdraw')}}" method="post" class="m-3" enctype="multipart/form-data">
+        <form action="{{route('admin.system.crypto.binance.withdraw')}}" method="post" class="m-3" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
-                <label for="inp-name">{{ __('Key') }}</label>
-                <input name="withdraw_key" id="withdraw_key" class="form-control" autocomplete="off" placeholder="{{__('New Withdraw Key')}}" value="" type="text" readonly>
-            </div>
-
-            <div class="form-group">
-                <label for="inp-name">{{ __('Avaliable Amount') }}</label>
-                <input name="available_amount" id="available_amount" class="form-control" autocomplete="off" placeholder="{{__('Amount')}}" value="{{$balance->BTC ?? ''}}" type="number"  readonly>
+                <label for="inp-name">{{ __('Address') }}</label>
+                <input name="address" id="address" class="form-control" autocomplete="off" placeholder="{{__('New Withdraw Address')}}" value="" type="text" >
             </div>
 
             <div class="form-group">
@@ -195,67 +188,48 @@
 @section('scripts')
 <script type="text/javascript">
     "use strict";
-    function deposit(asset, keyword) {
-        $('#address_list').html('');
-        var url = '{{route('admin.system.crypto.depositMethods')}}'
-        var token = '{{ csrf_token() }}';
-        var data  = {asset:asset,keyword:keyword,_token:token}
-        let _optionHtml = '<option value="">Select method.</option>' ;
-        $.post(url,data, function(res) {
-            if(res.length == 0) {
-                _optionHtml = '<option value="">There is no method.</option>';
-            }
-            else {
-                $.each(res, function(i, item) {
-                    _optionHtml += '<option value="'+ item.method +'" data-asset="'+ asset +'">'+ item.method +'</option>';
-                })
-            }
-            $('select#depositmethod').html(_optionHtml);
-            $('#modal-deposit').modal('show');
-          })
-    }
 
     function exchange(to, from='ETH') {
         if (to=='ETH') {
             $('#pair_type').val(from+'BTC')
-            $('#order_type').val('sell')
+            $('#order_type').val('SELL')
         }
         else {
             $('#pair_type').val(from+to)
-            $('#order_type').val('buy')
+            $('#order_type').val('BUY')
         }
         $('#modal-exchange').modal('show')
     }
 
     function withdraw(asset) {
+
+        $('#asset').val(asset)
         $('#modal-withdraw').modal('show')
     }
 
-    $('#depositmethod').on('change', function() {
-        var url = '{{route('admin.system.crypto.depositaddress')}}'
+    function deposit(asset, keyword) {
+        var url = '{{route('admin.system.crypto.binance.depositaddress')}}'
         var token = '{{ csrf_token() }}';
         var keyword = '{{$keyword}}';
-        var method = $('#depositmethod').val();
-        var asset = $('#depositmethod option:selected');
 
 
-        var data  = {asset:asset.data('asset'),keyword:keyword,method:method,_token:token}
+        var data  = {asset:asset,keyword:keyword,_token:token}
         var _divHtml = '';
         $.post(url,data, function(res) {
-            if(res.length == 0) {
+            console.log(res)
+            if(!res.address) {
                 _divHtml = '<h5 class="text-center">There is no available address.</h5>';
             }
             else {
-                $.each(res, function(i, item) {
-                    _divHtml += '<div class="form-group"> \
+                    _divHtml = '<div class="form-group"> \
                         <label for="inp-name">Address</label> \
-                        <input class="form-control" autocomplete="off" value="'+ item.address +'" type="text"  readonly> \
+                        <input class="form-control" autocomplete="off" value="'+ res.address +'" type="text"  readonly> \
                     </div>'
-                })
             }
             $('#address_list').html(_divHtml);
+            $('#modal-deposit').modal('show');
           })
-    })
+    }
     $('#deposit_confirm').on('click', function() {
         $('#modal-deposit').modal('hide')
 
