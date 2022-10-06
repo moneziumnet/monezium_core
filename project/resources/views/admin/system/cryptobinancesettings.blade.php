@@ -82,8 +82,9 @@
                             </div>
                         </div>
                         @php
-                            $amount = $balance->$key;
-                            $amount = (object)$amount;
+
+                            $amount = $balance->$key ?? '';
+                            $amount = (object)$amount ?? '';
                         @endphp
                         <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{$amount->available ?? '0.000000'}} </div>
                     </div>

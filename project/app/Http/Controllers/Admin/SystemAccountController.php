@@ -80,7 +80,7 @@ class SystemAccountController extends Controller
     public function setting($keyword)
     {
         $data['api'] = CryptoApi::where('keyword', $keyword)->first();
-        if($data['api'])
+        if($data['api']->api_key && $data['api']->api_secret)
         {
             $beta = false;
             $url = $beta ? 'https://api.beta.kraken.com' : 'https://api.kraken.com';
@@ -102,7 +102,7 @@ class SystemAccountController extends Controller
     public function binance_setting()
     {
         $data['api'] = CryptoApi::where('keyword', 'binance')->first();
-        if($data['api']) {
+        if($data['api']->api_key && $data['api']->api_secret) {
             $key = $data['api']->api_key;
             $secret = $data['api']->api_secret;
             $binance = new BinanceAPI($key, $secret);
