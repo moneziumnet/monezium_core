@@ -943,6 +943,14 @@ class UserController extends Controller
             return view('admin.user.profilebankaccount',$data);
         }
 
+        public function updateinfo(Request $request) {
+            $bank_account = BankAccount::find($request->bank_account_id);
+            $bank_account->iban = $request->iban;
+            $bank_account->swift = $request->swift;
+            $bank_account->save();
+            return back()->with('message', 'Updated successfully');
+        }
+
         public function storeBankAccount(Request $request) {
 
             $bankaccount = BankPoolAccount::where('bank_id', $request->subbank)->where('currency_id', $request->currency)->first();

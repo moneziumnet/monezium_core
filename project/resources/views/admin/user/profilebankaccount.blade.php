@@ -18,8 +18,8 @@
     <div class="card  tab-card">
       @include('admin.user.profiletab')
       <div class="tab-content" id="myTabContent">
-          @php
-        $currency = defaultCurr();
+        @php
+            $currency = defaultCurr();
         @endphp
         @include('includes.admin.form-success')
         <div class="tab-pane fade show active" id="modules" role="tabpanel" aria-labelledby="modules-tab">
@@ -36,21 +36,25 @@
 
                                     @foreach ($bankaccount as $value )
                                     <div class="col-xl-3 col-md-6 mb-4">
-                                        <div class="card h-100" >
-                                        <div class="card-body">
-                                            <div class="row align-items-center">
-                                            <div class="col mr-2">
-                                                <div class="row mb-1 mr-1">
-                                                    <div class='col font-weight-bold text-gray-900'>{{__($value->iban)}}</div>
-                                                    <div class='col font-weight-bold text-gray-900'>{{__($value->swift)}}</div>
+                                        <div 
+                                            class="card h-100 {{$value->iban == '' ? 'iban-modal': ''}}" 
+                                            style="{{$value->iban == '' ? 'background-color: #a2b2c5;' : ''}}" 
+                                            data-id="{{$value->id}}"
+                                        >
+                                            <div class="card-body">
+                                                <div class="row align-items-center">
+                                                <div class="col mr-2">
+                                                    <div class="row mb-1 mr-1">
+                                                        <div class='col font-weight-bold text-gray-900'>{{__($value->iban)}}</div>
+                                                        <div class='col font-weight-bold text-gray-900'>{{__($value->swift)}}</div>
+                                                    </div>
+                                                    <div class="d-flex mb-1 mr-1">
+                                                        <div class="mr-auto font-weight-bold text-gray-800"> {{__($value->subbank->name)}} </div>
+                                                        <div class='font-weight-bold text-gray-900'>{{__($value->currency->code)}}</div>
+                                                    </div>
                                                 </div>
-                                                <div class="d-flex mb-1 mr-1">
-                                                    <div class="mr-auto font-weight-bold text-gray-800"> {{__($value->subbank->name)}} </div>
-                                                    <div class='font-weight-bold text-gray-900'>{{__($value->currency->code)}}</div>
                                                 </div>
                                             </div>
-                                            </div>
-                                        </div>
                                         </div>
                                     </div>
                                     @endforeach
@@ -72,44 +76,70 @@
 {{-- Account MODAL --}}
 <div class="modal modal-blur fade" id="modal-success-2" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-md modal-dialog-centered" role="document">
-    <div class="modal-content">
-        <div class="modal-status bg-primary"></div>
-        <div class="modal-body py-4">
-            <div class="text-center">
-                <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
-                <h3>@lang('Bank Account')</h3>
+        <div class="modal-content">
+            <div class="modal-status bg-primary"></div>
+            <div class="modal-body py-4">
+                <div class="text-center">
+                    <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+                    <h3>@lang('Bank Account')</h3>
+                </div>
+                <form class="bankaccount mt-4 mx-3" action="" method="POST" >
+                    {{ csrf_field() }}
+                    <div class="form-group">
+                        <label for="inp-name">{{ __('SubInstitions Bank') }}</label>
+                        <select class="form-control" name="subbank" id="subbank" required>
+                            <option value="">{{ __('Select SubInstitions Bank') }}</option>
+                            @foreach ($subbank as $bank)
+                                @if($bank->hasGateway())
+                                    <option value="{{$bank->id}}">{{ __($bank->name) }}</option>
+                                @endif
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="inp-name">{{ __('Currency') }}</label>
+                        <select class="form-control" name="currency" id="currency" required>
+                            <option value="">{{ __('Select Currency') }}</option>
+                            @foreach ($currencylist as $value )
+                                <option value="{{$value->id}}">{{ __($value->code) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <input type="hidden" name="user" value="{{$data->id}}">
+                    <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Create') }}</button>
+                </form>
             </div>
-            <form class="bankaccount mt-4 mx-3" action="" method="POST" >
-                {{ csrf_field() }}
-                <div class="form-group">
-                    <label for="inp-name">{{ __('SubInstitions Bank') }}</label>
-                    <select class="form-control" name="subbank" id="subbank" required>
-                        <option value="">{{ __('Select SubInstitions Bank') }}</option>
-                        @foreach ($subbank as $bank)
-                            @if($bank->hasGateway())
-                                <option value="{{$bank->id}}">{{ __($bank->name) }}</option>
-                            @endif
-                        @endforeach
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="inp-name">{{ __('Currency') }}</label>
-                    <select class="form-control" name="currency" id="currency" required>
-                        <option value="">{{ __('Select Currency') }}</option>
-                        @foreach ($currencylist as $value )
-                            <option value="{{$value->id}}">{{ __($value->code) }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <input type="hidden" name="user" value="{{$data->id}}">
-                <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Create') }}</button>
-            </form>
         </div>
     </div>
-    </div>
-    </div>
+</div>
 {{-- Account MODAL ENDS --}}
 
+<div class="modal modal-blur fade" id="modal-iban" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-status bg-primary"></div>
+            <div class="modal-body py-4">
+                <div class="text-center">
+                    <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+                    <h3>@lang('Enter Bank Account Info')</h3>
+                </div>
+                <form class="mt-4 mx-3" action="{{route('admin-user-bank-updateinfo')}}" method="POST" id="iban-form" >
+                    {{ csrf_field() }}
+                    <div class="form-group">
+                        <label for="inp-name">{{ __('Bank IBAN') }}</label>
+                        <input type="text" class="form-control" name="iban" id="iban" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="inp-name">{{ __('Bank SWIFT') }}</label>
+                        <input type="text" class="form-control" name="swift" id="swift" required />
+                    </div>
+                    <input type="hidden" name="bank_account_id" id="bank_account_id">
+                    <button type="submit" class="btn btn-primary w-100">{{ __('Confrim') }}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 @endsection
 
@@ -118,21 +148,23 @@
 
 <script type="text/javascript">
     "use strict";
-$('#subbank').on('change', function() {
-    $.post("{{ route('admin-user-bank-gateway') }}",{id:$('#subbank').val(),_token:'{{csrf_token()}}'},function (res) {
-        
-        if(res.keyword == 'railsbank') {
-            $('.bankaccount').prop('action','{{ route('admin.user.bank.railsbank') }}');
-        }
-        if(res.keyword == 'openpayd') {
-            $('.bankaccount').prop('action','{{ route('admin.user.bank.openpayd') }}');
-        }
+    $('#subbank').on('change', function() {
+        $.post("{{ route('admin-user-bank-gateway') }}",{id:$('#subbank').val(),_token:'{{csrf_token()}}'},function (res) {    
+            if(res.keyword == 'railsbank') {
+                $('.bankaccount').prop('action','{{ route('admin.user.bank.railsbank') }}');
+            }
+            if(res.keyword == 'openpayd') {
+                $('.bankaccount').prop('action','{{ route('admin.user.bank.openpayd') }}');
+            }
         });
-})
-function CreateAccount() {
-    $('#modal-success-2').modal('show')
-}
-
+    })
+    $('.iban-modal').on('click', function () {
+        $('#modal-iban').modal('show');
+        $('#bank_account_id').val($(this).data('id'));
+    })
+    function CreateAccount() {
+        $('#modal-success-2').modal('show')
+    }
 </script>
 
 @endsection
