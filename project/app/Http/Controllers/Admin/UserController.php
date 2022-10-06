@@ -35,6 +35,7 @@ use App\Models\BankPlan;
 use App\Models\BankPoolAccount;
 use App\Models\Beneficiary;
 use App\Models\PlanDetail;
+use App\Models\VirtualCard;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use Auth;
@@ -280,6 +281,30 @@ class UserController extends Controller
                     $trans->details     = trans('Card Issuance');
                     $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
                     $trans->save();
+                    
+                    $trx='VC-'.Str::random(6);
+                    $sav['user_id']=$user->id;
+                    $sav['first_name']=explode(" ", $user->name)[0];
+                    $sav['last_name']=explode(" ", $user->name)[1];
+                    $sav['account_id']=$user->id;
+                    $sav['card_hash']=$user->id;
+                    $sav['card_pan']=generate_card_number(16);
+                    $sav['masked_card']='mc_'.rand(100, 999);
+                    $sav['cvv']=rand(100, 999);
+                    $sav['expiration']='10/24';
+                    $sav['card_type']='normal';
+                    $sav['name_on_card']='noc_US';
+                    $sav['callback']=" ";
+                    $sav['ref_id']=$trx;
+                    $sav['secret']=$trx;
+                    $sav['city']=$user->city;
+                    $sav['zip_code']=$user->zip;
+                    $sav['address']=$user->address;
+                    $sav['wallet_id']=$user_wallet->id;
+                    $sav['amount']=0;
+                    $sav['currency_id']=$currency_id;
+                    $sav['charge']=0;
+                    VirtualCard::create($sav);
                   }
                   else {
                     $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
