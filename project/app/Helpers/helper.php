@@ -828,4 +828,15 @@ if(!function_exists('getModule')){
     }
   }
 
+  if(!function_exists('generate_card_number'))
+  {
+    function generate_card_number($limit) {
+      $code = '';
+      for($i = 0; $i < $limit; $i++) { 
+          $code .= mt_rand(0, 9); 
+      }
+      return $code;
+    }
+  }
+
 ?>

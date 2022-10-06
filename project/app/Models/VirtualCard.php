@@ -26,6 +26,7 @@ class VirtualCard extends Model
     'ref_id',
     'city',
     'state',
+    'wallet_id',
     'address',
     'zip_code'];
     public function user()
@@ -35,6 +36,11 @@ class VirtualCard extends Model
     public function currency()
     {
         return $this->belongsTo(Currency::class,'currency_id')->withDefault();
+    }
+
+    public function wallet()
+    {
+        return $this->belongsTo(Wallet::class, 'wallet_id')->withDefault();
     }
 
 }

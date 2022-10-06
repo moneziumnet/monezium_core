@@ -19,6 +19,7 @@ class CreateVirtualCardsTable extends Migration
             $table->text('first_name')->nullable();
             $table->text('last_name')->nullable();
             $table->integer('account_id');
+            $table->integer('wallet_id');
             $table->string('card_hash');
             $table->string('card_pan');
             $table->string('masked_card');

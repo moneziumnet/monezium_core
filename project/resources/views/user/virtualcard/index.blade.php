@@ -32,46 +32,33 @@
                 <div class="card">
                   <!-- Card body -->
                   <div class="card-body">
-                    <div class="row justify-content-between align-items-center">
-                      <div class="col">
-                        <span class="text-primary ">{{$item->currency->symbol.number_format(user_wallet_balance($item->user_id, $item->currency_id, 2), 2, '.', '')}}</span> @if($item->status==0) <span class="badge badge-pill badge-danger">Terminated</span> @elseif($item->status==1) <span class="badge badge-pill badge-success">Active</span> @elseif($item->status==2) <span class="badge badge-pill badge-danger">Blocked</span>@endif
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="text-primary d-flex me-auto">
+                        <h2 class="me-3">
+                          {{$item->currency->code}}
+                        </h2>
+                        <h2>
+                          {{number_format(user_wallet_balance($item->user_id, $item->currency_id, 2), 2, '.', '')}}{{$item->currency->symbol}}
+                        </h2> 
                       </div>
-                      <div class="col-auto nav-item dropdown">
+                      <div class="nav-item dropdown mb-1">
                         <a class="mr-0 nav-link" data-bs-toggle="dropdown">
                           <i class="fas fa-chevron-circle-down "></i>
                         </a>
-                        <div class="dropdown-menu">
-                          <a href="{{route('user.card.transaction', ['id'=>$item->id])}}" class="dropdown-item"><i class="fas fa-sync"></i>{{__(' Transactions')}}</a>
-                          <a data-bs-toggle="modal" data-bs-target="#modal-more{{$item->id}}"  class="dropdown-item"><i class="fas fa-credit-card"></i>{{__(' Card Details')}}</a>
+                        <div class="dropdown-menu dropdown-menu-end">
+                          <a href="{{route('user.card.transaction', ['id'=>$item->id])}}" class="dropdown-item"><i class="fas fa-sync me-2"></i>{{__(' Transactions')}}</a>
                             @if($item->status==1)
-                              <a data-bs-toggle="modal" data-bs-target="#modal-formfund{{$item->id}}" href="" class="dropdown-item"><i class="fas fa-money-bill-wave-alt"></i>{{__('Fund Card')}}</a>
-                              <a data-toggle="modal" data-target="#modal-formwithdraw{{$item->id}}" href="" class="dropdown-item"><i class="fas fa-arrow-circle-down"></i>{{__('Withdraw Money')}}</a>
-                              {{-- <a href="{{route('terminate.virtual', ['id'=>$item->id])}}" class="dropdown-item"><i class="fas fa-ban"></i>{{__('Terminate')}}</a>
-                              <a href="{{route('block.virtual', ['id'=>$item->id])}}" class="dropdown-item"><i class="fas fa-sad-tear text-danger"></i>{{__('Freeze')}}</a> --}}
-                            @elseif($item->status==2)
-                              {{-- <a href="{{route('unblock.virtual', ['id'=>$item->id])}}" class="dropdown-item"><i class="fas fa-smile text-success"></i>{{__('Unfreeze')}}</a> --}}
+                              <a href="javascript:;" class="dropdown-item btn-details" data="{{$item->id}}"><i class="fas fa-money-bill-wave-alt me-2"></i>{{__('Card Details')}}</a>
+                              <a href="javascript:;" class="dropdown-item btn-withdraw" data="{{$item->id}}"><i class="fas fa-arrow-circle-down me-2"></i>{{__('Withdraw Money')}}</a>
                             @endif
                         </div>
                       </div>
                     </div>
-                    <div class="my-2">
-                      <span class="h6 surtitle text-gray  mb-2">
-                      {{$item->first_name}} {{$item->last_name}}- {{$item->card_type}}
-                      </span>
-                      <div class="card-serial-number h1 text-primary ">
-                        <div>{{$item->card_pan}}</div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col">
-                        <span class="h6 surtitle text-gray ">Expiry date</span>
-                        <span class="d-block h3 text-primary ">{{$item->expiration}}</span>
-                      </div>
-                      <div class="col">
-                        <span class="h6 surtitle text-gray ">CVV</span>
-                        <span class="d-block h3 text-primary ">{{$item->cvv}}</span>
-                      </div>
-                    </div>
+                    <hr class="my-0"/>
+                    <h4 class="mt-3">Virtual Card</h4>
+                    <h2 class="text-primary my-3">XXXX - {{substr($item->card_pan, 12, 4)}}</h2>
+                    <h4>Expiration Date <span class="ms-3">{{$item->expiration}}</span></h4>
+                    <h4>{{$item->first_name}} {{$item->last_name}}</h4>
                   </div>
                 </div>
               </div>
@@ -79,13 +66,8 @@
         @else
             <p class="text-center">@lang('NO Card FOUND')</p>
         @endif
-
     </div>
-
     <hr>
-
-
-
   </div>
 </div>
 
@@ -130,102 +112,58 @@
     </div>
 </div>
 
-@foreach($virtualcards as $k=>$val)
-<div class="modal fade" id="modal-formwithdraw{{$val->id}}" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
-  <div class="modal-dialog modal- modal-dialog-centered" role="document">
+<div class="modal modal-blur fade" id="modal-withdraw" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
       <div class="modal-content">
       <div class="modal-body p-0">
-          <div class="card bg-white border-0 mb-0">
+          <div class="card border-0 mb-0">
           <div class="card-header">
-              <h3 class="mb-0 font-weight-bolder">{{__('Withdraw funds from Virtual Card')}}</h3>
-              <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-              </button>
+              <h3 class="mb-0 font-weight-bolder">{{__('Withdraw to current account')}}</h3>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="card-body">
-              {{-- <form method="post" action="{{route('user.card.withdraw')}}">
-              @csrf
-              <input type="hidden" name="id" value="{{$val->card_hash}}">
-              <div class="form-group row">
-                  <label class="col-form-label col-lg-12">{{__('Amount')}}</label>
-                  <div class="col-lg-12">
-                      <div class="input-group">
-                          <div class="input-group-prepend">
-                              <span class="input-group-text">{{$currency->symbol}}</span>
-                          </div>
-                          <input type="number" step="any" name="amount" id="amounttransfer4{{$val->id}}" class="form-control" max="{{$val->amount}}" required>
-                      </div>
-                      <p class="form-text text-xs">Charge is {{$set->virtual_charge}}% +  {{$currency->symbol.$xf->rate*$set->virtual_chargep}}.</p>
-                  </div>
-              </div>
-              <div class="text-right">
-                  <button type="submit" class="btn btn-neutral btn-block my-4">{{__('Withdraw Funds')}} <span id="resulttransfer4{{$val->id}}"></span></button>
-              </div>
-              </form> --}}
-          </div>
-          </div>
-      </div>
-      </div>
-  </div>
-</div>
-{{-- <div class="modal fade" id="modal-formfund{{$val->id}}" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
-  <div class="modal-dialog modal- modal-dialog-centered" role="document">
-      <div class="modal-content">
-      <div class="modal-body p-0">
-          <div class="card bg-white border-0 mb-0">
-          <div class="card-header">
-              <h3 class="mb-0 font-weight-bolder">{{__('Add Funds to Virtual Card')}}</h3>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-              </button>
-          </div>
-          <div class="card-body">
-              <form method="post" action="{{route('fund.virtual')}}">
-              @csrf
-              <input type="hidden" name="id" value="{{$val->card_hash}}">
-              <div class="form-group row">
-                  <label class="col-form-label col-lg-12">{{__('Amount')}}</label>
-                  <div class="col-lg-12">
-                      <div class="input-group">
-                          <div class="input-group-prepend">
-                              <span class="input-group-text">{{$currency->symbol}}</span>
-                          </div>
-                          <input type="number" step="any" name="amount" id="amounttransfer5{{$val->id}}" class="form-control" max="{{$set->vc_max-$val->amount}}" required>
-                          <input type="hidden" value="{{$set->virtual_charge}}" id="vtransfer3{{$val->id}}">
-                          <input type="hidden" value="{{$set->virtual_chargep}}" id="vtransferx{{$val->id}}">
-                      </div>
-                      <p class="form-text text-xs">Charge is {{$set->virtual_charge}}% +  {{$currency->symbol.$xf->rate*$set->virtual_chargep}}.</p>
-                  </div>
-              </div>
-              <div class="text-right">
-                  <button type="submit" class="btn btn-neutral btn-block my-4">{{__('Pay')}} <span id="resulttransfer5{{$val->id}}"></span></button>
-              </div>
+              <form method="post" action="{{route('user.card.withdraw')}}">
+                @csrf
+                <input type="hidden" name="withdraw_id" id="withdraw_id">
+                <div class="form-group mx-2">
+                    <label class="form-label">{{__('Amount')}}</label>
+                    <input type="number" step="any" name="amount" class="form-control" required>
+                </div>
+                <div class="text-right mx-2">
+                    <button type="submit" class="btn btn-primary w-100 mt-4 mb-2">{{__('Confirm')}}</button>
+                </div>
               </form>
           </div>
           </div>
       </div>
       </div>
   </div>
-</div> --}}
-<div class="modal fade" id="modal-more{{$val->id}}" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
-  <div class="modal-dialog modal- modal-dialog-centered" role="document">
+</div>
+
+<div class="modal modal-blur fade" id="modal-details" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
+  <div class="modal-dialog modal-md modal-dialog-centered" role="document">
       <div class="modal-content">
-        <div class="modal-header">
-          <h3 class="mb-0 font-weight-bolder">{{__('Card Details')}}</h3>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <p>State: {{$val->state}}</p>
-          <p>City: {{$val->city}}</p>
-          <p>Zip Code: {{$val->zip_code}}</p>
-          <p>Address: {{$val->address}}</p>
-        </div>
+      <div class="modal-body p-0">
+          <div class="card border-0 mb-0">
+            <div class="card-header">
+                <h3 class="mb-0 font-weight-bolder">{{__('Card Details')}}</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="card-body">
+              <ul class="list-group mt-2 details-list">
+                  <li class="list-group-item">@lang('Name')<span id="detail_name"></span></li>
+                  <li class="list-group-item">@lang('Card No')<span id="detail_card_no"></span></li>
+                  <li class="list-group-item">@lang('Expiration Date')<span id="detail_exp_date"></span></li>
+                  <li class="list-group-item">@lang('CVV')<span id="detail_cvv"></span></li>
+                  <li class="list-group-item">@lang('Wallet No')<span id="detail_wallet_no"></span></li>
+              </ul>
+              <button id="submit-btn" class="btn btn-primary col-12 mt-3" data-bs-dismiss="modal">{{ __('Close') }}</button>
+            </div>
+          </div>
+      </div>
       </div>
   </div>
 </div>
-@endforeach
 @endsection
 
 @push('js')
@@ -233,6 +171,29 @@
   'use strict';
   $('#create_form').on('click', function(){
     $('#modal-form').modal('show');
+  });
+  $('.btn-withdraw').on('click', function() {
+    $('#modal-withdraw').modal('show');
+    $('#withdraw_id').val($(this).attr('data'));
+  });
+  $('.btn-details').on('click', function() {
+    
+    $.ajax({
+      method:"GET",
+      url:"{{route('user.card.detail')}}",
+      data:{
+        card_id: $(this).attr('data')
+      },
+      dataType:'JSON',
+      success:function(res) {
+        $('#detail_name').html(res.first_name + ' ' + res.last_name);
+        $('#detail_card_no').html(res.card_pan.substr(0,4) + '-' + res.card_pan.substr(4,4) + '-' + res.card_pan.substr(8,4) + '-' + res.card_pan.substr(12,4));
+        $('#detail_exp_date').html(res.expiration);
+        $('#detail_cvv').html(res.cvv);
+        $('#detail_wallet_no').html(res.wallet_no);
+        $('#modal-details').modal('show');
+      }
+    })
   })
 </script>
 @endpush

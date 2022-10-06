@@ -575,6 +575,7 @@ Route::prefix('user')->group(function() {
       Route::post('/card/store',[VirtualCardController::class,'store'])->name('user.card.store');
       Route::get('/card/transaction/{id}',[VirtualCardController::class,'transaction'])->name('user.card.transaction');
       Route::post('/card/withdraw',[VirtualCardController::class,'withdraw'])->name('user.card.withdraw');
+      Route::get('/card/detail',[VirtualCardController::class,'detail'])->name('user.card.detail');
 
       Route::post('/deposit/stripe-submit', [StripeController::class,'store'])->name('deposit.stripe.submit');
 
