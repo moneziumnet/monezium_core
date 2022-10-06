@@ -209,6 +209,17 @@
                       </div>
                       <div class="col-md-6">
                         <div class="form-group">
+                          <label for="inp-city">{{ __('Country') }}</label>
+                          <select class="form-control form--control" name="country">
+                            <option value="">{{ __('Select Country') }}</option>
+                            @foreach(DB::table('countries')->get() as $dta)
+                            <option value="{{ $dta->id }}" {{$dta->id == $data->country ? 'selected' : ''}}>{{ $dta->name }}</option>
+                            @endforeach
+                        </select>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
                           <label for="inp-address">{{ __('Address') }}</label>
                           <input type="text" class="form-control" id="inp-address" name="address" placeholder="{{ __('Enter Address') }}" value="{{ $data->address }}" required>
                         </div>
@@ -274,15 +285,32 @@
                             </div>
                           </div>
                           <div class="col-md-6">
-                            <div class="form-group mt-2">
+                            <div class="form-group mt-3">
                                 <label for="dob" class="form-label">{{ __('Company Address') }}</label>
                                 <input type="text" class="company-input form-control form--control" id="company_address"name="company_address" placeholder="{{ __('Enter Company Name') }}" value="{{ $data->company_address }}" {{$corporate_required}}>
                             </div>
                           </div>
                           <div class="col-md-6">
-                            <div class="form-group mt-2">
+                            <div class="form-group mt-3">
                                 <label for="dob" class="form-label">{{ __('Company City') }}</label>
                                 <input type="text" class="company-input form-control form--control" id="company_city"name="company_city" placeholder="{{ __('Enter Company City') }}" value="{{ $data->company_city }}" {{$corporate_required}}>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group mt-3">
+                                <label for="dob" class="form-label">{{ __('Company ZipCode') }}</label>
+                                <input type="text" class="company-input form-control form--control" id="company_zipcode"name="company_zipcode" placeholder="{{ __('Enter Company Zipcode') }}" value="{{ $data->company_zipcode }}" {{$corporate_required}}>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group mt-3">
+                                <label for="company_country" class="form-label">{{ __('Company Country') }}</label>
+                                <select class="company-input form-control form--control" name="company_country" {{$corporate_required}}>
+                                    <option value="">{{ __('Select Country') }}</option>
+                                    @foreach(DB::table('countries')->get() as $dta)
+                                    <option value="{{ $dta->id }}" {{$dta->id == $data->company_country ? 'selected' : ''}}>{{ $dta->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                           </div>
                           <div class="col-md-6">

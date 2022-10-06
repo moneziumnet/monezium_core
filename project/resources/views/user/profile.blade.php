@@ -103,7 +103,15 @@
                               <input name="city" class="form-control form--control" autocomplete="off" placeholder="{{__('City')}}" type="text" value="{{ $user->city }}" required>
                             </div>
                           </div>
-
+                          <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="dob" class="form-label">{{ __('Country') }}</label>
+                                @php
+                                  $country = App\Models\Country::find($user->country);
+                                @endphp
+                                <input type="text" class="form-control form--control" value="{{ $country ? $country->name : '' }}" readonly>
+                            </div>
+                          </div>
                           @php
                             $private_required = isset($user->company_name) ? '' : 'required';
                             $corporate_required = isset($user->company_name) ? 'required' : '';
@@ -173,6 +181,21 @@
                                 <div class="form-group mt-2">
                                     <label for="dob" class="form-label">{{ __('Company City') }}</label>
                                     <input type="text" class="company-input form-control form--control" id="company_city"name="company_city" placeholder="{{ __('Enter Company City') }}" value="{{ $user->company_city }}" {{$corporate_required}}>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group mt-3">
+                                    <label for="dob" class="form-label">{{ __('Company ZipCode') }}</label>
+                                    <input type="text" class="company-input form-control form--control" id="company_zipcode"name="company_zipcode" placeholder="{{ __('Enter Company ZipCode') }}" value="{{ $user->company_zipcode }}" {{$corporate_required}}>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group mt-3">
+                                    <label for="dob" class="form-label">{{ __('Company Country') }}</label>
+                                    @php
+                                      $country = App\Models\Country::find($user->company_country);
+                                    @endphp
+                                    <input type="text" class="company-input form-control form--control" value="{{ $country ? $country->name : '' }}" readonly>
                                 </div>
                               </div>
                               <div class="col-md-6">

@@ -109,7 +109,6 @@ class RegisterController extends Controller
         }
 
         $gs = Generalsetting::first();
-        //$subscription = BankPlan::findOrFail($id);
         $subscription = BankPlan::findOrFail($id);
 
         $user = new User;
@@ -133,6 +132,7 @@ class RegisterController extends Controller
             $input['company_type'] = $request->company_type;
             $input['company_city'] = $request->company_city;
             $input['company_country'] = $request->company_country;
+            $input['company_zipcode'] = $request->company_zipcode;
             $input['company_address'] = $request->company_address;
             $input['personal_code'] = null;
             $input['your_id'] = null;
@@ -147,6 +147,10 @@ class RegisterController extends Controller
             $input['issued_authority'] = $request->issued_authority;
             $input['date_of_issue'] = $request->date_of_issue;
             $input['date_of_expire'] = $request->date_of_expire;
+            $input['company_type'] = null;
+            $input['company_city'] = null;
+            $input['company_country'] = null;
+            $input['company_zipcode'] = null;
             $input['company_name'] = null;
             $input['company_reg_no'] = null;
             $input['company_vat_no'] = null;

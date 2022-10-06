@@ -258,12 +258,18 @@ class UserController extends Controller
             $input['company_reg_no'] = null;
             $input['company_vat_no'] = null;
             $input['company_dob'] = null;
+            $input['company_type'] = null;
+            $input['company_city'] = null;
+            $input['company_country'] = null;
+            $input['company_zipcode'] = null;
         } else {
             $input['company_name'] = $request->company_name;
             $input['company_reg_no'] = $request->company_reg_no;
             $input['company_vat_no'] = $request->company_vat_no;
             $input['company_dob'] = $request->company_dob;
-            $input['company_address'] = $request->company_address;
+            $input['company_type'] = $request->company_type;
+            $input['company_city'] = $request->company_city;
+            $input['company_zipcode'] = $request->company_zipcode;
             $input['personal_code'] = null;
             $input['your_id'] = null;
             $input['issued_authority'] = null;
