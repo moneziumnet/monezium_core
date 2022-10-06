@@ -67,9 +67,9 @@
 
                                 <div class="mx-auto col-md-6 mb-3">
                                     <div class="form-label">&nbsp;</div>
-                                    <a href="#" class="btn btn-primary exchange w-100">
+                                    <button href="#" class="btn btn-primary exchange w-100">
                                         @lang('Transfer')
-                                    </a>
+                                    </button>
                                 </div>
                                 <div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
                                     <div class="modal-dialog modal-md modal-dialog-centered" role="document">
@@ -115,6 +115,9 @@
     <script type="text/javascript">
         "use strict";
         $('.exchange').on('click',function () {
+            if(!document.getElementById('between_form').checkValidity()){
+                return;
+            }
             $('#modal_from_wallet').text('{{$wallet_type_list[$wallet->wallet_type]}}')
             $('#modal_currency').text('{{$wallet->currency->code}}')
             $('#modal_to_wallet').text($('#wallet_type  option:selected').text())
