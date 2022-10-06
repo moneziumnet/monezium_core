@@ -161,11 +161,11 @@
             if (attrData) {
                 const data = JSON.parse(attrData);
                 $('#beneficiary_name').html(data.name);
-                $('#beneficiary_address').html(data.address);
-                $('#bank_name').html(data.bank_name);
-                $('#bank_address').html(data.bank_address);
-                $('#swift').html(data.swift_bic);
-                $('#iban').html(data.account_iban);
+                $('#beneficiary_address').html(data.address ?? 'None');
+                $('#bank_name').html(data.bank_name ?? 'None');
+                $('#bank_address').html(data.bank_address ?? 'None');
+                $('#swift').html(data.swift_bic ?? 'None');
+                $('#iban').html(data.account_iban ?? 'None');
                 $('#detail_amount').html('{{$wallet->currency->symbol}}' + $('#amount').val() + ' {{$wallet->currency->code}}');
                 $('#detail_description').html($('#description').val());
             }

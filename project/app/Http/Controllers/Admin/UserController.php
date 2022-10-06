@@ -742,7 +742,7 @@ class UserController extends Controller
                     return redirect()->back()->with('error','Request Amount should be less than this '.$global_range->max);
                 }
 
-                $currency = defaultCurr();
+                $currency =  Currency::findOrFail($wallet->currency_id);
                 $balance = user_wallet_balance($user->id, $currency->id);
 
                 if($balance<0 || $finalAmount > $balance){

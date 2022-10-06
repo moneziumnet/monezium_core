@@ -155,7 +155,7 @@
                                           @php
                                             $subbank = App\Models\SubInsBank::whereId($data->subbank)->first();
                                           @endphp
-                                          <td data-label="{{ __('Sender Bank Name') }}">{{ $subbank->name }}</td>
+                                          <td data-label="{{ __('Sender Bank Name') }}">{{ $subbank ? $subbank->name : '' }}</td>
                                           <td data-label="{{ __('Amount') }}">{{$data->currency->symbol}}{{$data->amount}} {{$data->currency->code}}</td>
                                           <td data-label="{{ __('Status') }}">
                                             @if ($data->status == 1)
