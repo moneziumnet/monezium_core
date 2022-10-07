@@ -20,7 +20,7 @@ class MoneyRequestController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth', ['except' => 'request_user']);
     }
 
     public function index(){
@@ -283,7 +283,7 @@ class MoneyRequestController extends Controller
             return redirect()->route('user.money.request.index');
         }
         else {
-            return redirect()->route('user.register');
+            return redirect()->route('user.register',1);
         }
     }
 
