@@ -16,6 +16,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Datatables;
+use DateTime;
 
 class OtherBankTransferController extends Controller
 {
@@ -23,6 +24,16 @@ class OtherBankTransferController extends Controller
   {
     $this->middleware('auth:admin');
   }
+
+  public function getToken($request, $subbank) {
+    $bankgateway = BankGateway::where('subbank_id', $subbank)->first();
+    $secret = hash('sha512', $bankgateway->information->api_password);
+    $datetime = new DateTime();
+    $now = $datetime->format(DateTime::ATOM);
+    // $body = json_encode($request);
+    $signature = hash('sha512', mb_strtoupper($bankgateway->information->API_Key).$now.mb_strtoupper($secret).mb_strtoupper($request));
+    return array($signature, $now);
+    }
 
   public function datatables()
   {
@@ -305,7 +316,7 @@ class OtherBankTransferController extends Controller
                 return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
                 }
             }
-            else {
+            else if($bankgateway->keyword == 'railsbank') {
 
                 try {
                     $response = $client->request('GET','https://play.railsbank.com/v1/customer/ledgers?account_number='.$customer_bank->iban, [
@@ -367,6 +378,50 @@ class OtherBankTransferController extends Controller
                     $transaction_id = json_decode($response->getBody())->transaction_id;
                 } catch (\Throwable $th) {
                 return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
+                }
+            }
+            else if($bankgateway->keyword == 'clearjunction') {
+                $clientorder = rand(1000000, 9999999);
+                $body = '{
+                    "clientOrder": "'.$clientorder.'",
+                    "currency": "'.$currency->code.'",
+                    "amount": '.$data->amount.',
+                    "description": "'.$data->description.'",
+                    "payee": {
+                      "individual": {
+
+                        "lastName": "'.$data->beneficiary->name.'",
+                        "firstName": "'.$data->beneficiary->name.'"
+                      }
+                    },
+                    "payeeRequisite": {
+                      "iban": "'.$data->iban.'",
+                      "bankSwiftCode": "'.$data->swift_bic.'"
+                    },
+                    "payerRequisite": {
+                      "iban": "'.$customer_bank->iban.'",
+                      "bankSwiftCode": "'.$customer_bank->swift.'"
+                    }
+                  }';
+                  $param = $this->getToken($body, $data->subbank);
+
+                  try {
+                    $response = $client->request('POST',  'https://sandbox.clearjunction.com/v7/gate/payout/bankTransfer/eu?checkOnly=false', [
+                        'body' => $body,
+                        'headers' => [
+                           'Accept'=> '*/*',
+                          'X-API-KEY' => $bankgateway->information->API_Key,
+                          'Authorization' => 'Bearer '.$param[0],
+                          'Date' => $param[1],
+                          'Content-Type' => 'application/json',
+                        ],
+                      ]);
+                      $res_body = json_decode($response->getBody());
+
+                      $transaction_id = $res_body->requestReference;
+                } catch (\Throwable $th) {
+                    return response()->json(array('errors' => [ 0 => $response]));
+
                 }
             }
         }
