@@ -66,7 +66,7 @@ class UserClearJunctionController extends Controller
         $country = Country::findOrFail($user->country);
         $currency = Currency::whereId($request->currency)->first();
         if ($currency->code != 'EUR'){
-            return redirect()->back()->with(array('warning' => 'Sorry, Currently this Railsbank api only supports for EUR because this api is not product version.'));
+            return redirect()->back()->with(array('warning' => 'Sorry, Currently this api only supports for EUR because this api is not product version.'));
         }
 
         if ($bankaccount){
