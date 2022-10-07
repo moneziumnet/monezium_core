@@ -36,9 +36,9 @@
 
                                     @foreach ($bankaccount as $value )
                                     <div class="col-xl-3 col-md-6 mb-4">
-                                        <div 
-                                            class="card h-100 {{$value->iban == '' ? 'iban-modal': ''}}" 
-                                            style="{{$value->iban == '' ? 'background-color: #a2b2c5;' : ''}}" 
+                                        <div
+                                            class="card h-100 {{$value->iban == '' ? 'iban-modal': ''}}"
+                                            style="{{$value->iban == '' ? 'background-color: #a2b2c5;' : ''}}"
                                             data-id="{{$value->id}}"
                                         >
                                             <div class="card-body">
@@ -149,12 +149,16 @@
 <script type="text/javascript">
     "use strict";
     $('#subbank').on('change', function() {
-        $.post("{{ route('admin-user-bank-gateway') }}",{id:$('#subbank').val(),_token:'{{csrf_token()}}'},function (res) {    
+        $.post("{{ route('admin-user-bank-gateway') }}",{id:$('#subbank').val(),_token:'{{csrf_token()}}'},function (res) {
             if(res.keyword == 'railsbank') {
                 $('.bankaccount').prop('action','{{ route('admin.user.bank.railsbank') }}');
             }
             if(res.keyword == 'openpayd') {
                 $('.bankaccount').prop('action','{{ route('admin.user.bank.openpayd') }}');
+            }
+            if(res.keyword == 'clearjunction') {
+
+                $('.bankaccount').prop('action','{{ route('admin.user.bank.clearjunction') }}');
             }
         });
     })
