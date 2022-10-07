@@ -71,32 +71,38 @@
                 <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
                 <h3>@lang('Bank Account')</h3>
             </div>
-            <form class="mt-4 mx-3" action="{{isset($bank_gateway) ? $bank_gateway->keyword == 'openpayd' ? route('admin.user.bank.nogateway') : route('admin.subinstitution.banks.account.railsbank.create') : route('admin.user.bank.nogateway')}}" method="POST"  enctype="multipart/form-data" >
+            @if ($bank_gateway->keyword == 'clearjunction')
+            <div class="text-center mt-3">
+                <h5>@lang('Don\'t need System Bank Account in Clearjunction.')</h5>
+            </div>
+            @else
+                <form class="mt-4 mx-3" action="{{isset($bank_gateway) ? $bank_gateway->keyword == 'openpayd' ? route('admin.user.bank.nogateway') : route('admin.subinstitution.banks.account.railsbank.create') : route('admin.user.bank.nogateway')}}" method="POST"  enctype="multipart/form-data" >
 
-                {{ csrf_field() }}
+                    {{ csrf_field() }}
 
-                <div class="form-group">
-                    <label for="inp-name">{{ __('Currency') }}</label>
-                    <select class="form-control" name="currency" id="currency" required>
-                    <option value="">{{ __('Select Currency') }}</option>
-                    @foreach ($currencylist as $value )
-                        <option value="{{$value->id}}">{{ __($value->code) }}</option>
-                    @endforeach
-                    </select>
-                </div>
-                @if(!isset($bank_gateway) || $bank_gateway->keyword == 'openpayd')
                     <div class="form-group">
-                        <label for="inp-name">{{ __('IBAN') }}</label>
-                        <input type="text" class="form-control" name="iban" required />
+                        <label for="inp-name">{{ __('Currency') }}</label>
+                        <select class="form-control" name="currency" id="currency" required>
+                        <option value="">{{ __('Select Currency') }}</option>
+                        @foreach ($currencylist as $value )
+                            <option value="{{$value->id}}">{{ __($value->code) }}</option>
+                        @endforeach
+                        </select>
                     </div>
-                    <div class="form-group">
-                        <label for="inp-name">{{ __('SWIFT') }}</label>
-                        <input type="text" class="form-control" name="swift" required />
-                    </div>
-                @endif
-                <input type="hidden" name="subbank" value="{{$data->id}}">
-                <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Create') }}</button>
-            </form>
+                    @if(!isset($bank_gateway) || $bank_gateway->keyword == 'openpayd')
+                        <div class="form-group">
+                            <label for="inp-name">{{ __('IBAN') }}</label>
+                            <input type="text" class="form-control" name="iban" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="inp-name">{{ __('SWIFT') }}</label>
+                            <input type="text" class="form-control" name="swift" required />
+                        </div>
+                    @endif
+                    <input type="hidden" name="subbank" value="{{$data->id}}">
+                    <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Create') }}</button>
+                </form>
+            @endif
         </div>
     </div>
     </div>
