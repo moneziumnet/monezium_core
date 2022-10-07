@@ -301,7 +301,11 @@ class RegisterController extends Controller
             $notification->user_id = $user->id;
             $notification->save();
             Auth::guard('web')->login($user);
-
+            if(session()->get('setredirectroute') != NULL){
+                $redirect_url = session()->get('setredirectroute');
+                session()->forget('setredirectroute');
+                return response()->json(["redirect_url" => $redirect_url]);
+            }
             return response()->json(1);
         }
     }

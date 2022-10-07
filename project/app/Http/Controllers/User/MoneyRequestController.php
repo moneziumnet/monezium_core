@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use App\Classes\GeniusMailer;
 use App\Models\Generalsetting;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\URL;
 
 class MoneyRequestController extends Controller
 {
@@ -283,6 +284,7 @@ class MoneyRequestController extends Controller
             return redirect()->route('user.money.request.index');
         }
         else {
+            session()->put('setredirectroute', URL::current());
             return redirect()->route('user.register',1);
         }
     }

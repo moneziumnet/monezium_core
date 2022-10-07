@@ -178,6 +178,10 @@
 				cache: false,
 				processData: false,
 				success: function (data) {
+					if (data.redirect_url){
+						window.location = data.redirect_url;
+						return;
+					}
 					if (data == 1) {
 						window.location = mainurl + "/user/dashboard";
 					} else {

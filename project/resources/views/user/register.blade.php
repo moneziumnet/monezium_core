@@ -151,7 +151,7 @@
                                     $companytype = ['LIMITED_LIABILITY', 'SOLE_TRADER', 'PARTNERSHIP', 'PUBLIC_LIMITED_COMPANY', 'JOINT_STOCK_COMPANY', 'CHARITY']
                                 @endphp
                                 <label for="inp-user-type" class="form-label">{{ __('Select Company Type') }}</label>
-                                <select id="company_type" class="form-control" name="company_type" required>
+                                <select id="company_type" class="company-input form-control" name="company_type">
                                     <option value=""> {{__('Select Company Type')}}</option>
                                     @foreach ( $companytype as $type )
                                         <option value="{{$type}}"> {{$type}}</option>
