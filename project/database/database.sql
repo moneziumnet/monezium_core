@@ -270,9 +270,9 @@ CREATE TABLE `bank_gateways`  (
 -- ----------------------------
 -- Records of bank_gateways
 -- ----------------------------
-INSERT INTO `bank_gateways` VALUES (1, 'RailsBank', '{\"API_Key\":\"\"}', 'railsbank', '[\"1\"]', 0, '2022-08-05 11:22:08', '2022-08-05 11:22:08');
-INSERT INTO `bank_gateways` VALUES (2, 'ClearJunction', '{\"API_Key\":\"\", \"api_password\":\"\"}', 'clearjunction', '[\"1\",\"4\",\"17\"]', 0, '2022-08-05 11:22:08', '2022-08-05 11:22:08');
-INSERT INTO `bank_gateways` VALUES (3, 'OpenPayd', '{\"Auth\":\"\"}', 'openpayd', '[\"8\"]', 0, '2022-08-05 11:22:08', '2022-08-05 11:22:08');
+INSERT INTO `bank_gateways` VALUES (1, 'RailsBank', '{\"API_Key\":\"\"}', 'railsbank', '[\"2\"]', 0, '2022-08-05 11:22:08', '2022-08-05 11:22:08');
+INSERT INTO `bank_gateways` VALUES (2, 'ClearJunction', '{\"API_Key\":\"\", \"api_password\":\"\", \"wallet_uuid\":\"\"}', 'clearjunction', '[\"2\"]', 0, '2022-08-05 11:22:08', '2022-08-05 11:22:08');
+INSERT INTO `bank_gateways` VALUES (3, 'OpenPayd', '{\"Auth\":\"\"}', 'openpayd', '[\"1\", \"2\", \"3\"]', 0, '2022-08-05 11:22:08', '2022-08-05 11:22:08');
 
 
 -- ----------------------------
