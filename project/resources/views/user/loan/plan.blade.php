@@ -7,52 +7,44 @@
 @section('contents')
 
 <div class="container-xl">
-    <div class="page-header d-print-none">
-      <div class="row align-items-center">
-        <div class="col">
-          </div>
-          <h2 class="page-title">
-            {{__('Loan Account')}}
-          </h2>
-        </div>
-      </div>
+  <div class="page-header d-print-none">
+    <div class="row align-items-center">
+      <h2 class="page-title">
+        {{__('Loan Account')}}
+      </h2>
     </div>
-
-    <div class="page-body">
-      <div class="container-xl">
-      <div class="row justify-content " style="max-height: 368px;">
-        @foreach ($wallets as $item)
-        <div class="col-sm-6 col-md-4 mb-3">
-            <div class="card h-100 card--info-item">
-              <div class="text-end icon">
-                <i class="fas ">
-                    {{$item->currency->symbol}}
-                </i>
-              </div>
-              <div class="card-body">
-                <div class="h3 m-0 text-uppercase"> {{__('Loan')}}</div>
-                <div class="h4 m-0 text-uppercase"> {{ $item->wallet_no }}</div>
-                <div class="text-muted">{{ amount($item->balance,$item->currency->type,2) }}  {{$item->currency->code}}</div>
-              </div>
+  </div>
+  <div class="page-body">
+    <div class="container-xl">
+    <div class="row justify-content " style="max-height: 368px;">
+      @foreach ($wallets as $item)
+      <div class="col-sm-6 col-md-4 mb-3">
+          <div class="card h-100 card--info-item">
+            <div class="text-end icon">
+              <i class="fas ">
+                  {{$item->currency->symbol}}
+              </i>
             </div>
-        </div>
-        @endforeach
+            <div class="card-body">
+              <div class="h3 m-0 text-uppercase"> {{__('Loan')}}</div>
+              <div class="h4 m-0 text-uppercase"> {{ $item->wallet_no }}</div>
+              <div class="text-muted">{{ amount($item->balance,$item->currency->type,2) }}  {{$item->currency->code}}</div>
+            </div>
+          </div>
       </div>
-      </div>
+      @endforeach
     </div>
-
-<div class="container-xl">
-    <div class="page-header d-print-none">
-      <div class="row align-items-center">
-        <div class="col">
-          <h2 class="page-title">
-            {{__('Loan Plan')}}
-          </h2>
-        </div>
+    </div>
+  </div>
+  <div class="page-header d-print-none">
+    <div class="row align-items-center">
+      <div class="col">
+        <h2 class="page-title">
+          {{__('Loan Plan')}}
+        </h2>
       </div>
     </div>
   </div>
-
   <div class="page-body">
     <div class="container-xl">
       <div class="row mb--25-none">
@@ -128,60 +120,14 @@
       </div>
     </div>
   </div>
-
-
-
-  <div class="modal modal-blur fade" id="modal-apply" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">{{('Apply for Loan')}}</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-
-        <form action="{{ route('user.loan.amount') }}" method="post">
-            @csrf
-            <div class="modal-body">
-              <div class="form-group">
-                <label class="form-label required">{{__('Amount')}}</label>
-                <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" step="any" value="{{ old('amount') }}" min="1" required>
-              </div>
-
-              <div class="form-group mt-3">
-                <label class="form-label required">{{__('Currency')}}</label>
-                <select name="currency_id" id="withcurrency" class="form-select" required>
-                    <option value="">{{ __('Select Currency') }}</option>
-                    @foreach ($currencylist as $currency )
-                    <option value="{{$currency->id}}">{{ $currency->code }}</option>
-                    @endforeach
-                </select>
-              </div>
-
-
-              <input type="hidden" name="planId" id="planId" value="">
-            </div>
-
-            <div class="modal-footer">
-                <button type="submit" id="submit-btn" class="btn btn-primary">{{ __('Submit') }}</button>
-            </div>
-        </form>
-      </div>
+  <div class="page-header d-print-none">
+    <div class="row align-items-center">
+      <h2 class="page-title">
+        {{__('Loan Manage')}}
+      </h2>
     </div>
   </div>
-  <div class="container-xl">
-    <div class="page-header d-print-none">
-      <div class="row align-items-center">
-        <div class="col">
-          </div>
-          <h2 class="page-title">
-            {{__('Loan Manage')}}
-          </h2>
-        </div>
-      </div>
-    </div>
-</div>
-
-<div class="page-body">
+  <div class="page-body">
     <div class="container-xl">
         <div class="row row-cards">
             <div class="col-12">
@@ -277,9 +223,49 @@
             </div>
         </div>
     </div>
+  </div>
+</div>
+
+
+<div class="modal modal-blur fade" id="modal-apply" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{('Apply for Loan')}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <form action="{{ route('user.loan.amount') }}" method="post">
+          @csrf
+          <div class="modal-body">
+            <div class="form-group">
+              <label class="form-label required">{{__('Amount')}}</label>
+              <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" step="any" value="{{ old('amount') }}" min="1" required>
+            </div>
+
+            <div class="form-group mt-3">
+              <label class="form-label required">{{__('Currency')}}</label>
+              <select name="currency_id" id="withcurrency" class="form-select" required>
+                  <option value="">{{ __('Select Currency') }}</option>
+                  @foreach ($currencylist as $currency )
+                  <option value="{{$currency->id}}">{{ $currency->code }}</option>
+                  @endforeach
+              </select>
+            </div>
+
+
+            <input type="hidden" name="planId" id="planId" value="">
+          </div>
+
+          <div class="modal-footer">
+              <button type="submit" id="submit-btn" class="btn btn-primary">{{ __('Submit') }}</button>
+          </div>
+      </form>
+    </div>
+  </div>
 </div>
 <div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+  <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
     <div class="modal-content">
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         <div class="modal-status bg-primary"></div>
@@ -299,9 +285,9 @@
             </div>
         </form>
     </div>
-    </div>
+  </div>
 </div>
-  @endsection
+@endsection
 
 @push('js')
 
