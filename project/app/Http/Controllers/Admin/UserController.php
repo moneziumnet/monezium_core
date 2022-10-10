@@ -1025,7 +1025,7 @@ class UserController extends Controller
 
                                ->addColumn('kyc', function(User $data) {
                                    if($data->kyc_status == 1){
-                                    $status  = __('Approve');
+                                    $status  = __('Approved');
                                    }elseif($data->kyc_status == 2){
                                     $status  = __('Rejected');
                                    }else{

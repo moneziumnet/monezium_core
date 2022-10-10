@@ -18,7 +18,9 @@
       @include('admin.user.profiletab')
 
       <div class="tab-content" id="myTabContent">
-        @include('includes.admin.form-success')
+        <div class="p-3">
+          @include('includes.admin.form-success')
+        </div>
         <div class="tab-pane fade show active" id="modules" role="tabpanel" aria-labelledby="modules-tab">
             <div class="card-body">
                 <div class="card mb-4">
