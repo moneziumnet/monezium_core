@@ -187,17 +187,17 @@
                     {{__('Request Money')}}
                 </a>
                 @endif
-                
+
                 <!-- <a class="dropdown-item" href="{{route('user.merchant.other.bank')}}">
                   {{__('Other Bank Transfer')}}
                 </a> -->
-                
+
               </div>
             </li>
             @endif
 
             @if(check_user_type(4) || DB::table('managers')->where('manager_id', auth()->id())->first())
-            <li class="nav-item dropdown {{  request()->routeIs('user.referral.index') ? 'active' : '' }}">
+            <li class="nav-item dropdown {{  request()->routeIs('user.referral.index', 'user.manager.create', 'user-pricingplan') ? 'active' : '' }}">
               <a class="nav-link" href="{{route('user.referral.index')}}" >
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                   <i class="fas fa-box"></i>

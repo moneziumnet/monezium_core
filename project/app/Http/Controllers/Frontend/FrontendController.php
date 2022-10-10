@@ -71,7 +71,7 @@ class FrontendController extends Controller
                 $gs = Generalsetting::findOrFail(1);
                 if ($gs->is_affilate == 1) {
                     Session::put('affilate', $affilate_user->id);
-                    return redirect()->route('user.register');
+                    return redirect()->route('user.register', 1);
                 }
             }
         }
