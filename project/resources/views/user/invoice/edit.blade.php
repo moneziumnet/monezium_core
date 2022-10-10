@@ -273,7 +273,7 @@
 </div>
 
 <div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
     <div class="modal-content">
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         <div class="modal-status bg-primary"></div>
@@ -284,29 +284,52 @@
                 <div class="col">
                     <form action="{{route('user.invoice.beneficiary.create')}}" method="post" enctype="multipart/form-data">
                         @csrf
-                        <div class="form-group mt-2">
-                            <label class="form-label required">{{__('Name')}}</label>
-                            <input name="name" id="name" class="form-control shadow-none" placeholder="{{__('Name')}}" type="text" value="{{ old('name') }}" required>
-                        </div>
-                        <div class="form-group mt-2">
-                            <label class="form-label required">{{__('Email')}}</label>
-                            <input name="email" id="email" class="form-control shadow-none" placeholder="{{__('user@email.com')}}" type="email" value="{{ old('email') }}" required>
-                        </div>
-                        <div class="form-group mt-2">
-                            <label class="form-label required">{{__('Phone Number')}}</label>
-                            <input name="phone" id="phone" class="form-control shadow-none" placeholder="{{__('+123456789')}}" type="text" value="{{ old('phone') }}" required>
-                        </div>
-                        <div class="form-group mt-2">
-                            <label class="form-label required">{{__('Registration NO')}}</label>
-                            <input name="registration_no" id="registration_no" class="form-control shadow-none" placeholder="{{__('Registration NO')}}" type="text" value="{{ old('registration_no') }}" required>
-                        </div>
-                        <div class="form-group mt-2">
-                            <label class="form-label required">{{__('VAT NO')}}</label>
-                            <input name="vat_no" id="vat_no" class="form-control shadow-none" placeholder="{{__('VAT NO')}}" type="text" value="{{ old('vat_no') }}" required>
-                        </div>
-                        <div class="form-group mt-2">
-                            <label class="form-label required">{{__('Contact Person')}}</label>
-                            <input name="contact_person" id="contact_person" class="form-control shadow-none" placeholder="{{__('Contact Person')}}" type="text" value="{{ old('contact_person') }}" required>
+                        <div class="row">
+                            <div class="form-group mt-3 col-md-6">
+                                <label class="form-label required">{{__('Name')}}</label>
+                                <input name="name" id="name" class="form-control shadow-none" placeholder="{{__('Name')}}" type="text" value="{{ old('name') }}" required>
+                            </div>
+                            <div class="form-group mt-3 col-md-6">
+                                <label class="form-label required">{{__('Email')}}</label>
+                                <input name="email" id="email" class="form-control shadow-none" placeholder="{{__('user@email.com')}}" type="email" value="{{ old('email') }}" required>
+                            </div>
+                            <div class="form-group mt-3 col-md-6">
+                                <label class="form-label required">{{__('Address')}}</label>
+                                <input name="address" id="address" class="form-control shadow-none" placeholder="{{__('Address')}}" type="text" value="{{ old('address') }}" required>
+                            </div>
+                            <div class="form-group mt-3 col-md-6">
+                                <label class="form-label required">{{__('Phone Number')}}</label>
+                                <input name="phone" id="phone" class="form-control shadow-none" placeholder="{{__('+123456789')}}" type="text" value="{{ old('phone') }}" required>
+                            </div>
+                            <div class="form-group mt-3 col-md-6">
+                                <label class="form-label required">{{__('Registration NO')}}</label>
+                                <input name="registration_no" id="registration_no" class="form-control shadow-none" placeholder="{{__('Registration NO')}}" type="text" value="{{ old('registration_no') }}" required>
+                            </div>
+                            <div class="form-group mt-3 col-md-6">
+                                <label class="form-label required">{{__('VAT NO')}}</label>
+                                <input name="vat_no" id="vat_no" class="form-control shadow-none" placeholder="{{__('VAT NO')}}" type="text" value="{{ old('vat_no') }}" required>
+                            </div>
+                            <div class="form-group mt-3 col-md-6">
+                                <label class="form-label required">{{__('Contact Person')}}</label>
+                                <input name="contact_person" id="contact_person" class="form-control shadow-none" placeholder="{{__('Contact Person')}}" type="text" value="{{ old('contact_person') }}" required>
+                            </div>
+                            <hr class="my-3"/>
+                            <div class="form-group mt-3 col-md-6">
+                                <label class="form-label required">{{__('Bank Name')}}</label>
+                                <input name="bank_name" id="bank_name" class="form-control" autocomplete="off" placeholder="{{__('Enter Bank Name')}}" type="text" value="{{ old('bank_name') }}" required>
+                            </div>
+                            <div class="form-group mt-3 col-md-6">
+                                <label class="form-label required">{{__('Bank Address')}}</label>
+                                <input name="bank_address" id="bank_address" class="form-control" autocomplete="off" placeholder="{{__('Enter Bank Address')}}" type="text" value="{{ old('bank_address') }}" min="1" required>
+                            </div>
+                            <div class="form-group mt-3 col-md-6">
+                                <label class="form-label required">{{__('SWIFT/BIC')}}</label>
+                                <input name="swift_bic" id="swift_bic" class="form-control" autocomplete="off" placeholder="{{__('MEINATWW')}}" type="text" value="{{ old('swift_bic') }}" min="1" required>
+                            </div>
+                            <div class="form-group mt-3 col-md-6">
+                                <label class="form-label required">{{__('Account/IBAN')}}</label>
+                                <input name="account_iban" id="account_iban" class="form-control" autocomplete="off" placeholder="{{__('Enter Account/IBAN')}}" type="text" value="{{ old('account_iban') }}" min="1" required>
+                            </div>
                         </div>
                         <input type="hidden" name="user_id" value="{{auth()->id()}}">
                         <div class="row mt-3">
