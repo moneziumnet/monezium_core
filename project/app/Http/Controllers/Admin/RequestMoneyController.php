@@ -25,7 +25,7 @@ class RequestMoneyController extends Controller
                 $data = User::whereId($data->user_id)->first();
                 if($data){
                     return '<div>
-                            <span>'.$data->name.'</span>
+                            <span>'.($data->company_name ?? $data->name).'</span>
                             <p>'.$data->email.'</p>
                     </div>';
                 }else{
@@ -37,7 +37,7 @@ class RequestMoneyController extends Controller
 
                 if($data){
                     return '<div>
-                            <span>'.$data->name.'</span>
+                            <span>'.($data->company_name ?? $data->name).'</span>
                             <p>'.$data->email.'</p>
                     </div>';
                 }else{

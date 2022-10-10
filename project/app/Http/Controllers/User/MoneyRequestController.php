@@ -273,6 +273,13 @@ class MoneyRequestController extends Controller
         return back()->with('message','Successfully Money Request Cancelled.');
     }
 
+    public function delete($id)
+    {
+        $data = MoneyRequest::findOrFail($id);
+        $data->delete();
+        return back()->with('message','Money Request Deleted Successfully.');
+    }
+
     public function request_user($id) {
         $data = MoneyRequest::where('transaction_no', decrypt($id))->first();
         if(auth()->user()) {
