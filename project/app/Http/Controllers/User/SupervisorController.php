@@ -30,7 +30,7 @@ class SupervisorController extends Controller
     public function datatables($id)
     {
         $user = User::findOrFail($id);
-        $globals = Charge::where('plan_id', $user->bank_plan_id)->whereIn('slug', ['deposit', 'send', 'recieve', 'escrow', 'withdraw', 'exchange'])->get();
+        $globals = Charge::where('plan_id', $user->bank_plan_id)->whereIn('slug', ['deposit', 'send', 'recieve', 'escrow', 'withdraw', 'exchange', 'payment_between_accounts'])->get();
         $datas = $globals;
         return Datatables::of($datas)
                         ->editColumn('name', function(Charge $data) {

@@ -4,7 +4,7 @@
     <input  type="hidden" name="plan_id" class="form-control" value="{{$plandetail->plan_id}}">
     <input  type="hidden" name="slug" class="form-control" value="{{$plandetail->slug}}">
     @php
-        $accountlist = ['Deposit', 'Send', 'Recieve', 'Escrow', 'Withdraw', 'Exchange']
+        $accountlist = ['Deposit', 'Send', 'Recieve', 'Escrow', 'Withdraw', 'Exchange', 'Payment Between Accounts']
     @endphp
     <div class="form-group">
     <label class="form-label">{{__('Select Type')}}</label>

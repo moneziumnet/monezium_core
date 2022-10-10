@@ -285,7 +285,7 @@ class UserController extends Controller
                     $trans->details     = trans('Card Issuance');
                     $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
                     $trans->save();
-                    
+
                     $trx='VC-'.Str::random(6);
                     $sav['user_id']=$user->id;
                     $sav['first_name']=explode(" ", $user->name)[0];
@@ -541,42 +541,42 @@ class UserController extends Controller
                 'amount'            => 'required|numeric|min:0',
                 'description'       => 'required',
             ]);
-            
+
             $wallet = Wallet::where('id',$request->wallet_id)->with('currency')->first();
             $user = User::find($wallet->user_id);
-    
+
             if($user->bank_plan_id === null){
                 return redirect()->back()->with('error','This user have to buy a plan to withdraw.');
             }
-    
+
             if(now()->gt($user->plan_end_date)){
                 return redirect()->back()->with('error','Plan Date Expired.');
             }
-    
+
             $currency_id = $wallet->currency->id;
-    
+
             $dailySend = BalanceTransfer::whereUserId($user->id)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus(1)->sum('amount');
             $monthlySend = BalanceTransfer::whereUserId($user->id)->whereMonth('created_at', '=', date('m'))->whereStatus(1)->sum('amount');
             $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'send')->first();
-    
+
             if($dailySend > $global_range->daily_limit){
                 return redirect()->back()->with('error','Daily send limit over.');
             }
-    
+
             if($monthlySend > $global_range->monthly_limit){
                 return redirect()->back()->with('error','Monthly send limit over.');
             }
-    
+
             $gs = Generalsetting::first();
-    
+
             if($request->email == $user->email){
                 return redirect()->back()->with('error','Can not send money to himself!!');
             }
-    
+
             if($request->amount < 0){
                 return redirect()->back()->with('error','Request Amount should be greater than this!');
             }
-    
+
             if($request->amount > user_wallet_balance($user->id, $currency_id, $wallet->wallet_type)){
                 return redirect()->back()->with('error','Insufficient Balance.');
             }
@@ -610,9 +610,9 @@ class UserController extends Controller
                 $trans->trnx = str_rand();
                 $trans->user_id     = $user->referral_id;
                 $trans->user_type   = 1;
-    
+
                 $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-    
+
                 $trans->currency_id = $currency_id;
                 $trans->amount      = $transaction_custom_cost;
                 $trans->charge      = 0;
@@ -622,13 +622,13 @@ class UserController extends Controller
                 $trans->data        = '{"sender":"'.$user->name.'", "receiver":"'.User::findOrFail($user->referral_id)->name.'"}';
                 $trans->save();
             }
-            
+
             $finalCharge = amount($transaction_global_cost+$transaction_custom_cost, $wallet->currency->type);
             $finalamount = amount( $request->amount + $finalCharge, $wallet->currency->type);
             user_wallet_increment(0, $currency_id, $transaction_global_cost, 9);
-            
+
             if($receiver = User::where('email',$request->email)->first()){
-                
+
                 $txnid = Str::random(4).time();
                 $data = new BalanceTransfer();
                 $data->user_id = $user->id;
@@ -641,10 +641,10 @@ class UserController extends Controller
                 $data->description = $request->description;
                 $data->status = 1;
                 $data->save();
-    
+
                 user_wallet_decrement($user->id, $currency_id, $finalamount, $wallet->wallet_type);
                 user_wallet_increment($receiver->id, $currency_id, $request->amount, $wallet->wallet_type);
-    
+
                 $trans = new Transaction();
                 $trans->trnx = $txnid;
                 $trans->user_id     = $user->id;
@@ -659,7 +659,7 @@ class UserController extends Controller
                 $trans->details     = trans('Send Money');
                 $trans->data        = '{"sender":"'.$user->name.'", "receiver":"'.$receiver->name.'"}';
                 $trans->save();
-    
+
                 $trans = new Transaction();
                 $trans->trnx = $txnid;
                 $trans->user_id     = $receiver->id;
@@ -674,7 +674,7 @@ class UserController extends Controller
                 $trans->details     = trans('Send Money');
                 $trans->data        = '{"sender":"'.$user->name.'", "receiver":"'.$receiver->name.'"}';
                 $trans->save();
-    
+
                 if($wallet->currency->code == 'ETH') {
                     RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
                     $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
@@ -685,13 +685,13 @@ class UserController extends Controller
                     $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
                     RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, $request->amount],$wallet->keyword);
                 }
-    
+
                 $to = $receiver->email;
                 $subject = " Money send successfully.";
                 $msg = "Hello ".$receiver->name."!\nMoney send successfully.\nThank you.";
                 $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
                 @mail($to,$subject,$msg,$headers);
-    
+
                 return redirect(route('admin-user-accounts',$user->id))->with('message', 'Send money successfully.');
             }else{
                 return redirect()->back()->with('error','Sender not found!');
@@ -717,7 +717,7 @@ class UserController extends Controller
             $wallet = Wallet::where('id',$request->wallet_id)->with('currency')->first();
             $user = User::find($wallet->user_id);
             $beneficiary = Beneficiary::find($request->beneficiary_id);
-            
+
             $other_bank_limit = Generalsetting::first()->other_bank_limit;
             if ($request->amount >= $other_bank_limit) {
                 $rules = ['document' => 'required|mimes:xls,xlsx,pdf,jpg,png'];
@@ -1284,7 +1284,7 @@ class UserController extends Controller
         public function profilePricingplandatatables($id)
         {
             $user = User::findOrFail($id);
-            $globals = Charge::where('plan_id', $user->bank_plan_id)->whereIn('slug', ['deposit', 'send', 'recieve', 'escrow', 'withdraw', 'exchange'])->orderBy('name','desc')->get();
+            $globals = Charge::where('plan_id', $user->bank_plan_id)->whereIn('slug', ['deposit', 'send', 'recieve', 'escrow', 'withdraw', 'exchange', 'payment_between_accounts'])->orderBy('name','desc')->get();
             $datas = $globals;
             return Datatables::of($datas)
                             ->editColumn('name', function(Charge $data) {

@@ -265,6 +265,30 @@ class BankPlanController extends Controller
         ]);
 
         DB::table('charges')->insert([
+            'name' => 'Payment between accounts 1',
+            'slug' => 'payment_between_accounts',
+            'data' => '{"percent_charge":"1","fixed_charge":"2","from":"1","till":"5000"}',
+            'plan_id' => $data->id,
+            'user_id' => 0
+        ]);
+
+        DB::table('charges')->insert([
+            'name' => 'Payment between accounts 2',
+            'slug' => 'payment_between_accounts',
+            'data' => '{"percent_charge":"1","fixed_charge":"3","from":"5001","till":"20000"}',
+            'plan_id' => $data->id,
+            'user_id' => 0
+        ]);
+
+        DB::table('charges')->insert([
+            'name' => 'Payment between accounts 3',
+            'slug' => 'payment_between_accounts',
+            'data' => '{"percent_charge":"1","fixed_charge":"2","from":"20001","till":"50000"}',
+            'plan_id' => $data->id,
+            'user_id' => 0
+        ]);
+
+        DB::table('charges')->insert([
             'name' => 'Account Maintenance',
             'slug' => 'account-maintenance',
             'data' => '{"percent_charge":"2","fixed_charge":"2"}',
