@@ -65,8 +65,26 @@
     <script src="{{ asset('assets/front/js/custom.js') }}"></script>
     <script src="{{ asset('assets/user/js/notify.min.js') }}"></script>
     <script src="{{ asset('assets/front/js/toastr.min.js') }}"></script>
+    <script>
+        'use strict';
+        @if(Session::has('message'))
+        toastr.options =
+        {
+            "closeButton" : true,
+            "progressBar" : true
+        }
+        toastr.success("{{ session('message') }}");
+        @endif
 
-    @stack('js')
+        @if(Session::has('error'))
+        toastr.options =
+        {
+            "closeButton" : true,
+            "progressBar" : true
+        }
+        toastr.error("{{ session('error') }}");
+        @endif
+    </script>
 </body>
 
 </html>

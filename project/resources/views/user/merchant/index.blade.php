@@ -129,8 +129,8 @@
     data-siteurl="{{url('/')}}"
     data-currency="USD"
     data-amount="500"
-    fn-success="success"
-    fn-error="error"&gt;
+    fn-success="onsuccess"
+    fn-error="onerror"&gt;
     &lt;button&gt;Buy&lt;/button&gt;
 &lt;/div&gt;
 &lt;script src="{{url('/assets/api/payment.js')}}"&gt;&lt;/script&gt;

@@ -22,12 +22,22 @@ use Illuminate\Support\Facades\Validator;
 class AccessController extends Controller
 {
     public function index(Request $request) {
-        $site_key = $request->site_key ?? Session::get('site_key');
-        $amount = $request->amount;
-        $currency = Currency::where('code', $request->currency)->first();
+        if($request->site_key) {
+            $site_key = $request->site_key;
+            $amount = $request->amount;
+            $currency_id = $request->currency;
+        } else {
+            $site_key = Session::get('site_key');
+            $amount = Session::get('amount');
+            $currency_id = Session::get('currency_id');
+        }
+        
+        $currency = Currency::where('code', $currency_id)->first();
         $user_api = UserApiCred::where('access_key', $site_key)->first();
         if($user_api) {
             Session::put('site_key', $site_key);
+            Session::put('currency_id', $currency_id);
+            Session::put('amount', $amount);
             $user = $user_api->user;
             $bankaccounts = BankAccount::where('user_id', $user->id)->where('currency_id', $currency->id)->get();
             $cryptolist = Currency::whereStatus(1)->where('type', 2)->get();
@@ -51,25 +61,26 @@ class AccessController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-          return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
+            $errors = $validator->getMessageBag()->toArray();
+            return back()->with('error', $errors['email'][0] ?? $errors['password'][0]);
         }
 
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
 
             if(Auth::guard('web')->user()->is_banned == 1) {
               Auth::guard('web')->logout();
-              return response()->json(array('errors' => [ 0 => 'You are Banned From this system!' ]));
+              return back()->with("error", "You are Banned From this system!" );
             }
 
             if(Auth::guard('web')->user()->email_verified == 'No') {
               Auth::guard('web')->logout();
-              return response()->json(array('errors' => [ 0 => 'Your Email is not Verified!' ]));
+              return back()->with("error", "Your Email is not Verified!" );
             }
 
             return redirect(route('api.pay.index'))->with('message', 'Login successfully.');
         }
 
-        return response()->json(array('errors' => [ 0 => "Credentials Doesn't Match !" ]));
+        return back()->with("error", "Credentials Doesn't Match !" );
     }
 
     public function crypto_pay(Request $request) {
@@ -126,7 +137,10 @@ class AccessController extends Controller
             ]);
         } elseif($request->payment == 'wallet'){
             if(Auth::guest()) {
-                return redirect(route('api.pay.login'))->with('error', 'You need to login MT Payment System.');
+                return response()->json([
+                    'type' => 'login',
+                    'payload' => route('api.pay.login')
+                ]);
             }
             $wallet = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('currency_id',$request->currency_id)->where('wallet_type', 1)->first();
 

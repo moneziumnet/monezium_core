@@ -280,8 +280,12 @@
                     url: $(this).attr('action'),
                     data: $(this).serialize(),
                     success: function(msg) {
-                        window.close();
-                        window.opener.postMessage(msg,"*");             
+                        if(msg && msg.type == 'login') {
+                            window.location = msg.payload
+                        } else {
+                            window.close();
+                            window.opener.postMessage(msg,"*");             
+                        }
                     }
                 });
             }
