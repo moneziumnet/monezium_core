@@ -28,7 +28,7 @@
     @csrf
     <input  type="hidden" name="name" class="form-control" value="{{$plandetail->name}}">
     <input  type="hidden" name="user_id" class="form-control" value="{{$plandetail->user_id}}">
-    <input  type="hidden" name="plan_id" class="form-control" value="0">
+    <input  type="hidden" name="plan_id" class="form-control" value="{{$plandetail->plan_id}}">
     <input  type="hidden" name="slug" class="form-control" value="{{$plandetail->slug}}">
 
     @if($plandetail->data)

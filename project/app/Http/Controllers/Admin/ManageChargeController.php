@@ -12,7 +12,7 @@ class ManageChargeController extends Controller
 
     public function datatables($id)
     {
-         $datas = Charge::where('plan_id', $id)->get();
+         $datas = Charge::where('plan_id', $id)->where('user_id', 0)->get();
 
          return Datatables::of($datas)
                             ->editColumn('name', function(Charge $data) {

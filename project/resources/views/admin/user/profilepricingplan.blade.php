@@ -152,14 +152,6 @@
             }
         });
 
-        $(function() {
-        $(".btn-area").append('<div class="col-sm-12 col-md-4 pr-3 text-right">'+
-            '<button class="btn btn-primary"  data-id="'+'{{$plan->id}}'+'" onclick="createglobalplan(\''+'{{$plan->id}}'+'\')" ><i class="fas fa-plus"></i> {{__('Add New Plan')}} </button>'+
-        '</a>'+
-        '</div>');
-    });
-
-
         function getDetails (id=null)
         {
             if (id) {
@@ -193,22 +185,6 @@
             $('#modal-success').modal('hide');
         });
 
-        function createglobalplan(id)
-        {
-                var url = "{{url('admin/user/pricingplancreate')}}"+'/'+`${id}`
-                console.log(url);
-                $.get(url,function (res) {
-                  if(res == 'empty'){
-                    $('.list-group').html('<p>@lang('No details found!')</p>')
-                  }else{
-                    $('.list-group').html(res)
-                  }
-                });
-                $('#modal-success').modal('show')
-        }
-        $('.closed').click(function() {
-            $('#modal-success').modal('hide');
-        });
 </script>
 
 @endsection

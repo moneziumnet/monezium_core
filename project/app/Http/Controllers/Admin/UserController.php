@@ -1284,7 +1284,7 @@ class UserController extends Controller
         public function profilePricingplandatatables($id)
         {
             $user = User::findOrFail($id);
-            $globals = Charge::where('plan_id', $user->bank_plan_id)->whereIn('slug', ['deposit', 'send', 'recieve', 'escrow', 'withdraw', 'exchange', 'payment_between_accounts'])->orderBy('name','desc')->get();
+            $globals = Charge::where('plan_id', $user->bank_plan_id)->where('user_id', 0)->orderBy('name','desc')->get();
             $datas = $globals;
             return Datatables::of($datas)
                             ->editColumn('name', function(Charge $data) {
@@ -1307,7 +1307,7 @@ class UserController extends Controller
                                 }
                             })
                             ->editColumn('percent_customer', function(Charge $data) use($id) {
-                                $customplan =  Charge::where('user_id',$id)->where('name', $data->name)->first();
+                                $customplan =  Charge::where('user_id',$id)->where('plan_id', 0)->where('name', $data->name)->first();
                                 if ($customplan){
                                     return $customplan->data->percent_charge;
                                 }
@@ -1316,7 +1316,7 @@ class UserController extends Controller
                                 }
                             })
                             ->editColumn('fixed_customer', function(Charge $data) use($id) {
-                                $customplan =  Charge::where('user_id',$id)->where('name', $data->name)->first();
+                                $customplan =  Charge::where('user_id',$id)->where('plan_id', 0)->where('name', $data->name)->first();
 
                                 if ($customplan){
                                     return $customplan->data->fixed_charge;
@@ -1388,10 +1388,11 @@ class UserController extends Controller
 
         public function profilePricingplancreate($id, $charge_id) {
             $global = Charge::findOrFail($charge_id);
+            $user = User::findOrFail($id);
             $plandetail = new Charge();
             $plandetail->name = $global->name;
             $plandetail->user_id = $id;
-            $plandetail->plan_id = 0;
+            $plandetail->plan_id = $user->bank_plan_id;
             $plandetail->data =  $global->data;
             $plandetail->slug = $global->slug;
             return view('admin.user.profilepricingplanedit',compact('plandetail'));
