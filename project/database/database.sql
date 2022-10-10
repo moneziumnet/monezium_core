@@ -249,6 +249,15 @@ INSERT INTO `charges` VALUES (72, 'Exchange 3', 'exchange', '{\"percent_charge\"
 INSERT INTO `charges` VALUES (73, 'Exchange 1', 'exchange', '{\"percent_charge\":\"1\",\"fixed_charge\":4,\"from\":\"1\",\"till\":\"5000\"}', 3, '2022-07-07 18:58:02', '2022-07-07 18:58:02', 0);
 INSERT INTO `charges` VALUES (74, 'Exchange 2', 'exchange', '{\"percent_charge\":\"1\",\"fixed_charge\":\"3\",\"from\":\"5001\",\"till\":\"20000\"}', 3, '2022-07-07 18:58:03', '2022-07-07 18:58:03', 0);
 INSERT INTO `charges` VALUES (75, 'Exchange 3', 'exchange', '{\"percent_charge\":\"1\",\"fixed_charge\":\"10\",\"from\":\"20001\",\"till\":\"50000\"}', 3, '2022-07-07 18:58:03', '2022-07-07 18:58:03', 0);
+INSERT INTO `charges` VALUES (76, 'Payment between accounts 1', 'payment_between_accounts', '{\"percent_charge\":\"1\",\"fixed_charge\":4,\"from\":\"1\",\"till\":\"5000\"}', 1, '2022-07-07 18:58:02', '2022-07-07 18:58:02', 0);
+INSERT INTO `charges` VALUES (77, 'Payment between accounts 2', 'payment_between_accounts', '{\"percent_charge\":\"1\",\"fixed_charge\":\"3\",\"from\":\"5001\",\"till\":\"20000\"}', 1, '2022-07-07 18:58:03', '2022-07-07 18:58:03', 0);
+INSERT INTO `charges` VALUES (78, 'Payment between accounts 3', 'payment_between_accounts', '{\"percent_charge\":\"1\",\"fixed_charge\":\"10\",\"from\":\"20001\",\"till\":\"50000\"}', 1, '2022-07-07 18:58:03', '2022-07-07 18:58:03', 0);
+INSERT INTO `charges` VALUES (79, 'Payment between accounts 1', 'payment_between_accounts', '{\"percent_charge\":\"1\",\"fixed_charge\":4,\"from\":\"1\",\"till\":\"5000\"}', 2, '2022-07-07 18:58:02', '2022-07-07 18:58:02', 0);
+INSERT INTO `charges` VALUES (80, 'Payment between accounts 2', 'payment_between_accounts', '{\"percent_charge\":\"1\",\"fixed_charge\":\"3\",\"from\":\"5001\",\"till\":\"20000\"}', 2, '2022-07-07 18:58:03', '2022-07-07 18:58:03', 0);
+INSERT INTO `charges` VALUES (81, 'Payment between accounts 3', 'payment_between_accounts', '{\"percent_charge\":\"1\",\"fixed_charge\":\"10\",\"from\":\"20001\",\"till\":\"50000\"}', 2, '2022-07-07 18:58:03', '2022-07-07 18:58:03', 0);
+INSERT INTO `charges` VALUES (82, 'Payment between accounts 1', 'payment_between_accounts', '{\"percent_charge\":\"1\",\"fixed_charge\":4,\"from\":\"1\",\"till\":\"5000\"}', 3, '2022-07-07 18:58:02', '2022-07-07 18:58:02', 0);
+INSERT INTO `charges` VALUES (83, 'Payment between accounts 2', 'payment_between_accounts', '{\"percent_charge\":\"1\",\"fixed_charge\":\"3\",\"from\":\"5001\",\"till\":\"20000\"}', 3, '2022-07-07 18:58:03', '2022-07-07 18:58:03', 0);
+INSERT INTO `charges` VALUES (84, 'Payment between accounts 3', 'payment_between_accounts', '{\"percent_charge\":\"1\",\"fixed_charge\":\"10\",\"from\":\"20001\",\"till\":\"50000\"}', 3, '2022-07-07 18:58:03', '2022-07-07 18:58:03', 0);
 
 
 -- ----------------------------
