@@ -211,7 +211,7 @@ class SendController extends Controller
             $trans->type        = '-';
             $trans->remark      = 'Internal Payment';
             $trans->details     = trans('Send Money');
-            $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.$receiver->name.'"}';
+            $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name).'"}';
             $trans->save();
 
 
@@ -227,7 +227,7 @@ class SendController extends Controller
             $trans->type        = '+';
             $trans->remark      = 'Internal Payment';
             $trans->details     = trans('Send Money');
-            $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.$receiver->name.'"}';
+            $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name).'"}';
             $trans->save();
 
             session(['sendstatus'=>1, 'saveData'=>$trans]);
@@ -251,7 +251,7 @@ class SendController extends Controller
 
                 $to = $receiver->email;
                 $subject = " Money send successfully.";
-                $msg = "Hello ".$receiver->name."!\nMoney send successfully.\nThank you.";
+                $msg = "Hello ".($receiver->company_name ?? $receiver->name)."!\nMoney send successfully.\nThank you.";
                 $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
                 mail($to,$subject,$msg,$headers);
 

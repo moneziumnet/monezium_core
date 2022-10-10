@@ -58,7 +58,7 @@
                                           </td>
                                           <td data-label="{{ __('Sender') }}">
                                             <div>
-                                              {{ auth()->user()->name }}
+                                              {{ auth()->user()->company_name ?? auth()->user()->name }}
                                             </div>
                                           </td>
                                           <td data-label="{{ __('Amount') }}">
@@ -159,7 +159,7 @@
                                           </td>
                                           <td data-label="{{ __('Request From') }}">
                                             <div>
-                                              {{ $from != NULL ? $from->name : 'User Deleted' }}
+                                              {{ $from != NULL ? ($from->company_name ?? $from->name) : 'User Deleted' }}
                                             </div>
                                           </td>
                                           <td data-label="{{ __('Amount') }}">

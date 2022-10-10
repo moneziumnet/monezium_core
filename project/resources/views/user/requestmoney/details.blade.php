@@ -4,8 +4,8 @@
     <i class="fas fa-info-circle fa-3x text-primary mb-2"></i>
     <h3>@lang('Request Money Details')</h3>
     <ul class="list-group details-list mt-2">
-        <li class="list-group-item">@lang('Request From')<span>{{$from->name}}</span></li>
-        <li class="list-group-item">@lang('Request To')<span>{{ $to ? $to->name : $data->receiver_name }}</span></li>
+        <li class="list-group-item">@lang('Request From')<span>{{$from->company_name ?? $from->name}}</span></li>
+        <li class="list-group-item">@lang('Request To')<span>{{ $to ? ($to->company_name ?? $to->name) : $data->receiver_name }}</span></li>
         <li class="list-group-item">@lang('Amount')<span>{{ $data->currency->symbol }}{{ amount($data->amount, 1, 2) }} {{ $data->currency->code }}</span></li>
         <li class="list-group-item">@lang('Cost')<span>{{ $data->currency->symbol }}{{ amount($data->cost + $data->supervisor_cost, 1, 2) }} {{ $data->currency->code }}</span></li>
         <li class="list-group-item">@lang('Amount To Get')<span>{{ $data->currency->symbol }}{{ amount($data->amount - $data->cost - $data->supervisor_cost, 1, 2) }} {{ $data->currency->code }}</span></li>

@@ -207,7 +207,7 @@ class MoneyRequestController extends Controller
             $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
             $trans->remark      = $remark;
             $trans->details     = trans('Request Money');
-            $trans->data        = '{"sender":"'.$sender->name.'", "receiver":"'.$referral_user->name.'"}';
+            $trans->data        = '{"sender":"'.($sender->company_name ?? $sender->name).'", "receiver":"'.($referral_user->company_name ?? $referral_user->name).'"}';
             $trans->save();
         }
         if (isset($data->shop_id)) {
@@ -233,7 +233,7 @@ class MoneyRequestController extends Controller
         $trans->charge      = 0;
         $trans->type        = '-';
         $trans->remark      = 'Request_Money';
-        $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.$receiver->name.'"}';
+        $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name).'"}';
         $trans->details     = trans('Request Money');
 
         $trans->save();
@@ -251,7 +251,7 @@ class MoneyRequestController extends Controller
         $trans->charge      = $data->cost + $data->supervisor_cost;
         $trans->type        = '+';
         $trans->remark      = 'Request_Money';
-        $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.$receiver->name.'"}';
+        $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name).'"}';
         $trans->details     = trans('Request Money');
 
         $trans->save();
