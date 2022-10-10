@@ -17,13 +17,13 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 
 class QRAccessController extends Controller
 {
     public function index(Request $request) {
         $site_key = $request->site_key ?? Session::get('site_key');
-        $amount = $request->amount;
         $currencylist = Currency::where('status', 1)->get();
         $user_api = UserApiCred::where('access_key', $site_key)->first();
         if($user_api) {
@@ -36,8 +36,6 @@ class QRAccessController extends Controller
             return view('merchantqr.error');
         }
     }
-
-
 
     public function crypto_pay(Request $request) {
         $pre_currency = Currency::findOrFail($request->currency_id)->code;
@@ -86,6 +84,7 @@ class QRAccessController extends Controller
             return redirect(route('user.dashboard'))->with('message', 'Crypto Payment completed');
         } else if($request->payment == 'wallet'){
             if(Auth::guest()) {
+                session()->put('setredirectroute', route('qr.pay.index'));
                 return redirect(route('user.login'))->with('error', 'You need to login MT Payment System.');
             }
             $wallet = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('currency_id',$request->currency_id)->where('wallet_type', 1)->first();
