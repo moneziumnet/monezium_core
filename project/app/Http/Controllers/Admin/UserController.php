@@ -54,51 +54,55 @@ class UserController extends Controller
              $datas = User::orderBy('id','desc');
 
              return Datatables::of($datas)
-                                ->addColumn('action', function(User $data) {
-                                    return '<div class="btn-group mb-1">
-                                        <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        '.'Actions' .'
-                                        </button>
-                                        <div class="dropdown-menu" x-placement="bottom-start">
-                                        <a href="' . route('admin-user-profile',$data->id) . '"  class="dropdown-item">'.__("Profile").'</a>
-                                        <a href="javascript:;" class="dropdown-item send" data-email="'. $data->email .'" data-toggle="modal" data-target="#vendorform">'.__("Send").'</a>
-                                        <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.  route('admin-user-delete',$data->id).'">'.__("Delete").'</a>
-                                        <a href="'.  route('admin-user-login',encrypt($data->id)).'" class="dropdown-item" target="_blank">'.__("Login").'</a>
-                                        </div>
-                                    </div>';
-                                })
+                ->addColumn('name', function(User $data) {
+                    $name = $data->company_name ?? $data->name;
+                    return $name;
+                })
+                ->addColumn('action', function(User $data) {
+                    return '<div class="btn-group mb-1">
+                        <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        '.'Actions' .'
+                        </button>
+                        <div class="dropdown-menu" x-placement="bottom-start">
+                        <a href="' . route('admin-user-profile',$data->id) . '"  class="dropdown-item">'.__("Profile").'</a>
+                        <a href="javascript:;" class="dropdown-item send" data-email="'. $data->email .'" data-toggle="modal" data-target="#vendorform">'.__("Send").'</a>
+                        <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.  route('admin-user-delete',$data->id).'">'.__("Delete").'</a>
+                        <a href="'.  route('admin-user-login',encrypt($data->id)).'" class="dropdown-item" target="_blank">'.__("Login").'</a>
+                        </div>
+                    </div>';
+                })
 
-                                ->addColumn('status', function(User $data) {
-                                    $status      = $data->is_banned == 1 ? __('Block') : __('Unblock');
-                                    $status_sign = $data->is_banned == 1 ? 'danger'   : 'success';
+                ->addColumn('status', function(User $data) {
+                    $status      = $data->is_banned == 1 ? __('Block') : __('Unblock');
+                    $status_sign = $data->is_banned == 1 ? 'danger'   : 'success';
 
-                                        return '<div class="btn-group mb-1">
-                                        <button type="button" class="btn btn-'.$status_sign.' btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            '.$status .'
-                                        </button>
-                                        <div class="dropdown-menu" x-placement="bottom-start">
-                                            <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="'. route('admin-user-ban',['id1' => $data->id, 'id2' => 0]).'">'.__("Unblock").'</a>
-                                            <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="'. route('admin-user-ban',['id1' => $data->id, 'id2' => 1]).'">'.__("Block").'</a>
-                                        </div>
-                                        </div>';
-                                })
+                        return '<div class="btn-group mb-1">
+                        <button type="button" class="btn btn-'.$status_sign.' btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            '.$status .'
+                        </button>
+                        <div class="dropdown-menu" x-placement="bottom-start">
+                            <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="'. route('admin-user-ban',['id1' => $data->id, 'id2' => 0]).'">'.__("Unblock").'</a>
+                            <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="'. route('admin-user-ban',['id1' => $data->id, 'id2' => 1]).'">'.__("Block").'</a>
+                        </div>
+                        </div>';
+                })
 
-                                ->addColumn('verify', function(User $data) {
-                                    $status      = $data->email_verified == 'Yes' ? __('Yes') : __('No');
-                                    $status_sign = $data->email_verified == 'No' ? 'danger'   : 'success';
+                ->addColumn('verify', function(User $data) {
+                    $status      = $data->email_verified == 'Yes' ? __('Yes') : __('No');
+                    $status_sign = $data->email_verified == 'No' ? 'danger'   : 'success';
 
-                                        return '<div class="btn-group mb-1">
-                                        <button type="button" class="btn btn-'.$status_sign.' btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            '.$status .'
-                                        </button>
-                                        <div class="dropdown-menu" x-placement="bottom-start">
-                                            <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="'. route('admin-user-verify',['id1' => $data->id, 'id2' => 'Yes']).'">'.__("Yes").'</a>
-                                            <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="'. route('admin-user-verify',['id1' => $data->id, 'id2' => 'No']).'">'.__("No").'</a>
-                                        </div>
-                                        </div>';
-                                })
-                                ->rawColumns(['action','status', 'verify'])
-                                ->toJson();
+                        return '<div class="btn-group mb-1">
+                        <button type="button" class="btn btn-'.$status_sign.' btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            '.$status .'
+                        </button>
+                        <div class="dropdown-menu" x-placement="bottom-start">
+                            <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="'. route('admin-user-verify',['id1' => $data->id, 'id2' => 'Yes']).'">'.__("Yes").'</a>
+                            <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="'. route('admin-user-verify',['id1' => $data->id, 'id2' => 'No']).'">'.__("No").'</a>
+                        </div>
+                        </div>';
+                })
+                ->rawColumns(['name','action','status', 'verify'])
+                ->toJson();
         }
         public function login($id)
         {
