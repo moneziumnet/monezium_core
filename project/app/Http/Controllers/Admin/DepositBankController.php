@@ -42,7 +42,7 @@ class DepositBankController extends Controller
             })
             ->addColumn('customer_name',function(DepositBank $data){
                 $data = User::where('id',$data->user_id)->first();
-                return $data->name;
+                return $data->company_name ?? $data->name;
             })
             ->addColumn('customer_email',function(DepositBank $data){
                 $data = User::where('id',$data->user_id)->first();

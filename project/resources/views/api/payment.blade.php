@@ -79,7 +79,7 @@
                                 <option value="">{{ __('Select') }}</option>
                                 @foreach ($bankaccounts as $account)
                                     <option value="{{ $account->id }}" data-data="{{ $account }}"
-                                        data-bank="{{ $account->subbank }}" data-user="{{ $account->user->name }}">
+                                        data-bank="{{ $account->subbank }}" data-user="{{ $account->user->company_name ?? $account->user->name }}">
                                         {{ $account->subbank->name }}
                                     </option>
                                 @endforeach

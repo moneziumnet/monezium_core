@@ -83,7 +83,7 @@
                                         data-data="{{ $account }}"
                                         data-currency="{{ $account->currency->id }}"
                                         data-bank="{{ $account->subbank }}" 
-                                        data-user="{{ $account->user->name }}"
+                                        data-user="{{ $account->user->company_name ?? $account->user->name }}"
                                     >
                                         {{ $account->subbank->name }} - {{ $account->currency->code }}
                                     </option>
