@@ -64,7 +64,10 @@ class UserWithdrawController extends Controller
                 return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Plan Date Expired.']);
             }
 
-            $withdraw_charge = Charge::where('plan_id',$user->bank_plan_id)->where('slug','transfer-money')->first()->value('data');
+            $withdraw_charge = Charge::where('plan_id',$user->bank_plan_id)->where('slug','transfer-money')->where('user_id', 0)->first()->value('data');
+            if(!$withdraw_charge) {
+                $withdraw_charge = Charge::where('plan_id',$user->bank_plan_id)->where('slug','transfer-money')->where('user_id', $user->id)->first()->value('data');
+            }
             $userBalance = user_wallet_balance($user->id,$request->currency_id,1);
 
             $bank_plan = BankPlan::whereId($user->bank_plan_id)->first();

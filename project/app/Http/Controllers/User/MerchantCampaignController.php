@@ -192,7 +192,7 @@ class MerchantCampaignController extends Controller
                 return redirect(url('/'))->with('error', 'This compaign\'s deadline is passed');
             }
         }
-        
+
         if($request->payment == 'gateway'){
 
             $newdonation = new CampaignDonation();
@@ -252,7 +252,10 @@ class MerchantCampaignController extends Controller
 
                 $user = User::findOrFail(auth()->id());
 
-                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
+                if(!$chargefee) {
+                    $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
+                }
 
                 $trans = new ModelsTransaction();
                 $trans->trnx = str_rand();
@@ -339,7 +342,7 @@ class MerchantCampaignController extends Controller
             $input = $request->all();
             $input['currency_id'] = $data->currency_id;
             $newdonation->fill($input)->save();
-            
+
             if(auth()->user()) {
                 return redirect(route('user.shop.index'))->with('message','You have paid for buy project successfully (Deposit Bank).');
             }
@@ -356,7 +359,7 @@ class MerchantCampaignController extends Controller
             $crytpo_data->user_id = $data->user_id;
             $crytpo_data->address = $request->address;
             $crytpo_data->save();
-            
+
             if(auth()->user()) {
                 return redirect(route('user.shop.index'))->with('message','You have paid for buy project successfully (Crypto).');
             }

@@ -72,7 +72,7 @@ class ManageChargeController extends Controller
         $data = new Charge();
         if ($request->user_id == 0)
         {
-            $total = Charge::where('slug', strtolower($request->name))->where('plan_id',$request->plan_id )->get()->count() + 1;
+            $total = Charge::where('slug', strtolower($request->name))->where('plan_id',$request->plan_id)->where('user_id', 0)->get()->count() + 1;
             $data->name = $request->name." ".$total;
             $data->slug = strtolower($request->name);
         }

@@ -115,7 +115,10 @@ class RailsBankController extends Controller
         $data->currency_id = $request->currency;
         $data->save();
 
-        $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+        $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
+        if(!$chargefee) {
+            $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
+        }
 
         $trans = new Transaction();
         $trans->trnx = str_rand();

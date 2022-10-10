@@ -76,7 +76,10 @@ class UserController extends Controller
         $user_wallet->save();
 
         $user =  User::findOrFail($request->user_id);
-        $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+        $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
+        if(!$chargefee) {
+            $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
+        }
 
         $trans = new Transaction();
         $trans->trnx = str_rand();
@@ -133,8 +136,10 @@ class UserController extends Controller
 
 
         $user =  User::findOrFail($request->user_id);
-        $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
-
+        $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
+        if(!$chargefee) {
+            $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
+        }
         $trans = new Transaction();
         $trans->trnx = str_rand();
         $trans->user_id     = $request->user_id;
@@ -246,7 +251,7 @@ class UserController extends Controller
         ]);
 
         $input = $request->all();
-        
+
         if(!isset(auth()->user()->company_name)) {
             $input['personal_code'] = $request->personal_code;
             $input['your_id'] = $request->your_id;

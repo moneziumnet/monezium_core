@@ -75,7 +75,10 @@ class OwnTransferController extends Controller
                 'keyword' => $keyword
             ]);
             if($request->wallet_type == 2) {
-                $chargefee = Charge::where('slug', 'card-issuance')->where('plan_id', $user->bank_plan_id)->first();
+                $chargefee = Charge::where('slug', 'card-issuance')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
+                if(!$chargefee){
+                    $chargefee = Charge::where('slug', 'card-issuance')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
+                }
 
                 $trans = new Transaction();
                 $trans->trnx = str_rand();
@@ -95,7 +98,10 @@ class OwnTransferController extends Controller
                 $trans->save();
             }
             else {
-                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
+                if(!$chargefee) {
+                    $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
+                }
 
                 $trans = new Transaction();
                 $trans->trnx = str_rand();

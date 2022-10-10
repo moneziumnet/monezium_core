@@ -161,7 +161,10 @@ class RegisterController extends Controller
         $user->fill($input)->save();
 
         $default_currency = Currency::where('is_default','1')->first();
-        $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+        $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
+        if(!$chargefee) {
+            $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
+        }
 
         $user_wallet = new Wallet();
         $user_wallet->user_id = $user->id;

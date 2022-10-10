@@ -481,7 +481,7 @@ class ManageInvoiceController extends Controller
         if($request->payment == 'gateway'){
             return redirect(route('user.invoice.incoming.index'))->with('message','Gateway Payment completed');
         } else if($request->payment == 'bank_pay'){
-            
+
             $bankaccount = BankAccount::where('id', $request->bank_account)->first();
             $invoice = Invoice::findOrFail($request->invoice_id);
 
@@ -493,10 +493,10 @@ class ManageInvoiceController extends Controller
             $deposit['sub_bank_id'] = $bankaccount->subbank_id;
             $deposit['status'] = "pending";
             $deposit->save();
-            
+
             $invoice->payment_status = 1;
             $invoice->update();
-            
+
             return redirect(route('user.invoice.incoming.index'))->with('message','Bank Payment completed');
         } else if($request->payment == 'crypto'){
             $data = new CryptoDeposit();
@@ -532,7 +532,10 @@ class ManageInvoiceController extends Controller
 
                 $user = User::findOrFail(auth()->id());
 
-                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
+                if(!$chargefee) {
+                    $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
+                }
 
                 $trans = new Transaction();
                 $trans->trnx = str_rand();
@@ -612,7 +615,10 @@ class ManageInvoiceController extends Controller
 
                 $user = User::findOrFail($invoice->user_id);
 
-                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
+                if(!$chargefee) {
+                    $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
+                }
 
                 $trans = new Transaction();
                 $trans->trnx = str_rand();
@@ -703,7 +709,7 @@ class ManageInvoiceController extends Controller
         if($request->payment == 'gateway'){
             return redirect($url)->with('message','Gateway Payment completed');
         } else if($request->payment == 'bank_pay'){
-            
+
             $invoice = Invoice::findOrFail($request->invoice_id);
             $bankaccount = BankAccount::where('id', $request->bank_account)->first();
 
@@ -717,7 +723,7 @@ class ManageInvoiceController extends Controller
             $deposit->save();
 
             $invoice->payment_status = 1;
-            $invoice->update();            
+            $invoice->update();
             return redirect($url)->with('message','Bank Payment completed');
         } else if($request->payment == 'crypto'){
             $data = new CryptoDeposit();
@@ -726,7 +732,7 @@ class ManageInvoiceController extends Controller
             $invoice = Invoice::findOrFail($request->id);
             $data->user_id = $invoice->user_id;
             $data->save();
-            
+
             $invoice->payment_status = 1;
             $invoice->update();
             return redirect($url)->with('message','Crypto Payment completed');
@@ -752,7 +758,10 @@ class ManageInvoiceController extends Controller
 
                 $user = User::findOrFail(auth()->id());
 
-                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
+                if(!$chargefee) {
+                    $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
+                }
 
                 $trans = new Transaction();
                 $trans->trnx = str_rand();
@@ -832,7 +841,10 @@ class ManageInvoiceController extends Controller
 
                 $user = User::findOrFail($invoice->user_id);
 
-                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
+                if(!$chargefee) {
+                    $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
+                }
 
                 $trans = new Transaction();
                 $trans->trnx = str_rand();

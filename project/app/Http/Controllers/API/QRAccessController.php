@@ -102,7 +102,10 @@ class QRAccessController extends Controller
 
                 $user = User::findOrFail(auth()->id());
 
-                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
+                if(!$chargefee) {
+                    $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
+                }
 
                 $trans = new Transaction();
                 $trans->trnx = str_rand();
@@ -158,7 +161,10 @@ class QRAccessController extends Controller
 
                 $user = User::findOrFail($request->user_id);
 
-                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
+                if(!$chargefee) {
+                    $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
+                }
 
                 $trans = new Transaction();
                 $trans->trnx = str_rand();
@@ -195,7 +201,7 @@ class QRAccessController extends Controller
             $rcvTrnx->details     = trans('Receive Merchant Payment');
             $rcvTrnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($request->user_id)->name.'"}';
             $rcvTrnx->save();
-            
+
             return redirect(route('user.dashboard'))->with('message', 'Wallet Payment completed');
         }
     }

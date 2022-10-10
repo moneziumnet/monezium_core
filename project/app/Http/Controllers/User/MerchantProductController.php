@@ -240,7 +240,10 @@ class MerchantProductController extends Controller
 
                 $user = User::findOrFail(auth()->id());
 
-                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
+                if(!$chargefee) {
+                    $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
+                }
 
                 $trans = new Transaction();
                 $trans->trnx = str_rand();

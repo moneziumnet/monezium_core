@@ -377,8 +377,10 @@ if(!function_exists('getModule')){
           if ($wallet_type != 9) {
               $user = User::findOrFail($auth_id);
             if ($wallet_type == 2) {
-                $chargefee = Charge::where('slug', 'card-issuance')->where('plan_id', $user->bank_plan_id)->first();
-
+                $chargefee = Charge::where('slug', 'card-issuance')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
+                if(!$chargefee){
+                    $chargefee = Charge::where('slug', 'card-issuance')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
+                }
                 $trans = new Transaction();
                 $trans->trnx = str_rand();
                 $trans->user_id     = $auth_id;
@@ -395,8 +397,10 @@ if(!function_exists('getModule')){
                 $trans->save();
               }
               else {
-                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
-
+                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
+                if(!$chargefee) {
+                    $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
+                }
                 $trans = new Transaction();
                 $trans->trnx = str_rand();
                 $trans->user_id     = $auth_id;
@@ -579,7 +583,10 @@ if(!function_exists('getModule')){
         {
             if($user->wallet_maintenance && $now->gt($user->wallet_maintenance)) {
                 $user->wallet_maintenance = Carbontime::now()->addDays(30);
-                $chargefee = Charge::where('slug', 'account-maintenance')->where('plan_id', $user->bank_plan_id)->first();
+                $chargefee = Charge::where('slug', 'account-maintenance')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
+                if(!$chargefee) {
+                    $chargefee = Charge::where('slug', 'account-maintenance')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
+                }
                 foreach ($wallets as $key => $value) {
                     user_wallet_decrement($user->id, $value->currency_id, $chargefee->data->fixed_charge, 1);
                     user_wallet_increment(0, $value->currency_id, $chargefee->data->fixed_charge, 9);
@@ -615,7 +622,10 @@ if(!function_exists('getModule')){
         {
             if($user->card_maintenance && $now->gt($user->card_maintenance)) {
                 $user->card_maintenance = Carbontime::now()->addDays(30);
-                $chargefee = Charge::where('slug', 'card-maintenance')->where('plan_id', $user->bank_plan_id)->first();
+                $chargefee = Charge::where('slug', 'card-maintenance')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
+                if(!$chargefee) {
+                    $chargefee = Charge::where('slug', 'card-maintenance')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
+                }
                 foreach ($wallets as $key => $value) {
 
                     user_wallet_decrement($user->id, $value->currency_id, $chargefee->data->fixed_charge, 1);

@@ -51,11 +51,15 @@ class VirtualCardController extends Controller
             $user_wallet->wallet_no =$gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
             $user_wallet->created_at = date('Y-m-d H:i:s');
             $user_wallet->updated_at = date('Y-m-d H:i:s');
-            $user_wallet->save();   
+            $user_wallet->save();
         }
 
         $user =  User::findOrFail(auth()->id());
-        $chargefee = Charge::where('slug', 'card-issuance')->where('plan_id', $user->bank_plan_id)->first();
+        $chargefee = Charge::where('slug', 'card-issuance')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
+        if(!$chargefee){
+            $chargefee = Charge::where('slug', 'card-issuance')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
+        }
+
 
         $trans = new Transaction();
         $trans->trnx = str_rand();
@@ -195,7 +199,7 @@ class VirtualCardController extends Controller
         }
 
         $gs = Generalsetting::first();
-        
+
 
         $toWallet = Wallet::where('currency_id', $fromWallet->currency_id)->where('user_id',$user->id)->where('wallet_type',1)->where('user_type',1)->first();
         $currency =  Currency::findOrFail($fromWallet->currency_id);
@@ -221,7 +225,11 @@ class VirtualCardController extends Controller
                 'keyword' => $keyword
             ]);
             if($request->wallet_type == 2) {
-                $chargefee = Charge::where('slug', 'card-issuance')->where('plan_id', $user->bank_plan_id)->first();
+                $chargefee = Charge::where('slug', 'card-issuance')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
+                if(!$chargefee) {
+                    $chargefee = Charge::where('slug', 'card-issuance')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
+                }
+
 
                 $trans = new Transaction();
                 $trans->trnx = str_rand();
@@ -241,7 +249,10 @@ class VirtualCardController extends Controller
                 $trans->save();
             }
             else {
-                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->first();
+                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
+                if(!$chargefee) {
+                    $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
+                }
 
                 $trans = new Transaction();
                 $trans->trnx = str_rand();
