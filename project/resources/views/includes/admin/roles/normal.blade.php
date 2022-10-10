@@ -39,7 +39,6 @@
       <div class="bg-white py-2 collapse-inner rounded">
         <a class="collapse-item" href="{{route('admin.manage.kyc.user','user')}}">{{ __('KYC Form') }}</a>
         <a class="collapse-item" href="{{ route('admin.manage.module') }}">{{ __('KYC Modules') }}</a>
-        <a class="collapse-item" href="{{ route('admin.kyc.info','user') }}">{{ __('User KYC Info') }}</a>
       </div>
     </div>
   </li>

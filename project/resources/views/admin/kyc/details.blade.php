@@ -4,10 +4,11 @@
 
 <div class="card">
     <div class="d-sm-flex align-items-center justify-content-between py-3">
-        <h5 class=" mb-0 text-gray-800 pl-3">{{ __('KYC Details') }} <a class="btn btn-primary btn-rounded btn-sm" href="{{route('admin.kyc.info','user')}}"><i class="fas fa-arrow-left"></i> {{ __('Back') }}</a></h5>
+        <h5 class=" mb-0 text-gray-800 pl-3">{{ __('KYC Details') }} <a class="btn btn-primary btn-rounded btn-sm" href="{{route('admin.user.kycinfo',$user->id)}}"><i class="fas fa-arrow-left"></i> {{ __('Back') }}</a></h5>
         <ol class="breadcrumb m-0 py-0">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
-            <li class="breadcrumb-item"><a href="javascript:;">{{ __('KYC') }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('admin.user.index') }}">{{ __('User List') }}</a></li>
+            <li class="breadcrumb-item"><a href="{{route('admin.user.kycinfo',$user->id)}}">{{ __('Profile') }}</a></li>
         </ol>
     </div>
 </div>

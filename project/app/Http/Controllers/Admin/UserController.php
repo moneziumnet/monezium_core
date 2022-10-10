@@ -1005,11 +1005,11 @@ class UserController extends Controller
 
         public function kycdatatables($id)
         {
-            $datas = User::where('kyc_info','!=',NULL)->where('id', $id)->orderBy('id','desc');
+            $datas = User::where('id', $id)->get();
 
             return Datatables::of($datas)
                                 ->addColumn('action', function(User $data) {
-                                    $url = $data->kyc_method == 'auto' ? '#' : route('admin.kyc.details',$data->id);
+                                    $url = route('admin.kyc.details',$data->id);
                                     return '<div class="btn-group mb-1">
                                         <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         '.'Actions' .'
