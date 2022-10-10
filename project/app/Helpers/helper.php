@@ -536,7 +536,7 @@ if(!function_exists('getModule')){
   {
       function check_custom_transaction_fee($amount, $user, $slug)
       {
-          $transaction_plan = Charge::where('slug', $slug)->where('user_id', $user->id)->get();
+          $transaction_plan = Charge::where('slug', $slug)->where('user_id', $user->id)->where('plan_id', 0)->get();
           $res = null;
           foreach ($transaction_plan as $value) {
             if ($value->data->from <= $amount && $value->data->till >= $amount) {
@@ -551,8 +551,15 @@ if(!function_exists('getModule')){
   {
       function check_global_transaction_fee($amount, $user, $slug)
       {
-          $transaction_plan = Charge::where('slug', $slug)->where('plan_id', $user->bank_plan_id)->get();
           $res = null;
+          $transaction_plan = Charge::where('slug', $slug)->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->get();
+          foreach ($transaction_plan as $value) {
+            if ($value->data->from <= $amount && $value->data->till >= $amount) {
+                $res = $value;
+                return $res;
+            }
+          }
+          $transaction_plan = Charge::where('slug', $slug)->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->get();
           foreach ($transaction_plan as $value) {
             if ($value->data->from <= $amount && $value->data->till >= $amount) {
                 $res = $value;
@@ -832,8 +839,8 @@ if(!function_exists('getModule')){
   {
     function generate_card_number($limit) {
       $code = '';
-      for($i = 0; $i < $limit; $i++) { 
-          $code .= mt_rand(0, 9); 
+      for($i = 0; $i < $limit; $i++) {
+          $code .= mt_rand(0, 9);
       }
       return $code;
     }
