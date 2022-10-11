@@ -10,6 +10,7 @@ use App\Models\KYC;
 use App\Models\KycForm;
 use App\Models\User;
 use Datatables;
+use App\Classes\SumsubKYC;
 
 class KycManageController extends Controller
 {
@@ -158,8 +159,42 @@ class KycManageController extends Controller
     public function kycDetails($id)
     {
         $data['user'] = User::findOrFail($id);
-        if ($data['user']->kyc_method == 'auto'){
-            return back()->with('warning', 'You can not see the details of this user because this user\'s kyc method is "auto"'  );
+        if ($data['user']->kyc_method == 'auto' && !$data['user']->kyc_info){
+            $folderPath = 'assets/images/';
+            $SBObject = new SumsubKYC();
+            $app_data = $SBObject->getApplicantData($data['user']->kyc_token);
+            $applicantId = $app_data->{'id'};
+            $inspectionId = $app_data->inspectionId;
+            $app_status = $SBObject->getApplicantStatus($applicantId);
+            $requireInformations = [];
+            $details = [];
+
+            foreach ($app_status->SELFIE->imageIds as $key => $value) {
+                if($value) {
+                    $image = $SBObject->getImage($inspectionId, $value);
+                    $fileName = uniqid() . '.png';
+
+                    $file = $folderPath . $fileName;
+
+                    file_put_contents($file, $image);
+                    $requireInformations['file'][$key] = strtolower($app_status->SELFIE->idDocType);
+                    $details[$app_status->SELFIE->idDocType.'_Image_'.($key+1)] = [$fileName,'file'];
+                }
+            }
+            foreach ($app_status->IDENTITY->imageIds as $key => $value) {
+                if($value) {
+                    $image = $SBObject->getImage($inspectionId, $value);
+                    $fileName = uniqid() . '.png';
+
+                    $file = $folderPath . $fileName;
+
+                    file_put_contents($file, $image);
+                    $requireInformations['file'][count($app_status->SELFIE->imageIds)+$key] = strtolower($app_status->IDENTITY->idDocType);
+                    $details[$app_status->IDENTITY->idDocType.'_Image_'.($key+1)] = [$fileName,'file'];
+                }
+            }
+            $data['user']->kyc_info = json_encode($details,true);
+            $data['user']->save();
         }
         $data['kycInformations'] = json_decode($data['user']->kyc_info,true);
         return view('admin.kyc.details',$data);
@@ -169,12 +204,12 @@ class KycManageController extends Controller
     {
         $user = User::findOrFail($id1);
         $user->kyc_status = $id2;
-        
+
         if($id2 == 1) { //Approve
             $data = Generalsetting::first();
             $kyc_modules = explode(" , ", $data ? $data->module_section : []);
             $user_modules = explode(" , ", $user->section);
-            
+
             $new_modules = array_merge($kyc_modules, $user_modules, ['Transactions']);
             $new_modules = array_unique($new_modules);
             $user->section = implode(" , ", $new_modules);

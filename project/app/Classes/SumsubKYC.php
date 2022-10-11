@@ -65,8 +65,28 @@ class SumsubKYC
         $url = "/resources/applicants/" . $applicantId . "/requiredIdDocsStatus";
         $request = new GuzzleHttp\Psr7\Request('GET', SUMSUB_TEST_BASE_URL . $url);
 
-        return $responseBody = $this->sendHttpRequest($request, $url)->getBody();
+        $responseBody = $this->sendHttpRequest($request, $url)->getBody();
         return json_decode($responseBody);
+    }
+
+    public function getApplicantData($externalUserId)
+    // https://developers.sumsub.com/api-reference/#getting-applicant-status-api
+    {
+        $url = "/resources/applicants/-;externalUserId=" . $externalUserId . "/one";
+        $request = new GuzzleHttp\Psr7\Request('GET', SUMSUB_TEST_BASE_URL . $url);
+
+        $responseBody = $this->sendHttpRequest($request, $url)->getBody();
+        return json_decode($responseBody);
+    }
+
+    public function getImage($inspectionId,$imageId)
+    // https://developers.sumsub.com/api-reference/#getting-applicant-status-api
+    {
+        $url = "/resources/inspections/" . $inspectionId . "/resources/".$imageId;
+        $request = new GuzzleHttp\Psr7\Request('GET', SUMSUB_TEST_BASE_URL . $url);
+
+        $responseBody = $this->sendHttpRequest($request, $url)->getBody();
+        return $responseBody;
     }
 
     public function getAccessToken($externalUserId, $levelName)
