@@ -13,11 +13,24 @@ use App\Http\Controllers\User\MerchantProductController;
 use App\Http\Controllers\User\MerchantCampaignController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\QRAccessController;
+use App\Models\User;
 
 Route::redirect('admin', 'admin/login');
 
 Route::webhooks('webhook-openpayd','openpayd');
 Route::webhooks('webhook-railsbank','railsbank');
+
+Route::get('check-user-plan/{key}', function($key){
+    if($key == env('APP_KEY')) {
+        $user_list = User::all();
+        foreach($user_list as $user) {
+            wallet_monthly_fee($user->id);
+        }
+        return 'success';
+    } else {
+        return 'error';
+    }
+});
 
 Route::post('the/genius/ocean/2441139', [FrontendController::class, 'subscription']);
 Route::get('finalize', [FrontendController::class, 'finalize']);
