@@ -193,6 +193,9 @@ class KycManageController extends Controller
                     $details[$app_status->IDENTITY->idDocType.'_Image_'.($key+1)] = [$fileName,'file'];
                 }
             }
+            $details['ID_TYPE'] = [$app_data->info->idDocs[0]->idDocType ?? '', 'text'];
+            $details['Country'] = [$app_data->info->idDocs[0]->country ?? '', 'text'];
+            $details['ID_Number'] = [$app_data->info->idDocs[0]->number ?? '', 'text'];
             $data['user']->kyc_info = json_encode($details,true);
             $data['user']->save();
         }
