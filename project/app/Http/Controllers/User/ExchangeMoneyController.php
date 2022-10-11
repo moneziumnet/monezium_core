@@ -129,33 +129,59 @@ class ExchangeMoneyController extends Controller
             user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
         }
         $user= auth()->user();
+
+        $client = New Client();
+        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency=USD');
+        $rate = json_decode($response->getBody());
+        $code = $fromWallet->currency->code;
+        $from_rate = $rate->data->rates->$code;
+
         // $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'send')->first();
         $transaction_global_cost = 0;
         // if ($request->amount < $global_range->min || $request->amount > $global_range->max) {
         //     return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
         // }
-        $transaction_global_fee = check_global_transaction_fee($request->amount, $user, 'exchange');
+        $transaction_global_fee = check_global_transaction_fee($request->amount/$from_rate, $user, 'exchange');
         if($transaction_global_fee)
         {
-            $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/100) * $transaction_global_fee->data->percent_charge;
+            $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/($from_rate*100)) * $transaction_global_fee->data->percent_charge;
         }
-        user_wallet_increment(0, $fromWallet->currency->id, $transaction_global_cost, 9);
+        user_wallet_increment(0, $fromWallet->currency->id, $transaction_global_cost*$from_rate, 9);
         $transaction_custom_cost = 0;
         if($user->referral_id != 0)
         {
-            $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user,  'exchange');
+            $transaction_custom_fee = check_custom_transaction_fee($request->amount/$from_rate, $user,  'exchange');
             if($transaction_custom_fee) {
-                $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/100) * $transaction_custom_fee->data->percent_charge;
+                $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/($from_rate*100)) * $transaction_custom_fee->data->percent_charge;
             }
             $remark = 'Exchange_money_supervisor_fee';
-            if (check_user_type_by_id(4, $user->referral_id)) {
-                user_wallet_increment($user->referral_id, $fromWallet->currency->id, $transaction_custom_cost, 6);
-                $trans_wallet = get_wallet($user->referral_id, $fromWallet->currency->id, 6);
+            if($currency->type == 1) {
+
+                if (check_user_type_by_id(4, $user->referral_id)) {
+                    user_wallet_increment($user->referral_id, $fromWallet->currency->id, $transaction_custom_cost*$from_rate, 6);
+                    $trans_wallet = get_wallet($user->referral_id, $fromWallet->currency->id, 6);
+                }
+                elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
+                    $remark = 'Exchange_money_manager_fee';
+                    user_wallet_increment($user->referral_id, $fromWallet->currency->id, $transaction_custom_cost*$from_rate, 10);
+                    $trans_wallet = get_wallet($user->referral_id, $fromWallet->currency->id, 10);
+                }
             }
-            elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
-                $remark = 'Exchange_money_manager_fee';
-                user_wallet_increment($user->referral_id, $fromWallet->currency->id, $transaction_custom_cost, 10);
-                $trans_wallet = get_wallet($user->referral_id, $fromWallet->currency->id, 10);
+            else {
+                user_wallet_increment($user->referral_id, $fromWallet->currency->id, $transaction_custom_cost*$from_rate, 8);
+
+                $trans_wallet = get_wallet($user->referral_id, $fromWallet->currency->id, 8);
+                if($currency->code == 'ETH') {
+                    $torefWallet = Wallet::where('user_id', $user->referral_id)->where('wallet_type', 8)->where('currency_id', $data->currency_id)->first();
+
+                    RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
+                    $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$torefWallet->wallet_no.'", "value": "0x'.dechex($transaction_custom_cost*$from_rate*pow(10,18)).'"}';
+                    RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
+                }
+                elseif($currency->code == 'BTC') {
+                    $torefWallet = Wallet::where('user_id', $user->referral_id)->where('wallet_type', 8)->where('currency_id', $data->currency_id)->first();
+                    RPC_BTC_Send('sendtoaddress',[$torefWallet->wallet_no, $transaction_custom_cost*$from_rate],$fromWallet->keyword);
+                }
             }
             $trans = new Transaction();
             $trans->trnx = str_rand();
@@ -184,7 +210,7 @@ class ExchangeMoneyController extends Controller
         $defaultAmount = $request->amount / $result->data->rates->$fromrate;
         $finalAmount   = amount($defaultAmount * $result->data->rates->$torate,$toWallet->currency->type);
 
-        $charge = amount($transaction_global_cost+$transaction_custom_cost,$fromWallet->currency->type);
+        $charge = amount($transaction_global_cost,$fromWallet->currency->type);
         $totalAmount = amount(($request->amount +  $charge),$fromWallet->currency->type);
 
         if($fromWallet->balance < $totalAmount){
@@ -259,7 +285,7 @@ class ExchangeMoneyController extends Controller
         $exchange->from_currency = $fromWallet->currency->id;
         $exchange->to_currency = $toWallet->currency->id;
         $exchange->user_id = auth()->id();
-        $exchange->charge = $charge;
+        $exchange->charge = $charge + $transaction_custom_cost;
         $exchange->from_amount = $request->amount;
         $exchange->to_amount = $finalAmount;
         $exchange->save();

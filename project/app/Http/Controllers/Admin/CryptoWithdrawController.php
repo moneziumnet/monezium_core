@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\wallet;
 use Illuminate\Http\Request;
 use Datatables;
+use GuzzleHttp\Client;
 
 class CryptoWithdrawController extends Controller
 {
@@ -94,55 +95,67 @@ class CryptoWithdrawController extends Controller
         $data->status = $id2;
         $data->update();
         $currency = Currency::findOrFail($data->currency_id);
+
+        $client = New Client();
+        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency=USD');
+        $rate = json_decode($response->getBody());
+        $code = $currency->code;
+        $crypto_rate = $rate->data->rates->$code;
+
         if ($id2 == 2) {
             $user = $data->user;
             //$wallet = Wallet::where('user_id',$data->user_id)->where('user_type',1)->where('currency_id',$data->currency_id)->firstOrFail();
             $toWallet = Wallet::where('user_id', $user->id)->where('wallet_type', 8)->where('currency_id', $data->currency_id)->first();
             $fromWallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $data->currency_id)->first();
-            if($currency->code == 'ETH') {
-                RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-                $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$toWallet->wallet_no.'", "value": "0x'.dechex($data->amount*pow(10,18)).'"}';
-                RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
-            }
-            elseif($currency->code == 'BTC') {
-                RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, $data->amount],$fromWallet->keyword);
-            }
+
             user_wallet_increment($data->user_id, $data->currency_id, $data->amount, 8);
             $transaction_global_cost = 0;
 
-            $transaction_global_fee = check_global_transaction_fee($data->amount/$data->currency->rate, $user, 'withdraw');
+            $transaction_global_fee = check_global_transaction_fee($data->amount/$crypto_rate, $user, 'withdraw');
             if($transaction_global_fee)
             {
-                $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($data->amount/($data->currency->rate*100)) * $transaction_global_fee->data->percent_charge;
+                $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($data->amount/($crypto_rate*100)) * $transaction_global_fee->data->percent_charge;
             }
-            user_wallet_decrement(0, $data->currency_id, $transaction_global_cost * $data->currency->rate, 9);
+            user_wallet_decrement(0, $data->currency_id, $transaction_global_cost * $crypto_rate, 9);
 
             if($user->referral_id != 0)
             {
                 $transaction_custom_cost = 0;
-                $transaction_custom_fee = check_custom_transaction_fee($data->amount/$data->currency->rate, User::whereId($data->user_id)->first(), 'withdraw');
+                $transaction_custom_fee = check_custom_transaction_fee($data->amount/$crypto_rate, User::whereId($data->user_id)->first(), 'withdraw');
                 if($transaction_custom_fee) {
-                    $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($data->amount/(100*$data->currency->rate)) * $transaction_custom_fee->data->percent_charge;
+                    $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($data->amount/(100*$crypto_rate)) * $transaction_custom_fee->data->percent_charge;
                 }
                 $remark = 'withdraw_reject_supervisor_fee';
                 if (check_user_type_by_id(4, $user->referral_id)) {
-                    user_wallet_decrement($user->referral_id, $data->currency_id, $transaction_custom_cost*$data->currency->rate, 6);
+                    user_wallet_decrement($user->referral_id, $data->currency_id, $transaction_custom_cost*$crypto_rate, 8);
 
-                    $trans_wallet  = get_wallet($user->referral_id, $data->currency_id, 6);
+                    $trans_wallet  = get_wallet($user->referral_id, $data->currency_id, 8);
                 }
                 elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
                     $remark = 'withdraw_reject_manager_fee';
-                    user_wallet_decrement($user->referral_id, $data->currency_id, $transaction_custom_cost*$data->currency->rate, 10);
+                    user_wallet_decrement($user->referral_id, $data->currency_id, $transaction_custom_cost*$crypto_rate, 8);
 
-                    $trans_wallet  = get_wallet($user->referral_id, $data->currency_id, 10);
+                    $trans_wallet  = get_wallet($user->referral_id, $data->currency_id, 8);
                 }
 
+
+                if($currency->code == 'ETH') {
+                    $torefWallet = Wallet::where('user_id', $user->referral_id)->where('wallet_type', 8)->where('currency_id', $data->currency_id)->first();
+
+                    RPC_ETH('personal_unlockAccount',[$torefWallet->wallet_no, $torefWallet->keyword ?? '', 30]);
+                    $tx = '{"from": "'.$torefWallet->wallet_no.'", "to": "'.$toWallet->wallet_no.'", "value": "0x'.dechex($transaction_custom_cost*$crypto_rate*pow(10,18)).'"}';
+                    RPC_ETH_Send('personal_sendTransaction',$tx, $torefWallet->keyword ?? '');
+                }
+                elseif($currency->code == 'BTC') {
+                    $torefWallet = Wallet::where('user_id', $user->referral_id)->where('wallet_type', 8)->where('currency_id', $data->currency_id)->first();
+                    RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, $transaction_custom_cost*$crypto_rate],$torefWallet->keyword);
+                }
                 $trans = new Transaction();
                 $trans->trnx = str_rand();
                 $trans->user_id     = $user->referral_id;
                 $trans->user_type   = 1;
                 $trans->currency_id = $data->currency_id;
-                $trans->amount      = $transaction_custom_cost*$data->currency->rate;
+                $trans->amount      = $transaction_custom_cost*$crypto_rate;
                 $trans->charge      = 0;
                 $trans->type        = '-';
 
@@ -152,6 +165,14 @@ class CryptoWithdrawController extends Controller
                 $trans->details     = trans('Withdraw request rejected');
                 $trans->data        = '{"sender":"'.User::findOrFail($user->referral_id)->name.'", "receiver":"'.$user->name.'"}';
                 $trans->save();
+            }
+            if($currency->code == 'ETH') {
+                RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
+                $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$toWallet->wallet_no.'", "value": "0x'.dechex(($data->amount-$transaction_custom_cost*$crypto_rate)*pow(10,18)).'"}';
+                RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
+            }
+            elseif($currency->code == 'BTC') {
+                RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, ($data->amount-$transaction_custom_cost*$crypto_rate)],$fromWallet->keyword);
             }
             $trnx              = new Transaction();
             $trnx->trnx        = str_rand();
@@ -169,6 +190,8 @@ class CryptoWithdrawController extends Controller
             $trnx->details     = trans('Withdraw request rejected');
             $trnx->data        = '{"sender":"System Account", "receiver":"'.$user->name.'"}';
             $trnx->save();
+
+
         }
         $gs = Generalsetting::findOrFail(1);
 

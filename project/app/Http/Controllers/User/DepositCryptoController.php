@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\SubInsBank;
 use Auth;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -43,8 +44,13 @@ class DepositCryptoController extends Controller
                 return redirect()->back()->with('unsuccess','Verification code is not matched.');
             }
         }
+        $client = New Client();
+        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency=USD');
+        $rate = json_decode($response->getBody());
+
         $currency = Currency::where('id',$request->currency_id)->first();
-        $amountToAdd = $request->amount/$currency->rate;
+        $code = $currency->code;
+        $amountToAdd = $request->amount/$rate->data->rates->$code;
         $user = auth()->user();
         $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'deposit')->first();
         $dailydeposit = CryptoDeposit::where('user_id', $user->id)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus('complete')->sum('amount');

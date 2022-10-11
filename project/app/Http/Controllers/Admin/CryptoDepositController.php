@@ -11,6 +11,7 @@ use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Wallet;
 use Illuminate\Http\Request;
+use GuzzleHttp\Client;
 use Datatables;
 
 class CryptoDepositController extends Controller
@@ -61,7 +62,15 @@ class CryptoDepositController extends Controller
           }
 
         $user = User::findOrFail($data->user_id);
-        $amount = $data->amount/$data->currency->rate;
+
+        $client = New Client();
+        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency=USD');
+        $rate = json_decode($response->getBody());
+
+        $currency = Currency::where('id',$data->currency_id)->first();
+        $code = $currency->code;
+        $crypto_rate = $rate->data->rates->$code;
+        $amount = $data->amount/$crypto_rate;
         $transaction_global_cost = 0;
         $transaction_global_fee = check_global_transaction_fee($amount, $user, 'deposit');
         if($transaction_global_fee)
@@ -82,25 +91,25 @@ class CryptoDepositController extends Controller
                 }
                 $remark = 'Deposit_create_supervisor_fee';
                 if (check_user_type_by_id(4, $user->referral_id)) {
-                    $torefWallet = Wallet::where('user_id', $user->referral_id)->where('wallet_type', 6)->where('currency_id', $data->currency_id)->first();
-                    user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost*$data->currency->rate, 6);
+                    user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost*$crypto_rate, 8);
+                    $torefWallet = Wallet::where('user_id', $user->referral_id)->where('wallet_type', 8)->where('currency_id', $data->currency_id)->first();
 
-                    $trans_wallet = get_wallet($user->referral_id, $data->currency_id, 6);
+                    $trans_wallet = get_wallet($user->referral_id, $data->currency_id, 8);
                 }
                 elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
-                    $torefWallet = Wallet::where('user_id', $user->referral_id)->where('wallet_type', 10)->where('currency_id', $data->currency_id)->first();
-                    user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost*$data->currency->rate, 10);
+                    user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost*$crypto_rate, 8);
+                    $torefWallet = Wallet::where('user_id', $user->referral_id)->where('wallet_type', 8)->where('currency_id', $data->currency_id)->first();
                     $remark = 'Deposit_create_manager_fee';
 
-                    $trans_wallet = get_wallet($user->referral_id, $data->currency_id, 10);
+                    $trans_wallet = get_wallet($user->referral_id, $data->currency_id, 8);
                 }
                 if($currency->code == 'ETH') {
                     @RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-                    $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$torefWallet->wallet_no.'", "value": "0x'.dechex($transaction_custom_cost*$data->currency->rate*pow(10,18)).'"}';
+                    $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$torefWallet->wallet_no.'", "value": "0x'.dechex($transaction_custom_cost*$crypto_rate*pow(10,18)).'"}';
                     @RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
                 }
                 elseif($currency->code == 'BTC') {
-                    @RPC_BTC_Send('sendtoaddress',[$torefWallet->wallet_no, $transaction_custom_cost*$data->currency->rate],$fromWallet->keyword);
+                    @RPC_BTC_Send('sendtoaddress',[$torefWallet->wallet_no, $transaction_custom_cost*$crypto_rate],$fromWallet->keyword);
                 }
                 $referral_user = User::findOrFail($user->referral_id);
                 $trans = new Transaction();
@@ -108,7 +117,7 @@ class CryptoDepositController extends Controller
                 $trans->user_id     = $user->referral_id;
                 $trans->user_type   = 1;
                 $trans->currency_id = $data->currency_id;
-                $trans->amount      = $transaction_custom_cost*$data->currency->rate;
+                $trans->amount      = $transaction_custom_cost*$crypto_rate;
                 $trans->charge      = 0;
 
                 $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
@@ -122,16 +131,16 @@ class CryptoDepositController extends Controller
 
             $final_amount = $amount - $transaction_custom_cost - $transaction_global_cost;
 
-            $result1 = user_wallet_increment($user->id, $data->currency_id, $final_amount*$data->currency->rate, 8);
-            $result2 = user_wallet_increment(0, $data->currency_id, $transaction_global_cost*$data->currency->rate, 9);
+            $result1 = user_wallet_increment($user->id, $data->currency_id, $final_amount*$crypto_rate, 8);
+            $result2 = user_wallet_increment(0, $data->currency_id, $transaction_global_cost*$crypto_rate, 9);
 
             if($currency->code == 'ETH') {
                 RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-                $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$toWallet->wallet_no.'", "value": "0x'.dechex($final_amount*$data->currency->rate*pow(10,18)).'"}';
+                $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$toWallet->wallet_no.'", "value": "0x'.dechex($final_amount*$crypto_rate*pow(10,18)).'"}';
                 $res = RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
             }
             elseif($currency->code == 'BTC') {
-                $res = RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, amount($final_amount*$data->currency->rate,1,5)],$fromWallet->keyword);
+                $res = RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, amount($final_amount*$crypto_rate,1,5)],$fromWallet->keyword);
                 if($res == 'error') {
                     return response()->json(array('errors' => [ 0 =>  __('you can not deposit.') ]));
                 }
@@ -146,7 +155,7 @@ class CryptoDepositController extends Controller
             $trans->user_type   = 1;
             $trans->currency_id = $data->currency_id;
             $trans->amount      = $data->amount;
-            $trans->charge      = ($transaction_custom_cost + $transaction_global_cost)*$data->currency->rate;
+            $trans->charge      = ($transaction_custom_cost + $transaction_global_cost)*$crypto_rate;
             $trans_wallet       = get_wallet($user->id, $data->currency_id, 8);
             $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
             $trans->type        = '+';
