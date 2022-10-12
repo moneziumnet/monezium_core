@@ -565,6 +565,10 @@
                 {
                     $('.bankaccount').prop('action','{{ route('user.clearjunction.api.ibancreate') }}');
                 }
+                if(res.keyword == 'swan')
+                {
+                    $('.bankaccount').prop('action','{{ route('user.bankaccount.swan.store') }}');
+                }
              });
         })
     </script>

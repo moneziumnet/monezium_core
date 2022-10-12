@@ -76,6 +76,7 @@ use App\Http\Controllers\User\UserICOController;
 use App\Http\Controllers\User\WithdrawCryptoController;
 use App\Http\Controllers\User\VirtualCardController;
 use App\Http\Controllers\User\UserShopController;
+use App\Http\Controllers\Deposit\SwanController;
 
 Route::prefix('user')->group(function() {
 
@@ -103,6 +104,7 @@ Route::prefix('user')->group(function() {
       Route::post('/user/crypto/wallet', [UserController::class,'crypto_wallet_create'])->name('user.wallet.crypto.create');
       Route::POST('/user/bankaccount/openpayd',[OpenPaydController::class,'store'])->name('user.bankaccount.openpayd.store');
       Route::POST('/user/bankaccount/railsbank',[RailsBankController::class,'store'])->name('user.bankaccount.railsbank.store');
+      Route::POST('/user/bankaccount/swan',[SwanController::class,'store'])->name('user.bankaccount.swan.store');
       Route::POST('/user/bankaccount/gateway',[UserController::class,'gateway'])->name('user.bankaccount.gateway');
 
       Route::get('/username/{number}', [UserController::class,'username'])->name('user.username');
