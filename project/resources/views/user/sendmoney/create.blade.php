@@ -57,11 +57,17 @@
                                 <div class="form-group mb-3 mt-3">
                                     <label class="form-label required">{{__('Account Email')}}</label>
                                     <div class="input-group">
-                                        <input name="email" id="email" class="form-control camera_value" autocomplete="off" placeholder="{{__('user@email.com')}}" type="email" value="{{ $savedUser ? $savedUser->email : '' }}" min="1" required>
+                                        <input name="email" id="email" class="form-control camera_value" autocomplete="off" placeholder="{{__('user@email.com')}}" type="email" value="{{ $savedUser ? $savedUser->email : '' }}" required>
                                         <button type="button"  data-bs-toggle="tooltip" data-bs-original-title="@lang('Scan QR code')" class="input-group-text scan"><i class="fas fa-qrcode"></i></button>
                                     </div>
                                 </div>
 
+                                <div class="form-group mb-3 mt-3">
+                                    <label class="form-label required">{{__('Account Phone')}}</label>
+                                    <div class="input-group">
+                                        <input name="phone" id="phone" class="form-control camera_value" autocomplete="off" placeholder="{{__('1234567890')}}" type="text" value="{{ $savedUser ? $savedUser->phone : '' }}" required>
+                                    </div>
+                                </div>
                                 <div class="form-group mb-3 mt-3">
                                     <label class="form-label required">{{__('Select Wallet')}}</label>
                                     <select name="wallet_id" id="wallet_id" class="form-control" required>
@@ -193,7 +199,29 @@
       send_money_user = data;
       if(data['name']){
         $("#account_name").val(data['name']);
+        $("#phone").val(data['phone']);
       } else {
+        $("#account_name").val("");
+        $("#phone").val("");
+        toastr.options =
+        {
+            "closeButton" : true,
+            "progressBar" : true
+        }
+        toastr.error("This uer doesn't exist.");
+      }
+    });
+  })
+
+  $("#phone").on('change',function(){
+    $.post("{{ route('user.username.phone') }}",{phone: $("#phone").val(),_token:'{{csrf_token()}}'}, function(data){
+      send_money_user = data;
+      if(data['name']){
+        $("#account_name").val(data['name']);
+        $("#email").val(data['email']);
+      } else {
+        $("#account_name").val("");
+        $("#email").val("");
         toastr.options =
         {
             "closeButton" : true,

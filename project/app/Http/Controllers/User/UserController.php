@@ -414,7 +414,15 @@ class UserController extends Controller
 
     public function username_by_email(Request $request){
         if($data = User::where('email',$request->email)->first()){
-            return ["name" => $data->company_name ?? $data->name];
+            return ["name" => $data->company_name ?? $data->name, "phone" => $data->phone];
+        }else{
+            return false;
+        }
+    }
+
+    public function username_by_phone(Request $request){
+        if($data = User::where('phone',$request->phone)->first()){
+            return ["name" => $data->company_name ?? $data->name, "email" => $data->email];
         }else{
             return false;
         }

@@ -107,6 +107,7 @@ Route::prefix('user')->group(function() {
 
       Route::get('/username/{number}', [UserController::class,'username'])->name('user.username');
       Route::post('/username-by-email', [UserController::class,'username_by_email'])->name('user.username.email');
+      Route::post('/username-by-phone', [UserController::class,'username_by_phone'])->name('user.username.phone');
       Route::get('/transactions', [UserController::class,'transaction'])->name('user.transaction');
       Route::get('/transactions-export', [UserController::class,'transactionExport'])->name('user.transaction-export');
       Route::get('/transactions-pdf', [UserController::class,'transactionPDF'])->name('user.transaction-pdf');
