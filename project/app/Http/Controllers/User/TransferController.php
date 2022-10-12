@@ -61,7 +61,7 @@ class TransferController extends Controller
             return back()->with('error','Your monthly transfer limit has been reached');
         }
 
-        if(($charge->minimum *  $currency->rate) > $request->amount || ($charge->maximum *  $currency->rate) < $request->amount){
+        if(($charge->minimum *  getRate($currency)) > $request->amount || ($charge->maximum *  getRate($currency)) < $request->amount){
             return back()->with('error','Please follow the limit');
         }
 
@@ -104,7 +104,7 @@ class TransferController extends Controller
             user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
         }
 
-        $finalCharge = amount(chargeCalc($charge,$request->amount,$currency->rate),$currency->type);
+        $finalCharge = amount(chargeCalc($charge,$request->amount,getRate($currency)),$currency->type);
         $finalAmount =  amount($request->amount + $finalCharge, $currency->type);
         $senderBalance = user_wallet_balance(auth()->id(), $currency->id);
         if($senderBalance < $finalAmount) return back()->with('error','Insufficient balance.');

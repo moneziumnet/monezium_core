@@ -56,7 +56,7 @@ class PaytmController extends Controller
         }
 
         $currency = Currency::whereId($request->currency_id)->first();
-        $amountToAdd =  $request->amount/$currency->rate;
+        $amountToAdd =  $request->amount/getRate($currency);
 
         $deposit['user_id'] = auth()->user()->id;
         $deposit['currency_id'] = $request->currency_id;

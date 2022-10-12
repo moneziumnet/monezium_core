@@ -83,7 +83,7 @@ class InvoiceController extends Controller
              $currency = Currency::findOrFail($request->currency_id);
  
              $amount = array_sum($request->amount);
-             $finalCharge = chargeCalc($charge,$amount,$currency->rate);
+             $finalCharge = chargeCalc($charge,$amount,getRate($currency));
              $willGetAmount = numFormat($amount - $finalCharge);
  
              $invoice = new Invoice();

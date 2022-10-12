@@ -51,7 +51,7 @@ class VoucherController extends Controller
         if(!$wallet) return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Wallet not found']);
 
         $charge = charge('create-voucher');
-        $rate = $wallet->currency->rate;
+        $rate = getRate($wallet->currency);
 
         if($request->amount <  $charge->minimum * $rate || $request->amount >  $charge->maximum * $rate){
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Please follow the limit']);

@@ -43,7 +43,8 @@ if(!function_exists('getModule')){
       function showPrice($price,$currency){
         $gs = Generalsetting::first();
 
-        $price = round(($price) * $currency->rate,2);
+        $price = round(($price) * getRate($currency),2);
+
         if($gs->currency_format == 0){
             return $currency->symbol. $price;
         }
@@ -53,6 +54,25 @@ if(!function_exists('getModule')){
     }
   }
 
+  if(!function_exists('getRate')){
+    function getRate($currency){
+      try{
+        $client = New Client();
+        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency=USD');
+        $rate = json_decode($response->getBody());
+        $code = $currency->code;
+      } catch(\Exception $e) {
+        return $currency->rate;
+      }
+
+      if(isset($rate->data->rates->$code)){
+        $from_rate = $rate->data->rates->$code;
+      } else {
+        $from_rate = $currency->rate;
+      }
+      return $from_rate;
+    }
+  }
 
   if(!function_exists('admin')){
     function admin()

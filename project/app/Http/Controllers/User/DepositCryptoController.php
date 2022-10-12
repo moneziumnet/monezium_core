@@ -62,11 +62,11 @@ class DepositCryptoController extends Controller
         }
 
 
-        if($dailydeposit/$currency->rate > $global_range->daily_limit){
+        if($dailydeposit/getRate($currency) > $global_range->daily_limit){
             return redirect()->back()->with('unsuccess','Daily deposit limit over.');
         }
 
-        if($monthlydeposit/$currency->rate > $global_range->monthly_limit){
+        if($monthlydeposit/getRate($currency) > $global_range->monthly_limit){
             return redirect()->back()->with('unsuccess','Monthly deposit limit over.');
         }
 

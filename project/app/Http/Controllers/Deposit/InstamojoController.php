@@ -113,7 +113,7 @@ class InstamojoController extends Controller
         if ($input_data['payment_request_id'] == $payment_id) {
 
             $currency = Currency::where('id',$input['currency_id'])->first();
-            $amountToAdd = $input['amount']/$currency->rate;
+            $amountToAdd = $input['amount']/getRate($currency);
 
             $deposit['deposit_number'] = $order_data['item_number'];
             $deposit['user_id'] = auth()->user()->id;

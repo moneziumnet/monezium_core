@@ -59,7 +59,7 @@ class PaystackController extends Controller
 
         $gs =  Generalsetting::findOrFail(1);
         $currency = Currency::where('id',$request->currency_id)->first();
-        $amountToAdd = $request->amount/$currency->rate;
+        $amountToAdd = $request->amount/getRate($currency);
 
         $user = auth()->user();
         $user->income += $amountToAdd;

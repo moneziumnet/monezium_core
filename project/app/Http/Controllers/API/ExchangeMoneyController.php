@@ -180,8 +180,8 @@ class ExchangeMoneyController extends Controller
         }
 
 
-        $defaultAmount = $request->amount / $fromWallet->currency->rate;
-        $finalAmount   = amount($defaultAmount * $toWallet->currency->rate,$toWallet->currency->type);
+        $defaultAmount = $request->amount / getRate($fromWallet->currency);
+        $finalAmount   = amount($defaultAmount * getRate($toWallet->currency),$toWallet->currency->type);
 
         $charge = amount($custom_cost+$global_cost+$transaction_global_cost+$transaction_custom_cost,$fromWallet->currency->type);
         $totalAmount = amount(($request->amount +  $charge),$fromWallet->currency->type);

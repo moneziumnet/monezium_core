@@ -35,7 +35,7 @@ class DepositController extends Controller
                         })
                         ->editColumn('amount', function(Deposit $data) {
                             $gs = Generalsetting::find(1);
-                            return $data->currency->symbol.round($data->amount*$data->currency->rate);
+                            return $data->currency->symbol.round($data->amount*getRate($data->currency));
                         })
                         ->editColumn('status', function(Deposit $data) {
                             $status = $data->status == 'pending' ? '<span class="badge badge-warning">pending</span>' : '<span class="badge badge-success">completed</span>';
@@ -73,7 +73,7 @@ class DepositController extends Controller
 
         $user = User::findOrFail($data->user_id);
 
-        $amount = $data->amount*$data->currency->rate;
+        $amount = $data->amount*getRate($data->currency);
         $transaction_global_cost = 0;
 
         $transaction_global_fee = check_global_transaction_fee($amount, $user, 'deposit');

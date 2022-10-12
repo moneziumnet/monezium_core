@@ -103,7 +103,7 @@ class StripeController extends Controller
 
                 if ($charge['status'] == 'succeeded') {
                     $currency = Currency::where('id',$request->currency_id)->first();
-                    $amountToAdd = $request->amount/$currency->rate;
+                    $amountToAdd = $request->amount/getRate($currency);
 
                     $deposit['deposit_number'] = Str::random(12);
                     $deposit['user_id'] = auth()->id();

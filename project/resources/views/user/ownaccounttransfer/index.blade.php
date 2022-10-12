@@ -48,7 +48,7 @@
                                     <option value="" selected>@lang('Select')</option>
                                     @foreach ($wallets as $wallet)
                                     @if (isset($wallet_type_list[$wallet->wallet_type]))
-                                    <option value="{{$wallet->id}}" data-curr="{{$wallet->currency->id}}" data-rate="{{$wallet->currency->rate}}" data-code="{{$wallet->currency->code}}" data-type="{{$wallet->currency->type}}">{{$wallet->currency->code}} -- ({{amount($wallet->balance,$wallet->currency->type,2)}}) --  {{$wallet_type_list[$wallet->wallet_type]}}</option>
+                                    <option value="{{$wallet->id}}" data-curr="{{$wallet->currency->id}}" data-rate="{{getRate($wallet->currency)}}" data-code="{{$wallet->currency->code}}" data-type="{{$wallet->currency->type}}">{{$wallet->currency->code}} -- ({{amount($wallet->balance,$wallet->currency->type,2)}}) --  {{$wallet_type_list[$wallet->wallet_type]}}</option>
                                     @endif
                                     @endforeach
                                 </select>

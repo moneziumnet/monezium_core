@@ -49,7 +49,7 @@ class DepositBankController extends Controller
                 return $data->email;
             })
             ->editColumn('amount', function(DepositBank $data) {
-                return $data->currency->symbol.round($data->amount*$data->currency->rate);
+                return $data->currency->symbol.round($data->amount*getRate($data->currency));
             })
             ->editColumn('status', function(DepositBank $data) {
                 if($data->status == 'pending') {
@@ -129,7 +129,7 @@ class DepositBankController extends Controller
         }
 
         $user = User::findOrFail($data->user_id);
-        $amount = $data->amount * $data->currency->rate;
+        $amount = $data->amount * getRate($data->currency);
         $transaction_global_cost = 0;
         $transaction_global_fee = check_global_transaction_fee($amount, $user, 'deposit');
         if($transaction_global_fee)

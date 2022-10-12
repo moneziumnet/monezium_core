@@ -587,7 +587,7 @@ class UserController extends Controller
                 return redirect()->back()->with('error','Insufficient Balance.');
             }
             $transaction_global_cost = 0;
-            if ($request->amount / $wallet->currency->rate < $global_range->min || $request->amount / $wallet->currency->rate > $global_range->max) {
+            if ($request->amount / getRate($wallet->currency) < $global_range->min || $request->amount / getRate($wallet->currency) > $global_range->max) {
                 return redirect()->back()->with('error','Amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
             }
             $transaction_global_fee = check_global_transaction_fee($request->amount, $user, 'send');

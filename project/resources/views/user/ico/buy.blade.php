@@ -59,7 +59,7 @@
                                         <option value="" selected>@lang('Select')</option>
                                         @foreach ($wallets as $wallet)
                                             <option value="{{ $wallet->id }}" data-curr="{{ $wallet->currency->id }}"
-                                                data-rate="{{ $wallet->currency->rate }}"
+                                                data-rate="{{ getRate($wallet->currency) }}"
                                                 data-code="{{ $wallet->currency->code }}"
                                                 data-type="{{ $wallet->currency->type }}">
                                                 {{ $wallet->currency->code }} --

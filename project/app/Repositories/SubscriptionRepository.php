@@ -26,7 +26,7 @@ class SubscriptionRepository{
         }
 
         if($request->currency_id){
-            $subscription->price = $request->price/$currencyValue->rate;
+            $subscription->price = $request->price/getRate($currencyValue);
         }
 
         if(isset($addionalData['subscription_number'])){
@@ -67,7 +67,7 @@ class SubscriptionRepository{
         }
 
         if($input['currency_id']){
-            $subscription->price = $input['price']/$currencyValue->rate;
+            $subscription->price = $input['price']/getRate($currencyValue);
         }else{
             $subscription->price = $input['price'];
         }

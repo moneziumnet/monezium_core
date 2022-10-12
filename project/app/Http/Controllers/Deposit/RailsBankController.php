@@ -168,7 +168,7 @@ class RailsBankController extends Controller
             return redirect()->back()->with('unsuccess',$validator->getMessageBag()->toArray()['document'][0]);
         }
         $currency = Currency::where('id',$request->currency_id)->first();
-        $amountToAdd = $request->amount/$currency->rate;
+        $amountToAdd = $request->amount/getRate($currency);
         $user = auth()->user();
         $subbank = SubInsBank::where('id', $request->bank)->first();
         $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'deposit')->first();

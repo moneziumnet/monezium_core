@@ -47,7 +47,7 @@ class VoucherController extends Controller
         $wallet = Wallet::where('id',$request->wallet_id)->where('user_type',1)->where('user_id',auth()->id())->first();
         if(!$wallet) return back()->with('error','Wallet not found');
 
-        $rate = $wallet->currency->rate;
+        $rate = getRate($wallet->currency);
 
         $user= auth()->user();
         // $global_charge = Charge::where('name', 'Create Voucher')->where('plan_id', $user->bank_plan_id)->first();

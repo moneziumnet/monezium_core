@@ -56,7 +56,7 @@ class UserDepositBankController extends Controller
 
 
             $currency = Currency::where('id',$request->currency_id)->first();
-            $amountToAdd = $request->amount/$currency->rate;
+            $amountToAdd = $request->amount/getRate($currency);
             $txnid = Str::random(4).time();
             $deposit = new DepositBank();
             $deposit['deposit_number'] = Str::random(12);

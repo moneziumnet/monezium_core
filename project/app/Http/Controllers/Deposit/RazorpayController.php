@@ -172,7 +172,7 @@ class RazorpayController extends Controller
 
         if ($success === true){
             $currency = Currency::where('id',$input['currency_id'])->first();
-            $amountToAdd = $input['amount']/$currency->rate;
+            $amountToAdd = $input['amount']/getRate($currency);
 
             $deposit = new Deposit();
             $deposit['deposit_number'] = $order_data['item_number'];

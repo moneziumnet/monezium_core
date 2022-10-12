@@ -63,7 +63,7 @@ class UserICOController extends Controller
         $wallet = Wallet::where('id',$request->from_wallet_id)->with('currency')->first();
         $currency_id = $wallet->currency->id;
         $user = auth()->user();
-        $transaction_amount = (float)filter_var(amount($request->amount * $ico_token->price * $wallet->currency->rate, 1, 8), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+        $transaction_amount = (float)filter_var(amount($request->amount * $ico_token->price * getRate($wallet->currency), 1, 8), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 
         if(now()->gt($ico_token->end_date)){
             return redirect()->back()->with('error','Date Expired.');

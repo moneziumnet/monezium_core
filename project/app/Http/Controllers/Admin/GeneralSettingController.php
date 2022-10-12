@@ -179,7 +179,7 @@ class GeneralSettingController extends Controller
         else {
             $input['paytm_mode'] = 'sandbox';
         }
-        $input['fixed_commission'] = $input['fixed_commission'] / $curr->rate;
+        $input['fixed_commission'] = $input['fixed_commission'] / getRate($curr);
         $data->update($input);
 
 

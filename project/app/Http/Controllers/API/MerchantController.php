@@ -84,7 +84,7 @@ class MerchantController extends Controller
             $currency = Currency::findOrFail($senderWallet->currency->id);
             $charge = charge('make-escrow');
 
-            $finalCharge = amount(chargeCalc($charge,$request->amount,$currency->rate),$currency->type);
+            $finalCharge = amount(chargeCalc($charge,$request->amount,getRate($currency)),$currency->type);
 
             if($request->pay_charge) $finalAmount =  amount($request->amount + $finalCharge, $currency->type);
             else  $finalAmount =  amount($request->amount, $currency->type);
