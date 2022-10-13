@@ -78,17 +78,23 @@ class MerchantShopController extends Controller
         $currencies = Currency::wherestatus(1)->get();
         $gs = Generalsetting::first();
         foreach ($currencies as $key => $value) {
-            if($value->type == 2) {
+            $address = $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
+            $keyword = '';
+            if($value->code == 'ETH') {
+
                 $address = RPC_ETH('personal_newAccount',['123123']);
                 if ($address == 'error') {
-                    continue;
-                    // return response()->json(array('errors' => [0 => __('You can not create this shop because there is some issue in crypto node.')]));
+                    return false;
                 }
                 $keyword = '123123';
             }
-            else {
-                $address = $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
-                $keyword = '';
+            elseif ($value->code == 'BTC') {
+                $key = str_rand();
+                $address = RPC_BTC_Create('createwallet',[$key]);
+                if ($address == 'error') {
+                    return false;
+                }
+                $keyword = $key;
             }
             DB::table('merchant_wallets')->insert([
                 'merchant_id' => $data->merchant_id,
