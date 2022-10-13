@@ -131,7 +131,8 @@ class MerchantProductController extends Controller
     public function link($ref_id) {
         $data = Product::where('ref_id', $ref_id)->first();
         $bankaccounts = BankAccount::where('user_id', $data->user_id)->where('currency_id', $data->currency_id)->get();
-        $cryptolist = Currency::whereStatus(1)->where('type', 2)->get();
+        $crypto_ids =  MerchantWallet::where('merchant_id', $data->user_id)->where('shop_id', $data->shop_id)->pluck('currency_id')->toArray();
+        $cryptolist = Currency::whereStatus(1)->where('type', 2)->whereIn('id', $crypto_ids)->get();
         if(!$data) {
             return back()->with('error', 'This product does not exist.');
         }
@@ -152,13 +153,10 @@ class MerchantProductController extends Controller
         $data['product'] = Product::where('id', $id)->first();
         $data['quantity'] = $request->quantity;
         $data['total_amount'] = $data['product']->amount * $request->quantity;
-        $pre_currency = Currency::findOrFail($data['product']->currency_id)->code;
+        $pre_currency = Currency::findOrFail($data['product']->currency_id);
         $select_currency = Currency::findOrFail($request->link_pay_submit);
-        $client = New Client();
         $code = $select_currency->code;
-        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency='.$code);
-        $result = json_decode($response->getBody());
-        $data['cal_amount'] = floatval($result->data->rates->$pre_currency);
+        $data['cal_amount'] = floatval(getRate($pre_currency, $code));
         $data['merchantwallet'] =  MerchantWallet::where('merchant_id', $data['product']->user_id)->where('shop_id', $data['product']->shop_id)->where('currency_id', $select_currency->id)->first();
         return view('user.merchant.product.crypto_link_pay', $data);
     }
@@ -330,7 +328,7 @@ class MerchantProductController extends Controller
             mail($to,$subject,$msg_body,$headers);
 
         }
-        elseif($request->payment = 'crypto') {
+        elseif($request->payment == 'crypto') {
             $crytpo_data = new CryptoDeposit();
             $crytpo_data->currency_id = $request->currency_id;
             $crytpo_data->amount = $request->amount;
@@ -349,7 +347,7 @@ class MerchantProductController extends Controller
                 return redirect(url('/'))->with('message','You have paid for buy project successfully (Crypto).');
             }
         }
-        elseif($request->payment = 'gateway') {
+        elseif($request->payment == 'gateway') {
             if(auth()->user()) {
                 return redirect(route('user.shop.index'))->with('message','You have paid for buy project successfully (Payment Gateway).');
             }
@@ -371,13 +369,10 @@ class MerchantProductController extends Controller
         $data['product'] = Product::where('id', $id)->first();
         $data['quantity'] = $request->quantity;
         $data['total_amount'] = $data['product']->amount * $request->quantity;
-        $pre_currency = Currency::findOrFail($data['product']->currency_id)->code;
+        $pre_currency = Currency::findOrFail($data['product']->currency_id);
         $select_currency = Currency::findOrFail($request->link_pay_submit);
-        $client = New Client();
         $code = $select_currency->code;
-        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency='.$code);
-        $result = json_decode($response->getBody());
-        $data['cal_amount'] = floatval($result->data->rates->$pre_currency);
+        $data['cal_amount'] = floatval(getRate($pre_currency, $code));
         $data['merchantwallet'] =  MerchantWallet::where('merchant_id', $data['product']->user_id)->where('shop_id', $data['product']->shop_id)->where('currency_id', $select_currency->id)->first();
         return view('user.merchant.product.crypto_pay', $data);
     }

@@ -59,13 +59,13 @@
                                       </a>
                                       <div class="dropdown-menu dropdown-menu-left">
                                           @if ($val->status == 0)
-                                            <a href="{{route('user.merchant.shop.edit',$val->id)}}" class="dropdown-item"><i class="fas fa-edit"></i>{{__('Edit')}}</a>
-                                            <a href="javascript:void(0)" class="dropdown-item disabled" d><i class="fas fa-file-contract"></i>{{__('View')}}</a>
+                                              <a href="{{route('user.merchant.shop.edit',$val->id)}}" class="dropdown-item"><i class="fas fa-edit me-2"></i>{{__('Edit')}}</a>
+                                              <a href="javascript:void(0)" class="dropdown-item disabled" d><i class="fas fa-file-contract me-2"></i>{{__('View')}}</a>
                                             @else
-                                                <a href="javascript:void(0)" class="dropdown-item disabled"><i class="fas fa-edit"></i>{{__('Edit')}}</a>
-                                                <a href="{{route('user.merchant.shop.view_product',$val->id)}}" class="dropdown-item" ><i class="fas fa-file-contract"></i>{{__('View')}}</a>
+                                                <a href="javascript:void(0)" class="dropdown-item disabled"><i class="fas fa-edit me-2"></i>{{__('Edit')}}</a>
+                                                <a href="{{route('user.merchant.shop.view_product',$val->id)}}" class="dropdown-item" ><i class="fas fa-file-contract me-2"></i>{{__('View')}}</a>
                                             @endif
-                                            <a href="javascript:void(0)" class="dropdown-item" data-bs-target="#delete{{$val->id}}" data-bs-toggle="modal" ><i class="fas fa-trash-alt  me-2"></i>{{__('Delete')}}</a>
+                                            <a href="javascript:void(0)" class="dropdown-item" data-bs-target="#delete{{$val->id}}" data-bs-toggle="modal" ><i class="fas fa-trash-alt me-2"></i>{{__('Delete')}}</a>
                                       </div>
                                       </div>
                                   </div>

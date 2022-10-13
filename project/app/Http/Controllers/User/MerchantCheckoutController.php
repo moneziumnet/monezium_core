@@ -45,19 +45,17 @@ class MerchantCheckoutController extends Controller
 
     Public function link($id) {
         $data['checkout'] = MerchantCheckout::where('ref_id', $id)->first();
-        $data['cryptolist'] = Currency::whereStatus(1)->where('type', 2)->get();
+        $crypto_ids =  MerchantWallet::where('merchant_id', $data['checkout']->user_id)->where('shop_id', $data['checkout']->shop_id)->pluck('currency_id')->toArray();
+        $data['cryptolist'] = Currency::whereStatus(1)->where('type', 2)->whereIn('id', $crypto_ids)->get();
         return view('user.merchant.checkout.link', $data);
     }
 
     public function link_pay(Request $request, $id) {
         $data['checkout'] = MerchantCheckout::where('ref_id', $id)->first();
-        $pre_currency = Currency::findOrFail($data['checkout']->currency_id)->code;
+        $pre_currency = Currency::findOrFail($data['checkout']->currency_id);
         $select_currency = Currency::findOrFail($request->link_pay_submit);
-        $client = New Client();
         $code = $select_currency->code;
-        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency='.$code);
-        $result = json_decode($response->getBody());
-        $data['cal_amount'] = floatval($result->data->rates->$pre_currency);
+        $data['cal_amount'] = floatval(getRate($pre_currency, $code));
         $data['merchantwallet'] =  MerchantWallet::where('merchant_id', $data['checkout']->user_id)->where('shop_id', $data['checkout']->shop_id)->where('currency_id', $select_currency->id)->first();
         return view('user.merchant.checkout.link_pay', $data);
     }

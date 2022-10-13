@@ -305,7 +305,7 @@ Route::prefix('user')->group(function() {
       Route::get('invoice-cancel/{id}',   [ManageInvoiceController::class,'cancel'])->name('user.invoice.cancel');
       Route::post('invoice/send-mail',   [ManageInvoiceController::class,'sendToMail'])->name('user.invoice.send.mail');
       Route::get('invoice/view/{number}',   [ManageInvoiceController::class,'view'])->name('user.invoice.view');
-      Route::get('invoice/incoming/view/{number}',   [ManageInvoiceController::class,'view'])->name('user.invoice.incoming.view');
+      Route::get('invoice/incoming/view/{number}',   [ManageInvoiceController::class,'incoming_view'])->name('user.invoice.incoming.view');
 
       Route::get('invoices-payment/{number}',   [ManageInvoiceController::class,'invoicePayment'])->name('user.invoice.payment');
       Route::post('invoices-payment/submit',   [ManageInvoiceController::class,'invoicePaymentSubmit'])->name('user.invoice.payment.submit');;

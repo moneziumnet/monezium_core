@@ -55,20 +55,21 @@ if(!function_exists('getModule')){
   }
 
   if(!function_exists('getRate')){
-    function getRate($currency){
+    function getRate($to_currency, $from_code = null){
+      $from_code = $from_code ?? 'USD';
       try{
         $client = New Client();
-        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency=USD');
+        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency='.$from_code);
         $rate = json_decode($response->getBody());
-        $code = $currency->code;
+        $code = $to_currency->code;
       } catch(\Exception $e) {
-        return $currency->rate;
+        return $to_currency->rate;
       }
 
       if(isset($rate->data->rates->$code)){
         $from_rate = $rate->data->rates->$code;
       } else {
-        $from_rate = $currency->rate;
+        $from_rate = $to_currency->rate;
       }
       return $from_rate;
     }

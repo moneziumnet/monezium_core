@@ -152,7 +152,8 @@ class MerchantCampaignController extends Controller
     public function link($ref_id) {
         $data = Campaign::where('ref_id', $ref_id)->first();
         $bankaccounts = BankAccount::where('user_id', $data->user_id)->where('currency_id', $data->currency_id)->get();
-        $cryptolist= Currency::whereStatus(1)->where('type', 2)->get();
+        $crypto_ids =  Wallet::where('user_id', $data->user_id)->where('user_type',1)->where('wallet_type', 8)->pluck('currency_id')->toArray();
+        $cryptolist= Currency::whereStatus(1)->where('type', 2)->whereIn('id', $crypto_ids)->get();
         if(!$data) {
             return back()->with('error', 'This Campaign does not exist.');
         }
@@ -379,13 +380,10 @@ class MerchantCampaignController extends Controller
     public function crypto_pay(Request $request, $id) {
         $data['campaign'] = Campaign::where('id', $id)->first();
         $data['total_amount'] = $request->amount;
-        $pre_currency = Currency::findOrFail($data['campaign']->currency_id)->code;
+        $pre_currency = Currency::findOrFail($data['campaign']->currency_id);
         $select_currency = Currency::findOrFail($request->link_pay_submit);
-        $client = New Client();
         $code = $select_currency->code;
-        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency='.$code);
-        $result = json_decode($response->getBody());
-        $data['cal_amount'] = floatval($result->data->rates->$pre_currency);
+        $data['cal_amount'] = floatval(getRate($pre_currency, $code));
         $data['wallet'] =  Wallet::where('user_id', $data['campaign']->user_id)->where('user_type',1)->where('wallet_type', 8)->where('currency_id', $select_currency->id)->first();
         if(!$data['wallet']) {
             return back()->with('error', $select_currency->code .' crypto wallet is not existed in Campaign Owner.');
@@ -403,13 +401,10 @@ class MerchantCampaignController extends Controller
     public function crypto_link_pay(Request $request, $id) {
         $data['campaign'] = Campaign::where('id', $id)->first();
         $data['total_amount'] = $request->amount ;
-        $pre_currency = Currency::findOrFail($data['campaign']->currency_id)->code;
+        $pre_currency = Currency::findOrFail($data['campaign']->currency_id);
         $select_currency = Currency::findOrFail($request->link_pay_submit);
-        $client = New Client();
         $code = $select_currency->code;
-        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency='.$code);
-        $result = json_decode($response->getBody());
-        $data['cal_amount'] = floatval($result->data->rates->$pre_currency);
+        $data['cal_amount'] = floatval(getRate($pre_currency, $code));
         $data['wallet'] =  Wallet::where('user_id', $data['campaign']->user_id)->where('user_type',1)->where('wallet_type', 8)->where('currency_id', $select_currency->id)->first();
         if(!$data['wallet']) {
             return back()->with('error', $select_currency->code .' crypto wallet is not existed in Campaign Owner.');

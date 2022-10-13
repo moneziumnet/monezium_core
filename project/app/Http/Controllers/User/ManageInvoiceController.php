@@ -387,6 +387,15 @@ class ManageInvoiceController extends Controller
     {
         $data['invoice'] = Invoice::where('number',$number)->firstOrFail();
         $data['user'] = User::where('id',$data['invoice']->user_id)->first();
+        $data['back_url'] = route('user.invoice.index');
+        return view('user.invoice.invoice',$data);
+    }
+
+    public function incoming_view($number)
+    {
+        $data['invoice'] = Invoice::where('number',$number)->firstOrFail();
+        $data['user'] = User::where('id',$data['invoice']->user_id)->first();
+        $data['back_url'] = route('user.invoice.incoming.index');
         return view('user.invoice.invoice',$data);
     }
 
@@ -424,7 +433,9 @@ class ManageInvoiceController extends Controller
             $invoice = Invoice::where('number',decrypt($number))->firstOrFail();
             $user = User::where('id',$invoice->user_id)->firstOrFail();
             $bankaccounts = BankAccount::where('user_id', $user->id)->where('currency_id', $invoice->currency_id)->get();
-            $cryptolist = Currency::whereStatus(1)->where('type', 2)->get();
+
+            $crypto_ids =  Wallet::where('user_id', $invoice->user_id)->where('user_type',1)->where('wallet_type', 8)->pluck('currency_id')->toArray();
+            $cryptolist = Currency::whereStatus(1)->where('type', 2)->whereIn('id', $crypto_ids)->get();
 
             $inv_items = InvItem::where('invoice_id', $invoice->id)->get();
             $tax_value = 0;
@@ -454,7 +465,9 @@ class ManageInvoiceController extends Controller
             $user = User::where('id',$data->user_id)->firstOrFail();
 
             $bankaccounts = BankAccount::where('user_id', $user->id)->where('currency_id', $data->currency_id)->get();
-            $cryptolist = Currency::whereStatus(1)->where('type', 2)->get();
+
+            $crypto_ids =  Wallet::where('user_id', $data->user_id)->where('user_type',1)->where('wallet_type', 8)->pluck('currency_id')->toArray();
+            $cryptolist = Currency::whereStatus(1)->where('type', 2)->whereIn('id', $crypto_ids)->get();
 
             $inv_items = InvItem::where('invoice_id', $data->id)->get();
             $tax_value = 0;
@@ -474,7 +487,7 @@ class ManageInvoiceController extends Controller
 
     public function invoicePaymentSubmit(Request $request)
     {
-
+        $invoice = Invoice::findOrFail($request->invoice_id);
         if (auth()->user() && auth()->id() == $invoice->user_id) {
             redirect(route('user.dashboard'))->with('error','You can not pay yourself.');
         }
@@ -688,13 +701,10 @@ class ManageInvoiceController extends Controller
         }
 
         $data['total_amount'] = $data['invoice']->final_amount + $tax_value;
-        $pre_currency = Currency::findOrFail($data['invoice']->currency_id)->code;
+        $pre_currency = Currency::findOrFail($data['invoice']->currency_id);
         $select_currency = Currency::findOrFail($request->link_pay_submit);
-        $client = New Client();
         $code = $select_currency->code;
-        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency='.$code);
-        $result = json_decode($response->getBody());
-        $data['cal_amount'] = floatval($result->data->rates->$pre_currency);
+        $data['cal_amount'] = floatval(getRate($pre_currency, $code));
         $data['wallet'] =  Wallet::where('user_id', $data['invoice']->user_id)->where('user_type',1)->where('wallet_type', 8)->where('currency_id', $select_currency->id)->first();
         if(!$data['wallet']) {
             return back()->with('error', $select_currency->code .' Crypto wallet does not existed in sender.');
@@ -914,13 +924,10 @@ class ManageInvoiceController extends Controller
         }
 
         $data['total_amount'] = $data['invoice']->final_amount + $tax_value;
-        $pre_currency = Currency::findOrFail($data['invoice']->currency_id)->code;
+        $pre_currency = Currency::findOrFail($data['invoice']->currency_id);
         $select_currency = Currency::findOrFail($request->link_pay_submit);
-        $client = New Client();
         $code = $select_currency->code;
-        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency='.$code);
-        $result = json_decode($response->getBody());
-        $data['cal_amount'] = floatval($result->data->rates->$pre_currency);
+        $data['cal_amount'] = floatval(getRate($pre_currency, $code));
         $data['wallet'] =  Wallet::where('user_id', $data['invoice']->user_id)->where('user_type',1)->where('wallet_type', 8)->where('currency_id', $select_currency->id)->first();
         if(!$data['wallet']) {
             return back()->with('error', $select_currency->code .' Crypto wallet does not existed in sender.');
