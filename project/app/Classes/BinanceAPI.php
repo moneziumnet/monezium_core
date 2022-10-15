@@ -952,3 +952,4 @@ class BinanceAPI {
         return $balances;
     }
 }
+?>
