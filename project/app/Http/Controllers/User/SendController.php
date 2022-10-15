@@ -18,6 +18,7 @@ use App\Classes\GeniusMailer;
 use App\Models\Generalsetting;
 use App\Models\BalanceTransfer;
 use App\Http\Controllers\Controller;
+use App\Classes\EthereumRpcService;
 
 class SendController extends Controller
 {
@@ -233,16 +234,24 @@ class SendController extends Controller
             session(['sendstatus'=>1, 'saveData'=>$trans]);
             // user_wallet_decrement($user->id, $currency_id, $request->amount);
             // user_wallet_increment($receiver->id, $currency_id, $request->amount);
-
-            if($wallet->currency->code == 'ETH') {
-                RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
-                $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex($request->amount*pow(10,18)).'"}';
-                RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
-            }
-            if($wallet->currency->code == 'BTC') {
-                $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
-                RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, $request->amount],$wallet->keyword);
+            if ($wallet->currency->type == 2) {
+                if($wallet->currency->code == 'ETH') {
+                    RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
+                    $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
+                    $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex($request->amount*pow(10,18)).'"}';
+                    RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
+                }
+                else if($wallet->currency->code == 'BTC') {
+                    $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
+                    RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, $request->amount],$wallet->keyword);
+                }
+                else {
+                    RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
+                    $geth = new EthereumRpcService();
+                    $tokenContract = $wallet->currency->address;
+                    $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
+                    $geth->transferToken($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $request->amount);
+                }
             }
             if(SaveAccount::whereUserId(auth()->id())->where('receiver_id',$receiver->id)->exists()){
                 return redirect()->route('send.money.create')->with('success','Money Send Successfully');

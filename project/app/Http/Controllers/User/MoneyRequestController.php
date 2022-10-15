@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\BankPlan;
 use App\Models\Currency;
 use App\Models\Wallet;
+use App\Models\MerchantWallet;
 use App\Models\PlanDetail;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
@@ -16,6 +17,7 @@ use App\Classes\GeniusMailer;
 use App\Models\Generalsetting;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\URL;
+use App\Classes\EthereumRpcService;
 
 class MoneyRequestController extends Controller
 {
@@ -182,8 +184,9 @@ class MoneyRequestController extends Controller
         }
 
         $finalAmount = $data->amount - $data->cost -$data->supervisor_cost;
-
-        user_wallet_decrement($sender->id, $currency_id, $data->amount);
+        $currency = Currency::where('id', $currency_id)->first();
+        $wallet_type = $currency->type == 2 ? 8 : 1;
+        user_wallet_decrement($sender->id, $currency_id, $data->amount, $wallet_type);
         if ($receiver->referral_id != 0) {
             $remark = 'Request_money_supervisor_fee';
             if (check_user_type_by_id(4, $receiver->referral_id)) {
@@ -212,12 +215,31 @@ class MoneyRequestController extends Controller
         }
         if (isset($data->shop_id)) {
             merchant_shop_wallet_increment($receiver->id, $currency_id, $finalAmount, $data->shop_id);
+            $wallet = MerchantWallet::where('merchant_id', $sender->id)->where('currency_id', $currency_id)->where('shop_id', $data->shop_id )->with('currency')->first();
         }
         else {
-            user_wallet_increment($receiver->id, $currency_id, $finalAmount);
+            user_wallet_increment($receiver->id, $currency_id, $finalAmount, $wallet_type);
+            $wallet = Wallet::where('user_id', $sender->id)->where('currency_id', $currency_id)->where('wallet_type', $wallet_type)->first();
         }
-
-
+        if ($wallet->currency->type == 2) {
+            if($wallet->currency->code == 'ETH') {
+                RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
+                $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
+                $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex($finalAmount*pow(10,18)).'"}';
+                RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
+            }
+            else if($wallet->currency->code == 'BTC') {
+                $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
+                RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, $finalAmount],$wallet->keyword);
+            }
+            else {
+                RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
+                $geth = new EthereumRpcService();
+                $tokenContract = $wallet->currency->address;
+                $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
+                $geth->transferToken($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $request->amount);
+            }
+        }
         $data->update(['status'=>1]);
 
         $trans = new Transaction();
