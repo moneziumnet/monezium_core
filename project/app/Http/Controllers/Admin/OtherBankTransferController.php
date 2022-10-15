@@ -226,6 +226,7 @@ class OtherBankTransferController extends Controller
 
         $subbank = SubInsBank::where('id', $data->subbank)->first();
         $client = New Client();
+        $msg = __('Status Updated Successfully.');
         if($subbank->hasGateway()){
             if($bankgateway->keyword == 'openpayd') {
 
@@ -424,6 +425,80 @@ class OtherBankTransferController extends Controller
 
                 }
             }
+            else if($bankgateway->keyword == 'swan') {
+                try {
+                    $options = [
+                            'multipart' => [
+                            [
+                                'name' => 'client_id',
+                                'contents' => $bankgateway->information->client_id
+                            ],
+                            [
+                                'name' => 'client_secret',
+                                'contents' => $bankgateway->information->client_secret
+                            ],
+                            [
+                                'name' => 'grant_type',
+                                'contents' => 'client_credentials'
+                            ]
+                        ]];
+                        $response = $client->request('POST', 'https://oauth.swan.io/oauth2/token', $options);
+                        $res_body = json_decode($response->getBody());
+                        $access_token = $res_body->access_token;
+                } catch (\Throwable $th) {
+                    return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
+                }
+                try {
+                    $body = '{"query":"query MyQuery {\\n  accounts(filters: {}) {\\n    edges {\\n      node {\\n        id\\n        BIC\\n        IBAN\\n      }\\n    }\\n  }\\n}","variables":{}}';
+                    $headers = [
+                        'Authorization' => 'Bearer '.$access_token,
+                        'Content-Type' => 'application/json'
+                        ];
+                    $response = $client->request('POST', 'https://api.swan.io/sandbox-partner/graphql', [
+                        'body' => $body,
+                        'headers' => $headers
+                    ]);
+                    $res_body = json_decode($response->getBody());
+
+                    $accountlist = $res_body->data->accounts->edges ?? '';
+                } catch (\Throwable $th) {
+                    return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
+                }
+                $accountid = '';
+                // dd($accountlist);
+                if (count($accountlist) > 0) {
+                    foreach ($accountlist as $key => $value) {
+                        if ($value->node->IBAN == $customer_bank->iban) {
+                            $accountid = $value->node->id;
+                            break;
+                        }
+                    }
+                }
+                else {
+                    return response()->json(array('errors' => [ 0 => 'This bank account does not exist in SWAN.' ]));
+                }
+                if ($accountid == '') {
+                    return response()->json(array('errors' => [ 0 => 'This bank account does not exist in SWAN.' ]));
+                }
+                try {
+                    $body = '{"query":"mutation initiateCreditTransfers($input: InitiateCreditTransfersInput!) {\\n  initiateCreditTransfers(input: $input) {\\n    __typename\\n    ... on InitiateCreditTransfersSuccessPayload {\\n      __typename\\n      payment {\\n        id\\n        statusInfo {\\n          ... on PaymentConsentPending {\\n            __typename\\n            status\\n            consent {\\n              id\\n              consentUrl\\n              redirectUrl\\n            }\\n          }\\n          ... on PaymentInitiated {\\n            __typename\\n            status\\n          }\\n          ... on PaymentRejected {\\n            __typename\\n            reason\\n            status\\n          }\\n        }\\n      }\\n    }\\n    ... on AccountNotFoundRejection {\\n      __typename\\n      message\\n    }\\n    ... on ForbiddenRejection {\\n      __typename\\n      message\\n    }\\n  }\\n}\\n","variables":{"input":{"accountId":"'.$accountid.'","consentRedirectUrl":"'.route('admin.other.banks.transfer.index').'","creditTransfers":{"sepaBeneficiary":{"iban":"'.$data->iban.'","name":"'.$data->beneficiary->name.'","isMyOwnIban":false,"save":false},"amount":{"currency":"'.$currency->code.'","value":'.$data->amount.'},"reference":"'.$data->description.'"}}}}';
+                    $headers = [
+                        'Authorization' => 'Bearer '.$access_token,
+                        'Content-Type' => 'application/json'
+                        ];
+                    $response = $client->request('POST', 'https://api.swan.io/sandbox-partner/graphql', [
+                        'body' => $body,
+                        'headers' => $headers
+                    ]);
+                    $res_body = json_decode($response->getBody());
+                    $transaction_id = $res_body->data->initiateCreditTransfers->payment->id;
+                    $confirm_url = $res_body->data->initiateCreditTransfers->payment->statusInfo->consent->consentUrl;
+                    $msg = __('Status Updated Successfully. Please following url to confirm payment. ').$confirm_url;
+                } catch (\Throwable $th) {
+                    return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
+                }
+
+            }
         }
         else {
             $transaction_id = str_rand();
@@ -454,8 +529,6 @@ class OtherBankTransferController extends Controller
 
     $data->status = $id2;
     $data->update();
-
-    $msg = __('Status Updated Successfully.');
     return response()->json($msg);
   }
 }
