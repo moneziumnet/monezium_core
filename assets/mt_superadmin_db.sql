@@ -1327,11 +1327,6 @@ CREATE TABLE `tenants`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Records of tenants
--- ----------------------------
-INSERT INTO `tenants` VALUES ('51', '2022-06-20 00:13:16', '2022-06-20 00:13:16', '{\"tenancy_db_name\":\"bank2\",\"tenancy_db_username\":\"root\",\"tenancy_db_password\":null}');
-
--- ----------------------------
 -- Table structure for user_subscriptions
 -- ----------------------------
 DROP TABLE IF EXISTS `user_subscriptions`;
