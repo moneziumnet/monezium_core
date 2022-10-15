@@ -59,7 +59,7 @@ class SwanController extends Controller
             $res_body = json_decode($response->getBody());
             $access_token = $res_body->access_token;
             Session::put('Swan_token', $access_token);
-            Session::put('subbank', $bankgateway->id);
+            Session::put('subbank', $bankgateway->subbank_id);
             Session::put('currency', $currency->id);
         } catch (\Throwable $th) {
             return redirect()->back()->with(array('warning' => $th->getMessage()));
