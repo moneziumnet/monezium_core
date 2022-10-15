@@ -22,6 +22,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Session;
 
 class SwanController extends Controller
 {
@@ -57,6 +58,9 @@ class SwanController extends Controller
             $response = $client->request('POST', 'https://oauth.swan.io/oauth2/token', $options);
             $res_body = json_decode($response->getBody());
             $access_token = $res_body->access_token;
+            Session::put('Swan_token', $access_token);
+            Session::put('subbank', $bankgateway->id);
+            Session::put('currency', $currency->id);
         } catch (\Throwable $th) {
             return redirect()->back()->with(array('warning' => $th->getMessage()));
         }
