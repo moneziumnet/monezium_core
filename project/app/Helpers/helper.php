@@ -378,6 +378,15 @@ if(!function_exists('getModule')){
                     }
                     $keyword = $key;
                 }
+                else {
+                    $eth_currency = Currency::where('code', 'Eth')->first();
+                    $eth_wallet = Wallet::where('user_id', $user->id)->where('wallet_type', $wallet_type)->where('currency_id', $eth_currency->id)->first();
+                    if (!$eth_wallet) {
+                        return false;
+                    }
+                    $address = $eth_wallet->wallet_no;
+                    $keyword = $eth_wallet->keyword;
+                }
             }
             else {
                 $address = $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
@@ -480,6 +489,15 @@ if(!function_exists('getModule')){
                   }
                   $keyword = $key;
               }
+              else {
+                $eth_currency = Currency::where('code', 'Eth')->first();
+                $eth_wallet = MerchantWallet::where('merchant_id', $user->id)->where('shop_id', $shop_id)->where('currency_id', $eth_currency->id)->first();
+                if (!$eth_wallet) {
+                    return false;
+                }
+                $address = $eth_wallet->wallet_no;
+                $keyword = $eth_wallet->keyword;
+            }
           }
           else {
           $address = $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);

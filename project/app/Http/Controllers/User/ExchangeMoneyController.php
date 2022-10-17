@@ -60,9 +60,18 @@ class ExchangeMoneyController extends Controller
                     $keyword = str_rand();
                     $address = RPC_BTC_Create('createwallet',[$keyword]);
                 }
-                else {
+                else if ($currency->code == 'ETH' ) {
                     $address = RPC_ETH('personal_newAccount',['123123']);
                     $keyword = '123123';
+                }
+                else {
+                    $eth_currency = Currency::where('code', 'Eth')->first();
+                    $eth_wallet = Wallet::where('user_id', $user->id)->where('wallet_type', $request->wallet_type)->where('currency_id', $eth_currency->id)->first();
+                    if (!$eth_wallet) {
+                        return back()->with('error','Now, You do not have Eth Crypto Wallet. You have to create Eth Crypto wallet firstly for this exchange action .');
+                    }
+                    $address = $eth_wallet->wallet_no;
+                    $keyword = $eth_wallet->keyword;
                 }
                 if ($address == 'error') {
                     return back()->with('error','You can not create this wallet because there is some issue in crypto node.');

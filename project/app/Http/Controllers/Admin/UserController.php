@@ -241,9 +241,18 @@ class UserController extends Controller
                         $keyword = str_rand();
                         $address = RPC_BTC_Create('createwallet',[$keyword]);
                     }
-                    else {
+                    else if ($currency->code == 'ETH') {
                         $address = RPC_ETH('personal_newAccount',['123123']);
                         $keyword = '123123';
+                    }
+                    else {
+                        $eth_currency = Currency::where('code', 'Eth')->first();
+                        $eth_wallet = Wallet::where('user_id', $id)->where('wallet_type', $wallet_type)->where('currency_id', $eth_currency->id)->first();
+                        if (!$eth_wallet) {
+                            response()->json(array('errors' => [0 => __('You have to create Eth Crypto wallet firstly before create ERC20 token wallet.')]));
+                        }
+                        $address = $eth_wallet->wallet_no;
+                        $keyword = $eth_wallet->keyword;
                     }
                     if ($address == 'error') {
                         return response()->json(array('errors' => [0 => __('You can not create this wallet because there is some issue in crypto node.')]));

@@ -46,6 +46,15 @@ class SystemAccountController extends Controller
                     $address = RPC_ETH('personal_newAccount',['123123']);
                     $keyword = '123123';
                 }
+                else {
+                    $eth_currency = Currency::where('code', 'Eth')->first();
+                    $eth_wallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $eth_currency->id)->first();
+                    if (!$eth_wallet) {
+                        response()->json(array('errors' => [0 => __('You have to create Eth Crypto wallet firstly before create ERC20 token wallet.')]));
+                    }
+                    $address = $eth_wallet->wallet_no;
+                    $keyword = $eth_wallet->keyword;
+                }
             }
             else {
                 $address = $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);

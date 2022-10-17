@@ -80,21 +80,32 @@ class MerchantShopController extends Controller
         foreach ($currencies as $key => $value) {
             $address = $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
             $keyword = '';
-            if($value->code == 'ETH') {
+            if($value->type == 2) {
+                if($value->code == 'ETH') {
 
-                $address = RPC_ETH('personal_newAccount',['123123']);
-                if ($address == 'error') {
-                    return false;
+                    $address = RPC_ETH('personal_newAccount',['123123']);
+                    if ($address == 'error') {
+                        break;
+                    }
+                    $keyword = '123123';
                 }
-                $keyword = '123123';
-            }
-            elseif ($value->code == 'BTC') {
-                $key = str_rand();
-                $address = RPC_BTC_Create('createwallet',[$key]);
-                if ($address == 'error') {
-                    return false;
+                elseif ($value->code == 'BTC') {
+                    $key = str_rand();
+                    $address = RPC_BTC_Create('createwallet',[$key]);
+                    if ($address == 'error') {
+                        break;
+                    }
+                    $keyword = $key;
                 }
-                $keyword = $key;
+                else {
+                    $eth_currency = Currency::where('code', 'Eth')->first();
+                    $eth_wallet = MerchantWallet::where('merchant_id', $data->merchant_id)->where('shop_id', $data->id)->where('currency_id', $eth_currency->id)->first();
+                    if (!$eth_wallet) {
+                        break;
+                    }
+                    $address = $eth_wallet->wallet_no;
+                    $keyword = $eth_wallet->keyword;
+                }
             }
             DB::table('merchant_wallets')->insert([
                 'merchant_id' => $data->merchant_id,
