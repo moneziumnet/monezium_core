@@ -123,6 +123,7 @@ class RegisterController extends Controller
         $input['affilate_code'] = md5($request->name . $request->email);
         $input['name'] = trim($request->firstname)." ".trim($request->lastname);
         $input['dob'] = $request->customer_dob;
+        $input['phone'] = preg_replace("/[^0-9]/", "", $request->phone);
 
         if($request->form_select == 1) {
             $input['company_name'] = $request->company_name;

@@ -320,6 +320,8 @@ class UserController extends Controller
 
         $input = $request->all();
 
+        $input['phone'] = preg_replace("/[^0-9]/", "", $request->phone);
+
         if(!isset(auth()->user()->company_name)) {
             $input['personal_code'] = $request->personal_code;
             $input['your_id'] = $request->your_id;
@@ -489,7 +491,7 @@ class UserController extends Controller
     }
 
     public function username_by_phone(Request $request){
-        if($data = User::where('phone',$request->phone)->first()){
+        if($data = User::where('phone',preg_replace("/[^0-9]/", "", $request->phone))->first()){
             return ["name" => $data->company_name ?? $data->name, "email" => $data->email];
         }else{
             return false;
