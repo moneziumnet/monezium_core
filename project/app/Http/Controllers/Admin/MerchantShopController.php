@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Datatables;
 use App\Models\MerchantShop;
+use App\Models\MerchantWallet;
 use App\Models\User;
 use App\Models\Currency;
 use App\Models\Generalsetting;
@@ -82,18 +83,23 @@ class MerchantShopController extends Controller
             $keyword = '';
             if($value->type == 2) {
                 if($value->code == 'ETH') {
-
-                    $address = RPC_ETH('personal_newAccount',['123123']);
-                    if ($address == 'error') {
-                        break;
+                    $eth_wallet = MerchantWallet::where('merchant_id', $data->merchant_id)->where('shop_id', $data->id)->where('currency_id', $value->id)->first();
+                    if (!$eth_wallet) {
+                        $address = RPC_ETH('personal_newAccount',['123123']);
+                        if ($address == 'error') {
+                            continue;
+                        }
+                        $keyword = '123123';
                     }
-                    $keyword = '123123';
+                    else {
+                        continue;
+                    }
                 }
                 elseif ($value->code == 'BTC') {
                     $key = str_rand();
                     $address = RPC_BTC_Create('createwallet',[$key]);
                     if ($address == 'error') {
-                        break;
+                        continue;
                     }
                     $keyword = $key;
                 }
@@ -103,7 +109,7 @@ class MerchantShopController extends Controller
                     if (!$eth_wallet) {
                         $address = RPC_ETH('personal_newAccount',['123123']);
                         if ($address == 'error') {
-                            break;
+                            continue;
                         }
                         $keyword = '123123';
                         DB::table('merchant_wallets')->insert([
