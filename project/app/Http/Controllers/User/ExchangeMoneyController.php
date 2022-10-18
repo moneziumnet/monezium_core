@@ -343,7 +343,7 @@ class ExchangeMoneyController extends Controller
             RPC_ETH('personal_unlockAccount',[$fromsystemwallet->wallet_no, $fromsystemwallet->keyword ?? '', 30]);
             $geth = new EthereumRpcService();
             $tokenContract = $toWallet->currency->address;
-            $geth->transferToken($tokenContract, $fromsystemwallet->wallet_no, $toWallet->wallet_no, $totalAmount);
+            $geth->transferToken($tokenContract, $fromsystemwallet->wallet_no, $toWallet->wallet_no, $finalAmount);
         }
         if($fromWallet->currency->code == 'BTC' && $toWallet->currency->code != 'ETH' && $toWallet->currency->code != 'BTC' && $toWallet->currency->type == 2) {
             $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
@@ -359,7 +359,7 @@ class ExchangeMoneyController extends Controller
             RPC_ETH('personal_unlockAccount',[$fromsystemwallet->wallet_no, $fromsystemwallet->keyword ?? '', 30]);
             $geth = new EthereumRpcService();
             $tokenContract = $toWallet->currency->address;
-            $geth->transferToken($tokenContract, $fromsystemwallet->wallet_no, $toWallet->wallet_no, $totalAmount);
+            $geth->transferToken($tokenContract, $fromsystemwallet->wallet_no, $toWallet->wallet_no, $finalAmount);
         }
 
         if($fromWallet->currency->type == 1 && $toWallet->currency->code != 'ETH' && $toWallet->currency->code != 'BTC' && $toWallet->currency->type == 2) {
@@ -375,12 +375,11 @@ class ExchangeMoneyController extends Controller
 
             $geth = new EthereumRpcService();
             $tokenContract = $toWallet->currency->address;
-            $geth->transferToken($tokenContract, $tosystemwallet->wallet_no, $toWallet->wallet_no, $totalAmount);
+            $geth->transferToken($tokenContract, $tosystemwallet->wallet_no, $toWallet->wallet_no, $finalAmount);
 
             $fromsystemwallet1->balance += $totalAmount;
             $fromsystemwallet1->update();
         }
-
 
         if($fromWallet->currency->code != 'ETH' && $fromWallet->currency->code != 'BTC' && $fromWallet->currency->type == 2 && $toWallet->currency->code == 'BTC') {
             RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
@@ -453,7 +452,7 @@ class ExchangeMoneyController extends Controller
             RPC_ETH('personal_unlockAccount',[$fromsystemwallet->wallet_no, $fromsystemwallet->keyword ?? '', 30]);
             $geth = new EthereumRpcService();
             $tokenContract = $toWallet->currency->address;
-            $geth->transferToken($tokenContract, $fromsystemwallet->wallet_no, $toWallet->wallet_no, $totalAmount);
+            $geth->transferToken($tokenContract, $fromsystemwallet->wallet_no, $toWallet->wallet_no, $finalAmount);
         }
 
         $exchange = new ExchangeMoney();
