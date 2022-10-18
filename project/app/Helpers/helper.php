@@ -57,19 +57,20 @@ if(!function_exists('getModule')){
   if(!function_exists('getRate')){
     function getRate($to_currency, $from_code = null){
       $from_code = $from_code ?? 'USD';
+      $from_cur = Currency::where('code', $from_code)->first();
       try{
         $client = New Client();
         $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency='.$from_code);
         $rate = json_decode($response->getBody());
         $code = $to_currency->code;
       } catch(\Exception $e) {
-        return $to_currency->rate;
+        return $to_currency->rate / $from_cur->rate;
       }
 
       if(isset($rate->data->rates->$code)){
         $from_rate = $rate->data->rates->$code;
       } else {
-        $from_rate = $to_currency->rate;
+        $from_rate = $to_currency->rate / $from_cur->rate;
       }
       return $from_rate;
     }

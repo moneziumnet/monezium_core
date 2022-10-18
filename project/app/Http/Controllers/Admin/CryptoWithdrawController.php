@@ -174,6 +174,12 @@ class CryptoWithdrawController extends Controller
             elseif($currency->code == 'BTC') {
                 RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, ($data->amount-$transaction_custom_cost*$crypto_rate)],$fromWallet->keyword);
             }
+            else {
+                RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
+                $geth = new EthereumRpcService();
+                $tokenContract = $fromWallet->currency->address;
+                $geth->transferToken($tokenContract, $fromWallet->wallet_no, $toWallet->wallet_no, $data->amount-$transaction_custom_cost*$crypto_rate);
+            }
             $trnx              = new Transaction();
             $trnx->trnx        = str_rand();
             $trnx->user_id     = $data->user_id;

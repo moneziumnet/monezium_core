@@ -272,6 +272,7 @@ Route::prefix('admin')->group(function () {
     Route::post('/user/cal/manual/fee/', [UserController::class, 'calmanualfee'])->name('admin.cal.manual.charge');
     Route::post('/user/accounts/deposit', [UserController::class, 'profileAccountDeposit'])->name('admin-user-accounts-deposit');
     Route::get('/user/accounts/deposit/form', [UserController::class, 'profileAccountDepositForm'])->name('admin-user-accounts-deposit-form');
+    Route::get('/user/accounts/crypto/deposit/form/{id}', [UserController::class, 'profileAccountCryptoDepositForm'])->name('admin-user-accounts-crypto-deposit-form');
 
     Route::get('/users/ban/{id1}/{id2}', [UserController::class, 'ban'])->name('admin-user-ban');
     Route::get('/users/verify/{id1}/{id2}', [UserController::class, 'verify'])->name('admin-user-verify');

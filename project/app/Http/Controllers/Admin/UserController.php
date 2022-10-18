@@ -20,6 +20,7 @@ use App\Models\OrderedItem;
 use App\Models\Transaction;
 use App\Models\Withdrawals;
 use App\Models\SubInsBank;
+use App\Models\CryptoDeposit;
 use App\Models\BankGateway;
 use App\Models\BankAccount;
 use Illuminate\Support\Str;
@@ -208,13 +209,27 @@ class UserController extends Controller
             $trans->type        = '+';
             $trans->remark      = 'Deposit_create';
             $trans->details     = trans('Deposit complete');
-            $trans->data        = json_encode($request->except('_token', 'wallet_id'), True);
+            $trans->data        = $request->wallet_type == 'crypto' ? '{"sender":"System Account", "receiver":"'.$request->adddress.'"}':json_encode($request->except('_token', 'wallet_id'), True);
             $trans->save();
+            if ($request->wallet_type == 'crypto') {
+                $deposit = new CryptoDeposit();
+                $input = $request->all();
+
+                $deposit->fill($input)->save();
+            }
             return redirect()->back()->with(array('message' => 'Deposit Create Successfully'));
         }
 
         public function profileAccountDepositForm() {
             return view('admin.user.walletdeposit');
+        }
+
+        public function profileAccountCryptoDepositForm($id) {
+            $wallet = Wallet::where('id', $id)->first();
+            $data['wallet_no'] = $wallet->wallet_no;
+            $data['user_id'] = $wallet->user_id;
+            $data['currency_id'] = $wallet->currency_id;
+            return view('admin.user.walletcryptodeposit', $data);
         }
 
         public function profilewallets($id, $wallet_type, $currency_id)
@@ -705,18 +720,26 @@ class UserController extends Controller
                 $trans->details     = trans('Send Money');
                 $trans->data        = '{"sender":"'.$user->name.'", "receiver":"'.$receiver->name.'"}';
                 $trans->save();
+                if ($wallet->currency->type == 2) {
 
-                if($wallet->currency->code == 'ETH') {
-                    RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                    $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
-                    $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex($request->amount*pow(10,18)).'"}';
-                    RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
+                    if($wallet->currency->code == 'ETH') {
+                        RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
+                        $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
+                        $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex($request->amount*pow(10,18)).'"}';
+                        RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
+                    }
+                    elseif($wallet->currency->code == 'BTC') {
+                        $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
+                        RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, $request->amount],$wallet->keyword);
+                    }
+                    else {
+                        RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
+                        $geth = new EthereumRpcService();
+                        $tokenContract = $wallet->currency->address;
+                        $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
+                        $geth->transferToken($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $request->amount);
+                    }
                 }
-                if($wallet->currency->code == 'BTC') {
-                    $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
-                    RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, $request->amount],$wallet->keyword);
-                }
-
                 $to = $receiver->email;
                 $subject = " Money send successfully.";
                 $msg = "Hello ".$receiver->name."!\nMoney send successfully.\nThank you.";

@@ -152,8 +152,7 @@
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-right">
                                                 <a class="dropdown-item" href="javascript:;" onclick="getDetails({{$wallet->id}})">{{ __('Fee') }}</a>
-                                                <a class="dropdown-item" href="javascript:;" onclick="Deposit({{$wallet->id}})">{{ __('Deposit') }}</a>
-                                                <a class="dropdown-item" href="{{route('admin-wallet-between', ['user_id' => $data->id, 'wallet_id'=>$wallet->id])}}">{{ __('Payment between accounts') }}</a>
+                                                <a class="dropdown-item" href="javascript:;" onclick="Crypto_Deposit({{$wallet->id}})">{{ __('Deposit') }}</a>
                                                 <a class="dropdown-item" href="{{route('admin-wallet-internal', ['user_id' => $data->id, 'wallet_id'=>$wallet->id])}}">{{ __('Internal Payment') }}</a>
                                                 <a class="dropdown-item" href="{{route('admin-wallet-transactions', ['user_id' => $data->id, 'wallet_id'=>$wallet->id])}}">{{ __('Transaction View') }}</a>
                                             </div>
@@ -304,6 +303,21 @@
         $('#modal-success-2').modal('show')
     }
 
+    function Crypto_Deposit(id) {
+        console.log(id);
+        $('#wallet_id').val(id);
+        var url = "{{url('admin/user/accounts/crypto/deposit/form/')}}" + '/' + id
+        console.log(url)
+            $.get(url,function (res) {
+                if(res == 'empty'){
+                $('.list-group').html('<p>@lang('No details found!')</p>')
+                }else{
+                $('.list-group').html(res)
+                }
+            });
+        $('#modal-success-2').modal('show')
+    }
+
     $('#addpayment').on('click', function() {
         window.location.reload();
     });
@@ -338,9 +352,9 @@
                                                         </button>\
                                                         <div class="dropdown-menu dropdown-menu-right">\
                                                             <a class="dropdown-item" href="javascript:;" onclick="getDetails('+ item.id +')">{{ __("Fee") }}</a>\
-                                                            <a class="dropdown-item" href="javascript:;" onclick="Deposit('+ item.id +')">{{ __("Deposit") }}</a>\
-                                                            <a class="dropdown-item" href="{{url("admin/wallet/$data->id")}}/'+ item.id +'/between">{{ __("Payment between accounts") }}</a>\
-                                                            <a class="dropdown-item" href="{{url("admin/wallet/$data->id")}}/'+ item.id +'/internal">{{ __("Internal Payment") }}</a>' +
+                                                            <a class="dropdown-item" href="javascript:;" onclick="Deposit('+ item.id +')">{{ __("Deposit") }}</a>'
+                                                            + ( wallet_type == '8' ? '':'<a class="dropdown-item" href="{{url("admin/wallet/$data->id")}}/'+ item.id +'/between">{{ __("Payment between accounts") }}</a>') +
+                                                            '<a class="dropdown-item" href="{{url("admin/wallet/$data->id")}}/'+ item.id +'/internal">{{ __("Internal Payment") }}</a>' +
                                                             (wallet_type == '8' ? '':'<a class="dropdown-item" href="{{url("admin/wallet/$data->id")}}/'+ item.id +'/external">{{ __("External Payment") }}</a>') +
                                                             '<a class="dropdown-item" href="{{url("admin/wallet/$data->id")}}/'+ item.id +'/transactions">{{ __("Transaction View") }}</a>\
                                                         </div>\

@@ -16,6 +16,7 @@
 
                             <label >{{ __('Description') }}</label>
                             <textarea type="Text" class="form-control" id="description" name="description" placeholder="{{ __('Enter Description') }}"  rows="5" required></textarea>
+                            <input type="hidden" name="wallet_type" value="flat">
  </div>
 
                         <div class="form-group">
