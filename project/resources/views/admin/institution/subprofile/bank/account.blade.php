@@ -71,9 +71,9 @@
                 <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
                 <h3>@lang('Bank Account')</h3>
             </div>
-            @if ($bank_gateway->keyword == 'clearjunction')
+            @if ($bank_gateway->keyword == 'clearjunction' || $bank_gateway->keyword == 'swan')
             <div class="text-center mt-3">
-                <h5>@lang('Don\'t need System Bank Account in Clearjunction.')</h5>
+                <h5>@lang('Don\'t need System Bank Account in '){{ucwords($bank_gateway->keyword)}}</h5>
             </div>
             @else
                 <form class="mt-4 mx-3" action="{{isset($bank_gateway) ? $bank_gateway->keyword == 'openpayd' ? route('admin.user.bank.nogateway') : route('admin.subinstitution.banks.account.railsbank.create') : route('admin.user.bank.nogateway')}}" method="POST"  enctype="multipart/form-data" >
