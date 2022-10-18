@@ -91,7 +91,7 @@
 
                                 <div class="form-group mt-3">
                                     <label class="form-label required">{{__('Amount')}}</label>
-                                    <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" step="any" value="{{ old('amount') }}" min="1" required>
+                                    <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" step="any" value="{{ old('amount') }}" min="0" required>
                                 </div>
 
                                 <div class="form-group mt-3">

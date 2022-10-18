@@ -248,13 +248,13 @@
             var defaultAmount = amount/fromRate;
             var finalAmount = defaultAmount * toRate;
 
-            var url = "{{url('user/exchange-money/calcharge')}}"+'/'+amount;
+            var url = "{{url('user/exchange-money/calcharge')}}"+'/'+defaultAmount;
             $.get(url,function (res) {
 
                 $('.fromCurr').text(fromCode)
                 $('.toCurr').text(toCode)
                 $('.exAmount').text(amount +' '+ fromCode)
-                $('.exCharge').text(parseFloat(res).toFixed(8) +' '+ fromCode)
+                $('.exCharge').text(parseFloat(res)*fromRate.toFixed(8) +' '+ fromCode)
                 $('.total_amount').text(finalAmount.toFixed(8) +' '+ toCode)
             });
 

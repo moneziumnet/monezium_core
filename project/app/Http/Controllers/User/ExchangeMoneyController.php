@@ -13,6 +13,8 @@ use App\Models\Generalsetting;
 use App\Models\PlanDetail;
 use GuzzleHttp\Client;
 use App\Http\Controllers\Controller;
+use App\Classes\EthereumRpcService;
+
 
 class ExchangeMoneyController extends Controller
 {
@@ -200,7 +202,7 @@ class ExchangeMoneyController extends Controller
             $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
 
             $trans->currency_id = $fromWallet->currency->id;
-            $trans->amount      = $transaction_custom_cost;
+            $trans->amount      = $transaction_custom_cost*$from_rate;
             $trans->charge      = 0;
             $trans->type        = '+';
             $trans->remark      = $remark;
@@ -219,7 +221,7 @@ class ExchangeMoneyController extends Controller
         $defaultAmount = $request->amount / ($result->data->rates->$fromrate ?? $fromWallet->currency->rate);
         $finalAmount   = amount($defaultAmount * ($result->data->rates->$torate ?? $toWallet->currency->rate),$toWallet->currency->type);
 
-        $charge = amount($transaction_global_cost,$fromWallet->currency->type);
+        $charge = amount($transaction_global_cost*$from_rate,$fromWallet->currency->type);
         $totalAmount = amount(($request->amount +  $charge),$fromWallet->currency->type);
 
         if($fromWallet->balance < $totalAmount){
@@ -235,32 +237,56 @@ class ExchangeMoneyController extends Controller
         if($fromWallet->currency->code == 'ETH' && $toWallet->currency->type == 1) {
             RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
             $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
+            if (!$tosystemwallet) {
+                return back()->with('error',$fromWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
+            }
+            $tosystemwallet1 = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
+            if (!$tosystemwallet1) {
+                return back()->with('error',$toWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
+            }
             $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$tosystemwallet->wallet_no.'", "value": "0x'.dechex($totalAmount*pow(10,18)).'"}';
             RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
-            $tosystemwallet1 = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
             $tosystemwallet1->balance -= $finalAmount;
             $tosystemwallet1->update();
         }
         if($fromWallet->currency->code == 'BTC' && $toWallet->currency->type == 1) {
             $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
-            RPC_BTC_Send('sendtoaddress',[$tosystemwallet->wallet_no, $totalAmount],$fromWallet->keyword);
+            if (!$tosystemwallet) {
+                return back()->with('error',$fromWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
+            }
             $tosystemwallet1 = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
+            if (!$tosystemwallet1) {
+                return back()->with('error',$toWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
+            }
+            RPC_BTC_Send('sendtoaddress',[$tosystemwallet->wallet_no, $totalAmount],$fromWallet->keyword);
             $tosystemwallet1->balance -= $finalAmount;
             $tosystemwallet1->update();
         }
         if($toWallet->currency->code == 'ETH' && $fromWallet->currency->type == 1) {
             $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
+            if (!$tosystemwallet) {
+                return back()->with('error',$toWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
+            }
+            $fromsystemwallet1 = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
+            if (!$fromsystemwallet1) {
+                return back()->with('error',$fromWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
+            }
             RPC_ETH('personal_unlockAccount',[$tosystemwallet->wallet_no, $tosystemwallet->keyword ?? '', 30]);
             $tx = '{"from": "'.$tosystemwallet->wallet_no.'", "to": "'.$toWallet->wallet_no.'", "value": "0x'.dechex($finalAmount*pow(10,18)).'"}';
             RPC_ETH_Send('personal_sendTransaction',$tx, $tosystemwallet->keyword ?? '');
-            $fromsystemwallet1 = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
             $fromsystemwallet1->balance += $totalAmount;
             $fromsystemwallet1->update();
         }
         if($toWallet->currency->code == 'BTC' && $fromWallet->currency->type == 1) {
             $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
-            RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, $finalAmount],$tosystemwallet->keyword);
+            if (!$tosystemwallet) {
+                return back()->with('error',$toWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
+            }
             $fromsystemwallet1 = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
+            if (!$fromsystemwallet1) {
+                return back()->with('error',$fromWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
+            }
+            RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, $finalAmount],$tosystemwallet->keyword);
             $fromsystemwallet1->balance += $totalAmount;
             $fromsystemwallet1->update();
         }
@@ -275,18 +301,159 @@ class ExchangeMoneyController extends Controller
         if($fromWallet->currency->code == 'ETH' && $toWallet->currency->code == 'BTC') {
             RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
             $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
+            if (!$tosystemwallet) {
+                return back()->with('error',$fromWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
+            }
+            $fromsystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
+            if (!$fromsystemwallet) {
+                return back()->with('error',$toWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
+            }
+
             $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$tosystemwallet->wallet_no.'", "value": "0x'.dechex($totalAmount*pow(10,18)).'"}';
             RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
-            $fromsystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
             RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, $finalAmount],$fromsystemwallet->keyword);
         }
         if($fromWallet->currency->code == 'BTC' && $toWallet->currency->code == 'ETH') {
             $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
-            RPC_BTC_Send('sendtoaddress',[$tosystemwallet->wallet_no, $totalAmount],$fromWallet->keyword);
+            if (!$tosystemwallet) {
+                return back()->with('error',$fromWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
+            }
             $fromsystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
+            if (!$fromsystemwallet) {
+                return back()->with('error',$toWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
+            }
+            RPC_BTC_Send('sendtoaddress',[$tosystemwallet->wallet_no, $totalAmount],$fromWallet->keyword);
             RPC_ETH('personal_unlockAccount',[$fromsystemwallet->wallet_no, $fromsystemwallet->keyword ?? '', 30]);
             $tx = '{"from": "'.$fromsystemwallet->wallet_no.'", "to": "'.$toWallet->wallet_no.'", "value": "0x'.dechex($finalAmount*pow(10,18)).'"}';
             RPC_ETH_Send('personal_sendTransaction',$tx, $fromsystemwallet->keyword ?? '');
+        }
+        if($fromWallet->currency->code == 'ETH' && $toWallet->currency->code != 'BTC' && $toWallet->currency->code != 'ETH' && $toWallet->currency->type == 2) {
+            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
+            $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
+            if (!$tosystemwallet) {
+                return back()->with('error',$fromWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
+            }
+            $fromsystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
+            if (!$fromsystemwallet) {
+                return back()->with('error',$toWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
+            }
+            $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$tosystemwallet->wallet_no.'", "value": "0x'.dechex($totalAmount*pow(10,18)).'"}';
+            RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
+
+            RPC_ETH('personal_unlockAccount',[$fromsystemwallet->wallet_no, $fromsystemwallet->keyword ?? '', 30]);
+            $geth = new EthereumRpcService();
+            $tokenContract = $toWallet->currency->address;
+            $geth->transferToken($tokenContract, $fromsystemwallet->wallet_no, $toWallet->wallet_no, $totalAmount);
+        }
+        if($fromWallet->currency->code == 'BTC' && $toWallet->currency->code != 'ETH' && $toWallet->currency->code != 'BTC' && $toWallet->currency->type == 2) {
+            $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
+            if (!$tosystemwallet) {
+                return back()->with('error',$fromWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
+            }
+            $fromsystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
+            if (!$fromsystemwallet) {
+                return back()->with('error',$toWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
+            }
+            RPC_BTC_Send('sendtoaddress',[$tosystemwallet->wallet_no, $totalAmount],$fromWallet->keyword);
+
+            RPC_ETH('personal_unlockAccount',[$fromsystemwallet->wallet_no, $fromsystemwallet->keyword ?? '', 30]);
+            $geth = new EthereumRpcService();
+            $tokenContract = $toWallet->currency->address;
+            $geth->transferToken($tokenContract, $fromsystemwallet->wallet_no, $toWallet->wallet_no, $totalAmount);
+        }
+
+        if($fromWallet->currency->type == 1 && $toWallet->currency->code != 'ETH' && $toWallet->currency->code != 'BTC' && $toWallet->currency->type == 2) {
+            $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
+            if (!$tosystemwallet) {
+                return back()->with('error',$toWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
+            }
+            $fromsystemwallet1 = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
+            if (!$fromsystemwallet1) {
+                return back()->with('error',$fromWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
+            }
+            RPC_ETH('personal_unlockAccount',[$tosystemwallet->wallet_no, $tosystemwallet->keyword ?? '', 30]);
+
+            $geth = new EthereumRpcService();
+            $tokenContract = $toWallet->currency->address;
+            $geth->transferToken($tokenContract, $tosystemwallet->wallet_no, $toWallet->wallet_no, $totalAmount);
+
+            $fromsystemwallet1->balance += $totalAmount;
+            $fromsystemwallet1->update();
+        }
+
+
+        if($fromWallet->currency->code != 'ETH' && $fromWallet->currency->code != 'BTC' && $fromWallet->currency->type == 2 && $toWallet->currency->code == 'BTC') {
+            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
+            $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
+            if (!$tosystemwallet) {
+                return back()->with('error',$fromWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
+            }
+            $fromsystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
+            if (!$fromsystemwallet) {
+                return back()->with('error',$toWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
+            }
+            $geth = new EthereumRpcService();
+            $tokenContract = $fromWallet->currency->address;
+            $geth->transferToken($tokenContract, $fromWallet->wallet_no, $tosystemwallet->wallet_no, $totalAmount);
+
+            RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, $finalAmount],$fromsystemwallet->keyword);
+        }
+        if($fromWallet->currency->code != 'ETH' && $fromWallet->currency->code != 'BTC' && $fromWallet->currency->type == 2 && $toWallet->currency->code == 'ETH') {
+            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
+            $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
+            if (!$tosystemwallet) {
+                return back()->with('error',$fromWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
+            }
+            $fromsystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
+            if (!$fromsystemwallet) {
+                return back()->with('error',$toWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
+            }
+            $geth = new EthereumRpcService();
+            $tokenContract = $fromWallet->currency->address;
+            $geth->transferToken($tokenContract, $fromWallet->wallet_no, $tosystemwallet->wallet_no, $totalAmount);
+
+            RPC_ETH('personal_unlockAccount',[$fromsystemwallet->wallet_no, $fromsystemwallet->keyword ?? '', 30]);
+            $tx = '{"from": "'.$fromsystemwallet->wallet_no.'", "to": "'.$toWallet->wallet_no.'", "value": "0x'.dechex($finalAmount*pow(10,18)).'"}';
+            RPC_ETH_Send('personal_sendTransaction',$tx, $fromsystemwallet->keyword ?? '');
+        }
+
+        if($fromWallet->currency->code != 'ETH' && $fromWallet->currency->code != 'BTC' && $fromWallet->currency->type == 2 && $toWallet->currency->type == 1) {
+            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
+            $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
+            if (!$tosystemwallet) {
+                return back()->with('error',$fromWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
+            }
+            $tosystemwallet1 = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
+            if (!$tosystemwallet1) {
+                return back()->with('error',$toWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
+            }
+            $geth = new EthereumRpcService();
+            $tokenContract = $fromWallet->currency->address;
+            $geth->transferToken($tokenContract, $fromWallet->wallet_no, $tosystemwallet->wallet_no, $totalAmount);
+
+            $tosystemwallet1->balance -= $finalAmount;
+            $tosystemwallet1->update();
+        }
+
+        if($fromWallet->currency->code != 'ETH' && $fromWallet->currency->code != 'BTC' && $fromWallet->currency->type == 2 && $toWallet->currency->code != 'ETH' && $toWallet->currency->code != 'BTC' && $toWallet->currency->type == 2) {
+            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
+            $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
+            if (!$tosystemwallet) {
+                return back()->with('error',$fromWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
+            }
+            $fromsystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
+            if (!$fromsystemwallet) {
+                return back()->with('error',$toWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
+            }
+            $geth = new EthereumRpcService();
+            $tokenContract = $fromWallet->currency->address;
+            $geth->transferToken($tokenContract, $fromWallet->wallet_no, $tosystemwallet->wallet_no, $totalAmount);
+
+
+            RPC_ETH('personal_unlockAccount',[$fromsystemwallet->wallet_no, $fromsystemwallet->keyword ?? '', 30]);
+            $geth = new EthereumRpcService();
+            $tokenContract = $toWallet->currency->address;
+            $geth->transferToken($tokenContract, $fromsystemwallet->wallet_no, $toWallet->wallet_no, $totalAmount);
         }
 
         $exchange = new ExchangeMoney();
@@ -294,7 +461,7 @@ class ExchangeMoneyController extends Controller
         $exchange->from_currency = $fromWallet->currency->id;
         $exchange->to_currency = $toWallet->currency->id;
         $exchange->user_id = auth()->id();
-        $exchange->charge = $charge + $transaction_custom_cost;
+        $exchange->charge = $charge + $transaction_custom_cost*$from_rate;
         $exchange->from_amount = $request->amount;
         $exchange->to_amount = $finalAmount;
         $exchange->save();
