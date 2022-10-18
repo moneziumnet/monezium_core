@@ -382,10 +382,27 @@ if(!function_exists('getModule')){
                     $eth_currency = Currency::where('code', 'ETH')->first();
                     $eth_wallet = Wallet::where('user_id', $user->id)->where('wallet_type', $wallet_type)->where('currency_id', $eth_currency->id)->first();
                     if (!$eth_wallet) {
-                        return false;
+                        $address = RPC_ETH('personal_newAccount',['123123']);
+                        if ($address == 'error') {
+                            return false;
+                        }
+                        $keyword = '123123';
+                        $user_wallet = new Wallet();
+                        $user_wallet->user_id = $auth_id;
+                        $user_wallet->user_type = 1;
+                        $user_wallet->currency_id = $eth_currency->id;
+                        $user_wallet->balance = 0;
+                        $user_wallet->wallet_type = $wallet_type;
+                        $user_wallet->wallet_no =$address;
+                        $user_wallet->keyword =$keyword;
+                        $user_wallet->created_at = date('Y-m-d H:i:s');
+                        $user_wallet->updated_at = date('Y-m-d H:i:s');
+                        $user_wallet->save();
                     }
-                    $address = $eth_wallet->wallet_no;
-                    $keyword = $eth_wallet->keyword;
+                    else {
+                        $address = $eth_wallet->wallet_no;
+                        $keyword = $eth_wallet->keyword;
+                    }
                 }
             }
             else {
@@ -493,10 +510,23 @@ if(!function_exists('getModule')){
                 $eth_currency = Currency::where('code', 'ETH')->first();
                 $eth_wallet = MerchantWallet::where('merchant_id', $user->id)->where('shop_id', $shop_id)->where('currency_id', $eth_currency->id)->first();
                 if (!$eth_wallet) {
-                    return false;
+                    $address = RPC_ETH('personal_newAccount',['123123']);
+                    if ($address == 'error') {
+                        return false;
+                    }
+                    $keyword = '123123';
+                    DB::table('merchant_wallets')->insert([
+                        'merchant_id' => $auth_id,
+                        'currency_id' => $eth_currency->id,
+                        'shop_id' => $shop_id,
+                        'wallet_no' => $address,
+                        'keyword' => $keyword,
+                    ]);
                 }
-                $address = $eth_wallet->wallet_no;
-                $keyword = $eth_wallet->keyword;
+                else {
+                    $address = $eth_wallet->wallet_no;
+                    $keyword = $eth_wallet->keyword;
+                }
             }
           }
           else {
