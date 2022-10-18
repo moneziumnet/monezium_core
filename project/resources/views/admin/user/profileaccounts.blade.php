@@ -161,7 +161,22 @@
                                     </div>
                                 </div>
                                 <div class="text-xs font-weight-bold text-uppercase mb-1"> {{$dcurr->curr_name}}</div>
-                                <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{amount($wallet->balance,$dcurr->type,2)}} {{$dcurr->code}} ({{$dcurr->symbol}}) </div>
+                                @if ($dcurr->type == 2)
+                                    @if ($dcurr->code == 'BTC')
+                                        <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ RPC_BTC_Balance('getbalance',$wallet->keyword) == 'error' ? amount($wallet->balance,$dcurr->type,2) : RPC_BTC_Balance('getbalance', $wallet->keyword)}}  {{$dcurr->code}}</div>
+                                    @elseif($dcurr->code == 'ETH')
+                                        <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ hexdec(RPC_ETH('eth_getBalance',[$wallet->wallet_no, "latest"]))/pow(10,18) == 'error' ? amount($wallet->balance,$dcurr->type,2) : hexdec(RPC_ETH('eth_getBalance',[$wallet->wallet_no, "latest"]))/pow(10,18) }}  {{$dcurr->code}}</div>
+                                    @else
+                                        @php
+                                            $geth = new App\Classes\EthereumRpcService();
+                                            $tokenContract = $dcurr->address;
+                                            $balance = $geth->getTokenBalance($tokenContract, $wallet->wallet_no);
+                                        @endphp
+                                        <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ $balance ?? amount($wallet->balance,$dcurr->type,2) }}  {{$dcurr->code}}</div>
+                                    @endif
+                                @else
+                                    <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{amount($wallet->balance,$dcurr->type,2)}} {{$dcurr->code}} ({{$dcurr->symbol}}) </div>
+                                @endif
                             </div>
                             </div>
                         </div>
@@ -325,7 +340,7 @@
                                                             <a class="dropdown-item" href="javascript:;" onclick="getDetails('+ item.id +')">{{ __("Fee") }}</a>\
                                                             <a class="dropdown-item" href="javascript:;" onclick="Deposit('+ item.id +')">{{ __("Deposit") }}</a>\
                                                             <a class="dropdown-item" href="{{url("admin/wallet/$data->id")}}/'+ item.id +'/between">{{ __("Payment between accounts") }}</a>\
-                                                            <a class="dropdown-item" href="{{url("admin/wallet/$data->id")}}/'+ item.id +'/internal">{{ __("Internal Payment") }}</a>' + 
+                                                            <a class="dropdown-item" href="{{url("admin/wallet/$data->id")}}/'+ item.id +'/internal">{{ __("Internal Payment") }}</a>' +
                                                             (wallet_type == '8' ? '':'<a class="dropdown-item" href="{{url("admin/wallet/$data->id")}}/'+ item.id +'/external">{{ __("External Payment") }}</a>') +
                                                             '<a class="dropdown-item" href="{{url("admin/wallet/$data->id")}}/'+ item.id +'/transactions">{{ __("Transaction View") }}</a>\
                                                         </div>\

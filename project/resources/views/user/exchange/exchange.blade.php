@@ -240,23 +240,23 @@
             var amount = parseFloat($('.amount').val())
             var fromCode = from.data('code')
             var toCode   = to.data('code')
-            $.get('https://api.coinbase.com/v2/exchange-rates?currency=USD', function(response) {
-                var fromRate = parseFloat(response.data.rates[from.data('code')])
-                var toRate = parseFloat(response.data.rates[to.data('code')])
+            var fromRate = from.data('rate')
+            var toRate =to.data('rate')
+            console.log(fromRate)
+            console.log(toRate)
 
-                var defaultAmount = amount/fromRate;
-                var finalAmount = defaultAmount * toRate;
+            var defaultAmount = amount/fromRate;
+            var finalAmount = defaultAmount * toRate;
 
-                var url = "{{url('user/exchange-money/calcharge')}}"+'/'+amount;
-                $.get(url,function (res) {
+            var url = "{{url('user/exchange-money/calcharge')}}"+'/'+amount;
+            $.get(url,function (res) {
 
-                    $('.fromCurr').text(fromCode)
-                    $('.toCurr').text(toCode)
-                    $('.exAmount').text(amount +' '+ fromCode)
-                    $('.exCharge').text(parseFloat(res).toFixed(8) +' '+ fromCode)
-                    $('.total_amount').text(finalAmount.toFixed(8) +' '+ toCode)
-                });
-        })
+                $('.fromCurr').text(fromCode)
+                $('.toCurr').text(toCode)
+                $('.exAmount').text(amount +' '+ fromCode)
+                $('.exCharge').text(parseFloat(res).toFixed(8) +' '+ fromCode)
+                $('.total_amount').text(finalAmount.toFixed(8) +' '+ toCode)
+            });
 
         }
 

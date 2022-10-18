@@ -100,7 +100,7 @@ class CryptoWithdrawController extends Controller
         $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency=USD');
         $rate = json_decode($response->getBody());
         $code = $currency->code;
-        $crypto_rate = $rate->data->rates->$code;
+        $crypto_rate = $rate->data->rates->$code ?? $currency->rate;
 
         if ($id2 == 2) {
             $user = $data->user;

@@ -53,7 +53,7 @@ class WithdrawCryptoController extends Controller
         $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency=USD');
         $rate = json_decode($response->getBody());
         $code = $currency->code;
-        $crypto_rate = $rate->data->rates->$code;
+        $crypto_rate = $rate->data->rates->$code ?? $currency->rate;
 
         $userBalance = user_wallet_balance($request->user_id,$request->currency_id,8);
         $amountToAdd = $request->amount/$crypto_rate;

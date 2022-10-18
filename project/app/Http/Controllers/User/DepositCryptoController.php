@@ -50,7 +50,7 @@ class DepositCryptoController extends Controller
 
         $currency = Currency::where('id',$request->currency_id)->first();
         $code = $currency->code;
-        $amountToAdd = $request->amount/$rate->data->rates->$code;
+        $amountToAdd = $request->amount/($rate->data->rates->$code ?? $currency->rate);
         $user = auth()->user();
         $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'deposit')->first();
         $dailydeposit = CryptoDeposit::where('user_id', $user->id)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus('complete')->sum('amount');
