@@ -35,10 +35,6 @@
                     <form action="" id="form" method="post">
                     @csrf
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <div class="form-label">@lang('Amount')</div>
-                                <input type="text" name="amount" id="amount" class="form-control amount shadow-none" required>
-                            </div>
                             @php
                                 $userType = explode(',', auth()->user()->user_type);
                                 $supervisor = DB::table('customer_types')->where('type_name', 'Supervisors')->first()->id;
@@ -65,7 +61,10 @@
                                     @endforeach
                                 </select>
                             </div>
-
+                            <div class="col-md-6 mb-3">
+                                <div class="form-label">@lang('Amount')</div>
+                                <input type="text" name="amount" id="amount" class="form-control amount shadow-none" required>
+                            </div>
                             <div class="col-md-6 mb-3">
                                 <div class="form-label">@lang('To Wallet')</div>
                                 <select class="form-select wallet" name="wallet_type" id="wallet_type" disabled>
