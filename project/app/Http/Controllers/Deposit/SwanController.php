@@ -61,18 +61,20 @@ class SwanController extends Controller
             Session::put('Swan_token', $access_token);
             Session::put('subbank', $bankgateway->subbank_id);
             Session::put('currency', $currency->id);
+            Session::put('user_id', $user->id);
         } catch (\Throwable $th) {
             return redirect()->back()->with(array('warning' => $th->getMessage()));
         }
 
         try {
+            $redirect_url = url()->previous() == url('/user/dashboard') ? url('/user/dashboard') : url('/admin/dashboard');
             if(!isset($user->company_name)) {
                 $country = Country::findOrFail($user->country);
-                $body = '{"query":"mutation MyMutation($input: OnboardIndividualAccountHolderInput) {\\n  onboardIndividualAccountHolder(\\n    input: $input\\n  ) \\n  {\\n    ... on OnboardIndividualAccountHolderSuccessPayload {\\n      __typename\\n      onboarding {\\n        id\\n        onboardingUrl\\n        redirectUrl\\n      }\\n    }\\n    ... on ForbiddenRejection {\\n      __typename\\n      message\\n    }\\n  }\\n}\\n","variables":{"input":{"email":"'.$user->email.'","redirectUrl": "'.route('user.dashboard').'"}}}';
+                $body = '{"query":"mutation MyMutation($input: OnboardIndividualAccountHolderInput) {\\n  onboardIndividualAccountHolder(\\n    input: $input\\n  ) \\n  {\\n    ... on OnboardIndividualAccountHolderSuccessPayload {\\n      __typename\\n      onboarding {\\n        id\\n        onboardingUrl\\n        redirectUrl\\n      }\\n    }\\n    ... on ForbiddenRejection {\\n      __typename\\n      message\\n    }\\n  }\\n}\\n","variables":{"input":{"email":"'.$user->email.'","redirectUrl": "'.$redirect_url.'"}}}';
             }
             else {
                 $country = Country::findOrFail($user->company_country);
-                $body = '{"query":"mutation MyMutation($input: OnboardCompanyAccountHolderInput) {\\n  onboardCompanyAccountHolder(\\n    input: $input\\n  ) {\\n    ... on OnboardCompanyAccountHolderSuccessPayload {\\n      __typename\\n      onboarding {\\n        onboardingUrl\\n      }\\n    }\\n    ... on BadRequestRejection {\\n      __typename\\n      message\\n    }\\n    ... on ForbiddenRejection {\\n      __typename\\n      message\\n    }\\n    ... on ValidationRejection {\\n      __typename\\n      message\\n    }\\n  }\\n}","variables":{"input":{"email":"'.$user->email.'","redirectUrl": "'.route('user.dashboard').'"}}}';
+                $body = '{"query":"mutation MyMutation($input: OnboardCompanyAccountHolderInput) {\\n  onboardCompanyAccountHolder(\\n    input: $input\\n  ) {\\n    ... on OnboardCompanyAccountHolderSuccessPayload {\\n      __typename\\n      onboarding {\\n        onboardingUrl\\n      }\\n    }\\n    ... on BadRequestRejection {\\n      __typename\\n      message\\n    }\\n    ... on ForbiddenRejection {\\n      __typename\\n      message\\n    }\\n    ... on ValidationRejection {\\n      __typename\\n      message\\n    }\\n  }\\n}","variables":{"input":{"email":"'.$user->email.'","redirectUrl": "'.$redirect_url.'"}}}';
             }
             $headers = [
                 'Authorization' => 'Bearer '.$access_token,

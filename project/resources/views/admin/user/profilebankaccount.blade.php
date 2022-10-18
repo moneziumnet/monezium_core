@@ -160,6 +160,10 @@
 
                 $('.bankaccount').prop('action','{{ route('admin.user.bank.clearjunction') }}');
             }
+            if(res.keyword == 'swan') {
+
+                $('.bankaccount').prop('action','{{ route('admin.user.bank.swan') }}');
+            }
         });
     })
     $('.iban-modal').on('click', function () {

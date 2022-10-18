@@ -11,6 +11,8 @@ use App\Models\Deposit;
 use App\Models\Currency;
 use App\Models\Withdraw;
 use App\Models\Transaction;
+use App\Models\BankAccount;
+use App\Models\Charge;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
@@ -23,6 +25,8 @@ use App\Models\Withdrawals;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Session;
 
 class DashboardController extends Controller
 {
@@ -61,7 +65,65 @@ class DashboardController extends Controller
         //         $activation_notify = "<i class='icofont-warning-alt icofont-4x'></i><br>Please activate your system.<br> If you do not activate your system now, it will be inactive on ".$rooted."!!<br><a href='".url('/admin/activation')."' class='btn btn-success'>Activate Now</a>";
         //     }
         // }
+        if (request('state')) {
+            $client = New Client();
+            $access_token = Session::get('Swan_token');
+            $subbank = Session::get('subbank');
+            $currency_id = Session::get('currency');
+            $user_id = Session::get('user_id');
+            try {
+                $body = '{"query":"query MyQuery {\\n  onboarding(id: \\"'.request('state').'\\") {\\n    id\\n    account {\\n      BIC\\n      IBAN\\n      balances {\\n        available {\\n          currency\\n          value\\n        }\\n      }\\n      id\\n    }\\n  }\\n}","variables":{}}';
+                $headers = [
+                    'Authorization' => 'Bearer '.$access_token,
+                    'Content-Type' => 'application/json'
+                  ];
+                $response = $client->request('POST', 'https://api.swan.io/sandbox-partner/graphql', [
+                    'body' => $body,
+                    'headers' => $headers
+                ]);
+                $res_body = json_decode($response->getBody());
 
+                $iban = $res_body->data->onboarding->account->IBAN ?? '';
+                $bic_swift = $res_body->data->onboarding->account->BIC ?? '';
+            } catch (\Throwable $th) {
+                return redirect()->route('admin.dashboard')->with(array('warning' => $th->getMessage()));
+            }
+            if ($iban == null || $bic_swift == null || $iban == '' || $bic_swift == '' ) {
+                return redirect()->route('admin.dashboard')->with(array('warning' => 'Sorry, You can not create New Bank Account succesfully because Swan Api does not create iban and swift code. Please try again.'));
+            }
+            $user = User::findOrFail($user_id);
+            $data = New BankAccount();
+            $data->user_id = $user->id;
+            $data->subbank_id = $subbank;
+            $data->iban = $iban;
+            $data->swift = $bic_swift;
+            $data->currency_id = $currency_id;
+            $data->save();
+
+            $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
+            if(!$chargefee) {
+                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
+            }
+
+            $trans = new Transaction();
+            $trans->trnx = str_rand();
+            $trans->user_id     = $user->id;
+            $trans->user_type   = 1;
+            $trans->currency_id =  defaultCurr();
+            $trans->amount      = $chargefee->data->fixed_charge;
+            $trans_wallet       = get_wallet($user->id, defaultCurr(), 1);
+            $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+            $trans->charge      = 0;
+            $trans->type        = '-';
+            $trans->remark      = 'bank_account_create';
+            $trans->details     = trans('Bank Account Create');
+            $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+            $trans->save();
+
+            user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
+            user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
+            redirect()->route('admin.dashboard')->with(array('message' => $user->name.'\'s Swan Bank Account has been created successfully.'));
+        }
         return view('admin.dashboard', $data);
     }
     public function passwordreset()

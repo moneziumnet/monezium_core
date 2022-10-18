@@ -106,7 +106,7 @@ class SubInsBankController extends Controller
         if ($validator->fails()) {
             return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
         }
-        
+
         if (SubInsBank::where('ins_id', $request->ins_id)->where('name', $request->name)->first()) {
             return response()->json(array('errors'=>[0 =>'The same name exist. Please write other name.']));
         }
@@ -130,7 +130,10 @@ class SubInsBankController extends Controller
                 $bank_gateway->information = $info_data;
                 $bank_gateway->save();
             }
-            $msg = 'New Bank Added Successfully.<a href="'.route('admin.subinstitution.banks',$data->ins_id).'">View Bank Lists.</a>';
+            $msg = 'New Bank Added Successfully.<br> <a href="'.route('admin.subinstitution.banks',$data->ins_id).'">View Bank Lists.</a>';
+            if ($request->bankgateway->keyword == 'swan') {
+                 $msg = 'New Bank Added Successfully. <br><a href="'.route('admin.subinstitution.banks',$data->ins_id).'">View Bank Lists.</a><br>'.'To run this api right away. You need to register the following URL in the Dashboard (Swan), in <strong> API > Redirect URLs </strong>.<br>'.route('admin.dashboard').'<br>'.url('/user/dashboard');
+            }
             return response()->json($msg);
         } catch (\Exception $e){
             return response()->json(array('errors'=>[0 =>$e->errorInfo[2]]));
