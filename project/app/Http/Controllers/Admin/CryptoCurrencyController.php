@@ -64,7 +64,7 @@ class CryptoCurrencyController extends Controller
             $address = RPC_ETH('personal_newAccount',[$request->keyword]);
         }
         else {
-            $eth_currency = Currency::where('code', 'Eth')->first();
+            $eth_currency = Currency::where('code', 'ETH')->first();
             if (!$eth_currency) {
                 return response()->json(array('errors' => [ 0 => __('You have to create Ether Crypto Currency firstly before create ERC20 token currency.')]));
             }

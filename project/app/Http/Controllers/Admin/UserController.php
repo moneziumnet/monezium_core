@@ -246,7 +246,7 @@ class UserController extends Controller
                         $keyword = '123123';
                     }
                     else {
-                        $eth_currency = Currency::where('code', 'Eth')->first();
+                        $eth_currency = Currency::where('code', 'ETH')->first();
                         $eth_wallet = Wallet::where('user_id', $id)->where('wallet_type', $wallet_type)->where('currency_id', $eth_currency->id)->first();
                         if (!$eth_wallet) {
                             response()->json(array('errors' => [0 => __('You have to create Eth Crypto wallet firstly before create ERC20 token wallet.')]));

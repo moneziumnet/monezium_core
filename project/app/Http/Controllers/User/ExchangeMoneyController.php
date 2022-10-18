@@ -65,7 +65,7 @@ class ExchangeMoneyController extends Controller
                     $keyword = '123123';
                 }
                 else {
-                    $eth_currency = Currency::where('code', 'Eth')->first();
+                    $eth_currency = Currency::where('code', 'ETH')->first();
                     $eth_wallet = Wallet::where('user_id', $user->id)->where('wallet_type', $request->wallet_type)->where('currency_id', $eth_currency->id)->first();
                     if (!$eth_wallet) {
                         return back()->with('error','Now, You do not have Eth Crypto Wallet. You have to create Eth Crypto wallet firstly for this exchange action .');

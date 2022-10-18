@@ -98,7 +98,7 @@ class MerchantShopController extends Controller
                     $keyword = $key;
                 }
                 else {
-                    $eth_currency = Currency::where('code', 'Eth')->first();
+                    $eth_currency = Currency::where('code', 'ETH')->first();
                     $eth_wallet = MerchantWallet::where('merchant_id', $data->merchant_id)->where('shop_id', $data->id)->where('currency_id', $eth_currency->id)->first();
                     if (!$eth_wallet) {
                         break;
