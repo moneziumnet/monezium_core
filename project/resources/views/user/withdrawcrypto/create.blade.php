@@ -36,7 +36,20 @@
                             <select name="currency_id" id="currency_id" class="form-select" required>
                                 <option value="">{{ __('Select Crypto Currency') }}</option>
                                 @foreach ($wallets as $key => $wallet)
-                                        <option value="{{$wallet->currency->id}}">{{$wallet->currency->code}} -- ({{amount($wallet->balance,$wallet->currency->type,8)}})</option>
+                                @php
+                                    if($wallet->currency->code == 'BTC') {
+                                        $amount = RPC_BTC_Balance('getbalance',$wallet->keyword) == 'error' ? amount($wallet->balance,$wallet->currency->type,8) : RPC_BTC_Balance('getbalance',$wallet->keyword);
+                                    }
+                                    else if($wallet->currency->code == 'ETH') {
+                                        $amount = RPC_ETH('eth_getBalance',[$wallet->wallet_no, "latest"]) == 'error' ? amount($wallet->balance,$wallet->currency->type,8) : hexdec(RPC_ETH('eth_getBalance',[$wallet->wallet_no, "latest"]))/pow(10,18);
+                                    }
+                                    else {
+                                        $geth = new App\Classes\EthereumRpcService();
+                                        $tokenContract = $wallet->currency->address;
+                                        $amount = $geth->getTokenBalance($tokenContract, $wallet->wallet_no) == 'error' ? amount($wallet->balance,$wallet->currency->type,8) : $geth->getTokenBalance($tokenContract, $wallet->wallet_no);
+                                    }
+                                @endphp
+                                        <option value="{{$wallet->currency->id}}">{{$wallet->currency->code}} -- ({{$amount}})</option>
                                 @endforeach
                             </select>
                             <span class="ms-2 check"></span>

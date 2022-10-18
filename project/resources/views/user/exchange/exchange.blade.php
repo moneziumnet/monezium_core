@@ -56,7 +56,26 @@
                                     <option value="" selected>@lang('Select')</option>
                                     @foreach ($wallets as $wallet)
                                     @if (isset($wallet_type_list[$wallet->wallet_type]))
-                                    <option value="{{$wallet->id}}" data-curr="{{$wallet->currency->id}}" data-rate="{{getRate($wallet->currency)}}" data-code="{{$wallet->currency->code}}" data-type="{{$wallet->currency->type}}">{{$wallet->currency->code}} -- ({{amount($wallet->balance,$wallet->currency->type,2)}}) --  {{$wallet_type_list[$wallet->wallet_type]}}</option>
+                                    @php
+                                        if($wallet->currency->type == 2) {
+
+                                            if($wallet->currency->code == 'BTC') {
+                                                $amount = RPC_BTC_Balance('getbalance',$wallet->keyword) == 'error' ? amount($wallet->balance,$wallet->currency->type,2) : RPC_BTC_Balance('getbalance',$wallet->keyword);
+                                            }
+                                            else if($wallet->currency->code == 'ETH') {
+                                                $amount = RPC_ETH('eth_getBalance',[$wallet->wallet_no, "latest"]) == 'error' ? amount($wallet->balance,$wallet->currency->type,2) : hexdec(RPC_ETH('eth_getBalance',[$wallet->wallet_no, "latest"]))/pow(10,18);
+                                            }
+                                            else {
+                                                $geth = new App\Classes\EthereumRpcService();
+                                                $tokenContract = $wallet->currency->address;
+                                                $amount = $geth->getTokenBalance($tokenContract, $wallet->wallet_no) == 'error' ? amount($wallet->balance,$wallet->currency->type,2) : $geth->getTokenBalance($tokenContract, $wallet->wallet_no);
+                                            }
+                                        }
+                                        else {
+                                            $amount = amount($wallet->balance,$wallet->currency->type,2);
+                                        }
+                                    @endphp
+                                    <option value="{{$wallet->id}}" data-curr="{{$wallet->currency->id}}" data-rate="{{getRate($wallet->currency)}}" data-code="{{$wallet->currency->code}}" data-type="{{$wallet->currency->type}}">{{$wallet->currency->code}} -- ({{ $amount}}) --  {{$wallet_type_list[$wallet->wallet_type]}}</option>
                                     @endif
                                     @endforeach
                                 </select>
