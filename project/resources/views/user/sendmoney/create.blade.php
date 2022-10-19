@@ -212,7 +212,11 @@
 @push('js')
 <script>
   'use strict';
-  var send_money_user = null;
+  var send_money_user = {
+    name: "{{$savedUser ? $savedUser->name : 'null'}}",
+    email: "{{$savedUser ? $savedUser->email : 'null'}}",
+    phone: "{{$savedUser ? $savedUser->phone : 'null'}}",
+  };
   $("#email").on('change',function(){
     $.post("{{ route('user.username.email') }}",{email: $("#email").val(),_token:'{{csrf_token()}}'}, function(data){
       send_money_user = data;

@@ -24,7 +24,6 @@
 		  <thead class="thead-light">
 			<tr>
         <th>{{__('Date')}}</th>
-        <th>{{__('Hash')}}</th>
         <th>{{__('Customer Name')}}</th>
         <th>{{__('Customer Crypto Address')}}</th>
         <th>{{__('Amount')}}</th>
@@ -69,10 +68,10 @@
         <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
         <h3>@lang('Bank Details')</h3>
         <p class="bank_details"></p>
-        <ul class="list-group mt-2">
-            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Hash')<span id="hash" style="margin-left: 60px"></span></li>
-            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Customer Crypto Address')<span id="sender_address" style="margin-left: 60px"></span></li>
-            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Amount')<span id="amount" style="margin-left: 60px"></span></li>
+        <ul class="list-group details-list mt-2">
+            <li class="list-group-item">@lang('Hash')<span id="hash"></span></li>
+            <li class="list-group-item">@lang('Customer Crypto Address')<span id="sender_address"></span></li>
+            <li class="list-group-item">@lang('Amount')<span id="amount"></span></li>
             <li class="list-group-item justify-content-between text-center" style="word-break:break-all;"><a href="" id="trans_id">@lang('Add Hash Value')</a></li>
         </ul>
         </div>
@@ -107,7 +106,6 @@
            ajax: '{{ route('admin.withdraws.crypto.datatables') }}',
            columns: [
                 { data: 'created_at', name: 'created_at' },
-                { data: 'hash', name: 'hash' },
                 { data: 'customer_name', name: 'customer_name' },
                 { data: 'sender_address', name: 'sender_address' },
                 { data: 'amount', name: 'amount' },

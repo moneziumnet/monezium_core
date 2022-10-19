@@ -57,14 +57,14 @@ class CryptoWithdrawController extends Controller
                               }
 
                               return '<div class="btn-group mb-1">
-                                                      <button type="button" class="btn btn-' . $status_sign . ' btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        ' . $status . '
-                                                      </button>
-                                                      <div class="dropdown-menu" x-placement="bottom-start">
-                                                        <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="' . route('admin.withdraws.crypto.status', ['id1' => $data->id, 'id2' => 1]) . '">' . __("completed") . '</a>
-                                                        <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="' . route('admin.withdraws.crypto.status', ['id1' => $data->id, 'id2' => 2]) . '">' . __("rejected") . '</a>
-                                                      </div>
-                                                    </div>';
+                                    <button type="button" class="btn btn-' . $status_sign . ' btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    ' . $status . '
+                                    </button>
+                                    <div class="dropdown-menu" x-placement="bottom-start">
+                                    <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="' . route('admin.withdraws.crypto.status', ['id1' => $data->id, 'id2' => 1]) . '">' . __("completed") . '</a>
+                                    <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="' . route('admin.withdraws.crypto.status', ['id1' => $data->id, 'id2' => 2]) . '">' . __("rejected") . '</a>
+                                    </div>
+                                </div>';
                             })
                         ->editColumn('action', function(CryptoWithdraw $data) {
                             return '<input type="hidden", id="sub_data", value ='.json_encode($data).'>'.' <a href="javascript:;"   onclick=getDetails('.json_encode($data).') class="detailsBtn" >
