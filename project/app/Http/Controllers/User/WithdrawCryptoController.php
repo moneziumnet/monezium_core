@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers\User;
 
-use Illuminate\Support\Str;
-use App\Classes\GeniusMailer;
-use App\Models\Generalsetting;
-use App\Models\CryptoWithdraw;
-use App\Models\Transaction;
+use Auth;
 use App\Models\User;
+use App\Models\Wallet;
+use GuzzleHttp\Client;
 use App\Models\Currency;
 use App\Models\PlanDetail;
+use App\Models\Transaction;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\Wallet;
-use Auth;
+use App\Classes\GeniusMailer;
+use App\Models\CryptoWithdraw;
+use App\Models\Generalsetting;
 use Illuminate\Support\Facades\DB;
+use App\Classes\EthereumRpcService;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
-use GuzzleHttp\Client;
 
 
 class WithdrawCryptoController extends Controller
