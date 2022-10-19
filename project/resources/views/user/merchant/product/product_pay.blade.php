@@ -67,7 +67,7 @@
                           <div class="col-md-5 text-end ">
                             <form action="{{route('user.merchant.product.pay')}}" id="form_submit"  method="post" enctype="multipart/form-data">
                                 @csrf
-                                <div class="form-selectgroup row">
+                                <div class="form-selectgroup row mb-3">
                                     <label class="form-selectgroup-item">
                                         <input type="radio" name="payment" value="bank_pay" id="bank_pay" class="form-selectgroup-input select_method" >
                                         <span class="form-selectgroup-label">
@@ -95,7 +95,25 @@
                                     </label>
 
                                 </div>
-                                <div class="form-group ms-5 mt-5 text-start" id="bank_part" style="display: none">
+                                @if(Auth::guest())
+                                <div class="form-group ms-5 mt-3 text-start" >
+                                    <label class="form-label">{{__('Name')}}</label>
+                                    <input name="user_name" id="name" class="form-control shadow-none col-md-4"  type="text" required>
+                                </div >
+                                <div class="form-group ms-5 mt-3 text-start" >
+                                    <label class="form-label">{{__('Email')}}</label>
+                                    <input name="user_email" id="email" class="form-control shadow-none col-md-4"  type="email" required>
+                                </div >
+                                <div class="form-group ms-5 mt-3 text-start" >
+                                    <label class="form-label">{{__('Phone')}}</label>
+                                    <input name="user_phone" id="phone" class="form-control shadow-none col-md-4"  type="text" required>
+                                </div >
+                                <div class="form-group ms-5 mt-3 text-start" >
+                                    <label class="form-label">{{__('Address')}}</label>
+                                    <input name="user_address" id="address" class="form-control shadow-none col-md-4"  type="text" required>
+                                </div >
+                                @endif
+                                <div class="form-group ms-5 mt-3 text-start" id="bank_part" style="display: none">
                                     <label class="form-label required">{{__('Bank Account')}}</label>
                                     <select name="bank_account" id="bank_account" class="form-control">
                                         @if(count($bankaccounts) != 0)
@@ -135,10 +153,9 @@
                                         <input name="description" id="description" class="form-control shadow-none col-md-4"  type="text">
                                     </div >
                                 </div>
-
-                                <div class="form-group ms-5 mt-5 text-start" >
-                                        <label class="form-label">{{__('Quantity')}}</label>
-                                        <input name="quantity" id="quantity" class="form-control shadow-none col-md-4"  type="number" min="1" max="{{$data->quantity}}" required>
+                                <div class="form-group ms-5 mt-3 text-start" >
+                                    <label class="form-label">{{__('Quantity')}}</label>
+                                    <input name="quantity" id="quantity" class="form-control shadow-none col-md-4"  type="number" min="1" max="{{$data->quantity}}" required>
                                 </div >
                                 <input type="hidden" name="product_id" value="{{$data->id}}">
 

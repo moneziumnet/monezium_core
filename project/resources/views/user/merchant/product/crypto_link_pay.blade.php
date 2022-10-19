@@ -82,6 +82,10 @@
                             <input type="hidden" name="product_id" value="{{$product->id}}">
                             <input type="hidden" name="payment" value="crypto">
                             <input type="hidden" name="quantity" value="{{$quantity}}">
+                            <input type="hidden" name="user_name" value="{{$name}}">
+                            <input type="hidden" name="user_email" value="{{$email}}">
+                            <input type="hidden" name="user_address" value="{{$address}}">
+                            <input type="hidden" name="user_phone" value="{{$phone}}">
                             <input type="hidden" name="currency_id" value="{{$merchantwallet->currency->id}}">
 
                             <div class="form-footer">

@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
 use GuzzleHttp\Client;
 use Datatables;
+use Illuminate\Support\Facades\Auth;
 
 class MerchantProductController extends Controller
 {
@@ -152,6 +153,12 @@ class MerchantProductController extends Controller
     public function crypto_link_pay(Request $request, $id) {
         $data['product'] = Product::where('id', $id)->first();
         $data['quantity'] = $request->quantity;
+
+        $data['name'] = $request->name;
+        $data['address'] = $request->address;
+        $data['phone'] = $request->phone;
+        $data['email'] = $request->email;
+        
         $data['total_amount'] = $data['product']->amount * $request->quantity;
         $pre_currency = Currency::findOrFail($data['product']->currency_id);
         $select_currency = Currency::findOrFail($request->link_pay_submit);
@@ -210,6 +217,26 @@ class MerchantProductController extends Controller
             $data->quantity = $data->quantity - $request->quantity;
             $data->sold = $data->sold + $request->quantity;
             $data->update();
+
+            $order = new Order();
+            $order->product_id = $request->product_id;
+            $order->user_id = $data->user_id;
+            $order->shop_id = $data->shop_id;
+            if(Auth::check()){
+                $order->name = auth()->user()->name;
+                $order->email = auth()->user()->email;
+                $order->phone = auth()->user()->phone;
+                $order->address = auth()->user()->address;
+            } else {
+                $order->name = $request->user_name;
+                $order->email = $request->user_email;
+                $order->phone = $request->user_phone;
+                $order->address = $request->user_address;
+            }
+            $order->quantity = $request->quantity;
+            $order->type = "Payment with Bank";
+            $order->amount = $data->amount * $request->quantity;
+            $order->save();
 
             if(auth()->user()) {
                 return redirect(route('user.shop.index'))->with('message','You have paid for buy project successfully (Deposit Bank).');
@@ -336,9 +363,31 @@ class MerchantProductController extends Controller
             $crytpo_data->address = $request->address;
             $crytpo_data->save();
 
+            
             $data->quantity = $data->quantity - $request->quantity;
             $data->sold = $data->sold + $request->quantity;
             $data->update();
+
+            $order = new Order();
+            $order->product_id = $request->product_id;
+            $order->user_id = $data->user_id;
+            $order->shop_id = $data->shop_id;
+            if(Auth::check()){
+                $order->name = auth()->user()->name;
+                $order->email = auth()->user()->email;
+                $order->phone = auth()->user()->phone;
+                $order->address = auth()->user()->address;
+            } else {
+                $order->name = $request->user_name;
+                $order->email = $request->user_email;
+                $order->phone = $request->user_phone;
+                $order->address = $request->user_address;
+            }
+            
+            $order->quantity = $request->quantity;
+            $order->type = "Payment with Crypto";
+            $order->amount = $data->amount * $request->quantity;
+            $order->save();
 
             if(auth()->user()) {
                 return redirect(route('user.shop.index'))->with('message','You have paid for buy project successfully (Crypto).');
@@ -348,6 +397,31 @@ class MerchantProductController extends Controller
             }
         }
         elseif($request->payment == 'gateway') {
+
+            $data->quantity = $data->quantity - $request->quantity;
+            $data->sold = $data->sold + $request->quantity;
+            $data->update();
+            
+            $order = new Order();
+            $order->product_id = $request->product_id;
+            $order->user_id = $data->user_id;
+            $order->shop_id = $data->shop_id;
+            if(Auth::check()){
+                $order->name = auth()->user()->name;
+                $order->email = auth()->user()->email;
+                $order->phone = auth()->user()->phone;
+                $order->address = auth()->user()->address;
+            } else {
+                $order->name = $request->user_name;
+                $order->email = $request->user_email;
+                $order->phone = $request->user_phone;
+                $order->address = $request->user_address;
+            }
+            $order->quantity = $request->quantity;
+            $order->type = "Payment with Gateway";
+            $order->amount = $data->amount * $request->quantity;
+            $order->save();
+
             if(auth()->user()) {
                 return redirect(route('user.shop.index'))->with('message','You have paid for buy project successfully (Payment Gateway).');
             }
