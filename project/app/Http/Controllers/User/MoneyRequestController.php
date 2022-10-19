@@ -65,9 +65,9 @@ class MoneyRequestController extends Controller
         }
         $currency = Currency::findOrFail($request->wallet_id);
         $rate = getRate($currency);
-        // if(now()->gt($user->plan_end_date)){
-        //     return redirect()->back()->with('unsuccess','Plan Date Expired.');
-        // }
+        if(now()->gt($user->plan_end_date)){
+            return redirect()->back()->with('unsuccess','Plan Date Expired.');
+        }
 
         $bank_plan = BankPlan::whereId($user->bank_plan_id)->first();
         $dailyRequests = MoneyRequest::whereUserId(auth()->id())->whereDate('created_at', '=', date('Y-m-d'))->whereStatus('success')->sum('amount');
@@ -91,7 +91,7 @@ class MoneyRequestController extends Controller
         }
 
         if ($request->amount/$rate < $global_range->min || $request->amount/$rate > $global_range->max) {
-            return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
+            return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value(USD rate) is '.$global_range->max.' and Min value is '.$global_range->min );
         }
         $transaction_global_fee = check_global_transaction_fee($request->amount/$rate, $user, 'recieve');
         $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/($rate * 100)) * $transaction_global_fee->data->percent_charge;
@@ -179,12 +179,19 @@ class MoneyRequestController extends Controller
         $sender = User::whereId($data->receiver_id)->first();
         $receiver = User::whereId($data->user_id)->first();
 
-        if($data->amount > Crypto_Balance($sender->id, $currency_id)){
-            return back()->with('error','You don\'t have sufficient balance!');
+        $currency = Currency::where('id', $currency_id)->first();
+        if ($currency->type == 2) {
+            if($data->amount > Crypto_Balance($sender->id, $currency_id)){
+                return back()->with('error','You don\'t have sufficient balance!');
+            }
+        }
+        else {
+            if($data->amount > user_wallet_balance($sender->id, $currency_id)){
+                return back()->with('error','You don\'t have sufficient balance!');
+            }
         }
 
         $finalAmount = $data->amount - $data->cost -$data->supervisor_cost;
-        $currency = Currency::where('id', $currency_id)->first();
         $wallet_type = $currency->type == 2 ? 8 : 1;
         user_wallet_decrement($sender->id, $currency_id, $data->amount, $wallet_type);
         user_wallet_increment(0, $currency_id, $data->cost, 9);
@@ -227,21 +234,19 @@ class MoneyRequestController extends Controller
                 $trans_wallet = get_wallet($receiver->referral_id, $currency_id,10);
             }
             if ($wallet->currency->type == 2) {
+                $towallet =$trans_wallet;
                 if($wallet->currency->code == 'ETH') {
                     RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                    $towallet = Wallet::where('user_id', $receiver->referral_id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
                     $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex($data->supervisor_cost*pow(10,18)).'"}';
                     RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
                 }
                 else if($wallet->currency->code == 'BTC') {
-                    $towallet = Wallet::where('user_id', $receiver->referral_id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
                     RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, $data->supervisor_cost],$wallet->keyword);
                 }
                 else {
                     RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
                     $geth = new EthereumRpcService();
                     $tokenContract = $wallet->currency->address;
-                    $towallet = Wallet::where('user_id', $receiver->referral_id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
                     $geth->transferToken($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $data->supervisor_cost);
                 }
             }
