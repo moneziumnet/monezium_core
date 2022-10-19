@@ -32,23 +32,23 @@
                                 <div class="form-group mb-3 mt-3">
                                     <label class="form-label required">{{__('Account Email')}}</label>
                                     <div class="input-group">
-                                        <input name="email" id="email" class="form-control camera_value" autocomplete="off" placeholder="{{__('user@email.com')}}" type="email" value="" required>
+                                        <input name="email" id="email" class="form-control camera_value" autocomplete="off" type="email" value="" required>
                                     </div>
                                 </div>
 
                                 <div class="form-group mb-3 mt-3">
                                     <label class="form-label required">{{__('Account Name')}}</label>
-                                    <input name="account_name" id="account_name" class="form-control" autocomplete="off" placeholder="{{__('John Doe')}}" type="text" value="" required readonly>
+                                    <input name="account_name" id="account_name" class="form-control" autocomplete="off" type="text" value="" required readonly>
                                 </div>
 
                                 <div class="form-group mt-3">
                                     <label class="form-label required">{{__('Amount')}}</label>
-                                    <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" step="any" value="{{ old('amount') }}" required>
+                                    <input name="amount" id="amount" class="form-control" autocomplete="off" type="number" step="any" value="{{ old('amount') }}" required>
                                 </div>
 
                                 <div class="form-group mt-3">
                                     <label class="form-label required">{{__('Description')}}</label>
-                                    <textarea name="description" id="description" class="form-control" placeholder="{{__('Enter description')}}" rows="5" required></textarea>
+                                    <textarea name="description" id="description" class="form-control" rows="5" required></textarea>
                                 </div>
 
                                 <input type="hidden" name="wallet_id" value="{{$wallet->id}}" />
@@ -101,11 +101,12 @@
         "use strict";
         var send_money_user = null;
         $("#email").on('change',function(){
-            $.post("{{ route('user.username.email') }}",{email: $("#email").val(),_token:'{{csrf_token()}}'}, function(data){
+            $.post("{{ route('admin.username.email') }}",{email: $("#email").val(),_token:'{{csrf_token()}}'}, function(data){
             send_money_user = data;
             if(data['name']){
                 $("#account_name").val(data['name']);
             } else {
+                $("#account_name").val("");
                 toastr.options =
                 {
                     "closeButton" : true,

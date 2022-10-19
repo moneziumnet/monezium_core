@@ -571,6 +571,22 @@ class UserController extends Controller
             return view('admin.user.wallettransactions',$data);
         }
 
+        public function username_by_email(Request $request){
+            if($data = User::where('email',$request->email)->first()){
+                return ["name" => $data->company_name ?? $data->name, "phone" => $data->phone];
+            }else{
+                return false;
+            }
+        }
+    
+        public function username_by_phone(Request $request){
+            if($data = User::where('phone',preg_replace("/[^0-9]/", "", $request->phone))->first()){
+                return ["name" => $data->company_name ?? $data->name, "email" => $data->email];
+            }else{
+                return false;
+            }
+         }
+
         public function internal($user_id, $wallet_id)
         {
             $data['wallet'] = Wallet::findOrFail($wallet_id);

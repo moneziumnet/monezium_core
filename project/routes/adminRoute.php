@@ -304,6 +304,9 @@ Route::prefix('admin')->group(function () {
     Route::get('/merchant/shop/datatables/{id}', [MerchantShopController::class, 'datatables'])->name('admin.merchant.shop.datatables');
     Route::get('/merchant/shop/status/{id1}/{id2}', [MerchantShopController::class, 'status'])->name('admin.merchant.shop.status');
 
+    Route::post('/username-by-email', [UserController::class,'username_by_email'])->name('admin.username.email');
+    Route::post('/username-by-phone', [UserController::class,'username_by_phone'])->name('admin.username.phone');
+
   });
 
   Route::group(['middleware' => 'permissions:Loan Management'], function () {
