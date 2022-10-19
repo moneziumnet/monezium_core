@@ -352,7 +352,7 @@
                                                         </button>\
                                                         <div class="dropdown-menu dropdown-menu-right">\
                                                             <a class="dropdown-item" href="javascript:;" onclick="getDetails('+ item.id +')">{{ __("Fee") }}</a>\
-                                                            <a class="dropdown-item" href="javascript:;" onclick="Deposit('+ item.id +')">{{ __("Deposit") }}</a>'
+                                                            <a class="dropdown-item" href="javascript:;" onclick=' +( wallet_type == '8' ? '"Crypto_Deposit(' : '"Deposit(')+ item.id +')">{{ __("Deposit") }}</a>'
                                                             + ( wallet_type == '8' ? '':'<a class="dropdown-item" href="{{url("admin/wallet/$data->id")}}/'+ item.id +'/between">{{ __("Payment between accounts") }}</a>') +
                                                             '<a class="dropdown-item" href="{{url("admin/wallet/$data->id")}}/'+ item.id +'/internal">{{ __("Internal Payment") }}</a>' +
                                                             (wallet_type == '8' ? '':'<a class="dropdown-item" href="{{url("admin/wallet/$data->id")}}/'+ item.id +'/external">{{ __("External Payment") }}</a>') +

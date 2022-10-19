@@ -85,8 +85,8 @@
                                         <h3>@lang('Details')</h3>
                                     </div>
                                     <ul class="list-group mt-2">
-                                        <li class="list-group-item d-flex justify-content-between">@lang('Receiver Address')<span id="receiver_address"></span></li>
-                                        <li class="list-group-item d-flex justify-content-between">@lang('Your Crypto Address')<span id="modal_se_address"></span></li>
+                                        <li class="list-group-item d-flex justify-content-between">@lang('Sender Address')<span id="customer_address"></span></li>
+                                        <li class="list-group-item d-flex justify-content-between">@lang('Receiver Crypto Address')<span id="modal_se_address"></span></li>
                                         <li class="list-group-item d-flex justify-content-between">@lang('Amount')<span id="re_amount"></span></li>
                                         <li class="list-group-item d-flex justify-content-between">@lang('currency')<span id="re_currency"></span></li>
                                     </ul>
@@ -138,7 +138,7 @@
           var data  = {id:$(this).val(),_token:token}
           $.post(url,data, function(res) {
               $('.check').text('@lang('Sender Address is ')' + res).addClass('text-success');
-              $('#receiver_address').text(res);
+              $('#customer_address').text(res);
           })
       })
 
