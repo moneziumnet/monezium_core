@@ -27,18 +27,19 @@ use Illuminate\Support\Facades\Session;
 class SwanController extends Controller
 {
     public function store(Request $request){
+        $currency = Currency::whereId($request->currency)->first();
+        if ($currency->code != 'EUR'){
+            return redirect()->back()->with(array('warning' => 'Sorry, Currently SWAN Bank API only supports for EUR.'));
+        }
         $client = New Client();
         $user = User::findOrFail($request->user);
         $bankgateway = BankGateway::where('subbank_id', $request->subbank)->first();
         $bankaccount = BankAccount::where('user_id', $request->user)->where('subbank_id', $request->subbank)->where('currency_id', $request->currency)->first();
-        $currency = Currency::whereId($request->currency)->first();
         if ($bankaccount){
             return redirect()->back()->with(array('warning' => 'This bank account already exists.'));
 
         }
-        if ($currency->code != 'EUR'){
-            return redirect()->back()->with(array('warning' => 'Sorry, Currently this Bank API only supports for EUR.'));
-        }
+        
         try {
               $options = [
                 'multipart' => [

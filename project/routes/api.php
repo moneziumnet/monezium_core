@@ -19,7 +19,7 @@ use App\Http\Controllers\API\ExchangeMoneyController;
 use App\Http\Controllers\API\TransactionController;
 use App\Http\Controllers\API\SendController;
 use App\Http\Controllers\API\MerchantController;
-use App\Http\Controllers\API\UserClearJunctionController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -120,9 +120,5 @@ Route::prefix('api')->group(function () {
     Route::post('user/transfer-logs',[TransactionController::class,'transferlogs']);
 
     Route::post('user/merchant-api-key',[MerchantController::class,'apikey']);
-    
-    Route::post('user/bank-payout',[UserClearJunctionController::class,'bankPayout']);
-    
-
 
 });

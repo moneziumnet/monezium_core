@@ -58,17 +58,18 @@ class UserClearJunctionController extends Controller
     }
 
     public function AllocateIbanCreate(Request $request) {
+      $currency = Currency::whereId($request->currency)->first();
+      if ($currency->code != 'EUR'){
+        return redirect()->back()->with(array('warning' => 'Sorry, Currently Clear Junction API only supports for EUR because this API is not product version.'));
+      }
+
         $client = New Client();
         $user = User::findOrFail($request->user);
         $bankgateway = BankGateway::where('subbank_id', $request->subbank)->first();
         $banklastindex = BankAccount::orderBy('id', 'DESC')->first()->id + rand(100000,999999);
         $bankaccount = BankAccount::where('user_id', $request->user)->where('subbank_id', $request->subbank)->where('currency_id', $request->currency)->first();
         $country = Country::findOrFail($user->country);
-        $currency = Currency::whereId($request->currency)->first();
-        if ($currency->code != 'EUR'){
-            return redirect()->back()->with(array('warning' => 'Sorry, Currently this api only supports for EUR because this api is not product version.'));
-        }
-
+        
         if ($bankaccount){
             return redirect()->back()->with(array('warning' => 'This bank account already exists.'));
 

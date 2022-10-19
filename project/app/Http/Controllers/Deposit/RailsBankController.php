@@ -26,16 +26,17 @@ use Auth;
 class RailsBankController extends Controller
 {
     public function store(Request $request){
+        $currency = Currency::whereId($request->currency)->first();
+        if ($currency->code != 'EUR'){
+            return redirect()->back()->with(array('warning' => 'Sorry, Currently Railsbank API only supports for EUR because this API is not product version.'));
+        }
+
         $client = New Client();
         $user = User::findOrFail($request->user);
         $bankgateway = BankGateway::where('subbank_id', $request->subbank)->first();
-        $currency = Currency::whereId($request->currency)->first();
         $bankaccount = BankAccount::where('user_id', $request->user)->where('subbank_id', $request->subbank)->where('currency_id', $request->currency)->first();
         if ($bankaccount){
             return redirect()->back()->with(array('warning' => 'This bank account already exists.'));
-        }
-        if ($currency->code != 'EUR'){
-            return redirect()->back()->with(array('warning' => 'Sorry, Currently this Railsbank api only supports for EUR because this api is not product version.'));
         }
         try {
             $response = $client->request('POST', 'https://play.railsbank.com/v1/customer/endusers', [
