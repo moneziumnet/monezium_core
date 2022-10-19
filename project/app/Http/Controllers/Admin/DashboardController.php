@@ -92,13 +92,13 @@ class DashboardController extends Controller
                 return redirect()->route('admin.dashboard')->with(array('warning' => 'Sorry, You can not create New Bank Account succesfully because Swan Api does not create iban and swift code. Please try again.'));
             }
             $user = User::findOrFail($user_id);
-            $data = New BankAccount();
-            $data->user_id = $user->id;
-            $data->subbank_id = $subbank;
-            $data->iban = $iban;
-            $data->swift = $bic_swift;
-            $data->currency_id = $currency_id;
-            $data->save();
+            $bank = New BankAccount();
+            $bank->user_id = $user->id;
+            $bank->subbank_id = $subbank;
+            $bank->iban = $iban;
+            $bank->swift = $bic_swift;
+            $bank->currency_id = $currency_id;
+            $bank->save();
 
             $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
             if(!$chargefee) {
@@ -122,7 +122,7 @@ class DashboardController extends Controller
 
             user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
             user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
-            redirect()->route('admin.dashboard')->with(array('message' => $user->name.'\'s Swan Bank Account has been created successfully.'));
+            return redirect()->route('admin.dashboard')->with(array('message' => $user->name.'\'s Swan Bank Account has been created successfully.'));
         }
         return view('admin.dashboard', $data);
     }
