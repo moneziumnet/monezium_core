@@ -27,7 +27,14 @@ class ExchangeMoneyController extends Controller
     {
         $wallets = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('balance', '>', 0)->get();
         $currencies = Currency::where('status',1)->whereType('1')->get();
+        foreach ($currencies as $key => $value) {
+            $currencies[$key]->rate = getRate($value);
+        }
+
         $crypto_currencies = Currency::where('status',1)->whereType('2')->get();
+        foreach ($crypto_currencies as $key => $value) {
+            $crypto_currencies[$key]->rate = getRate($value);
+        }
         $recentExchanges = ExchangeMoney::where('user_id',auth()->id())->with(['fromCurr','toCurr'])->latest()->take(7)->get();
         $user = auth()->user();
         return view('user.exchange.exchange',compact('wallets','currencies','recentExchanges', 'crypto_currencies', 'user'));
