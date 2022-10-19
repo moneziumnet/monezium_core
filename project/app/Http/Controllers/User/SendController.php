@@ -99,9 +99,9 @@ class SendController extends Controller
             return redirect()->back()->with('unsuccess','You have to buy a plan to withdraw.');
         }
 
-        // if(now()->gt($user->plan_end_date)){
-        //     return redirect()->back()->with('unsuccess','Plan Date Expired.');
-        // }
+        if(now()->gt($user->plan_end_date)){
+            return redirect()->back()->with('unsuccess','Plan Date Expired.');
+        }
         $wallet = Wallet::where('id',$request->wallet_id)->with('currency')->first();
 
         $currency_id = $wallet->currency->id; //Currency::whereId($wallet_id)->first()->id;
