@@ -43,8 +43,8 @@
                                 <thead>
                                 <tr>
                                     <th>{{ __('Withdraw Date') }}</th>
-                                    <th>{{ __('Hash') }}</th>
-                                    <th>{{ __('Your Crypto Address') }}</th>
+                                    <th>{{ __('Sender Address') }}</th>
+                                    <th>{{ __('Reciever Address') }}</th>
                                     <th>{{ __('Amount') }}</th>
                                     <th>{{ __('Status') }}</th>
                                     <th class="text-end">{{ __('Details') }}</th>
@@ -58,12 +58,12 @@
                                           {{date('d-M-Y',strtotime($withdraw->created_at))}}
                                         </div>
                                       </td>
-                                      <td data-label="{{ __('Hash') }}">
+                                      <td data-label="{{ __('Sender Address') }}">
                                         <div>
-                                          {{str_dis($withdraw->hash)}}
+                                            {{Get_Wallet_Address(auth()->id(), $withdraw->currency->id)}}
                                         </div>
                                       </td>
-                                        <td data-label="{{ __('Your Crypto Address') }}">
+                                        <td data-label="{{ __('Reciever Address') }}">
                                           <div>
                                             {{ str_dis($withdraw->sender_address) }}
                                           </div>
@@ -90,7 +90,7 @@
                                           </div>
                                         </td>
                                         <td data-label="@lang('Details')" class="text-end">
-                                            <button class="btn btn-primary btn-sm details" data-data="{{json_encode($withdraw)}}" >@lang('Details')</button>
+                                            <button class="btn btn-primary btn-sm details" data-data="{{json_encode($withdraw)}}" data-address="{{Get_Wallet_Address(auth()->id(), $withdraw->currency->id)}}" >@lang('Details')</button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -114,8 +114,8 @@
         <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
         <h3>@lang('Bank Details')</h3>
         <ul class="list-group mt-2">
-            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Hash')<span id="hash" style="margin-left: 60px"></span></li>
-            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Your Crypto Address')<span id="sender_address" style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Sender Address')<span id="crypto_address" style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Receiver Address')<span id="sender_address" style="margin-left: 60px"></span></li>
             <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Amount')<span id="amount" style="margin-left: 60px"></span></li>
         </ul>
         </div>
@@ -130,7 +130,7 @@
 <script type="text/javascript">
     'use strict';
       $('.details').on('click', function() {
-          $('#hash').text($(this).data('data').hash);
+          $('#crypto_address').text($(this).data('address'));
           $('#sender_address').text($(this).data('data').sender_address);
           $('#amount').text($(this).data('data').amount + $(this).data('data').currency.code);
           $('#modal-success').modal('show');
