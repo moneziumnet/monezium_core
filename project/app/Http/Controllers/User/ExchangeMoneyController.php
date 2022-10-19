@@ -166,6 +166,18 @@ class ExchangeMoneyController extends Controller
         }
         user_wallet_increment(0, $fromWallet->currency->id, $transaction_global_cost*$from_rate, 9);
         $transaction_custom_cost = 0;
+        $charge = amount($transaction_global_cost*$from_rate,$fromWallet->currency->type);
+        $totalAmount = amount(($request->amount +  $charge),$fromWallet->currency->type);
+        if ($fromWallet->currency->type == 2) {
+            if($totalAmount > Crypto_Balance($user->id, $currency->id)){
+                return back()->with('error','Insufficient balance to your '.$fromWallet->currency->code.' wallet');
+            }
+        }
+        else {
+            if($totalAmount > $fromWallet->balance){
+                return back()->with('error','Insufficient balance to your '.$fromWallet->currency->code.' wallet');
+            }
+        }
         if($user->referral_id != 0)
         {
             $transaction_custom_fee = check_custom_transaction_fee($request->amount/$from_rate, $user,  'exchange');
@@ -228,12 +240,6 @@ class ExchangeMoneyController extends Controller
         $defaultAmount = $request->amount / ($result->data->rates->$fromrate ?? $fromWallet->currency->rate);
         $finalAmount   = amount($defaultAmount * ($result->data->rates->$torate ?? $toWallet->currency->rate),$toWallet->currency->type);
 
-        $charge = amount($transaction_global_cost*$from_rate,$fromWallet->currency->type);
-        $totalAmount = amount(($request->amount +  $charge),$fromWallet->currency->type);
-
-        if($fromWallet->balance < $totalAmount){
-            return back()->with('error','Insufficient balance to your '.$fromWallet->currency->code.' wallet');
-        }
 
         $fromWallet->balance -=  $totalAmount;
         $fromWallet->update();
