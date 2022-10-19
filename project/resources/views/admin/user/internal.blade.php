@@ -5,10 +5,27 @@
             @php
                 $accounttype = ['0' => 'All', '1' => 'Current', '2' => 'Card', '3' => 'Deposit', '4' => 'Loan', '5' => 'Escrow', '6' => 'Supervisor', '7' => 'Merchant', '8' => 'Crypto', '9' => 'System', '10' => 'Manager'];
                 $dcurr = App\Models\Currency::findOrFail($wallet->currency_id);
+                if($dcurr->type == 2) {
+
+                    if($dcurr->code == 'BTC') {
+                        $amount = RPC_BTC_Balance('getbalance',$wallet->keyword) == 'error' ? amount($wallet->balance,$dcurr->type,2) : RPC_BTC_Balance('getbalance',$wallet->keyword);
+                    }
+                    else if($dcurr->code == 'ETH') {
+                        $amount = RPC_ETH('eth_getBalance',[$wallet->wallet_no, "latest"]) == 'error' ? amount($wallet->balance,$dcurr->type,2) : hexdec(RPC_ETH('eth_getBalance',[$wallet->wallet_no, "latest"]))/pow(10,18);
+                    }
+                    else {
+                        $geth = new App\Classes\EthereumRpcService();
+                        $tokenContract = $dcurr->address;
+                        $amount = $geth->getTokenBalance($tokenContract, $wallet->wallet_no) == 'error' ? amount($wallet->balance,$dcurr->type,2) : $geth->getTokenBalance($tokenContract, $wallet->wallet_no);
+                    }
+                }
+                else {
+                    $amount = amount($wallet->balance, $dcurr->type, 2);
+                }
             @endphp
             <h5 class="mb-0 text-gray-800 pl-3">
                 <strong class="mr-3">{{ $accounttype[$wallet->wallet_type] }} {{ $wallet->wallet_no }}</strong>
-                ({{ $dcurr->symbol }} {{ amount($wallet->balance, $dcurr->type, 2) }} {{ $dcurr->code }})
+                ({{ $dcurr->symbol }} {{ $amount }} {{ $dcurr->code }})
             </h5>
             <ol class="breadcrumb py-0 m-0">
                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
@@ -131,9 +148,9 @@
                 $("#email").focus();
                 return;
             }
-            if (($('#email').val().length != 0) && 
-                ($('#amount').val().length != 0) && 
-                ($('#account_name').val().length != 0)  && 
+            if (($('#email').val().length != 0) &&
+                ($('#amount').val().length != 0) &&
+                ($('#account_name').val().length != 0)  &&
                 ($('#description').val().length != 0)
             ) {
                 $('#receiver_email').text($('#email').val());
