@@ -80,6 +80,7 @@
                             </div>
 
                             <input type="hidden" name="product_id" value="{{$product->id}}">
+                            <input type="hidden" name="payment" value="crypto">
                             <input type="hidden" name="quantity" value="{{$quantity}}">
                             <input type="hidden" name="currency_id" value="{{$merchantwallet->currency->id}}">
 
