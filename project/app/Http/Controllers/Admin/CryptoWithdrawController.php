@@ -30,8 +30,8 @@ class CryptoWithdrawController extends Controller
                             $data = User::where('id',$data->user_id)->first();
                             return str_dis($data->name);
                         })
-                        ->editColumn('hash',function(CryptoWithdraw $data){
-                            return str_dis($data->hash);
+                        ->editColumn('crypto_address',function(CryptoWithdraw $data){
+                            return str_dis(Get_Wallet_Address($data->user_id, $data->currency_id));
                         })
                         ->editColumn('sender_address',function(CryptoWithdraw $data){
                             return str_dis($data->sender_address);
@@ -39,35 +39,8 @@ class CryptoWithdrawController extends Controller
                         ->editColumn('amount', function(CryptoWithdraw $data) {
                             return $data->currency->symbol.$data->amount;
                         })
-                        ->editColumn('status', function(CryptoWithdraw $data) {
-                            if ($data->status == 1) {
-                                $status  = __('Completed');
-                              } elseif ($data->status == 2) {
-                                $status  = __('Rejected');
-                              } else {
-                                $status  = __('Pending');
-                              }
-
-                              if ($data->status == 1) {
-                                $status_sign  = 'success';
-                              } elseif ($data->status == 2) {
-                                $status_sign  = 'danger';
-                              } else {
-                                $status_sign = 'warning';
-                              }
-
-                              return '<div class="btn-group mb-1">
-                                    <button type="button" class="btn btn-' . $status_sign . ' btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    ' . $status . '
-                                    </button>
-                                    <div class="dropdown-menu" x-placement="bottom-start">
-                                    <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="' . route('admin.withdraws.crypto.status', ['id1' => $data->id, 'id2' => 1]) . '">' . __("completed") . '</a>
-                                    <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="' . route('admin.withdraws.crypto.status', ['id1' => $data->id, 'id2' => 2]) . '">' . __("rejected") . '</a>
-                                    </div>
-                                </div>';
-                            })
                         ->editColumn('action', function(CryptoWithdraw $data) {
-                            return '<input type="hidden", id="sub_data", value ='.json_encode($data).'>'.' <a href="javascript:;"   onclick=getDetails('.json_encode($data).') class="detailsBtn" >
+                            return '<input type="hidden", id="sub_data", value ='.json_encode($data).'>'.' <a href="javascript:;"   onclick=getDetails('.json_encode($data).',"'.Get_Wallet_Address($data->user_id, $data->currency_id).'") class="detailsBtn" >
                             ' . __("Details") . '</a>';
                         })
                         ->rawColumns(['created_at','customer_name','amount','status', 'action'])
