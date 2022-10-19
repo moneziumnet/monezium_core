@@ -155,30 +155,32 @@ class SendController extends Controller
                 $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/(100*$rate)) * $transaction_custom_fee->data->percent_charge;
             }
             $remark = 'Send_money_supervisor_fee';
-            if (check_user_type_by_id(4, $user->referral_id)) {
-                user_wallet_increment($user->referral_id, $currency_id, $transaction_custom_cost*$rate, 6);
-                $trans_wallet = get_wallet($user->referral_id, $currency_id, 6);
+            if ($wallet->currency->type == 1) {
+                if (check_user_type_by_id(4, $user->referral_id)) {
+                    user_wallet_increment($user->referral_id, $currency_id, $transaction_custom_cost*$rate, 6);
+                    $trans_wallet = get_wallet($user->referral_id, $currency_id, 6);
+                }
+                elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
+                    $remark = 'Send_money_manager_fee';
+                    user_wallet_increment($user->referral_id, $currency_id, $transaction_custom_cost*$rate, 10);
+                    $trans_wallet = get_wallet($user->referral_id, $currency_id, 10);
+                }
             }
-            elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
-                $remark = 'Send_money_manager_fee';
-                user_wallet_increment($user->referral_id, $currency_id, $transaction_custom_cost*$rate, 10);
-                $trans_wallet = get_wallet($user->referral_id, $currency_id, 10);
-            }
-            if ($wallet->currency->type == 2) {
-                $towallet = $trans_wallet;
+            else if ($wallet->currency->type == 2) {
+                $trans_wallet = get_wallet($user->referral_id, $currency_id, 8);
                 if($wallet->currency->code == 'ETH') {
                     RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                    $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex($transaction_custom_cost*$rate*pow(10,18)).'"}';
+                    $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$trans_wallet->wallet_no.'", "value": "0x'.dechex($transaction_custom_cost*$rate*pow(10,18)).'"}';
                     RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
                 }
                 else if($wallet->currency->code == 'BTC') {
-                    RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, $transaction_custom_cost*$rate],$wallet->keyword);
+                    RPC_BTC_Send('sendtoaddress',[$trans_wallet->wallet_no, $transaction_custom_cost*$rate],$wallet->keyword);
                 }
                 else {
                     RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
                     $geth = new EthereumRpcService();
                     $tokenContract = $wallet->currency->address;
-                    $geth->transferToken($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $transaction_custom_cost*$rate);
+                    $geth->transferToken($tokenContract, $wallet->wallet_no, $trans_wallet->wallet_no, $transaction_custom_cost*$rate);
                 }
             }
 

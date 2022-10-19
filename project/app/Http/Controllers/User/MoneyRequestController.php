@@ -224,30 +224,32 @@ class MoneyRequestController extends Controller
         }
         if ($receiver->referral_id != 0) {
             $remark = 'Request_money_supervisor_fee';
-            if (check_user_type_by_id(4, $receiver->referral_id)) {
-                user_wallet_increment($receiver->referral_id, $currency_id, $data->supervisor_cost,6);
-                $trans_wallet = get_wallet($receiver->referral_id, $currency_id,6);
+            if($wallet->currency->type == 1) {
+                if (check_user_type_by_id(4, $receiver->referral_id)) {
+                    user_wallet_increment($receiver->referral_id, $currency_id, $data->supervisor_cost,6);
+                    $trans_wallet = get_wallet($receiver->referral_id, $currency_id,6);
+                }
+                elseif (DB::table('managers')->where('manager_id', $receiver->referral_id)->first()) {
+                    $remark = 'Request_money_manager_fee';
+                    user_wallet_increment($receiver->referral_id, $currency_id, $data->supervisor_cost,10);
+                    $trans_wallet = get_wallet($receiver->referral_id, $currency_id,10);
+                }
             }
-            elseif (DB::table('managers')->where('manager_id', $receiver->referral_id)->first()) {
-                $remark = 'Request_money_manager_fee';
-                user_wallet_increment($receiver->referral_id, $currency_id, $data->supervisor_cost,10);
-                $trans_wallet = get_wallet($receiver->referral_id, $currency_id,10);
-            }
-            if ($wallet->currency->type == 2) {
-                $towallet =$trans_wallet;
+            else if ($wallet->currency->type == 2) {
+                $trans_wallet = Wallet::where('user_id', $receiver->referral_id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();;
                 if($wallet->currency->code == 'ETH') {
                     RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                    $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex($data->supervisor_cost*pow(10,18)).'"}';
+                    $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$trans_wallet->wallet_no.'", "value": "0x'.dechex($data->supervisor_cost*pow(10,18)).'"}';
                     RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
                 }
                 else if($wallet->currency->code == 'BTC') {
-                    RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, $data->supervisor_cost],$wallet->keyword);
+                    RPC_BTC_Send('sendtoaddress',[$trans_wallet->wallet_no, $data->supervisor_cost],$wallet->keyword);
                 }
                 else {
                     RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
                     $geth = new EthereumRpcService();
                     $tokenContract = $wallet->currency->address;
-                    $geth->transferToken($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $data->supervisor_cost);
+                    $geth->transferToken($tokenContract, $wallet->wallet_no, $trans_wallet->wallet_no, $data->supervisor_cost);
                 }
             }
             $referral_user = User::findOrFail($receiver->referral_id);

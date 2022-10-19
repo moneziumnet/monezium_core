@@ -202,15 +202,21 @@ class ExchangeMoneyController extends Controller
 
                 $trans_wallet = get_wallet($user->referral_id, $fromWallet->currency->id, 8);
                 if($currency->code == 'ETH') {
-                    $torefWallet = Wallet::where('user_id', $user->referral_id)->where('wallet_type', 8)->where('currency_id', $data->currency_id)->first();
+                    $torefWallet = Wallet::where('user_id', $user->referral_id)->where('wallet_type', 8)->where('currency_id', $fromWallet->currency_id)->first();
 
                     RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
                     $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$torefWallet->wallet_no.'", "value": "0x'.dechex($transaction_custom_cost*$from_rate*pow(10,18)).'"}';
                     RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
                 }
                 elseif($currency->code == 'BTC') {
-                    $torefWallet = Wallet::where('user_id', $user->referral_id)->where('wallet_type', 8)->where('currency_id', $data->currency_id)->first();
+                    $torefWallet = Wallet::where('user_id', $user->referral_id)->where('wallet_type', 8)->where('currency_id', $fromWallet->currency_id)->first();
                     RPC_BTC_Send('sendtoaddress',[$torefWallet->wallet_no, $transaction_custom_cost*$from_rate],$fromWallet->keyword);
+                }
+                else {
+                    RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
+                    $geth = new EthereumRpcService();
+                    $tokenContract = $fromWallet->currency->address;
+                    $geth->transferToken($tokenContract, $wallet->wallet_no, $trans_wallet->wallet_no, $transaction_custom_cost*$from_rate);
                 }
             }
             $trans = new Transaction();
