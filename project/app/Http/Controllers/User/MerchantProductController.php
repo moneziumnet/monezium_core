@@ -154,10 +154,10 @@ class MerchantProductController extends Controller
         $data['product'] = Product::where('id', $id)->first();
         $data['quantity'] = $request->quantity;
 
-        $data['name'] = $request->name;
-        $data['address'] = $request->address;
-        $data['phone'] = $request->phone;
-        $data['email'] = $request->email;
+        $data['name'] = $request->user_name;
+        $data['address'] = $request->user_address;
+        $data['phone'] = $request->user_phone;
+        $data['email'] = $request->user_email;
         
         $data['total_amount'] = $data['product']->amount * $request->quantity;
         $pre_currency = Currency::findOrFail($data['product']->currency_id);
