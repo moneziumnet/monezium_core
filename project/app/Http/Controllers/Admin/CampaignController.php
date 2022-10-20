@@ -132,7 +132,6 @@ class CampaignController extends Controller
                             </button>
                             <div class="dropdown-menu" x-placement="bottom-start">
                               <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="'. route('admin.donation.status',['id1' => $data->id, 'id2' => '1']).'">'.__("Approved").'</a>
-                              <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="'. route('admin.donation.status',['id1' => $data->id, 'id2' => '0']).'">'.__("Pending").'</a>
                             </div>
                           </div>';
                         })
@@ -165,104 +164,35 @@ class CampaignController extends Controller
             return response()->json($msg);
 
         }
-        if($donation->payment == 'wallet' && $id2 == 1){
-            $wallet = Wallet::where('user_id',$donation->user_id)->where('user_type',1)->where('currency_id',$donation->currency_id)->where('wallet_type', 1)->first();
-
-            if(!$wallet){
-                $wallet =  Wallet::create([
-                    'user_id'     => $donation->user_id,
-                    'user_type'   => 1,
-                    'currency_id' => $donation->currency_id,
-                    'balance'     => 0,
-                    'wallet_type' => 1,
-                    'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
-                ]);
-
-                $user = User::findOrFail($donation->user_id);
-
-                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
-                if(!$chargefee) {
-                    $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
-                }
-
-                user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
-                user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
-
-                $trans = new Transaction();
-                $trans->trnx = str_rand();
-                $trans->user_id     = $user->id;
-                $trans->user_type   = 1;
-                $trans->currency_id =  defaultCurr();
-                $trans->amount      = $chargefee->data->fixed_charge;
-                $trans->charge      = 0;
-                $trans->type        = '-';
-
-                $trans_wallet       = get_wallet($user->id,  defaultCurr(), 1);
-                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-
-                $trans->remark      = 'wallet_create';
-                $trans->details     = trans('Wallet Create');
-                $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
-                $trans->save();
-
-            }
-
-            if($wallet->balance < $donation->amount) {
-                return response()->json('Insufficient balance to your wallet');
-            }
-
-            $wallet->balance -= $donation->amount;
-            $wallet->update();
-
-            $trnx              = new Transaction();
-            $trnx->trnx        = str_rand();
-            $trnx->user_id     = $donation->user_id;
-            $trnx->user_type   = 1;
-            $trnx->currency_id = $donation->currency_id;
-            $trnx->wallet_id   = $wallet->id;
-            $trnx->amount      = $donation->amount;
-            $trnx->charge      = 0;
-            $trnx->remark      = 'donation_payment';
-            $trnx->type        = '-';
-            $trnx->details     = trans('Payment for Donation : '). $donation->campaign->ref_id;
-            $trnx->data        = '{"sender":"'.User::findOrFail($donation->user_id)->name.'", "receiver":"'.User::findOrFail($donation->campaign->user_id)->name.'"}';
-            $trnx->save();
-
-            $rcvWallet = Wallet::where('user_id',$donation->campaign->user_id)->where('user_type',1)->where('currency_id',$donation->currency_id)->where('wallet_type', 1)->first();
-
-            $rcvWallet->balance += $donation->amount;
-            $rcvWallet->update();
+        if(explode("-",$donation->payment)[0] == 'bank_pay') {
+            return redirect()->back()->with(array('warning' => 'You can not approve this donation via Bank, This will be approved automatically after incoming via Bank.'));
+        }
+        else if($donation->payment == 'gateway') {
+            return redirect()->back()->with(array('warning' => 'You can not approve this donation via Payment Gateway, This will be approved automatically after incoming via Payment Gateway.'));
+        }
+        else if($donation->payment == 'crypto') {
+            $wallet = get_wallet($data->user_id, $donation->currency_id, 8);
 
             $rcvTrnx              = new Transaction();
-            $rcvTrnx->trnx        = $trnx->trnx;
-            $rcvTrnx->user_id     = $donation->campaign->user_id;
+            $rcvTrnx->trnx        = str_rand();
+            $rcvTrnx->user_id     = $data->user_id;
             $rcvTrnx->user_type   = 1;
             $rcvTrnx->currency_id = $donation->currency_id;
-            $rcvTrnx->wallet_id   = $rcvWallet->id;
+            $rcvTrnx->wallet_id   = $wallet->id;
             $rcvTrnx->amount      = $donation->amount;
             $rcvTrnx->charge      = 0;
-            $rcvTrnx->remark      = 'donation_receive_payment';
+            $rcvTrnx->remark      = 'campaign_payment';
             $rcvTrnx->type        = '+';
-            $rcvTrnx->details     = trans('Receive Payment for Donation : '). $donation->campaign->ref_id;
-            $rcvTrnx->data        = '{"sender":"'.User::findOrFail($donation->user_id)->name.'", "receiver":"'.User::findOrFail($donation->campaign->user_id)->name.'"}';
+            $rcvTrnx->details     = trans('Receive Campaign Payment : '). $data->ref_id;
+            $rcvTrnx->data        = '{"sender":"'.$donation->user_name.'", "receiver":"'.User::findOrFail($data->user_id)->name.'"}';
             $rcvTrnx->save();
-            $donation->status = $id2;
-            $donation->update();
-            $totalamount = CampaignDonation::where('campaign_id', $donation->campaign_id)->whereStatus(1)->sum('amount');
-            if($totalamount >= $donation->campaign->goal) {
-                $data->status = 0;
-                $data->update();
-            }
-
-
-            $to = $data->user->email;
-            $subject = "Received Campaign Donation payments";
-            $msg_body = "You received money ".amount($data->amount, $data->currency->type,2)." \n The customers donate your campaign." ;
-            $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-            $headers .= "MIME-Version: 1.0" . "\r\n";
-            $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-            @mail($to,$subject,$msg_body,$headers);
-
+            $donation->amount = $donation->amount * getRate($wallet->currency);
+            $donation->currency = $data->currency_id;
+        }
+        $totalamount = CampaignDonation::where('campaign_id', $donation->campaign_id)->whereStatus(1)->sum('amount');
+        if($totalamount >= $donation->campaign->goal) {
+            $data->status = 0;
+            $data->update();
         }
         $donation->status = $id2;
         $donation->update();

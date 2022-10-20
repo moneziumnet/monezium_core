@@ -963,7 +963,7 @@ if(!function_exists('getModule')){
   if(!function_exists('get_wallet'))
   {
     function get_wallet($user_id, $currency_id, $wallet_type = 1) {
-      return Wallet::where('user_id', $user_id)->where('wallet_type', $wallet_type)->where('currency_id',$currency_id)->first();
+      return Wallet::where('user_id', $user_id)->where('wallet_type', $wallet_type)->where('currency_id',$currency_id)->with('currency')->first();
     }
   }
 

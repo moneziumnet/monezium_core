@@ -197,10 +197,6 @@ class MerchantCampaignController extends Controller
 
         if($request->payment == 'gateway'){
 
-            $newdonation = new CampaignDonation();
-            $input = $request->all();
-            $input['currency_id'] = $data->currency_id;
-            $newdonation->fill($input)->save();
             // $settings = Generalsetting::findOrFail(1);
 
             // $payouts = new Payout();
@@ -233,6 +229,17 @@ class MerchantCampaignController extends Controller
             // $input['currency_id'] = $data->currency_id;
             // $newdonation->fill($input)->save();
             // return redirect(route('user.dashboard'))->with('message','You have donated for Campaign successfully.');
+            $newdonation = new CampaignDonation();
+            $input = $request->all();
+            $input['currency_id'] = $data->currency_id;
+            $input['status'] = 1;
+            $newdonation->fill($input)->save();
+            if(auth()->user()) {
+                return redirect(route('user.shop.index'))->with('message','You have donated for Campaign successfully (Payment Gateway).');
+            }
+            else {
+                return redirect(url('/'))->with('message','You have donated for Campaign successfully (Payment Gateway).');
+            }
         }
         elseif($request->payment == 'wallet'){
             if(!auth()->user()) {
@@ -347,6 +354,7 @@ class MerchantCampaignController extends Controller
             $newdonation = new CampaignDonation();
             $input = $request->all();
             $input['currency_id'] = $data->currency_id;
+            $input['payment'] = 'bank_pay-'.$request->deposit_no;
             $newdonation->fill($input)->save();
 
             if(auth()->user()) {
@@ -355,6 +363,7 @@ class MerchantCampaignController extends Controller
             else {
                 return redirect(url('/'))->with('message','You have donated for Campaign successfully (Deposit Bank).');
             }
+
             // return 'bank';
         }
         elseif($request->payment == 'crypto') {
@@ -423,8 +432,8 @@ class MerchantCampaignController extends Controller
                 $newdonation = new CampaignDonation();
                 $newdonation->campaign_id = $data->id;
                 $newdonation->user_name = $request->user_name;
-                $newdonation ->currency_id = $data->currency_id;
-                $newdonation->amount = $request->amount/getRate($currency);
+                $newdonation ->currency_id = $request->currency_id;
+                $newdonation->amount = $request->amount;
                 $newdonation->payment = 'crypto';
                 $newdonation->description = $request->description;
                 $newdonation->status = 0;

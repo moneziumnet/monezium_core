@@ -15,6 +15,7 @@ use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Wallet;
 use App\Models\WebhookRequest;
+use App\Models\CampaignDonation;
 use Illuminate\Http\Request;
 use Datatables;
 
@@ -116,7 +117,7 @@ class DepositBankController extends Controller
             : 'Deposits already rejected';
           return redirect()->back()->with("error", $msg);
         }
-        
+
         $webhook_request = WebhookRequest::where('reference', $data->deposit_number)->first();
         if($webhook_request) {
             $data->amount = $webhook_request->amount;
@@ -199,6 +200,13 @@ class DepositBankController extends Controller
         $trans->save();
 
         $data->update(['status' => 'complete']);
+        $campaign = CampaignDonation::where('payment', 'bank_pay-'.$data->deposit_number)->first();
+
+        if ($campaign) {
+            $campaign->amount = $final_amount;
+            $campaign->status = 1;
+            $campaign->update();
+        }
         $gs = Generalsetting::findOrFail(1);
 
             $to = $user->email;
