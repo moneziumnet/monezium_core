@@ -548,7 +548,7 @@
         $('.trx_details').text($(this).data('data').details)
         $.get(url,function (res) {
           if(res == 'empty'){
-            $('.list-group').html('<p>@lang('No details found!')</p>')
+            $('.list-group').html("<p>@lang('No details found!')</p>")
           }else{
             $('.list-group').html(res)
           }
@@ -562,19 +562,19 @@
 
                 if(res.keyword == 'openpayd')
                     {
-                        $('.bankaccount').prop('action','{{ route('user.bankaccount.openpayd.store') }}');
+                        $('.bankaccount').prop('action',"{{ route('user.bankaccount.openpayd.store') }}");
                     }
                 if(res.keyword == 'railsbank')
                 {
-                    $('.bankaccount').prop('action','{{ route('user.bankaccount.railsbank.store') }}');
+                    $('.bankaccount').prop('action',"{{ route('user.bankaccount.railsbank.store') }}");
                 }
                 if(res.keyword == 'clearjunction')
                 {
-                    $('.bankaccount').prop('action','{{ route('user.clearjunction.api.ibancreate') }}');
+                    $('.bankaccount').prop('action',"{{ route('user.clearjunction.api.ibancreate') }}");
                 }
                 if(res.keyword == 'swan')
                 {
-                    $('.bankaccount').prop('action','{{ route('user.bankaccount.swan.store') }}');
+                    $('.bankaccount').prop('action',"{{ route('user.bankaccount.swan.store') }}");
                 }
              });
         })
