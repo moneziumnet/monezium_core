@@ -14,6 +14,7 @@ use App\Models\PlanDetail;
 use GuzzleHttp\Client;
 use App\Http\Controllers\Controller;
 use App\Classes\EthereumRpcService;
+use Illuminate\Support\Facades\DB;
 
 
 class ExchangeMoneyController extends Controller
@@ -216,7 +217,7 @@ class ExchangeMoneyController extends Controller
                     RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
                     $geth = new EthereumRpcService();
                     $tokenContract = $fromWallet->currency->address;
-                    $geth->transferToken($tokenContract, $wallet->wallet_no, $trans_wallet->wallet_no, $transaction_custom_cost*$from_rate);
+                    $geth->transferToken($tokenContract, $fromWallet->wallet_no, $trans_wallet->wallet_no, $transaction_custom_cost*$from_rate);
                 }
             }
             $trans = new Transaction();
