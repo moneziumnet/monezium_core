@@ -26,6 +26,7 @@ use App\Models\MerchantWallet;
 use App\Models\Order;
 use App\Models\Transaction as ModelsTransaction;
 use GuzzleHttp\Client;
+use App\Classes\EthereumRpcService;
 
 use PayPal\{
     Api\Item,
@@ -242,43 +243,12 @@ class MerchantCampaignController extends Controller
 
             $gs = Generalsetting::first();
             if(!$wallet){
-                $wallet =  Wallet::create([
-                    'user_id'     => auth()->id(),
-                    'user_type'   => 1,
-                    'currency_id' => $data->currency_id,
-                    'balance'     => 0,
-                    'wallet_type' => 1,
-                    'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
-                ]);
+                return redirect()->back()->with('error', 'You have no '.$data->currency->code.' current wallet to pay for this.');
 
-                $user = User::findOrFail(auth()->id());
-
-                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
-                if(!$chargefee) {
-                    $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
-                }
-
-                $trans = new ModelsTransaction();
-                $trans->trnx = str_rand();
-                $trans->user_id     = $user->id;
-                $trans->user_type   = 1;
-                $trans->currency_id = defaultCurr();
-                $trans->amount      = $chargefee->data->fixed_charge;
-                $trans_wallet = get_wallet($user->id, defaultCurr());
-                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-                $trans->charge      = 0;
-                $trans->type        = '-';
-                $trans->remark      = 'wallet_create';
-                $trans->details     = trans('Wallet Create');
-                $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
-                $trans->save();
-
-                user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
-                user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
             }
 
             if($wallet->balance < $request->amount) {
-                return redirect(route('user.dashboard'))->with('error','Insufficient balance to your wallet');
+                return redirect()->back()->with('error','Insufficient balance to your wallet');
             }
 
             $wallet->balance -= $request->amount;
@@ -299,6 +269,41 @@ class MerchantCampaignController extends Controller
             $trnx->save();
 
             $rcvWallet = Wallet::where('user_id', $data->user_id)->where('user_type',1)->where('currency_id',$data->currency_id)->where('wallet_type', 1)->first();
+            if(!$rcvWallet){
+                $rcvWallet =  Wallet::create([
+                    'user_id'     => $data->user_id,
+                    'user_type'   => 1,
+                    'currency_id' => $data->currency_id,
+                    'balance'     => 0,
+                    'wallet_type' => 1,
+                    'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
+                ]);
+
+                $campaign_user = User::findOrFail($data->user_id);
+
+                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $campaign_user->bank_plan_id)->where('user_id', $campaign_user->id)->first();
+                if(!$chargefee) {
+                    $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $campaign_user->bank_plan_id)->where('user_id', 0)->first();
+                }
+
+                $trans = new ModelsTransaction();
+                $trans->trnx = str_rand();
+                $trans->user_id     = $campaign_user->id;
+                $trans->user_type   = 1;
+                $trans->currency_id = defaultCurr();
+                $trans->amount      = $chargefee->data->fixed_charge;
+                $trans_wallet = get_wallet($campaign_user->id, defaultCurr());
+                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+                $trans->charge      = 0;
+                $trans->type        = '-';
+                $trans->remark      = 'wallet_create';
+                $trans->details     = trans('Wallet Create');
+                $trans->data        = '{"sender":"'.$campaign_user->name.'", "receiver":"System Account"}';
+                $trans->save();
+
+                user_wallet_decrement($campaign_user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
+                user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
+            }
 
             $rcvWallet->balance += $request->amount;
             $rcvWallet->update();
@@ -320,11 +325,11 @@ class MerchantCampaignController extends Controller
             $newdonation = new CampaignDonation();
             $input = $request->all();
             $input['currency_id'] = $data->currency_id;
+            $input['status'] = 1;
             $newdonation->fill($input)->save();
 
-            $gs = Generalsetting::first();
 
-            return redirect(route('user.dashboard'))->with('message','You have donated for Campaign successfully.');
+            return redirect()->back()->with('message','You have donated for Campaign successfully.');
         }
         elseif($request->payment == 'bank_pay'){
 
@@ -345,27 +350,92 @@ class MerchantCampaignController extends Controller
             $newdonation->fill($input)->save();
 
             if(auth()->user()) {
-                return redirect(route('user.shop.index'))->with('message','You have paid for buy project successfully (Deposit Bank).');
+                return redirect(route('user.shop.index'))->with('message','You have donated for Campaign successfully (Deposit Bank).');
             }
             else {
-                return redirect(url('/'))->with('message','You have paid for buy project successfully (Deposit Bank).');
+                return redirect(url('/'))->with('message','You have donated for Campaign successfully (Deposit Bank).');
             }
             // return 'bank';
         }
         elseif($request->payment == 'crypto') {
+            if(auth()->user()) {
+                if($request->amount > Crypto_Balance(auth()->id(), $request->currency_id)){
+                    return redirect()->back()->with('unsuccess','Insufficient Balance.');
+                }
+                $wallet = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('currency_id',$request->currency_id)->where('wallet_type', 8)->first();
+                $trans_wallet = get_wallet($data->user_id, $request->currency_id, 8);
+                if($wallet->currency->code == 'ETH') {
+                    RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
+                    $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$trans_wallet->wallet_no.'", "value": "0x'.dechex($request->amount*pow(10,18)).'"}';
+                    RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
+                }
+                else if($wallet->currency->code == 'BTC') {
+                    RPC_BTC_Send('sendtoaddress',[$trans_wallet->wallet_no, $request->amount],$wallet->keyword);
+                }
+                else {
+                    RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
+                    $geth = new EthereumRpcService();
+                    $tokenContract = $wallet->currency->address;
+                    $geth->transferToken($tokenContract, $wallet->wallet_no, $trans_wallet->wallet_no, $request->amount);
+                }
+                $trnx              = new ModelsTransaction();
+                $trnx->trnx        = str_rand();
+                $trnx->user_id     = auth()->id();
+                $trnx->user_type   = 1;
+                $trnx->currency_id = $request->currency_id;
+                $trnx->wallet_id   = $wallet->id;
+                $trnx->amount      = $request->amount;
+                $trnx->charge      = 0;
+                $trnx->remark      = 'campaign_payment';
+                $trnx->type        = '-';
+                $trnx->details     = trans('Payment to campaign : '). $data->ref_id;
+                $trnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($data->user_id)->name.'"}';
+                $trnx->save();
 
-            $crytpo_data = new CryptoDeposit();
-            $crytpo_data->currency_id = $request->currency_id;
-            $crytpo_data->amount = $request->amount;
-            $crytpo_data->user_id = $data->user_id;
-            $crytpo_data->address = $request->address;
-            $crytpo_data->save();
+                $rcvTrnx              = new ModelsTransaction();
+                $rcvTrnx->trnx        = $trnx->trnx;
+                $rcvTrnx->user_id     = $data->user_id;
+                $rcvTrnx->user_type   = 1;
+                $rcvTrnx->currency_id = $request->currency_id;
+                $rcvTrnx->wallet_id   = $trans_wallet->id;
+                $rcvTrnx->amount      = $request->amount;
+                $rcvTrnx->charge      = 0;
+                $rcvTrnx->remark      = 'campaign_payment';
+                $rcvTrnx->type        = '+';
+                $rcvTrnx->details     = trans('Receive Campaign Payment : '). $data->ref_id;
+                $rcvTrnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($data->user_id)->name.'"}';
+                $rcvTrnx->save();
+
+                $currency = Currency::findOrFail($request->currency_id);
+
+                $newdonation = new CampaignDonation();
+                $newdonation->campaign_id = $data->id;
+                $newdonation->user_name = auth()->user()->name;
+                $newdonation ->currency_id = $data->currency_id;
+                $newdonation->amount = $request->amount/getRate($currency);
+                $newdonation->payment = 'crypto';
+                $newdonation->description = $request->description;
+                $newdonation->status = 1;
+                $newdonation->save();
+            }
+            else{
+                $currency = Currency::findOrFail($request->currency_id);
+                $newdonation = new CampaignDonation();
+                $newdonation->campaign_id = $data->id;
+                $newdonation->user_name = $request->user_name;
+                $newdonation ->currency_id = $data->currency_id;
+                $newdonation->amount = $request->amount/getRate($currency);
+                $newdonation->payment = 'crypto';
+                $newdonation->description = $request->description;
+                $newdonation->status = 0;
+                $newdonation->save();
+            }
 
             if(auth()->user()) {
-                return redirect(route('user.shop.index'))->with('message','You have paid for buy project successfully (Crypto).');
+                return redirect(route('user.shop.index'))->with('message','You have donated for Campaign successfully (Crypto).');
             }
             else {
-                return redirect(url('/'))->with('message','You have paid for buy project successfully (Crypto).');
+                return redirect(url('/'))->with('message','You have donated for Campaign successfully (Crypto).');
             }
         }
     }
@@ -380,6 +450,7 @@ class MerchantCampaignController extends Controller
     public function crypto_pay(Request $request, $id) {
         $data['campaign'] = Campaign::where('id', $id)->first();
         $data['total_amount'] = $request->amount;
+        $data['description'] = $request->description;
         $pre_currency = Currency::findOrFail($data['campaign']->currency_id);
         $select_currency = Currency::findOrFail($request->link_pay_submit);
         $code = $select_currency->code;
@@ -401,6 +472,8 @@ class MerchantCampaignController extends Controller
     public function crypto_link_pay(Request $request, $id) {
         $data['campaign'] = Campaign::where('id', $id)->first();
         $data['total_amount'] = $request->amount ;
+        $data['description'] = $request->description;
+        $data['user_name'] = $request->user_name;
         $pre_currency = Currency::findOrFail($data['campaign']->currency_id);
         $select_currency = Currency::findOrFail($request->link_pay_submit);
         $code = $select_currency->code;

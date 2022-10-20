@@ -71,6 +71,7 @@
                         <input type="hidden" name="campaign_id" value="{{$campaign->id}}">
                         <input type="hidden" name="payment" value="crypto">
                         <input type="hidden" name="currency_id" value="{{$wallet->currency->id}}">
+                        <input type="hidden" name="description" value="{{$description}}">
 
                         <div class="form-footer">
                             <button type="submit" class="btn btn-primary w-100">{{__('Done')}}</button>
