@@ -157,17 +157,17 @@ class WithdrawCryptoController extends Controller
         }
         if($fromWallet->currency->code == 'ETH') {
             RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-            $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$request->sender_address.'", "value": "0x'.dechex(($request->amount + $messagefee*$crypto_rate)*pow(10,18)).'"}';
+            $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$request->sender_address.'", "value": "0x'.dechex($request->amount*pow(10,18)).'"}';
             RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
         }
         else if($fromWallet->currency->code == 'BTC') {
-            RPC_BTC_Send('sendtoaddress',[$request->sender_address, ($request->amount + $messagefee*$crypto_rate)],$fromWallet->keyword);
+            RPC_BTC_Send('sendtoaddress',[$request->sender_address, $request->amount],$fromWallet->keyword);
         }
         else {
             RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
             $geth = new EthereumRpcService();
             $tokenContract = $fromWallet->currency->address;
-            $geth->transferToken($tokenContract, $fromWallet->wallet_no, $request->sender_address, ($request->amount + $messagefee*$crypto_rate));
+            $geth->transferToken($tokenContract, $fromWallet->wallet_no, $request->sender_address, $request->amount);
         }
 
         $withdraw = new CryptoWithdraw();
