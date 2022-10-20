@@ -310,7 +310,7 @@ class PaytmController extends Controller
             $responseParamList = array();
             $JsonData =json_encode($requestParamList);
             $postData = 'JsonData='.urlencode($JsonData);
-            $ch = curl_init($apiURL);
+            $ch = curl_init($refundApiURL);
             curl_setopt ($ch, CURLOPT_SSL_VERIFYHOST, 0);
             curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, 0);
             curl_setopt($ch, CURLOPT_URL, $refundApiURL);
