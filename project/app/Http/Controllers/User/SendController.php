@@ -128,12 +128,12 @@ class SendController extends Controller
             return redirect()->back()->with('unsuccess','Request Amount should be greater than this!');
         }
         if ($wallet->currency->type == 2) {
-            if($request->amount > Crypto_Balance($user->id, $currency->id)){
+            if($request->amount > Crypto_Balance($user->id, $currency_id)){
                 return redirect()->back()->with('unsuccess','Insufficient Balance.');
             }
         }
         else {
-            if($request->amount > user_wallet_balance($user->id, $currency->id, $wallet->wallet_type)){
+            if($request->amount > user_wallet_balance($user->id, $currency_id, $wallet->wallet_type)){
                 return redirect()->back()->with('unsuccess','Insufficient Balance.');
             }
         }
