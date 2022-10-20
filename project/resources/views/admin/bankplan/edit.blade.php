@@ -143,7 +143,7 @@
                 console.log(url);
                 $.get(url,function (res) {
                   if(res == 'empty'){
-                    $('.list-group').html('<p>@lang('No details found!')</p>')
+                    $('.list-group').html("<p>@lang('No details found!')</p>")
                   }else{
                     $('.list-group').html(res)
                   }

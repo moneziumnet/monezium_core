@@ -279,7 +279,7 @@
             var url = "{{url('admin/user/accounts/fee')}}"+'/'+id
             $.get(url,function (res) {
                 if(res == 'empty'){
-                $('.list-group').html('<p>@lang('No details found!')</p>')
+                $('.list-group').html("<p>@lang('No details found!')</p>")
                 }else{
                 $('.list-group').html(res)
                 }
@@ -295,7 +295,7 @@
         var url = "{{url('admin/user/accounts/deposit/form')}}"
             $.get(url,function (res) {
                 if(res == 'empty'){
-                $('.list-group').html('<p>@lang('No details found!')</p>')
+                $('.list-group').html("<p>@lang('No details found!')</p>")
                 }else{
                 $('.list-group').html(res)
                 }
@@ -310,7 +310,7 @@
         console.log(url)
             $.get(url,function (res) {
                 if(res == 'empty'){
-                $('.list-group').html('<p>@lang('No details found!')</p>')
+                $('.list-group').html("<p>@lang('No details found!')</p>")
                 }else{
                 $('.list-group').html(res)
                 }

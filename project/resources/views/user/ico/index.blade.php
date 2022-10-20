@@ -120,7 +120,7 @@
             var url = "{{url('user/ico/details/')}}"+'/'+$(this).data('id')
             $.get(url,function (res) {
                 if(res == 'empty'){
-                    $('.ico-token-details').html('<p>@lang('No details found!')</p>')
+                    $('.ico-token-details').html("<p>@lang('No details found!')</p>")
                 }else{
                     $('.ico-token-details').html(res)
                 }
