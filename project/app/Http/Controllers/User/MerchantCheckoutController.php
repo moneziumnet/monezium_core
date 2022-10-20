@@ -133,6 +133,7 @@ class MerchantCheckoutController extends Controller
 
         $data = Transaction::findOrFail($id);
         $tran_status = json_decode($data->data,true);
+        
         if($tran_status['status'] == 'Completed') {
             return redirect()->route('user.merchant.checkout.transactionhistory')->with('warning','Merchant Checkout transaction status already is completed');
         }
@@ -142,7 +143,9 @@ class MerchantCheckoutController extends Controller
         else {
             $tran_status['status'] = $status;
             if ($status == 'Completed') {
-                $cryptowallet = MerchantWallet::where('merchant_id', $data->user_id)->where('shop_id', $tran_status['shop'])->where('currency_id', $data->currency_id)->first();
+                $shop = MerchantShop::where('name',$tran_status['shop'])->first();
+                // dd($shop);
+                $cryptowallet = MerchantWallet::where('merchant_id', $data->user_id)->where('shop_id', $shop->id)->where('currency_id', $data->currency_id)->first();
                 $cryptowallet->balance += $data->amount;
                 $cryptowallet->save();
             }
