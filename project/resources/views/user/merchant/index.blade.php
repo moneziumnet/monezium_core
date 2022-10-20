@@ -73,8 +73,8 @@
                                 </div>
                                 <div class="card-body">
                                 <div class="h3 m-0 text-uppercase"> {{__($item->shop->name)}}</div>
-                                <div class="h4 m-0 text-uppercase"> {{ $item->wallet_no }}</div>
-                                <div class="text-muted">{{ amount($item->balance,$item->currency->type,2) }}  {{$item->currency->code}}</div>
+                                <div class="h4 m-0"> {{ $item->wallet_no }}</div>
+                                <div class="text-muted">{{Crypto_Merchant_Balance($item->merchant_id, $item->currency_id, $item->shop_id) }}  {{$item->currency->code}}</div>
                                 </div>
                             </div>
                         </div>
