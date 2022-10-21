@@ -69,7 +69,11 @@ class MerchantCampaignController extends Controller
     public function index(){
         $data['campaigns'] = Campaign::where('user_id',auth()->id())->get();
         $data['categories'] = CampaignCategory::where('user_id', auth()->id())->get();
-        $data['currencies'] = Currency::whereStatus(1)->get();
+        if (isEnabledUserModule('Crypto'))
+            $data['currencies'] = Currency::whereStatus(1)->get();
+        else
+        $data['currencies'] = Currency::whereStatus(1)->where('type', 1)->get();
+
         return view('user.merchant.campaign.index', $data);
     }
 
@@ -100,7 +104,10 @@ class MerchantCampaignController extends Controller
     public function edit($id) {
         $data['data'] = Campaign::findOrFail($id);
         $data['categories'] = CampaignCategory::where('user_id', auth()->id())->get();
-        $data['currencies'] = Currency::whereStatus(1)->get();
+        if (isEnabledUserModule('Crypto'))
+            $data['currencies'] = Currency::whereStatus(1)->get();
+        else
+        $data['currencies'] = Currency::whereStatus(1)->where('type', 1)->get();
         return view('user.merchant.campaign.edit', $data);
     }
 

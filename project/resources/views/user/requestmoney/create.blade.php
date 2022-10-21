@@ -46,7 +46,16 @@
                           <label class="form-label required">{{__('Select Currency')}}</label>
                           <select name="wallet_id" id="wallet_id" class="form-control" required>
                             <option value="">Select</option>
-                            @foreach(DB::table('currencies')->get() as $currency)
+                            @php
+                            $modules = explode(" , ", auth()->user()->section);
+                            if(in_array('Crypto',$modules)){
+                              $currencies = DB::table('currencies')->get();
+                            }
+                            else{
+                                $currencies = DB::table('currencies')->where('type', 1)->get();
+                            }
+                            @endphp
+                            @foreach($currencies as $currency)
                             <option value="{{$currency->id}}">{{$currency->code}}</option>
                             @endforeach
                           </select>

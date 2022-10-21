@@ -40,6 +40,8 @@ class MerchantProductController extends Controller
         $data['shops'] = MerchantShop::where('merchant_id', auth()->id())->whereStatus(1)->get();
         $data['categories'] = ProductCategory::where('user_id', auth()->id())->get();
         $data['currencies'] = Currency::whereStatus(1)->get();
+        if (!isEnabledUserModule('Crypto'))
+            $data['currencies'] = Currency::whereStatus(1)->where('type', 1)->get();
         return view('user.merchant.product.index', $data);
     }
 
@@ -75,6 +77,8 @@ class MerchantProductController extends Controller
         $data['shops'] = MerchantShop::where('merchant_id', auth()->id())->whereStatus(1)->get();
         $data['categories'] = ProductCategory::where('user_id', auth()->id())->get();
         $data['currencies'] = Currency::whereStatus(1)->get();
+        if (!isEnabledUserModule('Crypto'))
+            $data['currencies'] = Currency::whereStatus(1)->where('type', 1)->get();
         return view('user.merchant.product.edit', $data);
     }
 

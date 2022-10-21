@@ -29,7 +29,10 @@ class MerchantCheckoutController extends Controller
     public function index(){
         $data['checkouts'] = MerchantCheckout::where('user_id',auth()->id())->get();
         $data['shops'] = MerchantShop::where('merchant_id', auth()->id())->whereStatus(1)->get();
-        $data['currencylist'] = Currency::whereStatus(1)->get();
+        if (isEnabledUserModule('Crypto'))
+            $data['currencylist'] = Currency::whereStatus(1)->get();
+        else
+        $data['currencylist'] = Currency::whereStatus(1)->where('type', 1)->get();
         return view('user.merchant.checkout.index', $data);
     }
 
@@ -100,7 +103,10 @@ class MerchantCheckoutController extends Controller
     public function edit($id) {
         $data['data'] = MerchantCheckout::findOrFail($id);
         $data['shops'] = MerchantShop::where('merchant_id', auth()->id())->get();
-        $data['currencylist'] = Currency::whereStatus(1)->get();
+        if (isEnabledUserModule('Crypto'))
+            $data['currencylist'] = Currency::whereStatus(1)->get();
+        else
+        $data['currencylist'] = Currency::whereStatus(1)->where('type', 1)->get();
         return view('user.merchant.checkout.edit', $data);
     }
 

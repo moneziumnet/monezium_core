@@ -38,6 +38,17 @@ if(!function_exists('getModule')){
   }
 }
 
+if(!function_exists('getUserModule')){
+  function isEnabledUserModule($module)
+  {
+      $sections = explode(" , ", auth()->user()->section);
+      if (in_array($module, $sections)){
+        return true;
+      }
+      return false;
+  }
+}
+
   if(!function_exists('showPrice')){
 
       function showPrice($price,$currency){

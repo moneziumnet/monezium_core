@@ -170,6 +170,7 @@
         @endif
     </div>
     <hr>
+    @if (isEnabledUserModule('Crypto'))
     <div class="container-xl">
         <div class="page-header d-print-none">
           <div class="row align-items-center">
@@ -250,6 +251,8 @@
         @endif
 
     </div>
+    @endif
+
     <hr>
     <div class="container-xl">
         <div class="page-header d-print-none">

@@ -1,10 +1,6 @@
-@php
-   $modules = explode(" , ", auth()->user()->section);
- @endphp
-
 <div class="card-header tab-card-header mb-3">
     <ul class="nav nav-pills card-header-tabs" id="pills-tab" role="tablist">
-        @if (in_array('Merchant Shop',$modules))
+        @if (isEnabledUserModule('Merchant Shop'))
         <li class="nav-item">
             <a class="nav-link 
                     {{ menu('user.merchant.shop.index') }}
@@ -17,7 +13,7 @@
             </a>
         </li>
         @endif
-        @if (in_array('Merchant Product',$modules))
+        @if (isEnabledUserModule('Merchant Product'))
         <li class="nav-item">
             <a class="nav-link 
                     {{ menu('user.merchant.product.index') }}
@@ -28,8 +24,6 @@
                 {{ __('Merchant Product') }}
             </a>
         </li>
-        @endif
-        @if (in_array('Merchant Product',$modules))
         <li class="nav-item">
             <a class="nav-link 
                     {{ menu('user.merchant.product.order') }}
@@ -39,7 +33,7 @@
             </a>
         </li>
         @endif
-        @if (in_array('Merchant Checkout',$modules))
+        @if (isEnabledUserModule('Merchant Checkout'))
         <li class="nav-item">
             <a class="nav-link 
                     {{ menu('user.merchant.checkout.index') }}
@@ -50,7 +44,7 @@
             </a>
         </li>
         @endif
-        @if (in_array('Merchant Transaction',$modules))
+        @if (isEnabledUserModule('Merchant Transaction'))
         <li class="nav-item">
             <a class="nav-link {{ menu('user.merchant.checkout.transactionhistory') }}"
                 href="{{ route('user.merchant.checkout.transactionhistory') }}" role="button">
@@ -58,7 +52,7 @@
             </a>
         </li>
         @endif
-        @if (in_array('Merchant Campaign',$modules))
+        @if (isEnabledUserModule('Merchant Campaign'))
         <li class="nav-item">
             <a class="nav-link 
                 {{ menu('user.merchant.campaign.index') }}
