@@ -165,10 +165,10 @@ class CampaignController extends Controller
 
         }
         if(explode("-",$donation->payment)[0] == 'bank_pay') {
-            return redirect()->back()->with(array('warning' => 'You can not approve this donation via Bank, This will be approved automatically after incoming via Bank.'));
+            return response()->json(array('errors' => [ 0 => __('You can not approve this donation via Bank, This will be approved automatically after incoming via Bank.') ]));
         }
         else if($donation->payment == 'gateway') {
-            return redirect()->back()->with(array('warning' => 'You can not approve this donation via Payment Gateway, This will be approved automatically after incoming via Payment Gateway.'));
+            return response()->json(array('errors' => [ 0 => __('You can not approve this donation via Payment Gateway, This will be approved automatically after incoming via Payment Gateway.') ]));
         }
         else if($donation->payment == 'crypto') {
             $wallet = get_wallet($data->user_id, $donation->currency_id, 8);
