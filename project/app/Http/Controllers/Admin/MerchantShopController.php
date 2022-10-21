@@ -85,11 +85,11 @@ class MerchantShopController extends Controller
                 if($value->code == 'ETH') {
                     $eth_wallet = MerchantWallet::where('merchant_id', $data->merchant_id)->where('shop_id', $data->id)->where('currency_id', $value->id)->first();
                     if (!$eth_wallet) {
-                        $address = RPC_ETH('personal_newAccount',['123123']);
+                        $keyword = str_rand(6);
+                        $address = RPC_ETH('personal_newAccount',[$keyword]);
                         if ($address == 'error') {
                             continue;
                         }
-                        $keyword = '123123';
                     }
                     else {
                         continue;
@@ -107,11 +107,11 @@ class MerchantShopController extends Controller
                     $eth_currency = Currency::where('code', 'ETH')->first();
                     $eth_wallet = MerchantWallet::where('merchant_id', $data->merchant_id)->where('shop_id', $data->id)->where('currency_id', $eth_currency->id)->first();
                     if (!$eth_wallet) {
-                        $address = RPC_ETH('personal_newAccount',['123123']);
+                        $keyword = str_rand(6);
+                        $address = RPC_ETH('personal_newAccount',[$keyword]);
                         if ($address == 'error') {
                             continue;
                         }
-                        $keyword = '123123';
                         DB::table('merchant_wallets')->insert([
                             'merchant_id' => $data->merchant_id,
                             'currency_id' => $eth_currency->id,

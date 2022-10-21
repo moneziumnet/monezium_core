@@ -45,7 +45,7 @@
             </div>
             </div>
         </div>
-
+        @if (isEnabledUserModule('Crypto'))
         <div class="container-xl">
             <div class="page-header d-print-none">
                 <div class="row align-items-center">
@@ -87,6 +87,7 @@
             </div>
             </div>
         </div>
+        @endif
 </div>
 
 <div class="row container-xl" style="margin-left: auto; margin-right:auto;">

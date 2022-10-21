@@ -375,12 +375,11 @@ if(!function_exists('getUserModule')){
             if ($currency->type == 2) {
                 $user = User::findOrFail($auth_id);
                 if($currency->code == 'ETH') {
-
-                    $address = RPC_ETH('personal_newAccount',['123123']);
+                  $keyword = str_rand(6);
+                    $address = RPC_ETH('personal_newAccount',[$keyword]);
                     if ($address == 'error') {
                         return false;
                     }
-                    $keyword = '123123';
                 }
                 elseif ($currency->code == 'BTC') {
                     $key = str_rand();
@@ -394,11 +393,11 @@ if(!function_exists('getUserModule')){
                     $eth_currency = Currency::where('code', 'ETH')->first();
                     $eth_wallet = Wallet::where('user_id', $user->id)->where('wallet_type', $wallet_type)->where('currency_id', $eth_currency->id)->first();
                     if (!$eth_wallet) {
-                        $address = RPC_ETH('personal_newAccount',['123123']);
+                      $keyword = str_rand(6);
+                        $address = RPC_ETH('personal_newAccount',[$keyword]);
                         if ($address == 'error') {
                             return false;
                         }
-                        $keyword = '123123';
                         $user_wallet = new Wallet();
                         $user_wallet->user_id = $auth_id;
                         $user_wallet->user_type = 1;
@@ -503,12 +502,11 @@ if(!function_exists('getUserModule')){
       {
           if ($currency->type == 2) {
               if($currency->code == 'ETH') {
-
-                  $address = RPC_ETH('personal_newAccount',['123123']);
+                $keyword = str_rand(6);
+                  $address = RPC_ETH('personal_newAccount',[$keyword]);
                   if ($address == 'error') {
                       return false;
                   }
-                  $keyword = '123123';
               }
               elseif ($currency->code == 'BTC') {
                   $key = str_rand();
@@ -522,11 +520,11 @@ if(!function_exists('getUserModule')){
                 $eth_currency = Currency::where('code', 'ETH')->first();
                 $eth_wallet = MerchantWallet::where('merchant_id', $user->id)->where('shop_id', $shop_id)->where('currency_id', $eth_currency->id)->first();
                 if (!$eth_wallet) {
-                    $address = RPC_ETH('personal_newAccount',['123123']);
+                  $keyword = str_rand(6);
+                    $address = RPC_ETH('personal_newAccount',[$keyword]);
                     if ($address == 'error') {
                         return false;
                     }
-                    $keyword = '123123';
                     DB::table('merchant_wallets')->insert([
                         'merchant_id' => $auth_id,
                         'currency_id' => $eth_currency->id,

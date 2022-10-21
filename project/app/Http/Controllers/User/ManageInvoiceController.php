@@ -56,7 +56,9 @@ class ManageInvoiceController extends Controller
      */
     public function create()
     {
-        $data['currencies'] = Currency::where('status', 1)->get();
+        $data['currencies'] = Currency::whereStatus(1)->get();
+        if (!isEnabledUserModule('Crypto'))
+            $data['currencies'] = Currency::whereStatus(1)->where('type', 1)->get();
         $data['beneficiaries'] = Beneficiary::where('user_id', auth()->id())->get();
         $data['contracts'] = Contract::where('user_id', auth()->id())->where('status', 1)->get();
         $data['products'] = Product::where('user_id', auth()->id())->where('status', 1)->get();
@@ -184,7 +186,9 @@ class ManageInvoiceController extends Controller
         // if($invoice->status == 1){
         //     return back()->with('error','Sorry! can\'t edit published invoice.');
         // }
-        $data['currencies'] = Currency::where('status', 1)->get();
+        $data['currencies'] = Currency::whereStatus(1)->get();
+        if (!isEnabledUserModule('Crypto'))
+            $data['currencies'] = Currency::whereStatus(1)->where('type', 1)->get();
         $data['beneficiaries'] = Beneficiary::where('user_id', auth()->id())->get();
         $data['contracts'] = Contract::where('user_id', auth()->id())->where('status', 1)->get();
         $data['products'] = Product::where('user_id', auth()->id())->where('status', 1)->get();
@@ -199,7 +203,9 @@ class ManageInvoiceController extends Controller
         // if($invoice->status == 1){
         //     return back()->with('error','Sorry! can\'t edit published invoice.');
         // }
-        $data['currencies'] = Currency::where('status', 1)->get();
+        $data['currencies'] = Currency::whereStatus(1)->get();
+        if (!isEnabledUserModule('Crypto'))
+            $data['currencies'] = Currency::whereStatus(1)->where('type', 1)->get();
         $data['beneficiaries'] = Beneficiary::where('user_id', auth()->id())->get();
         return view('user.invoice.incoming_edit',$data);
     }

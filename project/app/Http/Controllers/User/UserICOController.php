@@ -47,7 +47,9 @@ class UserICOController extends Controller
     {
         $ico_token = IcoToken::findOrFail($id);
         $wallets = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('wallet_type',1)->where('balance', '>', 0)->get();
-        $currencies = Currency::where('status',1)->get();
+        $currencies = Currency::whereStatus(1)->get();
+        if (!isEnabledUserModule('Crypto'))
+            $currencies = Currency::whereStatus(1)->where('type', 1)->get();        
         $user = auth()->user();
         return view('user.ico.buy', compact('wallets','currencies', 'user', 'ico_token'));
     }

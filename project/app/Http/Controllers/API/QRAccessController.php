@@ -24,7 +24,10 @@ class QRAccessController extends Controller
 {
     public function index(Request $request) {
         $site_key = $request->site_key ?? Session::get('site_key');
-        $currencylist = Currency::where('status', 1)->get();
+        $currencylist = Currency::whereStatus(1)->get();
+        if (!isEnabledUserModule('Crypto'))
+            $currencylist = Currency::whereStatus(1)->where('type', 1)->get();
+
         $user_api = UserApiCred::where('access_key', $site_key)->first();
         if($user_api) {
             Session::put('site_key', $site_key);

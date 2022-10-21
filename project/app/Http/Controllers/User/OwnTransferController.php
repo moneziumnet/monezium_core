@@ -54,11 +54,11 @@ class OwnTransferController extends Controller
         $toWallet = Wallet::where('currency_id',$fromWallet->currency_id)->where('user_id',auth()->id())->where('wallet_type',$request->wallet_type)->where('user_type',1)->first();
         $currency =  Currency::findOrFail($fromWallet->currency_id);
         if ($currency->type == 2) {
-            $address = RPC_ETH('personal_newAccount',['123123']);
+            $keyword = str_rand(6);
+            $address = RPC_ETH('personal_newAccount',[$keyword]);
             if ($address == 'error') {
                 return back()->with('error','You can not create this wallet because there is some issue in crypto node.');
             }
-            $keyword = '123123';
         }
         else {
             $address = $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
