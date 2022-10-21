@@ -251,7 +251,7 @@ class UserController extends Controller
                         $geth = new EthereumRpcService();
                         $tokenContract = $currency->address;
                         $balance = $geth->getTokenBalance($tokenContract, $wallets[0]->wallet_no);
-                        $wallets[0]->balance = $balance ?? amount($wallets[0]->balance,$currency->type,2);
+                        $wallets[0]->balance = $balance != 'error' ?? amount($wallets[0]->balance,$currency->type,2);
                     }
                 }
             }

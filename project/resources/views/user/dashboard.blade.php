@@ -233,14 +233,14 @@
                             @if ($item->currency->code == 'BTC')
                                 <div class="text-muted">{{ RPC_BTC_Balance('getbalance',$item->keyword) == 'error' ? amount($item->balance,$item->currency->type,2) : RPC_BTC_Balance('getbalance', $item->keyword)}}  {{$item->currency->code}}</div>
                             @elseif($item->currency->code == 'ETH')
-                                <div class="text-muted">{{ hexdec(RPC_ETH('eth_getBalance',[$item->wallet_no, "latest"]))/pow(10,18) == 'error' ? amount($item->balance,$item->currency->type,2) : hexdec(RPC_ETH('eth_getBalance',[$item->wallet_no, "latest"]))/pow(10,18) }}  {{$item->currency->code}}</div>
+                                <div class="text-muted">{{ RPC_ETH('eth_getBalance',[$item->wallet_no, "latest"]) == 'error' ? amount($item->balance,$item->currency->type,2) : hexdec(RPC_ETH('eth_getBalance',[$item->wallet_no, "latest"]))/pow(10,18) }}  {{$item->currency->code}}</div>
                             @else
                                 @php
                                     $geth = new App\Classes\EthereumRpcService();
                                     $tokenContract = $item->currency->address;
                                     $balance = $geth->getTokenBalance($tokenContract, $item->wallet_no);
                                 @endphp
-                                <div class="text-muted">{{ $balance ?? amount($item->balance,$item->currency->type,2) }}  {{$item->currency->code}}</div>
+                                <div class="text-muted">{{ $balance == 'error'? amount($item->balance,$item->currency->type,2):$balance }}  {{$item->currency->code}}</div>
                             @endif
                         </div>
                         </div>
