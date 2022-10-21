@@ -148,7 +148,7 @@ class WithdrawController extends Controller
             $trans->user_id     = $user->referral_id;
             $trans->user_type   = 1;
             $trans->currency_id = $request->currency_id;
-            
+
             $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
 
             $trans->amount      = $transaction_custom_cost;
@@ -174,7 +174,6 @@ class WithdrawController extends Controller
 
 
 
-        $total_amount = $newwithdrawal->amount + $newwithdrawal->fee;
 
         $trans = new Transaction();
         $trans->trnx = $txnid;

@@ -74,7 +74,7 @@
                       </select>
                     </div>
                 </div>
-                <div class="h1 mb-0 mt-2">{{ showprice($userBalance->total_amount,$currency) }}</div>
+                <div class="h1 mb-0 mt-2">{{ showprice($userBalance,$currency) }}</div>
               </div>
             </div>
           </div>
