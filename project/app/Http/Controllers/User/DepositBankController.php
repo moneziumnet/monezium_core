@@ -125,7 +125,7 @@ class DepositBankController extends Controller
         $deposit['deposit_number'] = $request->deposit_no;//Str::random(12);
         $deposit['user_id'] = auth()->id();
         $deposit['currency_id'] = $request->currency_id;
-        $deposit['amount'] = $amountToAdd;
+        $deposit['amount'] = $request->amount;
         $deposit['method'] = $request->method;
         $deposit['sub_bank_id'] = $request->bank;
         $deposit['txnid'] = $request->txnid;

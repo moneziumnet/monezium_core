@@ -79,7 +79,7 @@
                                           {{$data->iban ?? ''}}
                                         </td>
                                         <td data-label="{{ __('Amount') }}" id="li_amount">
-                                          {{ showprice($deposit->amount,$deposit->currency) }}
+                                            {{$deposit->amount}}{{$deposit->currency->symbol}}
                                         </td>
 
                                         <td data-label="{{ __('Status') }}">
@@ -92,12 +92,12 @@
                                           @endif
                                         </td>
                                         <td data-label="@lang('Details')" class="text-end">
-                                          <button class="btn btn-primary btn-sm details" 
+                                          <button class="btn btn-primary btn-sm details"
                                             data-data="{{json_encode($data ?? '')}}"
                                             data-hasgateway = "{{json_encode($subbank->hasGateway())}}"
-                                            data-subbank="{{json_encode($subbank ?? '')}}" 
-                                            data-deposit="{{json_encode($deposit)}}" 
-                                            data-amount="{{showprice($deposit->amount,$deposit->currency)}}"
+                                            data-subbank="{{json_encode($subbank ?? '')}}"
+                                            data-deposit="{{json_encode($deposit)}}"
+                                            data-amount="{{$deposit->amount}}{{$deposit->currency->symbol}}"
                                           >@lang('Details')</button>
                                         </td>
                                     </tr>

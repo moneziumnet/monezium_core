@@ -50,7 +50,7 @@ class DepositBankController extends Controller
                 return $data->email;
             })
             ->editColumn('amount', function(DepositBank $data) {
-                return $data->currency->symbol.round($data->amount*getRate($data->currency));
+                return $data->currency->symbol.round($data->amount);
             })
             ->editColumn('status', function(DepositBank $data) {
                 if($data->status == 'pending') {
@@ -130,7 +130,8 @@ class DepositBankController extends Controller
         }
 
         $user = User::findOrFail($data->user_id);
-        $amount = $data->amount * getRate($data->currency);
+        $rate =  getRate($data->currency);
+        $amount = $data->amount / $rate;
         $transaction_global_cost = 0;
         $transaction_global_fee = check_global_transaction_fee($amount, $user, 'deposit');
         if($transaction_global_fee)
@@ -149,12 +150,12 @@ class DepositBankController extends Controller
             }
             $remark = 'Deposit_create_supervisor_fee';
             if (check_user_type_by_id(4, $user->referral_id)) {
-                user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost, 6);
+                user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost*$rate, 6);
                 $trans_wallet = get_wallet($user->referral_id, $data->currency_id, 6);
             }
             elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
                 $remark = 'Deposit_create_manager_fee';
-                user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost, 10);
+                user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost*$rate, 10);
                 $trans_wallet = get_wallet($user->referral_id, $data->currency_id, 10);
             }
             $referral_user = User::findOrFail($user->referral_id);
@@ -164,7 +165,7 @@ class DepositBankController extends Controller
             $trans->user_id     = $user->referral_id;
             $trans->user_type   = 1;
             $trans->currency_id = $data->currency_id;
-            $trans->amount      = $transaction_custom_cost;
+            $trans->amount      = $transaction_custom_cost*$rate;
 
             $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
 
@@ -178,8 +179,8 @@ class DepositBankController extends Controller
         $final_chargefee = $transaction_global_cost + $transaction_custom_cost;
         $final_amount = amount($amount - $final_chargefee, $data->currency->type );
 
-        user_wallet_increment($user->id, $data->currency_id, $final_amount, 1);
-        user_wallet_increment(0, $data->currency_id, $transaction_global_cost, 9);
+        user_wallet_increment($user->id, $data->currency_id, $final_amount*$rate, 1);
+        user_wallet_increment(0, $data->currency_id, $transaction_global_cost*$rate, 9);
 
         $trans_wallet = get_wallet($user->id, $data->currency_id, 1);
 
@@ -188,8 +189,8 @@ class DepositBankController extends Controller
         $trans->user_id     = $user->id;
         $trans->user_type   = 1;
         $trans->currency_id = $data->currency_id;
-        $trans->amount      = $amount;
-        $trans->charge      = $final_chargefee;
+        $trans->amount      = $data->amount;
+        $trans->charge      = $final_chargefee*$rate;
         $trans->type        = '+';
 
         $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
@@ -203,7 +204,7 @@ class DepositBankController extends Controller
         $campaign = CampaignDonation::where('payment', 'bank_pay-'.$data->deposit_number)->first();
 
         if ($campaign) {
-            $campaign->amount = $final_amount;
+            $campaign->amount = $final_amount*$rate;
             $campaign->status = 1;
             $campaign->update();
         }
