@@ -187,7 +187,7 @@ class CampaignController extends Controller
             $rcvTrnx->data        = '{"sender":"'.$donation->user_name.'", "receiver":"'.User::findOrFail($data->user_id)->name.'"}';
             $rcvTrnx->save();
             $donation->amount = $donation->amount * getRate($wallet->currency);
-            $donation->currency = $data->currency_id;
+            $donation->currency_id = $data->currency_id;
         }
         $totalamount = CampaignDonation::where('campaign_id', $donation->campaign_id)->whereStatus(1)->sum('amount');
         if($totalamount >= $donation->campaign->goal) {
