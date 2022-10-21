@@ -79,13 +79,17 @@ class EthereumRpcService
             'Content-Type' => 'application/json',
         ];
 
-        $response = $client->request('POST', $link, ["headers" => $headers, "body" => json_encode($body)]);
-        $res = json_decode($response->getBody());
+        try {
+            $response = $client->request('POST', $link, ["headers" => $headers, "body" => json_encode($body)]);
+            $res = json_decode($response->getBody());
 
-        if (isset($res->error)) {
-            throw new EthereumException(sprintf('Ethereum client error: %s', $res->error->message));
+        } catch (\Throwable $th) {
+                return 'error';
         }
-
+        // if (isset($res->error)) {
+        //     return "error";
+        //     throw new EthereumException(sprintf('Ethereum client error: %s', $res->error->message));
+        // }
         if ($method == 'eth_sendTransaction') {
             do {
                 sleep(1);
