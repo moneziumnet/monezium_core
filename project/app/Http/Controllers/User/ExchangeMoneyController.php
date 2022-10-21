@@ -217,7 +217,10 @@ class ExchangeMoneyController extends Controller
                     RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
                     $geth = new EthereumRpcService();
                     $tokenContract = $fromWallet->currency->address;
-                    $geth->transferToken($tokenContract, $fromWallet->wallet_no, $trans_wallet->wallet_no, $transaction_custom_cost*$from_rate);
+                    $result = $geth->transferToken($tokenContract, $fromWallet->wallet_no, $trans_wallet->wallet_no, $transaction_custom_cost*$from_rate);
+                    if ($result == 'eth_balance_error') {
+                        return redirect()->back()->with(array('warning' => 'Eth balance is not available to transfer token'));
+                    }
                 }
             }
             $trans = new Transaction();
@@ -363,7 +366,10 @@ class ExchangeMoneyController extends Controller
             RPC_ETH('personal_unlockAccount',[$fromsystemwallet->wallet_no, $fromsystemwallet->keyword ?? '', 30]);
             $geth = new EthereumRpcService();
             $tokenContract = $toWallet->currency->address;
-            $geth->transferToken($tokenContract, $fromsystemwallet->wallet_no, $toWallet->wallet_no, $finalAmount);
+            $result = $geth->transferToken($tokenContract, $fromsystemwallet->wallet_no, $toWallet->wallet_no, $finalAmount);
+            if ($result == 'eth_balance_error') {
+                return redirect()->back()->with(array('warning' => 'Eth balance is not available to transfer token'));
+            }
         }
         if($fromWallet->currency->code == 'BTC' && $toWallet->currency->code != 'ETH' && $toWallet->currency->code != 'BTC' && $toWallet->currency->type == 2) {
             $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
@@ -379,7 +385,10 @@ class ExchangeMoneyController extends Controller
             RPC_ETH('personal_unlockAccount',[$fromsystemwallet->wallet_no, $fromsystemwallet->keyword ?? '', 30]);
             $geth = new EthereumRpcService();
             $tokenContract = $toWallet->currency->address;
-            $geth->transferToken($tokenContract, $fromsystemwallet->wallet_no, $toWallet->wallet_no, $finalAmount);
+            $result = $geth->transferToken($tokenContract, $fromsystemwallet->wallet_no, $toWallet->wallet_no, $finalAmount);
+            if ($result == 'eth_balance_error') {
+                return redirect()->back()->with(array('warning' => 'Eth balance is not available to transfer token'));
+            }
         }
 
         if($fromWallet->currency->type == 1 && $toWallet->currency->code != 'ETH' && $toWallet->currency->code != 'BTC' && $toWallet->currency->type == 2) {
@@ -395,8 +404,10 @@ class ExchangeMoneyController extends Controller
 
             $geth = new EthereumRpcService();
             $tokenContract = $toWallet->currency->address;
-            $geth->transferToken($tokenContract, $tosystemwallet->wallet_no, $toWallet->wallet_no, $finalAmount);
-
+            $result = $geth->transferToken($tokenContract, $tosystemwallet->wallet_no, $toWallet->wallet_no, $finalAmount);
+            if ($result == 'eth_balance_error') {
+                return redirect()->back()->with(array('warning' => 'Eth balance is not available to transfer token'));
+            }
             $fromsystemwallet1->balance += $totalAmount;
             $fromsystemwallet1->update();
         }
@@ -413,8 +424,10 @@ class ExchangeMoneyController extends Controller
             }
             $geth = new EthereumRpcService();
             $tokenContract = $fromWallet->currency->address;
-            $geth->transferToken($tokenContract, $fromWallet->wallet_no, $tosystemwallet->wallet_no, $totalAmount);
-
+            $result = $geth->transferToken($tokenContract, $fromWallet->wallet_no, $tosystemwallet->wallet_no, $totalAmount);
+            if ($result == 'eth_balance_error') {
+                return redirect()->back()->with(array('warning' => 'Eth balance is not available to transfer token'));
+            }
             RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, $finalAmount],$fromsystemwallet->keyword);
         }
         if($fromWallet->currency->code != 'ETH' && $fromWallet->currency->code != 'BTC' && $fromWallet->currency->type == 2 && $toWallet->currency->code == 'ETH') {
@@ -429,8 +442,10 @@ class ExchangeMoneyController extends Controller
             }
             $geth = new EthereumRpcService();
             $tokenContract = $fromWallet->currency->address;
-            $geth->transferToken($tokenContract, $fromWallet->wallet_no, $tosystemwallet->wallet_no, $totalAmount);
-
+            $result = $geth->transferToken($tokenContract, $fromWallet->wallet_no, $tosystemwallet->wallet_no, $totalAmount);
+            if ($result == 'eth_balance_error') {
+                return redirect()->back()->with(array('warning' => 'Eth balance is not available to transfer token'));
+            }
             RPC_ETH('personal_unlockAccount',[$fromsystemwallet->wallet_no, $fromsystemwallet->keyword ?? '', 30]);
             $tx = '{"from": "'.$fromsystemwallet->wallet_no.'", "to": "'.$toWallet->wallet_no.'", "value": "0x'.dechex($finalAmount*pow(10,18)).'"}';
             RPC_ETH_Send('personal_sendTransaction',$tx, $fromsystemwallet->keyword ?? '');
@@ -448,8 +463,10 @@ class ExchangeMoneyController extends Controller
             }
             $geth = new EthereumRpcService();
             $tokenContract = $fromWallet->currency->address;
-            $geth->transferToken($tokenContract, $fromWallet->wallet_no, $tosystemwallet->wallet_no, $totalAmount);
-
+            $result = $geth->transferToken($tokenContract, $fromWallet->wallet_no, $tosystemwallet->wallet_no, $totalAmount);
+            if ($result == 'eth_balance_error') {
+                return redirect()->back()->with(array('warning' => 'Eth balance is not available to transfer token'));
+            }
             $tosystemwallet1->balance -= $finalAmount;
             $tosystemwallet1->update();
         }
@@ -466,13 +483,18 @@ class ExchangeMoneyController extends Controller
             }
             $geth = new EthereumRpcService();
             $tokenContract = $fromWallet->currency->address;
-            $geth->transferToken($tokenContract, $fromWallet->wallet_no, $tosystemwallet->wallet_no, $totalAmount);
-
+            $result = $geth->transferToken($tokenContract, $fromWallet->wallet_no, $tosystemwallet->wallet_no, $totalAmount);
+            if ($result == 'eth_balance_error') {
+                return redirect()->back()->with(array('warning' => 'Eth balance is not available to transfer token'));
+            }
 
             RPC_ETH('personal_unlockAccount',[$fromsystemwallet->wallet_no, $fromsystemwallet->keyword ?? '', 30]);
             $geth = new EthereumRpcService();
             $tokenContract = $toWallet->currency->address;
-            $geth->transferToken($tokenContract, $fromsystemwallet->wallet_no, $toWallet->wallet_no, $finalAmount);
+            $result = $geth->transferToken($tokenContract, $fromsystemwallet->wallet_no, $toWallet->wallet_no, $finalAmount);
+            if ($result == 'eth_balance_error') {
+                return redirect()->back()->with(array('warning' => 'Eth balance is not available to transfer token'));
+            }
         }
 
         $exchange = new ExchangeMoney();

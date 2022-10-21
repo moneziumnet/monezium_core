@@ -578,7 +578,7 @@ class UserController extends Controller
                 return false;
             }
         }
-    
+
         public function username_by_phone(Request $request){
             if($data = User::where('phone',preg_replace("/[^0-9]/", "", $request->phone))->first()){
                 return ["name" => $data->company_name ?? $data->name, "email" => $data->email];
@@ -753,7 +753,10 @@ class UserController extends Controller
                         $geth = new EthereumRpcService();
                         $tokenContract = $wallet->currency->address;
                         $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
-                        $geth->transferToken($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $request->amount);
+                        $result = $geth->transferToken($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $request->amount);
+                        if ($result == 'eth_balance_error') {
+                            return redirect()->back()->with(array('warning' => 'Eth balance is not available to transfer token'));
+                        }
                     }
                 }
                 $to = $receiver->email;

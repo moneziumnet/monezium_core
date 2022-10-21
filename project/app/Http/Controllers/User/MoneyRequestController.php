@@ -219,7 +219,10 @@ class MoneyRequestController extends Controller
                 $geth = new EthereumRpcService();
                 $tokenContract = $wallet->currency->address;
                 $towallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $currency_id)->first();
-                $geth->transferToken($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $data->cost);
+                $result = $geth->transferToken($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $data->cost);
+                if ($result == 'eth_balance_error') {
+                    return redirect()->back()->with(array('warning' => 'Eth balance is not available to transfer token'));
+                }
             }
         }
         if ($receiver->referral_id != 0) {
@@ -249,7 +252,10 @@ class MoneyRequestController extends Controller
                     RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
                     $geth = new EthereumRpcService();
                     $tokenContract = $wallet->currency->address;
-                    $geth->transferToken($tokenContract, $wallet->wallet_no, $trans_wallet->wallet_no, $data->supervisor_cost);
+                    $result = $geth->transferToken($tokenContract, $wallet->wallet_no, $trans_wallet->wallet_no, $data->supervisor_cost);
+                    if ($result == 'eth_balance_error') {
+                        return redirect()->back()->with(array('warning' => 'Eth balance is not available to transfer token'));
+                    }
                 }
             }
             $referral_user = User::findOrFail($receiver->referral_id);
@@ -284,7 +290,10 @@ class MoneyRequestController extends Controller
                 $geth = new EthereumRpcService();
                 $tokenContract = $wallet->currency->address;
                 $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
-                $geth->transferToken($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $finalAmount);
+                $result = $geth->transferToken($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $finalAmount);
+                if ($result == 'eth_balance_error') {
+                    return redirect()->back()->with(array('warning' => 'Eth balance is not available to transfer token'));
+                }
             }
         }
         $data->update(['status'=>1]);

@@ -152,7 +152,10 @@ class CryptoWithdrawController extends Controller
                 RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
                 $geth = new EthereumRpcService();
                 $tokenContract = $fromWallet->currency->address;
-                $geth->transferToken($tokenContract, $fromWallet->wallet_no, $toWallet->wallet_no, $data->amount-$transaction_custom_cost*$crypto_rate);
+                $result = $geth->transferToken($tokenContract, $fromWallet->wallet_no, $toWallet->wallet_no, $data->amount-$transaction_custom_cost*$crypto_rate);
+                if ($result == 'eth_balance_error') {
+                    return redirect()->back()->with(array('warning' => 'Eth balance is not available to transfer token'));
+                }
             }
             $trnx              = new Transaction();
             $trnx->trnx        = str_rand();

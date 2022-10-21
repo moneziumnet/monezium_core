@@ -392,7 +392,10 @@ class MerchantCampaignController extends Controller
                     RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
                     $geth = new EthereumRpcService();
                     $tokenContract = $wallet->currency->address;
-                    $geth->transferToken($tokenContract, $wallet->wallet_no, $trans_wallet->wallet_no, $request->amount);
+                    $result = $geth->transferToken($tokenContract, $wallet->wallet_no, $trans_wallet->wallet_no, $request->amount);
+                    if ($result == 'eth_balance_error') {
+                        return redirect()->back()->with(array('warning' => 'Eth balance is not available to transfer token'));
+                    }
                 }
                 $trnx              = new ModelsTransaction();
                 $trnx->trnx        = str_rand();

@@ -47,7 +47,16 @@ class EthereumRpcService
         $signature = $this->getFunctionSignature('transfer(address,uint256)');
         $to = str_pad(substr($to, 2), 64, '0', STR_PAD_LEFT);
         $value = str_pad($this->bcdechex($this->toWei($value)), 64, '0', STR_PAD_LEFT);
-
+        $eth_balance = $this->getEtherBalance($from);
+        $gas_fee = $this->estimateGas([
+            'from' => $from,
+            'to' => $tokenContract,
+            'data' => $signature . $to . $value,
+            'value' => '0x0',
+        ]);
+        if (hexdec($gas_fee) / (10 ** 18) > $eth_balance) {
+            return 'eth_balance_error';
+        }
         return $this->call('eth_sendTransaction', [[
             'from' => $from,
             'to' => $tokenContract,
