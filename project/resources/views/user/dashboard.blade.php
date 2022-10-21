@@ -240,7 +240,7 @@
                                     $tokenContract = $item->currency->address;
                                     $balance = $geth->getTokenBalance($tokenContract, $item->wallet_no);
                                 @endphp
-                                <div class="text-muted">{{ $balance != 'error' ?? amount($item->balance,$item->currency->type,2) }}  {{$item->currency->code}}</div>
+                                <div class="text-muted">{{ $balance ?? amount($item->balance,$item->currency->type,2) }}  {{$item->currency->code}}</div>
                             @endif
                         </div>
                         </div>

@@ -50,7 +50,7 @@
                                                 $tokenContract = $dcurr->address;
                                                 $balance = $geth->getTokenBalance($tokenContract, $wallet->wallet_no);
                                             @endphp
-                                            <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ $balance != 'error' ?? amount($wallet->balance,$dcurr->type,2) }}  {{$dcurr->code}}</div>
+                                            <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ $balance ?? amount($wallet->balance,$dcurr->type,2) }}  {{$dcurr->code}}</div>
                                         @endif
                                     @else
                                         <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{amount($wallet->balance,$dcurr->type,2)}} {{$dcurr->code}} ({{$dcurr->symbol}}) </div>
