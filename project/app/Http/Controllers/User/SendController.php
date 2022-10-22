@@ -209,7 +209,7 @@ class SendController extends Controller
 
         $finalCharge = amount($transaction_global_cost+$transaction_custom_cost, $wallet->currency->type);
         $finalamount = amount( $request->amount + $finalCharge*$rate, $wallet->currency->type);
-        user_wallet_increment(0, $currency_id, $transaction_global_cost*$rate, 9);
+        
         if ($wallet->currency->type == 2) {
             $towallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $currency_id)->first();
             if($wallet->currency->code == 'ETH') {
@@ -231,7 +231,34 @@ class SendController extends Controller
             }
         }
 
+        user_wallet_increment(0, $currency_id, $transaction_global_cost*$rate, 9);
+
         if($receiver = User::where('email',$request->email)->first()){
+            
+            if ($wallet->currency->type == 2) {
+                $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
+                if($wallet->currency->code == 'ETH') {
+                    RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
+                    $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex($request->amount*pow(10,18)).'"}';
+                    RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
+                }
+                else if($wallet->currency->code == 'BTC') {
+                    RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, $request->amount],$wallet->keyword);
+                }
+                else {
+                    RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
+                    $geth = new EthereumRpcService();
+                    $tokenContract = $wallet->currency->address;
+                    $result = $geth->transferToken($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $request->amount);
+                    if (isset($result->error)) {
+                        return redirect()->back()->with(array('error' => $result->error->message));
+                    }
+                    if ($result == 'eth_balance_error') {
+                        return redirect()->back()->with(array('warning' => 'Eth balance is not available to transfer token'));
+                    }
+                }
+            }
+
             $txnid = Str::random(4).time();
             $data = new BalanceTransfer();
             $data->user_id = auth()->user()->id;
@@ -285,26 +312,7 @@ class SendController extends Controller
             session(['sendstatus'=>1, 'saveData'=>$trans]);
             // user_wallet_decrement($user->id, $currency_id, $request->amount);
             // user_wallet_increment($receiver->id, $currency_id, $request->amount);
-            if ($wallet->currency->type == 2) {
-                $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
-                if($wallet->currency->code == 'ETH') {
-                    RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                    $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex($request->amount*pow(10,18)).'"}';
-                    RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
-                }
-                else if($wallet->currency->code == 'BTC') {
-                    RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, $request->amount],$wallet->keyword);
-                }
-                else {
-                    RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                    $geth = new EthereumRpcService();
-                    $tokenContract = $wallet->currency->address;
-                    $result = $geth->transferToken($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $request->amount);
-                    if ($result == 'eth_balance_error') {
-                        return redirect()->back()->with(array('warning' => 'Eth balance is not available to transfer token'));
-                    }
-                }
-            }
+
             if(SaveAccount::whereUserId(auth()->id())->where('receiver_id',$receiver->id)->exists()){
                 return redirect()->route('send.money.create')->with('success','Money Send Successfully');
             }
