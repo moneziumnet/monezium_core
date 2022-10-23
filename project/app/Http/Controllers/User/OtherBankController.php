@@ -98,25 +98,26 @@ class OtherBankController extends Controller
         $dailyTransactions = BalanceTransfer::whereType('other')->whereUserId(auth()->user()->id)->whereDate('created_at', now())->get();
         $monthlyTransactions = BalanceTransfer::whereType('other')->whereUserId(auth()->user()->id)->whereMonth('created_at', now()->month())->get();
         $transaction_global_cost = 0;
-        $transaction_global_fee = check_global_transaction_fee($request->amount, $user, 'withdraw');
+        $currency = Currency::findOrFail($request->currency_id);
+        $rate = getRate($currency);
+        $transaction_global_fee = check_global_transaction_fee($request->amount/$rate, $user, 'withdraw');
 
         if ($global_range) {
             if($transaction_global_fee)
             {
-                $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/100) * $transaction_global_fee->data->percent_charge;
+                $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/($rate*100)) * $transaction_global_fee->data->percent_charge;
             }
-            $finalAmount = $request->amount - $transaction_global_cost;
+            $finalAmount = $request->amount - $transaction_global_cost*$rate;
 
-            if($global_range->min > $request->amount){
-                return redirect()->back()->with('unsuccess','Request Amount should be greater than this '.$global_range->min);
-            }
-
-            if($global_range->max < $request->amount){
-                return redirect()->back()->with('unsuccess','Request Amount should be less than this '.$global_range->max);
+            if($global_range->min > $request->amount/$rate){
+                return redirect()->back()->with('unsuccess','Request Amount(USD rate) should be greater than this '.$global_range->min);
             }
 
-            $currency = defaultCurr();
-            $balance = user_wallet_balance(auth()->id(), $currency);
+            if($global_range->max < $request->amount/$rate){
+                return redirect()->back()->with('unsuccess','Request Amount(USD rate) should be less than this '.$global_range->max);
+            }
+
+            $balance = user_wallet_balance(auth()->id(), $request->currency_id);
 
             if($balance<0 || $finalAmount > $balance){
                 return redirect()->back()->with('unsuccess','Insufficient Balance!');
@@ -158,7 +159,7 @@ class OtherBankController extends Controller
             $data->swift_bic = $request->swift_bic;
             $data->beneficiary_id = $request->beneficiary_id;
             $data->type = 'other';
-            $data->cost = $transaction_global_cost;
+            $data->cost = $transaction_global_cost*$rate;
             $data->payment_type = $request->payment_type;
             $data->amount = $request->amount;
             $data->final_amount = $finalAmount;

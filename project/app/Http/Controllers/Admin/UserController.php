@@ -638,13 +638,19 @@ class UserController extends Controller
             if($request->amount < 0){
                 return redirect()->back()->with('error','Request Amount should be greater than this!');
             }
-
-            if($request->amount > user_wallet_balance($user->id, $currency_id, $wallet->wallet_type)){
-                return redirect()->back()->with('error','Insufficient Balance.');
+            if($wallet->currency->type == 1) {
+                if($request->amount > user_wallet_balance($user->id, $currency_id, $wallet->wallet_type)){
+                    return redirect()->back()->with('error','Insufficient Balance.');
+                }
+            }
+            else if ($wallet->currency->type == 2) {
+                if($request->amount > Crypto_Balance($user->id, $currency_id, $wallet->wallet_type)){
+                    return redirect()->back()->with('unsuccess','Insufficient Balance.');
+                }
             }
             $transaction_global_cost = 0;
             if ($request->amount / $rate < $global_range->min || $request->amount / $rate > $global_range->max) {
-                return redirect()->back()->with('error','Amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
+                return redirect()->back()->with('error','Amount is not in defined range. Max value(USD rate) is '.$global_range->max.' and Min value is '.$global_range->min );
             }
             $transaction_global_fee = check_global_transaction_fee($request->amount/$rate, $user, 'send');
             if($transaction_global_fee)
@@ -701,7 +707,7 @@ class UserController extends Controller
                 $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
 
                 $trans->currency_id = $currency_id;
-                $trans->amount      = $transaction_custom_cost;
+                $trans->amount      = $transaction_custom_cost*$rate;
                 $trans->charge      = 0;
                 $trans->type        = '+';
                 $trans->remark      = $remark;
@@ -852,9 +858,9 @@ class UserController extends Controller
                 return redirect()->back()->with('error','This user has to buy a plan to withdraw.');
             }
 
-            if(now()->gt($user->plan_end_date)){
-                return redirect()->back()->with('error','Plan Date Expired.');
-            }
+            // if(now()->gt($user->plan_end_date)){
+            //     return redirect()->back()->with('error','Plan Date Expired.');
+            // }
 
             $bank_plan = BankPlan::whereId($user->bank_plan_id)->first();
             $dailySend = BalanceTransfer::whereUserId($user->id)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus(1)->sum('amount');
@@ -873,24 +879,25 @@ class UserController extends Controller
             $dailyTransactions = BalanceTransfer::whereType('other')->whereUserId($user->id)->whereDate('created_at', now())->get();
             $monthlyTransactions = BalanceTransfer::whereType('other')->whereUserId($user->id)->whereMonth('created_at', now()->month())->get();
             $transaction_global_cost = 0;
-            $transaction_global_fee = check_global_transaction_fee($request->amount, $user, 'withdraw');
+            $currency =  Currency::findOrFail($wallet->currency_id);
+            $rate = getRate($currency);
+            $transaction_global_fee = check_global_transaction_fee($request->amount/$rate, $user, 'withdraw');
 
             if ($global_range) {
                 if($transaction_global_fee)
                 {
-                    $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/100) * $transaction_global_fee->data->percent_charge;
+                    $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/($rate * 100)) * $transaction_global_fee->data->percent_charge;
                 }
-                $finalAmount = $request->amount + $transaction_global_cost;
+                $finalAmount = $request->amount - $transaction_global_cost*$rate;
 
-                if($global_range->min > $request->amount){
-                    return redirect()->back()->with('error','Request Amount should be greater than this '.$global_range->min);
-                }
-
-                if($global_range->max < $request->amount){
-                    return redirect()->back()->with('error','Request Amount should be less than this '.$global_range->max);
+                if($global_range->min > $request->amount/$rate){
+                    return redirect()->back()->with('error','Request Amount(USD rate) should be greater than this '.$global_range->min);
                 }
 
-                $currency =  Currency::findOrFail($wallet->currency_id);
+                if($global_range->max < $request->amount/$rate){
+                    return redirect()->back()->with('error','Request Amount(USD rate) should be less than this '.$global_range->max);
+                }
+
                 $balance = user_wallet_balance($user->id, $currency->id);
 
                 if($balance<0 || $finalAmount > $balance){
@@ -928,7 +935,7 @@ class UserController extends Controller
                 $data->swift_bic = $beneficiary->swift_bic;
                 $data->beneficiary_id = $request->beneficiary_id;
                 $data->type = 'other';
-                $data->cost = $transaction_global_cost;
+                $data->cost = $transaction_global_cost*$rate;
                 $data->payment_type = $request->payment_type;
                 $data->amount = $request->amount;
                 $data->final_amount = $finalAmount;
