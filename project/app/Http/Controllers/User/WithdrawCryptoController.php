@@ -63,9 +63,6 @@ class WithdrawCryptoController extends Controller
 
         }
 
-        if($request->amount > $userBalance){
-            return redirect()->back()->with('unsuccess','Insufficient Account Balance.');
-        }
 
         if($dailywithdraw/$crypto_rate > $global_range->daily_limit){
             return redirect()->back()->with('unsuccess','Daily withdraw limit over.');
@@ -92,12 +89,15 @@ class WithdrawCryptoController extends Controller
         }
 
         $messagefee = $transaction_global_cost + $transaction_custom_cost;
-        $messagefinal = $amountToAdd + $messagefee;
+        $messagefinal = $amountToAdd - $messagefee;
 
         if($messagefinal < 0){
             return redirect()->back()->with('unsuccess','Request Amount should be greater than this '.$request->amount.' ('.$currency->code.')');
         }
 
+        if($request->amount > $userBalance){
+            return redirect()->back()->with('unsuccess','Insufficient Account Balance.');
+        }
         user_wallet_decrement($user->id, $currency->id, $request->amount, 8);
         user_wallet_increment(0, $currency->id, $transaction_global_cost*$crypto_rate, 9);
         $fromWallet = Wallet::where('user_id', $user->id)->where('wallet_type', 8)->where('currency_id', $currency->id)->first();
@@ -163,17 +163,17 @@ class WithdrawCryptoController extends Controller
         }
         if($fromWallet->currency->code == 'ETH') {
             RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-            $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$request->sender_address.'", "value": "0x'.dechex($request->amount*pow(10,18)).'"}';
+            $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$request->sender_address.'", "value": "0x'.dechex($messagefinal*$crypto_rate*pow(10,18)).'"}';
             RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
         }
         else if($fromWallet->currency->code == 'BTC') {
-            RPC_BTC_Send('sendtoaddress',[$request->sender_address, $request->amount],$fromWallet->keyword);
+            RPC_BTC_Send('sendtoaddress',[$request->sender_address, $messagefinal*$crypto_rate],$fromWallet->keyword);
         }
         else {
             RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
             $geth = new EthereumRpcService();
             $tokenContract = $fromWallet->currency->address;
-            $result = $geth->transferToken($tokenContract, $fromWallet->wallet_no, $request->sender_address, $request->amount);
+            $result = $geth->transferToken($tokenContract, $fromWallet->wallet_no, $request->sender_address, $messagefinal*$crypto_rate);
             if ($result == 'eth_balance_error') {
                 return redirect()->back()->with(array('warning' => 'Eth balance is not available to transfer token'));
             }
@@ -193,7 +193,7 @@ class WithdrawCryptoController extends Controller
         $trans->user_id     = $user->id;
         $trans->user_type   = 1;
         $trans->currency_id = $request->currency_id;
-        $trans->amount      = $request->amount + $messagefee*$crypto_rate;
+        $trans->amount      = $request->amount;
         $trans->charge      = $messagefee*$crypto_rate;
 
         $trans_wallet = get_wallet($user->id, $currency->id, 8);
