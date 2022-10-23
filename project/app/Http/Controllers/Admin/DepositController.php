@@ -72,14 +72,14 @@ class DepositController extends Controller
         }
 
         $user = User::findOrFail($data->user_id);
-
-        $amount = $data->amount*getRate($data->currency);
+        $rate =  getRate($data->currency);
+        $amount = $data->amount*$rate;
         $transaction_global_cost = 0;
 
-        $transaction_global_fee = check_global_transaction_fee($amount, $user, 'deposit');
+        $transaction_global_fee = check_global_transaction_fee($data->amount, $user, 'deposit');
         if($transaction_global_fee)
         {
-            $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($amount/100) * $transaction_global_fee->data->percent_charge;
+            $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($data->amount/100) * $transaction_global_fee->data->percent_charge;
         }
         $transaction_custom_cost = 0;
 
@@ -87,18 +87,18 @@ class DepositController extends Controller
 
         if($user->referral_id != 0)
         {
-            $transaction_custom_fee = check_custom_transaction_fee($amount, $user, 'deposit');
+            $transaction_custom_fee = check_custom_transaction_fee($data->amount, $user, 'deposit');
             if($transaction_custom_fee) {
-                $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($amount/100) * $transaction_custom_fee->data->percent_charge;
+                $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($data->amount/100) * $transaction_custom_fee->data->percent_charge;
             }
             $remark = 'Deposit_create_supervisor_fee';
             if (check_user_type_by_id(4, $user->referral_id)) {
-                user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost, 6);
+                user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost*$rate, 6);
                 $trans_wallet = get_wallet($user->referral_id, $data->currency_id, 6);
             }
             elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
                 $remark = 'Deposit_create_manager_fee';
-                user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost, 10);
+                user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost*$rate, 10);
                 $trans_wallet = get_wallet($user->referral_id, $data->currency_id, 10);
             }
             $referral_user = User::findOrFail($user->referral_id);
@@ -107,7 +107,7 @@ class DepositController extends Controller
             $trans->user_id     = $user->referral_id;
             $trans->user_type   = 1;
             $trans->currency_id = $data->currency_id;
-            $trans->amount      = $transaction_custom_cost;
+            $trans->amount      = $transaction_custom_cost*$rate;
 
             $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
 
@@ -119,9 +119,9 @@ class DepositController extends Controller
             $trans->save();
         }
         $final_chargefee = $transaction_global_cost + $transaction_custom_cost;
-        $final_amount = amount($amount - $final_chargefee, $data->currency->type );
+        $final_amount = amount($amount - $final_chargefee*$rate, $data->currency->type );
 
-        user_wallet_increment(0, $data->currency_id, $transaction_global_cost, 9);
+        user_wallet_increment(0, $data->currency_id, $transaction_global_cost*$rate, 9);
         user_wallet_increment($user->id, $data->currency_id, $final_amount, 1);
 
         $trans_wallet = get_wallet($user->id, $data->currency_id, 1);
@@ -134,8 +134,8 @@ class DepositController extends Controller
         $trans->amount      = $amount;
 
         $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-        
-        $trans->charge      = $final_chargefee;
+
+        $trans->charge      = $final_chargefee*$rate;
         $trans->type        = '+';
         $trans->remark      = 'Deposit_create';
         $trans->details     = trans('Deposit complete');
