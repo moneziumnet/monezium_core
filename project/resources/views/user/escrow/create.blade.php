@@ -161,21 +161,22 @@
             var amount = parseFloat($('#amount').val());
             var selected = $('.wallet option:selected')
             var description = $('#description').val()
+            var rate = parseFloat(selected.data('rate'));
 
             if(amount == '' || selected.val() == '' || description == ''){
                 toastr.options = { "closeButton" : true, "progressBar" : true };
                 toastr.error('Please fill up the required fields.');
                 return false;
             }
-            var url = "{{url('user/escrow/calcharge')}}"+'/'+amount;
+            var url = "{{url('user/escrow/calcharge')}}"+'/'+amount/rate;
             $.get(url,function (res) {
                 $('#modal-success').find('.amount').text(amount +' '+selected.data('code'))
-                $('#modal-success').find('.charge').text(res +' '+ selected.data('code'))
+                $('#modal-success').find('.charge').text(res * rate +' '+ selected.data('code'))
                 if ($('.form-check-input').is(':checked')) {
-                    $('#modal-success').find('.total_amount').text((parseFloat(res)+amount).toFixed(3) +' '+selected.data('code'))
+                    $('#modal-success').find('.total_amount').text((parseFloat(res * rate)+amount).toFixed(3) +' '+selected.data('code'))
                 }
                 else {
-                    $('#modal-success').find('.total_amount').text((amount - parseFloat(res)).toFixed(3) +' '+selected.data('code'))
+                    $('#modal-success').find('.total_amount').text((amount - parseFloat(res * rate)).toFixed(3) +' '+selected.data('code'))
 
                 }
                 $('#modal-success').modal('show')

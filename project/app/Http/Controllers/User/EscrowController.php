@@ -71,10 +71,10 @@ class EscrowController extends Controller
         if(!$senderWallet) return back()->with('error','Your wallet not found');
 
         $currency = Currency::findOrFail($senderWallet->currency->id);
-
+        $rate = getRate($currency);
         $user= auth()->user();
         $transaction_global_cost = 0;
-        $transaction_global_fee = check_global_transaction_fee($request->amount, $user, 'escrow');
+        $transaction_global_fee = check_global_transaction_fee($request->amount/$rate, $user, 'escrow');
         $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'escrow')->first();
         if ($request->amount < $global_range->min || $request->amount > $global_range->max) {
             return redirect()->back()->with('error','Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
@@ -86,30 +86,30 @@ class EscrowController extends Controller
         $transaction_custom_cost = 0;
         if($user->referral_id != 0)
         {
-            $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user, 'escrow');
+            $transaction_custom_fee = check_custom_transaction_fee($request->amount/$rate, $user, 'escrow');
             if($transaction_custom_fee) {
                 $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/100) * $transaction_custom_fee->data->percent_charge;
             }
         }
 
         $finalCharge = amount($transaction_global_cost+$transaction_custom_cost,$currency->type);
-        if($request->charge_pay) $finalAmount =  amount($request->amount + $finalCharge, $currency->type);
+        if($request->charge_pay) $finalAmount =  amount($request->amount + $finalCharge*$rate, $currency->type);
         else  $finalAmount =  amount($request->amount, $currency->type);
 
         if($senderWallet->balance < $finalAmount) return back()->with('error','Insufficient balance.');
 
         $senderWallet->balance -= $finalAmount;
-        user_wallet_increment(0, $currency->id, $transaction_global_cost, 9);
+        user_wallet_increment(0, $currency->id, $transaction_global_cost*$rate, 9);
         $senderWallet->update();
         if($user->referral_id != 0){
             $remark = 'Make_Escrow_supervisor_fee';
             if (check_user_type_by_id(4, $user->referral_id)) {
-                user_wallet_increment($user->referral_id, $currency->id, $transaction_custom_cost, 6);
+                user_wallet_increment($user->referral_id, $currency->id, $transaction_custom_cost*$rate, 6);
                 $trans_wallet = get_wallet($user->referral_id, $currency->id, 6);
             }
             elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
                 $remark = 'Make_Escrow_manager_fee';
-                user_wallet_increment($user->referral_id, $currency->id, $transaction_custom_cost, 10);
+                user_wallet_increment($user->referral_id, $currency->id, $transaction_custom_cost*$rate, 10);
                 $trans_wallet = get_wallet($user->referral_id, $currency->id, 10);
             }
             $trans = new Transaction();
@@ -117,7 +117,7 @@ class EscrowController extends Controller
             $trans->user_id     = $user->referral_id;
             $trans->user_type   = 1;
             $trans->currency_id = $currency->id;
-            $trans->amount      = $transaction_custom_cost;
+            $trans->amount      = $transaction_custom_cost*$rate;
             $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
             $trans->charge      = 0;
             $trans->type        = '+';
@@ -134,7 +134,7 @@ class EscrowController extends Controller
         $escrow->description  = $request->description;
         $escrow->amount       = $request->amount;
         $escrow->pay_charge   = $request->charge_pay ? 1 : 0;
-        $escrow->charge       = $finalCharge;
+        $escrow->charge       = $finalCharge*$rate;
         $escrow->currency_id  = $currency->id;
         $escrow->save();
 
@@ -145,7 +145,7 @@ class EscrowController extends Controller
         $trnx->currency_id = $currency->id;
         $trnx->wallet_id   = $senderWallet->id;
         $trnx->amount      = $finalAmount;
-        $trnx->charge      = $finalCharge;
+        $trnx->charge      = $finalCharge*$rate;
         $trnx->remark      = 'make_escrow';
         $trnx->type        = '-';
         $trnx->details     = trans('Made escrow to '). $receiver->email;
@@ -279,8 +279,7 @@ class EscrowController extends Controller
             user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
         }
 
-        $amount = $escrow->amount;
-        if($escrow->pay_charge == 0) $amount -= $escrow->charge;
+        $amount = $escrow->amount - $escrow->charge;
 
         $recipientWallet->balance += $amount;
         $recipientWallet->update();
