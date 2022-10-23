@@ -63,13 +63,8 @@ class CryptoDepositController extends Controller
 
         $user = User::findOrFail($data->user_id);
 
-        $client = New Client();
-        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency=USD');
-        $rate = json_decode($response->getBody());
-
         $currency = Currency::where('id',$data->currency_id)->first();
-        $code = $currency->code;
-        $crypto_rate = $rate->data->rates->$code;
+        $crypto_rate = getRate($currency);
         $amount = $data->amount/$crypto_rate;
         $transaction_global_cost = 0;
         $transaction_global_fee = check_global_transaction_fee($amount, $user, 'deposit');

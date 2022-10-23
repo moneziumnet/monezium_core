@@ -70,11 +70,7 @@ class CryptoWithdrawController extends Controller
         $data->update();
         $currency = Currency::findOrFail($data->currency_id);
 
-        $client = New Client();
-        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency=USD');
-        $rate = json_decode($response->getBody());
-        $code = $currency->code;
-        $crypto_rate = $rate->data->rates->$code ?? $currency->rate;
+        $crypto_rate = getRate($currency);
 
         if ($id2 == 2) {
             $user = $data->user;
