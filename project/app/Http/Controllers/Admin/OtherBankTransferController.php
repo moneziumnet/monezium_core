@@ -276,7 +276,7 @@ class OtherBankTransferController extends Controller
 
                     $master_account_id = $res_body->id;
                     $master_amount = $res_body->availableBalance->value;
-                    if ($master_amount < $data->amount) {
+                    if ($master_amount < $data->final_amount) {
                         return response()->json(array('errors' => [ 0 => __('Your balance is Insufficient') ]));
                     }
                 } catch (\Throwable $th) {
@@ -295,7 +295,7 @@ class OtherBankTransferController extends Controller
                                 "bic":"'.$data->swift_bic.'"
                                 },
                             "amount":
-                                {"value":"'.$data->amount.'",
+                                {"value":"'.$data->final_amount.'",
                                 "currency":"'.$currency->code.'"
                                 },
                             "linkedAccountHolderId":"'.$user->holder_id.'",
@@ -368,7 +368,7 @@ class OtherBankTransferController extends Controller
                             "ledger_from_id": "'.$ledger.'",
                             "beneficiary_id": "'.$beneficiary.'",
                             "payment_type": "payment-type-EU-SEPA-Step2",
-                            "amount": "'.$data->amount.'"
+                            "amount": "'.$data->final_amount.'"
                         }',
                         'headers' => [
                         'Accept'=> 'application/json',
@@ -386,7 +386,7 @@ class OtherBankTransferController extends Controller
                 $body = '{
                     "clientOrder": "'.$clientorder.'",
                     "currency": "'.$currency->code.'",
-                    "amount": '.$data->amount.',
+                    "amount": '.$data->final_amount.',
                     "description": "'.$data->description.'",
                     "payee": {
                       "individual": {
@@ -481,7 +481,7 @@ class OtherBankTransferController extends Controller
                     return response()->json(array('errors' => [ 0 => 'This bank account does not exist in SWAN.' ]));
                 }
                 try {
-                    $body = '{"query":"mutation initiateCreditTransfers($input: InitiateCreditTransfersInput!) {\\n  initiateCreditTransfers(input: $input) {\\n    __typename\\n    ... on InitiateCreditTransfersSuccessPayload {\\n      __typename\\n      payment {\\n        id\\n        statusInfo {\\n          ... on PaymentConsentPending {\\n            __typename\\n            status\\n            consent {\\n              id\\n              consentUrl\\n              redirectUrl\\n            }\\n          }\\n          ... on PaymentInitiated {\\n            __typename\\n            status\\n          }\\n          ... on PaymentRejected {\\n            __typename\\n            reason\\n            status\\n          }\\n        }\\n      }\\n    }\\n    ... on AccountNotFoundRejection {\\n      __typename\\n      message\\n    }\\n    ... on ForbiddenRejection {\\n      __typename\\n      message\\n    }\\n  }\\n}\\n","variables":{"input":{"accountId":"'.$accountid.'","consentRedirectUrl":"'.route('admin.dashboard').'","creditTransfers":{"sepaBeneficiary":{"iban":"'.$data->iban.'","name":"'.$data->beneficiary->name.'","isMyOwnIban":false,"save":false},"amount":{"currency":"'.$currency->code.'","value":'.$data->amount.'},"reference":"'.$data->description.'"}}}}';
+                    $body = '{"query":"mutation initiateCreditTransfers($input: InitiateCreditTransfersInput!) {\\n  initiateCreditTransfers(input: $input) {\\n    __typename\\n    ... on InitiateCreditTransfersSuccessPayload {\\n      __typename\\n      payment {\\n        id\\n        statusInfo {\\n          ... on PaymentConsentPending {\\n            __typename\\n            status\\n            consent {\\n              id\\n              consentUrl\\n              redirectUrl\\n            }\\n          }\\n          ... on PaymentInitiated {\\n            __typename\\n            status\\n          }\\n          ... on PaymentRejected {\\n            __typename\\n            reason\\n            status\\n          }\\n        }\\n      }\\n    }\\n    ... on AccountNotFoundRejection {\\n      __typename\\n      message\\n    }\\n    ... on ForbiddenRejection {\\n      __typename\\n      message\\n    }\\n  }\\n}\\n","variables":{"input":{"accountId":"'.$accountid.'","consentRedirectUrl":"'.route('admin.dashboard').'","creditTransfers":{"sepaBeneficiary":{"iban":"'.$data->iban.'","name":"'.$data->beneficiary->name.'","isMyOwnIban":false,"save":false},"amount":{"currency":"'.$currency->code.'","value":'.$data->final_amount.'},"reference":"'.$data->description.'"}}}}';
                     $headers = [
                         'Authorization' => 'Bearer '.$access_token,
                         'Content-Type' => 'application/json'
@@ -505,7 +505,7 @@ class OtherBankTransferController extends Controller
         }
 
 
-            user_wallet_decrement($user->id, $data->currency_id, $data->final_amount);
+            user_wallet_decrement($user->id, $data->currency_id, $data->amount);
             $trans_wallet = get_wallet($user->id, $data->currency_id);
 
             user_wallet_increment(0, $data->currency_id, $data->cost, 9);
@@ -515,7 +515,7 @@ class OtherBankTransferController extends Controller
             $trans->user_id     = $data->user_id;
             $trans->user_type   = 1;
             $trans->currency_id = $data->currency_id;
-            $trans->amount      = $data->final_amount;
+            $trans->amount      = $data->amount;
 
             $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
 

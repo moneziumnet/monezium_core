@@ -105,7 +105,7 @@ class OtherBankController extends Controller
             {
                 $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/100) * $transaction_global_fee->data->percent_charge;
             }
-            $finalAmount = $request->amount + $transaction_global_cost;
+            $finalAmount = $request->amount - $transaction_global_cost;
 
             if($global_range->min > $request->amount){
                 return redirect()->back()->with('unsuccess','Request Amount should be greater than this '.$global_range->min);
