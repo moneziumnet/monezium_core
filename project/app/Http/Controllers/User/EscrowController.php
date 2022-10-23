@@ -81,14 +81,14 @@ class EscrowController extends Controller
         }
         if($transaction_global_fee)
         {
-            $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/100) * $transaction_global_fee->data->percent_charge;
+            $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/($rate*100)) * $transaction_global_fee->data->percent_charge;
         }
         $transaction_custom_cost = 0;
         if($user->referral_id != 0)
         {
             $transaction_custom_fee = check_custom_transaction_fee($request->amount/$rate, $user, 'escrow');
             if($transaction_custom_fee) {
-                $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/100) * $transaction_custom_fee->data->percent_charge;
+                $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/($rate*100)) * $transaction_custom_fee->data->percent_charge;
             }
         }
 

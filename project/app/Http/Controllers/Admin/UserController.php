@@ -616,7 +616,7 @@ class UserController extends Controller
             }
 
             $currency_id = $wallet->currency->id;
-
+            $rate = getRate($wallet->currency);
             $dailySend = BalanceTransfer::whereUserId($user->id)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus(1)->sum('amount');
             $monthlySend = BalanceTransfer::whereUserId($user->id)->whereMonth('created_at', '=', date('m'))->whereStatus(1)->sum('amount');
             $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'send')->first();
@@ -643,31 +643,56 @@ class UserController extends Controller
                 return redirect()->back()->with('error','Insufficient Balance.');
             }
             $transaction_global_cost = 0;
-            if ($request->amount / getRate($wallet->currency) < $global_range->min || $request->amount / getRate($wallet->currency) > $global_range->max) {
+            if ($request->amount / $rate < $global_range->min || $request->amount / $rate > $global_range->max) {
                 return redirect()->back()->with('error','Amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
             }
-            $transaction_global_fee = check_global_transaction_fee($request->amount, $user, 'send');
+            $transaction_global_fee = check_global_transaction_fee($request->amount/$rate, $user, 'send');
             if($transaction_global_fee)
             {
-                $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/100) * $transaction_global_fee->data->percent_charge;
+                $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/($rate*100)) * $transaction_global_fee->data->percent_charge;
             }
             $transaction_custom_cost = 0;
             if($user->referral_id != 0)
             {
-                $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user, 'send');
+                $transaction_custom_fee = check_custom_transaction_fee($request->amount/$rate, $user, 'send');
                 if($transaction_custom_fee) {
-                    $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/100) * $transaction_custom_fee->data->percent_charge;
+                    $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/($rate*100)) * $transaction_custom_fee->data->percent_charge;
                 }
                 $remark = 'Send_money_supervisor_fee';
-                if (check_user_type_by_id(4, $user->referral_id)) {
-                    user_wallet_increment($user->referral_id, $currency_id, $transaction_custom_cost, 6);
-                    $trans_wallet = get_wallet($user->referral_id, $currency_id, 6);
+                if ($wallet->currency->type == 1){
+                    if (check_user_type_by_id(4, $user->referral_id)) {
+                        user_wallet_increment($user->referral_id, $currency_id, $transaction_custom_cost*$rate, 6);
+                        $trans_wallet = get_wallet($user->referral_id, $currency_id, 6);
+                    }
+                    elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
+                        $remark = 'Send_money_manager_fee';
+                        user_wallet_increment($user->referral_id, $currency_id, $transaction_custom_cost*$rate, 10);
+                        $trans_wallet = get_wallet($user->referral_id, $currency_id, 10);
+                    }
                 }
-                elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
-                    $remark = 'Send_money_manager_fee';
-                    user_wallet_increment($user->referral_id, $currency_id, $transaction_custom_cost, 10);
-                    $trans_wallet = get_wallet($user->referral_id, $currency_id, 10);
+                else {
+                    user_wallet_increment($user->referral_id, $currency_id, $transaction_custom_cost*$rate, 8);
+
+                    $trans_wallet = get_wallet($user->referral_id, $currency_id, 8);
+                    if($wallet->currency->code == 'ETH') {
+                        RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
+                        $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$trans_wallet->wallet_no.'", "value": "0x'.dechex($transaction_custom_cost*$rate*pow(10,18)).'"}';
+                        RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
+                    }
+                    else if($wallet->currency->code == 'BTC') {
+                        RPC_BTC_Send('sendtoaddress',[$trans_wallet->wallet_no, $transaction_custom_cost*$rate],$wallet->keyword);
+                    }
+                    else {
+                        RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
+                        $geth = new EthereumRpcService();
+                        $tokenContract = $wallet->currency->address;
+                        $result = $geth->transferToken($tokenContract, $wallet->wallet_no, $trans_wallet->wallet_no, $transaction_custom_cost*$rate);
+                        if ($result == 'eth_balance_error') {
+                            return redirect()->back()->with(array('warning' => 'Eth balance is not available to transfer token'));
+                        }
+                    }
                 }
+
                 $trans = new Transaction();
                 $trans->trnx = str_rand();
                 $trans->user_id     = $user->referral_id;
@@ -686,8 +711,28 @@ class UserController extends Controller
             }
 
             $finalCharge = amount($transaction_global_cost+$transaction_custom_cost, $wallet->currency->type);
-            $finalamount = amount( $request->amount + $finalCharge, $wallet->currency->type);
-            user_wallet_increment(0, $currency_id, $transaction_global_cost, 9);
+            $finalamount = amount( $request->amount - $finalCharge*$rate, $wallet->currency->type);
+            user_wallet_increment(0, $currency_id, $transaction_global_cost*$rate, 9);
+            if ($wallet->currency->type == 2) {
+                $towallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $currency_id)->first();
+                if($wallet->currency->code == 'ETH') {
+                    RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
+                    $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex($transaction_global_cost*$rate*pow(10,18)).'"}';
+                    RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
+                }
+                else if($wallet->currency->code == 'BTC') {
+                    RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, $transaction_global_cost*$rate],$wallet->keyword);
+                }
+                else {
+                    RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
+                    $geth = new EthereumRpcService();
+                    $tokenContract = $wallet->currency->address;
+                    $result = $geth->transferToken($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $transaction_global_cost*$rate);
+                    if ($result == 'eth_balance_error') {
+                        return redirect()->back()->with(array('warning' => 'Eth balance is not available to transfer token'));
+                    }
+                }
+            }
 
             if($receiver = User::where('email',$request->email)->first()){
 
@@ -704,8 +749,8 @@ class UserController extends Controller
                 $data->status = 1;
                 $data->save();
 
-                user_wallet_decrement($user->id, $currency_id, $finalamount, $wallet->wallet_type);
-                user_wallet_increment($receiver->id, $currency_id, $request->amount, $wallet->wallet_type);
+                user_wallet_decrement($user->id, $currency_id, $request->amount, $wallet->wallet_type);
+                user_wallet_increment($receiver->id, $currency_id, $finalamount, $wallet->wallet_type);
 
                 $trans = new Transaction();
                 $trans->trnx = $txnid;
@@ -714,7 +759,7 @@ class UserController extends Controller
                 $trans->currency_id = $currency_id;
                 $trans_wallet = get_wallet($user->id, $currency_id, $wallet->wallet_type);
                 $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-                $trans->amount      = $finalamount;
+                $trans->amount      = $request->amount;
                 $trans->charge      = $finalCharge;
                 $trans->type        = '-';
                 $trans->remark      = 'Internal Payment';
@@ -727,7 +772,7 @@ class UserController extends Controller
                 $trans->user_id     = $receiver->id;
                 $trans->user_type   = 1;
                 $trans->currency_id = $currency_id;
-                $trans->amount      = $request->amount;
+                $trans->amount      = $finalamount;
                 $trans_wallet = get_wallet($receiver->id, $currency_id, $wallet->wallet_type);
                 $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
                 $trans->charge      = 0;
@@ -741,19 +786,19 @@ class UserController extends Controller
                     if($wallet->currency->code == 'ETH') {
                         RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
                         $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
-                        $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex($request->amount*pow(10,18)).'"}';
+                        $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex($finalamount*pow(10,18)).'"}';
                         RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
                     }
                     elseif($wallet->currency->code == 'BTC') {
                         $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
-                        RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, $request->amount],$wallet->keyword);
+                        RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, $finalamount],$wallet->keyword);
                     }
                     else {
                         RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
                         $geth = new EthereumRpcService();
                         $tokenContract = $wallet->currency->address;
                         $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
-                        $result = $geth->transferToken($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $request->amount);
+                        $result = $geth->transferToken($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $finalamount);
                         if ($result == 'eth_balance_error') {
                             return redirect()->back()->with(array('warning' => 'Eth balance is not available to transfer token'));
                         }
