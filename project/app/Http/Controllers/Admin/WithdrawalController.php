@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Transaction;
 use App\Models\Withdrawals;
+use App\Models\Currency;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Wallet;
@@ -47,34 +48,35 @@ class WithdrawalController extends Controller
         $withdraw->status = 2;
         $withdraw->reject_reason = $request->reason_of_reject;
         $withdraw->save();
-
+        $currency = Currency::findOrFail($withdraw->currency_id);
+        $rate = getRate($currency);
         if($withdraw->user_id){
             $user = $withdraw->user;
             //$wallet = Wallet::where('user_id',$withdraw->user_id)->where('user_type',1)->where('currency_id',$withdraw->currency_id)->firstOrFail();
             user_wallet_increment($withdraw->user_id, $withdraw->currency_id, $withdraw->amount);
             $transaction_global_cost = 0;
-            $transaction_global_fee = check_global_transaction_fee($withdraw->amount, $user, 'withdraw');
+            $transaction_global_fee = check_global_transaction_fee($withdraw->amount/$rate, $user, 'withdraw');
             if($transaction_global_fee)
             {
-                $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($withdraw->amount/100) * $transaction_global_fee->data->percent_charge;
+                $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($withdraw->amount/($rate*100)) * $transaction_global_fee->data->percent_charge;
             }
-            user_wallet_decrement(0, $withdraw->currency_id, $transaction_global_cost, 9);
+            user_wallet_decrement(0, $withdraw->currency_id, $transaction_global_cost*$rate, 9);
 
             if($user->referral_id != 0)
             {
                 $transaction_custom_cost = 0;
-                $transaction_custom_fee = check_custom_transaction_fee($withdraw->amount, User::whereId($withdraw->user_id)->first(), 'withdraw');
+                $transaction_custom_fee = check_custom_transaction_fee($withdraw->amount/$rate, User::whereId($withdraw->user_id)->first(), 'withdraw');
                 if($transaction_custom_fee) {
-                    $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($withdraw->amount/100) * $transaction_custom_fee->data->percent_charge;
+                    $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($withdraw->amount/($rate*100)) * $transaction_custom_fee->data->percent_charge;
                 }
                 $remark = 'withdraw_reject_supervisor_fee';
                 if (check_user_type_by_id(4, $user->referral_id)) {
-                    user_wallet_decrement($user->referral_id, $withdraw->currency_id, $transaction_custom_cost, 6);
+                    user_wallet_decrement($user->referral_id, $withdraw->currency_id, $transaction_custom_cost*$rate, 6);
                     $trans_wallet = get_wallet($user->referral_id, $withdraw->currency_id, 6);
                 }
                 elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
                     $remark = 'withdraw_reject_manager_fee';
-                    user_wallet_decrement($user->referral_id, $withdraw->currency_id, $transaction_custom_cost, 10);
+                    user_wallet_decrement($user->referral_id, $withdraw->currency_id, $transaction_custom_cost*$rate, 10);
                     $trans_wallet = get_wallet($user->referral_id, $withdraw->currency_id, 10);
                 }
 
@@ -83,8 +85,8 @@ class WithdrawalController extends Controller
                 $trans->user_id     = $user->referral_id;
                 $trans->user_type   = 1;
                 $trans->currency_id = $withdraw->currency_id;
-                $trans->amount      = $transaction_custom_cost;
-                
+                $trans->amount      = $transaction_custom_cost*$rate;
+
                 $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
 
                 $trans->charge      = 0;
@@ -106,7 +108,7 @@ class WithdrawalController extends Controller
 
             $trans_wallet = get_wallet($withdraw->user_id, $withdraw->currency_id);
             $trnx->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-            
+
             $trnx->charge      = 0;
             $trnx->remark      = 'withdraw_reject';
             $trnx->type        = '+';

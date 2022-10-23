@@ -59,6 +59,8 @@ class MerchantMoneyRequestController extends Controller
         $monthlyRequests = MoneyRequest::whereUserId(auth()->id())->whereMonth('created_at', '=', date('m'))->whereStatus('success')->sum('amount');
         $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'recieve')->first();
         $gs = Generalsetting::first();
+        $currency = Curreny::findOrFail($request->wallet_id);
+        $rate = getRate($currency);
 
         if($request->email == $user->email){
             return redirect()->back()->with('unsuccess','You can not send money yourself!');
@@ -77,19 +79,19 @@ class MerchantMoneyRequestController extends Controller
             return redirect()->back()->with('unsuccess','Monthly request limit over.');
         }
 
-        if ($request->amount < $global_range->min || $request->amount > $global_range->max) {
-            return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
+        if ($request->amount/$rate < $global_range->min || $request->amount/$rate > $global_range->max) {
+            return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value(USD rate) is '.$global_range->max.' and Min value is '.$global_range->min );
         }
 
-        $transaction_global_fee = check_global_transaction_fee($request->amount, $user, 'recieve');
-        $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/100) * $transaction_global_fee->data->percent_charge;
+        $transaction_global_fee = check_global_transaction_fee($request->amount/$rate, $user, 'recieve');
+        $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/(100*$rate)) * $transaction_global_fee->data->percent_charge;
 
         if($user->referral_id != 0)
         {
             $transaction_custom_cost = 0;
-            $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user, 'recieve');
+            $transaction_custom_fee = check_custom_transaction_fee($request->amount/$rate, $user, 'recieve');
             if($transaction_custom_fee) {
-                $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/100) * $transaction_custom_fee->data->percent_charge;
+                $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/(100*$rate)) * $transaction_custom_fee->data->percent_charge;
             }
         }
 
@@ -103,8 +105,8 @@ class MerchantMoneyRequestController extends Controller
         $data->receiver_name = $receiver->name;
         $data->transaction_no = $txnid;
         $data->currency_id = $request->wallet_id;
-        $data->cost = $transaction_global_cost;
-        $data->supervisor_cost = $user->referral_id != 0 ? $transaction_custom_cost : 0 ;
+        $data->cost = $transaction_global_cost*$rate;
+        $data->supervisor_cost = $user->referral_id != 0 ? $transaction_custom_cost*$rate : 0 ;
         $data->amount = $request->amount;
         $data->status = 0;
         $data->details = $request->details;

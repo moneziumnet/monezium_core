@@ -545,7 +545,7 @@ class UserController extends Controller
             $trnx->save();
             user_wallet_decrement($id, $currency_id, $plan->amount);
 
-            $user = User::findorFail($id);
+            $user = User::findOrFail($id);
             if ($user) {
 
                 $user->bank_plan_id = $subscription_type_id;
