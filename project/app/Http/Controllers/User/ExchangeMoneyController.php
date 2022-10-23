@@ -165,7 +165,9 @@ class ExchangeMoneyController extends Controller
         {
             $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/($from_rate*100)) * $transaction_global_fee->data->percent_charge;
         }
-        user_wallet_increment(0, $fromWallet->currency->id, $transaction_global_cost*$from_rate, 9);
+        if($fromWallet->currency->type == 1 && $toWallet->currency->type == 1){
+            user_wallet_increment(0, $fromWallet->currency->id, $transaction_global_cost*$from_rate, 9);
+        }
         $transaction_custom_cost = 0;
         $charge = amount($transaction_global_cost*$from_rate,$fromWallet->currency->type);
         $totalAmount = amount(($request->amount +  $charge),$fromWallet->currency->type);
@@ -507,7 +509,7 @@ class ExchangeMoneyController extends Controller
         $exchange->to_amount = $finalAmount;
         $exchange->save();
 
-        @mailSend('exchange_money',['from_curr'=>$fromWallet->currency->code,'to_curr'=>$toWallet->currency->code,'charge'=> amount($charge,$fromWallet->currency->type,3),'from_amount'=> amount($request->amount,$fromWallet->currency->type,3),'to_amount'=> amount($finalAmount,$toWallet->currency->type,3),'date_time'=> dateFormat($exchange->created_at)],auth()->user());
+        @mailSend('exchange_money',['from_curr'=>$fromWallet->currency->code,'to_curr'=>$toWallet->currency->code,'charge'=> amount($charge + $transaction_custom_cost*$from_rate,$fromWallet->currency->type,3),'from_amount'=> amount($request->amount,$fromWallet->currency->type,3),'to_amount'=> amount($finalAmount,$toWallet->currency->type,3),'date_time'=> dateFormat($exchange->created_at)],auth()->user());
 
         return back()->with('message','Money exchanged successfully.');
     }
