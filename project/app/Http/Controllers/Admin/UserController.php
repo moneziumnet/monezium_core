@@ -858,9 +858,9 @@ class UserController extends Controller
                 return redirect()->back()->with('error','This user has to buy a plan to withdraw.');
             }
 
-            // if(now()->gt($user->plan_end_date)){
-            //     return redirect()->back()->with('error','Plan Date Expired.');
-            // }
+            if(now()->gt($user->plan_end_date)){
+                return redirect()->back()->with('error','Plan Date Expired.');
+            }
 
             $bank_plan = BankPlan::whereId($user->bank_plan_id)->first();
             $dailySend = BalanceTransfer::whereUserId($user->id)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus(1)->sum('amount');
