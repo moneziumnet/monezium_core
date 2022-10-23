@@ -53,17 +53,7 @@ class OwnTransferController extends Controller
 
         $toWallet = Wallet::where('currency_id',$fromWallet->currency_id)->where('user_id',auth()->id())->where('wallet_type',$request->wallet_type)->where('user_type',1)->first();
         $currency =  Currency::findOrFail($fromWallet->currency_id);
-        if ($currency->type == 2) {
-            $keyword = str_rand(6);
-            $address = RPC_ETH('personal_newAccount',[$keyword]);
-            if ($address == 'error') {
-                return back()->with('error','You can not create this wallet because there is some issue in crypto node.');
-            }
-        }
-        else {
-            $address = $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
-            $keyword = '';
-        }
+        $rate = getRate($currency);
         if(!$toWallet){
             $toWallet = Wallet::create([
                 'user_id'     => auth()->id(),
@@ -124,28 +114,33 @@ class OwnTransferController extends Controller
             user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
         }
 
+
+        if($fromWallet->balance < $request->amount){
+            return back()->with('error','Insufficient balance to your '.$fromWallet->currency->code.' wallet');
+        }
+
         $transaction_global_cost = 0;
-        $transaction_global_fee = check_global_transaction_fee($request->amount, $user, 'payment_between_accounts');
+        $transaction_global_fee = check_global_transaction_fee($request->amount/$rate, $user, 'payment_between_accounts');
         if($transaction_global_fee)
         {
             $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/100) * $transaction_global_fee->data->percent_charge;
-            user_wallet_increment(0, $fromWallet->currency->id, $transaction_global_cost, 9);
+            user_wallet_increment(0, $fromWallet->currency->id, $transaction_global_cost*$rate, 9);
         }
         $transaction_custom_cost = 0;
         if($user->referral_id != 0)
         {
-            $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user,  'payment_between_accounts');
+            $transaction_custom_fee = check_custom_transaction_fee($request->amount/$rate, $user,  'payment_between_accounts');
             if($transaction_custom_fee) {
                 $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/100) * $transaction_custom_fee->data->percent_charge;
             }
             $remark = 'Own_transfer_supervisor_fee';
             if (check_user_type_by_id(4, $user->referral_id)) {
-                user_wallet_increment($user->referral_id, $fromWallet->currency->id, $transaction_custom_cost, 6);
+                user_wallet_increment($user->referral_id, $fromWallet->currency->id, $transaction_custom_cost*$rate, 6);
                 $trans_wallet = get_wallet($user->referral_id, $fromWallet->currency->id, 6);
             }
             elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
                 $remark = 'Own_transfer_manager_fee';
-                user_wallet_increment($user->referral_id, $fromWallet->currency->id, $transaction_custom_cost, 10);
+                user_wallet_increment($user->referral_id, $fromWallet->currency->id, $transaction_custom_cost*$rate, 10);
                 $trans_wallet = get_wallet($user->referral_id, $fromWallet->currency->id, 10);
             }
             $trans = new Transaction();
@@ -156,7 +151,7 @@ class OwnTransferController extends Controller
             $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
 
             $trans->currency_id = $fromWallet->currency->id;
-            $trans->amount      = $transaction_custom_cost;
+            $trans->amount      = $transaction_custom_cost*$rate;
             $trans->charge      = 0;
             $trans->type        = '+';
             $trans->remark      = $remark;
@@ -165,14 +160,11 @@ class OwnTransferController extends Controller
             $trans->save();
         }
 
-        if($fromWallet->balance < $request->amount + $transaction_global_cost +  $transaction_custom_cost){
-            return back()->with('error','Insufficient balance to your '.$fromWallet->currency->code.' wallet');
-        }
 
-        $fromWallet->balance -=  $request->amount + $transaction_global_cost +  $transaction_custom_cost;
+        $fromWallet->balance -=  $request->amount;
         $fromWallet->update();
 
-        $toWallet->balance += $request->amount;
+        $toWallet->balance += $request->amount-($transaction_global_cost +  $transaction_custom_cost)*$rate;
         $toWallet->update();
 
 
@@ -182,8 +174,8 @@ class OwnTransferController extends Controller
         $trnx->user_type   = 1;
         $trnx->currency_id = $fromWallet->currency->id;
         $trnx->wallet_id   = $fromWallet->id;
-        $trnx->amount      = $request->amount + $transaction_global_cost +  $transaction_custom_cost;
-        $trnx->charge      = $transaction_global_cost + $transaction_custom_cost;
+        $trnx->amount      = $request->amount;
+        $trnx->charge      = ($transaction_global_cost + $transaction_custom_cost)*$rate;
         $trnx->remark      = 'Own_transfer';
         $trnx->type        = '-';
         $trnx->details     = trans('Transfer  '.$fromWallet->currency->code.'money other wallet');
@@ -196,7 +188,7 @@ class OwnTransferController extends Controller
         $toTrnx->user_type   = 1;
         $toTrnx->currency_id = $toWallet->currency->id;
         $toTrnx->wallet_id   = $toWallet->id;
-        $toTrnx->amount      = $request->amount;
+        $toTrnx->amount      = $request->amount-($transaction_global_cost +  $transaction_custom_cost)*$rate;
         $toTrnx->charge      = 0;
         $toTrnx->remark      = 'Own_transfer';
         $toTrnx->type          = '+';
@@ -204,7 +196,7 @@ class OwnTransferController extends Controller
         $toTrnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.auth()->user()->name.'"}';
         $toTrnx->save();
 
-        @mailSend('exchange_money',['from_curr'=>$fromWallet->currency->code,'to_curr'=>$toWallet->currency->code,'charge'=> amount($charge,$fromWallet->currency->type,3),'from_amount'=> amount($request->amount,$fromWallet->currency->type,3),'to_amount'=> amount($finalAmount,$toWallet->currency->type,3),'date_time'=> dateFormat($trnx->created_at)],auth()->user());
+        @mailSend('exchange_money',['from_curr'=>$fromWallet->currency->code,'to_curr'=>$toWallet->currency->code,'charge'=> amount(($transaction_global_cost +  $transaction_custom_cost)*$rate,$fromWallet->currency->type,3),'from_amount'=> amount($request->amount,$fromWallet->currency->type,3),'to_amount'=> amount($request->amount-($transaction_global_cost +  $transaction_custom_cost)*$rate,$toWallet->currency->type,3),'date_time'=> dateFormat($trnx->created_at)],auth()->user());
 
         return back()->with('message','Money exchanged successfully.');
     }
