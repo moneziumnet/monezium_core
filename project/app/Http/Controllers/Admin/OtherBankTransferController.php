@@ -407,7 +407,7 @@ class OtherBankTransferController extends Controller
                   $param = $this->getToken($body, $data->subbank);
 
                   try {
-                    $response = $client->request('POST',  'https://sandbox.clearjunction.com/v7/gate/payout/bankTransfer/eu?checkOnly=false', [
+                    $response = $client->request('POST',  'https://client.clearjunction.com/v7/gate/payout/bankTransfer/eu?checkOnly=false', [
                         'body' => $body,
                         'headers' => [
                            'Accept'=> '*/*',

@@ -21,7 +21,7 @@ use DateTime;
 
 class UserClearJunctionController extends Controller
 {
-    private $url = 'https://sandbox.clearjunction.com/v7/'; // Sandbox Host Url
+    private $url = 'https://client.clearjunction.com/v7/'; // Sandbox Host Url
     private $wallet_uuid = '8f297da3-8838-437f-b4e1-ce9f7714c61b'; // Sandbwallet_uuid
     private $API_Key = '8f299ac0-1543-41f6-b094-70a5fd837bed';
     private $apiPassword = 'eydy8qv9ui0o';
@@ -69,7 +69,7 @@ class UserClearJunctionController extends Controller
         $banklastindex = BankAccount::orderBy('id', 'DESC')->first()->id + rand(100000,999999);
         $bankaccount = BankAccount::where('user_id', $request->user)->where('subbank_id', $request->subbank)->where('currency_id', $request->currency)->first();
         $country = Country::findOrFail($user->country);
-        
+
         if ($bankaccount){
             return redirect()->back()->with(array('warning' => 'This bank account already exists.'));
 
