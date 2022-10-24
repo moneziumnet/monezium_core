@@ -167,12 +167,6 @@ class ExchangeMoneyController extends Controller
 
         if(in_array(4,$explode))
         {
-            $custom_charge = Charge::where('name', 'Exchange Money')->where('user_id', $user_id)->first();
-
-            if($custom_charge)
-            {
-                $custom_cost = $custom_charge->data->fixed_charge + ($request->amount/100) * $custom_charge->data->percent_charge;
-            }
             $transaction_custom_fee = check_custom_transaction_fee($request->amount, $user);
             if($transaction_custom_fee) {
                 $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/100) * $transaction_custom_fee->data->percent_charge;
@@ -181,10 +175,10 @@ class ExchangeMoneyController extends Controller
 
 
         $defaultAmount = $request->amount / getRate($fromWallet->currency);
-        $finalAmount   = amount($defaultAmount * getRate($toWallet->currency),$toWallet->currency->type);
+        $finalAmount   = $defaultAmount * getRate($toWallet->currency);
 
-        $charge = amount($custom_cost+$global_cost+$transaction_global_cost+$transaction_custom_cost,$fromWallet->currency->type);
-        $totalAmount = amount(($request->amount +  $charge),$fromWallet->currency->type);
+        $charge = $custom_cost+$global_cost+$transaction_global_cost+$transaction_custom_cost;
+        $totalAmount = $request->amount +  $charge;
 
         if($fromWallet->balance < $totalAmount){
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Insufficient balance to your '.$fromWallet->currency->code.' wallet']);

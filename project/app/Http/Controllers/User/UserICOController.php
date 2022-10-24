@@ -49,7 +49,7 @@ class UserICOController extends Controller
         $wallets = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('wallet_type',1)->where('balance', '>', 0)->get();
         $currencies = Currency::whereStatus(1)->get();
         if (!isEnabledUserModule('Crypto'))
-            $currencies = Currency::whereStatus(1)->where('type', 1)->get();        
+            $currencies = Currency::whereStatus(1)->where('type', 1)->get();
         $user = auth()->user();
         return view('user.ico.buy', compact('wallets','currencies', 'user', 'ico_token'));
     }
@@ -65,7 +65,7 @@ class UserICOController extends Controller
         $wallet = Wallet::where('id',$request->from_wallet_id)->with('currency')->first();
         $currency_id = $wallet->currency->id;
         $user = auth()->user();
-        $transaction_amount = (float)filter_var(amount($request->amount * $ico_token->price * getRate($wallet->currency), 1, 8), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+        $transaction_amount = $request->amount * $ico_token->price * getRate($wallet->currency);
 
         if(now()->gt($ico_token->end_date)){
             return redirect()->back()->with('error','Date Expired.');

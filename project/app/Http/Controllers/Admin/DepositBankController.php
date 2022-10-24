@@ -177,7 +177,7 @@ class DepositBankController extends Controller
             $trans->save();
         }
         $final_chargefee = $transaction_global_cost + $transaction_custom_cost;
-        $final_amount = amount($amount - $final_chargefee, $data->currency->type );
+        $final_amount = $amount - $final_chargefee;
 
         user_wallet_increment($user->id, $data->currency_id, $final_amount*$rate, 1);
         user_wallet_increment(0, $data->currency_id, $transaction_global_cost*$rate, 9);

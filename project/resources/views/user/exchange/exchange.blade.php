@@ -62,18 +62,7 @@
                                     @if (isset($wallet_type_list[$wallet->wallet_type]))
                                     @php
                                         if($wallet->currency->type == 2) {
-
-                                            if($wallet->currency->code == 'BTC') {
-                                                $amount = RPC_BTC_Balance('getbalance',$wallet->keyword) == 'error' ? amount($wallet->balance,$wallet->currency->type,2) : RPC_BTC_Balance('getbalance',$wallet->keyword);
-                                            }
-                                            else if($wallet->currency->code == 'ETH') {
-                                                $amount = RPC_ETH('eth_getBalance',[$wallet->wallet_no, "latest"]) == 'error' ? amount($wallet->balance,$wallet->currency->type,2) : hexdec(RPC_ETH('eth_getBalance',[$wallet->wallet_no, "latest"]))/pow(10,18);
-                                            }
-                                            else {
-                                                $geth = new App\Classes\EthereumRpcService();
-                                                $tokenContract = $wallet->currency->address;
-                                                $amount = $geth->getTokenBalance($tokenContract, $wallet->wallet_no) == 'error' ? amount($wallet->balance,$wallet->currency->type,2) : $geth->getTokenBalance($tokenContract, $wallet->wallet_no);
-                                            }
+                                            $amount = Crypto_Balance($wallet->user_id, $wallet->currency_id);
                                         }
                                         else {
                                             $amount = amount($wallet->balance,$wallet->currency->type,2);

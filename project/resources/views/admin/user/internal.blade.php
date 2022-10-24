@@ -6,18 +6,7 @@
                 $accounttype = ['0' => 'All', '1' => 'Current', '2' => 'Card', '3' => 'Deposit', '4' => 'Loan', '5' => 'Escrow', '6' => 'Supervisor', '7' => 'Merchant', '8' => 'Crypto', '9' => 'System', '10' => 'Manager'];
                 $dcurr = App\Models\Currency::findOrFail($wallet->currency_id);
                 if($dcurr->type == 2) {
-
-                    if($dcurr->code == 'BTC') {
-                        $amount = RPC_BTC_Balance('getbalance',$wallet->keyword) == 'error' ? amount($wallet->balance,$dcurr->type,2) : RPC_BTC_Balance('getbalance',$wallet->keyword);
-                    }
-                    else if($dcurr->code == 'ETH') {
-                        $amount = RPC_ETH('eth_getBalance',[$wallet->wallet_no, "latest"]) == 'error' ? amount($wallet->balance,$dcurr->type,2) : hexdec(RPC_ETH('eth_getBalance',[$wallet->wallet_no, "latest"]))/pow(10,18);
-                    }
-                    else {
-                        $geth = new App\Classes\EthereumRpcService();
-                        $tokenContract = $dcurr->address;
-                        $amount = $geth->getTokenBalance($tokenContract, $wallet->wallet_no) == 'error' ? amount($wallet->balance,$dcurr->type,2) : $geth->getTokenBalance($tokenContract, $wallet->wallet_no);
-                    }
+                    $amount = Crypto_Balance($wallet->user_id, $wallet->currency_id);
                 }
                 else {
                     $amount = amount($wallet->balance, $dcurr->type, 2);

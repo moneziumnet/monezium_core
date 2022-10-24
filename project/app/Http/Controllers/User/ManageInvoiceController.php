@@ -409,7 +409,7 @@ class ManageInvoiceController extends Controller
     {
         $invoice = Invoice::findOrFail($request->invoice_id);
         $currency = $invoice->currency;
-        $amount = amount($invoice->final_amount,$currency->type,3);
+        $amount = $invoice->final_amount;
         $route = route('invoice.view',encrypt($invoice->number));
 
         email([

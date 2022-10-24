@@ -716,8 +716,8 @@ class UserController extends Controller
                 $trans->save();
             }
 
-            $finalCharge = amount($transaction_global_cost+$transaction_custom_cost, $wallet->currency->type);
-            $finalamount = amount( $request->amount - $finalCharge*$rate, $wallet->currency->type);
+            $finalCharge = $transaction_global_cost+$transaction_custom_cost;
+            $finalamount =  $request->amount - $finalCharge*$rate;
             user_wallet_increment(0, $currency_id, $transaction_global_cost*$rate, 9);
             if ($wallet->currency->type == 2) {
                 $towallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $currency_id)->first();

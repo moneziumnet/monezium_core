@@ -230,18 +230,8 @@
                         <div class="card-body">
                             <div class="h3 m-0 text-uppercase"> {{__('Crypto')}}</div>
                             <div class="h4 m-0"> {{ $item->wallet_no }}</div>
-                            @if ($item->currency->code == 'BTC')
-                                <div class="text-muted">{{ RPC_BTC_Balance('getbalance',$item->keyword) == 'error' ? amount($item->balance,$item->currency->type,2) : RPC_BTC_Balance('getbalance', $item->keyword)}}  {{$item->currency->code}}</div>
-                            @elseif($item->currency->code == 'ETH')
-                                <div class="text-muted">{{ RPC_ETH('eth_getBalance',[$item->wallet_no, "latest"]) == 'error' ? amount($item->balance,$item->currency->type,2) : hexdec(RPC_ETH('eth_getBalance',[$item->wallet_no, "latest"]))/pow(10,18) }}  {{$item->currency->code}}</div>
-                            @else
-                                @php
-                                    $geth = new App\Classes\EthereumRpcService();
-                                    $tokenContract = $item->currency->address;
-                                    $balance = $geth->getTokenBalance($tokenContract, $item->wallet_no);
-                                @endphp
-                                <div class="text-muted">{{ $balance == 'error'? amount($item->balance,$item->currency->type,2):$balance }}  {{$item->currency->code}}</div>
-                            @endif
+                            <div class="text-muted">{{ Crypto_Balance($item->user_id, $item->currency_id)}}  {{$item->currency->code}}</div>
+
                         </div>
                         </div>
                     </div>

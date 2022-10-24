@@ -934,15 +934,15 @@ if(!function_exists('getUserModule')){
         $wallet = MerchantWallet::where('merchant_id', $auth_id)->where('shop_id', $shop_id)->where('currency_id',$currency_id)->with('currency')->first();
         if($wallet) {
             if($wallet->currency->code == 'BTC') {
-                $amount = RPC_BTC_Balance('getbalance',$wallet->keyword) == 'error' ? amount($wallet->balance,$wallet->currency->type,8) : RPC_BTC_Balance('getbalance',$wallet->keyword);
+                $amount = RPC_BTC_Balance('getbalance',$wallet->keyword) == 'error' ? 0 : RPC_BTC_Balance('getbalance',$wallet->keyword);
             }
             else if($wallet->currency->code == 'ETH') {
-                $amount = RPC_ETH('eth_getBalance',[$wallet->wallet_no, "latest"]) == 'error' ? amount($wallet->balance,$wallet->currency->type,8) : hexdec(RPC_ETH('eth_getBalance',[$wallet->wallet_no, "latest"]))/pow(10,18);
+                $amount = RPC_ETH('eth_getBalance',[$wallet->wallet_no, "latest"]) == 'error' ? 0 : hexdec(RPC_ETH('eth_getBalance',[$wallet->wallet_no, "latest"]))/pow(10,18);
             }
             else {
                 $geth = new App\Classes\EthereumRpcService();
                 $tokenContract = $wallet->currency->address;
-                $amount = $geth->getTokenBalance($tokenContract, $wallet->wallet_no) == 'error' ? amount($wallet->balance,$wallet->currency->type,8) : $geth->getTokenBalance($tokenContract, $wallet->wallet_no);
+                $amount = $geth->getTokenBalance($tokenContract, $wallet->wallet_no) == 'error' ? 0 : $geth->getTokenBalance($tokenContract, $wallet->wallet_no);
             }
         }
         else {

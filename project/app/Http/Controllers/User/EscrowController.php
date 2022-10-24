@@ -92,9 +92,9 @@ class EscrowController extends Controller
             }
         }
 
-        $finalCharge = amount($transaction_global_cost+$transaction_custom_cost,$currency->type);
-        if($request->charge_pay) $finalAmount =  amount($request->amount + $finalCharge*$rate, $currency->type);
-        else  $finalAmount =  amount($request->amount, $currency->type);
+        $finalCharge = $transaction_global_cost+$transaction_custom_cost;
+        if($request->charge_pay) $finalAmount =  $request->amount + $finalCharge*$rate;
+        else  $finalAmount =  $request->amount;
 
         if($senderWallet->balance < $finalAmount) return back()->with('error','Insufficient balance.');
 

@@ -47,7 +47,7 @@ class EscrowController extends Controller
                 'charge_pay'        => 'numeric'
             ];
             $validator = Validator::make($request->all(), $rules);
-            
+
             if ($validator->fails()) {
                 return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
             }
@@ -65,10 +65,10 @@ class EscrowController extends Controller
             $currency = Currency::findOrFail($senderWallet->currency->id);
             $charge = charge('make-escrow');
 
-            $finalCharge = amount(chargeCalc($charge,$request->amount,getRate($currency)),$currency->type);
+            $finalCharge = chargeCalc($charge,$request->amount,getRate($currency));
 
-            if($request->pay_charge) $finalAmount =  amount($request->amount + $finalCharge, $currency->type);
-            else  $finalAmount =  amount($request->amount, $currency->type);
+            if($request->pay_charge) $finalAmount =  $request->amount + $finalCharge;
+            else  $finalAmount =  $request->amount;
 
             if($senderWallet->balance < $finalAmount) return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Insufficient balance']);
 

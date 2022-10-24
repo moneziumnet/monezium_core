@@ -80,8 +80,7 @@ class VoucherController extends Controller
 
 
 
-        $finalCharge = amount($custom_cost+$global_cost+$transaction_global_cost+$transaction_custom_cost,$wallet->currency->type);
-        $finalAmount = $request->amount + $finalCharge;
+        $finalCharge = $custom_cost+$global_cost+$transaction_global_cost+$transaction_custom_cost;
 
         // $commission  = ($request->amount * $global_charge->data->commission)/100;
         $userBalance = user_wallet_balance(auth()->id(), $wallet->currency_id);

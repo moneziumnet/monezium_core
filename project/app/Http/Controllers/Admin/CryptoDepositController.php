@@ -135,7 +135,7 @@ class CryptoDepositController extends Controller
                 $res = RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
             }
             elseif($currency->code == 'BTC') {
-                $res = RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, amount($final_amount*$crypto_rate,1,5)],$fromWallet->keyword);
+                $res = RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, $final_amount*$crypto_rate],$fromWallet->keyword);
                 if($res == 'error') {
                     return response()->json(array('errors' => [ 0 =>  __('you can not deposit.') ]));
                 }

@@ -161,18 +161,8 @@
                                 </div>
                                 <div class="text-xs font-weight-bold text-uppercase mb-1"> {{$dcurr->curr_name}}</div>
                                 @if ($dcurr->type == 2)
-                                    @if ($dcurr->code == 'BTC')
-                                        <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ RPC_BTC_Balance('getbalance',$wallet->keyword) == 'error' ? amount($wallet->balance,$dcurr->type,2) : RPC_BTC_Balance('getbalance', $wallet->keyword)}}  {{$dcurr->code}}</div>
-                                    @elseif($dcurr->code == 'ETH')
-                                        <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ hexdec(RPC_ETH('eth_getBalance',[$wallet->wallet_no, "latest"]))/pow(10,18) == 'error' ? amount($wallet->balance,$dcurr->type,2) : hexdec(RPC_ETH('eth_getBalance',[$wallet->wallet_no, "latest"]))/pow(10,18) }}  {{$dcurr->code}}</div>
-                                    @else
-                                        @php
-                                            $geth = new App\Classes\EthereumRpcService();
-                                            $tokenContract = $dcurr->address;
-                                            $balance = $geth->getTokenBalance($tokenContract, $wallet->wallet_no);
-                                        @endphp
-                                        <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ $balance =='error' ? amount($wallet->balance,$dcurr->type,2) :$balance }}  {{$dcurr->code}}</div>
-                                    @endif
+                                    <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ Crypto_Balance($wallet->user_id, $wallet->currency_id)}}  {{$dcurr->code}}</div>
+
                                 @else
                                     <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{amount($wallet->balance,$dcurr->type,2)}} {{$dcurr->code}} ({{$dcurr->symbol}}) </div>
                                 @endif
