@@ -14,18 +14,18 @@ class SwanResponse implements RespondsToWebhook
     public function respondToValidWebhook(Request $request, WebhookConfig $config): Response
     {
         $obj = json_decode($request->getContent());
-
-        if(!isset($obj->resource_id)) {
+        
+        if(!isset($obj->resourceId)) {
             return response()->json('error');
         }
-        $webrequest = WebhookRequest::where('transaction_id', $obj->resource_id)
+        $webrequest = WebhookRequest::where('transaction_id', $obj->resourceId)
             ->where('gateway_type', 'swan')
             ->first();    
 
         if(!$webrequest)
             $webrequest = new WebhookRequest();
 
-        $webrequest->transaction_id = $obj->resource_id;
+        $webrequest->transaction_id = $obj->resourceId;
         switch($obj->eventType) {
             case "transaction-pending":
                 $webrequest->status = "processing";
@@ -68,17 +68,7 @@ class SwanResponse implements RespondsToWebhook
             return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
         }
         try {
-            $body = '{"query":"query Transaction($id: ID!) {
-                transaction(id: $id) {
-                  id
-                  reference
-                  counterparty
-                  amount {
-                    currency
-                    value
-                  }
-                }
-              }","variables":{"id": "'.$obj->resource_id.'"}}';
+            $body = '{"query":"query Transaction($id: ID!) {\\n  transaction(id: $id) {\\n    id\\n    reference\\n    counterparty\\n    amount {\\n      currency\\n      value\\n    }\\n  }\\n}","variables":{"id": "'.$obj->resourceId.'"}}';
             $headers = [
                 'Authorization' => 'Bearer '.$access_token,
                 'Content-Type' => 'application/json'
