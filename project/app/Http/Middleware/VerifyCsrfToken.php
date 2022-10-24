@@ -26,5 +26,6 @@ class VerifyCsrfToken extends Middleware
         '/user/globalpass/callback',
         'webhook-openpayd',
         'webhook-railsbank',
+        'webhook-swan',
     ];
 }

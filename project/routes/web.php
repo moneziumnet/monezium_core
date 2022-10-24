@@ -19,6 +19,7 @@ Route::redirect('admin', 'admin/login');
 
 Route::webhooks('webhook-openpayd','openpayd');
 Route::webhooks('webhook-railsbank','railsbank');
+Route::webhooks('webhook-swan','swan');
 
 Route::get('check-user-plan/{key}', function($key){
     if($key == env('APP_KEY')) {
