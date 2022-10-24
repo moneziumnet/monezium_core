@@ -241,18 +241,7 @@ class UserController extends Controller
                 $wallets = Wallet::where('user_id', $id)->where('wallet_type', $wallet_type)->where('currency_id', $currency_id)->with('currency')->get();
                 $currency = Currency::findOrFail($currency_id);
                 if($currency->type == 2 && count($wallets) >= 1) {
-                    if($currency->code == 'BTC') {
-                        $wallets[0]->balance = RPC_BTC_Balance('getbalance',$wallets[0]->keyword) == 'error' ? 0 : RPC_BTC_Balance('getbalance', $wallets[0]->keyword);
-                    }
-                    elseif($currency->code == 'ETH') {
-                        $wallets[0]->balance = hexdec(RPC_ETH('eth_getBalance',[$wallets[0]->wallet_no, "latest"]))/pow(10,18) == 'error' ? 0 : hexdec(RPC_ETH('eth_getBalance',[$wallets[0]->wallet_no, "latest"]))/pow(10,18);
-                    }
-                    else {
-                        $geth = new EthereumRpcService();
-                        $tokenContract = $currency->address;
-                        $balance = $geth->getTokenBalance($tokenContract, $wallets[0]->wallet_no);
-                        $wallets[0]->balance = $balance == 'error' ? 0:$balance;
-                    }
+                    $wallets[0]->balance = Crypto_Balance($wallets[0]->user_id, $wallets[0]->currency_id);
                 }
             }
             return $wallets;
