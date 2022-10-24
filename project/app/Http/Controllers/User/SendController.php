@@ -233,6 +233,9 @@ class SendController extends Controller
 
         if($receiver = User::where('email',$request->email)->first()){
 
+            user_wallet_decrement($user->id, $currency_id, $request->amount, $wallet->wallet_type);
+            user_wallet_increment($receiver->id, $currency_id, $finalamount, $wallet->wallet_type);
+
             if ($wallet->currency->type == 2) {
                 $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
                 if($wallet->currency->code == 'ETH') {
@@ -270,8 +273,6 @@ class SendController extends Controller
             // $receiver->increment('balance',$request->amount);
             // $user->decrement('balance',$request->amount);
 
-            user_wallet_decrement($user->id, $currency_id, $request->amount, $wallet->wallet_type);
-            user_wallet_increment($receiver->id, $currency_id, $finalamount, $wallet->wallet_type);
 
             $trans = new Transaction();
             $trans->trnx = $txnid;

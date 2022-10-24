@@ -906,7 +906,12 @@ if(!function_exists('getUserModule')){
   {
     function Crypto_Balance($auth_id, $currency_id)
     {
-        $wallet = Wallet::where('user_id', $auth_id)->where('wallet_type', 8)->where('currency_id',$currency_id)->with('currency')->first();
+        if ($auth_id == 0 ) {
+            $wallet = Wallet::where('user_id', $auth_id)->where('wallet_type', 9)->where('currency_id',$currency_id)->with('currency')->first();
+        }
+        else {
+            $wallet = Wallet::where('user_id', $auth_id)->where('wallet_type', 8)->where('currency_id',$currency_id)->with('currency')->first();
+        }
         if($wallet) {
             if($wallet->currency->code == 'BTC') {
                 $amount = RPC_BTC_Balance('getbalance',$wallet->keyword) == 'error' ? 0 : RPC_BTC_Balance('getbalance',$wallet->keyword);
