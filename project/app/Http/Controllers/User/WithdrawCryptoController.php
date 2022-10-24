@@ -115,8 +115,8 @@ class WithdrawCryptoController extends Controller
             $geth = new EthereumRpcService();
             $tokenContract = $fromWallet->currency->address;
             $result = $geth->transferToken($tokenContract, $fromWallet->wallet_no, $toWallet->wallet_no, $transaction_global_cost*$crypto_rate);
-            if ($result == 'eth_balance_error') {
-                return redirect()->back()->with(array('warning' => 'Eth balance is not available to transfer token'));
+            if (isset($result->error)){
+                return redirect()->back()->with(array('error' => 'Ethereum client error: '.$result->error->message));
             }
         }
 
@@ -141,8 +141,8 @@ class WithdrawCryptoController extends Controller
                 $geth = new EthereumRpcService();
                 $tokenContract = $fromWallet->currency->address;
                 $result = $geth->transferToken($tokenContract, $fromWallet->wallet_no, $torefWallet->wallet_no, $transaction_custom_cost*$crypto_rate);
-                if ($result == 'eth_balance_error') {
-                    return redirect()->back()->with(array('warning' => 'Eth balance is not available to transfer token'));
+                if (isset($result->error)){
+                    return redirect()->back()->with(array('error' => 'Ethereum client error: '.$result->error->message));
                 }
             }
             $trans = new Transaction();
@@ -174,8 +174,8 @@ class WithdrawCryptoController extends Controller
             $geth = new EthereumRpcService();
             $tokenContract = $fromWallet->currency->address;
             $result = $geth->transferToken($tokenContract, $fromWallet->wallet_no, $request->sender_address, $messagefinal*$crypto_rate);
-            if ($result == 'eth_balance_error') {
-                return redirect()->back()->with(array('warning' => 'Eth balance is not available to transfer token'));
+            if (isset($result->error)){
+                return redirect()->back()->with(array('error' => 'Ethereum client error: '.$result->error->message));
             }
         }
 

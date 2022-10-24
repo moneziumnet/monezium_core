@@ -47,17 +47,24 @@ class EthereumRpcService
         $signature = $this->getFunctionSignature('transfer(address,uint256)');
         $to = str_pad(substr($to, 2), 64, '0', STR_PAD_LEFT);
         $value = str_pad($this->bcdechex($this->toWei($value)), 64, '0', STR_PAD_LEFT);
-        $eth_balance = $this->getEtherBalance($from);
-        $gas_fee = $this->estimateGas([
-            'from' => $from,
-            'to' => $tokenContract,
-            'data' => $signature . $to . $value,
-            'value' => '0x0',
-        ]);
-        if (hexdec($gas_fee) / (10 ** 18) > $eth_balance) {
-            return 'eth_balance_error';
-        }
-        return $this->call('eth_sendTransaction', [[
+        // $value = "0x".dechex((int)($value*pow(10,18)));
+        // dd($value);
+        // $eth_balance = $this->getEtherBalance($from);
+        // $gas_fee = $this->estimateGas([
+        //     'from' => $from,
+        //     'to' => $tokenContract,
+        //     'data' => $signature . $to . $value,
+        //     'value' => '0x0',
+        // ]);
+        // if (hexdec($gas_fee) / (10 ** 18) > $eth_balance) {
+        //     $res = [
+        //         'error' => [
+        //             'message' => 'eth balance insulance funds.',
+        //         ]
+        //     ];
+        //     return $res;
+        // }
+        return $this->call_transfer('eth_sendTransaction', [[
             'from' => $from,
             'to' => $tokenContract,
             'data' => $signature . $to . $value,
@@ -76,6 +83,40 @@ class EthereumRpcService
             'data' => $signature . $spender . $value,
             'value' => '0x0',
         ]]);
+    }
+    public function call_transfer($method, array $parameters = [], $link = 'localhost:8545')
+    {
+        $body = [
+            'jsonrpc' => '2.0',
+            'method' => $method,
+            'params' => $parameters,
+            'id' => $id = time(),
+        ];
+        $client = new Client();
+        $headers = [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+        ];
+
+        try {
+            $response = $client->request('POST', $link, ["headers" => $headers, "body" => json_encode($body)]);
+            $res = json_decode($response->getBody());
+
+        } catch (\Throwable $th) {
+                return 'error';
+        }
+        if (isset($res->error)) {
+            return $res;
+            // throw new EthereumException(sprintf('Ethereum client error: %s', $res->error->message));
+        }
+        if ($method == 'eth_sendTransaction') {
+            do {
+                sleep(1);
+                $txReceipt = $this->getTransactionReceipt($res->result);
+            } while (!$txReceipt);
+            return $txReceipt;
+        }
+        return $res;
     }
 
     public function call($method, array $parameters = [], $link = 'localhost:8545')
@@ -98,17 +139,6 @@ class EthereumRpcService
 
         } catch (\Throwable $th) {
                 return 'error';
-        }
-        // if (isset($res->error)) {
-        //     return "error";
-        //     throw new EthereumException(sprintf('Ethereum client error: %s', $res->error->message));
-        // }
-        if ($method == 'eth_sendTransaction') {
-            do {
-                sleep(1);
-                $txReceipt = $this->getTransactionReceipt($res->result);
-            } while (!$txReceipt);
-            return $txReceipt;
         }
         return $res->result;
     }

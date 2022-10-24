@@ -125,7 +125,7 @@ class SendController extends Controller
         }
 
         if($request->amount < 0){
-            return redirect()->back()->with('unsuccess','Request Amount should be greater than this!');
+            return redirect()->back()->with('unsuccess','Request Amount should be greater than 0!');
         }
         if ($wallet->currency->type == 2) {
             if($request->amount > Crypto_Balance($user->id, $currency_id)){
@@ -181,8 +181,8 @@ class SendController extends Controller
                     $geth = new EthereumRpcService();
                     $tokenContract = $wallet->currency->address;
                     $result = $geth->transferToken($tokenContract, $wallet->wallet_no, $trans_wallet->wallet_no, $transaction_custom_cost*$rate);
-                    if ($result == 'eth_balance_error') {
-                        return redirect()->back()->with(array('warning' => 'Eth balance is not available to transfer token'));
+                    if (isset($result->error)){
+                        return redirect()->back()->with(array('error' => 'Ethereum client error: '.$result->error->message));
                     }
                 }
             }
@@ -205,10 +205,8 @@ class SendController extends Controller
 
         }
 
-
-
-        $finalCharge = amount($transaction_global_cost+$transaction_custom_cost, $wallet->currency->type);
-        $finalamount = amount( $request->amount - $finalCharge*$rate, $wallet->currency->type);
+        $finalCharge = $transaction_global_cost+$transaction_custom_cost;
+        $finalamount = $request->amount - $finalCharge*$rate;
 
         if ($wallet->currency->type == 2) {
             $towallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $currency_id)->first();
@@ -225,8 +223,8 @@ class SendController extends Controller
                 $geth = new EthereumRpcService();
                 $tokenContract = $wallet->currency->address;
                 $result = $geth->transferToken($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $transaction_global_cost*$rate);
-                if ($result == 'eth_balance_error') {
-                    return redirect()->back()->with(array('warning' => 'Eth balance is not available to transfer token'));
+                if (isset($result->error)){
+                    return redirect()->back()->with(array('error' => 'Ethereum client error: '.$result->error->message));
                 }
             }
         }
@@ -249,12 +247,9 @@ class SendController extends Controller
                     RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
                     $geth = new EthereumRpcService();
                     $tokenContract = $wallet->currency->address;
-                    $result = $geth->transferToken($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $finalamount);
-                    if (isset($result->error)) {
-                        return redirect()->back()->with(array('error' => $result->error->message));
-                    }
-                    if ($result == 'eth_balance_error') {
-                        return redirect()->back()->with(array('warning' => 'Eth balance is not available to transfer token'));
+                    $result = $geth->transferToken($tokenContract, $wallet->wallet_no, $towallet->wallet_no, (float)$finalamount);
+                    if (isset($result->error)){
+                        return redirect()->back()->with(array('error' => 'Ethereum client error: '.$result->error->message));
                     }
                 }
             }

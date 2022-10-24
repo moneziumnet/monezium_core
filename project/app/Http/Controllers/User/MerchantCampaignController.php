@@ -393,8 +393,8 @@ class MerchantCampaignController extends Controller
                     $geth = new EthereumRpcService();
                     $tokenContract = $wallet->currency->address;
                     $result = $geth->transferToken($tokenContract, $wallet->wallet_no, $trans_wallet->wallet_no, $request->amount);
-                    if ($result == 'eth_balance_error') {
-                        return redirect()->back()->with(array('warning' => 'Eth balance is not available to transfer token'));
+                    if (isset($result->error)){
+                        return redirect()->back()->with(array('error' => 'Ethereum client error: '.$result->error->message));
                     }
                 }
                 $trnx              = new ModelsTransaction();

@@ -693,8 +693,8 @@ class UserController extends Controller
                         $geth = new EthereumRpcService();
                         $tokenContract = $wallet->currency->address;
                         $result = $geth->transferToken($tokenContract, $wallet->wallet_no, $trans_wallet->wallet_no, $transaction_custom_cost*$rate);
-                        if ($result == 'eth_balance_error') {
-                            return redirect()->back()->with(array('warning' => 'Eth balance is not available to transfer token'));
+                        if (isset($result->error)){
+                            return redirect()->back()->with(array('error' => 'Ethereum client error: '.$result->error->message));
                         }
                     }
                 }
@@ -734,8 +734,8 @@ class UserController extends Controller
                     $geth = new EthereumRpcService();
                     $tokenContract = $wallet->currency->address;
                     $result = $geth->transferToken($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $transaction_global_cost*$rate);
-                    if ($result == 'eth_balance_error') {
-                        return redirect()->back()->with(array('warning' => 'Eth balance is not available to transfer token'));
+                    if (isset($result->error)){
+                        return redirect()->back()->with(array('error' => 'Ethereum client error: '.$result->error->message));
                     }
                 }
             }
@@ -805,8 +805,8 @@ class UserController extends Controller
                         $tokenContract = $wallet->currency->address;
                         $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
                         $result = $geth->transferToken($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $finalamount);
-                        if ($result == 'eth_balance_error') {
-                            return redirect()->back()->with(array('warning' => 'Eth balance is not available to transfer token'));
+                        if (isset($result->error)){
+                            return redirect()->back()->with(array('error' => 'Ethereum client error: '.$result->error->message));
                         }
                     }
                 }
