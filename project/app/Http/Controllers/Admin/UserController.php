@@ -242,16 +242,16 @@ class UserController extends Controller
                 $currency = Currency::findOrFail($currency_id);
                 if($currency->type == 2 && count($wallets) >= 1) {
                     if($currency->code == 'BTC') {
-                        $wallets[0]->balance = RPC_BTC_Balance('getbalance',$wallets[0]->keyword) == 'error' ? amount($wallets[0]->balance,$currency->type,2) : RPC_BTC_Balance('getbalance', $wallets[0]->keyword);
+                        $wallets[0]->balance = RPC_BTC_Balance('getbalance',$wallets[0]->keyword) == 'error' ? 0 : RPC_BTC_Balance('getbalance', $wallets[0]->keyword);
                     }
                     elseif($currency->code == 'ETH') {
-                        $wallets[0]->balance = hexdec(RPC_ETH('eth_getBalance',[$wallets[0]->wallet_no, "latest"]))/pow(10,18) == 'error' ? amount($wallets[0]->balance,$currency->type,2) : hexdec(RPC_ETH('eth_getBalance',[$wallets[0]->wallet_no, "latest"]))/pow(10,18);
+                        $wallets[0]->balance = hexdec(RPC_ETH('eth_getBalance',[$wallets[0]->wallet_no, "latest"]))/pow(10,18) == 'error' ? 0 : hexdec(RPC_ETH('eth_getBalance',[$wallets[0]->wallet_no, "latest"]))/pow(10,18);
                     }
                     else {
                         $geth = new EthereumRpcService();
                         $tokenContract = $currency->address;
                         $balance = $geth->getTokenBalance($tokenContract, $wallets[0]->wallet_no);
-                        $wallets[0]->balance = $balance == 'error' ? amount($wallets[0]->balance,$currency->type,2):$balance;
+                        $wallets[0]->balance = $balance == 'error' ? 0:$balance;
                     }
                 }
             }

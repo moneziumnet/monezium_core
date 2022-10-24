@@ -189,7 +189,7 @@ class ExchangeMoneyController extends Controller
                 $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/($from_rate*100)) * $transaction_custom_fee->data->percent_charge;
             }
             $remark = 'Exchange_money_supervisor_fee';
-            if($currency->type == 1) {
+            if($fromWallet->currency->type == 1) {
 
                 if (check_user_type_by_id(4, $user->referral_id)) {
                     user_wallet_increment($user->referral_id, $fromWallet->currency->id, $transaction_custom_cost*$from_rate, 6);
@@ -205,14 +205,14 @@ class ExchangeMoneyController extends Controller
                 user_wallet_increment($user->referral_id, $fromWallet->currency->id, $transaction_custom_cost*$from_rate, 8);
 
                 $trans_wallet = get_wallet($user->referral_id, $fromWallet->currency->id, 8);
-                if($currency->code == 'ETH') {
+                if($fromWallet->currency->code == 'ETH') {
                     $torefWallet = Wallet::where('user_id', $user->referral_id)->where('wallet_type', 8)->where('currency_id', $fromWallet->currency_id)->first();
 
                     RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
                     $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$torefWallet->wallet_no.'", "value": "0x'.dechex($transaction_custom_cost*$from_rate*pow(10,18)).'"}';
                     RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
                 }
-                elseif($currency->code == 'BTC') {
+                elseif($fromWallet->currency->code == 'BTC') {
                     $torefWallet = Wallet::where('user_id', $user->referral_id)->where('wallet_type', 8)->where('currency_id', $fromWallet->currency_id)->first();
                     RPC_BTC_Send('sendtoaddress',[$torefWallet->wallet_no, $transaction_custom_cost*$from_rate],$fromWallet->keyword);
                 }
@@ -254,7 +254,7 @@ class ExchangeMoneyController extends Controller
         $finalAmount   = $defaultAmount * ($result->data->rates->$torate ?? $toWallet->currency->rate);
 
         $fromWallet->balance -=  $totalAmount;
-        
+
         $fromWallet->update();
 
         $toWallet->balance += $finalAmount;
