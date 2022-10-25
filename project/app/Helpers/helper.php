@@ -351,6 +351,7 @@ if(!function_exists('getUserModule')){
                       ->decrement('balance', $amount);
           return $balance;
         }
+        return $$wallet;
       }
   }
 
@@ -375,14 +376,14 @@ if(!function_exists('getUserModule')){
                   $keyword = str_rand(6);
                     $address = RPC_ETH('personal_newAccount',[$keyword]);
                     if ($address == 'error') {
-                        return false;
+                        return null;
                     }
                 }
                 elseif ($currency->code == 'BTC') {
                     $key = str_rand();
                     $address = RPC_BTC_Create('createwallet',[$key]);
                     if ($address == 'error') {
-                        return false;
+                        return null;
                     }
                     $keyword = $key;
                 }
@@ -393,7 +394,7 @@ if(!function_exists('getUserModule')){
                       $keyword = str_rand(6);
                         $address = RPC_ETH('personal_newAccount',[$keyword]);
                         if ($address == 'error') {
-                            return false;
+                            return null;
                         }
                         $user_wallet = new Wallet();
                         $user_wallet->user_id = $auth_id;
@@ -473,14 +474,14 @@ if(!function_exists('getUserModule')){
               }
               user_wallet_decrement($auth_id, defaultCurr(), $chargefee->data->fixed_charge, 1);
               user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
-              return $user_wallet->balance;
+              return $user_wallet;
           }
 
         }
         else {
           $wallet->balance += $amount;
           $wallet->update();
-          return $wallet->balance;
+          return $wallet;
         }
 
       }
