@@ -639,7 +639,7 @@ class UserController extends Controller
             }
             $transaction_global_cost = 0;
             if ($request->amount / $rate < $global_range->min || $request->amount / $rate > $global_range->max) {
-                return redirect()->back()->with('error','Amount is not in defined range. Max value(USD rate) is '.$global_range->max.' and Min value is '.$global_range->min );
+                return redirect()->back()->with('error','Amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
             }
             $transaction_global_fee = check_global_transaction_fee($request->amount/$rate, $user, 'send');
             if($transaction_global_fee)
@@ -881,11 +881,11 @@ class UserController extends Controller
                 $finalAmount = $request->amount - $transaction_global_cost*$rate;
 
                 if($global_range->min > $request->amount/$rate){
-                    return redirect()->back()->with('error','Request Amount(USD rate) should be greater than this '.$global_range->min);
+                    return redirect()->back()->with('error','Request Amount should be greater than this '.$global_range->min);
                 }
 
                 if($global_range->max < $request->amount/$rate){
-                    return redirect()->back()->with('error','Request Amount(USD rate) should be less than this '.$global_range->max);
+                    return redirect()->back()->with('error','Request Amount should be less than this '.$global_range->max);
                 }
 
                 $balance = user_wallet_balance($user->id, $currency->id);

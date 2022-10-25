@@ -91,7 +91,7 @@ class MoneyRequestController extends Controller
         }
 
         if ($request->amount/$rate < $global_range->min || $request->amount/$rate > $global_range->max) {
-            return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value(USD rate) is '.$global_range->max.' and Min value is '.$global_range->min );
+            return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
         }
         $transaction_global_fee = check_global_transaction_fee($request->amount/$rate, $user, 'recieve');
         $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/($rate * 100)) * $transaction_global_fee->data->percent_charge;

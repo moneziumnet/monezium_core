@@ -59,7 +59,7 @@ class WithdrawCryptoController extends Controller
         $monthlywithdraw = CryptoWithdraw::where('user_id', $user->id)->whereMonth('created_at', '=', date('m'))->whereStatus('complete')->sum('amount');
 
         if ( $amountToAdd < $global_range->min ||  $amountToAdd > $global_range->max) {
-           return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value (USD) is '.$global_range->max.' and Min value(USD) is '.$global_range->min );
+           return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
 
         }
 

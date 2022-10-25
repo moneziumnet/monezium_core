@@ -110,11 +110,11 @@ class OtherBankController extends Controller
             $finalAmount = $request->amount - $transaction_global_cost*$rate;
 
             if($global_range->min > $request->amount/$rate){
-                return redirect()->back()->with('unsuccess','Request Amount(USD rate) should be greater than this '.$global_range->min);
+                return redirect()->back()->with('unsuccess','Request Amount should be greater than this '.$global_range->min);
             }
 
             if($global_range->max < $request->amount/$rate){
-                return redirect()->back()->with('unsuccess','Request Amount(USD rate) should be less than this '.$global_range->max);
+                return redirect()->back()->with('unsuccess','Request Amount should be less than this '.$global_range->max);
             }
 
             $balance = user_wallet_balance(auth()->id(), $request->currency_id);

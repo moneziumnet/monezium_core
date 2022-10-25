@@ -67,7 +67,8 @@ if(!function_exists('getUserModule')){
 
   if(!function_exists('getRate')){
     function getRate($to_currency, $from_code = null){
-      $from_code = $from_code ?? 'USD';
+      $defaultCode = Currency::where('is_default','=',1)->first()->code;
+      $from_code = $from_code ?? $defaultCode;
       $from_cur = Currency::where('code', $from_code)->first();
       try{
         $client = New Client();

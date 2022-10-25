@@ -44,29 +44,26 @@ class DepositCryptoController extends Controller
                 return redirect()->back()->with('unsuccess','Verification code is not matched.');
             }
         }
-        $client = New Client();
-        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency=USD');
-        $rate = json_decode($response->getBody());
 
         $currency = Currency::where('id',$request->currency_id)->first();
-        $code = $currency->code;
-        $amountToAdd = $request->amount/($rate->data->rates->$code ?? $currency->rate);
+        $rate = getRate($currency);
+        $amountToAdd = $request->amount/$rate;
         $user = auth()->user();
         $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'deposit')->first();
         $dailydeposit = CryptoDeposit::where('user_id', $user->id)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus('complete')->sum('amount');
         $monthlydeposit = CryptoDeposit::where('user_id', $user->id)->whereMonth('created_at', '=', date('m'))->whereStatus('complete')->sum('amount');
 
         if ( $amountToAdd < $global_range->min ||  $amountToAdd > $global_range->max) {
-           return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value(USD) is '.$global_range->max.' and Min value(USD) is '.$global_range->min );
+           return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
 
         }
 
 
-        if($dailydeposit/getRate($currency) > $global_range->daily_limit){
+        if($dailydeposit/$rate > $global_range->daily_limit){
             return redirect()->back()->with('unsuccess','Daily deposit limit over.');
         }
 
-        if($monthlydeposit/getRate($currency) > $global_range->monthly_limit){
+        if($monthlydeposit/$rate > $global_range->monthly_limit){
             return redirect()->back()->with('unsuccess','Monthly deposit limit over.');
         }
 

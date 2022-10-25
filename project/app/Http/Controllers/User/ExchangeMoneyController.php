@@ -149,11 +149,7 @@ class ExchangeMoneyController extends Controller
         }
         $user= auth()->user();
 
-        $client = New Client();
-        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency=USD');
-        $rate = json_decode($response->getBody());
-        $code = $fromWallet->currency->code;
-        $from_rate = $rate->data->rates->$code ?? $fromWallet->currency->rate;
+        $from_rate = getRate($fromWallet->currency);
 
         // $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'send')->first();
         $transaction_global_cost = 0;
@@ -245,13 +241,8 @@ class ExchangeMoneyController extends Controller
 
 
 
-        $client = New Client();
-        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency=USD');
-        $result = json_decode($response->getBody());
-        $fromrate = $fromWallet->currency->code;
-        $torate = $toWallet->currency->code;
-        $defaultAmount = $request->amount / ($result->data->rates->$fromrate ?? $fromWallet->currency->rate);
-        $finalAmount   = $defaultAmount * ($result->data->rates->$torate ?? $toWallet->currency->rate);
+        $defaultAmount = $request->amount / $from_rate;
+        $finalAmount   = $defaultAmount * getRate( $toWallet->currency);
 
         $fromWallet->balance -=  $totalAmount;
 
