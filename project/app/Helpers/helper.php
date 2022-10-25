@@ -974,7 +974,9 @@ if(!function_exists('getUserModule')){
   if(!function_exists('get_wallet'))
   {
     function get_wallet($user_id, $currency_id, $wallet_type = 1) {
-      return Wallet::where('user_id', $user_id)->where('wallet_type', $wallet_type)->where('currency_id',$currency_id)->with('currency')->first();
+      user_wallet_increment($user_id, $currency_id, 0, $wallet_type);
+      $wallet = Wallet::where('user_id', $user_id)->where('wallet_type', $wallet_type)->where('currency_id',$currency_id)->with('currency')->first();
+      return $wallet;
     }
   }
 
