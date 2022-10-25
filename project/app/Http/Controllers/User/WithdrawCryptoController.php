@@ -101,7 +101,7 @@ class WithdrawCryptoController extends Controller
         user_wallet_decrement($user->id, $currency->id, $request->amount, 8);
         user_wallet_increment(0, $currency->id, $transaction_global_cost*$crypto_rate, 9);
         $fromWallet = Wallet::where('user_id', $user->id)->where('wallet_type', 8)->where('currency_id', $currency->id)->first();
-        $toWallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $currency->id)->first();
+        $toWallet = get_wallet(0,$currency->id,9);
         if($currency->code == 'ETH') {
             RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
             $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$toWallet->wallet_no.'", "value": "0x'.dechex( $transaction_global_cost*$crypto_rate*pow(10,18)).'"}';

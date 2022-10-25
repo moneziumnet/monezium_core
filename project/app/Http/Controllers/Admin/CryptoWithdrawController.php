@@ -76,7 +76,7 @@ class CryptoWithdrawController extends Controller
             $user = $data->user;
             //$wallet = Wallet::where('user_id',$data->user_id)->where('user_type',1)->where('currency_id',$data->currency_id)->firstOrFail();
             $toWallet = Wallet::where('user_id', $user->id)->where('wallet_type', 8)->where('currency_id', $data->currency_id)->first();
-            $fromWallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $data->currency_id)->first();
+            $fromWallet = get_wallet(0,$data->currency_id,9);
 
             user_wallet_increment($data->user_id, $data->currency_id, $data->amount, 8);
             $transaction_global_cost = 0;

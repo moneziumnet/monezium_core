@@ -472,9 +472,8 @@ if(!function_exists('getUserModule')){
               }
               user_wallet_decrement($auth_id, defaultCurr(), $chargefee->data->fixed_charge, 1);
               user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
-              return $user_wallet;
-          }
-
+            }
+            return $user_wallet;
         }
         else {
           $wallet->balance += $amount;
@@ -973,8 +972,7 @@ if(!function_exists('getUserModule')){
   if(!function_exists('get_wallet'))
   {
     function get_wallet($user_id, $currency_id, $wallet_type = 1) {
-      user_wallet_increment($user_id, $currency_id, 0, $wallet_type);
-      $wallet = Wallet::where('user_id', $user_id)->where('wallet_type', $wallet_type)->where('currency_id',$currency_id)->with('currency')->first();
+      $wallet = user_wallet_increment($user_id, $currency_id, 0, $wallet_type);
       return $wallet;
     }
   }

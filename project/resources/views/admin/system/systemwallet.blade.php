@@ -26,7 +26,7 @@
                 <div class="row m-3" id="walletlist">
                 @foreach (DB::table('currencies')->get() as $dcurr)
                 @php
-                    $wallet = DB::table('wallets')->where('user_id', 0)->where('wallet_type',9)->where('currency_id',$dcurr->id)->first();
+                    $wallet = get_wallet(0,$dcurr->id,9);
                 @endphp
                     @if ($wallet != null)
                         <div class="col-xl-3 col-md-6 mb-4">

@@ -21,7 +21,7 @@ use DateTime;
 
 class UserClearJunctionController extends Controller
 {
-    private $url = 'https://client.clearjunction.com/v7/'; // Sandbox Host Url
+    private $url = 'https://sandbox.clearjunction.com/v7/'; // Sandbox Host Url
     private $wallet_uuid = '8f297da3-8838-437f-b4e1-ce9f7714c61b'; // Sandbwallet_uuid
     private $API_Key = '8f299ac0-1543-41f6-b094-70a5fd837bed';
     private $apiPassword = 'eydy8qv9ui0o';
@@ -156,7 +156,7 @@ class UserClearJunctionController extends Controller
                 return redirect()->back()->with(array('warning' => $th->getMessage()));
 
             }
-            sleep(10);
+            sleep(20);
             $param = $this->getToken('{}', $request->subbank);
             try {
                 $response = $client->request('GET',  $this->url.'gate/allocate/v2/status/iban/clientOrder/'.$orderid, [

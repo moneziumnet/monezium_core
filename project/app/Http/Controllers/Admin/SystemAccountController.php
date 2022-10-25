@@ -37,34 +37,34 @@ class SystemAccountController extends Controller
             $wallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $currency_id)->first();
             $currency =  Currency::findOrFail($currency_id);
             $gs = Generalsetting::first();
-            if ($currency->type == 2) {
-                if ($currency->code == 'BTC') {
-                    $keyword = str_rand();
-                    $address = RPC_BTC_Create('createwallet',[$keyword]);
-                }
-                elseif ($currency->code == 'ETH'){
-                    $keyword = str_rand(6);
-                    $address = RPC_ETH('personal_newAccount',[$keyword]);
-                }
-                else {
-                    $eth_currency = Currency::where('code', 'ETH')->first();
-                    $eth_wallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $eth_currency->id)->first();
-                    if (!$eth_wallet) {
-                        response()->json(array('errors' => [0 => __('You have to create Eth Crypto wallet firstly before create ERC20 token wallet.')]));
-                    }
-                    $address = $eth_wallet->wallet_no;
-                    $keyword = $eth_wallet->keyword;
-                }
-            }
-            else {
-                $address = $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
-                $keyword = '';
-            }
-            if (!isset($address) || $address == 'error') {
-                return response()->json(array('errors' => [0 => __('You can not create this wallet because there is some issue in crypto node.')]));
-            }
             if(!$wallet)
             {
+                if ($currency->type == 2) {
+                    if ($currency->code == 'BTC') {
+                        $keyword = str_rand();
+                        $address = RPC_BTC_Create('createwallet',[$keyword]);
+                    }
+                    elseif ($currency->code == 'ETH'){
+                        $keyword = str_rand(6);
+                        $address = RPC_ETH('personal_newAccount',[$keyword]);
+                    }
+                    else {
+                        $eth_currency = Currency::where('code', 'ETH')->first();
+                        $eth_wallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $eth_currency->id)->first();
+                        if (!$eth_wallet) {
+                            response()->json(array('errors' => [0 => __('You have to create Eth Crypto wallet firstly before create ERC20 token wallet.')]));
+                        }
+                        $address = $eth_wallet->wallet_no;
+                        $keyword = $eth_wallet->keyword;
+                    }
+                }
+                else {
+                    $address = $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
+                    $keyword = '';
+                }
+                if (!isset($address) || $address == 'error') {
+                    return response()->json(array('errors' => [0 => __('You can not create this wallet because there is some issue in crypto node.')]));
+                }
                 $user_wallet = new Wallet();
                 $user_wallet->user_id = 0;
                 $user_wallet->user_type = 1;

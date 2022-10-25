@@ -206,19 +206,19 @@ class MoneyRequestController extends Controller
         if ($wallet->currency->type == 2) {
             if($wallet->currency->code == 'ETH') {
                 RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                $towallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $currency_id)->first();
+                $towallet = get_wallet(0, $currency_id, 9);
                 $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex($data->cost*pow(10,18)).'"}';
                 RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
             }
             else if($wallet->currency->code == 'BTC') {
-                $towallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $currency_id)->first();
+                $towallet = get_wallet(0, $currency_id, 9);
                 RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, $data->cost],$wallet->keyword);
             }
             else {
                 RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
                 $geth = new EthereumRpcService();
                 $tokenContract = $wallet->currency->address;
-                $towallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $currency_id)->first();
+                $towallet = get_wallet(0, $currency_id, 9);
                 $result = $geth->transferToken($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $data->cost);
                 if (isset($result->error)){
                     return redirect()->back()->with(array('error' => 'Ethereum client error: '.$result->error->message));

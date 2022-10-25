@@ -74,7 +74,7 @@ class CryptoDepositController extends Controller
         }
         $transaction_custom_cost = 0;
         $toWallet = Wallet::where('user_id', $user->id)->where('wallet_type', 8)->where('currency_id', $data->currency_id)->first();
-        $fromWallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $data->currency_id)->first();
+        $fromWallet = get_wallet(0,$data->currency_id,9);
         $currency = Currency::findOrFail($data->currency_id);
         if ($id2 == 1) {
             if($user->referral_id != 0)

@@ -262,11 +262,11 @@ class ExchangeMoneyController extends Controller
 
         if($fromWallet->currency->code == 'ETH' && $toWallet->currency->type == 1) {
             RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-            $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
+            $tosystemwallet = get_wallet(0, $fromWallet->currency->id, 9);
             if (!$tosystemwallet) {
                 return back()->with('error',$fromWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
-            $tosystemwallet1 = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
+            $tosystemwallet1 = get_wallet(0, $toWallet->currency->id, 9);
             if (!$tosystemwallet1) {
                 return back()->with('error',$toWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
@@ -276,11 +276,11 @@ class ExchangeMoneyController extends Controller
             $tosystemwallet1->update();
         }
         if($fromWallet->currency->code == 'BTC' && $toWallet->currency->type == 1) {
-            $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
+            $tosystemwallet = get_wallet(0, $fromWallet->currency->id, 9);
             if (!$tosystemwallet) {
                 return back()->with('error',$fromWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
-            $tosystemwallet1 = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
+            $tosystemwallet1 = get_wallet(0, $toWallet->currency->id, 9);
             if (!$tosystemwallet1) {
                 return back()->with('error',$toWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
@@ -289,11 +289,11 @@ class ExchangeMoneyController extends Controller
             $tosystemwallet1->update();
         }
         if($toWallet->currency->code == 'ETH' && $fromWallet->currency->type == 1) {
-            $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
+            $tosystemwallet = get_wallet(0, $toWallet->currency->id, 9);
             if (!$tosystemwallet) {
                 return back()->with('error',$toWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
-            $fromsystemwallet1 = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
+            $fromsystemwallet1 = get_wallet(0, $fromWallet->currency->id, 9);
             if (!$fromsystemwallet1) {
                 return back()->with('error',$fromWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
@@ -304,11 +304,11 @@ class ExchangeMoneyController extends Controller
             $fromsystemwallet1->update();
         }
         if($toWallet->currency->code == 'BTC' && $fromWallet->currency->type == 1) {
-            $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
+            $tosystemwallet = get_wallet(0, $toWallet->currency->id, 9);
             if (!$tosystemwallet) {
                 return back()->with('error',$toWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
-            $fromsystemwallet1 = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
+            $fromsystemwallet1 = get_wallet(0, $fromWallet->currency->id, 9);
             if (!$fromsystemwallet1) {
                 return back()->with('error',$fromWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
@@ -326,11 +326,11 @@ class ExchangeMoneyController extends Controller
         }
         if($fromWallet->currency->code == 'ETH' && $toWallet->currency->code == 'BTC') {
             RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-            $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
+            $tosystemwallet = get_wallet(0, $fromWallet->currency->id, 9);
             if (!$tosystemwallet) {
                 return back()->with('error',$fromWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
-            $fromsystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
+            $fromsystemwallet = get_wallet(0, $toWallet->currency->id, 9);
             if (!$fromsystemwallet) {
                 return back()->with('error',$toWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
@@ -340,11 +340,11 @@ class ExchangeMoneyController extends Controller
             RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, $finalAmount],$fromsystemwallet->keyword);
         }
         if($fromWallet->currency->code == 'BTC' && $toWallet->currency->code == 'ETH') {
-            $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
+            $tosystemwallet = get_wallet(0, $fromWallet->currency->id, 9);
             if (!$tosystemwallet) {
                 return back()->with('error',$fromWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
-            $fromsystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
+            $fromsystemwallet = get_wallet(0, $toWallet->currency->id, 9);
             if (!$fromsystemwallet) {
                 return back()->with('error',$toWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
@@ -355,11 +355,11 @@ class ExchangeMoneyController extends Controller
         }
         if($fromWallet->currency->code == 'ETH' && $toWallet->currency->code != 'BTC' && $toWallet->currency->code != 'ETH' && $toWallet->currency->type == 2) {
             RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-            $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
+            $tosystemwallet = get_wallet(0, $fromWallet->currency->id, 9);
             if (!$tosystemwallet) {
                 return back()->with('error',$fromWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
-            $fromsystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
+            $fromsystemwallet = get_wallet(0, $toWallet->currency->id, 9);
             if (!$fromsystemwallet) {
                 return back()->with('error',$toWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
@@ -375,11 +375,11 @@ class ExchangeMoneyController extends Controller
             }
         }
         if($fromWallet->currency->code == 'BTC' && $toWallet->currency->code != 'ETH' && $toWallet->currency->code != 'BTC' && $toWallet->currency->type == 2) {
-            $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
+            $tosystemwallet = get_wallet(0, $fromWallet->currency->id, 9);
             if (!$tosystemwallet) {
                 return back()->with('error',$fromWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
-            $fromsystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
+            $fromsystemwallet = get_wallet(0, $toWallet->currency->id, 9);
             if (!$fromsystemwallet) {
                 return back()->with('error',$toWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
@@ -395,11 +395,11 @@ class ExchangeMoneyController extends Controller
         }
 
         if($fromWallet->currency->type == 1 && $toWallet->currency->code != 'ETH' && $toWallet->currency->code != 'BTC' && $toWallet->currency->type == 2) {
-            $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
+            $tosystemwallet = get_wallet(0, $toWallet->currency->id, 9);
             if (!$tosystemwallet) {
                 return back()->with('error',$toWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
-            $fromsystemwallet1 = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
+            $fromsystemwallet1 = get_wallet(0, $fromWallet->currency->id, 9);
             if (!$fromsystemwallet1) {
                 return back()->with('error',$fromWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
@@ -417,11 +417,11 @@ class ExchangeMoneyController extends Controller
 
         if($fromWallet->currency->code != 'ETH' && $fromWallet->currency->code != 'BTC' && $fromWallet->currency->type == 2 && $toWallet->currency->code == 'BTC') {
             RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-            $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
+            $tosystemwallet = get_wallet(0, $fromWallet->currency->id, 9);
             if (!$tosystemwallet) {
                 return back()->with('error',$fromWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
-            $fromsystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
+            $fromsystemwallet = get_wallet(0, $toWallet->currency->id, 9);
             if (!$fromsystemwallet) {
                 return back()->with('error',$toWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
@@ -435,11 +435,11 @@ class ExchangeMoneyController extends Controller
         }
         if($fromWallet->currency->code != 'ETH' && $fromWallet->currency->code != 'BTC' && $fromWallet->currency->type == 2 && $toWallet->currency->code == 'ETH') {
             RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-            $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
+            $tosystemwallet = get_wallet(0, $fromWallet->currency->id, 9);
             if (!$tosystemwallet) {
                 return back()->with('error',$fromWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
-            $fromsystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
+            $fromsystemwallet = get_wallet(0, $toWallet->currency->id, 9);
             if (!$fromsystemwallet) {
                 return back()->with('error',$toWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
@@ -456,11 +456,11 @@ class ExchangeMoneyController extends Controller
 
         if($fromWallet->currency->code != 'ETH' && $fromWallet->currency->code != 'BTC' && $fromWallet->currency->type == 2 && $toWallet->currency->type == 1) {
             RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-            $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
+            $tosystemwallet = get_wallet(0, $fromWallet->currency->id, 9);
             if (!$tosystemwallet) {
                 return back()->with('error',$fromWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
-            $tosystemwallet1 = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
+            $tosystemwallet1 = get_wallet(0, $toWallet->currency->id, 9);
             if (!$tosystemwallet1) {
                 return back()->with('error',$toWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
@@ -476,11 +476,11 @@ class ExchangeMoneyController extends Controller
 
         if($fromWallet->currency->code != 'ETH' && $fromWallet->currency->code != 'BTC' && $fromWallet->currency->type == 2 && $toWallet->currency->code != 'ETH' && $toWallet->currency->code != 'BTC' && $toWallet->currency->type == 2) {
             RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-            $tosystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $fromWallet->currency->id)->first();
+            $tosystemwallet = get_wallet(0, $fromWallet->currency->id, 9);
             if (!$tosystemwallet) {
                 return back()->with('error',$fromWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
-            $fromsystemwallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $toWallet->currency->id)->first();
+            $fromsystemwallet = get_wallet(0, $toWallet->currency->id, 9);
             if (!$fromsystemwallet) {
                 return back()->with('error',$toWallet->currency->code.' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }

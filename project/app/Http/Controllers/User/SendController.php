@@ -209,8 +209,8 @@ class SendController extends Controller
         $finalamount = $request->amount - $finalCharge*$rate;
 
         if ($wallet->currency->type == 2) {
-            // $towallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $currency_id)->first();
-            $towallet = get_wallet(0,$currency_id, 9);            
+            $towallet = get_wallet(0, $currency_id, 9);
+
             if($wallet->currency->code == 'ETH') {
                 RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
                 $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex($transaction_global_cost*$rate*pow(10,18)).'"}';
