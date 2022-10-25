@@ -153,7 +153,7 @@ class UserClearJunctionController extends Controller
                 //   dd($response);
                 //   return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
             } catch (\Throwable $th) {
-                return redirect()->back()->with(array('warning' => $th->getMessage()));
+                return redirect()->back()->with(array('warning' => json_encode($th->getMessage())));
 
             }
             sleep(20);
@@ -174,7 +174,7 @@ class UserClearJunctionController extends Controller
                 //   dd($response);
                 //   return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => json_decode($response->getBody())]);
             } catch (\Throwable $th) {
-                return redirect()->back()->with(array('warning' => $th->getMessage()));
+                return redirect()->back()->with(array('warning' => json_encode($th->getMessage())));
             }
 
             $res = $this->CheckBankWallet($request->subbank);

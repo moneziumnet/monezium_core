@@ -86,7 +86,7 @@ class DashboardController extends Controller
                 $iban = $res_body->data->onboarding->account->IBAN ?? '';
                 $bic_swift = $res_body->data->onboarding->account->BIC ?? '';
             } catch (\Throwable $th) {
-                return redirect()->route('admin.dashboard')->with(array('warning' => $th->getMessage()));
+                return redirect()->route('admin.dashboard')->with(array('warning' => json_encode($th->getMessage())));
             }
             if ($iban == null || $bic_swift == null || $iban == '' || $bic_swift == '' ) {
                 return redirect()->route('admin.dashboard')->with(array('warning' => 'Sorry, You can not create New Bank Account succesfully because Swan Api does not create iban and swift code. Please try again.'));

@@ -39,7 +39,7 @@ class SwanController extends Controller
             return redirect()->back()->with(array('warning' => 'This bank account already exists.'));
 
         }
-        
+
         try {
               $options = [
                 'multipart' => [
@@ -64,7 +64,7 @@ class SwanController extends Controller
             Session::put('currency', $currency->id);
             Session::put('user_id', $user->id);
         } catch (\Throwable $th) {
-            return redirect()->back()->with(array('warning' => $th->getMessage()));
+            return redirect()->back()->with(array('warning' => json_encode($th->getMessage())));
         }
 
         try {
@@ -89,7 +89,7 @@ class SwanController extends Controller
             return redirect()->away($res_body->data->onboardIndividualAccountHolder->onboarding->onboardingUrl);
 
         } catch (\Throwable $th) {
-            return redirect()->back()->with(array('warning' => $th->getMessage()));
+            return redirect()->back()->with(array('warning' => json_encode($th->getMessage())));
         }
     }
 }
