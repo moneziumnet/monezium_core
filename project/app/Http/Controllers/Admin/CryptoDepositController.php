@@ -140,7 +140,7 @@ class CryptoDepositController extends Controller
                     return response()->json(array('errors' => [ 0 =>  __('you can not deposit.') ]));
                 }
             }
-            if(!$result1 || !$result2) {
+            if($result1 == null || $result2 == null) {
               return response()->json(array('errors' => [ 0 =>  __('Crypto node is not installed.') ]));
             }
 
