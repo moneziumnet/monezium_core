@@ -32,6 +32,7 @@ use Illuminate\Support\Carbon as Carbontime;
 use PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel\Current;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Session;
+use Symfony\Component\Console\Completion\Suggestion;
 
 class UserController extends Controller
 {
@@ -496,7 +497,33 @@ class UserController extends Controller
         }else{
             return false;
         }
-     }
+    }
+
+    public function userlist_by_phone(Request $request){
+        $phone_number = preg_replace("/[^0-9]/", "", $request->input('query'));
+        $data = User::where('phone', 'like', '%'.$phone_number.'%')->get();
+        if(count($data) > 0){
+            $suggestions = array();
+            foreach($data as $item) {
+                array_push($suggestions, [
+                    "value" => $item->phone,
+                    "data" => [
+                        "name" => $item->company_name ?? $item->name,
+                        "email" => $item->email,
+                    ],
+                ]);
+            }
+            return json_encode([
+                "query" => $request->input('query'),
+                "suggestions" => $suggestions
+            ]);
+        }else{
+            return json_encode([
+                "query" => $request->input('query'),
+                "suggestions" => []
+            ]);
+        }
+    }
 
     public function generatePDF()
     {

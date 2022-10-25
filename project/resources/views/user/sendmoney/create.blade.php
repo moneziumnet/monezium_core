@@ -1,7 +1,29 @@
 @extends('layouts.user')
 
 @push('css')
+<style>
+.autocomplete-suggestions {
+  border: 1px solid #999;
+  cursor: default;
+  overflow: auto;
+  background: inherit;
+}
 
+.autocomplete-suggestion {
+  padding: 4px 5px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.autocomplete-selected {
+  background: #3399FF;
+}
+
+.autocomplete-suggestions strong {
+  font-weight: bold;
+  /* color: #3399FF; */
+}
+</style>
 @endpush
 
 @section('contents')
@@ -69,7 +91,7 @@
                                 <div class="form-group mb-3 mt-3">
                                     <label class="form-label required">{{__('Account Phone')}}</label>
                                     <div class="input-group">
-                                        <input name="phone" id="phone" class="form-control camera_value" autocomplete="off" placeholder="{{__('1234567890')}}" type="text" value="{{ $savedUser ? $savedUser->phone : '' }}" required>
+                                        <input name="phone" id="phone" class="form-control phone-select2 camera_value" autocomplete="off" placeholder="{{__('1234567890')}}" type="text" value="{{ $savedUser ? $savedUser->phone : '' }}" required>
                                     </div>
                                 </div>
                                 <div class="form-group mb-3 mt-3">
@@ -203,8 +225,21 @@
 @endsection
 
 @push('js')
+<script src="{{asset('assets/front/js/jquery.autocomplete.js')}}"></script>
 <script>
   'use strict';
+  $(document).ready(function() {
+    $('.phone-select2').autocomplete({
+      serviceUrl: "{{ route('user.userlist.phone') }}",
+      onSelect:function (suggestion) {
+        $("#account_name").val(suggestion.data.name);
+        $("#email").val(suggestion.data.email);
+      },
+      formatResult: function(suggestion, value) {
+        return suggestion.value + ' ' + suggestion.data.name
+      }
+    })
+  })
   var send_money_user = {
     name: "{{$savedUser ? $savedUser->name : 'null'}}",
     email: "{{$savedUser ? $savedUser->email : 'null'}}",
@@ -230,12 +265,10 @@
   })
 
   $("#phone").on('change',function(){
+    // return;
     $.post("{{ route('user.username.phone') }}",{phone: $("#phone").val(),_token:'{{csrf_token()}}'}, function(data){
       send_money_user = data;
-      if(data['name']){
-        $("#account_name").val(data['name']);
-        $("#email").val(data['email']);
-      } else {
+      if(!data['name']){
         $("#account_name").val("");
         $("#email").val("");
         toastr.options =
@@ -249,42 +282,42 @@
   })
 
   $('#submit').on('click', function() {
-        if(!send_money_user['name']) {
-          toastr.options =
-          {
-              "closeButton" : true,
-              "progressBar" : true
-          }
-          toastr.error("This uer doesn't exist.Try again.");
-          $("#email").focus();
-          return;
+    if(!send_money_user['name']) {
+      toastr.options =
+      {
+          "closeButton" : true,
+          "progressBar" : true
+      }
+      toastr.error("This uer doesn't exist.Try again.");
+      $("#email").focus();
+      return;
+    }
+    if (($('#email').val().length != 0) && ($('#wallet_id').val().length != 0) && ($('#amount').val().length != 0) && ($('#account_name').val().length != 0)  && ($('#description').val().length != 0)) {
+        var verify = "{{$user->paymentCheck('Internal Payment')}}";
+        event.preventDefault();
+        $('#receiver_email').text($('#email').val());
+        $('#receiver_name').text($('#account_name').val());
+        $('#currency').text($('#wallet_id option:selected').text().split('--')[0]);
+        $('#re_amount').text($('#amount').val());
+        $('#re_description').text($('#description').val());
+        if (verify) {
+            var url = "{{url('user/sendotp')}}";
+            $.get(url,function (res) {
+                console.log(res)
+                if(res=='success') {
+                    $('#modal-success').modal('show');
+                }
+                else {
+                  toastr.options = { "closeButton" : true, "progressBar" : true }
+                  toastr.error('The OTP code can not be sent to you.');
+                }
+            });
+        } else {
+            $('#otp_body').remove();
+            $('#modal-success').modal('show');
         }
-        if (($('#email').val().length != 0) && ($('#wallet_id').val().length != 0) && ($('#amount').val().length != 0) && ($('#account_name').val().length != 0)  && ($('#description').val().length != 0)) {
-            var verify = "{{$user->paymentCheck('Internal Payment')}}";
-            event.preventDefault();
-            $('#receiver_email').text($('#email').val());
-            $('#receiver_name').text($('#account_name').val());
-            $('#currency').text($('#wallet_id option:selected').text().split('--')[0]);
-            $('#re_amount').text($('#amount').val());
-            $('#re_description').text($('#description').val());
-            if (verify) {
-                var url = "{{url('user/sendotp')}}";
-                $.get(url,function (res) {
-                    console.log(res)
-                    if(res=='success') {
-                        $('#modal-success').modal('show');
-                    }
-                    else {
-                      toastr.options = { "closeButton" : true, "progressBar" : true }
-                      toastr.error('The OTP code can not be sent to you.');
-                    }
-                });
-            } else {
-                $('#otp_body').remove();
-                $('#modal-success').modal('show');
-            }
-            $('#modal-success').modal('show')
-        }
-      })
+        $('#modal-success').modal('show')
+    }
+  })
 </script>
 @endpush
