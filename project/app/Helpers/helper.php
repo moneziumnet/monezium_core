@@ -345,13 +345,12 @@ if(!function_exists('getUserModule')){
 
         if($wallet)
         {
-          $balance = Wallet::where('user_id', $auth_id)
+          Wallet::where('user_id', $auth_id)
                       ->where('currency_id',$currency_id)
                       ->where('wallet_type', $wallet_type)
                       ->decrement('balance', $amount);
-          return $balance;
         }
-        return $$wallet;
+        return $wallet;
       }
   }
 
@@ -371,7 +370,6 @@ if(!function_exists('getUserModule')){
         if(!$wallet)
         {
             if ($currency->type == 2) {
-                $user = User::findOrFail($auth_id);
                 if($currency->code == 'ETH') {
                   $keyword = str_rand(6);
                     $address = RPC_ETH('personal_newAccount',[$keyword]);
@@ -389,7 +387,7 @@ if(!function_exists('getUserModule')){
                 }
                 else {
                     $eth_currency = Currency::where('code', 'ETH')->first();
-                    $eth_wallet = Wallet::where('user_id', $user->id)->where('wallet_type', $wallet_type)->where('currency_id', $eth_currency->id)->first();
+                    $eth_wallet = Wallet::where('user_id', $auth_id)->where('wallet_type', $wallet_type)->where('currency_id', $eth_currency->id)->first();
                     if (!$eth_wallet) {
                       $keyword = str_rand(6);
                         $address = RPC_ETH('personal_newAccount',[$keyword]);
