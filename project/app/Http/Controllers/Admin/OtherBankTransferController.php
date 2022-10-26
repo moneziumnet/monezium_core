@@ -505,26 +505,26 @@ class OtherBankTransferController extends Controller
         }
 
 
-            user_wallet_decrement($user->id, $data->currency_id, $data->amount);
-            $trans_wallet = get_wallet($user->id, $data->currency_id);
+        user_wallet_decrement($user->id, $data->currency_id, $data->amount);
+        $trans_wallet = get_wallet($user->id, $data->currency_id);
 
-            user_wallet_increment(0, $data->currency_id, $data->cost, 9);
+        user_wallet_increment(0, $data->currency_id, $data->cost, 9);
 
-            $trans = new Transaction();
-            $trans->trnx = Str::random(4).time();
-            $trans->user_id     = $data->user_id;
-            $trans->user_type   = 1;
-            $trans->currency_id = $data->currency_id;
-            $trans->amount      = $data->amount;
+        $trans = new Transaction();
+        $trans->trnx = Str::random(4).time();
+        $trans->user_id     = $data->user_id;
+        $trans->user_type   = 1;
+        $trans->currency_id = $data->currency_id;
+        $trans->amount      = $data->amount;
 
-            $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+        $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
 
-            $trans->charge      = $data->cost;
-            $trans->type        = '-';
-            $trans->remark      = 'External_Payment';
-            $trans->data        = '{"sender":"'.$user->name.'", "receiver":"'.$data->beneficiary->name.'", "transaction_id":"'.$transaction_id.'"}';
-            $trans->details     = trans('Send Money');
-            $trans->save();
+        $trans->charge      = $data->cost;
+        $trans->type        = '-';
+        $trans->remark      = 'External_Payment';
+        $trans->data        = '{"sender":"'.$user->name.'", "receiver":"'.$data->beneficiary->name.'", "transaction_id":"'.$transaction_id.'", "description":"'.$data->description.'"}';
+        $trans->details     = trans('Send Money');
+        $trans->save();
     }
 
     $data->status = $id2;

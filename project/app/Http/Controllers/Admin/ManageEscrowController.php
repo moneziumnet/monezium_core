@@ -122,7 +122,7 @@ class ManageEscrowController extends Controller
             $trans->type        = '-';
             $trans->remark      = 'wallet_create';
             $trans->details     = trans('Wallet Create');
-            $trans->data        = '{"sender":"'.User::findOrFail($request->id)->name.'", "receiver":"System Account"}';
+            $trans->data        = '{"sender":"'.User::findOrFail($request->id)->name.'", "receiver":"System Account", "description":"'.$escrow->description.'"}';
             $trans->save();
         }
 
