@@ -193,10 +193,12 @@ class MoneyRequestController extends Controller
 
         $finalAmount = $data->amount - $data->cost -$data->supervisor_cost;
         $wallet_type = $currency->type == 2 ? 8 : 1;
-        user_wallet_decrement($sender->id, $currency_id, $data->amount, $wallet_type);
-        user_wallet_increment(0, $currency_id, $data->cost, 9);
+        
+        // user_wallet_decrement($sender->id, $currency_id, $data->amount, $wallet_type);
+        // user_wallet_increment(0, $currency_id, $data->cost, 9);
         if (isset($data->shop_id)) {
             merchant_shop_wallet_increment($receiver->id, $currency_id, $finalAmount, $data->shop_id);
+            dd($sender);
             $wallet = MerchantWallet::where('merchant_id', $sender->id)->where('currency_id', $currency_id)->where('shop_id', $data->shop_id )->with('currency')->first();
         }
         else {
@@ -270,7 +272,7 @@ class MoneyRequestController extends Controller
             $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
             $trans->remark      = $remark;
             $trans->details     = trans('Request Money');
-            $trans->data        = '{"sender":"'.($sender->company_name ?? $sender->name).'", "receiver":"'.($referral_user->company_name ?? $referral_user->name).'"}';
+            $trans->data        = '{"sender":"'.($sender->company_name ?? $sender->name).'", "receiver":"'.($referral_user->company_name ?? $referral_user->name).'", "description": "'.$data->details.'"}';
             $trans->save();
         }
 
@@ -311,7 +313,7 @@ class MoneyRequestController extends Controller
         $trans->charge      = 0;
         $trans->type        = '-';
         $trans->remark      = 'Request_Money';
-        $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name).'"}';
+        $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name).'", "description": "'.$data->details.'"}';
         $trans->details     = trans('Request Money');
 
         $trans->save();
@@ -329,7 +331,7 @@ class MoneyRequestController extends Controller
         $trans->charge      = $data->cost + $data->supervisor_cost;
         $trans->type        = '+';
         $trans->remark      = 'Request_Money';
-        $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name).'"}';
+        $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name).'", "description": "'.$data->details.'"}';
         $trans->details     = trans('Request Money');
 
         $trans->save();

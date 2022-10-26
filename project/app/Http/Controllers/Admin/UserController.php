@@ -701,7 +701,7 @@ class UserController extends Controller
                 $trans->type        = '+';
                 $trans->remark      = $remark;
                 $trans->details     = trans('Send Money');
-                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'"}';
+                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'", "description": "'.$request->description.'"}';
                 $trans->save();
             }
 
@@ -760,7 +760,7 @@ class UserController extends Controller
                 $trans->type        = '-';
                 $trans->remark      = 'Internal Payment';
                 $trans->details     = trans('Send Money');
-                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name ).'"}';
+                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name ).'", "description": "'.$request->description.'"}';
                 $trans->save();
 
                 $trans = new Transaction();
@@ -775,7 +775,7 @@ class UserController extends Controller
                 $trans->type        = '+';
                 $trans->remark      = 'Internal Payment';
                 $trans->details     = trans('Send Money');
-                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name ).'"}';
+                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name ).'", "description": "'.$request->description.'"}';
                 $trans->save();
                 if ($wallet->currency->type == 2) {
 

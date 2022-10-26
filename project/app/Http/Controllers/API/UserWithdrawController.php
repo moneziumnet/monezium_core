@@ -172,6 +172,7 @@ class UserWithdrawController extends Controller
             $trans->type        = '-';
             $trans->remark      = 'Payout';
             $trans->details     = trans('Payout created');
+            $trans->data        = '{"description":"'.$request->details.'"}';
 
             // $trans->email = $user->email;
             // $trans->amount = $finalamount;

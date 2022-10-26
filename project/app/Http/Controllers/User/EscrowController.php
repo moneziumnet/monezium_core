@@ -123,7 +123,7 @@ class EscrowController extends Controller
             $trans->type        = '+';
             $trans->remark      = $remark;
             $trans->details     = trans('Make Escrow');
-            $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'"}';
+            $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'", "description": "'.$request->description.'"}';
             $trans->save();
         }
 
@@ -149,7 +149,7 @@ class EscrowController extends Controller
         $trnx->remark      = 'make_escrow';
         $trnx->type        = '-';
         $trnx->details     = trans('Made escrow to '). $receiver->email;
-        $trnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name).'"}';
+        $trnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name).'", "description": "'.$request->description.'"}';
         $trnx->save();
 
         return redirect(route('user.escrow.index'))->with('message','Escrow has been created successfully');
@@ -272,7 +272,7 @@ class EscrowController extends Controller
             $trans->type        = '-';
             $trans->remark      = 'wallet_create';
             $trans->details     = trans('Wallet Create');
-            $trans->data        = '{"sender":"'.($recipient->company_name ?? $recipient->name).'", "receiver":"System Account"}';
+            $trans->data        = '{"sender":"'.($recipient->company_name ?? $recipient->name).'", "receiver":"System Account", "description": "'.$escrow->description.'"}';
             $trans->save();
 
             user_wallet_decrement($recipient->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
@@ -295,7 +295,7 @@ class EscrowController extends Controller
         $trnx->remark      = 'make_escrow';
         $trnx->type        = '+';
         $trnx->details     = trans('Received escrow money '). $recipient->email;
-        $trnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($recipient->company_name ?? $recipient->name).'"}';
+        $trnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($recipient->company_name ?? $recipient->name).'", "description": "'.$escrow->description.'"}';
         $trnx->save();
 
         $escrow->status = 1;

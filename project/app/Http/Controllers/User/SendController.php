@@ -200,7 +200,7 @@ class SendController extends Controller
             $trans->type        = '+';
             $trans->remark      = $remark;
             $trans->details     = trans('Send Money');
-            $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'"}';
+            $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'", "description": "'.$request->description.'"}';
             $trans->save();
 
         }
@@ -287,7 +287,7 @@ class SendController extends Controller
             $trans->type        = '-';
             $trans->remark      = 'Internal Payment';
             $trans->details     = trans('Send Money');
-            $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name).'"}';
+            $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name).'", "description": "'.$request->description.'"}';
             $trans->save();
 
 
@@ -303,7 +303,7 @@ class SendController extends Controller
             $trans->type        = '+';
             $trans->remark      = 'Internal Payment';
             $trans->details     = trans('Send Money');
-            $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name).'"}';
+            $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name).'", "description": "'.$request->description.'"}';
             $trans->save();
 
             session(['sendstatus'=>1, 'saveData'=>$trans]);

@@ -179,7 +179,7 @@ class UserOtherBankController extends Controller
                 $trans->type        = '-';
                 $trans->remark      = 'Send_Money';
                 $trans->details     = trans('Send Money');
-
+                $trans->data        = '{"description":"'.$request->description.'"}';
                 // $trans->email = $user->email;
                 // $trans->amount = $finalAmount;
                 // $trans->type = "Send Money";

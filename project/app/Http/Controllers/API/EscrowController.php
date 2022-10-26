@@ -97,6 +97,7 @@ class EscrowController extends Controller
             $trnx->remark      = 'make_escrow';
             $trnx->type        = '-';
             $trnx->details     = trans('Made escrow to '). $receiver->email;
+            $trnx->data        = '{"description":"'.$request->description.'"}';
             $trnx->save();
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Escrow has been created successfully', 'data' => $escrow]);
 

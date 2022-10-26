@@ -96,7 +96,7 @@
 
                                           <td data-label="{{ __('Details') }}">
                                             <div class="btn-list">
-                                                <a href="{{route('user.merchant.money.request.details',$data->id)}}" class="btn btn-primary">
+                                                <a href="{{route('user.merchant.money.request.details',$data->id)}}" class="btn btn-sm btn-primary">
                                                   {{__('Details')}}
                                                 </a>
                                             </div>
