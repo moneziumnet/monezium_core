@@ -1607,37 +1607,23 @@ class UserController extends Controller
             {
                 $data['name'] = trim($request->firstname)." ".trim($request->lastname);
             }
+            if(isset($request->form_select)){
+                $is_private = $request->form_select == 0;
 
-            if($request->form_select == 0) {
-                $data['personal_code'] = $request->personal_code;
-                $data['your_id'] = $request->your_id;
-                $data['issued_authority'] = $request->issued_authority;
-                $data['date_of_issue'] = $request->date_of_issue;
-                $data['date_of_expire'] = $request->date_of_expire;
-                $data['company_address'] = null;
-                $data['company_name'] = null;
-                $data['company_reg_no'] = null;
-                $data['company_vat_no'] = null;
-                $data['company_dob'] = null;
-                $data['company_type'] = null;
-                $data['company_city'] = null;
-                $data['company_country'] = null;
-                $data['company_zipcode'] = null;
-            } else {
-                $data['company_name'] = $request->company_name;
-                $data['company_reg_no'] = $request->company_reg_no;
-                $data['company_vat_no'] = $request->company_vat_no;
-                $data['company_dob'] = $request->company_dob;
-                $data['company_address'] = $request->company_address;
-                $data['company_type'] = $request->company_type;
-                $data['company_zipcode'] = $request->company_zipcode;
-                $data['company_city'] = $request->company_city;
-                $data['company_country'] = $request->company_country;
-                $data['personal_code'] = null;
-                $data['your_id'] = null;
-                $data['issued_authority'] = null;
-                $data['date_of_issue'] = null;
-                $data['date_of_expire'] = null;
+                $data['personal_code'] = $is_private ? $request->personal_code : null;
+                $data['your_id'] = $is_private ? $request->your_id : null;
+                $data['issued_authority'] = $is_private ? $request->issued_authority : null;
+                $data['date_of_issue'] = $is_private ? $request->date_of_issue : null;
+                $data['date_of_expire'] = $is_private ? $request->date_of_expire : null;
+                $data['company_address'] = $is_private ? null : $request->company_address;
+                $data['company_name'] = $is_private ? null : $request->company_name;
+                $data['company_reg_no'] = $is_private ? null : $request->company_reg_no;
+                $data['company_vat_no'] = $is_private ? null : $request->company_vat_no;
+                $data['company_dob'] = $is_private ? null : $request->company_dob;
+                $data['company_type'] = $is_private ? null : $request->company_type;
+                $data['company_city'] = $is_private ? null : $request->company_city;
+                $data['company_country'] = $is_private ? null : $request->company_country;
+                $data['company_zipcode'] = $is_private ? null : $request->company_zipcode;
             }
 
             if ($file = $request->file('photo'))
@@ -1655,7 +1641,7 @@ class UserController extends Controller
             if (!empty($request->input('user_type'))) {
                 $data['user_type'] = implode(',',$request->input('user_type'));
             }
-
+            
             $user->update($data);
             $msg = 'Customer Information Updated Successfully.';
             return response()->json($msg);

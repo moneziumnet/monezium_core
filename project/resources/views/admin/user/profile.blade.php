@@ -287,7 +287,7 @@
                           <div class="col-md-6">
                             <div class="form-group mt-3">
                                 <label for="dob" class="form-label">{{ __('Company Address') }}</label>
-                                <input type="text" class="company-input form-control form--control" id="company_address"name="company_address" placeholder="{{ __('Enter Company Name') }}" value="{{ $data->company_address }}" {{$corporate_required}}>
+                                <input type="text" class="company-input form-control form--control" id="company_address"name="company_address" placeholder="{{ __('Enter Company Address') }}" value="{{ $data->company_address }}" {{$corporate_required}}>
                             </div>
                           </div>
                           <div class="col-md-6">
