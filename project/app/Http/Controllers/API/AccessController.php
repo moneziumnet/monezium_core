@@ -173,7 +173,7 @@ class AccessController extends Controller
                 $trans->type        = '-';
                 $trans->remark      = 'wallet_create';
                 $trans->details     = trans('Wallet Create');
-                $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
                 $trans->save();
 
                 user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
@@ -200,7 +200,7 @@ class AccessController extends Controller
             $trnx->remark      = 'merchant_api_payment';
             $trnx->type        = '-';
             $trnx->details     = trans('Payment to merchant');
-            $trnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($request->user_id)->name.'"}';
+            $trnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(User::findOrFail($request->user_id)->company_name ?? User::findOrFail($request->user_id)->name).'"}';
             $trnx->save();
 
             $rcvWallet = Wallet::where('user_id',$request->user_id)->where('user_type',1)->where('currency_id',$request->currency_id)->where('wallet_type', 1)->first();
@@ -235,7 +235,7 @@ class AccessController extends Controller
                 $trans->type        = '-';
                 $trans->remark      = 'wallet_create';
                 $trans->details     = trans('Wallet Create');
-                $trans->data        = '{"sender":"'.User::findOrFail($request->user_id)->name.'", "receiver":"System Account"}';
+                $trans->data        = '{"sender":"'.(User::findOrFail($request->user_id)->company_name ?? User::findOrFail($request->user_id)->name).'", "receiver":"System Account"}';
                 $trans->save();
 
                 user_wallet_decrement($request->user_id, defaultCurr(), $chargefee->data->fixed_charge, 1);
@@ -256,7 +256,7 @@ class AccessController extends Controller
             $rcvTrnx->remark      = 'merchant_api_payment';
             $rcvTrnx->type        = '+';
             $rcvTrnx->details     = trans('Receive Merchant Payment');
-            $rcvTrnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($request->user_id)->name.'"}';
+            $rcvTrnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(User::findOrFail($request->user_id)->company_name ?? User::findOrFail($request->user_id)->name).'"}';
             $rcvTrnx->save();
             return response()->json([
                 'type' => 'mt_payment_success',

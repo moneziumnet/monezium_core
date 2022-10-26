@@ -32,7 +32,7 @@ class CampaignController extends Controller
                             return $date;
                         })
                         ->editColumn('organizer',function(Campaign $data){
-                            return $data->user->name;
+                            return $data->user->company_name ?? $data->user->name;
                         })
                         ->editColumn('goal',function(Campaign $data){
                             return $data->currency->symbol.$data->goal;
@@ -110,8 +110,8 @@ class CampaignController extends Controller
                             return $date;
                         })
                         ->editColumn('organizer',function(CampaignDonation $data){
-                            $name = User::where('id', $data->campaign->user_id)->first()->name;
-                            return $name;
+                            $user = User::where('id', $data->campaign->user_id)->first();
+                            return $user->company_name ?? $user->name;
                         })
                         ->editColumn('title',function(CampaignDonation $data){
                             return $data->campaign->title;
@@ -137,7 +137,7 @@ class CampaignController extends Controller
                         })
                         ->editColumn('action', function(CampaignDonation $data) {
                             $total = CampaignDonation::where('campaign_id', $data->id)->where('status', 1)->sum('amount');
-                            $organizer = User::findOrFail($data->campaign->user_id)->name;
+                            $organizer = User::findOrFail($data->campaign->user_id)->company_name ?? User::findOrFail($data->campaign->user_id)->name;
                             $delete = '<a href="javascript:;" data-href="' . route('admin.donation.delete',$data->id) . '" data-toggle="modal" data-target="#deleteModal" class="dropdown-item">'.__("Delete").'</a>';
                             return '<div class="btn-group mb-1">
                                 <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -184,7 +184,8 @@ class CampaignController extends Controller
             $rcvTrnx->remark      = 'campaign_payment';
             $rcvTrnx->type        = '+';
             $rcvTrnx->details     = trans('Receive Campaign Payment : '). $data->ref_id;
-            $rcvTrnx->data        = '{"sender":"'.$donation->user_name.'", "receiver":"'.User::findOrFail($data->user_id)->name.'", "description":"'.$donation->description.'"}';
+
+            $rcvTrnx->data        = '{"sender":"'.$donation->user_name.'", "receiver":"'.(User::findOrFail($data->user_id)->company_name ?? User::findOrFail($data->user_id)->name).'", "description":"'.$donation->description.'"}';
             $rcvTrnx->save();
             $donation->amount = $donation->amount * getRate($wallet->currency);
             $donation->currency_id = $data->currency_id;

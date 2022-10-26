@@ -37,7 +37,7 @@ class LoanController extends Controller
 
                             ->editColumn('user_id', function(UserLoan $data){
                               return '<div>
-                                          <span>'.$data->user->name.'</span>
+                                          <span>'.($data->user->company_name ?? $data->user->name).'</span>
                                           <p>'.$data->user->account_number.'</p>
                                       </div>';
                             })

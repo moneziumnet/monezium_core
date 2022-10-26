@@ -28,7 +28,7 @@ class CryptoWithdrawController extends Controller
                         })
                         ->addColumn('customer_name',function(CryptoWithdraw $data){
                             $data = User::where('id',$data->user_id)->first();
-                            return str_dis($data->name);
+                            return str_dis($data->company_name ?? $data->name);
                         })
                         ->editColumn('crypto_address',function(CryptoWithdraw $data){
                             return str_dis(Get_Wallet_Address($data->user_id, $data->currency_id));
@@ -143,7 +143,7 @@ class CryptoWithdrawController extends Controller
 
                 $trans->remark      = $remark;
                 $trans->details     = trans('Withdraw request rejected');
-                $trans->data        = '{"sender":"'.User::findOrFail($user->referral_id)->name.'", "receiver":"'.$user->name.'"}';
+                $trans->data        = '{"sender":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name ).'", "receiver":"'.($user->company_name ?? $user->name).'"}';
                 $trans->save();
             }
             if($currency->code == 'ETH') {
@@ -177,7 +177,7 @@ class CryptoWithdrawController extends Controller
             $trnx->remark      = 'withdraw_reject';
             $trnx->type        = '+';
             $trnx->details     = trans('Withdraw request rejected');
-            $trnx->data        = '{"sender":"System Account", "receiver":"'.$user->name.'"}';
+            $trnx->data        = '{"sender":"System Account", "receiver":"'.($user->company_name ?? $user->name ).'"}';
             $trnx->save();
 
 

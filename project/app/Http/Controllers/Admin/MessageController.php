@@ -31,7 +31,7 @@ class MessageController extends Controller
                             })
 
                             ->addColumn('name', function(AdminUserConversation $data) {
-                                $name = $data->user->name;
+                                $name = $data->user->company_name ?? $data->user->name;
                                 return  $name;
                             })
                             ->addColumn('action', function(AdminUserConversation $data) {

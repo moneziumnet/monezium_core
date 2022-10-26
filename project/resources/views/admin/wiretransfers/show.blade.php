@@ -64,11 +64,11 @@
                                     <td width="10%">:</td>
                                     <td width="45%">{{ $data->account_holder_name }}</td>
                                 </tr>
-    
+
                                 <tr>
                                     <th width="45%">{{__('Sender Account Name')}}</th>
                                     <td width="10%">:</td>
-                                    <td width="45%">{{ $data->user->name }}</td>
+                                    <td width="45%">{{ $data->user->company_name ?? $data->user->name }}</td>
                                 </tr>
                                 </tbody>
                             </table>

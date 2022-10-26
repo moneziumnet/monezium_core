@@ -200,7 +200,7 @@ class SendController extends Controller
             $trans->type        = '+';
             $trans->remark      = $remark;
             $trans->details     = trans('Send Money');
-            $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($user->referral_id)->name.'"}';
+            $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'"}';
             $trans->save();
 
         }

@@ -77,7 +77,7 @@ class MerchantCheckoutController extends Controller
         $trans->type        = '+';
         $trans->remark      = 'merchant_checkout';
         $trans->details     = trans('Merchant Checkout');
-        $trans->data        = '{"hash":"'.$request->hash.'","status":"Pending","shop":"'.$check->shop->name.'", "receiver":"'.$user->name.'"}';
+        $trans->data        = '{"hash":"'.$request->hash.'","status":"Pending","shop":"'.$check->shop->name.'", "receiver":"'.($user->company_name ?? $user->name).'"}';
         $trans->save();
         return back()->with('success', 'You have done successfully');
     }
@@ -139,7 +139,7 @@ class MerchantCheckoutController extends Controller
 
         $data = Transaction::findOrFail($id);
         $tran_status = json_decode($data->data,true);
-        
+
         if($tran_status['status'] == 'Completed') {
             return redirect()->route('user.merchant.checkout.transactionhistory')->with('warning','Merchant Checkout transaction status already is completed');
         }

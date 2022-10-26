@@ -162,7 +162,7 @@ class MerchantProductController extends Controller
         $data['address'] = $request->user_address;
         $data['phone'] = $request->user_phone;
         $data['email'] = $request->user_email;
-        
+
         $data['total_amount'] = $data['product']->amount * $request->quantity;
         $pre_currency = Currency::findOrFail($data['product']->currency_id);
         $select_currency = Currency::findOrFail($request->link_pay_submit);
@@ -227,10 +227,10 @@ class MerchantProductController extends Controller
             $order->user_id = $data->user_id;
             $order->shop_id = $data->shop_id;
             if(Auth::check()){
-                $order->name = auth()->user()->name;
+                $order->name = auth()->user()->company_name ?? auth()->user()->name;
                 $order->email = auth()->user()->email;
                 $order->phone = auth()->user()->phone;
-                $order->address = auth()->user()->address;
+                $order->address = auth()->user()->company_address ?? auth()->user()->address;
             } else {
                 $order->name = $request->user_name;
                 $order->email = $request->user_email;
@@ -286,7 +286,7 @@ class MerchantProductController extends Controller
                 $trans->type        = '-';
                 $trans->remark      = 'wallet_create';
                 $trans->details     = trans('Wallet Create');
-                $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
                 $trans->save();
 
                 user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
@@ -311,7 +311,7 @@ class MerchantProductController extends Controller
             $trnx->remark      = 'merchant_product_buy';
             $trnx->type        = '-';
             $trnx->details     = trans('Payment to buy product : '). $data->ref_id;
-            $trnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($data->user_id)->name.'"}';
+            $trnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(User::findOrFail($data->user_id)->company_name ?? User::findOrFail($data->user_id)->name).'"}';
             $trnx->save();
 
             $rcvWallet = MerchantWallet::where('merchant_id', $data->user_id)->where('shop_id', $data->shop_id)->where('currency_id', $data->currency_id)->first();
@@ -330,7 +330,7 @@ class MerchantProductController extends Controller
             $rcvTrnx->remark      = 'product_sell_payment';
             $rcvTrnx->type        = '+';
             $rcvTrnx->details     = trans('Receive Payment to sell product : '). $data->ref_id;
-            $rcvTrnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($data->user_id)->name.'"}';
+            $rcvTrnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(User::findOrFail($data->user_id)->company_name ?? User::findOrFail($data->user_id)->name).'"}';
             $rcvTrnx->save();
 
             $data->quantity = $data->quantity - $request->quantity;
@@ -341,10 +341,10 @@ class MerchantProductController extends Controller
             $order->product_id = $request->product_id;
             $order->user_id = $data->user_id;
             $order->shop_id = $data->shop_id;
-            $order->name = auth()->user()->name;
+            $order->name = auth()->user()->company_name ?? auth()->user()->name;
             $order->email = auth()->user()->email;
             $order->phone = auth()->user()->phone;
-            $order->address = auth()->user()->address;
+            $order->address = auth()->user()->company_address ?? auth()->user()->address;
             $order->quantity = $request->quantity;
             $order->type = "Payment with Account";
             $order->amount = $data->amount * $request->quantity;
@@ -367,7 +367,7 @@ class MerchantProductController extends Controller
             $crytpo_data->address = $request->address;
             $crytpo_data->save();
 
-            
+
             $data->quantity = $data->quantity - $request->quantity;
             $data->sold = $data->sold + $request->quantity;
             $data->update();
@@ -377,17 +377,17 @@ class MerchantProductController extends Controller
             $order->user_id = $data->user_id;
             $order->shop_id = $data->shop_id;
             if(Auth::check()){
-                $order->name = auth()->user()->name;
+                $order->name = auth()->user()->company_name ?? auth()->user()->name;
                 $order->email = auth()->user()->email;
                 $order->phone = auth()->user()->phone;
-                $order->address = auth()->user()->address;
+                $order->address = auth()->user()->company_address ?? auth()->user()->address;
             } else {
                 $order->name = $request->user_name;
                 $order->email = $request->user_email;
                 $order->phone = $request->user_phone;
                 $order->address = $request->user_address;
             }
-            
+
             $order->quantity = $request->quantity;
             $order->type = "Payment with Crypto";
             $order->amount = $data->amount * $request->quantity;
@@ -405,16 +405,16 @@ class MerchantProductController extends Controller
             $data->quantity = $data->quantity - $request->quantity;
             $data->sold = $data->sold + $request->quantity;
             $data->update();
-            
+
             $order = new Order();
             $order->product_id = $request->product_id;
             $order->user_id = $data->user_id;
             $order->shop_id = $data->shop_id;
             if(Auth::check()){
-                $order->name = auth()->user()->name;
+                $order->name = auth()->user()->company_name ?? auth()->user()->name;
                 $order->email = auth()->user()->email;
                 $order->phone = auth()->user()->phone;
-                $order->address = auth()->user()->address;
+                $order->address = auth()->user()->company_address ?? auth()->user()->address;
             } else {
                 $order->name = $request->user_name;
                 $order->email = $request->user_email;

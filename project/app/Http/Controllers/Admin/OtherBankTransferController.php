@@ -45,7 +45,7 @@ class OtherBankTransferController extends Controller
         $data = User::whereId($data->user_id)->first();
         if ($data) {
           return '<div>
-            <span>' . $data->name . '</span>
+            <span>' . ($data->company_name ?? $data->name) . '</span>
           </div>';
         } else {
           return $data = '';
@@ -114,7 +114,7 @@ class OtherBankTransferController extends Controller
         $data = User::whereId($data->user_id)->first();
         if ($data) {
           return '<div>
-            <span>' . $data->name . '</span>
+            <span>' . ($data->company_name ?? $data->name) . '</span>
           </div>';
         } else {
           return $data = '';
@@ -522,7 +522,7 @@ class OtherBankTransferController extends Controller
         $trans->charge      = $data->cost;
         $trans->type        = '-';
         $trans->remark      = 'External_Payment';
-        $trans->data        = '{"sender":"'.$user->name.'", "receiver":"'.$data->beneficiary->name.'", "transaction_id":"'.$transaction_id.'", "description":"'.$data->description.'"}';
+        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$data->beneficiary->name.'", "transaction_id":"'.$transaction_id.'", "description":"'.$data->description.'"}';
         $trans->details     = trans('Send Money');
         $trans->save();
     }

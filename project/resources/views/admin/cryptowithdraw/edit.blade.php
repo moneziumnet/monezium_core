@@ -32,7 +32,7 @@
 
               <div class="form-group">
                 <label for="customer_name">{{ __('Customer Name') }}</label>
-                <input type="text" class="form-control" id="customer_name" name="customer_name" value="{{ $withdraw->user->name}}" readonly required>
+                <input type="text" class="form-control" id="customer_name" name="customer_name" value="{{ $withdraw->user->company_name ?? $withdraw->user->name}}" readonly required>
               </div>
 
               <div class="form-group">

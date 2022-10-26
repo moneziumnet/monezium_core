@@ -17,7 +17,7 @@
                                                     <tr>
                                                         <th>{{ __("User Name") }}</th>
                                                         <td>
-                                                            <a href="{{route('admin-user-profile',$withdraw->user->id)}}" target="_blank">{{$withdraw->user->name}}</a>
+                                                            <a href="{{route('admin-user-profile',$withdraw->user->id)}}" target="_blank">{{$withdraw->user->company_name ?? $withdraw->user->name}}</a>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -48,7 +48,7 @@
                                                         <th>{{ __("Withdraw Method") }}</th>
                                                         <td>{{$withdraw->method}}</td>
                                                     </tr>
-                                                    
+
                                                     <tr>
                                                         <th>{{ __("Withdraw Account Details") }}</th>
                                                         <td>{{$withdraw->details}}</td>

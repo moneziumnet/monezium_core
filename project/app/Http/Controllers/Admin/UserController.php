@@ -315,7 +315,7 @@ class UserController extends Controller
                     $trans->type        = '-';
                     $trans->remark      = 'card_issuance';
                     $trans->details     = trans('Card Issuance');
-                    $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+                    $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
                     $trans->save();
 
                     $trx='VC-'.Str::random(6);
@@ -359,7 +359,7 @@ class UserController extends Controller
                     $trans->type        = '-';
                     $trans->remark      = 'wallet_create';
                     $trans->details     = trans('Wallet Create');
-                    $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+                    $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
                     $trans->save();
                   }
 
@@ -530,7 +530,7 @@ class UserController extends Controller
             $trnx->remark      = 'upgrade_plan';
             $trnx->type        = '-';
             $trnx->details     = trans('Upgrade Plan');
-            $trnx->data        = '{"sender":"'.User::findOrFail($id)->name.'", "receiver":"System Account"}';
+            $trnx->data        = '{"sender":"'.(User::findOrFail($id)->company_name ?? User::findOrFail($id)->name).'", "receiver":"System Account"}';
             $trnx->save();
             user_wallet_decrement($id, $currency_id, $plan->amount);
 
@@ -701,7 +701,7 @@ class UserController extends Controller
                 $trans->type        = '+';
                 $trans->remark      = $remark;
                 $trans->details     = trans('Send Money');
-                $trans->data        = '{"sender":"'.$user->name.'", "receiver":"'.User::findOrFail($user->referral_id)->name.'"}';
+                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'"}';
                 $trans->save();
             }
 
@@ -760,7 +760,7 @@ class UserController extends Controller
                 $trans->type        = '-';
                 $trans->remark      = 'Internal Payment';
                 $trans->details     = trans('Send Money');
-                $trans->data        = '{"sender":"'.$user->name.'", "receiver":"'.$receiver->name.'"}';
+                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name ).'"}';
                 $trans->save();
 
                 $trans = new Transaction();
@@ -775,7 +775,7 @@ class UserController extends Controller
                 $trans->type        = '+';
                 $trans->remark      = 'Internal Payment';
                 $trans->details     = trans('Send Money');
-                $trans->data        = '{"sender":"'.$user->name.'", "receiver":"'.$receiver->name.'"}';
+                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name ).'"}';
                 $trans->save();
                 if ($wallet->currency->type == 2) {
 
@@ -1002,7 +1002,7 @@ class UserController extends Controller
                     $trans->charge      = 0;
                     $trans->type        = '-';
                     $trans->remark      = 'card_issuance';
-                    $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+                    $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
                     $trans->details     = trans('Card Issuance');
                     $trans->save();
                 }
@@ -1026,7 +1026,7 @@ class UserController extends Controller
                     $trans->type        = '-';
                     $trans->remark      = 'wallet_create';
                     $trans->details     = trans('Wallet Create');
-                    $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+                    $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
                     $trans->save();
                 }
                 user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
@@ -1055,7 +1055,7 @@ class UserController extends Controller
             $trnx->remark      = 'Own_transfer';
             $trnx->type        = '-';
             $trnx->details     = trans('Transfer  '.$fromWallet->currency->code.'money other wallet');
-            $trnx->data        = '{"sender":"'.$user->name.'", "receiver":"'.$user->name.'"}';
+            $trnx->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.($user->company_name ?? $user->name).'"}';
             $trnx->save();
 
             $toTrnx              = new Transaction();
@@ -1069,7 +1069,7 @@ class UserController extends Controller
             $toTrnx->remark      = 'Own_transfer';
             $toTrnx->type          = '+';
             $toTrnx->details     = trans('Transfer  '.$fromWallet->currency->code.'money other wallet');
-            $toTrnx->data        = '{"sender":"'.$user->name.'", "receiver":"'.$user->name.'"}';
+            $toTrnx->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.($user->company_name ?? $user->name).'"}';
             $toTrnx->save();
 
             @mailSend('exchange_money',['from_curr'=>$fromWallet->currency->code,'to_curr'=>$toWallet->currency->code,'charge'=> amount($charge,$fromWallet->currency->type,3),'from_amount'=> amount($request->amount,$fromWallet->currency->type,3),'to_amount'=> amount($finalAmount,$toWallet->currency->type,3),'date_time'=> dateFormat($trnx->created_at)],auth()->user());
@@ -1500,7 +1500,7 @@ class UserController extends Controller
             $trans->charge      = 0;
             $trans->type        = '-';
             $trans->remark      = 'manual_fee_'.str_replace(' ', '_', $manualfee->name);
-            $trans->data        = '{"sender":"'.User::findOrFail($wallet->user_id)->name.'", "receiver":"System Account"}';
+            $trans->data        = '{"sender":"'.(User::findOrFail($wallet->user_id)->company_name ?? User::findOrFail($wallet->user_id)->name).'", "receiver":"System Account"}';
             $trans->details     = trans('manual_fee');
             $trans->save();
             return redirect()->back()->with(array('message' => 'Done Manual fee successfully'));
@@ -1641,7 +1641,7 @@ class UserController extends Controller
             if (!empty($request->input('user_type'))) {
                 $data['user_type'] = implode(',',$request->input('user_type'));
             }
-            
+
             $user->update($data);
             $msg = 'Customer Information Updated Successfully.';
             return response()->json($msg);

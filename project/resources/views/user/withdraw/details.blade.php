@@ -1,5 +1,5 @@
 <li class="list-group-item d-flex justify-content-between">@lang('WithDraw Method')<span>{{$data->method->name}}</span></li>
-<li class="list-group-item d-flex justify-content-between">@lang('User Name')<span>{{ $data->user->name }}</span></li>
+<li class="list-group-item d-flex justify-content-between">@lang('User Name')<span>{{ $data->user->company_name ?? $data->user->name}}</span></li>
 <li class="list-group-item d-flex justify-content-between">@lang('Amount')<span>{{$data->currency->symbol}}{{$data->amount}}</span></li>
 <li class="list-group-item d-flex justify-content-between">@lang('Charge')<span>{{$data->currency->symbol}}{{$data->charge}}</span></li>
 <li class="list-group-item d-flex justify-content-between">@lang('Description')<span>{{$data->user_data}}</span></li>

@@ -173,7 +173,8 @@ class DepositBankController extends Controller
             $trans->type        = '+';
             $trans->remark      = $remark;
             $trans->details     = trans('Deposit complete');
-            $trans->data        = '{"sender":"System Account", "receiver":"'.$referral_user->name.'", "description": "'.$data->details.' / '.$data->deposit_number.'"}';
+
+            $trans->data        = '{"sender":"System Account", "receiver":"'.($referral_user->company_name ?? $referral_user->name).'", "description": "'.$data->details.' / '.$data->deposit_number.'"}';
             $trans->save();
         }
         $final_chargefee = $transaction_global_cost + $transaction_custom_cost;
@@ -197,7 +198,8 @@ class DepositBankController extends Controller
 
         $trans->remark      = 'Deposit_create';
         $trans->details     = trans('Deposit complete');
-        $trans->data        = '{"sender":"System Account", "receiver":"'.$user->name.'", "description": "'.$data->details.' / '.$data->deposit_number.'"}';
+
+        $trans->data        = '{"sender":"System Account", "receiver":"'.($user->company_name ?? $user->name).'", "description": "'.$data->details.' / '.$data->deposit_number.'"}';
         $trans->save();
 
         $data->update(['status' => 'complete']);

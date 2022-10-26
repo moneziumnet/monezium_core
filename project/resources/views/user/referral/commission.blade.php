@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -24,7 +24,7 @@
                 <div class="card">
                     @if (count($commissions) == 0)
                         <h3 class="text-center py-5">{{__('No Data Found')}}</h3>
-                    @else 
+                    @else
                         <div class="table-responsive">
                             <table class="table table-vcenter table-mobile-md card-table">
                                 <thead>
@@ -55,7 +55,7 @@
 
                                             <td data-label="{{ __('From') }}">
                                                 <div>
-                                                    {{  $receiver != NULL ? $receiver->name : '' }}
+                                                    {{  $receiver != NULL ? $receiver->company_name ?? $receiver->name : '' }}
                                                 </div>
                                             </td>
 

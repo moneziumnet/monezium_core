@@ -120,7 +120,7 @@ class ExchangeMoneyController extends Controller
                 $trans->type        = '-';
                 $trans->remark      = 'card_issuance';
                 $trans->details     = trans('Card Issuance');
-                $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
                 $trans->save();
             }
             else {
@@ -141,7 +141,7 @@ class ExchangeMoneyController extends Controller
                 $trans->type        = '-';
                 $trans->remark      = 'wallet_create';
                 $trans->details     = trans('Wallet Create');
-                $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
                 $trans->save();
             }
             user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
@@ -235,7 +235,7 @@ class ExchangeMoneyController extends Controller
             $trans->type        = '+';
             $trans->remark      = $remark;
             $trans->details     = trans('Exchange Money');
-            $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($user->referral_id)->name.'"}';
+            $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'"}';
             $trans->save();
         }
 

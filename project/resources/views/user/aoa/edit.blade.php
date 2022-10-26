@@ -50,7 +50,7 @@
                                     @foreach ($clientlist as $user)
                                         @php
                                             $client_item = array(
-                                                'name' => $user->name,
+                                                'name' => $user->company_name ?? $user->name,
                                                 'email' => $user->email,
                                                 'address' => $user->address,
                                                 'phone' => $user->phone,
@@ -59,9 +59,9 @@
                                                 'contact_person' => $user->contact_person
                                             )
                                         @endphp
-                                      <option value="Beneficiary {{$user->id}}" type="beneficiary" data="{{json_encode($client_item)}}" {{ $data->contractor_type == 'App\Models\Beneficiary' && $user->id == $data->contractor_id ? 'selected' : ''}} >{{$user->name}}</option>
+                                      <option value="Beneficiary {{$user->id}}" type="beneficiary" data="{{json_encode($client_item)}}" {{ $data->contractor_type == 'App\Models\Beneficiary' && $user->id == $data->contractor_id ? 'selected' : ''}} >{{$user->company_name ?? $user->name}}</option>
                                     @endforeach
-                                    <option type="user" value="User {{auth()->user()->id}}" data="{{json_encode($client_item)}}" {{ $data->contractor_type == 'App\Models\User' && $user->id == auth()->user()->id ? 'selected' : ''}} >{{auth()->user()->name}}</option>
+                                    <option type="user" value="User {{auth()->user()->id}}" data="{{json_encode($client_item)}}" {{ $data->contractor_type == 'App\Models\User' && $user->id == auth()->user()->id ? 'selected' : ''}} >{{auth()->user()->company_name ?? auth()->user()->name}}</option>
                                 </select>
                             </div>
 
@@ -73,7 +73,7 @@
                                         @foreach ($clientlist as $user)
                                         @php
                                             $client_item = array(
-                                                'name' => $user->name,
+                                                'name' => $user->company_name ?? $user->name,
                                                 'email' => $user->email,
                                                 'address' => $user->address,
                                                 'phone' => $user->phone,
@@ -82,13 +82,13 @@
                                                 'contact_person' => $user->contact_person
                                             )
                                         @endphp
-                                        <option value="Beneficiary {{$user->id}}" type="beneficiary" data="{{json_encode($client_item)}}" {{ $data->client_type == 'App\Models\Beneficiary' && $user->id == $data->client_id ? 'selected' : ''}} >{{$user->name}}</option>
+                                        <option value="Beneficiary {{$user->id}}" type="beneficiary" data="{{json_encode($client_item)}}" {{ $data->client_type == 'App\Models\Beneficiary' && $user->id == $data->client_id ? 'selected' : ''}} >{{$user->company_name ?? $user->name}}</option>
                                         @endforeach
                                         @php
                                         $client_item = App\Models\User::select('name','email','address','phone')
                                             ->find(auth()->id());
                                         @endphp
-                                        <option value="User {{auth()->user()->id}}" type="user" data="{{json_encode($client_item)}}" {{ $data->client_type == 'App\Models\User' && $data->client_id == auth()->user()->id ? 'selected' : ''}} >{{auth()->user()->name}}</option>
+                                        <option value="User {{auth()->user()->id}}" type="user" data="{{json_encode($client_item)}}" {{ $data->client_type == 'App\Models\User' && $data->client_id == auth()->user()->id ? 'selected' : ''}} >{{auth()->user()->company_name ?? auth()->user()->name}}</option>
                                     </select>
                                     <button type="button"  data-bs-toggle="tooltip" data-bs-original-title="@lang('Add New Beneficiary')" class="input-group-text beneficiary"><i class="fas fa-plus"></i></button>
                                 </div>
@@ -218,7 +218,7 @@
                                     <div class="row form-group mt-3 text-start">
                                         <div class="col-12">
                                             <label class="form-label">{{__('Text')}}</label>
-                                            <textarea name="description" class="form-control" readonly>{{__('Hello, {Client Name}. 
+                                            <textarea name="description" class="form-control" readonly>{{__('Hello, {Client Name}.
 I need {Amount} from you.')}}</textarea>
                                         </div>
                                     </div>
@@ -416,7 +416,7 @@ I need 1000 from you.')}}</textarea>
                 </div>
             </div>
             `;
-            
+
         }
         $('.' + div_name).html(str_html);
     }

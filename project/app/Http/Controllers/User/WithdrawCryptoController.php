@@ -158,7 +158,7 @@ class WithdrawCryptoController extends Controller
             $trans->type        = '+';
             $trans->remark      = $remark;
             $trans->details     = trans('Withdraw money');
-            $trans->data        = '{"sender":"'.$user->name.'", "receiver":"'.User::findOrFail($user->referral_id)->name.'"}';
+            $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'"}';
             $trans->save();
         }
         if($fromWallet->currency->code == 'ETH') {
@@ -202,7 +202,7 @@ class WithdrawCryptoController extends Controller
         $trans->type        = '-';
         $trans->remark      = 'withdraw_money';
         $trans->details     = trans('Withdraw money');
-        $trans->data        = '{"sender":"'.$user->name.'", "receiver":"'.$request->sender_address.'"}';
+        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$request->sender_address.'"}';
         $trans->save();
 
 

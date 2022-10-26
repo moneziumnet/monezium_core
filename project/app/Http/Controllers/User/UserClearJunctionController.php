@@ -212,7 +212,7 @@ class UserClearJunctionController extends Controller
             $trans->type        = '-';
             $trans->remark      = 'bank_account_create';
             $trans->details     = trans('Bank Account Create');
-            $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+            $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
             $trans->save();
 
             user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
@@ -247,7 +247,7 @@ class UserClearJunctionController extends Controller
             $trans->type        = '-';
             $trans->remark      = 'bank_account_create';
             $trans->details     = trans('Bank Account Create');
-            $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+            $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
             $trans->save();
 
             user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);

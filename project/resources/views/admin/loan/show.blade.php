@@ -77,7 +77,7 @@
                                     <tr>
                                         <th width="45%">{{__('User')}}</th>
                                         <th width="10%">:</th>
-                                        <td width="45%">{{$data->user->name}}</td>
+                                        <td width="45%">{{$data->user->company_name ?? $data->user->name}}</td>
                                     </tr>
                                     <tr>
                                         <th width="45%">{{__('Request Amount')}}</th>

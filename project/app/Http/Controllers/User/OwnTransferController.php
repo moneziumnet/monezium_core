@@ -83,7 +83,7 @@ class OwnTransferController extends Controller
                 $trans->charge      = 0;
                 $trans->type        = '-';
                 $trans->remark      = 'card_issuance';
-                $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"System Account"}';
+                $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"System Account"}';
                 $trans->details     = trans('Card Issuance');
                 $trans->save();
             }
@@ -107,7 +107,7 @@ class OwnTransferController extends Controller
                 $trans->type        = '-';
                 $trans->remark      = 'wallet_create';
                 $trans->details     = trans('Wallet Create');
-                $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"System Account"}';
+                $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"System Account"}';
                 $trans->save();
             }
             user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
@@ -156,7 +156,7 @@ class OwnTransferController extends Controller
             $trans->type        = '+';
             $trans->remark      = $remark;
             $trans->details     = trans('Own Money Transfer');
-            $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($user->referral_id)->name.'"}';
+            $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'"}';
             $trans->save();
         }
 
@@ -179,7 +179,7 @@ class OwnTransferController extends Controller
         $trnx->remark      = 'Own_transfer';
         $trnx->type        = '-';
         $trnx->details     = trans('Transfer  '.$fromWallet->currency->code.'money other wallet');
-        $trnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.auth()->user()->name.'"}';
+        $trnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(auth()->user()->company_name ?? auth()->user()->name).'"}';
         $trnx->save();
 
         $toTrnx              = new Transaction();
@@ -193,7 +193,7 @@ class OwnTransferController extends Controller
         $toTrnx->remark      = 'Own_transfer';
         $toTrnx->type          = '+';
         $toTrnx->details     = trans('Transfer  '.$fromWallet->currency->code.'money other wallet');
-        $toTrnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.auth()->user()->name.'"}';
+        $toTrnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(auth()->user()->company_name ?? auth()->user()->name).'"}';
         $toTrnx->save();
 
         @mailSend('exchange_money',['from_curr'=>$fromWallet->currency->code,'to_curr'=>$toWallet->currency->code,'charge'=> amount(($transaction_global_cost +  $transaction_custom_cost)*$rate,$fromWallet->currency->type,3),'from_amount'=> amount($request->amount,$fromWallet->currency->type,3),'to_amount'=> amount($request->amount-($transaction_global_cost +  $transaction_custom_cost)*$rate,$toWallet->currency->type,3),'date_time'=> dateFormat($trnx->created_at)],auth()->user());

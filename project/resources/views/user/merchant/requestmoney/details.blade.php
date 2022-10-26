@@ -34,7 +34,7 @@
                             <tr>
                                 <th class="45%" width="45%">{{__('Request From')}}</th>
                                 <td width="10%">:</td>
-                                <td class="45%" width="45%">{{ $from->name }}</td>
+                                <td class="45%" width="45%">{{ $from->company_name ?? $from->name }}</td>
                             </tr>
 
                             <tr>
@@ -46,7 +46,7 @@
                             <tr>
                                 <th class="45%" width="45%">{{__('Request To')}}</th>
                                 <td width="10%">:</td>
-                                <td class="45%" width="45%">{{ $to->name }}</td>
+                                <td class="45%" width="45%">{{ $to ? ($to->company_name ?? $to->name) : $data->receiver_name }}</td>
                             </tr>
 
                             <tr>

@@ -162,7 +162,7 @@ class UserLoanController extends Controller
         $trans->type        = '+';
         $trans->remark      = 'loan_create';
         $trans->details     = trans('loan requesting');
-        $trans->data        = '{"sender":"System Account", "receiver":"'.auth()->user()->name.'"}';
+        $trans->data        = '{"sender":"System Account", "receiver":"'.(auth()->user()->company_name ?? auth()->user()->name).'"}';
         $trans->save();
 
         return redirect()->route('user.loans.index')->with('message','Loan Requesting Successfully');

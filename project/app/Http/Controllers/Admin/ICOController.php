@@ -17,7 +17,7 @@ class ICOController extends Controller
                             return str_dis($data->name);
                         })
                         ->editColumn('user_name',function(IcoToken $data){
-                            return str_dis($data->user->name);
+                            return str_dis($data->user->company_name ?? $data->user->name );
                         })
                         ->editColumn('price', function(IcoToken $data) {
                             return $data->price;

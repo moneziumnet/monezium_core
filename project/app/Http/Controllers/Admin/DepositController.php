@@ -27,7 +27,7 @@ class DepositController extends Controller
                         })
                         ->addColumn('customer_name',function(Deposit $data){
                             $data = User::where('id',$data->user_id)->first();
-                            return $data->name;
+                            return $data->company_name ?? $data->name;
                         })
                         ->addColumn('customer_email',function(Deposit $data){
                             $data = User::where('id',$data->user_id)->first();
@@ -115,7 +115,8 @@ class DepositController extends Controller
             $trans->type        = '+';
             $trans->remark      = $remark;
             $trans->details     = trans('Deposit complete');
-            $trans->data        = '{"sender":"System Account", "receiver":"'.$referral_user->name.'", "description":"'.$data->deposit_number.'"}';
+
+            $trans->data        = '{"sender":"System Account", "receiver":"'.($referral_user->company_name ?? $referral_user->name).'"}, "description":"'.$data->deposit_number.'"}';
             $trans->save();
         }
         $final_chargefee = $transaction_global_cost + $transaction_custom_cost;
@@ -139,7 +140,8 @@ class DepositController extends Controller
         $trans->type        = '+';
         $trans->remark      = 'Deposit_create';
         $trans->details     = trans('Deposit complete');
-        $trans->data        = '{"sender":"System Account", "receiver":"'.$user->name.'", "description":"'.$data->deposit_number.'"}';
+
+        $trans->data        = '{"sender":"System Account", "receiver":"'.($user->company_name ?? $user->name).'"}, "description":"'.$data->deposit_number.'"}';
         $trans->save();
 
         $data->update(['status' => 'complete']);

@@ -26,19 +26,19 @@ class OwnBankTransferController extends Controller
                                 $data = User::whereId($data->user_id)->first();
                                 if($data){
                                     return '<div>
-                                            <span>'.$data->name.'</span>
+                                            <span>'.($data->company_name ?? $data->name).'</span>
                                             <p>'.$data->account_number.'</p>
                                     </div>';
                                 }else{
                                     return $data = '';
                                 }
-                            }) 
+                            })
                             ->editColumn('receiver_id', function(BalanceTransfer $data){
                                 $data = User::whereId($data->receiver_id)->first();
-  
+
                                 if($data){
                                     return '<div>
-                                            <span>'.$data->name.'</span>
+                                            <span>'.($data->company_name ?? $data->name).'</span>
                                             <p>'.$data->account_number.'</p>
                                     </div>';
                                 }else{

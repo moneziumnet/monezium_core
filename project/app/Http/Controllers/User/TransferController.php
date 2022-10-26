@@ -97,7 +97,7 @@ class TransferController extends Controller
             $trans->type        = '-';
             $trans->remark      = 'wallet_create';
             $trans->details     = trans('Wallet Create');
-            $trans->data        = '{"sender":"'.$receiver->name.'", "receiver":"System Account"}';
+            $trans->data        = '{"sender":"'.($receiver->company_name ?? $receiver->name).'", "receiver":"System Account"}';
             $trans->save();
 
             user_wallet_decrement($receiver->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
@@ -123,7 +123,7 @@ class TransferController extends Controller
         $trnx->remark      = 'transfer_money';
         $trnx->type        = '-';
         $trnx->details     = trans('Transfer money to '). $receiver->email;
-        $trnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.$receiver->name.'"}';
+        $trnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name).'"}';
         $trnx->save();
 
         user_wallet_increment($receiver->id, $currency->id, $request->amount);
@@ -140,7 +140,7 @@ class TransferController extends Controller
         $receiverTrnx->remark      = 'transfer_money';
         $receiverTrnx->type        = '+';
         $receiverTrnx->details     = trans('Received money from '). auth()->user()->email;
-        $receiverTrnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.$receiver->name.'"}';
+        $receiverTrnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name).'"}';
         $receiverTrnx->save();
 
         //to sender

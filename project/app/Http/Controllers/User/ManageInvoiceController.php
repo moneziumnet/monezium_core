@@ -568,7 +568,7 @@ class ManageInvoiceController extends Controller
                 $trans->type        = '-';
                 $trans->remark      = 'wallet_create';
                 $trans->details     = trans('Wallet Create');
-                $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
                 $trans->save();
 
                 user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
@@ -597,7 +597,7 @@ class ManageInvoiceController extends Controller
             $trans->remark      = 'invoice_tax_fee';
             $trans->details     = trans('Invoice Tax Fee');
             $trans->invoice_num = $invoice->number;
-            $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"System Account"}';
+            $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"System Account"}';
             $trans->save();
 
             $wallet->balance -= $invoice->final_amount;
@@ -616,7 +616,7 @@ class ManageInvoiceController extends Controller
             $trnx->invoice_num = $invoice->number;
             $trnx->type        = '-';
             $trnx->details     = trans('Payment to invoice : '). $invoice->number;
-            $trnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($invoice->user_id)->name.'"}';
+            $trnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(User::findOrFail($invoice->user_id)->company_name ?? User::findOrFail($invoice->user_id)->name).'"}';
             $trnx->save();
 
             $rcvWallet = Wallet::where('user_id',$invoice->user_id)->where('user_type',1)->where('currency_id',$invoice->currency_id)->where('wallet_type', 1)->first();
@@ -651,7 +651,7 @@ class ManageInvoiceController extends Controller
                 $trans->type        = '-';
                 $trans->remark      = 'wallet_create';
                 $trans->details     = trans('Wallet Create');
-                $trans->data        = '{"sender":"'.User::findOrFail($invoice->user_id)->name.'", "receiver":"System Account"}';
+                $trans->data        = '{"sender":"'.(User::findOrFail($invoice->user_id)->company_name ?? User::findOrFail($invoice->user_id)->name).'", "receiver":"System Account"}';
                 $trans->save();
 
                 user_wallet_decrement($invoice->user_id, defaultCurr(), $chargefee->data->fixed_charge, 1);
@@ -673,7 +673,7 @@ class ManageInvoiceController extends Controller
             $rcvTrnx->invoice_num = $invoice->number;
             $rcvTrnx->type        = '+';
             $rcvTrnx->details     = trans('Receive Payment from invoice : '). $invoice->number;
-            $rcvTrnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($invoice->user_id)->name.'"}';
+            $rcvTrnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(User::findOrFail($invoice->user_id)->company_name ?? User::findOrFail($invoice->user_id)->name).'"}';
             $rcvTrnx->save();
 
             $invoice->payment_status = 1;
@@ -791,7 +791,7 @@ class ManageInvoiceController extends Controller
                 $trans->type        = '-';
                 $trans->remark      = 'wallet_create';
                 $trans->details     = trans('Wallet Create');
-                $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
                 $trans->save();
 
                 user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
@@ -820,7 +820,7 @@ class ManageInvoiceController extends Controller
             $trans->remark      = 'invoice_tax_fee';
             $trans->details     = trans('Invoice Tax Fee');
             $trans->invoice_num = $invoice->number;
-            $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"System Account"}';
+            $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"System Account"}';
             $trans->save();
 
             $wallet->balance -= $invoice->final_amount;
@@ -839,7 +839,7 @@ class ManageInvoiceController extends Controller
             $trnx->invoice_num = $invoice->number;
             $trnx->type        = '-';
             $trnx->details     = trans('Payment to invoice : '). $invoice->number;
-            $trnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($invoice->user_id)->name.'"}';
+            $trnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(User::findOrFail($invoice->user_id)->company_name ?? User::findOrFail($invoice->user_id)->name).'"}';
             $trnx->save();
 
             $rcvWallet = Wallet::where('user_id',$invoice->user_id)->where('user_type',1)->where('currency_id',$invoice->currency_id)->where('wallet_type', 1)->first();
@@ -874,7 +874,7 @@ class ManageInvoiceController extends Controller
                 $trans->type        = '-';
                 $trans->remark      = 'wallet_create';
                 $trans->details     = trans('Wallet Create');
-                $trans->data        = '{"sender":"'.User::findOrFail($invoice->user_id)->name.'", "receiver":"System Account"}';
+                $trans->data        = '{"sender":"'.(User::findOrFail($invoice->user_id)->company_name ?? User::findOrFail($invoice->user_id)->name).'", "receiver":"System Account"}';
                 $trans->save();
 
                 user_wallet_decrement($invoice->user_id, defaultCurr(), $chargefee->data->fixed_charge, 1);
@@ -896,7 +896,7 @@ class ManageInvoiceController extends Controller
             $rcvTrnx->invoice_num = $invoice->number;
             $rcvTrnx->type        = '+';
             $rcvTrnx->details     = trans('Receive Payment from invoice : '). $invoice->number;
-            $rcvTrnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($invoice->user_id)->name.'"}';
+            $rcvTrnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(User::findOrFail($invoice->user_id)->company_name ?? User::findOrFail($invoice->user_id)->name).'"}';
             $rcvTrnx->save();
 
             $invoice->payment_status = 1;

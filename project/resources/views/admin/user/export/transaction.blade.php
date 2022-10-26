@@ -2,14 +2,14 @@
     <thead>
         <tr>
             <th colspan="5" style="text-align: center">
-                {{$user->name}}
-       
+                {{$user->company_name ?? $user->name }}
+
             </th>
         </tr>
         <tr>
             <th colspan="5" style="text-align: center">
-                {{$user->address}}<br/>
-                {{$user->city}}, {{$user->zip}}<br/>
+                {{$user->company_address ?? $user->address}}<br/>
+                {{$user->company_city ?? $user->city}}, {{$user->company_zipcode ?? $user->zip}}<br/>
                 {{$user->account_number}}
             </th>
         </tr>

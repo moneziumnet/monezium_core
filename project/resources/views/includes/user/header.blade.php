@@ -35,7 +35,7 @@
         <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
           <span class="avatar avatar-sm" style="background-image: url({{ auth()->user()->photo ? asset('assets/images/'.auth()->user()->photo) : asset('assets/user/img/user.jpg')}})"></span>
           <div class="d-none d-xl-block ps-2">
-            <div>{{auth()->user()->name}}</div>
+            <div>{{auth()->user()->company_name ?? auth()->user()->name}}</div>
           </div>
         </a>
         <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">

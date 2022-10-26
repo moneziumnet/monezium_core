@@ -9,7 +9,7 @@
         <li class="list-group-item">@lang('Bank Address')<span>{{ $data->beneficiary->bank_address }}</span></li>
         <li class="list-group-item">@lang('Account IBAN')<span>{{ $data->beneficiary->account_iban }}</span></li>
         <li class="list-group-item">@lang('SWIFT/BIC')<span>{{ $data->beneficiary->swift_bic }}</span></li>
-        <li class="list-group-item">@lang('Customer Name')<span>{{ $user->name }}</span></li>
+        <li class="list-group-item">@lang('Customer Name')<span>{{ $user->company_name ?? $user->name}}</span></li>
         <li class="list-group-item">@lang('Customer Email')<span>{{ $user->email }}</span></li>
         <li class="list-group-item">@lang('Customer Bank IBAN')<span>{{ $bankaccount->iban }}</span></li>
         <li class="list-group-item">@lang('Customer Bank SWIFT')<span>{{ $bankaccount->swift }}</span></li>

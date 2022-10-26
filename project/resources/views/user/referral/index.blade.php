@@ -212,7 +212,7 @@
                                             </td>
                                             <td data-label="{{ __('Name') }}">
                                                 <div>
-                                                    {{ ucfirst($data->manager->name) }}
+                                                    {{ ucfirst($data->manager->company_name ?? $data->manager->name) }}
                                                 </div>
                                             </td>
                                             <td data-label="{{ __('Email') }}">

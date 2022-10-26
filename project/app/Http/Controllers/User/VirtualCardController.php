@@ -75,7 +75,7 @@ class VirtualCardController extends Controller
         $trans->type        = '-';
         $trans->remark      = 'card_issuance';
         $trans->details     = trans('Card Issuance');
-        $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
         $trans->save();
 
         user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
@@ -244,7 +244,7 @@ class VirtualCardController extends Controller
                 $trans->charge      = 0;
                 $trans->type        = '-';
                 $trans->remark      = 'card_issuance';
-                $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
                 $trans->details     = trans('Card Issuance');
                 $trans->save();
             }
@@ -268,7 +268,7 @@ class VirtualCardController extends Controller
                 $trans->type        = '-';
                 $trans->remark      = 'wallet_create';
                 $trans->details     = trans('Wallet Create');
-                $trans->data        = '{"sender":"'.$user->name.'", "receiver":"System Account"}';
+                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
                 $trans->save();
             }
             user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
@@ -297,7 +297,7 @@ class VirtualCardController extends Controller
         $trnx->remark      = 'Own_transfer';
         $trnx->type        = '-';
         $trnx->details     = trans('Transfer  '.$fromWallet->currency->code.'money other wallet');
-        $trnx->data        = '{"sender":"'.$user->name.'", "receiver":"'.$user->name.'"}';
+        $trnx->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.($user->company_name ?? $user->name).'"}';
         $trnx->save();
 
         $toTrnx              = new Transaction();
@@ -311,7 +311,7 @@ class VirtualCardController extends Controller
         $toTrnx->remark      = 'Own_transfer';
         $toTrnx->type          = '+';
         $toTrnx->details     = trans('Transfer  '.$fromWallet->currency->code.'money other wallet');
-        $toTrnx->data        = '{"sender":"'.$user->name.'", "receiver":"'.$user->name.'"}';
+        $toTrnx->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.($user->company_name ?? $user->name).'"}';
         $toTrnx->save();
 
         return back()->with('message','Money exchanged successfully.');

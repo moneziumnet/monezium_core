@@ -104,7 +104,7 @@ class UserICOController extends Controller
         $trans->type        = '+';
         $trans->remark      = 'ico_token_buy';
         $trans->details     = trans('Buy ico token');
-        $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.$ico_token->user->name.'"}';
+        $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($ico_token->user->company_name ?? $ico_token->user->name).'"}';
         $trans->save();
 
         $trans = new Transaction();
@@ -119,7 +119,7 @@ class UserICOController extends Controller
         $trans->type        = '-';
         $trans->remark      = 'ico_token_buy';
         $trans->details     = trans('Buy ico token');
-        $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.$ico_token->user->name.'"}';
+        $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($ico_token->user->company_name ?? $ico_token->user->name).'"}';
         $trans->save();
 
         $trans = new Transaction();
@@ -134,7 +134,7 @@ class UserICOController extends Controller
         $trans->type        = '+';
         $trans->remark      = 'ico_token_sell';
         $trans->details     = trans('Sell ico token');
-        $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.$ico_token->user->name.'"}';
+        $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($ico_token->user->company_name ?? $ico_token->user->name).'"}';
         $trans->save();
 
         return redirect(route('user.ico'))->with('message','Buy token successfully.');

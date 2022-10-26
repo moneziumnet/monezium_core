@@ -28,20 +28,20 @@ class WireTransferController extends Controller
                                 $data = User::whereId($data->user_id)->first();
                                 if($data){
                                     return '<div>
-                                            <span>'.$data->name.'</span>
+                                            <span>'.($data->company_name ?? $data->name).'</span>
                                             <p>'.$data->account_number.'</p>
                                     </div>';
                                 }else{
                                     return $data = '';
                                 }
-                            }) 
+                            })
                             ->editColumn('account_number', function(WireTransfer $data){
-  
+
                                 return '<div>
                                         <span>'.$data->account_holder_name.'</span>
                                         <p>'.$data->account_number.'</p>
                                 </div>';
-                                
+
                             })
                             ->editColumn('amount', function(WireTransfer $data) {
                                 $curr = Currency::where('is_default','=',1)->first();
@@ -87,7 +87,7 @@ class WireTransferController extends Controller
                                     <a href="' . route('admin.wire.transfer.show',$data->id) . '"  class="dropdown-item">'.__("Details").'</a>
                                   </div>
                                 </div>';
-  
+
                               })
 
                             ->rawColumns(['wire_transfer_bank_id','user_id','account_number','amount','status','action'])
@@ -120,10 +120,10 @@ class WireTransferController extends Controller
 
           }
         }
-  
+
         $data->status = $id2;
         $data->update();
-  
+
         $msg = 'Data Updated Successfully.';
         return response()->json($msg);
       }

@@ -27,7 +27,7 @@ class CryptoDepositController extends Controller
                         })
                         ->addColumn('customer_name',function(CryptoDeposit $data){
                             $data = User::where('id',$data->user_id)->first();
-                            return str_dis($data->name);
+                            return str_dis($data->company_name ?? $data->name);
                         })
                         ->editColumn('amount', function(CryptoDeposit $data) {
                             return $data->currency->symbol.$data->amount;
@@ -120,7 +120,7 @@ class CryptoDepositController extends Controller
                 $trans->type        = '+';
                 $trans->remark      = $remark;
                 $trans->details     = trans('Deposit complete');
-                $trans->data        = '{"sender":"System Account", "receiver":"'.$referral_user->name.'"}';
+                $trans->data        = '{"sender":"System Account", "receiver":"'.($referral_user->company_name ?? $referral_user->name).'"}';
                 $trans->save();
             }
 
@@ -156,7 +156,7 @@ class CryptoDepositController extends Controller
             $trans->type        = '+';
             $trans->remark      = 'Deposit_create';
             $trans->details     = trans('Deposit complete');
-            $trans->data        = '{"sender":"System Account", "receiver":"'.$user->name.'"}';
+            $trans->data        = '{"sender":"System Account", "receiver":"'.($user->company_name ?? $user->name).'"}';
             $trans->save();
         }
 

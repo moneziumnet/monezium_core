@@ -122,7 +122,8 @@ class ManageEscrowController extends Controller
             $trans->type        = '-';
             $trans->remark      = 'wallet_create';
             $trans->details     = trans('Wallet Create');
-            $trans->data        = '{"sender":"'.User::findOrFail($request->id)->name.'", "receiver":"System Account", "description":"'.$escrow->description.'"}';
+
+            $trans->data        = '{"sender":"'.(User::findOrFail($request->id)->company_name ?? User::findOrFail($request->id)->name ).'", "receiver":"System Account"}, "description":"'.$escrow->description.'"}';
             $trans->save();
         }
 
@@ -141,7 +142,7 @@ class ManageEscrowController extends Controller
         $trnx->type        = '+';
         $trnx->remark      = 'escrow_return';
         $trnx->details     = trans('Escrow fund returned');
-        $trnx->data        = '{"sender":"Escrow System", "receiver":"'.User::findOrFail($request->id)->name.'"}';
+        $trnx->data        = '{"sender":"Escrow System", "receiver":"'.(User::findOrFail($request->id)->company_name ?? User::findOrFail($request->id)->name ).'"}';
         $trnx->save();
 
         $escrow->returned_to = @$wallet->user->email;

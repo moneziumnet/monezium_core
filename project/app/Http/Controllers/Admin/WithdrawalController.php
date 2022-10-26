@@ -93,7 +93,7 @@ class WithdrawalController extends Controller
                 $trans->type        = '-';
                 $trans->remark      = $remark;
                 $trans->details     = trans('Withdraw request rejected');
-                $trans->data        = '{"sender":"'.User::findOrFail($user->referral_id)->name.'", "receiver":"'.$user->name.'"}';
+                $trans->data        = '{"sender":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'", "receiver":"'.($user->company_name ?? $user->name).'"}';
                 $trans->save();
             }
             // $wallet->balance += $withdraw->total_amount;
@@ -113,7 +113,7 @@ class WithdrawalController extends Controller
             $trnx->remark      = 'withdraw_reject';
             $trnx->type        = '+';
             $trnx->details     = trans('Withdraw request rejected');
-            $trnx->data        = '{"sender":"System Account", "receiver":"'.$user->name.'"}';
+            $trnx->data        = '{"sender":"System Account", "receiver":"'.($user->company_name ?? $user->name).'"}';
             $trnx->save();
 
         } else{
@@ -136,7 +136,7 @@ class WithdrawalController extends Controller
             $trnx->remark      = 'withdraw_reject';
             $trnx->type        = '+';
             $trnx->details     = trans('Withdraw request rejected');
-            $trnx->data        = '{"sender":"System Account", "receiver":"'.$user->name.'"}';
+            $trnx->data        = '{"sender":"System Account", "receiver":"'.($user->company_name ?? $user->name).'"}';
             $trnx->save();
 
         }

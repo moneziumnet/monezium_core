@@ -279,7 +279,7 @@ class MerchantCampaignController extends Controller
             $trnx->remark      = 'campaign_payment';
             $trnx->type        = '-';
             $trnx->details     = trans('Payment to campaign : '). $data->ref_id;
-            $trnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($data->user_id)->name.'"}';
+            $trnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name ).'", "receiver":"'.(User::findOrFail($data->user_id)->company_name ?? User::findOrFail($data->user_id)->name).'"}';
             $trnx->save();
 
             $rcvWallet = Wallet::where('user_id', $data->user_id)->where('user_type',1)->where('currency_id',$data->currency_id)->where('wallet_type', 1)->first();
@@ -333,7 +333,7 @@ class MerchantCampaignController extends Controller
             $rcvTrnx->remark      = 'campaign_payment';
             $rcvTrnx->type        = '+';
             $rcvTrnx->details     = trans('Receive Campaign Payment : '). $data->ref_id;
-            $rcvTrnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($data->user_id)->name.'"}';
+            $rcvTrnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(User::findOrFail($data->user_id)->company_name ?? User::findOrFail($data->user_id)->name).'"}';
             $rcvTrnx->save();
 
             $newdonation = new CampaignDonation();
@@ -408,7 +408,7 @@ class MerchantCampaignController extends Controller
                 $trnx->remark      = 'campaign_payment';
                 $trnx->type        = '-';
                 $trnx->details     = trans('Payment to campaign : '). $data->ref_id;
-                $trnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($data->user_id)->name.'"}';
+                $trnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(User::findOrFail($data->user_id)->company_name ?? User::findOrFail($data->user_id)->name).'"}';
                 $trnx->save();
 
                 $rcvTrnx              = new ModelsTransaction();
@@ -422,14 +422,14 @@ class MerchantCampaignController extends Controller
                 $rcvTrnx->remark      = 'campaign_payment';
                 $rcvTrnx->type        = '+';
                 $rcvTrnx->details     = trans('Receive Campaign Payment : '). $data->ref_id;
-                $rcvTrnx->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"'.User::findOrFail($data->user_id)->name.'"}';
+                $rcvTrnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(User::findOrFail($data->user_id)->company_name ?? User::findOrFail($data->user_id)->name).'"}';
                 $rcvTrnx->save();
 
                 $currency = Currency::findOrFail($request->currency_id);
 
                 $newdonation = new CampaignDonation();
                 $newdonation->campaign_id = $data->id;
-                $newdonation->user_name = auth()->user()->name;
+                $newdonation->user_name = auth()->user()->company_name ?? auth()->user()->name;
                 $newdonation ->currency_id = $data->currency_id;
                 $newdonation->amount = $request->amount/getRate($currency);
                 $newdonation->payment = 'crypto';

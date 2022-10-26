@@ -59,7 +59,7 @@
                                           </td>
                                           <td data-label="{{ __('Sender') }}">
                                             <div>
-                                              {{ auth()->user()->name }}
+                                              {{ auth()->user()->company_name ?? auth()->user()->name }}
                                             </div>
                                           </td>
                                           <td data-label="{{ __('Amount') }}">

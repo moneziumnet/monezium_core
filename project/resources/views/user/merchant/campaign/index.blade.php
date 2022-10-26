@@ -73,7 +73,7 @@
                                     <div class="col-12">
                                     <h5 class="h4 mb-2 font-weight-bolder">{{__('Campaign Title: ')}}{{$val->title}}</h5>
                                     <h5 class="mb-1">{{__('Category: ')}} {{$val->category->name}}</h5>
-                                    <h5 class="mb-1">{{__('Organizer: ')}} {{$val->user->name}}</h5>
+                                    <h5 class="mb-1">{{__('Organizer: ')}} {{$val->user->company_name ?? $val->user->name}}</h5>
                                     <h5 class="mb-1">{{__('Goal: ')}} {{$val->currency->symbol}}{{$val->goal}}</h5>
                                     @php
                                         $total = DB::table('campaign_donations')->where('campaign_id', $val->id)->where('status', 1)->sum('amount');

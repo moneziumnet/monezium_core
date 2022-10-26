@@ -79,7 +79,7 @@ class MerchantSendController extends Controller
         $trans->type        = '-';
         $trans->remark      = 'Merchant to own';
         $trans->details     = trans('Merchant to own');
-        $trans->data         = '{"sender":"'.$user->name.'", "receiver":"'.$user->name.'"}';
+        $trans->data         = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.($user->company_name ?? $user->name).'"}';
         $trans->save();
 
         $trans = new Transaction();
@@ -94,7 +94,7 @@ class MerchantSendController extends Controller
         $trans->type        = '+';
         $trans->remark      = 'Merchant to own';
         $trans->details     = trans('Merchant to own');
-        $trans->data         = '{"sender":"'.$user->name.'", "receiver":"'.$user->name.'"}';
+        $trans->data         = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.($user->company_name ?? $user->name).'"}';
         $trans->save();
 
         merchant_shop_wallet_decrement($user->id, $wallet->currency_id, $request->amount, $request->shop_id);

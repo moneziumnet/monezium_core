@@ -143,7 +143,7 @@
                                             @endphp
 
                                             <td data-label="{{ __('Account No') }}">{{ $receiver != NULL ? $receiver->account_number : 'User Deleted' }}</td>
-                                            <td data-label="{{ __('Beneficiary Name') }}">{{ $receiver != NULL ? $receiver->name : 'User Deleted' }}</td>
+                                            <td data-label="{{ __('Beneficiary Name') }}">{{ $receiver != NULL ? ($receiver->company_name ?? $receiver->name) : 'User Deleted' }}</td>
                                           @endif
 
                                           @if (!$data->receiver_id)

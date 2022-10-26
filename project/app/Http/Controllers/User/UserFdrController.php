@@ -101,7 +101,7 @@ class UserFdrController extends Controller
             // $trans->profit = "minus";
             // $trans->txnid = $data->transaction_no;
             // $trans->user_id = auth()->id();
-            $trans->data        = '{"sender":"'.auth()->user()->name.'", "receiver":"System Account"}';
+            $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"System Account"}';
             $trans->save();
 
             return redirect()->route('user.invest.index')->with('success','Loan Requesting Successfully');
