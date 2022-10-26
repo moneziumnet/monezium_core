@@ -184,7 +184,7 @@ class CampaignController extends Controller
             $rcvTrnx->remark      = 'campaign_payment';
             $rcvTrnx->type        = '+';
             $rcvTrnx->details     = trans('Receive Campaign Payment : '). $data->ref_id;
-            $rcvTrnx->data        = '{"sender":"'.$donation->user_name.'", "receiver":"'.User::findOrFail($data->user_id)->name.'"}';
+            $rcvTrnx->data        = '{"sender":"'.$donation->user_name.'", "receiver":"'.User::findOrFail($data->user_id)->name.'", "description":"'.$donation->description.'"}';
             $rcvTrnx->save();
             $donation->amount = $donation->amount * getRate($wallet->currency);
             $donation->currency_id = $data->currency_id;
