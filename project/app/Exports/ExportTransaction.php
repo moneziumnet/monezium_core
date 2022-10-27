@@ -47,7 +47,7 @@ class ExportTransaction implements FromView,ShouldAutoSize
     {
         $user = Auth::user();
         $transactions = Transaction::with('currency')->whereUserId(auth()->id())
-        ->where('wallet_id', $this->wallet_id)
+        // ->where('wallet_id', $this->wallet_id)
         ->when($this->wallet_id,function($q){
             return $q->where('wallet_id',$this->wallet_id);
         })
