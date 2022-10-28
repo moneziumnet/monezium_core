@@ -145,8 +145,9 @@
     'use strict';
       $('.details').on('click', function() {
           if($(this).data('hasgateway')) {
-            $('#user_name').text($(this).data('deposit').user.name);
-            $('#user_address').text($(this).data('deposit').user.address);
+            const user = $(this).data('deposit').user;
+            $('#user_name').text(user.company_name ?? user.name);
+            $('#user_address').text(user.address);
           } else {
             $('#user_name').text($(this).data('subbank').sub_institution.name);
             $('#user_address').text($(this).data('subbank').sub_institution.address);
