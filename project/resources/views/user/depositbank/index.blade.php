@@ -147,7 +147,7 @@
           if($(this).data('hasgateway')) {
             const user = $(this).data('deposit').user;
             $('#user_name').text(user.company_name ?? user.name);
-            $('#user_address').text(user.address);
+            $('#user_address').text(user.company_address ?? user.address);
           } else {
             $('#user_name').text($(this).data('subbank').sub_institution.name);
             $('#user_address').text($(this).data('subbank').sub_institution.address);
