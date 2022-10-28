@@ -84,7 +84,12 @@ class SwanController extends Controller
                 'headers' => $headers
             ]);
             $res_body = json_decode($response->getBody());
-            return redirect()->away($res_body->data->onboardIndividualAccountHolder->onboarding->onboardingUrl);
+            if(!isset($user->company_name)) {
+                return redirect()->away($res_body->data->onboardIndividualAccountHolder->onboarding->onboardingUrl);
+            }
+            else {
+                return redirect()->away($res_body->data->onboardCompanyAccountHolder->onboarding->onboardingUrl);
+            }
 
         } catch (\Throwable $th) {
             return redirect()->back()->with(array('warning' => json_encode($th->getMessage())));
