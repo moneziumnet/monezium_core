@@ -10,11 +10,14 @@ use App\Models\Wallet;
 use App\Models\Charge;
 use App\Models\VirtualCard;
 use App\Models\Transaction;
+use App\Models\BankGateway;
+use App\Models\BankAccount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Datatables;
+use GuzzleHttp\Client;
 
 class VirtualCardController extends Controller
 {
@@ -34,10 +37,97 @@ class VirtualCardController extends Controller
 
         $user=auth()->user();
         $currency=Currency::where('id', $request->currency_id)->first();
+        if($currency->code != 'EUR') {
+            return back()->with('error', 'This api support only for EUR currency.');
+        }
 
         $v_card = VirtualCard::where('user_id', auth()->user()->id)->where('currency_id', $request->currency_id)->first();
         if($v_card) {
             return back()->with('error', $currency->code . ' Virtual Card already exists.');
+        }
+        $bankgateways = BankGateway::where('keyword', 'swan')->get();
+        if(count($bankgateways) > 1) {
+            foreach ($bankgateways as $key => $value) {
+                $bankaccount = BankAccount::where('user_id', $user->id)->where('currency_id', $request->currency_id)->where('subbank_id', $value->subbank_id)->first();
+                if($bankaccount) {
+                    $account = $bankaccount;
+                    $bankgateway = $value;
+                }
+            }
+        }
+        else {
+            return back()->with('error', ' The api does not exist for creating Virtual Card.');
+        }
+        if(!$account) {
+            return back()->with('error', 'Please create swan Bank account before creating virtual card.');
+        }
+        $client = New Client();
+        try {
+            $options = [
+              'multipart' => [
+                [
+                  'name' => 'client_id',
+                  'contents' => $bankgateway->information->client_id
+                ],
+                [
+                  'name' => 'client_secret',
+                  'contents' => $bankgateway->information->client_secret
+                ],
+                [
+                  'name' => 'grant_type',
+                  'contents' => 'client_credentials'
+                ]
+            ]];
+          $response = $client->request('POST', 'https://oauth.swan.io/oauth2/token', $options);
+          $res_body = json_decode($response->getBody());
+          $access_token = $res_body->access_token;
+        } catch (\Throwable $th) {
+            return redirect()->back()->with(array('warning' => json_encode($th->getMessage())));
+        }
+        try {
+            $body = '{"query":"query MyQuery {\\n  accounts {\\n    edges {\\n      node {\\n        BIC\\n        IBAN\\n        memberships {\\n          edges {\\n            node {\\n              email\\n              id\\n            }\\n          }\\n        }\\n      }\\n    }\\n  }\\n}\\n","variables":{}}';
+            $headers = [
+                'Authorization' => 'Bearer '.$access_token,
+                'Content-Type' => 'application/json'
+            ];
+            $response = $client->request('POST', 'https://api.swan.io/sandbox-partner/graphql', [
+                'body' => $body,
+                'headers' => $headers
+            ]);
+            $res_body = json_decode($response->getBody());
+            $accountlist = $res_body->data->accounts->edges;
+            if(count($accountlist) > 0) {
+                foreach ($accountlist as $key => $value) {
+                    if($value->node->IBAN == $account->iban) {
+                        $membership_id = $value->node->memberships->edges[0]->node->id;
+                    }
+                }
+            }
+
+        } catch (\Throwable $th) {
+            return redirect()->back()->with(array('warning' => json_encode($th->getMessage())));
+        }
+        if(!$membership_id){
+            return back()->with('error', 'The membership id for your swan bank account does not exist');
+        }
+        try {
+            $redirect_url = route('user.card.index');
+            $body = '{"query":"\\nmutation MyMutation {\\n  addCard(\\n    input: {\\n      accountMembershipId: \\"'.$membership_id.'\\"\\n      withdrawal: true\\n      international: true\\n      nonMainCurrencyTransactions: true\\n      eCommerce: true\\n      consentRedirectUrl: \\"'.$redirect_url.'\\"\\n    }\\n  ) {\\n    ... on AddCardSuccessPayload {\\n      __typename\\n      card {\\n        statusInfo {\\n          ... on CardConsentPendingStatusInfo {\\n            __typename\\n            consent {\\n              consentUrl\\n            }\\n          }\\n        }\\n        id\\n      }\\n    }\\n  }\\n}\\n","variables":{}}';
+            $headers = [
+                'Authorization' => 'Bearer '.$access_token,
+                'Content-Type' => 'application/json'
+            ];
+            $response = $client->request('POST', 'https://api.swan.io/sandbox-partner/graphql', [
+                'body' => $body,
+                'headers' => $headers
+            ]);
+            $res_body = json_decode($response->getBody());
+            if($res_body->errors) {
+                return redirect()->back()->with(array('error' => json_encode( $res_body->errors)));
+            }
+
+        } catch (\Throwable $th) {
+            return redirect()->back()->with(array('warning' => json_encode($th->getMessage())));
         }
         $user_wallet =  Wallet::where('user_id', auth()->user()->id)->where('wallet_type', 2)->where('currency_id', $request->currency_id)->first();
         if(!$user_wallet){
@@ -52,111 +142,63 @@ class VirtualCardController extends Controller
             $user_wallet->created_at = date('Y-m-d H:i:s');
             $user_wallet->updated_at = date('Y-m-d H:i:s');
             $user_wallet->save();
+            $user =  User::findOrFail(auth()->id());
+            $chargefee = Charge::where('slug', 'card-issuance')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
+            if(!$chargefee){
+                $chargefee = Charge::where('slug', 'card-issuance')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
+            }
+
+
+            $trans = new Transaction();
+            $trans->trnx = str_rand();
+            $trans->user_id     = $user->id;
+            $trans->user_type   = 1;
+            $trans->currency_id = defaultCurr();
+            $trans->amount      = $chargefee->data->fixed_charge;
+
+            $trans_wallet = get_wallet($user->id, defaultCurr(), 1);
+
+            $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+            $trans->charge      = 0;
+            $trans->type        = '-';
+            $trans->remark      = 'card_issuance';
+            $trans->details     = trans('Card Issuance');
+            $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
+            $trans->save();
+
+            user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
+            user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
         }
 
-        $user =  User::findOrFail(auth()->id());
-        $chargefee = Charge::where('slug', 'card-issuance')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
-        if(!$chargefee){
-            $chargefee = Charge::where('slug', 'card-issuance')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
-        }
-
-
-        $trans = new Transaction();
-        $trans->trnx = str_rand();
-        $trans->user_id     = $user->id;
-        $trans->user_type   = 1;
-        $trans->currency_id = defaultCurr();
-        $trans->amount      = $chargefee->data->fixed_charge;
-
-        $trans_wallet = get_wallet($user->id, defaultCurr(), 1);
-
-        $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-        $trans->charge      = 0;
-        $trans->type        = '-';
-        $trans->remark      = 'card_issuance';
-        $trans->details     = trans('Card Issuance');
-        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
-        $trans->save();
-
-        user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
-        user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
 
         $coin=$currency->code;
         $trx='VC-'.Str::random(6);
         $name=$request->first_name." ".$request->last_name;
         $ds = "";
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.flutterwave.com/v3/virtual-cards",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS =>"{\n    \"currency\": \"$coin\",\n    \"amount\": $request->amount,\n    \"billing_name\": \"$name\",\n   \"callback_url\": \"$ds/\"\n}",
-            CURLOPT_HTTPHEADER => array(
-                "Content-Type: application/json",
-                "Authorization: Bearer ".env('SECRET_KEY')
-            ),
-        ));
-        $response = curl_exec($curl);
-        curl_close($curl);
-        $result = json_decode($response, true);
 
-        if (array_key_exists('data', $result) && ($result['status'] === 'success')) {
-
-            //Save Card
-            $sav['user_id']=$user->id;
-            $sav['first_name']=$request->first_name;
-            $sav['last_name']=$request->last_name;
-            $sav['account_id']=$result['data']['account_id'];
-            $sav['card_hash']=$result['data']['id'];
-            $sav['card_pan']=$result['data']['card_pan'];
-            $sav['masked_card']=$result['data']['masked_pan'];
-            $sav['cvv']=$result['data']['cvv'];
-            $sav['expiration']=$result['data']['expiration'];
-            $sav['card_type']=$result['data']['card_type'];
-            $sav['name_on_card']=$result['data']['name_on_card'];
-            $sav['callback']=" ";
-            $sav['ref_id']=$trx;
-            $sav['secret']=$trx;
-            $sav['city']=$result['data']['city'];
-            $sav['state']=$result['data']['state'];
-            $sav['zip_code']=$result['data']['zip_code'];
-            $sav['address']=$result['data']['address_1'];
-            $sav['amount']=0;
-            $sav['currency_id']=$request->currency_id;
-            $sav['wallet_id']=$user_wallet->id;
-            $sav['charge']=0;
-            VirtualCard::create($sav);
-            return back()->with('success', 'Virtual card was successfully created');
-        }else{
-            $sav['user_id']=$user->id;
-            $sav['first_name']=$request->first_name ?? explode(" ", $user->name)[0];
-            $sav['last_name']=$request->last_name ?? explode(" ", $user->name)[1];
-            $sav['account_id']=$user->id;
-            $sav['card_hash']=$user->id;
-            $sav['card_pan']=generate_card_number(16);
-            $sav['masked_card']='mc_'.rand(100, 999);
-            $sav['cvv']=rand(100, 999);
-            $sav['expiration']='10/24';
-            $sav['card_type']='normal';
-            $sav['name_on_card']='noc_US';
-            $sav['callback']=" ";
-            $sav['ref_id']=$trx;
-            $sav['secret']=$trx;
-            $sav['city']=$user->city;
-            $sav['zip_code']=$user->zip;
-            $sav['address']=$user->address;
-            $sav['wallet_id']=$user_wallet->id;
-            $sav['amount']=0;
-            $sav['currency_id']=$request->currency_id;
-            $sav['charge']=0;
-            VirtualCard::create($sav);
-            return back()->with('success', 'Virtual card was successfully created');
-        }
+        $sav['user_id']=$user->id;
+        $sav['first_name']=$request->first_name ?? explode(" ", $user->name)[0];
+        $sav['last_name']=$request->last_name ?? explode(" ", $user->name)[1];
+        $sav['account_id']=$user->id;
+        $sav['card_hash']=$user->id;
+        $sav['card_pan']=generate_card_number(16);
+        $sav['masked_card']='mc_'.rand(100, 999);
+        $sav['cvv']=rand(100, 999);
+        $sav['expiration']='10/24';
+        $sav['card_type']='normal';
+        $sav['name_on_card']='noc_US';
+        $sav['callback']=" ";
+        $sav['ref_id']=$trx;
+        $sav['secret']=$trx;
+        $sav['city']=$user->city;
+        $sav['zip_code']=$user->zip;
+        $sav['address']=$user->address;
+        $sav['wallet_id']=$user_wallet->id;
+        $sav['amount']=0;
+        $sav['currency_id']=$request->currency_id;
+        $sav['charge']=0;
+        VirtualCard::create($sav);
+        return back()->with('success', 'Virtual card was successfully created');
     }
 
     public function transaction($id) {
