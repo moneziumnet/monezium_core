@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -23,10 +23,10 @@
               <div class="card">
                   <h3 class="text-center">{{__('NO PLAN FOUND')}}</h3>
               </div>
-            @else 
+            @else
 
             @foreach ($packages as $key=>$data)
-                
+
                 <div class="col-sm-6 col-lg-4 col-xl-4">
                     <div class="plan__item position-relative">
                         <div class="ribbon ribbon-top ribbon-bookmark bg-green">
@@ -37,7 +37,7 @@
                             </div>
                             <div class="right">
                                 <h5 class="title">
-                                    {{ showPrice($data->amount,$currency) }}
+                                    {{$currency->symbol}}{{ $data->amount }}
                                 </h5>
                                 <span>{{ $data->days }} @lang('Days')</span>
                             </div>
@@ -49,7 +49,7 @@
                                             @lang('Maximum Send Money (Daily)')
                                         </div>
                                         <div class="info">
-                                            {{ showprice($data->daily_send,$currency) }}
+                                            {{$currency->symbol}}{{ $data->daily_send }}
                                         </div>
                                     </li>
 
@@ -59,7 +59,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ showprice($data->monthly_send,$currency) }}
+                                            {{$currency->symbol}}{{ $data->monthly_send }}
                                         </div>
                                     </li>
 
@@ -69,7 +69,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ showprice($data->daily_receive,$currency) }}
+                                            {{$currency->symbol}}{{ $data->daily_receive }}
                                         </div>
                                     </li>
 
@@ -79,7 +79,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ showprice($data->monthly_receive,$currency) }}
+                                            {{$currency->symbol}}{{ $data->monthly_receive }}
                                         </div>
                                     </li>
 
@@ -89,7 +89,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ showprice($data->daily_withdraw,$currency) }}
+                                            {{$currency->symbol}}{{ $data->daily_withdraw }}
                                         </div>
                                     </li>
                                     <li>
@@ -98,7 +98,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ showprice($data->monthly_withdraw,$currency) }}
+                                            {{$currency->symbol}}{{ $data->monthly_withdraw }}
                                         </div>
                                     </li>
                                     <li>
@@ -106,10 +106,10 @@
                                             @lang('Maximum Loan Amount (Monthly)')
                                         </div>
                                         <div class="info">
-                                            {{ showprice($data->loan_amount,$currency) }}
+                                            {{$currency->symbol}}{{ $data->loan_amount }}
                                         </div>
                                     </li>
-                                    
+
                                 @if ($data->attribute)
                                     @foreach (json_decode($data->attribute,true) as $key=>$attribute)
                                         <li>
@@ -118,7 +118,7 @@
                                             </div>
                                         </li>
                                     @endforeach
-                                @endif  
+                                @endif
                             </ul>
                             @if (auth()->user()->bank_plan_id == $data->id)
                                 <a href="javascript:;" class="btn btn-green w-100">
@@ -128,7 +128,7 @@
                                 <div class="text-end mt-2">
                                     ({{ auth()->user()->plan_end_date ? auth()->user()->plan_end_date->toDateString() : '' }}) <a href="{{route('user.package.subscription',$data->id)}}" class="text--base">@lang('Renew Plan')</a>
                                 </div>
-                            @else 
+                            @else
                                 <a href="{{route('user.package.subscription',$data->id)}}" class="btn btn-green w-100">
                                     {{__('Get Started')}}
                                 </a>

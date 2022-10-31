@@ -533,6 +533,7 @@ class UserController extends Controller
             $trnx->data        = '{"sender":"'.(User::findOrFail($id)->company_name ?? User::findOrFail($id)->name).'", "receiver":"System Account"}';
             $trnx->save();
             user_wallet_decrement($id, $currency_id, $plan->amount);
+            user_wallet_increment(0, $currency_id, $plan->amount, 9);
 
             $user = User::findOrFail($id);
             if ($user) {

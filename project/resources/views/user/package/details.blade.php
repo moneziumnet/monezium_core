@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -34,49 +34,49 @@
                         <tr>
                             <th class="45%" width="45%">{{__('Plan Amount')}}</th>
                             <td width="10%">:</td>
-                            <td class="45%" width="45%">{{ showPrice($data->amount,$currency) }}</td>
+                            <td class="45%" width="45%">{{$currency->symbol}}{{ $data->amount }} </td>
                         </tr>
 
                         <tr>
                             <th class="45%" width="45%">{{__('Maximum Send Money')}} (@lang('Daily'))</th>
                             <td width="10%">:</td>
-                            <td class="45%" width="45%">{{ showPrice($data->daily_send,$currency) }}</td>
+                            <td class="45%" width="45%">{{$currency->symbol}}{{ $data->daily_send }}</td>
                         </tr>
 
                         <tr>
                             <th class="45%" width="45%">{{__('Maximum Send Money')}} (@lang('Monthly'))</th>
                             <td width="10%">:</td>
-                            <td class="45%" width="45%">{{ showPrice($data->monthly_send,$currency) }}</td>
+                            <td class="45%" width="45%">{{$currency->symbol}}{{ $data->monthly_send }}</td>
                         </tr>
 
                         <tr>
                             <th class="45%" width="45%">{{__('Maximum Receive Money')}} (@lang('Daily'))</th>
                             <td width="10%">:</td>
-                            <td class="45%" width="45%">{{ showPrice($data->daily_receive,$currency) }}</td>
+                            <td class="45%" width="45%">{{$currency->symbol}}{{ $data->daily_receive }}</td>
                         </tr>
 
                         <tr>
                             <th class="45%" width="45%">{{__('Maximum Receive Money')}} (@lang('Monthly'))</th>
                             <td width="10%">:</td>
-                            <td class="45%" width="45%">{{ showPrice($data->monthly_receive,$currency) }}</td>
+                            <td class="45%" width="45%">{{$currency->symbol}}{{ $data->monthly_receive }}</td>
                         </tr>
 
                         <tr>
                             <th class="45%" width="45%">{{__('Maximum Withdraw Amount')}} (@lang('Daily'))</th>
                             <td width="10%">:</td>
-                            <td class="45%" width="45%">{{ showPrice($data->daily_withdraw,$currency) }}</td>
+                            <td class="45%" width="45%">{{$currency->symbol}}{{ $data->daily_withdraw }}</td>
                         </tr>
 
                         <tr>
                             <th class="45%" width="45%">{{__('Maximum Withdraw Amount')}} (@lang('Monthly'))</th>
                             <td width="10%">:</td>
-                            <td class="45%" width="45%">{{ showPrice($data->monthly_withdraw,$currency) }}</td>
+                            <td class="45%" width="45%">{{$currency->symbol}}{{ $data->monthly_withdraw }}</td>
                         </tr>
 
                         <tr>
                             <th width="45%">{{__('Maximum Loan Amount')}} (@lang('Monthly'))</th>
                             <td width="10%">:</td>
-                            <td width="45%">{{ showPrice($data->loan_amount,$currency) }}</td>
+                            <td width="45%">{{$currency->symbol}}{{ $data->loan_amount }}</td>
                         </tr>
 
                         <tr>
@@ -92,23 +92,6 @@
                     <form id="subscription-form" action="{{ route('subscription.free.submit') }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
-                        @if ($data->amount != 0)
-                            <div class="form-group">
-                                <label class="form-label required">{{__('Payment Method')}}</label>
-                                <select name="method" id="subscriptionMethod" class="form-select" required>
-                                    <option value="">{{ __('Select Payment Method') }}</option>
-                                    @foreach ($gateways as $gateway)
-                                        @if (in_array($gateway->keyword,$availableGatways))
-                                            @if ($gateway->type == 'manual')
-                                                <option value="Manual" data-details="{{$gateway->details}}">{{ $gateway->title }}</option>
-                                            @else
-                                                <option value="{{$gateway->keyword}}">{{ $gateway->name }}</option>
-                                            @endif
-                                        @endif
-                                    @endforeach                   
-                                </select>
-                            </div>
-                        @endif
 
                         <div id="card-view" class="col-lg-12 pt-3 d-none">
                             <div class="row">
@@ -261,11 +244,11 @@ $(document).on('submit','.step1-form',function(){
           }
         });
         handler.openIframe();
-            return false;                    
+            return false;
         }
         else {
           $('#preloader').show();
-            return true;   
+            return true;
         }
 });
 
@@ -281,7 +264,7 @@ $(document).on('submit','.step1-form',function(){
 
   <script type="text/javascript">
   'use strict';
-  
+
     var cnstatus = false;
     var dateStatus = false;
     var cvcStatus = false;
