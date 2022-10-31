@@ -27,6 +27,7 @@ class CreateBeneficiariesTable extends Migration
             $table->string('registration_no')->nullable();
             $table->string('vat_no')->nullable();
             $table->string('contact_person')->nullable();
+            $table->enum('type', ['RETAIL', 'CORPORATE'])->default('RETAIL')->nullable();
             $table->timestamps();
         });
     }

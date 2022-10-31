@@ -41,7 +41,7 @@ class UserContractManageController extends Controller
         $data->information = json_encode(array_combine($request->desc_title,$request->desc_text));
         $data->user_id = $request->user_id;
         $data->contractor_id = $request->contractor_id;
-        
+
         $data->amount = $request->amount;
 
         if(isset($request->item)){
@@ -272,6 +272,12 @@ class UserContractManageController extends Controller
             return back()->with('error', 'You can\'t create the beneficiary with your email');
         }
         $input = $request->all();
+        if($request->type == 'RETAIL') {
+            $input['name'] =  trim($request->firstname)." ".trim($request->lastname);
+        }
+        else {
+            $input['name'] =  $request->company_name;
+        }
         $data->fill($input)->save();
         return back()->with('message', 'You have created new beneficiary successfully, please choose beneficiary list.');
     }

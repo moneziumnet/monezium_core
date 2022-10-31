@@ -284,13 +284,13 @@ class OtherBankTransferController extends Controller
                 }
 
                 try {
+                    $customer_name = $data->beneficiary->type == 'RETAIL' ? '"firstName":"'.explode(" ",$data->beneficiary->name)[0].'","lastName":"'.explode(" ",$data->beneficiary->name)[1].'",' : '"companyName":"'.$data->beneficiary->name.'",';
                     $response = $client->request('POST', 'https://secure-mt.openpayd.com/api/transactions/sweepPayout', [
                         'body' =>
                             '{"beneficiary":
                                 {"bankAccountCountry":"'.substr($data->iban, 0,2).'",
-                                "customerType":"RETAIL",
-                                "firstName":"'.$data->beneficiary->name.'",
-                                "lastName":"'.$data->beneficiary->name.'",
+                                "customerType":"'.$data->beneficiary->type.'",
+                                '.$customer_name.'
                                 "iban":"'.$data->iban.'",
                                 "bic":"'.$data->swift_bic.'"
                                 },

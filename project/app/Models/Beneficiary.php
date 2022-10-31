@@ -21,7 +21,8 @@ class Beneficiary extends Model
         'phone',
         'registration_no',
         'vat_no',
-        'contact_person'
+        'contact_person',
+        'type'
     ];
 
     // protected $casts = [

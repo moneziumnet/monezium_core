@@ -256,9 +256,31 @@ I need 1000 from you.')}}</textarea>
                         @csrf
                         <div class="row">
                             <div class="form-group mt-3 col-md-6">
-                                <label class="form-label required">{{__('Name')}}</label>
-                                <input name="name" id="name" class="form-control shadow-none" placeholder="{{__('Name')}}" type="text" value="{{ old('name') }}" required>
+                                <label class="form-label required">{{__('Beneficiary Type')}}</label>
+                                <select id="bene_type" class="form-select" name="type" required>
+                                    <option value="RETAIL"> {{__("RETAIL")}}</option>
+                                    <option value="CORPORATE"> {{__("CORPORATE")}}</option>
+                                </select>
                             </div>
+                            <div id='retail' style="display: block" >
+
+                                <div class="form-group mt-3 col-md-6">
+                                    <label class="form-label required">{{__('First Name')}}</label>
+                                    <input name="firstname" id="firstname" class="form-control" autocomplete="off" placeholder="{{__('John')}}" type="text" value="{{ old('firstname') }}" required>
+                                </div>
+
+                                <div class="form-group mt-3 col-md-6">
+                                    <label class="form-label required">{{__('Last Name')}}</label>
+                                    <input name="lastname" id="lastname" class="form-control" autocomplete="off" placeholder="{{__('Doe')}}" type="text" value="{{ old('lastname') }}" required>
+                                </div>
+                            </div>
+                            <div id='corporate' style="display: none">
+                                <div class="form-group mt-3 col-md-6">
+                                    <label class="form-label required">{{__('Company Name')}}</label>
+                                    <input name="company_name" id="company_name" class="form-control" autocomplete="off" placeholder="{{__('Tech LTD')}}" type="text" value="{{ old('company_name') }}" >
+                                </div>
+                            </div>
+                            <hr class="my-3"/>
                             <div class="form-group mt-3 col-md-6">
                                 <label class="form-label required">{{__('Email')}}</label>
                                 <input name="email" id="email" class="form-control shadow-none" placeholder="{{__('user@email.com')}}" type="email" value="{{ old('email') }}" required>
@@ -326,6 +348,22 @@ I need 1000 from you.')}}</textarea>
 @push('js')
 <script>
     'use strict';
+    $('#bene_type').on('change', function(){
+        if ($('#bene_type').val() == 'RETAIL') {
+            document.getElementById('retail').style.display = "block";
+            $("#firstname").prop('required',true);
+            $("#lastname").prop('required',true);
+            document.getElementById('corporate').style.display = "none";
+            $("#company_name").prop('required',false);
+        }
+        else if ($('#bene_type').val() == 'CORPORATE') {
+            document.getElementById('retail').style.display = "none";
+            $("#firstname").prop('required',false);
+            $("#lastname").prop('required',false);
+            document.getElementById('corporate').style.display = "block";
+            $("#company_name").prop('required',true);
+        }
+    })
     var contractor_select_html = "";
     var client_select_html = "";
     $(document).ready(function() {

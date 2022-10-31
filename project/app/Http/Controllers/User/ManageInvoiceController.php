@@ -979,6 +979,12 @@ class ManageInvoiceController extends Controller
             return back()->with('error', 'You can\'t create the beneficiary with your email');
         }
         $input = $request->all();
+        if($request->type == 'RETAIL') {
+            $input['name'] =  trim($request->firstname)." ".trim($request->lastname);
+        }
+        else {
+            $input['name'] =  $request->company_name;
+        }
         $data->fill($input)->save();
         return back()->with('message', 'You have created new beneficiary successfully, please choose beneficiary list.');
     }

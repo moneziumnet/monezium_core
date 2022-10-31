@@ -34,14 +34,16 @@ class BeneficiaryController extends Controller
     }
 
     public function store(Request $request){
-        $request->validate([
-            'name' => 'required',
-        ]);
-
         $data = new Beneficiary();
         $input = $request->all();
 
         $input['user_id'] = auth()->user()->id;
+        if($request->type == 'RETAIL') {
+            $input['name'] =  trim($request->firstname)." ".trim($request->lastname);
+        }
+        else {
+            $input['name'] =  $request->company_name;
+        }
         $data->fill($input)->save();
 
         return redirect()->route('user.beneficiaries.index')->with('success','Beneficiary Added Successfully');
@@ -58,14 +60,17 @@ class BeneficiaryController extends Controller
     }
 
     public function update(Request $request, $id) {
-        $request->validate([
-            'name' => 'required',
-        ]);
 
         $data = Beneficiary::findOrFail($id);
         $input = $request->all();
 
         $input['user_id'] = auth()->user()->id;
+        if($request->type == 'RETAIL') {
+            $input['name'] =  trim($request->firstname)." ".trim($request->lastname);
+        }
+        else {
+            $input['name'] =  $request->company_name;
+        }
         $data->fill($input)->update();
         return redirect()->route('user.beneficiaries.index')->with('message','Beneficiary has been updated successfully');
     }

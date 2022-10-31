@@ -30,9 +30,33 @@
 
                             <div class="row">
                                 <div class="form-group mb-3 mt-3 col-md-6">
-                                    <label class="form-label required">{{__('Name')}}</label>
-                                    <input name="name" id="name" class="form-control" autocomplete="off" placeholder="{{__('John Doe')}}" type="text" value="{{ $beneficiary->name }}"  required>
+                                    <label class="form-label required">{{__('Beneficiary Type')}}</label>
+                                    <select id="bene_type" class="form-select" name="type" required>
+                                        <option value="RETAIL" {{$beneficiary->type == 'RETAIL' ? 'selected' : ''}}> {{__("RETAIL")}}</option>
+                                        <option value="CORPORATE" {{$beneficiary->type == 'CORPORATE' ? 'selected' : ''}}> {{__("CORPORATE")}}</option>
+                                    </select>
                                 </div>
+                                <div id='retail' style="display: block" >
+
+                                    <div class="form-group mb-3 mt-3 col-md-6">
+                                        <label class="form-label required">{{__('First Name')}}</label>
+                                        <input name="firstname" id="firstname" class="form-control" autocomplete="off" placeholder="{{__('John')}}" type="text" value="{{ explode(" ", $beneficiary->name)[0] ?? $beneficiary->name }}" required>
+                                    </div>
+
+                                    <div class="form-group mb-3 mt-3 col-md-6">
+                                        <label class="form-label required">{{__('Last Name')}}</label>
+                                        <input name="lastname" id="lastname" class="form-control" autocomplete="off" placeholder="{{__('Doe')}}" type="text" value="{{ explode(" ", $beneficiary->name)[1] ?? $beneficiary->name }}" required>
+                                    </div>
+                                </div>
+                                <div id='corporate' style="display: none">
+                                    <div class="form-group mb-3 mt-3 col-md-6">
+                                        <label class="form-label required">{{__('Company Name')}}</label>
+                                        <input name="company_name" id="company_name" class="form-control" autocomplete="off" placeholder="{{__('Tech LTD')}}" type="text" value="{{ $beneficiary->name }}" >
+                                    </div>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
 
                                 <div class="form-group mb-3 mt-3 col-md-6">
                                     <label class="form-label required">{{__('Email')}}</label>
@@ -106,5 +130,37 @@
 @push('js')
     <script>
         'use strict';
+        $(document).ready(function() {
+            if ($('#bene_type').val() == 'RETAIL') {
+                document.getElementById('retail').style.display = "block";
+                $("#firstname").prop('required',true);
+                $("#lastname").prop('required',true);
+                document.getElementById('corporate').style.display = "none";
+                $("#company_name").prop('required',false);
+            }
+            else if ($('#bene_type').val() == 'CORPORATE') {
+                document.getElementById('retail').style.display = "none";
+                $("#firstname").prop('required',false);
+                $("#lastname").prop('required',false);
+                document.getElementById('corporate').style.display = "block";
+                $("#company_name").prop('required',true);
+            }
+        })
+        $('#bene_type').on('change', function(){
+            if ($('#bene_type').val() == 'RETAIL') {
+                document.getElementById('retail').style.display = "block";
+                $("#firstname").prop('required',true);
+                $("#lastname").prop('required',true);
+                document.getElementById('corporate').style.display = "none";
+                $("#company_name").prop('required',false);
+            }
+            else if ($('#bene_type').val() == 'CORPORATE') {
+                document.getElementById('retail').style.display = "none";
+                $("#firstname").prop('required',false);
+                $("#lastname").prop('required',false);
+                document.getElementById('corporate').style.display = "block";
+                $("#company_name").prop('required',true);
+            }
+        })
     </script>
 @endpush
