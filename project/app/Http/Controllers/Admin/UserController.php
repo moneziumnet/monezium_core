@@ -488,7 +488,8 @@ class UserController extends Controller
         public function profilePricingplan($id)
         {
             $data = User::findOrFail($id);
-            $plans = BankPlan::where('id','!=',$data->bank_plan_id)->get();
+            $type = $data->company_name ? 'corporate' : 'private';
+            $plans = BankPlan::where('id','!=',$data->bank_plan_id)->where('type', $type)->get();
             $plan = BankPlan::findOrFail($data->bank_plan_id);
             //dd($plan);
             $data['data'] = $data;
@@ -1610,6 +1611,16 @@ class UserController extends Controller
             }
             if(isset($request->form_select)){
                 $is_private = $request->form_select == 0;
+                if($is_private) {
+                    $subscrib = BankPlan::findOrFail($user->bank_plan_id);
+                    $subscription = BankPlan::where('type', 'private')->where('keyword', $subscrib->keyword)->first();
+                    $data['bank_plan_id'] = $subscription->id;
+                }
+                else {
+                    $subscrib = BankPlan::findOrFail($user->bank_plan_id);
+                    $subscription = BankPlan::where('type', 'corporate')->where('keyword', $subscrib->keyword)->first();
+                    $data['bank_plan_id'] = $subscription->id;
+                }
 
                 $data['personal_code'] = $is_private ? $request->personal_code : null;
                 $data['your_id'] = $is_private ? $request->your_id : null;

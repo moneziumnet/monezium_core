@@ -24,6 +24,8 @@ class CreateBankPlansTable extends Migration
             $table->double('daily_withdraw')->nullable();
             $table->double('monthly_withdraw')->nullable();
             $table->double('loan_amount')->nullable();
+            $table->enum('type', ['private','corporate'])->default('private');
+            $table->string('keyword')->nullable();
             $table->text('attribute')->nullable();
             $table->integer('days')->nullable();
             $table->timestamps();

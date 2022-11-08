@@ -98,6 +98,7 @@ DROP TABLE IF EXISTS `bank_plans`;
 CREATE TABLE `bank_plans`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `keyword` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   `amount` double NULL DEFAULT NULL,
   `daily_send` double NULL DEFAULT NULL,
   `monthly_send` double NULL DEFAULT NULL,
@@ -108,6 +109,7 @@ CREATE TABLE `bank_plans`  (
   `loan_amount` double NULL DEFAULT NULL,
   `attribute` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
   `days` int(11) NULL DEFAULT NULL,
+  `type` enum('private','corporate') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT 'private',
   `created_at` timestamp(0) NULL DEFAULT NULL,
   `updated_at` timestamp(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
@@ -116,9 +118,12 @@ CREATE TABLE `bank_plans`  (
 -- ----------------------------
 -- Records of bank_plans
 -- ----------------------------
-INSERT INTO `bank_plans` VALUES (1, 'Free', 0, 10000, 10000, 10000, 100000, 100000, 100000, 100000, NULL, 30, '2022-06-07 21:21:12', '2022-06-07 21:21:12');
-INSERT INTO `bank_plans` VALUES (2, 'Standard', 50, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, NULL, 30, '2022-06-18 04:55:10', '2022-06-18 08:20:18');
-INSERT INTO `bank_plans` VALUES (3, 'Professional', 100, 10000, 10000, 10000, 10000, 10000, 10000, 10000, NULL, 90, '2022-06-18 08:20:57', '2022-06-18 08:20:57');
+INSERT INTO `bank_plans` VALUES (1, 'Free', 'Free20220607', 0, 10000, 10000, 10000, 100000, 100000, 100000, 100000, NULL, 30, 'private', '2022-06-07 21:21:12', '2022-06-07 21:21:12');
+INSERT INTO `bank_plans` VALUES (2, 'Standard', 'Standard20220607', 50, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, NULL, 30, 'private', '2022-06-18 04:55:10', '2022-06-18 08:20:18');
+INSERT INTO `bank_plans` VALUES (3, 'Professional', 'Professional20220607', 100, 10000, 10000, 10000, 10000, 10000, 10000, 10000, NULL, 90, 'private', '2022-06-18 08:20:57', '2022-06-18 08:20:57');
+INSERT INTO `bank_plans` VALUES (4, 'Free', 'Free20220607', 0, 10000, 10000, 10000, 100000, 100000, 100000, 100000, NULL, 30, 'corporate', '2022-06-07 21:21:12', '2022-06-07 21:21:12');
+INSERT INTO `bank_plans` VALUES (5, 'Standard', 'Standard20220607', 50, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, NULL, 30, 'corporate', '2022-06-18 04:55:10', '2022-06-18 08:20:18');
+INSERT INTO `bank_plans` VALUES (6, 'Professional', 'Professional20220607', 100, 10000, 10000, 10000, 10000, 10000, 10000, 10000, NULL, 90, 'corporate', '2022-06-18 08:20:57', '2022-06-18 08:20:57');
 
 
 DROP TABLE IF EXISTS `plan_details`;

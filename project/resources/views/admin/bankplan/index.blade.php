@@ -28,6 +28,7 @@
 				<th>{{__('Title')}}</th>
 				<th>{{__('Amount')}}</th>
 				<th>{{__('Days')}}</th>
+				<th>{{__('Type')}}</th>
 				<th>{{__('Actions')}}</th>
 			</tr>
 		  </thead>
@@ -107,6 +108,7 @@
 				{ data: 'title', name: 'title' },
 				{ data: 'amount', name: 'amount' },
 				{ data: 'days', name: 'days' },
+				{ data: 'type', name: 'type' },
 				{ data: 'action', searchable: false, orderable: false }
             ],
             language : {

@@ -27,6 +27,9 @@ class BankPlanController extends Controller
                             ->editColumn('created_at', function(BankPlan $data) {
                                 return $data->created_at->toDateString();
                             })
+                            ->editColumn('type', function(BankPlan $data) {
+                                return ucfirst($data->type);
+                            })
                             ->editColumn('amount', function(BankPlan $data) {
                                 $curr = Currency::where('is_default','=',1)->first();
                                 return  '<div>
@@ -105,289 +108,293 @@ class BankPlanController extends Controller
         if($validator->fails()){
             return response()->json(['errors'=> $validator->getMessageBag()->toArray()]);
         }
+        $typelist = ['private', 'corporate'];
+        foreach ($typelist as $key => $value) {
+            $data = new BankPlan();
+            $data->title = $request->title;
+            $data->amount = $request->amount;
+            $data->daily_send = $request->daily_send;
+            $data->monthly_send = $request->monthly_send;
+            $data->daily_receive = $request->daily_receive;
+            $data->monthly_receive = $request->monthly_receive;
+            $data->daily_withdraw = $request->daily_withdraw;
+            $data->monthly_withdraw = $request->monthly_withdraw;
+            $data->type = $value;
+            $data->keyword = $request->title.time();
+            $data->loan_amount = $request->loan_amount;
+            if($request->attribute){
+                $data->attribute = json_encode($request->attribute,true);
+            }
+            $data->days = $request->days;
+            $data->save();
 
-        $data = new BankPlan();
-        $data->title = $request->title;
-        $data->amount = $request->amount;
-        $data->daily_send = $request->daily_send;
-        $data->monthly_send = $request->monthly_send;
-        $data->daily_receive = $request->daily_receive;
-        $data->monthly_receive = $request->monthly_receive;
-        $data->daily_withdraw = $request->daily_withdraw;
-        $data->monthly_withdraw = $request->monthly_withdraw;
-        $data->loan_amount = $request->loan_amount;
-        if($request->attribute){
-            $data->attribute = json_encode($request->attribute,true);
+            DB::table('charges')->insert([
+                'name' => 'Deposit 1',
+                'slug' => 'deposit',
+                'data' => '{"percent_charge":"1","fixed_charge":"2","from":"1","till":"5000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+            DB::table('charges')->insert([
+                'name' => 'Deposit 2',
+                'slug' => 'deposit',
+                'data' => '{"percent_charge":"1","fixed_charge":"3","from":"5001","till":"20000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+            DB::table('charges')->insert([
+                'name' => 'Deposit 3',
+                'slug' => 'deposit',
+                'data' => '{"percent_charge":"1","fixed_charge":"2","from":"20001","till":"50000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Send 1',
+                'slug' => 'send',
+                'data' => '{"percent_charge":"1","fixed_charge":"2","from":"1","till":"5000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Send 2',
+                'slug' => 'send',
+                'data' => '{"percent_charge":"1","fixed_charge":"3","from":"5001","till":"20000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Send 3',
+                'slug' => 'send',
+                'data' => '{"percent_charge":"1","fixed_charge":"2","from":"20001","till":"50000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Recieve 1',
+                'slug' => 'recieve',
+                'data' => '{"percent_charge":"1","fixed_charge":"2","from":"1","till":"5000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Recieve 2',
+                'slug' => 'recieve',
+                'data' => '{"percent_charge":"1","fixed_charge":"3","from":"5001","till":"20000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Recieve 3',
+                'slug' => 'recieve',
+                'data' => '{"percent_charge":"1","fixed_charge":"2","from":"20001","till":"50000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Escrow 1',
+                'slug' => 'escrow',
+                'data' => '{"percent_charge":"1","fixed_charge":"2","from":"1","till":"5000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Escrow 2',
+                'slug' => 'escrow',
+                'data' => '{"percent_charge":"1","fixed_charge":"3","from":"5001","till":"20000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Escrow 3',
+                'slug' => 'escrow',
+                'data' => '{"percent_charge":"1","fixed_charge":"2","from":"20001","till":"50000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Withdraw 1',
+                'slug' => 'withdraw',
+                'data' => '{"percent_charge":"1","fixed_charge":"2","from":"1","till":"5000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Withdraw 2',
+                'slug' => 'withdraw',
+                'data' => '{"percent_charge":"1","fixed_charge":"3","from":"5001","till":"20000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Withdraw 3',
+                'slug' => 'withdraw',
+                'data' => '{"percent_charge":"1","fixed_charge":"2","from":"20001","till":"50000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Exchange 1',
+                'slug' => 'exchange',
+                'data' => '{"percent_charge":"1","fixed_charge":"2","from":"1","till":"5000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Exchange 2',
+                'slug' => 'exchange',
+                'data' => '{"percent_charge":"1","fixed_charge":"3","from":"5001","till":"20000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Exchange 3',
+                'slug' => 'exchange',
+                'data' => '{"percent_charge":"1","fixed_charge":"2","from":"20001","till":"50000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Payment between accounts 1',
+                'slug' => 'payment_between_accounts',
+                'data' => '{"percent_charge":"1","fixed_charge":"2","from":"1","till":"5000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Payment between accounts 2',
+                'slug' => 'payment_between_accounts',
+                'data' => '{"percent_charge":"1","fixed_charge":"3","from":"5001","till":"20000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Payment between accounts 3',
+                'slug' => 'payment_between_accounts',
+                'data' => '{"percent_charge":"1","fixed_charge":"2","from":"20001","till":"50000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Account Maintenance',
+                'slug' => 'account-maintenance',
+                'data' => '{"percent_charge":"2","fixed_charge":"2"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Card Maintenance',
+                'slug' => 'card-maintenance',
+                'data' => '{"percent_charge":"2","fixed_charge":"2"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Account Opening',
+                'slug' => 'account-open',
+                'data' => '{"percent_charge":"2","fixed_charge":"2"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Card Issuance',
+                'slug' => 'card-issuance',
+                'data' => '{"percent_charge":"2","fixed_charge":"2"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Password reset by Staff',
+                'slug' => 'manual',
+                'data' => '{"percent_charge":"2","fixed_charge":"2"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Payment tracking',
+                'slug' => 'manual',
+                'data' => '{"percent_charge":"2","fixed_charge":"2"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Security key reset',
+                'slug' => 'manual',
+                'data' => '{"percent_charge":"2","fixed_charge":"2"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('plan_details')->insert([
+                'type' => 'deposit',
+                'plan_id' => $data->id,
+                'min' => 100,
+                'max' => 10000,
+                'daily_limit' => 10000,
+                'monthly_limit' => 250000,
+            ]);
+
+            DB::table('plan_details')->insert([
+                'type' => 'send',
+                'plan_id' => $data->id,
+                'min' => 100,
+                'max' => 10000,
+                'daily_limit' => 10000,
+                'monthly_limit' => 250000,
+            ]);
+
+            DB::table('plan_details')->insert([
+                'type' => 'recieve',
+                'plan_id' => $data->id,
+                'min' => 100,
+                'max' => 10000,
+                'daily_limit' => 10000,
+                'monthly_limit' => 250000,
+            ]);
+
+            DB::table('plan_details')->insert([
+                'type' => 'escrow',
+                'plan_id' => $data->id,
+                'min' => 100,
+                'max' => 10000,
+                'daily_limit' => 10000,
+                'monthly_limit' => 250000,
+            ]);
+
+            DB::table('plan_details')->insert([
+                'type' => 'withdraw',
+                'plan_id' => $data->id,
+                'min' => 100,
+                'max' => 10000,
+                'daily_limit' => 10000,
+                'monthly_limit' => 250000,
+            ]);
         }
-        $data->days = $request->days;
-        $data->save();
-
-        DB::table('charges')->insert([
-            'name' => 'Deposit 1',
-            'slug' => 'deposit',
-            'data' => '{"percent_charge":"1","fixed_charge":"2","from":"1","till":"5000"}',
-            'plan_id' => $data->id,
-            'user_id' => 0
-        ]);
-        DB::table('charges')->insert([
-            'name' => 'Deposit 2',
-            'slug' => 'deposit',
-            'data' => '{"percent_charge":"1","fixed_charge":"3","from":"5001","till":"20000"}',
-            'plan_id' => $data->id,
-            'user_id' => 0
-        ]);
-        DB::table('charges')->insert([
-            'name' => 'Deposit 3',
-            'slug' => 'deposit',
-            'data' => '{"percent_charge":"1","fixed_charge":"2","from":"20001","till":"50000"}',
-            'plan_id' => $data->id,
-            'user_id' => 0
-        ]);
-
-        DB::table('charges')->insert([
-            'name' => 'Send 1',
-            'slug' => 'send',
-            'data' => '{"percent_charge":"1","fixed_charge":"2","from":"1","till":"5000"}',
-            'plan_id' => $data->id,
-            'user_id' => 0
-        ]);
-
-        DB::table('charges')->insert([
-            'name' => 'Send 2',
-            'slug' => 'send',
-            'data' => '{"percent_charge":"1","fixed_charge":"3","from":"5001","till":"20000"}',
-            'plan_id' => $data->id,
-            'user_id' => 0
-        ]);
-
-        DB::table('charges')->insert([
-            'name' => 'Send 3',
-            'slug' => 'send',
-            'data' => '{"percent_charge":"1","fixed_charge":"2","from":"20001","till":"50000"}',
-            'plan_id' => $data->id,
-            'user_id' => 0
-        ]);
-
-        DB::table('charges')->insert([
-            'name' => 'Recieve 1',
-            'slug' => 'recieve',
-            'data' => '{"percent_charge":"1","fixed_charge":"2","from":"1","till":"5000"}',
-            'plan_id' => $data->id,
-            'user_id' => 0
-        ]);
-
-        DB::table('charges')->insert([
-            'name' => 'Recieve 2',
-            'slug' => 'recieve',
-            'data' => '{"percent_charge":"1","fixed_charge":"3","from":"5001","till":"20000"}',
-            'plan_id' => $data->id,
-            'user_id' => 0
-        ]);
-
-        DB::table('charges')->insert([
-            'name' => 'Recieve 3',
-            'slug' => 'recieve',
-            'data' => '{"percent_charge":"1","fixed_charge":"2","from":"20001","till":"50000"}',
-            'plan_id' => $data->id,
-            'user_id' => 0
-        ]);
-
-        DB::table('charges')->insert([
-            'name' => 'Escrow 1',
-            'slug' => 'escrow',
-            'data' => '{"percent_charge":"1","fixed_charge":"2","from":"1","till":"5000"}',
-            'plan_id' => $data->id,
-            'user_id' => 0
-        ]);
-
-        DB::table('charges')->insert([
-            'name' => 'Escrow 2',
-            'slug' => 'escrow',
-            'data' => '{"percent_charge":"1","fixed_charge":"3","from":"5001","till":"20000"}',
-            'plan_id' => $data->id,
-            'user_id' => 0
-        ]);
-
-        DB::table('charges')->insert([
-            'name' => 'Escrow 3',
-            'slug' => 'escrow',
-            'data' => '{"percent_charge":"1","fixed_charge":"2","from":"20001","till":"50000"}',
-            'plan_id' => $data->id,
-            'user_id' => 0
-        ]);
-
-        DB::table('charges')->insert([
-            'name' => 'Withdraw 1',
-            'slug' => 'withdraw',
-            'data' => '{"percent_charge":"1","fixed_charge":"2","from":"1","till":"5000"}',
-            'plan_id' => $data->id,
-            'user_id' => 0
-        ]);
-
-        DB::table('charges')->insert([
-            'name' => 'Withdraw 2',
-            'slug' => 'withdraw',
-            'data' => '{"percent_charge":"1","fixed_charge":"3","from":"5001","till":"20000"}',
-            'plan_id' => $data->id,
-            'user_id' => 0
-        ]);
-
-        DB::table('charges')->insert([
-            'name' => 'Withdraw 3',
-            'slug' => 'withdraw',
-            'data' => '{"percent_charge":"1","fixed_charge":"2","from":"20001","till":"50000"}',
-            'plan_id' => $data->id,
-            'user_id' => 0
-        ]);
-
-        DB::table('charges')->insert([
-            'name' => 'Exchange 1',
-            'slug' => 'exchange',
-            'data' => '{"percent_charge":"1","fixed_charge":"2","from":"1","till":"5000"}',
-            'plan_id' => $data->id,
-            'user_id' => 0
-        ]);
-
-        DB::table('charges')->insert([
-            'name' => 'Exchange 2',
-            'slug' => 'exchange',
-            'data' => '{"percent_charge":"1","fixed_charge":"3","from":"5001","till":"20000"}',
-            'plan_id' => $data->id,
-            'user_id' => 0
-        ]);
-
-        DB::table('charges')->insert([
-            'name' => 'Exchange 3',
-            'slug' => 'exchange',
-            'data' => '{"percent_charge":"1","fixed_charge":"2","from":"20001","till":"50000"}',
-            'plan_id' => $data->id,
-            'user_id' => 0
-        ]);
-
-        DB::table('charges')->insert([
-            'name' => 'Payment between accounts 1',
-            'slug' => 'payment_between_accounts',
-            'data' => '{"percent_charge":"1","fixed_charge":"2","from":"1","till":"5000"}',
-            'plan_id' => $data->id,
-            'user_id' => 0
-        ]);
-
-        DB::table('charges')->insert([
-            'name' => 'Payment between accounts 2',
-            'slug' => 'payment_between_accounts',
-            'data' => '{"percent_charge":"1","fixed_charge":"3","from":"5001","till":"20000"}',
-            'plan_id' => $data->id,
-            'user_id' => 0
-        ]);
-
-        DB::table('charges')->insert([
-            'name' => 'Payment between accounts 3',
-            'slug' => 'payment_between_accounts',
-            'data' => '{"percent_charge":"1","fixed_charge":"2","from":"20001","till":"50000"}',
-            'plan_id' => $data->id,
-            'user_id' => 0
-        ]);
-
-        DB::table('charges')->insert([
-            'name' => 'Account Maintenance',
-            'slug' => 'account-maintenance',
-            'data' => '{"percent_charge":"2","fixed_charge":"2"}',
-            'plan_id' => $data->id,
-            'user_id' => 0
-        ]);
-
-        DB::table('charges')->insert([
-            'name' => 'Card Maintenance',
-            'slug' => 'card-maintenance',
-            'data' => '{"percent_charge":"2","fixed_charge":"2"}',
-            'plan_id' => $data->id,
-            'user_id' => 0
-        ]);
-
-        DB::table('charges')->insert([
-            'name' => 'Account Opening',
-            'slug' => 'account-open',
-            'data' => '{"percent_charge":"2","fixed_charge":"2"}',
-            'plan_id' => $data->id,
-            'user_id' => 0
-        ]);
-
-        DB::table('charges')->insert([
-            'name' => 'Card Issuance',
-            'slug' => 'card-issuance',
-            'data' => '{"percent_charge":"2","fixed_charge":"2"}',
-            'plan_id' => $data->id,
-            'user_id' => 0
-        ]);
-
-        DB::table('charges')->insert([
-            'name' => 'Password reset by Staff',
-            'slug' => 'manual',
-            'data' => '{"percent_charge":"2","fixed_charge":"2"}',
-            'plan_id' => $data->id,
-            'user_id' => 0
-        ]);
-
-        DB::table('charges')->insert([
-            'name' => 'Payment tracking',
-            'slug' => 'manual',
-            'data' => '{"percent_charge":"2","fixed_charge":"2"}',
-            'plan_id' => $data->id,
-            'user_id' => 0
-        ]);
-
-        DB::table('charges')->insert([
-            'name' => 'Security key reset',
-            'slug' => 'manual',
-            'data' => '{"percent_charge":"2","fixed_charge":"2"}',
-            'plan_id' => $data->id,
-            'user_id' => 0
-        ]);
-
-        DB::table('plan_details')->insert([
-            'type' => 'deposit',
-            'plan_id' => $data->id,
-            'min' => 100,
-            'max' => 10000,
-            'daily_limit' => 10000,
-            'monthly_limit' => 250000,
-        ]);
-
-        DB::table('plan_details')->insert([
-            'type' => 'send',
-            'plan_id' => $data->id,
-            'min' => 100,
-            'max' => 10000,
-            'daily_limit' => 10000,
-            'monthly_limit' => 250000,
-        ]);
-
-        DB::table('plan_details')->insert([
-            'type' => 'recieve',
-            'plan_id' => $data->id,
-            'min' => 100,
-            'max' => 10000,
-            'daily_limit' => 10000,
-            'monthly_limit' => 250000,
-        ]);
-
-        DB::table('plan_details')->insert([
-            'type' => 'escrow',
-            'plan_id' => $data->id,
-            'min' => 100,
-            'max' => 10000,
-            'daily_limit' => 10000,
-            'monthly_limit' => 250000,
-        ]);
-
-        DB::table('plan_details')->insert([
-            'type' => 'withdraw',
-            'plan_id' => $data->id,
-            'min' => 100,
-            'max' => 10000,
-            'daily_limit' => 10000,
-            'monthly_limit' => 250000,
-        ]);
 
         $msg = 'New Data Added Successfully.'.'<a href="'.route("admin.bank.plan.index").'">View Plan Lists</a>';
         return response()->json($msg);

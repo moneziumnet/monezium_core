@@ -126,6 +126,9 @@ class RegisterController extends Controller
         $input['phone'] = preg_replace("/[^0-9]/", "", $request->phone);
 
         if($request->form_select == 1) {
+            $subscription = BankPlan::where('type', 'corporate')->where('keyword', $subscription->keyword)->first();
+            $input['bank_plan_id'] = $subscription->id;
+            $input['plan_end_date'] = Carbon::now()->addDays($subscription->days);
             $input['company_name'] = $request->company_name;
             $input['company_reg_no'] = $request->company_reg_no;
             $input['company_vat_no'] = $request->company_vat_no;
