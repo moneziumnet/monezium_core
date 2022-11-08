@@ -1429,7 +1429,7 @@ class UserController extends Controller
                                 }
                             })
                             ->editColumn('percent_customer', function(Charge $data) use($id) {
-                                $customplan =  Charge::where('user_id',$id)->where('plan_id', 0)->where('name', $data->name)->first();
+                                $customplan =  Charge::where('user_id',$id)->where('plan_id', $data->plan_id)->where('name', $data->name)->first();
                                 if ($customplan){
                                     return $customplan->data->percent_charge;
                                 }
@@ -1438,7 +1438,7 @@ class UserController extends Controller
                                 }
                             })
                             ->editColumn('fixed_customer', function(Charge $data) use($id) {
-                                $customplan =  Charge::where('user_id',$id)->where('plan_id', 0)->where('name', $data->name)->first();
+                                $customplan =  Charge::where('user_id',$id)->where('plan_id', $data->plan_id)->where('name', $data->name)->first();
 
                                 if ($customplan){
                                     return $customplan->data->fixed_charge;
@@ -1448,7 +1448,7 @@ class UserController extends Controller
                                 }
                             })
                             ->addColumn('action', function (Charge $data) use($id) {
-                                $customplan =  Charge::where('user_id',$id)->where('name', $data->name)->first();
+                                $customplan =  Charge::where('user_id',$id)->where('plan_id', $data->plan_id)->where('name', $data->name)->first();
 
                                 if($customplan) {
                                     return '<button type="button" class="btn btn-primary btn-big btn-rounded " onclick="getDetails('.$customplan->id.')" aria-haspopup="true" aria-expanded="false">
