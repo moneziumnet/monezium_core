@@ -36,7 +36,7 @@
                 {{-- @else --}}
                     <div class="card border-0 shadow-sm">
                         <div class="card-header">
-                            <h5 class="card-title text-dark text-center">@lang('Two Factor Authenticator')</h5>
+                            <h5 class="card-title text-center">@lang('Two Factor Authenticator')</h5>
                         </div>
                         <div class="card-body">
                             @includeIf('includes.flash')
