@@ -1476,7 +1476,7 @@ class UserController extends Controller
         public function profileAccountFee($id) {
             $wallet = Wallet::findOrFail($id);
             $user = User::findOrFail($wallet->user_id);
-            $manual = Charge::where('plan_id', $user->bank_plan_id)->where('slug', 'manual')->get();
+            $manual = Charge::where('plan_id', $user->bank_plan_id)->where('user_id', 0)->where('slug', 'manual')->get();
             return view('admin.user.walletfee', compact('wallet', 'manual'));
 
         }
@@ -1485,6 +1485,10 @@ class UserController extends Controller
             $wallet = Wallet::where('id',$request->wallet_id)->with('currency')->first();
             $userBalance = user_wallet_balance($wallet->user_id, $wallet->currency->id, $wallet->wallet_type);
             $manualfee = Charge::findOrFail($request->charge_id);
+            $customfee = Charge::where('plan_id', $manualfee->plan_id)->where('user_id', $wallet->user_id)->where('name', $manualfee->name)->first();
+            if ($customfee) {
+                $manualfee = $customfee;
+            }
             if ($manualfee->data->fixed_charge > $userBalance) {
                 return redirect()->back()->with(array('warning' => 'Customer Balance not Available.'));
             }
