@@ -40,6 +40,9 @@
         </a>
         <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
           <a href="{{ route('user.profile.index') }}" class="dropdown-item">{{__('Edit Profile')}}</a>
+          <a class="dropdown-item" href="{{route('user.module.view')}}">
+            {{__('Module')}}
+          </a>
           <a href="{{ route('user.change.password.form') }}" class="dropdown-item">{{__('Change Password')}}</a>
           <a class="dropdown-item" href="{{route('user.package.index')}}">
             {{__('Pricing Plan')}}

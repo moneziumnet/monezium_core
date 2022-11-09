@@ -615,6 +615,13 @@ class UserController extends Controller
         return view('user.security.index', compact('user'));
     }
 
+    public function usermodule(Request $request)
+    {
+        $user = auth()->user();
+
+        return view('user.module.index', compact('user'));
+    }
+
     public function installmentCheck(){
         $loans = UserLoan::whereStatus(1)->get();
         $now = Carbontime::now();
