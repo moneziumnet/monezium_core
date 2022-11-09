@@ -27,7 +27,7 @@
                         </div>
                         <div class="card-body">
                             @includeIf('includes.flash')
-                            <form action="{{route('user.securityform')}}" method="POST" enctype="multipart/form-data">
+                            <form action="{{route('user.module.update')}}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group mb-3 mt-3 ms-3 col-md-4">
                                     <h4>{{__('User Modules')}}</h4>
@@ -38,7 +38,7 @@
                                     <div class="col-md-4 col-sm-6 mt-3">
                                         <div class="form-group">
                                             <div class="form-check form-switch">
-                                                <input type="checkbox" name="section[]" value="{{$section}}" checked class="form-check-input" id="{{$section}}">
+                                                <input type="checkbox" name="section[]" value="{{$section}}" {{ $user->moduleCheck($section) ? 'checked' : '' }} class="form-check-input" id="{{$section}}">
                                                 <label class="form-check-label" for="{{$section}}">{{__($section)}}</label>
                                             </div>
                                         </div>

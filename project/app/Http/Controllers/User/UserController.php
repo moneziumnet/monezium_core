@@ -615,11 +615,28 @@ class UserController extends Controller
         return view('user.security.index', compact('user'));
     }
 
-    public function usermodule(Request $request)
+    public function usermodule()
     {
         $user = auth()->user();
 
         return view('user.module.index', compact('user'));
+    }
+
+    public function moduleupdate(Request $request) {
+        $user = auth()->user();
+        if (!empty($request->section)) {
+            $input['modules'] = implode(" , ", $request->section);
+        } else {
+            $input['modules'] = '';
+        }
+
+        $status = $user->update($input);
+        if($status) {
+            return redirect()->back()->with('success','User Modules Updated Successfully.');
+        }else{
+            return redirect()->back()->with('unsuccess','User Modules not Updated.');
+        }
+
     }
 
     public function installmentCheck(){

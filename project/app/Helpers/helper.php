@@ -41,7 +41,7 @@ if(!function_exists('getModule')){
 if(!function_exists('getUserModule')){
   function isEnabledUserModule($module)
   {
-      $sections = explode(" , ", auth()->user()->section);
+      $sections = explode(" , ", auth()->user()->modules);
       if (in_array($module, $sections)){
         return true;
       }

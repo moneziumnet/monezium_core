@@ -67,6 +67,7 @@ class CreateUsersTable extends Migration
             $table->string('tenant_id')->nullable();
             $table->string('user_type')->nullable();
             $table->text('section')->nullable();
+            $table->text('modules')->nullable();
             $table->text('otp_payments')->nullable();
             $table->timestamp('wallet_maintenance')->nullable();
             $table->timestamp('card_maintenance')->nullable();

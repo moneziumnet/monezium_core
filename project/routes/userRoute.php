@@ -126,6 +126,7 @@ Route::prefix('user')->group(function() {
       Route::get('/security', [UserController::class,'securityform'])->name('user.securityform');
       Route::post('/security', [UserController::class,'securityform'])->name('user.securityform');
       Route::get('/module', [UserController::class,'usermodule'])->name('user.module.view');
+      Route::post('/module/update', [UserController::class,'moduleupdate'])->name('user.module.update');
 
 
       Route::get('/two-factor', [UserController::class,'showTwoFactorForm'])->name('user.show2faForm');
