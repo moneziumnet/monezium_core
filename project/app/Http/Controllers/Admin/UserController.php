@@ -1575,6 +1575,33 @@ class UserController extends Controller
         public function updateModules(Request $request, $id)
         {
             $user = User::findOrFail($id);
+            foreach($request->section as $key=>$section){
+                if (!$user->sectionCheck($section)) {
+                    $manualfee = Charge::where('user_id', $id )->where('plan_id', $user->bank_plan_id)->where('name', $section)->first();
+                    if(!$manualfee) {
+                        $manualfee = Charge::where('user_id', 0)->where('plan_id', $user->bank_plan_id)->where('name', $section)->first();
+                    }
+                    if($manualfee) {
+                        $trans = new Transaction();
+                        $trans->trnx = str_rand();
+                        $trans->user_id     = $id;
+                        $trans->user_type   = 1;
+                        $trans->currency_id = defaultCurr();
+                        $trans->amount      = $manualfee->data->fixed_charge;
+                        $trans_wallet = get_wallet($id, defaultCurr(), 1);
+                        $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+                        $trans->charge      = 0;
+                        $trans->type        = '-';
+                        $trans->remark      = 'section_enable';
+                        $trans->details     = $section.trans(' Section Create');
+                        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
+                        $trans->save();
+
+                        user_wallet_decrement($id, defaultCurr(), $manualfee->data->fixed_charge, 1);
+                        user_wallet_increment(0, defaultCurr(), $manualfee->data->fixed_charge, 9);
+                    }
+                }
+            }
             if (!empty($request->section)) {
                 $input['section'] = implode(" , ", $request->section);
             } else {

@@ -349,6 +349,16 @@ class BankPlanController extends Controller
                 'plan_id' => $data->id,
                 'user_id' => 0
             ]);
+            $modules = explode(" , ", "Shop , Loan , Investments , Payments , Incoming , Cards , External Payments , Payment between accounts , Internal Payment , Crypto , Request Money , Exchange Money , Transactions , Voucher , Merchant Shop , Merchant Product , Merchant Checkout , Merchant Transaction , Merchant Campaign , Merchant own Account , Merchant Request Money , Invoice , Contracts , Escrow , ICO");
+            foreach ($modules as $key => $value) {
+                DB::table('charges')->insert([
+                    'name' => $value,
+                    'slug' => 'module',
+                    'data' => '{"percent_charge":"2","fixed_charge":"2"}',
+                    'plan_id' => $data->id,
+                    'user_id' => 0
+                ]);
+            }
 
             DB::table('plan_details')->insert([
                 'type' => 'deposit',
