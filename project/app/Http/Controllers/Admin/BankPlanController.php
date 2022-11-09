@@ -354,7 +354,7 @@ class BankPlanController extends Controller
                 DB::table('charges')->insert([
                     'name' => $value,
                     'slug' => 'module',
-                    'data' => '{"percent_charge":"2","fixed_charge":"2"}',
+                    'data' => '{"percent_charge":"0","fixed_charge":"0"}',
                     'plan_id' => $data->id,
                     'user_id' => 0
                 ]);
