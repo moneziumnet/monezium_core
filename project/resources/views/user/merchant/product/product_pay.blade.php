@@ -27,7 +27,7 @@
               <div class="page-header text-white d-print-none">
                 <div class="row align-items-center">
                   <div class="col">
-                    <h2 class="page-title text-dark">
+                    <h2 class="page-title">
                         @lang('Product Pay')
                     </h2>
                   </div>
@@ -262,7 +262,7 @@
 
             return result;
         }
-        
+
         $('.select_method').on('click', function() {
             if ($(this).attr('id') == 'bank_pay') {
                 $('#form_submit').attr('action', "{{route('user.merchant.product.pay')}}");

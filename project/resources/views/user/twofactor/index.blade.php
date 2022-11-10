@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -24,7 +24,7 @@
                 @if(Auth::user()->twofa)
                     <div class="card border-0 shadow-sm">
                         <div class="card-header">
-                            <h5 class="card-title text-dark text-center">@lang('Two Factor Authenticator')</h5>
+                            <h5 class="card-title text-center">@lang('Two Factor Authenticator')</h5>
                         </div>
                         <div class="card-body">
                             <div class="form-group mx-auto text-center">
@@ -36,7 +36,7 @@
                 @else
                     <div class="card border-0 shadow-sm">
                         <div class="card-header">
-                            <h5 class="card-title text-dark text-center">@lang('Two Factor Authenticator')</h5>
+                            <h5 class="card-title text-center">@lang('Two Factor Authenticator')</h5>
                         </div>
                         <div class="card-body">
                             <div class="form-group mx-auto text-center">
@@ -50,7 +50,7 @@
                             </div>
                             <div class="form-group mx-auto text-center">
                                 <a href="javascript:void(0)" class="btn btn--base btn-md mt-3 mb-1" data-bs-toggle="modal" data-bs-target="#enableModal">@lang('Enable Two Factor Authenticator')</a>
-                            </div> 
+                            </div>
 
                             <div class="form-group mx-auto text-center">
                                 <a class="btn btn--base btn-md mt-3" href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en" target="_blank">@lang('DOWNLOAD APP')</a>

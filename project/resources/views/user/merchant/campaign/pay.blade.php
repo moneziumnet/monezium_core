@@ -27,7 +27,7 @@
               <div class="page-header text-white d-print-none">
                 <div class="row align-items-center">
                   <div class="col">
-                    <h2 class="page-title text-dark">
+                    <h2 class="page-title">
                         @lang('Campaign Pay')
                     </h2>
                   </div>
@@ -318,8 +318,8 @@
                 $('#detail_bank_details').html($('#description').val() + " / " + $('#deposit_no').val());
             }
         });
-        $('#payment_submit').on('click', function () { 
-            if(document.getElementById('form_submit').checkValidity()) {           
+        $('#payment_submit').on('click', function () {
+            if(document.getElementById('form_submit').checkValidity()) {
                 $('#form_submit').submit();
             }
         });

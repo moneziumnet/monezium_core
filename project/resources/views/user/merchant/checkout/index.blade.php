@@ -49,7 +49,7 @@
                         </div>
                         <div class="col-auto nav-item dropdown">
                           <div class="d-flex align-items-center">
-                            <div class="text-sm text-dark"><a class="btn btn-dark btn-sm copy" data-clipboard-text="{{route('user.merchant.checkout.link', $item->ref_id)}}" title="Copy">{{__('COPY LINK')}} <i class="fas fa-link text-xs"></i></a></div>
+                            <div class="text-sm"><a class="btn btn-dark btn-sm copy" data-clipboard-text="{{route('user.merchant.checkout.link', $item->ref_id)}}" title="Copy">{{__('COPY LINK')}} <i class="fas fa-link text-xs"></i></a></div>
                             <a class="mr-0 nav-link" data-bs-toggle="dropdown">
                               <i class="fas fa-chevron-circle-down "></i>
                             </a>

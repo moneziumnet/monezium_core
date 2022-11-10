@@ -30,7 +30,7 @@
               <div class="page-header text-white d-print-none">
                 <div class="row align-items-center">
                   <div class="col">
-                    <h2 class="page-title text-dark">
+                    <h2 class="page-title">
                         @lang('Invoice')
                     </h2>
                   </div>
