@@ -70,7 +70,7 @@
                           <select name="wallet_id" id="wallet_id" class="form-control" required>
                             <option value="">Select</option>
                             @php
-                            $modules = explode(" , ", auth()->user()->section);
+                            $modules = explode(" , ", auth()->user()->modules);
                             if(in_array('Crypto',$modules)){
                               $currencies = DB::table('currencies')->get();
                             }
