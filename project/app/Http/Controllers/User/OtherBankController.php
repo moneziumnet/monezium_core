@@ -161,8 +161,8 @@ class OtherBankController extends Controller
             $data->type = 'other';
             $data->cost = $transaction_global_cost*$rate;
             $data->payment_type = $request->payment_type;
-            $data->amount = $request->amount;
-            $data->final_amount = $finalAmount;
+            $data->amount = $request->amount + $transaction_global_cost*$rate;
+            $data->final_amount = $request->amount;
             $data->description = $request->des;
             $data->status = 0;
             $data->save();

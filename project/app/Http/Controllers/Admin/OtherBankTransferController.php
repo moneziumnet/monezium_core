@@ -66,7 +66,7 @@ class OtherBankTransferController extends Controller
 
       ->editColumn('amount', function (BalanceTransfer $data) {
         $curr = Currency::where('id', $data->currency_id)->first();
-        return $curr->symbol . $data->amount;
+        return $curr->symbol . $data->final_amount;
       })
 
       ->editColumn('cost', function (BalanceTransfer $data) {
@@ -135,7 +135,7 @@ class OtherBankTransferController extends Controller
 
       ->editColumn('amount', function (BalanceTransfer $data) {
         $curr = Currency::where('id', $data->currency_id)->first();
-        return $curr->symbol . $data->amount;
+        return $curr->symbol . $data->final_amount;
       })
 
       ->editColumn('cost', function (BalanceTransfer $data) {
@@ -330,7 +330,7 @@ class OtherBankTransferController extends Controller
                     $enduser = json_decode($response->getBody())[0]->holder_id;
                     $amount = json_decode($response->getBody())[0]->amount;
                     $ledger = json_decode($response->getBody())[0]->ledger_id;
-                    if ($amount < $request->amount) {
+                    if ($amount < $data->final_amount) {
                         return redirect()->back()->with(array('warning' => 'Insufficient Balance.'));
                     }
                 } catch (\Throwable $th) {
