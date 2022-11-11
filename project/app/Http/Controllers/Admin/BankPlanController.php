@@ -109,6 +109,7 @@ class BankPlanController extends Controller
             return response()->json(['errors'=> $validator->getMessageBag()->toArray()]);
         }
         $typelist = ['private', 'corporate'];
+        $keyword = $request->title.time();
         foreach ($typelist as $key => $value) {
             $data = new BankPlan();
             $data->title = $request->title;
@@ -120,7 +121,7 @@ class BankPlanController extends Controller
             $data->daily_withdraw = $request->daily_withdraw;
             $data->monthly_withdraw = $request->monthly_withdraw;
             $data->type = $value;
-            $data->keyword = $request->title.time();
+            $data->keyword = $keyword;
             $data->loan_amount = $request->loan_amount;
             if($request->attribute){
                 $data->attribute = json_encode($request->attribute,true);
