@@ -17,7 +17,7 @@ class OpenpaySignatureValidator implements SignatureValidator
             return false;
         }
         
-        $publicKeyPath = asset('assets/test.pem');
+        $publicKeyPath = asset('assets/PUBLIC_KEY.pem');
         $public_key = openssl_pkey_get_public(file_get_contents($publicKeyPath));
         $return = openssl_verify($data, base64_decode($signature), $public_key, OPENSSL_ALGO_SHA256);
         return $return == 1;
