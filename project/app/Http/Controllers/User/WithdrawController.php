@@ -64,8 +64,18 @@ class WithdrawController extends Controller
     {
         $user = auth()->user();
         if($user->paymentCheck('Withdraw')) {
-            if ($user->two_fa_code != $request->otp) {
-                return redirect()->back()->with('unsuccess','Verification code is not matched.');
+            if ($user->payment_fa != 'two_fa_google') {
+                if ($user->two_fa_code != $request->otp) {
+                    return redirect()->back()->with('unsuccess','Verification code is not matched.');
+                }
+            }
+            else{
+                $googleAuth = new GoogleAuthenticator();
+                $secret = $user->go;
+                $oneCode = $googleAuth->getCode($secret);
+                if ($oneCode != $request->otp) {
+                    return redirect()->back()->with('unsuccess','Verification code is not matched.');
+                }
             }
         }
         $request->validate([

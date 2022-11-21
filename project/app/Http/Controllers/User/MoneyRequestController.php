@@ -48,8 +48,18 @@ class MoneyRequestController extends Controller
     public function store(Request $request){
         $user = auth()->user();
         if($user->paymentCheck('Request Money')) {
-            if ($user->two_fa_code != $request->otp_code) {
-                return redirect()->back()->with('unsuccess','Verification code is not matched.');
+            if ($user->payment_fa != 'two_fa_google') {
+                if ($user->two_fa_code != $request->otp_code) {
+                    return redirect()->back()->with('unsuccess','Verification code is not matched.');
+                }
+            }
+            else{
+                $googleAuth = new GoogleAuthenticator();
+                $secret = $user->go;
+                $oneCode = $googleAuth->getCode($secret);
+                if ($oneCode != $request->otp_code) {
+                    return redirect()->back()->with('unsuccess','Verification code is not matched.');
+                }
             }
         }
         $request->validate([
@@ -167,8 +177,18 @@ class MoneyRequestController extends Controller
     public function send(Request $request, $id){
         $user = auth()->user();
         if($user->paymentCheck('Receive Request Money')) {
-            if ($user->two_fa_code != $request->otp_code) {
-                return redirect()->back()->with('error','Verification code is not matched.');
+            if ($user->payment_fa != 'two_fa_google') {
+                if ($user->two_fa_code != $request->otp_code) {
+                    return redirect()->back()->with('unsuccess','Verification code is not matched.');
+                }
+            }
+            else{
+                $googleAuth = new GoogleAuthenticator();
+                $secret = $user->go;
+                $oneCode = $googleAuth->getCode($secret);
+                if ($oneCode != $request->otp_code) {
+                    return redirect()->back()->with('unsuccess','Verification code is not matched.');
+                }
             }
         }
 
@@ -193,7 +213,7 @@ class MoneyRequestController extends Controller
 
         $finalAmount = $data->amount - $data->cost -$data->supervisor_cost;
         $wallet_type = $currency->type == 2 ? 8 : 1;
-        
+
         // user_wallet_decrement($sender->id, $currency_id, $data->amount, $wallet_type);
         // user_wallet_increment(0, $currency_id, $data->cost, 9);
         if (isset($data->shop_id)) {
