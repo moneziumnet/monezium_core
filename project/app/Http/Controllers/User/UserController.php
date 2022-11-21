@@ -441,7 +441,7 @@ class UserController extends Controller
             $user->twofa = 1;
             $user->save();
 
-            return redirect()->back()->with('success','Two factor authentication activated');
+            return redirect()->back()->with('message','Google Two factor authentication activated');
         } else {
             return redirect()->back()->with('error','Something went wrong!');
         }
@@ -556,6 +556,11 @@ class UserController extends Controller
     public function securityform(Request $request)
     {
         $user = auth()->user();
+        $gnl = Generalsetting::first();
+        $ga = new GoogleAuthenticator();
+        $user = auth()->user();
+        $secret = $ga->createSecret();
+        $qrCodeUrl = $ga->getQRCodeGoogleUrl($user->name . '@' . $gnl->title, $secret);
 
         if($request->isMethod('post'))
         {
@@ -612,7 +617,7 @@ class UserController extends Controller
 
         }
 
-        return view('user.security.index', compact('user'));
+        return view('user.security.index', compact('user', 'qrCodeUrl', 'secret'));
     }
 
     public function usermodule()

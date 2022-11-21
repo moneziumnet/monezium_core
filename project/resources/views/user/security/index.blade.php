@@ -105,7 +105,49 @@
         </div>
     </div>
 </div>
+<div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-status bg-primary"></div>
+        <form action="{{route('user.createTwoFactor')}}" method="POST">
+            @csrf
+            <div class="modal-body py-4">
+                <div class="text-center">
 
+                    <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+                    <h3>@lang('Details')</h3>
+                </div>
+                <div class="form-group mx-auto text-center mt-3">
+                    <img class="mx-auto" src="{{$qrCodeUrl}}">
+                </div>
+
+
+                <div class="form-group mt-3" id="code_body">
+                    <label class="form-label required">{{__('Enter Google Authenticator Code')}}</label>
+                    <input name="code" id="code" class="form-control" placeholder="{{__('Enter Google Authenticator Code')}}" type="text" step="any" value="{{ old('opt_code') }}" required>
+                </div>
+                <input type="hidden" name="key" value="{{$secret}}">
+
+            </div>
+            <div class="modal-footer">
+            <div class="w-100">
+                <div class="row">
+                <div class="col"><a href="#" class="btn w-100" data-bs-dismiss="modal">
+                    @lang('Cancel')
+                    </a></div>
+                <div class="col">
+                    <button type="submit" class="btn btn-primary w-100 confirm">
+                    @lang('Confirm')
+                    </button>
+                </div>
+                </div>
+            </div>
+        </form>
+        </div>
+    </div>
+    </div>
+</div>
 
 @endsection
 
@@ -131,6 +173,16 @@
         var checked = $(this).prop('checked');
         $('#check_box').find('input:checkbox').prop('checked', checked);
     });
+    })
+    $('#login_fa').on('change', function(){
+        if ($('#login_fa').val() == 'two_fa_google' &&  '{{$user->twofa}}' != 1) {
+            $('#modal-success').modal('show');
+        }
+    })
+    $('#payment_fa').on('change', function(){
+        if ($('#payment_fa').val() == 'two_fa_google' &&  '{{$user->twofa}}' != 1) {
+            $('#modal-success').modal('show');
+        }
     })
 </script>
 
