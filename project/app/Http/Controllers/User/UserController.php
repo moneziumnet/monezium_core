@@ -558,7 +558,6 @@ class UserController extends Controller
         $user = auth()->user();
         $gnl = Generalsetting::first();
         $ga = new GoogleAuthenticator();
-        $user = auth()->user();
         $secret = $ga->createSecret();
         $qrCodeUrl = $ga->getQRCodeGoogleUrl($user->name . '@' . $gnl->title, $secret);
 
@@ -579,6 +578,9 @@ class UserController extends Controller
                 }
                 $login_fa_yn = 'Y';
                 $login_fa = $request->input('login_fa');
+                if($login_fa == 'two_fa_google' && $user->twofa != 1){
+                    return redirect()->back()->with('error','Please enable Google Two factor authentication.');
+                }
             }
 
             if($request->input('payment_fa_yn') == 'Y')
@@ -597,6 +599,9 @@ class UserController extends Controller
                     $otp_payment = implode(" , ", $request->otp_payment);
                 } else {
                     $otp_payment = '';
+                }
+                if($payment_fa == 'two_fa_google' && $user->twofa != 1){
+                    return redirect()->back()->with('error','Please enable Google Two factor authentication.');
                 }
             }
 

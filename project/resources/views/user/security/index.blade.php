@@ -116,7 +116,7 @@
                 <div class="text-center">
 
                     <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
-                    <h3>@lang('Details')</h3>
+                    <h3>@lang('Enable Google Authentication')</h3>
                 </div>
                 <div class="form-group mx-auto text-center mt-3">
                     <img class="mx-auto" src="{{$qrCodeUrl}}">
@@ -138,7 +138,7 @@
                     </a></div>
                 <div class="col">
                     <button type="submit" class="btn btn-primary w-100 confirm">
-                    @lang('Confirm')
+                    @lang('Enable')
                     </button>
                 </div>
                 </div>
