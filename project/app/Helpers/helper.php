@@ -253,8 +253,9 @@ if(!function_exists('getUserModule')){
 
   if(!function_exists('nexmo')) {
     function nexmo(string $recipient,$message,$from){
+        $gs = Generalsetting::first();
         // Update Nexmo
-        $config = array('api_key'=>'bcd5c114', 'api_secret'=>'RCpy6PaQRspb4fdi');
+        $config = array('api_key'=>$gs->nexmo_key, 'api_secret'=>$gs->nexmo_secret);
         $basic  = new \Vonage\Client\Credentials\Basic($config['api_key'], $config['api_secret']);
         $client = new \Vonage\Client($basic);
         $client->sms()->send(

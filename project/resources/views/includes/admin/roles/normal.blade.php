@@ -284,7 +284,8 @@
           </div>
         @endif
 
-        <a class="collapse-item" href="{{ route('admin.system.accounts') }}">{{ __('System Accounts') }}</a>
+        <a class="collapse-item nav-link sub-nav-link collapsed" href="{{ route('admin.system.accounts') }}">{{ __('System Accounts') }}</a>
+        <a class="collapse-item nav-link sub-nav-link collapsed" href="{{ route('admin.gs.nexmo') }}">{{ __('Phone(Nexmo) Setting') }}</a>
 
         @if(getModule('Currency Setting'))
           <a class="collapse-item nav-link sub-nav-link collapsed" href="#" data-toggle="collapse" data-target="#payment_gateways" aria-expanded="true"

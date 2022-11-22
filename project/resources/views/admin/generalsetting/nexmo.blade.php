@@ -37,14 +37,14 @@
                 <div class="form-group">
                     <label for="inp-secret">{{  __('Secret')  }}</label>
                     <input type="text" class="form-control" id="inp-secret" name="nexmo_secret"  placeholder="{{ __('Secret') }}" value="{{ $gs->nexmo_secret }}">
-                </div>    
+                </div>
             </div>
 
             <div class="col-md-12">
                 <div class="form-group">
                     <label for="inp-number">{{  __('Default Phone Number')  }}</label>
                     <input type="text" class="form-control" id="inp-number" name="nexmo_default_number"  placeholder="{{ __('Default Phone Number') }}" value="{{ $gs->nexmo_default_number }}">
-                </div>    
+                </div>
             </div>
 
             <div class="col-md-12">
