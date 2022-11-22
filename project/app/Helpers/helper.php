@@ -70,19 +70,24 @@ if(!function_exists('getUserModule')){
       $defaultCode = Currency::where('is_default','=',1)->first()->code;
       $from_code = $from_code ?? $defaultCode;
       $from_cur = Currency::where('code', $from_code)->first();
+      $client = New Client();
+      $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency=USD');
+      $rate = json_decode($response->getBody());
+      $to_code = $to_currency->code;
+      $to_rate = $rate->data->rates->$to_code ?? $to_currency->rate;
       try{
         $client = New Client();
         $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency='.$from_code);
         $rate = json_decode($response->getBody());
         $code = $to_currency->code;
       } catch(\Exception $e) {
-        return $to_currency->rate / $from_cur->rate;
+        return $to_rate / $from_cur->rate;
       }
 
       if(isset($rate->data->rates->$code)){
         $from_rate = $rate->data->rates->$code;
       } else {
-        $from_rate = $to_currency->rate / $from_cur->rate;
+        $from_rate = $to_rate / $from_cur->rate;
       }
       return $from_rate;
     }
