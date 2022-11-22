@@ -1604,6 +1604,13 @@ class UserController extends Controller
             }
             if (!empty($request->section)) {
                 $input['section'] = implode(" , ", $request->section);
+                $modules = [];
+                foreach($request->section as $key=>$section) {
+                    if($user->moduleCheck($section)) {
+                        array_push($modules, $section);
+                    }
+                }
+                $input['modules'] = implode(" , ", $modules);
             } else {
                 $input['section'] = '';
             }
