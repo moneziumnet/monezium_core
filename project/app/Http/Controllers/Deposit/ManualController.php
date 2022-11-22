@@ -9,6 +9,7 @@ use App\Models\PlanDetail;
 use App\Models\Deposit;
 use App\Models\Generalsetting;
 use Illuminate\Http\Request;
+use App\Classes\GoogleAuthenticator;
 use Illuminate\Support\Str;
 
 class ManualController extends Controller

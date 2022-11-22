@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Currency;
 use App\Models\Deposit;
 use App\Models\Generalsetting;
+use App\Classes\GoogleAuthenticator;
 use App\Models\PlanDetail;
 use App\Models\PaymentGateway;
 use Illuminate\Http\Request;

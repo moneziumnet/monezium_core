@@ -11,6 +11,7 @@ use App\Models\Deposit;
 use App\Models\PlanDetail;
 use App\Models\Generalsetting;
 use App\Models\PaymentGateway;
+use App\Classes\GoogleAuthenticator;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

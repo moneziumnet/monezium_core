@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\ExchangeMoney;
 use App\Models\Charge;
 use App\Models\Generalsetting;
+use App\Classes\GoogleAuthenticator;
 use App\Models\Transaction;
 use App\Http\Controllers\Controller;
 use Auth;

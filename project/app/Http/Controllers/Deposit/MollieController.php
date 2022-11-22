@@ -6,6 +6,7 @@ use App\Classes\GeniusMailer;
 use App\Http\Controllers\Controller;
 use App\Models\Currency;
 use Mollie\Laravel\Facades\Mollie;
+use App\Classes\GoogleAuthenticator;
 use App\Models\Generalsetting;
 use App\Models\PlanDetail;
 use Illuminate\Http\Request;

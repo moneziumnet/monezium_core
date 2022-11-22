@@ -10,6 +10,7 @@ use App\Models\PlanDetail;
 use App\Models\Generalsetting;
 use App\Models\PaymentGateway;
 use App\Models\Transaction;
+use App\Classes\GoogleAuthenticator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;

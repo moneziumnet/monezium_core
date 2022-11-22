@@ -9,6 +9,7 @@ use App\Models\Currency;
 use App\Models\PlanDetail;
 use App\Models\Deposit;
 use App\Models\Generalsetting;
+use App\Classes\GoogleAuthenticator;
 use App\Models\PaymentGateway;
 use App\Models\Transaction;
 use Carbon\Carbon;

@@ -11,6 +11,7 @@ use App\Models\PlanDetail;
 use App\Models\PaymentGateway;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Classes\GoogleAuthenticator;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use net\authorize\api\contract\v1 as AnetAPI;

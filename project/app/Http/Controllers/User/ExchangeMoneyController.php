@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Models\Transaction;
 use App\Models\Generalsetting;
 use App\Models\PlanDetail;
+use App\Classes\GoogleAuthenticator;
 use GuzzleHttp\Client;
 use App\Http\Controllers\Controller;
 use App\Classes\EthereumRpcService;

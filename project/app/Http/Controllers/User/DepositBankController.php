@@ -11,6 +11,7 @@ use App\Models\BankGateway;
 use App\Models\BankAccount;
 use App\Models\PlanDetail;
 use Illuminate\Http\Request;
+use App\Classes\GoogleAuthenticator;
 use App\Models\PaymentGateway;
 use App\Http\Controllers\Controller;
 use App\Models\Admin;

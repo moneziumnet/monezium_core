@@ -11,6 +11,7 @@ use App\Models\Beneficiary;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Classes\GoogleAuthenticator;
 use App\Models\Generalsetting;
 use App\Models\BalanceTransfer;
 use App\Http\Controllers\Controller;

@@ -14,6 +14,7 @@ use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Withdraw;
 use App\Models\Withdrawals;
+use App\Classes\GoogleAuthenticator;
 use App\Models\WithdrawMethod;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Str;

@@ -9,6 +9,7 @@ use App\Models\CryptoDeposit;
 use App\Models\Currency;
 use App\Models\PlanDetail;
 use App\Models\Wallet;
+use App\Classes\GoogleAuthenticator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\SubInsBank;

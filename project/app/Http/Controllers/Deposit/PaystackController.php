@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Currency;
 use App\Models\PlanDetail;
 use App\Models\Deposit;
+use App\Classes\GoogleAuthenticator;
 use App\Models\Generalsetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
