@@ -11685,9 +11685,7 @@ body:not(.theme-dark) .hide-theme-light {
 		background-color: #1e293b;
 		color: inherit;
 	}
-	.theme-dark .card {
-		border-color: transparent;
-	}
+
 	.theme-dark .card-tabs .nav-tabs .nav-link {
 		background-color: #1b2434;
 		color: inherit;

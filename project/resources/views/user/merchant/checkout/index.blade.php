@@ -45,7 +45,7 @@
                     <div class="card-body">
                       <div class="row justify-content-between align-items-center">
                         <div class="col">
-                            <h5 class="h4 mb-1 font-weight-bolder">{{$item->name}}</h5>
+                            <h5 class="h2 mb-1 font-weight-bolder">{{$item->name}}</h5>
                         </div>
                         <div class="col-auto nav-item dropdown">
                           <div class="d-flex align-items-center">

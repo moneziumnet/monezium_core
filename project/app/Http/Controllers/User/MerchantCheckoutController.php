@@ -11,6 +11,7 @@ use App\Models\Currency;
 use App\Models\Transaction;
 use App\Models\Generalsetting;
 use App\Models\User;
+use App\Models\BankAccount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
@@ -48,8 +49,17 @@ class MerchantCheckoutController extends Controller
 
     Public function link($id) {
         $data['checkout'] = MerchantCheckout::where('ref_id', $id)->first();
+        $data['bankaccounts'] = BankAccount::where('user_id', $data['checkout']->user_id)->where('currency_id', $data['checkout']->currency_id)->get();
         $crypto_ids =  MerchantWallet::where('merchant_id', $data['checkout']->user_id)->where('shop_id', $data['checkout']->shop_id)->pluck('currency_id')->toArray();
         $data['cryptolist'] = Currency::whereStatus(1)->where('type', 2)->whereIn('id', $crypto_ids)->get();
+
+        if(!$data['checkout']) {
+            return back()->with('error', 'This checkout does not exist.');
+        }
+        if($data['checkout']->status == 0) {
+            return back()->with('error', 'This product\'s sell status is deactive');
+        }
+
         return view('user.merchant.checkout.link', $data);
     }
 
