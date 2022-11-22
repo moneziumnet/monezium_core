@@ -59,7 +59,7 @@
                           <div class="col-md-3">
                           </div>
                           <div class="col-md-5 ">
-                            <form action="{{route('user.merchant.campaign.pay')}}" method="post" id="form_submit" class="text-end">
+                            <form action="{{route('user.merchant.checkout.transaction')}}" method="post" id="form_submit" class="text-end">
                                 @csrf
                                 <div class="form-selectgroup row">
                                     <label class="form-selectgroup-item">
@@ -140,7 +140,7 @@
                                     <label class="form-label required">{{__('Description')}}</label>
                                     <input name="description" id="description" class="form-control shadow-none col-md-4"  type="text"  required>
                                 </div >
-                                <input type="hidden" name="campaign_id" value="{{$checkout->id}}">
+                                <input type="hidden" name="check_id" value="{{$checkout->id}}">
                                 @if(Auth::check())
                                 <input type="hidden" name="user_name" value="{{auth()->user()->name}}">
                                 @else
@@ -255,7 +255,7 @@
 
         $('.select_method').on('click', function() {
             if ($(this).attr('id') == 'bank_pay') {
-                $('#form_submit').attr('action', "{{route('user.merchant.campaign.pay')}}");
+                $('#form_submit').attr('action', "{{route('user.merchant.checkout.transaction')}}");
                 $('#form_submit').attr('method', "POST");
                 document.getElementById("crypto_pay").style.display = "none";
                 document.getElementById("default_pay").style.display = "block";
@@ -263,7 +263,7 @@
                 document.getElementById("bank_part").style.display = "block";
             }
             else if ($(this).attr('id') == 'crypto') {
-                $('#form_submit').attr('action',"{{route('user.merchant.campaign.crypto.link.pay', $checkout->id)}}");
+                $('#form_submit').attr('action',"{{route('user.merchant.checkout.link_pay', $checkout->ref_id)}}");
                 $('#form_submit').attr('method', "GET");
                 document.getElementById("crypto_pay").style.display = "block";
                 document.getElementById("default_pay").style.display = "none";
@@ -272,7 +272,7 @@
                 document.getElementById("bank_part").style.display = "none";
             }
             else {
-                $('#form_submit').attr('action', "{{route('user.merchant.campaign.pay')}}");
+                $('#form_submit').attr('action', "{{route('user.merchant.checkout.transaction')}}");
                 $('#form_submit').attr('method', "POST");
                 document.getElementById("crypto_pay").style.display = "none";
                 document.getElementById("default_pay").style.display = "block";

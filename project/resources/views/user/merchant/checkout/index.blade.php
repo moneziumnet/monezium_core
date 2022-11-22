@@ -185,7 +185,7 @@
 
                   <div class="form-group mb-3">
                     <label class="form-label">{{__('Amount')}}</label>
-                    <input name="amount" id="amount" class="form-control" placeholder="{{__('Amount')}}" type="text" >
+                    <input name="amount" id="amount" class="form-control" placeholder="{{__('Amount')}}" type="number" required>
                   </div>
 
                   <div class="form-group mb-3">

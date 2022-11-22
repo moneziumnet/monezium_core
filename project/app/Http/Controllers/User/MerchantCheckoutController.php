@@ -65,6 +65,9 @@ class MerchantCheckoutController extends Controller
 
     public function link_pay(Request $request, $id) {
         $data['checkout'] = MerchantCheckout::where('ref_id', $id)->first();
+        $data['amount'] = $request->amount;
+        $data['name'] = $request->user_name;
+        $data['description'] = $request->description;
         $pre_currency = Currency::findOrFail($data['checkout']->currency_id);
         $select_currency = Currency::findOrFail($request->link_pay_submit);
         $code = $select_currency->code;
@@ -74,22 +77,123 @@ class MerchantCheckoutController extends Controller
     }
 
     public function transaction(Request $request) {
-        $check = MerchantCheckout::whereId($request->id)->first();
-        $user = User::findOrFail($check->user_id);
+        $data = MerchantCheckout::whereId($request->check_id)->first();
 
-        $trans = new Transaction();
-        $trans->trnx = str_rand();
-        $trans->user_id     = $check->user_id;
-        $trans->user_type   = 1;
-        $trans->currency_id = $request->currency_id;
-        $trans->amount      = $request->amount;
-        $trans->charge      = 0;
-        $trans->type        = '+';
-        $trans->remark      = 'merchant_checkout';
-        $trans->details     = trans('Merchant Checkout');
-        $trans->data        = '{"hash":"'.$request->hash.'","status":"Pending","shop":"'.$check->shop->name.'", "receiver":"'.($user->company_name ?? $user->name).'"}';
-        $trans->save();
-        return back()->with('success', 'You have done successfully');
+
+        if(!$data) {
+            return redirect(url('/'))->with('error', 'This Checkout does not exist.');
+        }
+        if($data->status == 0) {
+            return redirect(url('/'))->with('error', 'This Checkout\'s status is deactive');
+        }
+
+        if($request->payment == 'gateway'){
+
+            $user = User::findOrFail($data->user_id);
+
+            $trans = new Transaction();
+            $trans->trnx = str_rand();
+            $trans->user_id     = $data->user_id;
+            $trans->user_type   = 1;
+            $trans->currency_id = $request->currency_id;
+            $trans->amount      = $request->amount;
+            $trans->charge      = 0;
+            $trans->type        = '+';
+            $trans->remark      = 'merchant_checkout';
+            $trans->details     = trans('Merchant Checkout');
+            $trans->data        = '{"hash":"'.$request->hash.'","status":"Pending","shop":"'.$data->shop->name.'", "receiver":"'.($user->company_name ?? $user->name).'"}';
+            $trans->save();
+            return  redirect(url('/'))->with('success', 'You have done successfully');
+
+        }
+        elseif($request->payment == 'wallet'){
+            if(!auth()->user()) {
+                return redirect(route('user.login'))->with('error', 'You have to login for this payment.');
+            }
+
+            $wallet = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('currency_id',$data->currency_id)->where('wallet_type', 1)->first();
+
+            $gs = Generalsetting::first();
+            if(!$wallet){
+                return redirect()->back()->with('error', 'You have no '.$data->currency->code.' current wallet to pay for this.');
+
+            }
+
+            if($wallet->balance < $request->amount) {
+                return redirect()->back()->with('error','Insufficient balance to your wallet');
+            }
+
+            $wallet->balance -= $request->amount;
+            $wallet->update();
+
+            $trnx              = new Transaction();
+            $trnx->trnx        = str_rand();
+            $trnx->user_id     = auth()->id();
+            $trnx->user_type   = 1;
+            $trnx->currency_id = $data->currency_id;
+            $trnx->wallet_id   = $wallet->id;
+            $trnx->amount      = $request->amount;
+            $trnx->charge      = 0;
+            $trnx->remark      = 'merchant_checkout';
+            $trnx->type        = '-';
+            $trnx->details     = trans('Payment to checkout : '). $data->ref_id;
+            $trnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name ).'", "receiver":"'.(User::findOrFail($data->user_id)->company_name ?? User::findOrFail($data->user_id)->name).'"}';
+            $trnx->save();
+
+            $rcvWallet = MerchantWallet::where('merchant_id', $data->user_id)->where('shop_id', $data->shop_id)->where('currency_id', $data->currency_id)->first();
+
+            $rcvWallet->balance += $request->amount;
+            $rcvWallet->update();
+
+
+            $trans = new Transaction();
+            $trans->trnx = $trnx->trnx;
+            $trans->user_id     = $data->user_id;
+            $trans->user_type   = 1;
+            $trans->currency_id = $data->currency_id;
+            $trans->amount      = $request->amount;
+            $trans->charge      = 0;
+            $trans->type        = '+';
+            $trans->remark      = 'merchant_checkout';
+            $trans->details     = trans('Merchant Checkout');
+            $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "status":"Completed","shop":"'.$data->shop->name.'", "receiver":"'.($user->company_name ?? $user->name).'"}';
+            $trans->save();
+
+            return redirect()->back()->with('message','You have done successfully.');
+        }
+        elseif($request->payment == 'bank_pay'){
+
+            $bankaccount = BankAccount::where('id', $request->bank_account)->first();
+            $deposit = new DepositBank();
+            $deposit['deposit_number'] = $request->deposit_no;
+            $deposit['user_id'] = $data->user_id;
+            $deposit['currency_id'] = $data->currency_id;
+            $deposit['amount'] = $request->amount;
+            $deposit['sub_bank_id'] = $bankaccount->subbank_id;
+            $deposit['details'] = $request->description;
+            $deposit['status'] = "pending";
+            $deposit->save();
+
+            return redirect(url('/'))->with('message','You have done successfully (Deposit Bank).');
+            // return 'bank';
+        }
+        elseif($request->payment == 'crypto') {
+            $user = User::findOrFail($data->user_id);
+
+            $trans = new Transaction();
+            $trans->trnx = str_rand();
+            $trans->user_id     = $data->user_id;
+            $trans->user_type   = 1;
+            $trans->currency_id = $request->currency_id;
+            $trans->amount      = $request->amount;
+            $trans->charge      = 0;
+            $trans->type        = '+';
+            $trans->remark      = 'merchant_checkout';
+            $trans->details     = trans('Merchant Checkout');
+            $trans->data        = '{"hash":"'.$request->hash.'","status":"Pending","shop":"'.$data->shop->name.'", "receiver":"'.($user->company_name ?? $user->name).'"}';
+            $trans->save();
+            return  redirect(url('/'))->with('success', 'You have done successfully');
+        }
     }
 
     public function transactionhistory() {

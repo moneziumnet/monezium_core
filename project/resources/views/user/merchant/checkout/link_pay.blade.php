@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
     <title>{{__($gs->title)}}</title>
     <!-- CSS files -->
-    {{-- <link rel="shortcut icon" href="{{getPhoto($gs->favicon)}}"> --}}
+    <link rel="shortcut icon" href="{{getPhoto($gs->favicon)}}">
 
     <link href="{{asset('assets/user/')}}/css/tabler.min.css" rel="stylesheet"/>
     <link href="{{asset('assets/user/')}}/fontawesome-free/css/all.min.css" rel="stylesheet"/>
@@ -24,9 +24,18 @@
             <div class="page-header d-print-none">
                 <div class="row align-items-center">
                 <div class="col">
-                    <h2 class="text-center">
-                    {{__('Send payment')}}
+                    <div class="page-pretitle">
+                    {{__('Overview')}}
+                    </div>
+                    <h2 class="page-title">
+                    {{__('Checkout')}}
                     </h2>
+                </div>
+                <div class="col-auto ms-auto d-print-none">
+
+                        <a class="btn btn-primary d-sm-inline-block" href="{{route('user.merchant.checkout.link', $checkout->ref_id)}}">
+                        <i class="fas fa-backward me-1"></i> {{__('Back')}}
+                        </a>
                 </div>
                 </div>
             </div>
@@ -71,11 +80,13 @@
 
                                 <div class="form-group mb-3 mt-3">
                                     <label class="form-label required">{{__('Amount')}}</label>
-                                    <input name="amount" id="amount" class="form-control" autocomplete="off"  type="text" value="{{ $checkout->amount/$cal_amount }}" readonly required>
+                                    <input name="amount" id="amount" class="form-control" autocomplete="off"  type="text" value="{{ $amount/$cal_amount }}" readonly required>
                                 </div>
 
                                 <input type="hidden" name="id" value="{{$checkout->id}}">
                                 <input type="hidden" name="currency_id" value="{{$merchantwallet->currency->id}}">
+                                <input type="hidden" name="user_name" value="{{$user_name}}">
+                                <input type="hidden" name="description" value="{{$description}}">
 
                                 <div class="form-footer">
                                     <button type="submit" class="btn btn-primary w-100">{{__('Done')}}</button>
