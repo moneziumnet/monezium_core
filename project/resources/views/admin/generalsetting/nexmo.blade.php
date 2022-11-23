@@ -42,13 +42,6 @@
 
             <div class="col-md-12">
                 <div class="form-group">
-                    <label for="inp-number">{{  __('Default Phone Number')  }}</label>
-                    <input type="text" class="form-control" id="inp-number" name="nexmo_default_number"  placeholder="{{ __('Default Phone Number') }}" value="{{ $gs->nexmo_default_number }}">
-                </div>
-            </div>
-
-            <div class="col-md-12">
-                <div class="form-group">
                     <label for="inp-name">{{ __('Status') }}</label>
                     <select class="form-control mb-3" name="nexmo_status">
                       <option value="1" {{ $gs->nexmo_status == 1 ? 'selected' : '' }}>{{ __('YES') }}</option>
