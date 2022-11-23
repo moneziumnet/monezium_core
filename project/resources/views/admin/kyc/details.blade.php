@@ -30,11 +30,13 @@
                                 @if ($kycInformations != NULL)
                                     @foreach ($kycInformations as $key=>$value)
                                         @if (isset($value[1]) && $value[1] == 'file')
-                                        <tr>
-                                            <th width="45%">{{$key}}</th>
-                                            <td width="10%">:</td>
-                                            <td width="45%"><a href="{{asset('assets/images/'.$value[0])}}" download><img src="{{asset('assets/images/'.$value[0])}}" class="img-thumbnail"></a></td>
-                                        </tr>
+                                        @if (gettype($value[0]) != 'array')
+                                            <tr>
+                                                <th width="45%">{{$key}}</th>
+                                                <td width="10%">:</td>
+                                                <td width="45%"><a href="{{asset('assets/images/'.$value[0])}}" download><img src="{{asset('assets/images/'.$value[0])}}" class="img-thumbnail"></a></td>
+                                            </tr>
+                                        @endif
                                         @else
                                             <tr>
                                                 <th width="45%">{{$key}}</th>
