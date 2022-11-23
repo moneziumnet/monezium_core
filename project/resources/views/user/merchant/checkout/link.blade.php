@@ -46,6 +46,7 @@
                                     <div class="row mb-3">
                                         <div class="col-12">
                                         <h5 class="h4 mb-2 font-weight-bolder">{{__('Checkout Name: ')}}{{$checkout->name}}</h5>
+                                        <h5 class="mb-1">{{__('Shop: ')}} {{$checkout->shop->name}}</h5>
                                         <h5 class="mb-1">{{__('Description: ')}} {{$checkout->description}}</h5>
                                         <h5 class="mb-1">{{__('Reference: ')}} {{$checkout->ref_id}}</h5>
                                         <h5 class="mb-1">{{__('Amount: ')}}@if($checkout->amount==null) Not fixed @else {{$checkout->currency->symbol.$checkout->amount}}({{$checkout->currency->code}}) @endif</h5>
