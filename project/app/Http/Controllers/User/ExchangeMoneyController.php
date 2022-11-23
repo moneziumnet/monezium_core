@@ -28,18 +28,23 @@ class ExchangeMoneyController extends Controller
     public function exchangeForm()
     {
         $wallets = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('balance', '>', 0)->get();
+        $client = New Client();
+        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency=USD');
+        $rate = json_decode($response->getBody());
         $currencies = Currency::where('status',1)->whereType('1')->get();
         foreach ($currencies as $key => $value) {
-            $currencies[$key]->rate = getRate($value);
+            $code = $value->code;
+            $currencies[$key]->rate = $rate->data->rates->$code ?? $value->rate;
         }
 
         $crypto_currencies = Currency::where('status',1)->whereType('2')->get();
         foreach ($crypto_currencies as $key => $value) {
-            $crypto_currencies[$key]->rate = getRate($value);
+            $code = $value->code;
+            $crypto_currencies[$key]->rate =  $rate->data->rates->$code ?? $value->rate;
         }
         $recentExchanges = ExchangeMoney::where('user_id',auth()->id())->with(['fromCurr','toCurr'])->latest()->take(7)->get();
         $user = auth()->user();
-        return view('user.exchange.exchange',compact('wallets','currencies','recentExchanges', 'crypto_currencies', 'user'));
+        return view('user.exchange.exchange',compact('wallets','currencies','recentExchanges', 'crypto_currencies', 'user', 'rate'));
     }
 
     public function submitExchange(Request $request)

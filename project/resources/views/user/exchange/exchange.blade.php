@@ -67,8 +67,9 @@
                                         else {
                                             $amount = amount($wallet->balance,$wallet->currency->type,2);
                                         }
+                                        $code = $wallet->currency->code;
                                     @endphp
-                                    <option value="{{$wallet->id}}" data-curr="{{$wallet->currency->id}}" data-rate="{{getRate($wallet->currency)}}" data-code="{{$wallet->currency->code}}" data-type="{{$wallet->currency->type}}">{{$wallet->currency->code}} -- ({{ $amount}}) --  {{$wallet_type_list[$wallet->wallet_type]}}</option>
+                                    <option value="{{$wallet->id}}" data-curr="{{$wallet->currency->id}}" data-rate="{{$rate->data->rates->$code ?? $wallet->currency->rate}}" data-code="{{$wallet->currency->code}}" data-type="{{$wallet->currency->type}}">{{$wallet->currency->code}} -- ({{ $amount}}) --  {{$wallet_type_list[$wallet->wallet_type]}}</option>
                                     @endif
                                     @endforeach
                                 </select>
