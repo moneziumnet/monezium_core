@@ -205,6 +205,9 @@
             <div class="tab-pane fade show active" id="priceplan">
                 <div class="row g-4 justify-content-center pricing--wrapper">
                     @foreach ($bankplans as $key=>$data)
+                    @php
+                        $code = $currency->code;
+                    @endphp
                     <div class="col-lg-4 col-sm-10 col-md-6">
                         <div class="plan__item">
                             <div class="plan__item-header">
@@ -212,7 +215,7 @@
                                     <h5 class="title">{{ $data->title}}</h5>
                                 </div>
                                 <div class="right">
-                                    <h5 class="title">{{ showprice($data->amount,$currency) }} </h5>
+                                    <h5 class="title">{{ $data->amount*$rate->data->rates->$code.$currency->symbol }} </h5>
                                     <span>@lang('Amount')</span>
                                 </div>
                             </div>
@@ -223,7 +226,7 @@
                                             @lang('Maximum Send Money (Daily)')
                                         </div>
                                         <div class="info">
-                                            {{ showprice($data->daily_send,$currency) }}
+                                            {{ $data->daily_send*$rate->data->rates->$code.$currency->symbol }}
                                         </div>
                                     </li>
 
@@ -233,7 +236,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ showprice($data->monthly_send,$currency) }}
+                                            {{ $data->monthly_send*$rate->data->rates->$code.$currency->symbol }}
                                         </div>
                                     </li>
 
@@ -243,7 +246,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ showprice($data->daily_receive,$currency) }}
+                                            {{ $data->daily_receive*$rate->data->rates->$code.$currency->symbol }}
                                         </div>
                                     </li>
 
@@ -253,7 +256,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ showprice($data->monthly_receive,$currency) }}
+                                            {{ $data->monthly_receive*$rate->data->rates->$code.$currency->symbol }}
                                         </div>
                                     </li>
 
@@ -263,7 +266,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ showprice($data->daily_withdraw,$currency) }}
+                                            {{ $data->daily_withdraw*$rate->data->rates->$code.$currency->symbol }}
                                         </div>
                                     </li>
                                     <li>
@@ -272,7 +275,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ showprice($data->monthly_withdraw,$currency) }}
+                                            {{ $data->monthly_withdraw*$rate->data->rates->$code.$currency->symbol }}
                                         </div>
                                     </li>
                                     <li>
@@ -280,7 +283,7 @@
                                             @lang('Maximum Loan Amount (Monthly)')
                                         </div>
                                         <div class="info">
-                                            {{ showprice($data->loan_amount,$currency) }}
+                                            {{ $data->loan_amount*$rate->data->rates->$code.$currency->symbol }}
                                         </div>
                                     </li>
                                     <li>
@@ -321,7 +324,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ showprice($data->per_installment,$currency) }}
+                                            {{ $data->per_installment*$rate->data->rates->$code.$currency->symbol }}
                                         </div>
                                     </li>
 
@@ -331,7 +334,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ showprice($data->final_amount,$currency) }}
+                                            {{ $data->final_amount*$rate->data->rates->$code.$currency->symbol }}
                                         </div>
                                     </li>
 
@@ -341,7 +344,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ showprice(round($data->final_amount + $data->user_profit,2),$currency) }}
+                                            {{ round($data->final_amount + $data->user_profit,2)*$rate->data->rates->$code.$currency->symbol }}
                                         </div>
                                     </li>
 
@@ -394,7 +397,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ showprice($data->min_amount,$currency) }}
+                                            {{ $data->min_amount*$rate->data->rates->$code.$currency->symbol }}
                                         </div>
                                     </li>
 
@@ -404,7 +407,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ showprice($data->max_amount,$currency) }}
+                                            {{ $data->max_amount*$rate->data->rates->$code.$currency->symbol }}
                                         </div>
                                     </li>
 
@@ -471,7 +474,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ showprice($data->min_amount,$currency) }}
+                                            {{ $data->min_amount*$rate->data->rates->$code.$currency->symbol }}
                                         </div>
                                     </li>
 
@@ -481,7 +484,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ showprice($data->max_amount,$currency) }}
+                                            {{ $data->max_amount*$rate->data->rates->$code.$currency->symbol }}
                                         </div>
                                     </li>
 

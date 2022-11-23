@@ -44,20 +44,20 @@ class MerchantOtherBankController extends Controller
         }
 
         $bank_plan = BankPlan::whereId($user->bank_plan_id)->first();
+        $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'withdraw')->first();
         $dailySend = BalanceTransfer::whereUserId(auth()->id())->whereDate('created_at', '=', date('Y-m-d'))->whereStatus(1)->sum('amount');
         $monthlySend = BalanceTransfer::whereUserId(auth()->id())->whereMonth('created_at', '=', date('m'))->whereStatus(1)->sum('amount');
 
-        if($dailySend > $bank_plan->daily_send){
+        if($dailySend > $global_range->daily_limit){
             return redirect()->back()->with('unsuccess','Daily send limit over.');
         }
 
-        if($monthlySend > $bank_plan->monthly_send){
+        if($monthlySend > $global_range->monthly_limit){
             return redirect()->back()->with('unsuccess','Monthly send limit over.');
         }
 
 
         $gs = Generalsetting::first();
-        $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'withdraw')->first();
 
         $dailyTransactions = BalanceTransfer::whereType('other')->whereUserId(auth()->user()->id)->whereDate('created_at', now())->get();
         $monthlyTransactions = BalanceTransfer::whereType('other')->whereUserId(auth()->user()->id)->whereMonth('created_at', now()->month())->get();

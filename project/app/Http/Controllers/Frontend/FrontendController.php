@@ -48,6 +48,7 @@ use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use GuzzleHttp\Client;
 
 class FrontendController extends Controller
 {
@@ -96,6 +97,9 @@ class FrontendController extends Controller
         $data['loanplans'] = LoanPlan::orderBy('id', 'desc')->whereStatus(1)->limit(3)->get();
         $data['depositsplans'] = DpsPlan::orderBy('id', 'desc')->whereStatus(1)->limit(3)->get();
         $data['fdrplans'] = FdrPlan::orderBy('id', 'desc')->whereStatus(1)->limit(3)->get();
+        $client = New Client();
+        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency=USD');
+        $data['rate'] = json_decode($response->getBody());
         return view('frontend.index', $data);
     }
 
