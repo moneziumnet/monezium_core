@@ -12,6 +12,8 @@ use App\Models\Transaction;
 use App\Models\Generalsetting;
 use App\Models\User;
 use App\Models\BankAccount;
+use App\Models\DepositBank;
+use App\Models\Wallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
@@ -66,7 +68,7 @@ class MerchantCheckoutController extends Controller
     public function link_pay(Request $request, $id) {
         $data['checkout'] = MerchantCheckout::where('ref_id', $id)->first();
         $data['amount'] = $request->amount;
-        $data['name'] = $request->user_name;
+        $data['user_name'] = $request->user_name;
         $data['description'] = $request->description;
         $pre_currency = Currency::findOrFail($data['checkout']->currency_id);
         $select_currency = Currency::findOrFail($request->link_pay_submit);
@@ -95,15 +97,15 @@ class MerchantCheckoutController extends Controller
             $trans->trnx = str_rand();
             $trans->user_id     = $data->user_id;
             $trans->user_type   = 1;
-            $trans->currency_id = $request->currency_id;
+            $trans->currency_id = $data->currency_id;
             $trans->amount      = $request->amount;
             $trans->charge      = 0;
             $trans->type        = '+';
             $trans->remark      = 'merchant_checkout';
             $trans->details     = trans('Merchant Checkout');
-            $trans->data        = '{"hash":"'.$request->hash.'","status":"Pending","shop":"'.$data->shop->name.'", "receiver":"'.($user->company_name ?? $user->name).'"}';
+            $trans->data        = '{"sender":"'.$request->user_name.'","status":"Pending","shop":"'.$data->shop->name.'", "receiver":"'.($user->company_name ?? $user->name).'"}';
             $trans->save();
-            return  redirect(url('/'))->with('success', 'You have done successfully');
+            return  redirect(url('/'))->with('message', 'You have done successfully');
 
         }
         elseif($request->payment == 'wallet'){
@@ -125,6 +127,7 @@ class MerchantCheckoutController extends Controller
 
             $wallet->balance -= $request->amount;
             $wallet->update();
+            $user = User::findOrFail($data->user_id);
 
             $trnx              = new Transaction();
             $trnx->trnx        = str_rand();
@@ -137,7 +140,7 @@ class MerchantCheckoutController extends Controller
             $trnx->remark      = 'merchant_checkout';
             $trnx->type        = '-';
             $trnx->details     = trans('Payment to checkout : '). $data->ref_id;
-            $trnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name ).'", "receiver":"'.(User::findOrFail($data->user_id)->company_name ?? User::findOrFail($data->user_id)->name).'"}';
+            $trnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name ).'","status":"Completed", "receiver":"'.(User::findOrFail($data->user_id)->company_name ?? User::findOrFail($data->user_id)->name).'"}';
             $trnx->save();
 
             $rcvWallet = MerchantWallet::where('merchant_id', $data->user_id)->where('shop_id', $data->shop_id)->where('currency_id', $data->currency_id)->first();
@@ -190,9 +193,9 @@ class MerchantCheckoutController extends Controller
             $trans->type        = '+';
             $trans->remark      = 'merchant_checkout';
             $trans->details     = trans('Merchant Checkout');
-            $trans->data        = '{"hash":"'.$request->hash.'","status":"Pending","shop":"'.$data->shop->name.'", "receiver":"'.($user->company_name ?? $user->name).'"}';
+            $trans->data        = '{"sender":"'.$request->user_name.'","status":"Pending","shop":"'.$data->shop->name.'", "receiver":"'.($user->company_name ?? $user->name).'"}';
             $trans->save();
-            return  redirect(url('/'))->with('success', 'You have done successfully');
+            return  redirect(url('/'))->with('message', 'You have done successfully');
         }
     }
 
