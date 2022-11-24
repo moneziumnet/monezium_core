@@ -200,7 +200,56 @@ class UserController extends Controller
             $trax_details['sender'] = $request->fullname;
             $trax_details['receiver'] = $wallet->user->name;
             $trax_details = json_encode($trax_details, True);
-            user_wallet_increment($wallet->user_id,$wallet->currency_id,$request->amount, $wallet->wallet_type);
+
+            $user = User::findOrFail($wallet->user_id);
+            $rate =  getRate($wallet->currency);
+            $amount = $request->amount / $rate;
+            $transaction_global_cost = 0;
+            $transaction_global_fee = check_global_transaction_fee($amount, $user, 'deposit');
+            if($transaction_global_fee)
+            {
+                $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($amount/100) * $transaction_global_fee->data->percent_charge;
+            }
+            $transaction_custom_cost = 0;
+            if($user->referral_id != 0)
+            {
+                $transaction_custom_fee = check_custom_transaction_fee($amount, $user, 'deposit');
+                if($transaction_custom_fee) {
+                    $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($amount/100) * $transaction_custom_fee->data->percent_charge;
+                }
+                $remark = 'Deposit_create_supervisor_fee';
+                if (check_user_type_by_id(4, $user->referral_id)) {
+                    user_wallet_increment($user->referral_id, $wallet->currency_id, $transaction_custom_cost*$rate, 6);
+                    $trans_wallet = get_wallet($user->referral_id, $wallet->currency_id, 6);
+                }
+                elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
+                    $remark = 'Deposit_create_manager_fee';
+                    user_wallet_increment($user->referral_id, $wallet->currency_id, $transaction_custom_cost*$rate, 10);
+                    $trans_wallet = get_wallet($user->referral_id, $wallet->currency_id, 10);
+                }
+                $referral_user = User::findOrFail($user->referral_id);
+
+                $trans = new Transaction();
+                $trans->trnx = str_rand();
+                $trans->user_id     = $user->referral_id;
+                $trans->user_type   = 1;
+                $trans->currency_id = $wallet->currency_id;
+                $trans->amount      = $transaction_custom_cost*$rate;
+
+                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+
+                $trans->charge      = 0;
+                $trans->type        = '+';
+                $trans->remark      = $remark;
+                $trans->details     = trans('Deposit complete');
+
+                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.($referral_user->company_name ?? $referral_user->name).'"}';
+                $trans->save();
+            }
+            $fee = $transaction_global_cost + $transaction_custom_cost;
+            $final_amount = $amount - $fee;
+            user_wallet_increment($wallet->user_id,$wallet->currency_id,$final_amount*$rate, $wallet->wallet_type);
+            user_wallet_increment(0, $wallet->currency_id, $transaction_global_cost*$rate, 9);
 
             $trans = new Transaction();
             $trans->trnx = Str::random(4).time();
@@ -209,11 +258,11 @@ class UserController extends Controller
             $trans->wallet_id   = $wallet->id;
             $trans->currency_id = $wallet->currency_id;
             $trans->amount      = $request->amount;
-            $trans->charge      = 0;
+            $trans->charge      = $fee*$rate;
             $trans->type        = '+';
             $trans->remark      = 'Deposit_create';
             $trans->details     = trans('Deposit complete');
-            $trans->data        = $request->wallet_type == 'crypto' ? '{"sender":"System Account", "receiver":"'.$request->adddress.'"}':$trax_details;
+            $trans->data        = $request->wallet_type == 'crypto' ? '{"sender":"'.$request->fullname.'", "receiver":"'.$request->adddress.'"}':$trax_details;
             $trans->save();
             if ($request->wallet_type == 'crypto') {
                 $deposit = new CryptoDeposit();
