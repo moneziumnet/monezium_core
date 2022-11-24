@@ -273,8 +273,10 @@ if(!function_exists('getUserModule')){
   if(!function_exists('userBalance')){
     function userBalance($user_id){
       $wallets = Wallet::where('user_id', $user_id)->with('currency')->get();
+      $currency_id = defaultCurr();
+      $code = Currency::findOrFail($currency_id)->code;
       $client = New Client();
-      $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency=USD');
+      $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency='.$code);
       $rate = json_decode($response->getBody());
       $totalbalance = 0;
         foreach ($wallets as $key => $wallet) {
