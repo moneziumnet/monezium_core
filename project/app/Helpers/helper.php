@@ -777,7 +777,7 @@ if(!function_exists('getUserModule')){
             "jsonrpc": "2.0"
             }';
             try {
-                $response = $client->request('POST', $link, ["headers"=>$headers, "body"=>$body]);
+                $response = $client->request('POST', $link, ["headers"=>$headers, "body"=>$body,'connect_timeout' => 0.5]);
                 $res =json_decode($response->getBody());
                 return $res->result;
             } catch (\Throwable $th) {
@@ -905,7 +905,7 @@ if(!function_exists('getUserModule')){
             "jsonrpc": "2.0"
             }';
             try {
-                $response = $client->request('POST', $link.'/wallet/'.$wallet_name, ["headers"=>$headers, "body"=>$body]);
+                $response = $client->request('POST', $link.'/wallet/'.$wallet_name, ["headers"=>$headers, "body"=>$body,'connect_timeout' => 0.5]);
                 $res =json_decode($response->getBody());
             } catch (\Throwable $th) {
                 return 'error';
@@ -918,12 +918,8 @@ if(!function_exists('getUserModule')){
     function Crypto_Balance($auth_id, $currency_id)
     {
       $amount = 0;
-      $status = RPC_ETH("eth_syncing", []);
-      if ($status = 'error') {
-        return 'error';
-      }
-        if ($auth_id == 0 ) {
-            $wallet = Wallet::where('user_id', $auth_id)->where('wallet_type', 9)->where('currency_id',$currency_id)->with('currency')->first();
+      if ($auth_id == 0 ) {
+          $wallet = Wallet::where('user_id', $auth_id)->where('wallet_type', 9)->where('currency_id',$currency_id)->with('currency')->first();
         }
         else {
             $wallet = Wallet::where('user_id', $auth_id)->where('wallet_type', 8)->where('currency_id',$currency_id)->with('currency')->first();

@@ -134,7 +134,7 @@ class EthereumRpcService
         ];
 
         try {
-            $response = $client->request('POST', $link, ["headers" => $headers, "body" => json_encode($body)]);
+            $response = $client->request('POST', $link, ["headers" => $headers, "body" => json_encode($body), 'connect_timeout' => 0.5]);
             $res = json_decode($response->getBody());
 
         } catch (\Throwable $th) {
