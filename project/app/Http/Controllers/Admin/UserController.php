@@ -196,6 +196,10 @@ class UserController extends Controller
         public function profileAccountDeposit(Request $request)
         {
             $wallet = Wallet::findOrFail($request->wallet_id);
+            $trax_details = $request->except('_token', 'wallet_id');
+            $trax_details['sender'] = $request->fullname;
+            $trax_details['receiver'] = $wallet->user->name;
+            $trax_details = json_encode($trax_details, True);
             user_wallet_increment($wallet->user_id,$wallet->currency_id,$request->amount, $wallet->wallet_type);
 
             $trans = new Transaction();
@@ -209,7 +213,7 @@ class UserController extends Controller
             $trans->type        = '+';
             $trans->remark      = 'Deposit_create';
             $trans->details     = trans('Deposit complete');
-            $trans->data        = $request->wallet_type == 'crypto' ? '{"sender":"System Account", "receiver":"'.$request->adddress.'"}':json_encode($request->except('_token', 'wallet_id'), True);
+            $trans->data        = $request->wallet_type == 'crypto' ? '{"sender":"System Account", "receiver":"'.$request->adddress.'"}':$trax_details;
             $trans->save();
             if ($request->wallet_type == 'crypto') {
                 $deposit = new CryptoDeposit();
