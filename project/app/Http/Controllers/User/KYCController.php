@@ -5,6 +5,8 @@ namespace App\Http\Controllers\User;
 use App\Models\User;
 use App\Models\KycForm;
 use App\Models\Product;
+use App\Models\Charge;
+use App\Models\Transaction;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
@@ -171,6 +173,46 @@ class KYCController extends Controller
         $user->kyc_status = $request->status;
         if($request->status == 2) {
             $user->kyc_token = null;
+        }
+        if($request->status == 1) {
+            $pre_sections = explode(" , ", $user->section);
+            $sectionlist = ['Incoming', 'External Payments', 'Request Money', 'Transactions', 'Payments', 'Payment between accounts', 'Exchange Money'];
+            foreach($sectionlist as $key=>$section){
+                if (!$user->sectionCheck($section)) {
+                    $manualfee = Charge::where('user_id', $request->id )->where('plan_id', $user->bank_plan_id)->where('name', $section)->first();
+                    if(!$manualfee) {
+                        $manualfee = Charge::where('user_id', 0)->where('plan_id', $user->bank_plan_id)->where('name', $section)->first();
+                    }
+                    if($manualfee) {
+                        $trans = new Transaction();
+                        $trans->trnx = str_rand();
+                        $trans->user_id     = $request->id;
+                        $trans->user_type   = 1;
+                        $trans->currency_id = defaultCurr();
+                        $trans->amount      = $manualfee->data->fixed_charge;
+                        $trans_wallet = get_wallet($request->id, defaultCurr(), 1);
+                        $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+                        $trans->charge      = 0;
+                        $trans->type        = '-';
+                        $trans->remark      = 'section_enable';
+                        $trans->details     = $section.trans(' Section Create');
+                        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
+                        $trans->save();
+
+                        user_wallet_decrement($request->id, defaultCurr(), $manualfee->data->fixed_charge, 1);
+                        user_wallet_increment(0, defaultCurr(), $manualfee->data->fixed_charge, 9);
+                    }
+                    array_push($pre_sections, $section);
+                }
+            }
+            $modules = explode(" , ", $user->modules);
+            foreach($sectionlist as $key=>$section) {
+                if(!$user->moduleCheck($section)) {
+                    array_push($modules, $section);
+                }
+            }
+            $user->modules= implode(" , ", $modules);
+            $user->section= implode(" , ", $pre_sections);
         }
         $user->update();
         $res = $request->status == 1 ? 'Your Verification Completed.' : 'Your Verification Rejected.';
