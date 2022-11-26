@@ -240,10 +240,14 @@ Route::prefix('admin')->group(function () {
     Route::get('/user/{id}/documents', [UserController::class, 'profileDocuments'])->name('admin-user-documents');
     Route::get('/user/{id}/settings', [UserController::class, 'profileSettings'])->name('admin-user-settings');
     Route::get('/user/{id}/pricingplan', [UserController::class, 'profilePricingplan'])->name('admin-user-pricingplan');
+    Route::get('/user/{id}/pricingplan_supervisor', [UserController::class, 'profilePricingplan_supervisor'])->name('admin-user-pricingplan-supervisor');
+    Route::get('/user/{id}/pricingplan_manager', [UserController::class, 'profilePricingplan_manager'])->name('admin-user-pricingplan-manager');
     Route::get('/user/pricingplan/edit/{id}', [UserController::class, 'profilePricingplanedit'])->name('admin-user-pricingplan-edit');
     Route::get('/user/pricingplan/create/{id}/{charge_id}', [UserController::class, 'profilePricingplancreate'])->name('admin-user-pricingplan-create');
+    Route::get('/user/pricingplan/supervisor/create/{id}/{charge_id}', [UserController::class, 'profilePricingplanSupervisorcreate'])->name('admin-user-pricingplan-supervisor-create');
     Route::get('/user/pricingplancreate/{id}', [UserController::class, 'profilePricingplanglobalcreate'])->name('admin-user-pricingplan-global-create');
     Route::get('/user/pricingplan/datatables/{id}', [UserController::class, 'profilePricingplandatatables'])->name('admin-user-pricingplan-datatables');
+    Route::get('/user/pricingplan/supervisor/datatables/{id}', [UserController::class, 'profilePricingplanSupervisordatatables'])->name('admin-user-pricingplan-supervisor-datatables');
     Route::post('/user/{id}/admin-user-upgrade-plan', [UserController::class, 'upgradePlan'])->name('admin-user-upgrade-plan');
     Route::get('/user/{id}/transactions', [UserController::class, 'profileTransctions'])->name('admin-user-transactions');
     Route::get('/user/{id}/banks', [UserController::class, 'profileBanks'])->name('admin-user-banks');

@@ -551,6 +551,32 @@ class UserController extends Controller
             return view('admin.user.profilepricingplan',$data);
         }
 
+        public function profilePricingplan_supervisor($id)
+        {
+            $data = User::findOrFail($id);
+            $type = $data->company_name ? 'corporate' : 'private';
+            $plans = BankPlan::where('id','!=',$data->bank_plan_id)->where('type', $type)->get();
+            $plan = BankPlan::findOrFail($data->bank_plan_id);
+            //dd($plan);
+            $data['data'] = $data;
+            $data['plan'] = $plan;
+            $data['plans'] = $plans;
+            return view('admin.user.profilepricingplansupervisor',$data);
+        }
+
+        public function profilePricingplan_manager($id)
+        {
+            $data = User::findOrFail($id);
+            $type = $data->company_name ? 'corporate' : 'private';
+            $plans = BankPlan::where('id','!=',$data->bank_plan_id)->where('type', $type)->get();
+            $plan = BankPlan::findOrFail($data->bank_plan_id);
+            //dd($plan);
+            $data['data'] = $data;
+            $data['plan'] = $plan;
+            $data['plans'] = $plans;
+            return view('admin.user.profilepricingplanmanager',$data);
+        }
+
         public function upgradePlan(Request $request, $id)
         {
             $rules = [
@@ -1521,6 +1547,70 @@ class UserController extends Controller
                             ->toJson();
         }
 
+        public function profilePricingplanSupervisordatatables($id)
+        {
+            $user = User::findOrFail($id);
+            $globals = Charge::where('plan_id', $user->bank_plan_id)->where('user_id', 0)->orderBy('name','desc')->get();
+            $datas = $globals;
+            return Datatables::of($datas)
+                            ->editColumn('name', function(Charge $data) {
+                                return $data->name;
+                            })
+                            ->editColumn('percent', function(Charge $data)  {
+                                if ($data->data){
+                                    return $data->data->percent_charge;
+                                }
+                                else {
+                                    return 0;
+                                }
+                            })
+                            ->editColumn('fixed', function(Charge $data) {
+                                if ($data->data){
+                                    return $data->data->fixed_charge;
+                                }
+                                else {
+                                    return 0;
+                                }
+                            })
+                            ->editColumn('percent_customer', function(Charge $data) use($id) {
+                                $customplan =  Charge::where('user_id',$id)->where('plan_id', 0)->where('name', $data->name)->first();
+                                if ($customplan){
+                                    return $customplan->data->percent_charge;
+                                }
+                                else {
+                                    return 0;
+                                }
+                            })
+                            ->editColumn('fixed_customer', function(Charge $data) use($id) {
+                                $customplan =  Charge::where('user_id',$id)->where('plan_id', 0)->where('name', $data->name)->first();
+
+                                if ($customplan){
+                                    return $customplan->data->fixed_charge;
+                                }
+                                else {
+                                    return 0;
+                                }
+                            })
+                            ->addColumn('action', function (Charge $data) use($id) {
+                                $customplan =  Charge::where('user_id',$id)->where('plan_id', 0)->where('name', $data->name)->first();
+
+                                if($customplan) {
+                                    return '<button type="button" class="btn btn-primary btn-big btn-rounded " onclick="getDetails('.$customplan->id.')" aria-haspopup="true" aria-expanded="false">
+                                    Edit
+                                    </button>';
+                                }
+                                else {
+
+                                        return '<button type="button" class="btn btn-primary btn-big btn-rounded " data-id="'.$data->id.'" onclick="createDetails(\''.$data->id.'\')" aria-haspopup="true" aria-expanded="false">
+                                        Edit
+                                        </button>';
+                                }
+                            })
+
+                            ->rawColumns(['action'])
+                            ->toJson();
+        }
+
         public function profilePricingplanedit($id) {
             $plandetail = Charge::findOrFail($id);
             return view('admin.user.profilepricingplanedit',compact('plandetail'));
@@ -1573,6 +1663,18 @@ class UserController extends Controller
             $plandetail->name = $global->name;
             $plandetail->user_id = $id;
             $plandetail->plan_id = $user->bank_plan_id;
+            $plandetail->data =  $global->data;
+            $plandetail->slug = $global->slug;
+            return view('admin.user.profilepricingplanedit',compact('plandetail'));
+        }
+
+        public function profilePricingplanSupervisorcreate($id, $charge_id) {
+            $global = Charge::findOrFail($charge_id);
+            $user = User::findOrFail($id);
+            $plandetail = new Charge();
+            $plandetail->name = $global->name;
+            $plandetail->user_id = $id;
+            $plandetail->plan_id = 0;
             $plandetail->data =  $global->data;
             $plandetail->slug = $global->slug;
             return view('admin.user.profilepricingplanedit',compact('plandetail'));

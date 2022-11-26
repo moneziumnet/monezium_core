@@ -4,11 +4,11 @@
             <a class="nav-link {{menu('admin-user-profile')}}" id="information" href="{{route('admin-user-profile',$data->id) }}" role="button" >Information</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link 
-                {{menu('admin-user-accounts')}} 
-                {{menu('admin-wallet-internal')}} 
-                {{menu('admin-wallet-external')}} 
-                {{menu('admin-wallet-between')}} 
+            <a class="nav-link
+                {{menu('admin-user-accounts')}}
+                {{menu('admin-wallet-internal')}}
+                {{menu('admin-wallet-external')}}
+                {{menu('admin-wallet-between')}}
                 {{menu('admin-wallet-transactions')}}" id="accounts" href="{{route('admin-user-accounts',$data->id) }}" role="button">Accounts</a>
         </li>
         <li class="nav-item">
@@ -18,7 +18,7 @@
             <a class="nav-link {{menu('admin-user-settings')}}" id="settings" href="{{route('admin-user-settings',$data->id) }}" role="button" >Settings</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{menu('admin-user-pricingplan')}}" id="pricingplan" href="{{route('admin-user-pricingplan',$data->id) }}" role="button" >Pricing Plan</a>
+            <a class="nav-link {{menu('admin-user-pricingplan')}} {{menu('admin-user-pricingplan-supervisor')}} {{menu('admin-user-pricingplan-manager')}}" id="pricingplan" href="{{route('admin-user-pricingplan',$data->id) }}" role="button" >Pricing Plan</a>
         </li>
         <li class="nav-item">
             <a class="nav-link {{menu('admin-user-transactions')}} {{menu('admin-user.transaction-edit')}}" id="transactions" href="{{route('admin-user-transactions',$data->id) }}" role="button" >Transactions</a>

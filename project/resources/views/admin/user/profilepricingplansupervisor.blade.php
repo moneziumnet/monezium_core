@@ -140,7 +140,7 @@
            processing: true,
            serverSide: true,
            searching: true,
-           ajax: '{{ route('admin-user-pricingplan-datatables',$data->id) }}',
+           ajax: '{{ route('admin-user-pricingplan-supervisor-datatables',$data->id) }}',
            columns: [
                 { data: 'name', name: 'name' },
                 { data: 'percent', name: 'percent' },
@@ -172,7 +172,7 @@
 
         function createDetails(id)
         {
-                var url = "{{url('admin/user/pricingplan/create')}}"+'/'+'{{$data->id}}'+'/'+`${id}`
+                var url = "{{url('admin/user/pricingplan/supervisor/create')}}"+'/'+'{{$data->id}}'+'/'+`${id}`
                 console.log(url);
                 $.get(url,function (res) {
                   if(res == 'empty'){
