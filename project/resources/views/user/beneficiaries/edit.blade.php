@@ -32,7 +32,7 @@
                                 <div class="form-group mb-3 mt-3 col-md-6">
                                     <label class="form-label required">{{__('Beneficiary Type')}}</label>
                                     <select id="bene_type" class="form-select" name="type" required>
-                                        <option value="RETAIL" {{$beneficiary->type == 'RETAIL' ? 'selected' : ''}}> {{__("RETAIL")}}</option>
+                                        <option value="RETAIL" {{$beneficiary->type == 'RETAIL' ? 'selected' : ''}}> {{__("Individual")}}</option>
                                         <option value="CORPORATE" {{$beneficiary->type == 'CORPORATE' ? 'selected' : ''}}> {{__("CORPORATE")}}</option>
                                     </select>
                                 </div>

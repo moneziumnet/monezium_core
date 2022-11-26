@@ -258,7 +258,7 @@ I need 1000 from you.')}}</textarea>
                             <div class="form-group mt-3 col-md-6">
                                 <label class="form-label required">{{__('Beneficiary Type')}}</label>
                                 <select id="bene_type" class="form-select" name="type" required>
-                                    <option value="RETAIL"> {{__("RETAIL")}}</option>
+                                    <option value="RETAIL"> {{__("Individual")}}</option>
                                     <option value="CORPORATE"> {{__("CORPORATE")}}</option>
                                 </select>
                             </div>
