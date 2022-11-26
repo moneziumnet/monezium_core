@@ -117,7 +117,7 @@ class MerchantOtherBankController extends Controller
             $trans->trnx = $txnid;
             $trans->user_id     = $user->id;
             $trans->user_type   = 2;
-            $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
+            $trans->currency_id = defaultCurr();
             $trans->amount      = $finalAmount;
             $trans_wallet = get_wallet(auth()->id(),$currency);
             $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;

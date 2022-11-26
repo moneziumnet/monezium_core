@@ -187,7 +187,7 @@ class RegisterController extends Controller
         $trans->user_type   = 1;
         $trans->currency_id = $default_currency->id;
         $trans->amount      = $chargefee->data->fixed_charge;
-        $trans_wallet       = get_wallet($user->id, 1, 1);
+        $trans_wallet       = get_wallet($user->id, $default_currency->id, 1);
         $trans->wallet_id   = $user_wallet->id;
         $trans->charge      = 0;
         $trans->type        = '-';
@@ -202,7 +202,7 @@ class RegisterController extends Controller
         $trans->user_type   = 1;
         $trans->currency_id = $default_currency->id;
         $trans->amount      = $subscription->amount;
-        $trans_wallet       = get_wallet($user->id, 1, 1);
+        $trans_wallet       = get_wallet($user->id, defaultCurr(), 1);
         $trans->wallet_id   = $user_wallet->id;
         $trans->charge      = 0;
         $trans->type        = '-';

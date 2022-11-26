@@ -472,9 +472,9 @@ if(!function_exists('getUserModule')){
                 $trans->trnx = str_rand();
                 $trans->user_id     = $auth_id;
                 $trans->user_type   = 1;
-                $trans->currency_id = 1;
+                $trans->currency_id = defaultCurr();
                 $trans->amount      = $chargefee->data->fixed_charge;
-                $trans_wallet       = get_wallet($auth_id, 1, 1);
+                $trans_wallet       = get_wallet($auth_id, defaultCurr(), 1);
                 $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
                 $trans->charge      = 0;
                 $trans->type        = '-';
