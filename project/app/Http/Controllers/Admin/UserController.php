@@ -1471,7 +1471,7 @@ class UserController extends Controller
                             })
                             ->editColumn('charge', function(Transaction $data) {
                                 $currency = Currency::whereId($data->currency_id)->first();
-                                return $data->type.amount($data->charge,$currency->type,2).$currency->code;
+                                return '-'.amount($data->charge,$currency->type,2).$currency->code;
                             })
                             ->addColumn('action', function (Transaction $data) {
                                 return ' <a href="javascript:;"  data-href="" onclick="getDetails('.$data->id.')" class="detailsBtn" >
