@@ -515,7 +515,7 @@ class OtherBankTransferController extends Controller
         $trans->user_id     = $data->user_id;
         $trans->user_type   = 1;
         $trans->currency_id = $data->currency_id;
-        $trans->amount      = $data->amount;
+        $trans->amount      = $data->final_amount;
 
         $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
 
