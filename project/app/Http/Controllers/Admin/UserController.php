@@ -1297,11 +1297,11 @@ class UserController extends Controller
                 $userBalance = user_wallet_balance($trnx->user_id,$currency_id);
                 $amount = $request->input('amount');
                 $charge = $request->input('charge');
-                $newTotal = $amount + $charge;
+                $newTotal = $amount - $charge;
 
                 if($trnx->type == "-")
                 {
-                    $totalAmt = $trnx->amount + $trnx->charge;
+                    $totalAmt = $trnx->amount - $trnx->charge;
                     $balance = $userBalance + $totalAmt;
 
                     if($amount > $balance)
@@ -1309,7 +1309,9 @@ class UserController extends Controller
                         return response()->json(array('errors' => ['Customer Balance not Available.']));
                     }
 
-                    user_wallet_increment($trnx->user_id, $currency_id, $totalAmt);
+                    user_wallet_increment($trnx->user_id, $currency_id, $trnx->amount);
+                    user_wallet_decrement(0, $currency_id, $trnx->charge, 9);
+
                     $trnx->currency_id = $currency_id;
                     $trnx->amount      = $amount;
                     $trnx->charge      = $charge;
@@ -1322,16 +1324,19 @@ class UserController extends Controller
                     $trnx->details     = $request->input('description');
                     $trnx->save();
 
-                    user_wallet_decrement($trnx->user_id, $currency_id, $newTotal);
+                    user_wallet_decrement($trnx->user_id, $currency_id, $amount);
+                    user_wallet_increment(0, $currency_id, $charge, 9);
+
                     return response()->json('Transacton Update Success');
                 }
 
                 if($trnx->type == "+")
                 {
-                    $totalAmt = $trnx->amount + $trnx->charge;
+                    $totalAmt = $trnx->amount - $trnx->charge;
                     $balance = $userBalance - $totalAmt;
                     user_wallet_decrement($trnx->user_id, $currency_id, $totalAmt);
-
+                    user_wallet_decrement(0, $currency_id, $trnx->charge, 9);
+                    
                     $trnx->currency_id = $currency_id;
                     $trnx->amount      = $amount;
                     $trnx->charge      = $charge;
@@ -1343,7 +1348,8 @@ class UserController extends Controller
                 // $trnx->type        = '-';
                     $trnx->details     = $request->input('description');
                     $trnx->save();
-                    user_wallet_increment($trnx->user_id, $currency_id, $amount);
+                    user_wallet_increment($trnx->user_id, $currency_id, $newTotal);
+                    user_wallet_increment(0, $currency_id, $charge, 9);
 
                     return response()->json('Transacton Update Success');
                 }
