@@ -84,7 +84,7 @@ class EthereumRpcService
             'value' => '0x0',
         ]]);
     }
-    public function call_transfer($method, array $parameters = [], $link = '192.168.88.12:8545')
+    public function call_transfer($method, array $parameters = [], $link = 'localhost:8545')
     {
         $body = [
             'jsonrpc' => '2.0',
@@ -119,7 +119,7 @@ class EthereumRpcService
         return $res;
     }
 
-    public function call($method, array $parameters = [], $link = '192.168.88.12:8545')
+    public function call($method, array $parameters = [], $link = 'localhost:8545')
     {
         $body = [
             'jsonrpc' => '2.0',

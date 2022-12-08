@@ -763,7 +763,7 @@ if(!function_exists('getUserModule')){
 
   if(!function_exists('RPC_ETH'))
   {
-      function RPC_ETH($method, $args, $link = '192.168.88.12:8545')
+      function RPC_ETH($method, $args, $link = 'localhost:8545')
       {
           $args = json_encode($args);
           $client = new Client();
@@ -787,7 +787,7 @@ if(!function_exists('getUserModule')){
   }
   if(!function_exists('RPC_ETH_Send'))
   {
-      function RPC_ETH_Send($method, $args, $keyword, $link = '192.168.88.12:8545')
+      function RPC_ETH_Send($method, $args, $keyword, $link = 'localhost:8545')
       {
           $client = new Client();
             $headers = [
@@ -812,7 +812,7 @@ if(!function_exists('getUserModule')){
 
   if(!function_exists('RPC_BTC_Create'))
   {
-      function RPC_BTC_Create($method, $args, $link = 'http://192.168.88.12:18443')
+      function RPC_BTC_Create($method, $args, $link = 'http://localhost:18443')
       {
           $args = json_encode($args);
           $client = new Client();
@@ -852,7 +852,7 @@ if(!function_exists('getUserModule')){
 
   if(!function_exists('RPC_BTC_Send'))
   {
-      function RPC_BTC_Send($method, $args, $wallet_name, $link = 'http://192.168.88.12:18443')
+      function RPC_BTC_Send($method, $args, $wallet_name, $link = 'http://localhost:18443')
       {
           $args = json_encode($args);
           $client = new Client();
@@ -891,7 +891,7 @@ if(!function_exists('getUserModule')){
 
   if(!function_exists('RPC_BTC_Balance'))
   {
-      function RPC_BTC_Balance($method, $wallet_name, $link = 'http://192.168.88.12:18443')
+      function RPC_BTC_Balance($method, $wallet_name, $link = 'http://localhost:18443')
       {
           $client = new Client();
             $headers = [
