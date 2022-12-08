@@ -277,6 +277,10 @@ class GeneralSettingController extends Controller
         // Update Nexmo
         return view('admin.generalsetting.nexmo');
     }
+    
+    public function currencyapi(){
+        return view('admin.generalsetting.currencyrate');
+    }
 
     public function status($field,$value)
     {

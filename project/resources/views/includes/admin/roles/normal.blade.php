@@ -295,6 +295,7 @@
           <div id="payment_gateways" class="collapse" aria-labelledby="headingTable" data-parent="#system_setting">
             <div class="bg-white py-2 collapse-inner rounded">
               <a class="collapse-item" href="{{ route('admin.currency.index') }}">{{ __('Currencies') }}</a>
+              <a class="collapse-item" href="{{ route('admin.gs.currencyapi') }}">{{ __('Currency API') }}</a>
             </div>
           </div>
         @endif

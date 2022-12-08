@@ -527,6 +527,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/twilio-sms-settings', [GeneralSettingController::class, 'twilio'])->name('admin.gs.twilio');
     // Update Nexmo
     Route::get('/nexmo-sms-settings', [GeneralSettingController::class, 'nexmo'])->name('admin.gs.nexmo');
+    Route::get('/currency-api-settings', [GeneralSettingController::class, 'currencyapi'])->name('admin.gs.currencyapi');
   });
 
   Route::group(['middleware' => 'permissions:Home page Setting'], function () {
