@@ -34,7 +34,8 @@
                                 </div>
                                 <div class="row ms-3">
 
-                                    @foreach ( explode(" , ", $user->section) as $section )
+                                    @foreach(explode(" , ", $user->section) as $section )
+                                    @if ($section)
                                     <div class="col-md-4 col-sm-6 mt-3">
                                         <div class="form-group">
                                             <div class="form-check form-switch">
@@ -43,6 +44,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @endif
                                     @endforeach
                                 </div>
 
