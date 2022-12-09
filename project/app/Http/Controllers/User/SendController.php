@@ -33,7 +33,7 @@ class SendController extends Controller
         // {
             $ga = new GoogleAuthenticator();
             $data['secret'] = $ga->createSecret();
-            $wallets = Wallet::where('user_id',auth()->id())->where('balance','>',0)->with('currency')->get();
+            $wallets = Wallet::where('user_id',auth()->id())->with('currency')->get();
             $data['wallets'] = $wallets;
             $data['saveAccounts'] = SaveAccount::whereUserId(auth()->id())->orderBy('id','desc')->get();
             $data['savedUser'] = NULL;
@@ -293,7 +293,7 @@ class SendController extends Controller
             $trans_wallet = get_wallet($user->id, $currency_id, $wallet->wallet_type);
             $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
             $trans->amount      = $request->amount;
-            $trans->charge      = $finalCharge;
+            $trans->charge      = $finalCharge*$rate;
             $trans->type        = '-';
             $trans->remark      = 'Internal Payment';
             $trans->details     = trans('Send Money');

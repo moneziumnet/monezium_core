@@ -109,7 +109,9 @@
                                                     $amount = amount($wallet->balance,$wallet->currency->type,2);
                                                 }
                                             @endphp
+                                            @if ($amount > 0)
                                             <option value="{{$wallet->id}}">{{$wallet->currency->code}} --  ({{$amount}}) --{{$wallet_type_list[$wallet->wallet_type]}} </option>
+                                            @endif
                                         @endif
 
                                         @endforeach

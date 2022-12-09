@@ -280,8 +280,10 @@ if(!function_exists('getUserModule')){
       $rate = json_decode($response->getBody());
       $totalbalance = 0;
         foreach ($wallets as $key => $wallet) {
+          if ($wallet && $wallet->currency) {
             $code = $wallet->currency->code;
             $totalbalance = $totalbalance + $wallet->balance/($rate->data->rates->$code ?? $wallet->currency->rate);
+          }
         }
         return $totalbalance;
         //return admin()->can($permission);

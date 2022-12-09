@@ -27,7 +27,7 @@ class ExchangeMoneyController extends Controller
 
     public function exchangeForm()
     {
-        $wallets = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('balance', '>', 0)->get();
+        $wallets = Wallet::where('user_id',auth()->id())->where('user_type',1)->get();
         $client = New Client();
         $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency=USD');
         $rate = json_decode($response->getBody());
