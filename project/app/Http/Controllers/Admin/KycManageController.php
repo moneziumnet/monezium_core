@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Datatables;
+use App\Models\KYC;
+use App\Models\User;
+use App\Models\Charge;
+use App\Models\KycForm;
+use App\Classes\SumsubKYC;
+use App\Models\Transaction;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Models\Generalsetting;
-use App\Models\KYC;
-use App\Models\KycForm;
-use App\Models\User;
-use Datatables;
-use App\Classes\SumsubKYC;
+use App\Http\Controllers\Controller;
 
 class KycManageController extends Controller
 {
@@ -209,13 +211,52 @@ class KycManageController extends Controller
         $user->kyc_status = $id2;
 
         if($id2 == 1) { //Approve
-            $data = Generalsetting::first();
-            $kyc_modules = explode(" , ", $data ? $data->module_section : []);
-            $user_modules = explode(" , ", $user->section);
+            $pre_sections = explode(" , ", $user->section);
+            $sectionlist = ['Incoming', 'External Payments', 'Request Money', 'Transactions', 'Payments', 'Payment between accounts', 'Exchange Money'];
+            foreach($sectionlist as $key=>$section){
+                if (!$user->sectionCheck($section)) {
+                    $manualfee = Charge::where('user_id', $id1 )->where('plan_id', $user->bank_plan_id)->where('name', $section)->first();
+                    if(!$manualfee) {
+                        $manualfee = Charge::where('user_id', 0)->where('plan_id', $user->bank_plan_id)->where('name', $section)->first();
+                    }
+                    if($manualfee && $manualfee->data->fixed_charge > 0) {
+                        $trans = new Transaction();
+                        $trans->trnx = str_rand();
+                        $trans->user_id     = $id1;
+                        $trans->user_type   = 1;
+                        $trans->currency_id = defaultCurr();
+                        $trans->amount      = $manualfee->data->fixed_charge;
+                        $trans_wallet = get_wallet($id1, defaultCurr(), 1);
+                        $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+                        $trans->charge      = 0;
+                        $trans->type        = '-';
+                        $trans->remark      = 'section_enable';
+                        $trans->details     = $section.trans(' Section Create');
+                        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
+                        $trans->save();
 
-            $new_modules = array_merge($kyc_modules, $user_modules, ['Transactions']);
-            $new_modules = array_unique($new_modules);
-            $user->section = implode(" , ", $new_modules);
+                        user_wallet_decrement($id1, defaultCurr(), $manualfee->data->fixed_charge, 1);
+                        user_wallet_increment(0, defaultCurr(), $manualfee->data->fixed_charge, 9);
+                    }
+                    array_push($pre_sections, $section);
+                }
+            }
+            $modules = explode(" , ", $user->modules);
+            foreach($sectionlist as $key=>$section) {
+                if(!$user->moduleCheck($section)) {
+                    array_push($modules, $section);
+                }
+            }
+            $user->modules= implode(" , ", $modules);
+            $user->section= implode(" , ", $pre_sections);
+
+            // $data = Generalsetting::first();
+            // $kyc_modules = explode(" , ", $data ? $data->module_section : []);
+            // $user_modules = explode(" , ", $user->section);
+            // $new_modules = array_merge($kyc_modules, $user_modules);
+            // $new_modules = array_unique($new_modules);
+            // $user->modules= implode(" , ", $new_modules);
+            // $user->section = implode(" , ", $new_modules);
         }
 
         $user->update();

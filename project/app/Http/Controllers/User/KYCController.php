@@ -183,7 +183,7 @@ class KYCController extends Controller
                     if(!$manualfee) {
                         $manualfee = Charge::where('user_id', 0)->where('plan_id', $user->bank_plan_id)->where('name', $section)->first();
                     }
-                    if($manualfee) {
+                    if($manualfee && $manualfee->data->fixed_charge > 0) {
                         $trans = new Transaction();
                         $trans->trnx = str_rand();
                         $trans->user_id     = $request->id;

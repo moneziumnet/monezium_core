@@ -73,27 +73,22 @@
                 </span>
               </a>
               <div class="dropdown-menu">
-                @if(isEnabledUserModule('Incoming'))
+                @if(isEnabledUserModule('Incoming') && !(auth()->user()->kyc_status != 1 && in_array('Incoming',$kyc_modules)))
                 <a class="dropdown-item" href="{{route('user.depositbank.index')}}">
                     {{__('Incoming')}}
                 </a>
                 @endif
-                <!-- @if(isEnabledUserModule('Wire Transfer'))
-                <a class="dropdown-item" href="{{route('user.wire.transfer.index')}}">
-                  {{__('Wire Transfer')}}
-                </a>
-                @endif -->
                 @if(isEnabledUserModule('Cards'))
                 <a class="dropdown-item" href="{{route('user.card.index')}}">
                     {{__('Cards')}}
                 </a>
                 @endif
-                @if(isEnabledUserModule('External Payments'))
+                @if(isEnabledUserModule('External Payments') && !(auth()->user()->kyc_status != 1 && in_array('External Payments',$kyc_modules)))
                 <a class="dropdown-item" href="{{route('user.beneficiaries.index')}}">
                   {{__('External Payments')}}
                 </a>
                 @endif
-                @if(isEnabledUserModule('Payment between accounts'))
+                @if(isEnabledUserModule('Payment between accounts') && !(auth()->user()->kyc_status != 1 && in_array('Payment between accounts',$kyc_modules)))
                 <a class="dropdown-item" href="{{ route('ownaccounttransfer-index') }}">
                     {{__('Payment between accounts')}}
                 </a>
@@ -114,7 +109,7 @@
                   {{__('Exchange')}}
                 </a>
                 @endif
-                @if(isEnabledUserModule('Transactions'))
+                @if(isEnabledUserModule('Transactions') && !(auth()->user()->kyc_status != 1 && in_array('Transactions',$kyc_modules)))
                 <a class="dropdown-item" href="{{route('user.transaction')}}">
                   {{__('Transactions')}}
                 </a>
@@ -123,7 +118,7 @@
             </li>
             @endif
 
-            @if(isEnabledUserModule('Voucher') && !(auth()->user()->kyc_status != 1 && in_array('Voucher',$kyc_modules)))
+            @if(isEnabledUserModule('Voucher'))
             <li class="nav-item dropdown {{ request()->routeIs('user.vouchers', 'user.create.voucher', 'user.reedem.voucher','user.reedem.history') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -211,7 +206,7 @@
             </li>
             @endif
 
-            @if(isEnabledUserModule('Invoice') && !(auth()->user()->kyc_status != 1 && in_array('Invoice',$kyc_modules)))
+            @if(isEnabledUserModule('Invoice'))
             <li class="nav-item dropdown {{ request()->routeIs('user.invoice.create', 'user.invoice.index', 'user.contract.index', 'user.invoice.invoic_setting', 'user.invoice.incoming.index') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -237,7 +232,7 @@
             </li>
             @endif
 
-            @if(isEnabledUserModule('Escrow') && !(auth()->user()->kyc_status != 1 && in_array('Escrow',$kyc_modules)))
+            @if(isEnabledUserModule('Escrow'))
             <li class="nav-item dropdown {{ request()->routeIs('user.escrow.create', 'user.escrow.index', 'user.escrow.pending') ? 'active' : '' }}">
               <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -259,7 +254,7 @@
             </li>
             @endif
 
-            @if(isEnabledUserModule('ICO') && !(auth()->user()->kyc_status != 1 && in_array('ICO',$kyc_modules)))
+            @if(isEnabledUserModule('ICO'))
             <li class="nav-item dropdown {{ request()->routeIs('user.ico') ? 'active' : '' }}">
               <a class="nav-link" href="{{route('user.ico')}}">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
