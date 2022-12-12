@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('kyc_requests', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
             $table->integer('user_id');
             $table->mediumText('kyc_info')->nullable();
             $table->timestamp('request_date')->nullable();
