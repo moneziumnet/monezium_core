@@ -127,6 +127,10 @@ Route::prefix('user')->group(function() {
       Route::post('/security', [UserController::class,'securityform'])->name('user.securityform');
       Route::get('/module', [UserController::class,'usermodule'])->name('user.module.view');
       Route::post('/module/update', [UserController::class,'moduleupdate'])->name('user.module.update');
+      Route::get('/aml_kyc', [UserController::class,'aml_kyc'])->name('user.aml.kyc');
+      Route::get('/aml_kyc/history', [UserController::class,'aml_kyc_history'])->name('user.aml.kyc.history');
+      Route::post('/aml_kyc/update', [UserController::class,'aml_kyc_store'])->name('user.aml.kyc.store');
+
 
 
       Route::get('/two-factor', [UserController::class,'showTwoFactorForm'])->name('user.show2faForm');

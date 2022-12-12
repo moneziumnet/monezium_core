@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('title');
             $table->integer('user_id');
             $table->mediumText('kyc_info')->nullable();
+            $table->mediumText('submit_info')->nullable();
             $table->timestamp('request_date')->nullable();
             $table->timestamp('submitted_date')->nullable();
             $table->tinyInteger('status')->default(0);

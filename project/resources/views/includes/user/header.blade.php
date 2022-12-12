@@ -50,6 +50,9 @@
           <a class="dropdown-item" href="{{route('user.securityform')}}">
             {{__('Security')}}
           </a>
+          <a class="dropdown-item" href="{{route('user.aml.kyc')}}">
+            {{__('AML/KYC')}}
+          </a>
           {{-- <a class="dropdown-item" href="{{route('user.show2faForm')}}">
             {{__('2FA Security')}}
           </a> --}}

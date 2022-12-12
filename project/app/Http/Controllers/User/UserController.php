@@ -17,6 +17,7 @@ use App\Models\SubInsBank;
 use App\Models\BankAccount;
 use App\Models\BankGateway;
 use App\Models\Transaction;
+use App\Models\KycRequest;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
@@ -647,6 +648,67 @@ class UserController extends Controller
             return redirect()->back()->with('unsuccess','User Modules not Updated.');
         }
 
+    }
+
+    public function aml_kyc() {
+        $KycForms = KycRequest::where('user_id',auth()->id())->whereIn('status', [0, 2])->first();
+        $informations = [];
+        if ($KycForms) {
+            $informations = json_decode($KycForms->kyc_info,true);
+        }
+
+        return view('user.aml.index',compact('KycForms', 'informations'));
+    }
+
+    public function aml_kyc_store(Request $request) {
+        $KycForms = KycRequest::where('id',$request->id)->first();
+        $informations = json_decode($KycForms->kyc_info,true);
+
+
+        $requireInformations = [];
+        foreach($informations as $key=>$value){
+            if($value['type'] == 'Input'){
+                $requireInformations['text'][$value['label']] = strtolower(str_replace(' ', '_', $value['label']));
+            }
+            elseif($value['type'] == 'Textarea'){
+                $requireInformations['textarea'][$value['label']] = strtolower(str_replace(' ', '_', $value['label']));
+            }else{
+                $requireInformations['file'][$value['label']] = strtolower(str_replace(' ', '_', $value['label']));
+            }
+        }
+
+
+        $details = [];
+        foreach($requireInformations as $key=>$infos){
+            foreach($infos as $index=>$info){
+
+                if($request->has($info)){
+                    if($request->hasFile($info)){
+                        if ($file = $request->file($info))
+                        {
+                           $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
+                           $file->move('assets/images',$name);
+                           $details[$info] = [$name,$key];
+                        }
+                    }else{
+                        $details[$info] = [$request->$info,$key];
+                    }
+                }
+            }
+        }
+        // $details['type'] = $request->type;
+        if(!empty($details)){
+            $KycForms->submit_info = json_encode($details,true);
+            $KycForms->submitted_date = date('Y-m-d H:i:s');
+            $KycForms->status = 3;
+        }
+        $KycForms->save();
+        return redirect()->route('user.aml.kyc.history')->with('message','KYC submitted successfully');
+    }
+
+    public function aml_kyc_history(){
+        $data['history'] = KycRequest::where('user_id', auth()->id())->latest()->paginate(15);
+        return view('user.aml.history', $data);
     }
 
     public function installmentCheck(){
