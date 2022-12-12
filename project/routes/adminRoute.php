@@ -652,8 +652,12 @@ Route::prefix('admin')->group(function () {
     Route::get('/kyc-info/{user}', [KycManageController::class, 'kycInfo'])->name('admin.kyc.info');
     Route::get('/kyc-info/user/{id}', [KycManageController::class, 'kycDetails'])->name('admin.kyc.details');
     Route::get('/users/kyc/{id1}/{id2}', [KycManageController::class, 'kyc'])->name('admin.user.kyc');
+    Route::get('/users/more/kyc/{id1}/{id2}', [KycManageController::class, 'kyc_more'])->name('admin.more.user.kyc');
     Route::get('/user/{id}/kyc_info', [UserController::class, 'profilekycinfo'])->name('admin.user.kycinfo');
     Route::get('/user/kycinfo/datatables/{id}', [UserController::class, 'kycdatatables'])->name('admin.user.kyc.datatables');
+    Route::get('/user/kycform/more/{id}', [UserController::class, 'KycForm'])->name('admin.kyc.more.form.create');
+    Route::post('/user/kycform/more/store', [UserController::class, 'StoreKycForm'])->name('admin.kyc.more.form.store');
+    Route::get('/user/kycinfo/more/datatables/{id}', [UserController::class, 'additionkycdatatables'])->name('admin.user.more.kyc.datatables');
 
   });
 

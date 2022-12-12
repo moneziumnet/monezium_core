@@ -37,6 +37,7 @@ use App\Models\BankPoolAccount;
 use App\Models\Beneficiary;
 use App\Models\PlanDetail;
 use App\Models\VirtualCard;
+use App\Models\KycRequest;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use Auth;
@@ -1202,6 +1203,7 @@ class UserController extends Controller
 
         public function profilekycinfo($id) {
             $data['data'] = User::findOrFail($id);
+            $data['url'] = route('admin.kyc.details',$id);
             return view('admin.user.profilekycinfo', $data);
         }
 
@@ -1255,6 +1257,61 @@ class UserController extends Controller
                                 })
                                 ->rawColumns(['action','status','kyc'])
                                 ->toJson();
+        }
+
+        public function additionkycdatatables($id)
+        {
+            $datas = KycRequest::where('user_id', $id)->get();
+
+            return Datatables::of($datas)
+                               ->addColumn('action', function(KycRequest $data) {
+                                   if($data->status == 1){
+                                    $status  = __('Approved');
+                                   }elseif($data->status == 2){
+                                    $status  = __('Rejected');
+                                   }else{
+                                    $status =  __('Pending');
+                                   }
+
+                                   if($data->status == 1){
+                                    $status_sign  = 'success';
+                                   }elseif($data->status == 2){
+                                    $status_sign  = 'danger';
+                                   }else{
+                                    $status_sign = 'warning';
+                                   }
+
+                                    return '<div class="btn-group mb-1">
+                                    <button type="button" class="btn btn-'.$status_sign.' btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        '.$status .'
+                                    </button>
+                                    <div class="dropdown-menu" x-placement="bottom-start">
+                                        <a href="javascript:;" data-toggle="modal" data-target="#statusModal1" class="dropdown-item" data-href="'. route('admin.more.user.kyc',['id1' => $data->id, 'id2' => 1]).'">'.__("Approve").'</a>
+                                        <a href="javascript:;" data-toggle="modal" data-target="#statusModal1" class="dropdown-item" data-href="'. route('admin.more.user.kyc',['id1' => $data->id, 'id2' => 2 ]).'">'.__("Reject").'</a>
+                                    </div>
+                                    </div>';
+
+                                })
+                                ->rawColumns(['action'])
+                                ->toJson();
+        }
+
+        public function KycForm($id)
+        {
+            $user=User::findOrFail($id);
+            return view('admin.user.kyc_more_forms', compact('user'));
+        }
+
+        public function StoreKycForm(Request $request)
+        {
+            $data = new KycRequest();
+            $input = $request->all();
+            $input['kyc_info'] = json_encode(array_values($request->form_builder));
+            $input['request_date'] = date('Y-m-d H:i:s');
+            $data->fill($input)->save();
+    
+            $msg = __('New Data Added Successfully.').' '.'<a href="'.route("admin.user.kycinfo", $request->user_id).'">'.__('View Lists.').'</a>';
+            return response()->json($msg);
         }
 
         public function gateway(Request $request) {

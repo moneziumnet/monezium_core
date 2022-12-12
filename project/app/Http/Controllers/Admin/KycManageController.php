@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
 use App\Http\Controllers\Controller;
+use App\Models\KycRequest;
 
 class KycManageController extends Controller
 {
@@ -260,6 +261,15 @@ class KycManageController extends Controller
         }
 
         $user->update();
+        return response()->json('Data Updated Successfully.');
+    }
+
+    public function kyc_more($id1,$id2)
+    {
+        $kycrequest = KycRequest::where('user_id',$id1)->first();
+        $kycrequest->status = $id2;
+
+        $kycrequest->update();
         return response()->json('Data Updated Successfully.');
     }
 
