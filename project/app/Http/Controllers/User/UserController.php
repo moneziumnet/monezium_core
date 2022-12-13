@@ -54,6 +54,20 @@ class UserController extends Controller
         $data['currencies'] = Currency::where('type', 1)->where('status', 1)->get();
         $data['crypto_currencies'] = Currency::where('type', 2)->where('status', 1)->get();
         $data['subbank'] = SubInsBank::wherestatus(1)->get();
+        $data['kyc_request_id'] = 0;
+        $data['kyc_request_status'] = 4;
+        $kycrequest = KycRequest::where('user_id', auth()->id())->whereIn('status', [0, 2])->first();
+        if($kycrequest){
+            $data['kyc_request_status'] = $kycrequest->status;
+            $data['kyc_request_id'] = $kycrequest->id;
+        }
+        else {
+            $kycrequest = KycRequest::where('user_id', auth()->id())->whereIn('status', [1, 3])->first();
+            if ($kycrequest) {
+                $data['kyc_request_status'] = $kycrequest->status;
+                $data['kyc_request_id'] = $kycrequest->id;
+            }
+        }
 
         foreach ($data['transactions'] as $key => $transaction) {
             $transaction->currency = Currency::whereId($transaction->currency_id)->first();

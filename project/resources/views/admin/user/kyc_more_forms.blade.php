@@ -105,8 +105,8 @@ $("#lang-btn").on('click', function(){
                 <div class="col-md-4">
                     <select class="form-control" name="form_builder[${id}][required]" required>
                         <option value="">{{ __('Select Required Type') }}</option>
-                        <option value="true">@lang('Yes')</option>
-                        <option value="false">@lang('No')</option>
+                        <option value="1">@lang('Yes')</option>
+                        <option value="0">@lang('No')</option>
                     </select>
                 </div>
 
@@ -144,8 +144,8 @@ $(document).on('click','.lang-remove', function(){
                 <div class="col-md-4">
                     <select class="form-control" name="form_builder[1][required]" required>
                         <option value="">{{ __('Select Required Type') }}</option>
-                        <option value="true">@lang('Yes')</option>
-                        <option value="false">@lang('No')</option>
+                        <option value="1">@lang('Yes')</option>
+                        <option value="0">@lang('No')</option>
                     </select>
                 </div>
 

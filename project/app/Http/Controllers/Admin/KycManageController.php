@@ -266,7 +266,7 @@ class KycManageController extends Controller
 
     public function kyc_more($id1,$id2)
     {
-        $kycrequest = KycRequest::where('user_id',$id1)->first();
+        $kycrequest = KycRequest::where('id',$id1)->first();
         $kycrequest->status = $id2;
 
         $kycrequest->update();

@@ -1204,6 +1204,23 @@ class UserController extends Controller
         public function profilekycinfo($id) {
             $data['data'] = User::findOrFail($id);
             $data['url'] = route('admin.kyc.details',$id);
+            if($data['data']->kyc_status == 1){
+                $status  = __('Approved');
+               }elseif($data['data']->kyc_status == 2){
+                $status  = __('Rejected');
+               }else{
+                $status =  __('Pending');
+               }
+
+               if($data['data']->kyc_status == 1){
+                $status_sign  = 'success';
+               }elseif($data['data']->kyc_status == 2){
+                $status_sign  = 'danger';
+               }else{
+                $status_sign = 'warning';
+               }
+            $data['status'] = $status;
+            $data['status_sign'] = $status_sign;
             return view('admin.user.profilekycinfo', $data);
         }
 

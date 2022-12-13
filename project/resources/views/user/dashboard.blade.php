@@ -14,7 +14,45 @@
 <div class="page-body">
   <div class="container-xl">
 
-    @if (auth()->user()->kyc_status != 1)
+    @if (auth()->user()->kyc_status == 1)
+      @if ($kyc_request_id != 0)
+        @if ($kyc_request_status != 3)
+
+          @if ($kyc_request_status == 2)
+            <div class="row mb-3">
+              <div class="col-md-12">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="form-group w-100 d-flex flex-wrap align-items-center justify-content-evenly justify-content-sm-between">
+                        <h3 class="my-1 text-center text-sm-start">{{ __('You are rejected . Please submit for additional kyc verification again.') }}</h3>
+                        <div class="my-1">
+                            <a href="{{ route('user.aml.kyc') }}" class="btn btn-warning">@lang('Submit')</a>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          @elseif ($kyc_request_status == 0)
+            <div class="row mb-3">
+              <div class="col-md-12">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="form-group w-100 d-flex flex-wrap align-items-center justify-content-evenly justify-content-sm-between">
+                        <h3 class="my-1 text-center text-sm-start">{{ __('You have a information to submit for additional kyc verification.') }}</h3>
+                        <div class="my-1">
+                            <a href="{{ route('user.aml.kyc') }}" class="btn btn-warning">@lang('Submit')</a>
+                        </div>
+                      </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          @endif
+        @endif
+      @endif
+
+    @else
     <div class="row mb-3">
       <div class="col-md-12">
         <div class="card">

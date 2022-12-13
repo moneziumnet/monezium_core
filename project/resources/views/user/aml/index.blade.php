@@ -13,6 +13,9 @@
         <h2 class="page-title">
           {{__('KYC Form')}}
         </h2>
+        <div class="page-pretitle">
+          {{__('We need to know more about you.')}}
+        </div>
       </div>
     </div>
   </div>
