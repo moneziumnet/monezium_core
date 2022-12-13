@@ -21,11 +21,12 @@ use DateTime;
 
 class UserClearJunctionController extends Controller
 {
-    private $url = 'https://sandbox.clearjunction.com/v7/'; // Sandbox Host Url
-    private $wallet_uuid = '8f297da3-8838-437f-b4e1-ce9f7714c61b'; // Sandbwallet_uuid
-    private $API_Key = '8f299ac0-1543-41f6-b094-70a5fd837bed';
-    private $apiPassword = 'eydy8qv9ui0o';
-    private $key = '{"API_Key":"8f299ac0-1543-41f6-b094-70a5fd837bed","api_password":"eydy8qv9ui0o","wallet_uuid":"8f297da3-8838-437f-b4e1-ce9f7714c61b"}';
+    // private $url = 'https://sandbox.clearjunction.com/v7/'; // Sandbox Host Url
+    private $url = 'https://client.clearjunction.com/v7/'; // Host Url
+    private $wallet_uuid = '8f2980e8-d67b-4bbf-9622-b7310444fac9'; // Sandbwallet_uuid
+    private $API_Key = '93030547-8be2-4895-afc7-fa9eda34937e';
+    private $apiPassword = 'awklgvvhhb4g';
+    private $key = '{"API_Key":"93030547-8be2-4895-afc7-fa9eda34937e","api_password":"awklgvvhhb4g","wallet_uuid":"8f2980e8-d67b-4bbf-9622-b7310444fac9"}';
 
 	//echo $hashed = hash("sha512", $password);
     public function getToken($request, $subbank) {
@@ -60,7 +61,7 @@ class UserClearJunctionController extends Controller
     public function AllocateIbanCreate(Request $request) {
       $currency = Currency::whereId($request->currency)->first();
       if ($currency->code != 'EUR'){
-        return redirect()->back()->with(array('warning' => 'Sorry, Currently Clear Junction API only supports for EUR because this API is not product version.'));
+        return redirect()->back()->with(array('warning' => 'Sorry, Currently Clear Junction API only supports for EUR.'));
       }
 
         $client = New Client();

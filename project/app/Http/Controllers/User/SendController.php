@@ -216,7 +216,7 @@ class SendController extends Controller
         }
 
         $finalCharge = $transaction_global_cost+$transaction_custom_cost;
-        $finalamount = $request->amount - $finalCharge*$rate;
+        $finalamount = $request->amount + $finalCharge*$rate;
 
         if ($wallet->currency->type == 2) {
             $towallet = get_wallet(0, $currency_id, 9);
@@ -244,24 +244,24 @@ class SendController extends Controller
 
         if($receiver = User::where('email',$request->email)->first()){
 
-            user_wallet_decrement($user->id, $currency_id, $request->amount, $wallet->wallet_type);
-            user_wallet_increment($receiver->id, $currency_id, $finalamount, $wallet->wallet_type);
+            user_wallet_decrement($user->id, $currency_id, $finalamount, $wallet->wallet_type);
+            user_wallet_increment($receiver->id, $currency_id, $request->amount, $wallet->wallet_type);
 
             if ($wallet->currency->type == 2) {
                 $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
                 if($wallet->currency->code == 'ETH') {
                     RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                    $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex($finalamount*pow(10,18)).'"}';
+                    $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex($request->amount*pow(10,18)).'"}';
                     RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
                 }
                 else if($wallet->currency->code == 'BTC') {
-                    RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, $finalamount],$wallet->keyword);
+                    RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, $request->amount],$wallet->keyword);
                 }
                 else {
                     RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
                     $geth = new EthereumRpcService();
                     $tokenContract = $wallet->currency->address;
-                    $result = $geth->transferToken($tokenContract, $wallet->wallet_no, $towallet->wallet_no, (float)$finalamount);
+                    $result = $geth->transferToken($tokenContract, $wallet->wallet_no, $towallet->wallet_no, (float)$request->amount);
                     if (isset($result->error)){
                         return redirect()->back()->with(array('error' => 'Ethereum client error: '.$result->error->message));
                     }
@@ -306,7 +306,7 @@ class SendController extends Controller
             $trans->user_id     = $receiver->id;
             $trans->user_type   = 1;
             $trans->currency_id = $currency_id;
-            $trans->amount      = $finalamount;
+            $trans->amount      = $request->amount;
             $trans_wallet = get_wallet($receiver->id, $currency_id, $wallet->wallet_type);
             $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
             $trans->charge      = 0;

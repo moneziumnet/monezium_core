@@ -178,6 +178,10 @@ class OtherBankController extends Controller
             $data->status = 0;
             $data->save();
 
+
+            user_wallet_decrement($user->id, $data->currency_id, $data->amount);
+            user_wallet_increment(0, $data->currency_id, $data->cost, 9);
+
             // $trans = new Transaction();
             // $trans->trnx = $txnid;
             // $trans->user_id     = $user->id;
