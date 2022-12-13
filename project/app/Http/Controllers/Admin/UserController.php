@@ -1309,7 +1309,18 @@ class UserController extends Controller
                                     </div>';
 
                                 })
-                                ->rawColumns(['action'])
+                                ->addColumn('detail', function(KycRequest $data) {
+                                    $url = route('admin.more.user.kyc.details',$data->id);
+                                    return '<div class="btn-group mb-1">
+                                        <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        '.'Actions' .'
+                                        </button>
+                                        <div class="dropdown-menu" x-placement="bottom-start">
+                                        <a href="' .$url. '"  class="dropdown-item">'.__("Details").'</a>
+                                        </div>
+                                    </div>';
+                                })
+                                ->rawColumns(['action', 'detail'])
                                 ->toJson();
         }
 

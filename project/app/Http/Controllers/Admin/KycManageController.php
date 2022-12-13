@@ -273,4 +273,12 @@ class KycManageController extends Controller
         return response()->json('Data Updated Successfully.');
     }
 
+    public function moreDetails($id)
+    {
+        $data['kycrequest'] = KycRequest::where('id', $id)->first();
+        $data['user'] =  User::findOrFail($data['kycrequest']->user_id);
+        $data['kycInformations'] = json_decode($data['kycrequest']->submit_info,true);
+        return view('admin.aml.details',$data);
+    }
+
 }

@@ -30,7 +30,7 @@
                         <div class="col-md-4 ml-3">
                             <div class="row">
                                 <div class="h5 mt-2">{{  __('KYC Status')  }}</div>
-                                <div class="btn-group ml-3">
+                                <div class="btn-group ml-5">
                                     <button type="button" class="btn btn-sm btn-rounded dropdown-toggle btn-{{$status_sign}}" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
                                     {{_($status)}}
@@ -72,6 +72,7 @@
                               <th>{{ __("Requirement") }}</th>
                               <th>{{ __("Requested Date") }}</th>
                               <th>{{__("Submitted Date")}}</th>
+                              <th>{{__("Details")}}</th>
                               <th>{{ __("Status") }}</th>
                           </tr>
                           </thead>
@@ -130,6 +131,7 @@
                           { data: 'title', name: 'title' },
                           { data: 'request_date', name: 'request_date' },
                           { data: 'submitted_date',name: 'submitted_date'},
+                          { data: 'detail', searchable: false, orderable: false },
                           { data: 'action', searchable: false, orderable: false },
                         ],
                   language : {
