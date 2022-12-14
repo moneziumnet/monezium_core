@@ -89,7 +89,8 @@ class SystemAccountController extends Controller
     public function setting($keyword)
     {
         $data['api'] = CryptoApi::where('keyword', $keyword)->first();
-        if($data['api']->api_key && $data['api']->api_secret)
+        $data['balance'] = "";
+        if($data['api'] && $data['api']->api_key && $data['api']->api_secret)
         {
             $beta = false;
             $url = $beta ? 'https://api.beta.kraken.com' : 'https://api.kraken.com';
