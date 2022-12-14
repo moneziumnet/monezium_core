@@ -237,12 +237,12 @@
 
     function withdraw(asset) {
         if (asset == 'XETH') {
-            $('#withdraw_key').val('{{$api->withdraw_eth}}')
-            $('#available_amount').val('{{$balance->XETH}}')
+            $('#withdraw_key').val('{{$api? $api->withdraw_eth: ""}}')
+            $('#available_amount').val('{{$balance?$balance->XETH :""}}')
         }
         else {
-            $('#withdraw_key').val('{{$api->withdraw_btc}}')
-            $('#available_amount').val('{{$balance->XXBT}}')
+            $('#withdraw_key').val('{{$api?$api->withdraw_btc:""}}')
+            $('#available_amount').val('{{$balance?$balance->XXBT : ""}}')
         }
         $('#asset').val(asset)
 
