@@ -29,7 +29,7 @@ class DepositBankController extends Controller
             ->setRowAttr([
                 'style' => function(DepositBank $data) {
                     $reference = $data->deposit_number;
-                    $webhook_request = WebhookRequest::where('reference', $reference)->first();
+                    $webhook_request = WebhookRequest::where('reference', 'LIKE', '%'.$reference)->first();
                     if($data->status == 'pending' && (!$webhook_request || $webhook_request->status == "processing")) {
                         return "background-color: #ffcaca;";
                     } else {
