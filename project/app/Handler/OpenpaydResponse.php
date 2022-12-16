@@ -12,10 +12,7 @@ class OpenpaydResponse implements RespondsToWebhook
 {
     public function respondToValidWebhook(Request $request, WebhookConfig $config): Response
     {
-        file_put_contents('webhook.log', $request->getContent(), FILE_APPEND | LOCK_EX);
-        file_put_contents('webhook.log', $request->header($config->signatureHeaderName), FILE_APPEND | LOCK_EX);
-        
-        $obj = str2obj($request->getContent());
+        $obj = json_decode($request->getContent());
         $currency = Currency::where('code', $obj->amount->currency)->first();
 
         $webrequest = WebhookRequest::where('reference', $obj->transactionReference)
