@@ -75,37 +75,37 @@ class UserClearJunctionController extends Controller
             return redirect()->back()->with(array('warning' => 'This bank account already exists.'));
 
         }
-        if(!($user->phone)){
-            return redirect()->back()->with(array('warning' => 'Please input phone number in User Profile.'));
-        }
-        if(!($user->dob)){
-            return redirect()->back()->with(array('warning' => 'Please input birthday in User Profile.'));
-        }
-        if(!($country)){
-            return redirect()->back()->with(array('warning' => 'Please select country in User Profile.'));
-        }
-        if(!($user->zip)){
-            return redirect()->back()->with(array('warning' => 'Please input zipcode in User Profile.'));
-        }
-        if(!($user->city)){
-            return redirect()->back()->with(array('warning' => 'Please input City name in User Profile.'));
-        }
-        if(!($user->address)){
-            return redirect()->back()->with(array('warning' => 'Please input Address in User Profile.'));
-        }
-        if(!($user->your_id)){
-            return redirect()->back()->with(array('warning' => 'Please input ID number in User Profile.'));
-        }
-        if(!($user->issued_authority)){
-            return redirect()->back()->with(array('warning' => 'Please input Provider Authority Name in User Profile.'));
-        }
-        if(!($user->date_of_issue)){
-            return redirect()->back()->with(array('warning' => 'Please input Issued Date in User Profile.'));
-        }
-        if(!($user->date_of_expire)){
-            return redirect()->back()->with(array('warning' => 'Please input Expire Date in User Profile.'));
-        }
         if(!isset($user->company_name)) {
+          if(!($user->phone)){
+              return redirect()->back()->with(array('warning' => 'Please input phone number in User Profile.'));
+          }
+          if(!($user->dob)){
+              return redirect()->back()->with(array('warning' => 'Please input birthday in User Profile.'));
+          }
+          if(!($country)){
+              return redirect()->back()->with(array('warning' => 'Please select country in User Profile.'));
+          }
+          if(!($user->zip)){
+              return redirect()->back()->with(array('warning' => 'Please input zipcode in User Profile.'));
+          }
+          if(!($user->city)){
+              return redirect()->back()->with(array('warning' => 'Please input City name in User Profile.'));
+          }
+          if(!($user->address)){
+              return redirect()->back()->with(array('warning' => 'Please input Address in User Profile.'));
+          }
+          if(!($user->your_id)){
+              return redirect()->back()->with(array('warning' => 'Please input ID number in User Profile.'));
+          }
+          if(!($user->issued_authority)){
+              return redirect()->back()->with(array('warning' => 'Please input Provider Authority Name in User Profile.'));
+          }
+          if(!($user->date_of_issue)){
+              return redirect()->back()->with(array('warning' => 'Please input Issued Date in User Profile.'));
+          }
+          if(!($user->date_of_expire)){
+              return redirect()->back()->with(array('warning' => 'Please input Expire Date in User Profile.'));
+          }
         $body = '{
             "clientOrder": "'.$banklastindex.'",
               "walletUuid": "'.$bankgateway->information->wallet_uuid.'",
