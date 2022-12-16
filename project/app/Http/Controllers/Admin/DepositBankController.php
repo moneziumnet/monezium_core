@@ -70,7 +70,7 @@ class DepositBankController extends Controller
                 } else {
                 @$bankaccount = BankPoolAccount::where('bank_id', $detail->id)->where('currency_id', $data->currency_id)->first();
                 }
-                $send_info = WebhookRequest::where('reference', $data->deposit_number)->with('currency')->first();
+                $send_info = WebhookRequest::where('reference', 'LIKE', '%'.$data->deposit_number)->with('currency')->first();
                 $detail->address = str_replace(' ', '-', $detail->address);
                 $detail->name = str_replace(' ', '-', $detail->name);
                 $doc_url = $data->document ? $data->document : null;
@@ -118,7 +118,7 @@ class DepositBankController extends Controller
           return redirect()->back()->with("error", $msg);
         }
 
-        $webhook_request = WebhookRequest::where('reference', $data->deposit_number)->first();
+        $webhook_request = WebhookRequest::where('reference', 'LIKE', '%'.$data->deposit_number)->first();
         if($webhook_request) {
             $data->amount = $webhook_request->amount;
         }
