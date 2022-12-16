@@ -3,6 +3,8 @@ namespace App\Handler;
 
 use App\Models\Currency;
 use App\Models\WebhookRequest;
+use App\Models\DepositBank;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\WebhookClient\WebhookConfig;
 use Spatie\WebhookClient\WebhookResponse\RespondsToWebhook;
@@ -34,6 +36,23 @@ class OpenpaydResponse implements RespondsToWebhook
         $webrequest->gateway_type = "openpayd";
 
         $webrequest->save();
+
+        $deposit = DepositBank::whereRaw("INSTR('".$obj->transactionReference."', deposit_number) > 0")->first();
+        if(!$deposit) {
+            $new_deposit = new DepositBank();
+            $user = User::where('holder_id', $obj->accountHolderId)->first();
+
+            if(!$user)
+                return response()->json("failure");
+
+            $new_deposit['deposit_number'] = $obj->transactionReference;
+            $new_deposit['user_id'] = $user->id
+            $new_deposit['currency_id'] = $webrequest->currency_id;
+            $new_deposit['amount'] = $obj->amount->value;
+            $new_deposit['status'] = "pending";
+            $new_deposit['sub_bank_id'] = null;
+            $new_deposit->save();
+        }
 
         return response()->json("success");
     }

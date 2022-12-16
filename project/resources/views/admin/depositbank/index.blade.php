@@ -71,10 +71,10 @@
         <ul class="list-group details-list mt-2">
             <li class="list-group-item">@lang('Receiver Name')<span id="user_name"></span></li>
             <li class="list-group-item">@lang('Receiver Address')<span id="user_addr"></span></li>
-            <li class="list-group-item">@lang('Bank Name')<span id="bank_name"></span></li>
-            <li class="list-group-item">@lang('Bank Address')<span id="bank_address"></span></li>
-            <li class="list-group-item">@lang('Bank IBAN')<span id="bank_iban"></span></li>
-            <li class="list-group-item">@lang('Bank SWIFT')<span id="bank_swift"></span></li>
+            <li class="list-group-item bank-info">@lang('Bank Name')<span id="bank_name"></span></li>
+            <li class="list-group-item bank-info">@lang('Bank Address')<span id="bank_address"></span></li>
+            <li class="list-group-item bank-info">@lang('Bank IBAN')<span id="bank_iban"></span></li>
+            <li class="list-group-item bank-info">@lang('Bank SWIFT')<span id="bank_swift"></span></li>
             <li class="list-group-item send-info">@lang('Transaction No')<span id="transaction_no"></span></li>
             <li class="list-group-item send-info">@lang('Sender Name')<span id="sender_name"></span></li>
             <li class="list-group-item send-info">@lang('Sender Address')<span id="sender_address"></span></li>
@@ -139,6 +139,7 @@
         function getDetails(e) {
             var res_data = JSON.parse(e.target.getAttribute('data-detail'));
             var bankaccount = JSON.parse(e.target.getAttribute('data-bank'));
+            var user_info = JSON.parse(e.target.getAttribute('data-userinfo'));
             var send_info = JSON.parse(e.target.getAttribute('data-sendinfo'));
             var document_url = e.target.getAttribute('data-docu');
             var deposit_number = e.target.getAttribute('data-number');
@@ -146,17 +147,26 @@
             var deposit_status = e.target.getAttribute('data-status');
             var complete_url = e.target.getAttribute('data-complete-url');
             var reject_url = e.target.getAttribute('data-reject-url');
-            $('#bank_name').text(res_data.name.replace(/-/gi, ' '));
-            $('#bank_address').text(res_data.address.replace(/-/gi, ' '));
-            $('#bank_iban').text(bankaccount.iban);
-            $('#bank_swift').text(bankaccount.swift);
             
             if(e.target.getAttribute('data-hasgateway') == "true") {
                 $('#user_name').text(bankaccount.user.name);
                 $('#user_addr').text(bankaccount.user.address);
-            } else {
+            } else if(res_data) {
                 $('#user_name').text(res_data.sub_institution.name);
                 $('#user_addr').text(res_data.sub_institution.address);
+            } else if(user_info) {
+                $('#user_name').text(user_info.name);
+                $('#user_addr').text(user_info.address);
+            }
+
+            if(bankaccount) {
+                $('.bank-info').removeClass('d-none');
+                $('#bank_name').text(res_data.name.replace(/-/gi, ' '));
+                $('#bank_address').text(res_data.address.replace(/-/gi, ' '));
+                $('#bank_iban').text(bankaccount.iban);
+                $('#bank_swift').text(bankaccount.swift);
+            } else {
+                $('.bank-info').addClass('d-none');
             }
 
             if(send_info) {

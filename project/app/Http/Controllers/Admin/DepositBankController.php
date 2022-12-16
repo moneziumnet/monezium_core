@@ -65,12 +65,28 @@ class DepositBankController extends Controller
             ->addColumn('action', function(DepositBank $data) {
 
                 @$detail = SubInsBank::where('id', $data->sub_bank_id)->with('subInstitution')->first();
-                if($detail->hasGateway()){
-                @$bankaccount = BankAccount::whereUserId($data->user_id)->where('subbank_id', $detail->id)->where('currency_id', $data->currency_id)->with('user')->first();
-                } else {
-                @$bankaccount = BankPoolAccount::where('bank_id', $detail->id)->where('currency_id', $data->currency_id)->first();
-                }
                 $send_info = WebhookRequest::where('reference', 'LIKE', '%'.$data->deposit_number)->with('currency')->first();
+                
+
+                if(!$detail) {
+                    $user_info = User::find($data->user_id);
+                    return '<div class="btn-group mb-1">
+                            <a href="javascript:;"
+                                data-sendinfo = \''.json_encode($send_info).'\'
+                                data-number="'.$data->deposit_number.'"
+                                data-status="'.$data->status.'"
+                                data-userinfo=\'{"name":"'.($user_info->name ?? '').'","address":"'.($user_info->address ?? '').'"}\'
+                                data-complete-url="'.route('admin.deposits.bank.status',['id1' => $data->id, 'id2' => 'complete']).'"
+                                data-reject-url="'.route('admin.deposits.bank.status',['id1' => $data->id, 'id2' => 'reject']).'"
+                                onclick=getDetails(event)
+                                class="btn btn-sm btn-primary detailsBtn">' . __("Details") . '</a>
+                        </div>';                    
+                }
+                if($detail->hasGateway()){
+                    @$bankaccount = BankAccount::whereUserId($data->user_id)->where('subbank_id', $detail->id)->where('currency_id', $data->currency_id)->with('user')->first();
+                } else {
+                    @$bankaccount = BankPoolAccount::where('bank_id', $detail->id)->where('currency_id', $data->currency_id)->first();
+                }
                 $detail->address = str_replace(' ', '-', $detail->address);
                 $detail->name = str_replace(' ', '-', $detail->name);
                 $doc_url = $data->document ? $data->document : null;
