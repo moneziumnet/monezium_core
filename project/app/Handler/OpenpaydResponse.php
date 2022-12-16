@@ -13,11 +13,13 @@ class OpenpaydResponse implements RespondsToWebhook
     public function respondToValidWebhook(Request $request, WebhookConfig $config): Response
     {
         $obj = json_decode($request->getContent());
-        $currency = Currency::where('code', $obj->amount->currency)->first();
+        if(!$obj->transactionReference)
+            return response()->json("failure");
 
+        $currency = Currency::where('code', $obj->amount->currency)->first();
         $webrequest = WebhookRequest::where('reference', $obj->transactionReference)
             ->where('gateway_type', 'openpayd')
-            ->first();        
+            ->first();
         if(!$webrequest)
             $webrequest = new WebhookRequest();
         
@@ -28,7 +30,7 @@ class OpenpaydResponse implements RespondsToWebhook
         $webrequest->currency_id = $currency ? $currency->id : 0;
         $webrequest->status = strtolower($obj->status);
         $webrequest->reference = $obj->transactionReference;
-        $webrequest->failure_reason = $obj->failureReason;
+        $webrequest->failure_reason = $obj->failureReason??"";
         $webrequest->gateway_type = "openpayd";
 
         $webrequest->save();
