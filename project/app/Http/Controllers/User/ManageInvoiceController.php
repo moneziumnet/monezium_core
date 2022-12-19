@@ -22,6 +22,7 @@ use App\Models\InvoiceSetting;
 use App\Http\Controllers\Controller;
 use App\Models\BankAccount;
 use GuzzleHttp\Client;
+use App\Classes\GeniusMailer;
 use Illuminate\Support\Facades\Auth;
 
 class ManageInvoiceController extends Controller
@@ -412,23 +413,42 @@ class ManageInvoiceController extends Controller
         $amount = $invoice->final_amount;
         $route = route('invoice.view',encrypt($invoice->number));
 
-        email([
+        // email([
 
-            'email'   => $request->email,
-            "subject" => 'Invoice Payment',
-            'message' => "Hello"." $invoice->invoice_to,<br/></br>".
+        //     'email'   => $request->email,
+        //     "subject" => 'Invoice Payment',
+        //     'message' => "Hello"." $invoice->invoice_to,<br/></br>".
 
-                "You have pending payment of invoice"." <b>$invoice->number</b>."."Please click the below link to complete your payment" .".<br/></br>".
+        //         "You have pending payment of invoice"." <b>$invoice->number</b>."."Please click the below link to complete your payment" .".<br/></br>".
 
-                "Invoice details".": <br/></br>".
+        //         "Invoice details".": <br/></br>".
 
-                "Amount"  .":  $amount $currency->code <br/>".
-                "Payment Link"." :  <a href='$route' target='_blank'>"."Click To Payment"."</a><br/>".
-                "QR Code"." :  <img src='".generateQR($route)."' class='' alt=''><br/>".
-                "Time"." : $invoice->created_at,
+        //         "Amount"  .":  $amount $currency->code <br/>".
+        //         "Payment Link"." :  <a href='$route' target='_blank'>"."Click To Payment"."</a><br/>".
+        //         "QR Code"." :  <img src='".generateQR($route)."' class='' alt=''><br/>".
+        //         "Time"." : $invoice->created_at,
 
-            "
-        ]);
+        //     "
+        // ]);
+
+        $data=[
+            'to' => $request->email,
+            'subject' => 'Invoice Payment',
+            'body' =>  "Hello"." $invoice->invoice_to,<br/></br>".
+
+            "You have pending payment of invoice"." <b>$invoice->number</b>."."Please click the below link to complete your payment" .".<br/></br>".
+
+            "Invoice details".": <br/></br>".
+
+            "Amount"  .":  $amount $currency->code <br/>".
+            "Payment Link"." :  <a href='$route' target='_blank'>"."Click To Payment"."</a><br/>".
+            "QR Code"." :  <img src='".generateQR($route)."' class='' alt=''><br/>".
+            "Time"." : $invoice->created_at,
+
+        "
+        ];
+        $mailer = new GeniusMailer();
+        $mailer->sendCustomMail($data);
 
         return back()->with('message','Invoice has been sent to the recipient');
     }
