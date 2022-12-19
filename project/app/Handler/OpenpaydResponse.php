@@ -46,7 +46,7 @@ class OpenpaydResponse implements RespondsToWebhook
                 return response()->json("failure");
 
             $new_deposit['deposit_number'] = $obj->transactionReference;
-            $new_deposit['user_id'] = $user->id
+            $new_deposit['user_id'] = $user->id;
             $new_deposit['currency_id'] = $webrequest->currency_id;
             $new_deposit['amount'] = $obj->amount->value;
             $new_deposit['status'] = "pending";
