@@ -32,12 +32,13 @@
                                 <div class="form-group mb-3 mt-3 col-md-6">
                                     <label class="form-label required">{{__('Beneficiary Type')}}</label>
                                     <select id="bene_type" class="form-select" name="type" required>
-                                        <option value="RETAIL"> {{__("Individual")}}</option>
+                                        <option value="RETAIL"> {{__("INDIVIDUAL")}}</option>
                                         <option value="CORPORATE"> {{__("CORPORATE")}}</option>
                                     </select>
                                 </div>
+								
                                 <div id='retail' style="display: block" >
-
+								<div class="row">
                                     <div class="form-group mb-3 mt-3 col-md-6">
                                         <label class="form-label required">{{__('First Name')}}</label>
                                         <input name="firstname" id="firstname" class="form-control" autocomplete="off" placeholder="{{__('John')}}" type="text" value="{{ old('firstname') }}" required>
@@ -48,12 +49,14 @@
                                         <input name="lastname" id="lastname" class="form-control" autocomplete="off" placeholder="{{__('Doe')}}" type="text" value="{{ old('lastname') }}" required>
                                     </div>
                                 </div>
+								</div>
                                 <div id='corporate' style="display: none">
-                                    <div class="form-group mb-3 mt-3 col-md-6">
+                                    <div class="form-group mb-3 mt-3 col-md-12">
                                         <label class="form-label required">{{__('Company Name')}}</label>
                                         <input name="company_name" id="company_name" class="form-control" autocomplete="off" placeholder="{{__('Tech LTD')}}" type="text" value="{{ old('company_name') }}" >
                                     </div>
                                 </div>
+								
                             </div>
                             <hr/>
                             <div class="row">
