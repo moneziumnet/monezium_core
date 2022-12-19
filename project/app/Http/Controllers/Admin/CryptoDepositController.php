@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Classes\GeniusMailer;
-use App\Http\Controllers\Controller;
-use App\Models\Currency;
-use App\Models\CryptoDeposit;
-use App\Models\Generalsetting;
-use App\Models\Transaction;
+use Datatables;
 use App\Models\User;
 use App\Models\Wallet;
-use Illuminate\Http\Request;
 use GuzzleHttp\Client;
-use Datatables;
+use App\Models\Currency;
+use App\Models\Transaction;
+use Illuminate\Http\Request;
+use App\Classes\GeniusMailer;
+use App\Models\CryptoDeposit;
+use App\Models\Generalsetting;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class CryptoDepositController extends Controller
 {
