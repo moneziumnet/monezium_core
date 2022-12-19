@@ -383,16 +383,16 @@ class OtherBankTransferController extends Controller
             }
             else if($bankgateway->keyword == 'clearjunction') {
                 $clientorder = rand(1000000, 9999999);
+                $type =   $data->beneficiary->type == 'RETAIL' ? "individual" : "corporate";
+                $payee_name = $data->beneficiary->type == 'RETAIL' ? '"firstName":"'.explode(" ",$data->beneficiary->name, 2)[0].'","lastName":"'.explode(" ",$data->beneficiary->name, 2)[1].'"' : '"name":"'.$data->beneficiary->name.'"';
                 $body = '{
                     "clientOrder": "'.$clientorder.'",
                     "currency": "'.$currency->code.'",
                     "amount": '.$data->final_amount.',
                     "description": "'.$data->description.'",
                     "payee": {
-                      "individual": {
-
-                        "lastName": "'.$data->beneficiary->name.'",
-                        "firstName": "'.$data->beneficiary->name.'"
+                      '.$type.': {
+                        '.$payee_name.'
                       }
                     },
                     "payeeRequisite": {
