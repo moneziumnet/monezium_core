@@ -77,7 +77,7 @@ class UserController extends Controller
 
 
                     $headers = "From: " . $gs->from_name . "<" . $gs->from_email . ">";
-                    mail($to, $subject, $msg, $headers);
+                    sendMail($to, $subject, $msg, $headers);
                 return response()->json('We need to verify your email address. We have sent an email to ' . $to . ' to verify your email address. Please click link in that email to continue.');
             } else {
 
@@ -171,7 +171,7 @@ class UserController extends Controller
               $msg = "Your New Password is : ".$autopass;
 
                 $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-                mail($request->email,$subject,$msg,$headers);
+                sendMail($request->email,$subject,$msg,$headers);
               return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Your Password Reseted Successfully. Please Check your email for new Password.']);
 
             }

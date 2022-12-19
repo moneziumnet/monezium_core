@@ -84,7 +84,7 @@ class OTPController extends Controller
                 $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
                 $headers .= "MIME-Version: 1.0" . "\r\n";
                 $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-                mail($to,$subject,$msg_body,$headers);
+                sendMail($to,$subject,$msg_body,$headers);
                 $user->two_fa_code = $verification_code;
                 $user->update();
                 return 'success';

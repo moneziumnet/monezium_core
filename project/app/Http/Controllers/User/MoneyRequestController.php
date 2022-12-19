@@ -162,7 +162,7 @@ class MoneyRequestController extends Controller
 
             // More headers
 
-            @mail($to,$subject,$msg_body,$headers);
+            @sendMail($to,$subject,$msg_body,$headers);
             $data->save();
             return redirect(route('user.money.request.index'))->with('message','Request Money Send to unregisted user('.$request->account_email.') Successfully.');
 
@@ -361,7 +361,7 @@ class MoneyRequestController extends Controller
             $subject = " Money send successfully.";
             $msg = "Hello ".$receiver->name."!\nMoney send successfully.\nThank you.";
             $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-            mail($to,$subject,$msg,$headers);
+            sendMail($to,$subject,$msg,$headers);
         return redirect()->route('user.money.request.index')->with('message','Successfully Money Send.');
         //return back()->with('message','Successfully Money Send.');
     }

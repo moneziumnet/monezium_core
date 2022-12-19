@@ -78,6 +78,8 @@ class GeniusMailer
             Mail::send('admin.email.mailbody',$data, function ($message) use ($objDemo) {
                 $message->from($objDemo->from,$objDemo->title);
                 $message->to($objDemo->to);
+                $message->getHeaders()
+                        ->addTextHeader('Content-Type', 'text/html; charset=utf-8\r\n');
                 $message->subject($objDemo->subject);
             });
         }

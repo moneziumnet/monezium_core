@@ -135,7 +135,7 @@ class SubscriptionRepository{
            $subject = " You Purchase Plan Successfully.";
            $msg = "Hello ".$subscription->user->nam."!\nYou Purchase Plan Successfully.\nThank you.";
            $headers = "From: ".$this->gs->from_name."<".$this->gs->from_email.">";
-           mail($to,$subject,$msg,$headers);
+           sendMail($to,$subject,$msg,$headers);
     }
 
 

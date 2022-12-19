@@ -335,7 +335,7 @@ class FrontendController extends Controller
 
 
             $headers = "From: " . $gs->from_name . "<" . $gs->from_email . ">";
-            mail($to, $subject, $msg, $headers);
+            sendMail($to, $subject, $msg, $headers);
 
         return response()->json($ps->contact_success);
     }

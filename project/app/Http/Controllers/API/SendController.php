@@ -140,7 +140,7 @@ class SendController extends Controller
                     $subject = " Money send successfully.";
                     $msg = "Hello ".$receiver->name."!\nMoney send successfully.\nThank you.";
                     $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-                    mail($to,$subject,$msg,$headers);
+                    sendMail($to,$subject,$msg,$headers);
                 return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Money Send Successfully.']);
             }else{
                 return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Sender not found!.']);
@@ -306,7 +306,7 @@ class SendController extends Controller
                 $subject = " Money send successfully.";
                 $msg = "Hello ".$receiver->name."!\nMoney send successfully.\nThank you.";
                 $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-                mail($to,$subject,$msg,$headers);
+                sendMail($to,$subject,$msg,$headers);
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Successfully Money Send.']);
 
         } catch (\Throwable $th) {

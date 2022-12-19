@@ -26,7 +26,7 @@ class KYCWebhookController extends Controller
         $subject = " Online Selfie Link";
         $msg = "Hello ".$user->name."!\nThis is the link of online Selfie for you.\nLink is \n".$route." \n Thank you.";
         $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-        mail($to,$subject,$msg,$headers);
+        sendMail($to,$subject,$msg,$headers);
 
         $requireInformations = [];
         if($userForms){

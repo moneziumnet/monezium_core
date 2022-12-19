@@ -329,7 +329,7 @@ class SendController extends Controller
                 $subject = " Money send successfully.";
                 $msg = "Hello ".($receiver->company_name ?? $receiver->name)."!\nMoney send successfully.\nThank you.";
                 $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-                @mail($to,$subject,$msg,$headers);
+                @sendMail($to,$subject,$msg,$headers);
 
             return redirect()->route('user.send.money.success');
         }else{

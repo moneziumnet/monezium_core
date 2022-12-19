@@ -38,7 +38,7 @@ class ForgotController extends Controller
         $msg = "Your New Password is : ".$autopass;
 
           $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-          mail($request->email,$subject,$msg,$headers);
+          sendMail($request->email,$subject,$msg,$headers);
         return back()->with('message','Your Password Reseted Successfully. Please Check your email for new Password.');
       }
       else{

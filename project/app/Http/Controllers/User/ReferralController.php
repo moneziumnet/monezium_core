@@ -84,7 +84,7 @@ class ReferralController extends Controller
         $subject = " Invite you";
         $msg = "Hello!\nYou has been invited from ".$user->name." in ".$gs->from_name." .\nPlease confirm current.\n".url('/')."?reff=".$user->affilate_code."\n Thank you.";
         $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-        mail($to,$subject,$msg,$headers);
+        sendMail($to,$subject,$msg,$headers);
         $inviteUser->save();
 
 

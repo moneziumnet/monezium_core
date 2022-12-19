@@ -218,7 +218,7 @@ class RegisterController extends Controller
             $msg = "Dear Customer,<br> We noticed that you need to verify your email address." . $verificationLink;
 
                 $headers = "From: " . $gs->from_name . "<" . $gs->from_email . ">";
-                mail($to, $subject, $msg, $headers);
+                sendMail($to, $subject, $msg, $headers);
             return response()->json('We need to verify your email address. We have sent an email to ' . $to . ' to verify your email address. Please click link in that email to continue.');
         } else {
 

@@ -70,7 +70,7 @@ class UserGlobalPassController extends Controller
             $msg = 'Your KYC status is updated';
 
               $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-              mail($user->user->email,$subject.'('.ucwords($type).')',$msg,$headers);
+              sendMail($user->user->email,$subject.'('.ucwords($type).')',$msg,$headers);
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => 'Okay']);
         }
         else {

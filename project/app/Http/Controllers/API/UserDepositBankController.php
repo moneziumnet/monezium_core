@@ -76,7 +76,7 @@ class UserDepositBankController extends Controller
                 $subject = " You have deposited successfully.";
                 $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
                 $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-                mail($to,$subject,$msg,$headers);
+                sendMail($to,$subject,$msg,$headers);
 
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Deposit amount '.$request->amount.' ('.$currency->code.') successfully!']);
         }catch(\Throwable $th){

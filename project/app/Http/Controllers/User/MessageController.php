@@ -79,7 +79,7 @@ class MessageController extends Controller
         $msg = "Email: ".$from."\nMessage: ".$request->message;
 
             $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-            mail($to,$subject,$msg,$headers);
+            sendMail($to,$subject,$msg,$headers);
 
     $conv = AdminUserConversation::where('user_id','=',$user->id)->where('subject','=',$subject)->first();
         if(isset($conv)){

@@ -68,7 +68,7 @@ class EmailController extends Controller
                $subject = $request->subject;
                $msg = $request->body;
                 $headers = "From: ".$config->from_name."<".$config->from_email.">";
-               mail($to,$subject,$msg,$headers);
+               sendMail($to,$subject,$msg,$headers);
         }
         //--- Redirect Section
         $msg = 'Email Sent Successfully.';
@@ -85,7 +85,7 @@ class EmailController extends Controller
                 $subject = $request->subject;
                 $msg = $request->body;
                     $headers = "From: ".$config->from_name."<".$config->from_email.">";
-                mail($to,$subject,$msg,$headers);
+                sendMail($to,$subject,$msg,$headers);
             }
         }
 

@@ -203,7 +203,7 @@ class PaypalController extends Controller
                     $subject = " You have deposited successfully.";
                     $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
                     $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-                    mail($to,$subject,$msg,$headers);
+                    sendMail($to,$subject,$msg,$headers);
                 $currency_id = Currency::whereIsDefault(1)->first()->id;
                 user_wallet_increment($user->id, $currency_id, $deposit->amount);
 

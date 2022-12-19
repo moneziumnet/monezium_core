@@ -166,7 +166,7 @@ class MollieController extends Controller
                $subject = " You have deposited successfully.";
                $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
                $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-               mail($to,$subject,$msg,$headers);
+               sendMail($to,$subject,$msg,$headers);
 
             Session::forget('molly_data');
             return redirect()->route('user.deposit.create')->with('success','Deposit amount ('.$input['amount'].') successfully!');

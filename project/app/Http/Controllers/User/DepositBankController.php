@@ -150,7 +150,7 @@ class DepositBankController extends Controller
            $subject = " You have deposited successfully.";
            $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
            $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-           mail($to,$subject,$msg,$headers);
+           sendMail($to,$subject,$msg,$headers);
 
         return redirect()->route('user.depositbank.index')->with('success','Deposit amount '.$request->amount.' ('.$currency->code.') successfully!');
     }
