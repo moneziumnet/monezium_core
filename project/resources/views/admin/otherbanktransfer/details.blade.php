@@ -13,6 +13,19 @@
         <li class="list-group-item">@lang('Customer Email')<span>{{ $user->email }}</span></li>
         <li class="list-group-item">@lang('Customer Bank IBAN')<span>{{ $bankaccount->iban }}</span></li>
         <li class="list-group-item">@lang('Customer Bank SWIFT')<span>{{ $bankaccount->swift }}</span></li>
+        @php
+            $status_color = 'primary';
+            if ($webhook_request) {
+                if ($webhook_request->status == "processing") {
+                    $status_color = 'warning';
+                } elseif ($webhook_request->status == "completed") {
+                    $status_color = 'success';
+                } elseif ($webhook_request->status == "failed") {
+                    $status_color = 'danger';
+                } 
+            }
+        @endphp
+        <li class="list-group-item send-info">@lang('Status')<span><span class="badge badge-{{$status_color}}">{{$webhook_request ? $webhook_request->status : 'Pending'}}</span></span></li>
         @if ($data->document)
             @php
                 $arr_file_name = explode('.', $data->document);
@@ -35,7 +48,31 @@
     <div class="w-100">
         <div class="row">
             <div class="col">
-            @if ($data->status == 0)
+            @if ($data->status == 3 && $status_color == 'success')
+                <div class="row action-button">
+                    <div class="col-md-12 mt-2">
+                        <button
+                            class="btn btn-success w-100"
+                            id="complete_transfer"
+                            data-toggle="modal"
+                            data-target="#statusModal"
+                            data-href="{{route('admin.other.banks.transfer.status', ['id1' => $data->id, 'status' => 1])}}"
+                        >{{__("Approve")}}</button>
+                    </div>
+                </div>
+            @elseif ($data->status == 3 && $status_color == 'danger')
+                <div class="row action-button">
+                    <div class="col-md-12 mt-2">
+                        <button
+                            class="btn btn-danger w-100"
+                            id="reject_transfer"
+                            data-toggle="modal"
+                            data-target="#statusModal"
+                            data-href="{{route('admin.other.banks.transfer.status', ['id1' => $data->id, 'status' => 2])}}"
+                        >{{__("Reject")}}</button>
+                    </div>
+                </div>
+            @elseif ($data->status == 3 && $nogateway)
                 <div class="row action-button">
                     <div class="col-md-6 mt-2">
                         <button
@@ -56,7 +93,19 @@
                         >{{__("Reject")}}</button>
                     </div>
                 </div>
-            @else
+            @elseif ($data->status == 0 && $status_color == 'primary')
+                <div class="row action-button">
+                    <div class="col-md-12 mt-2">
+                        <button
+                            class="btn btn-primary w-100"
+                            id="send_request"
+                            data-toggle="modal"
+                            data-target="#statusModal"
+                            data-href="{{route('admin.other.banks.transfer.status', ['id1' => $data->id, 'status' => 3])}}"
+                        >{{__("Send Request")}}</button>
+                    </div>
+                </div>
+            @elseif ($data->status != 0 )
                 <button class="btn w-100 closed" data-bs-dismiss="modal">
                     @lang('Close')
                 </button>

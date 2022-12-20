@@ -115,6 +115,11 @@
 				$('#modal-details').modal('hide');
 				$('.btn-ok').attr('href', $(this).data('href'));
 			});
+
+			$('#send_request').on('click', function() {
+				$('#modal-details').modal('hide');
+				$('.btn-ok').attr('href', $(this).data('href'));
+			});
 		})
 	};
 </script>
