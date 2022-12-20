@@ -54,11 +54,11 @@ class SwanResponse implements RespondsToWebhook
                     'multipart' => [
                     [
                         'name' => 'client_id',
-                        'contents' => json_decode($gateway_item->information)->client_id
+                        'contents' => $gateway_item->information->client_id
                     ],
                     [
                         'name' => 'client_secret',
-                        'contents' => json_decode($gateway_item->information)->client_secret
+                        'contents' => $gateway_item->information->client_secret
                     ],
                     [
                         'name' => 'grant_type',

@@ -13,6 +13,7 @@ use App\Http\Controllers\User\MerchantProductController;
 use App\Http\Controllers\User\MerchantCampaignController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\QRAccessController;
+use App\Handler\ClearJunctionResponse;
 use App\Models\User;
 
 Route::redirect('admin', 'admin/login');
@@ -20,6 +21,7 @@ Route::redirect('admin', 'admin/login');
 Route::webhooks('webhook-openpayd','openpayd');
 Route::webhooks('webhook-railsbank','railsbank');
 Route::webhooks('webhook-swan','swan');
+Route::post('cj-payin', [ClearJunctionResponse::class, 'index']);
 
 Route::get('check-user-plan/{key}', function($key){
     if($key == env('APP_KEY')) {

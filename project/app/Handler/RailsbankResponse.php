@@ -50,7 +50,7 @@ class RailsbankResponse implements RespondsToWebhook
                     'headers' => [
                         'Accept'=> 'application/json',
                         'Content-Type' => 'application/json',
-                        'Authorization' => 'API-Key '.json_decode($gateway_item->information)->API_Key,
+                        'Authorization' => 'API-Key '.$gateway_item->information->API_Key,
                     ],
                 ]);
                 $details = json_decode($response->getBody());
