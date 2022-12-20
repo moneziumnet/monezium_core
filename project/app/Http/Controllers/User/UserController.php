@@ -95,9 +95,6 @@ class UserController extends Controller
             } catch (\Throwable $th) {
                 return redirect()->route('user.dashboard')->with(array('warning' => json_encode($th->getMessage())));
             }
-            if ($iban == null || $bic_swift == null || $iban == '' || $bic_swift == '' ) {
-                return redirect()->route('user.dashboard')->with(array('warning' => 'Sorry, You can not create New Bank Account succesfully because Swan Api does not create iban and swift code. Please try again.'));
-            }
             $user = auth()->user();
             $bankaccount = New BankAccount();
             $bankaccount->user_id = auth()->id();
