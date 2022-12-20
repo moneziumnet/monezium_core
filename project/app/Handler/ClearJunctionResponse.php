@@ -2,10 +2,15 @@
 
 namespace App\Handler;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\BankGateway;
+use DateTime;
+use GuzzleHttp\Client;
+use App\Models\Currency;
 use App\Models\BankAccount;
+use App\Models\BankGateway;
+use App\Models\DepositBank;
+use Illuminate\Http\Request;
+use App\Models\WebhookRequest;
+use App\Http\Controllers\Controller;
 
 class ClearJunctionResponse extends Controller
 {
@@ -14,7 +19,7 @@ class ClearJunctionResponse extends Controller
         $obj = json_decode($request->getContent());
         
         $currency = Currency::where('code', $obj->currency)->first();
-        $webrequest = WebhookRequest::where('reference', $obj->orderReference)
+        $webrequest = WebhookRequest::where('reference', $obj->label)
             ->where('gateway_type', 'clearjunction')
             ->first();
         if(!$webrequest)
@@ -38,11 +43,11 @@ class ClearJunctionResponse extends Controller
                 $webrequest->status = "failed";
                 break;
         }
-        $webrequest->reference = $obj->orderReference;
+        $webrequest->reference = $obj->label;
         $webrequest->gateway_type = "clearjunction";
         $webrequest->save();
 
-        $deposit = DepositBank::whereRaw("INSTR('".$obj->orderReference."', deposit_number) > 0")->first();
+        $deposit = DepositBank::whereRaw("INSTR('".$obj->label."', deposit_number) > 0")->first();
         if(!$deposit) {
             $new_deposit = new DepositBank();
             $user = $this->getUser($obj->clientOrder);
@@ -50,7 +55,7 @@ class ClearJunctionResponse extends Controller
             if(!$user)
                 return response()->json("failure");
 
-            $new_deposit['deposit_number'] = $obj->orderReference;
+            $new_deposit['deposit_number'] = $obj->label;
             $new_deposit['user_id'] = $user->id;
             $new_deposit['currency_id'] = $webrequest->currency_id;
             $new_deposit['amount'] = $obj->amount->value;
@@ -75,6 +80,7 @@ class ClearJunctionResponse extends Controller
         foreach($gateway_list as $gateway_item) {
             try {
                 $param = $this->getToken('{}', $gateway_item);
+                $client = new Client();
                 $response = $client->request('GET',  $this->url.'gate/allocate/v2/status/iban/clientOrder/'.$orderid, [
                     'body' => '{}',
                     'headers' => [
