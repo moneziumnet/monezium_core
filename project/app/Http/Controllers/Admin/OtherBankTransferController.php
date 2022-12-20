@@ -40,6 +40,17 @@ class OtherBankTransferController extends Controller
     $datas = BalanceTransfer::whereType('other')->orderBy('id', 'desc');
 
     return Datatables::of($datas)
+      ->setRowAttr([
+        'style' => function(BalanceTransfer $data) {
+            $transaction_id = $data->transaction_no;
+            $webhook_request = WebhookRequest::where('transaction_id', $transaction_id )->first();
+            if($data->status == 'pending' && (!$webhook_request || $webhook_request->status == "processing")) {
+                return "background-color: #ffcaca;";
+            } else {
+                return "background-color: #ffffff;";
+            }
+        },
+      ])
 
       ->editColumn('user_id', function (BalanceTransfer $data) {
         $data = User::whereId($data->user_id)->first();
@@ -220,314 +231,319 @@ class OtherBankTransferController extends Controller
     }
     if ($id2 == 1) {
         $currency = Currency::where('id',$data->currency_id)->first();
-        $customer_bank = BankAccount::whereUserId($user->id)->where('subbank_id',$data->subbank)->where('currency_id', $data->currency_id)->first();
-        $bankgateway = BankGateway::where('subbank_id', $data->subbank)->first();
-        $master_account = BankPoolAccount::where('bank_id', $data->subbank)->where('currency_id', $data->currency_id)->first();
+        // $customer_bank = BankAccount::whereUserId($user->id)->where('subbank_id',$data->subbank)->where('currency_id', $data->currency_id)->first();
+        // $bankgateway = BankGateway::where('subbank_id', $data->subbank)->first();
+        // $master_account = BankPoolAccount::where('bank_id', $data->subbank)->where('currency_id', $data->currency_id)->first();
 
-        $subbank = SubInsBank::where('id', $data->subbank)->first();
-        $client = New Client();
-        $msg = __('Status Updated Successfully.');
-        if($subbank->hasGateway()){
-            if($bankgateway->keyword == 'openpayd') {
+        // $subbank = SubInsBank::where('id', $data->subbank)->first();
+        // $client = New Client();
+        // $msg = __('Status Updated Successfully.');
+        // if($subbank->hasGateway()){
+        //     if($bankgateway->keyword == 'openpayd') {
 
-                try {
-                    $response = $client->request('POST', 'https://secure-mt.openpayd.com/api/oauth/token?grant_type=client_credentials', [
-                        'headers' => [
-                        'Accept'=> 'application/json',
-                        'Authorization' => 'Basic '.$bankgateway->information->Auth,
-                        'Content-Type' => 'application/x-www-form-urlencoded',
-                        ],
-                    ]);
-                    $res_body = json_decode($response->getBody());
-                    $auth_token = $res_body->access_token;
-                    $accounter_id = $res_body->accountHolderId;
-                } catch (\Throwable $th) {
-                return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
-                }
+        //         try {
+        //             $response = $client->request('POST', 'https://secure-mt.openpayd.com/api/oauth/token?grant_type=client_credentials', [
+        //                 'headers' => [
+        //                 'Accept'=> 'application/json',
+        //                 'Authorization' => 'Basic '.$bankgateway->information->Auth,
+        //                 'Content-Type' => 'application/x-www-form-urlencoded',
+        //                 ],
+        //             ]);
+        //             $res_body = json_decode($response->getBody());
+        //             $auth_token = $res_body->access_token;
+        //             $accounter_id = $res_body->accountHolderId;
+        //         } catch (\Throwable $th) {
+        //         return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
+        //         }
 
 
-                try {
-                    $response = $client->request('GET', 'https://secure-mt.openpayd.com/api/accounts?iban='.$customer_bank->iban, [
-                        'headers' => [
-                        'Accept' => 'application/json',
-                        'Authorization' => 'Bearer '.$auth_token,
-                        'Content-Type' => 'application/json',
-                        'x-account-holder-id' => $user->holder_id,
-                        ],
-                    ]);
-                    $res_body = json_decode($response->getBody())->content[0];
+        //         try {
+        //             $response = $client->request('GET', 'https://secure-mt.openpayd.com/api/accounts?iban='.$customer_bank->iban, [
+        //                 'headers' => [
+        //                 'Accept' => 'application/json',
+        //                 'Authorization' => 'Bearer '.$auth_token,
+        //                 'Content-Type' => 'application/json',
+        //                 'x-account-holder-id' => $user->holder_id,
+        //                 ],
+        //             ]);
+        //             $res_body = json_decode($response->getBody())->content[0];
 
-                    $account_id = $res_body->id;
-                    $amount = $res_body->availableBalance->value;
-                } catch (\Throwable $th) {
-                return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
-                }
+        //             $account_id = $res_body->id;
+        //             $amount = $res_body->availableBalance->value;
+        //         } catch (\Throwable $th) {
+        //         return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
+        //         }
 
-                try {
-                    $response = $client->request('GET', 'https://secure-mt.openpayd.com/api/accounts?iban='.$master_account->iban, [
-                        'headers' => [
-                        'Accept' => 'application/json',
-                        'Authorization' => 'Bearer '.$auth_token,
-                        'Content-Type' => 'application/json',
-                        'x-account-holder-id' => $accounter_id,
-                        ],
-                    ]);
-                    $res_body = json_decode($response->getBody())->content[0];
+        //         try {
+        //             $response = $client->request('GET', 'https://secure-mt.openpayd.com/api/accounts?iban='.$master_account->iban, [
+        //                 'headers' => [
+        //                 'Accept' => 'application/json',
+        //                 'Authorization' => 'Bearer '.$auth_token,
+        //                 'Content-Type' => 'application/json',
+        //                 'x-account-holder-id' => $accounter_id,
+        //                 ],
+        //             ]);
+        //             $res_body = json_decode($response->getBody())->content[0];
 
-                    $master_account_id = $res_body->id;
-                    $master_amount = $res_body->availableBalance->value;
-                    if ($master_amount < $data->final_amount) {
-                        return response()->json(array('errors' => [ 0 => __('Your balance is Insufficient') ]));
-                    }
-                } catch (\Throwable $th) {
-                    return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
-                }
+        //             $master_account_id = $res_body->id;
+        //             $master_amount = $res_body->availableBalance->value;
+        //             if ($master_amount < $data->final_amount) {
+        //                 return response()->json(array('errors' => [ 0 => __('Your balance is Insufficient') ]));
+        //             }
+        //         } catch (\Throwable $th) {
+        //             return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
+        //         }
 
-                try {
-                    $customer_name = $data->beneficiary->type == 'RETAIL' ? '"firstName":"'.explode(" ",$data->beneficiary->name, 2)[0].'","lastName":"'.explode(" ",$data->beneficiary->name, 2)[1].'",' : '"companyName":"'.$data->beneficiary->name.'",';
-                    $response = $client->request('POST', 'https://secure-mt.openpayd.com/api/transactions/sweepPayout', [
-                        'body' =>
-                            '{"beneficiary":
-                                {"bankAccountCountry":"'.substr($data->iban, 0,2).'",
-                                "customerType":"'.$data->beneficiary->type.'",
-                                '.$customer_name.'
-                                "iban":"'.$data->iban.'",
-                                "bic":"'.$data->swift_bic.'"
-                                },
-                            "amount":
-                                {"value":"'.$data->final_amount.'",
-                                "currency":"'.$currency->code.'"
-                                },
-                            "linkedAccountHolderId":"'.$user->holder_id.'",
-                            "accountId":"'.$account_id.'",
-                            "sweepSourceAccountId":"'.$master_account_id.'",
-                            "paymentType":"'.$data->payment_type.'",
-                            "reference":"'.$data->description.'"
-                            }',
-                        'headers' => [
-                        'Accept' => 'application/json',
-                        'Authorization' => 'Bearer '.$auth_token,
-                        'Content-Type' => 'application/json',
-                        'x-account-holder-id' => $accounter_id,
-                        ],
-                    ]);
-                    $res_body = json_decode($response->getBody());
-                    $transaction_id = $res_body->transactionId  ;
-                } catch (\Throwable $th) {
-                return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
-                }
-            }
-            else if($bankgateway->keyword == 'railsbank') {
+        //         try {
+        //             $customer_name = $data->beneficiary->type == 'RETAIL' ? '"firstName":"'.explode(" ",$data->beneficiary->name, 2)[0].'","lastName":"'.explode(" ",$data->beneficiary->name, 2)[1].'",' : '"companyName":"'.$data->beneficiary->name.'",';
+        //             $response = $client->request('POST', 'https://secure-mt.openpayd.com/api/transactions/sweepPayout', [
+        //                 'body' =>
+        //                     '{"beneficiary":
+        //                         {"bankAccountCountry":"'.substr($data->iban, 0,2).'",
+        //                         "customerType":"'.$data->beneficiary->type.'",
+        //                         '.$customer_name.'
+        //                         "iban":"'.$data->iban.'",
+        //                         "bic":"'.$data->swift_bic.'"
+        //                         },
+        //                     "amount":
+        //                         {"value":"'.$data->final_amount.'",
+        //                         "currency":"'.$currency->code.'"
+        //                         },
+        //                     "linkedAccountHolderId":"'.$user->holder_id.'",
+        //                     "accountId":"'.$account_id.'",
+        //                     "sweepSourceAccountId":"'.$master_account_id.'",
+        //                     "paymentType":"'.$data->payment_type.'",
+        //                     "reference":"'.$data->description.'"
+        //                     }',
+        //                 'headers' => [
+        //                 'Accept' => 'application/json',
+        //                 'Authorization' => 'Bearer '.$auth_token,
+        //                 'Content-Type' => 'application/json',
+        //                 'x-account-holder-id' => $accounter_id,
+        //                 ],
+        //             ]);
+        //             $res_body = json_decode($response->getBody());
+        //             $transaction_id = $res_body->transactionId  ;
+        //         } catch (\Throwable $th) {
+        //         return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
+        //         }
+        //     }
+        //     else if($bankgateway->keyword == 'railsbank') {
 
-                try {
-                    $response = $client->request('GET','https://play.railsbank.com/v1/customer/ledgers?account_number='.$customer_bank->iban, [
-                        'headers' => [
-                            'Accept'=> 'application/json',
-                            'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
-                            'Content-Type' => 'application/json',
-                        ],
-                    ]);
-                    $enduser = json_decode($response->getBody())[0]->holder_id;
-                    $amount = json_decode($response->getBody())[0]->amount;
-                    $ledger = json_decode($response->getBody())[0]->ledger_id;
-                    if ($amount < $data->final_amount) {
-                        return redirect()->back()->with(array('warning' => 'Insufficient Balance.'));
-                    }
-                } catch (\Throwable $th) {
-                return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
-                }
-                try {
+        //         try {
+        //             $response = $client->request('GET','https://play.railsbank.com/v1/customer/ledgers?account_number='.$customer_bank->iban, [
+        //                 'headers' => [
+        //                     'Accept'=> 'application/json',
+        //                     'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
+        //                     'Content-Type' => 'application/json',
+        //                 ],
+        //             ]);
+        //             $enduser = json_decode($response->getBody())[0]->holder_id;
+        //             $amount = json_decode($response->getBody())[0]->amount;
+        //             $ledger = json_decode($response->getBody())[0]->ledger_id;
+        //             if ($amount < $data->final_amount) {
+        //                 return redirect()->back()->with(array('warning' => 'Insufficient Balance.'));
+        //             }
+        //         } catch (\Throwable $th) {
+        //         return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
+        //         }
+        //         try {
 
-                    $response = $client->request('POST','https://play.railsbank.com/v1/customer/beneficiaries', [
-                        'body' => '{
-                            "holder_id": "'.$enduser.'",
-                            "asset_class": "currency",
-                            "asset_type": "eur",
-                            "iban": "'.$data->iban.'",
-                            "bic_swift": "'.$data->swift_bic.'",
-                            "person": {
-                            "name": "'.$data->beneficiary->name.'",
-                            "email": "'.$data->beneficiary->email.'",
-                            "address": { "address_iso_country": "'.substr($data->iban, 0,2).'" }
-                            }
-                        }',
-                        'headers' => [
-                            'Accept'=> 'application/json',
-                            'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
-                            'Content-Type' => 'application/json',
-                        ],
-                    ]);
+        //             $response = $client->request('POST','https://play.railsbank.com/v1/customer/beneficiaries', [
+        //                 'body' => '{
+        //                     "holder_id": "'.$enduser.'",
+        //                     "asset_class": "currency",
+        //                     "asset_type": "eur",
+        //                     "iban": "'.$data->iban.'",
+        //                     "bic_swift": "'.$data->swift_bic.'",
+        //                     "person": {
+        //                     "name": "'.$data->beneficiary->name.'",
+        //                     "email": "'.$data->beneficiary->email.'",
+        //                     "address": { "address_iso_country": "'.substr($data->iban, 0,2).'" }
+        //                     }
+        //                 }',
+        //                 'headers' => [
+        //                     'Accept'=> 'application/json',
+        //                     'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
+        //                     'Content-Type' => 'application/json',
+        //                 ],
+        //             ]);
 
-                    $beneficiary = json_decode($response->getBody())->beneficiary_id;
-                } catch (\Throwable $th) {
-                return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
-                }
-                try {
-                    $response = $client->request('POST', 'https://play.railsbank.com/v1/customer/transactions', [
-                        'body' => '{
-                            "ledger_from_id": "'.$ledger.'",
-                            "beneficiary_id": "'.$beneficiary.'",
-                            "payment_type": "payment-type-EU-SEPA-Step2",
-                            "amount": "'.$data->final_amount.'"
-                        }',
-                        'headers' => [
-                        'Accept'=> 'application/json',
-                        'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
-                        'Content-Type' => 'application/json',
-                        ],
-                    ]);
-                    $transaction_id = json_decode($response->getBody())->transaction_id;
-                } catch (\Throwable $th) {
-                return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
-                }
-            }
-            else if($bankgateway->keyword == 'clearjunction') {
-                $clientorder = rand(1000000, 9999999);
-                $type =   $data->beneficiary->type == 'RETAIL' ? "individual" : "corporate";
-                $payee_name = $data->beneficiary->type == 'RETAIL' ? '"firstName":"'.explode(" ",$data->beneficiary->name, 2)[0].'","lastName":"'.explode(" ",$data->beneficiary->name, 2)[1].'"' : '"name":"'.$data->beneficiary->name.'"';
-                $body = '{
-                    "clientOrder": "'.$clientorder.'",
-                    "currency": "'.$currency->code.'",
-                    "amount": '.$data->final_amount.',
-                    "description": "'.$data->description.'",
-                    "payee": {
-                      '.$type.': {
-                        '.$payee_name.'
-                      }
-                    },
-                    "payeeRequisite": {
-                      "iban": "'.$data->iban.'",
-                      "bankSwiftCode": "'.$data->swift_bic.'"
-                    },
-                    "payerRequisite": {
-                      "iban": "'.$customer_bank->iban.'",
-                      "bankSwiftCode": "'.$customer_bank->swift.'"
-                    }
-                  }';
-                  $param = $this->getToken($body, $data->subbank);
+        //             $beneficiary = json_decode($response->getBody())->beneficiary_id;
+        //         } catch (\Throwable $th) {
+        //         return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
+        //         }
+        //         try {
+        //             $response = $client->request('POST', 'https://play.railsbank.com/v1/customer/transactions', [
+        //                 'body' => '{
+        //                     "ledger_from_id": "'.$ledger.'",
+        //                     "beneficiary_id": "'.$beneficiary.'",
+        //                     "payment_type": "payment-type-EU-SEPA-Step2",
+        //                     "amount": "'.$data->final_amount.'"
+        //                 }',
+        //                 'headers' => [
+        //                 'Accept'=> 'application/json',
+        //                 'Authorization' => 'API-Key '.$bankgateway->information->API_Key,
+        //                 'Content-Type' => 'application/json',
+        //                 ],
+        //             ]);
+        //             $transaction_id = json_decode($response->getBody())->transaction_id;
+        //         } catch (\Throwable $th) {
+        //         return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
+        //         }
+        //     }
+        //     else if($bankgateway->keyword == 'clearjunction') {
+        //         $clientorder = rand(1000000, 9999999);
+        //         $type =   $data->beneficiary->type == 'RETAIL' ? "individual" : "corporate";
+        //         $payee_name = $data->beneficiary->type == 'RETAIL' ? '"firstName":"'.explode(" ",$data->beneficiary->name, 2)[0].'","lastName":"'.explode(" ",$data->beneficiary->name, 2)[1].'"' : '"name":"'.$data->beneficiary->name.'"';
+        //         $body = '{
+        //             "clientOrder": "'.$clientorder.'",
+        //             "currency": "'.$currency->code.'",
+        //             "amount": '.$data->final_amount.',
+        //             "description": "'.$data->description.'",
+        //             "payee": {
+        //               '.$type.': {
+        //                 '.$payee_name.'
+        //               }
+        //             },
+        //             "payeeRequisite": {
+        //               "iban": "'.$data->iban.'",
+        //               "bankSwiftCode": "'.$data->swift_bic.'"
+        //             },
+        //             "payerRequisite": {
+        //               "iban": "'.$customer_bank->iban.'",
+        //               "bankSwiftCode": "'.$customer_bank->swift.'"
+        //             }
+        //           }';
+        //           $param = $this->getToken($body, $data->subbank);
 
-                  try {
-                    $response = $client->request('POST',  'https://client.clearjunction.com/v7/gate/payout/bankTransfer/eu?checkOnly=false', [
-                        'body' => $body,
-                        'headers' => [
-                           'Accept'=> '*/*',
-                          'X-API-KEY' => $bankgateway->information->API_Key,
-                          'Authorization' => 'Bearer '.$param[0],
-                          'Date' => $param[1],
-                          'Content-Type' => 'application/json',
-                        ],
-                      ]);
-                      $res_body = json_decode($response->getBody());
+        //           try {
+        //             $response = $client->request('POST',  'https://client.clearjunction.com/v7/gate/payout/bankTransfer/eu?checkOnly=false', [
+        //                 'body' => $body,
+        //                 'headers' => [
+        //                    'Accept'=> '*/*',
+        //                   'X-API-KEY' => $bankgateway->information->API_Key,
+        //                   'Authorization' => 'Bearer '.$param[0],
+        //                   'Date' => $param[1],
+        //                   'Content-Type' => 'application/json',
+        //                 ],
+        //               ]);
+        //               $res_body = json_decode($response->getBody());
 
-                      $transaction_id = $res_body->requestReference;
-                } catch (\Throwable $th) {
-                    return response()->json(array('errors' => [ 0 => $response]));
+        //               $transaction_id = $res_body->requestReference;
+        //         } catch (\Throwable $th) {
+        //             return response()->json(array('errors' => [ 0 => $response]));
 
-                }
-            }
-            else if($bankgateway->keyword == 'swan') {
-                try {
-                    $options = [
-                            'multipart' => [
-                            [
-                                'name' => 'client_id',
-                                'contents' => $bankgateway->information->client_id
-                            ],
-                            [
-                                'name' => 'client_secret',
-                                'contents' => $bankgateway->information->client_secret
-                            ],
-                            [
-                                'name' => 'grant_type',
-                                'contents' => 'client_credentials'
-                            ]
-                        ]];
-                        $response = $client->request('POST', 'https://oauth.swan.io/oauth2/token', $options);
-                        $res_body = json_decode($response->getBody());
-                        $access_token = $res_body->access_token;
-                } catch (\Throwable $th) {
-                    return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
-                }
-                try {
-                    $body = '{"query":"query MyQuery {\\n  accounts(filters: {}) {\\n    edges {\\n      node {\\n        id\\n        BIC\\n        IBAN\\n      }\\n    }\\n  }\\n}","variables":{}}';
-                    $headers = [
-                        'Authorization' => 'Bearer '.$access_token,
-                        'Content-Type' => 'application/json'
-                        ];
-                    $response = $client->request('POST', 'https://api.swan.io/sandbox-partner/graphql', [
-                        'body' => $body,
-                        'headers' => $headers
-                    ]);
-                    $res_body = json_decode($response->getBody());
+        //         }
+        //     }
+        //     else if($bankgateway->keyword == 'swan') {
+        //         try {
+        //             $options = [
+        //                     'multipart' => [
+        //                     [
+        //                         'name' => 'client_id',
+        //                         'contents' => $bankgateway->information->client_id
+        //                     ],
+        //                     [
+        //                         'name' => 'client_secret',
+        //                         'contents' => $bankgateway->information->client_secret
+        //                     ],
+        //                     [
+        //                         'name' => 'grant_type',
+        //                         'contents' => 'client_credentials'
+        //                     ]
+        //                 ]];
+        //                 $response = $client->request('POST', 'https://oauth.swan.io/oauth2/token', $options);
+        //                 $res_body = json_decode($response->getBody());
+        //                 $access_token = $res_body->access_token;
+        //         } catch (\Throwable $th) {
+        //             return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
+        //         }
+        //         try {
+        //             $body = '{"query":"query MyQuery {\\n  accounts(filters: {}) {\\n    edges {\\n      node {\\n        id\\n        BIC\\n        IBAN\\n      }\\n    }\\n  }\\n}","variables":{}}';
+        //             $headers = [
+        //                 'Authorization' => 'Bearer '.$access_token,
+        //                 'Content-Type' => 'application/json'
+        //                 ];
+        //             $response = $client->request('POST', 'https://api.swan.io/sandbox-partner/graphql', [
+        //                 'body' => $body,
+        //                 'headers' => $headers
+        //             ]);
+        //             $res_body = json_decode($response->getBody());
 
-                    $accountlist = $res_body->data->accounts->edges ?? '';
-                } catch (\Throwable $th) {
-                    return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
-                }
-                $accountid = '';
-                // dd($accountlist);
-                if (count($accountlist) > 0) {
-                    foreach ($accountlist as $key => $value) {
-                        if ($value->node->IBAN == $customer_bank->iban) {
-                            $accountid = $value->node->id;
-                            break;
-                        }
-                    }
-                }
-                else {
-                    return response()->json(array('errors' => [ 0 => 'This bank account does not exist in SWAN.' ]));
-                }
-                if ($accountid == '') {
-                    return response()->json(array('errors' => [ 0 => 'This bank account does not exist in SWAN.' ]));
-                }
-                try {
-                    $body = '{"query":"mutation initiateCreditTransfers($input: InitiateCreditTransfersInput!) {\\n  initiateCreditTransfers(input: $input) {\\n    __typename\\n    ... on InitiateCreditTransfersSuccessPayload {\\n      __typename\\n      payment {\\n        id\\n        statusInfo {\\n          ... on PaymentConsentPending {\\n            __typename\\n            status\\n            consent {\\n              id\\n              consentUrl\\n              redirectUrl\\n            }\\n          }\\n          ... on PaymentInitiated {\\n            __typename\\n            status\\n          }\\n          ... on PaymentRejected {\\n            __typename\\n            reason\\n            status\\n          }\\n        }\\n      }\\n    }\\n    ... on AccountNotFoundRejection {\\n      __typename\\n      message\\n    }\\n    ... on ForbiddenRejection {\\n      __typename\\n      message\\n    }\\n  }\\n}\\n","variables":{"input":{"accountId":"'.$accountid.'","consentRedirectUrl":"'.route('admin.dashboard').'","creditTransfers":{"sepaBeneficiary":{"iban":"'.$data->iban.'","name":"'.$data->beneficiary->name.'","isMyOwnIban":false,"save":false},"amount":{"currency":"'.$currency->code.'","value":'.$data->final_amount.'},"reference":"'.$data->description.'"}}}}';
-                    $headers = [
-                        'Authorization' => 'Bearer '.$access_token,
-                        'Content-Type' => 'application/json'
-                        ];
-                    $response = $client->request('POST', 'https://api.swan.io/sandbox-partner/graphql', [
-                        'body' => $body,
-                        'headers' => $headers
-                    ]);
-                    $res_body = json_decode($response->getBody());
-                    $transaction_id = $res_body->data->initiateCreditTransfers->payment->id;
-                    $confirm_url = $res_body->data->initiateCreditTransfers->payment->statusInfo->consent->consentUrl;
-                    $msg = __('Status Updated Successfully. Please following url to confirm payment. ').$confirm_url;
-                } catch (\Throwable $th) {
-                    return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
-                }
+        //             $accountlist = $res_body->data->accounts->edges ?? '';
+        //         } catch (\Throwable $th) {
+        //             return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
+        //         }
+        //         $accountid = '';
+        //         // dd($accountlist);
+        //         if (count($accountlist) > 0) {
+        //             foreach ($accountlist as $key => $value) {
+        //                 if ($value->node->IBAN == $customer_bank->iban) {
+        //                     $accountid = $value->node->id;
+        //                     break;
+        //                 }
+        //             }
+        //         }
+        //         else {
+        //             return response()->json(array('errors' => [ 0 => 'This bank account does not exist in SWAN.' ]));
+        //         }
+        //         if ($accountid == '') {
+        //             return response()->json(array('errors' => [ 0 => 'This bank account does not exist in SWAN.' ]));
+        //         }
+        //         try {
+        //             $body = '{"query":"mutation initiateCreditTransfers($input: InitiateCreditTransfersInput!) {\\n  initiateCreditTransfers(input: $input) {\\n    __typename\\n    ... on InitiateCreditTransfersSuccessPayload {\\n      __typename\\n      payment {\\n        id\\n        statusInfo {\\n          ... on PaymentConsentPending {\\n            __typename\\n            status\\n            consent {\\n              id\\n              consentUrl\\n              redirectUrl\\n            }\\n          }\\n          ... on PaymentInitiated {\\n            __typename\\n            status\\n          }\\n          ... on PaymentRejected {\\n            __typename\\n            reason\\n            status\\n          }\\n        }\\n      }\\n    }\\n    ... on AccountNotFoundRejection {\\n      __typename\\n      message\\n    }\\n    ... on ForbiddenRejection {\\n      __typename\\n      message\\n    }\\n  }\\n}\\n","variables":{"input":{"accountId":"'.$accountid.'","consentRedirectUrl":"'.route('admin.dashboard').'","creditTransfers":{"sepaBeneficiary":{"iban":"'.$data->iban.'","name":"'.$data->beneficiary->name.'","isMyOwnIban":false,"save":false},"amount":{"currency":"'.$currency->code.'","value":'.$data->final_amount.'},"reference":"'.$data->description.'"}}}}';
+        //             $headers = [
+        //                 'Authorization' => 'Bearer '.$access_token,
+        //                 'Content-Type' => 'application/json'
+        //                 ];
+        //             $response = $client->request('POST', 'https://api.swan.io/sandbox-partner/graphql', [
+        //                 'body' => $body,
+        //                 'headers' => $headers
+        //             ]);
+        //             $res_body = json_decode($response->getBody());
+        //             $transaction_id = $res_body->data->initiateCreditTransfers->payment->id;
+        //             $confirm_url = $res_body->data->initiateCreditTransfers->payment->statusInfo->consent->consentUrl;
+        //             $msg = __('Status Updated Successfully. Please following url to confirm payment. ').$confirm_url;
+        //         } catch (\Throwable $th) {
+        //             return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
+        //         }
 
-            }
-        }
-        else {
-            $transaction_id = str_rand();
-        }
+        //     }
+        // }
+        // else {
+        //     $transaction_id = str_rand();
+        // }
 
 
         // user_wallet_decrement($user->id, $data->currency_id, $data->amount);
-        // $trans_wallet = get_wallet($user->id, $data->currency_id);
+        $trans_wallet = get_wallet($user->id, $data->currency_id);
         // user_wallet_increment(0, $data->currency_id, $data->cost, 9);
+        
+        user_wallet_decrement($user->id, $data->currency_id, $data->amount);
+        user_wallet_increment(0, $data->currency_id, $data->cost, 9);
 
         $trans = new Transaction();
         $trans->trnx = Str::random(4).time();
         $trans->user_id     = $data->user_id;
         $trans->user_type   = 1;
         $trans->currency_id = $data->currency_id;
-        $trans->amount      = $data->final_amount;
+        $trans->amount      = $data->amount;
 
         $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
 
         $trans->charge      = $data->cost;
         $trans->type        = '-';
         $trans->remark      = 'External_Payment';
-        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$data->beneficiary->name.'", "transaction_id":"'.$transaction_id.'", "description":"'.$data->description.'"}';
+        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$data->beneficiary->name.'", "transaction_id":"'.$data->transaction_no.'", "description":"'.$data->description.'"}';
         $trans->details     = trans('Send Money');
         $trans->save();
     }
 
     $data->status = $id2;
     $data->update();
+    $msg = __('Status Updated Successfully.');
+
     return response()->json($msg);
   }
 }
