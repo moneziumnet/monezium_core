@@ -14,20 +14,21 @@ use App\Http\Controllers\Controller;
 
 class ClearJunctionResponse extends Controller
 {
-    public function index(Request $request)
+    public function payin(Request $request)
     {
-        $obj = json_decode($request->getContent());
+        $obj = str2obj($request->getContent());
         
         $currency = Currency::where('code', $obj->currency)->first();
         $webrequest = WebhookRequest::where('reference', $obj->label)
             ->where('gateway_type', 'clearjunction')
+            ->where('is_pay_in', true)
             ->first();
         if(!$webrequest)
             $webrequest = new WebhookRequest();
         
         $webrequest->transaction_id = $obj->clientOrder;
-        $webrequest->sender_name = "";
-        $webrequest->sender_address = $obj->payer->address->addressOneString;
+        $webrequest->sender_name = $obj->paymentDetails->payerRequisite->name;
+        $webrequest->sender_address = "";
         $webrequest->amount = $obj->amount;
         $webrequest->currency_id = $currency ? $currency->id : 0;
         
@@ -45,61 +46,56 @@ class ClearJunctionResponse extends Controller
         }
         $webrequest->reference = $obj->label;
         $webrequest->gateway_type = "clearjunction";
+        $webrequest->is_pay_in = true;
         $webrequest->save();
 
         $deposit = DepositBank::whereRaw("INSTR('".$obj->label."', deposit_number) > 0")->first();
         if(!$deposit) {
             $new_deposit = new DepositBank();
-            $user = $this->getUser($obj->clientOrder);
+            $bankaccount = BankAccount::where('iban', $obj->paymentDetails->payeeRequisite->iban)->first();
 
-            if(!$user)
+            if(!$bankaccount)
                 return response()->json("failure");
 
             $new_deposit['deposit_number'] = $obj->label;
-            $new_deposit['user_id'] = $user->id;
+            $new_deposit['user_id'] = $bankaccount->user_id;
             $new_deposit['currency_id'] = $webrequest->currency_id;
-            $new_deposit['amount'] = $obj->amount->value;
+            $new_deposit['amount'] = $obj->amount;
             $new_deposit['status'] = "pending";
-            $new_deposit['sub_bank_id'] = null;
+            $new_deposit['sub_bank_id'] = $bankaccount->subbank_id;
             $new_deposit->save();
         }
 
         return response()->json("success");
     }
 
-    public function getToken($request, $bankgateway) {
-        $secret = hash('sha512', $bankgateway->information->api_password);
-        $datetime = new DateTime();
-        $now = $datetime->format(DateTime::ATOM);
-        $signature = hash('sha512', mb_strtoupper($bankgateway->information->API_Key).$now.mb_strtoupper($secret).mb_strtoupper($request));
-        return array($signature, $now);
-    }
-    
-    public function getUser($orderid) {
-        $gateway_list = BankGateway::where('keyword', 'railsbank')->get();
-        foreach($gateway_list as $gateway_item) {
-            try {
-                $param = $this->getToken('{}', $gateway_item);
-                $client = new Client();
-                $response = $client->request('GET',  $this->url.'gate/allocate/v2/status/iban/clientOrder/'.$orderid, [
-                    'body' => '{}',
-                    'headers' => [
-                        'Accept'=> '*/*',
-                        'X-API-KEY' => $gateway_item->information->API_Key,
-                        'Authorization' => 'Bearer '.$param[0],
-                        'Date' => $param[1],
-                        'Content-Type' => 'application/json',
-                    ],
-                ]);
-                $res_body = json_decode($response->getBody());
-                $iban = $res_body->iban;
-                
-                $bankaccount = BankAccount::where('iban', $iban)->first();
-                return $bankaccount->user_id;
-            } catch (\Exception $e) {
-                continue;
-            }
+    public function payout(Request $request) {
+        $obj = str2obj($request->getContent());
+        
+        $webrequest = WebhookRequest::where('transaction_id', $obj->orderReference)
+            ->where('gateway_type', 'clearjunction')
+            ->where('is_pay_in', false)
+            ->first();
+        if(!$webrequest)
+            $webrequest = new WebhookRequest();
+        
+        $webrequest->transaction_id = $obj->orderReference;
+        $webrequest->is_pay_in = false;
+        
+        switch($obj->status) {
+            case "created":
+            case "pending":
+                $webrequest->status = "processing";
+                break;
+            case "settled":
+                $webrequest->status = "completed";
+                break;
+            default:
+                $webrequest->status = "failed";
+                break;
         }
-        return null;
+        $webrequest->gateway_type = "clearjunction";
+        $webrequest->save();
+        return response()->json("success");
     }
 }

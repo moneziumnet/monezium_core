@@ -24,6 +24,7 @@ return new class extends Migration
             $table->enum('status', ['processing', 'completed', 'failed'])->default('processing');
             $table->string('failure_reason')->nullable();
             $table->string('gateway_type');
+            $table->boolean('is_pay_in')->default(false);
             $table->timestamps();
         });
     }
