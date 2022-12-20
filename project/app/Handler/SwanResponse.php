@@ -1,14 +1,17 @@
 <?php
 namespace App\Handler;
 
-use App\Models\BankGateway;
-use App\Models\Currency;
-use App\Models\WebhookRequest;
+use App\Models\User;
 use GuzzleHttp\Client;
+use App\Models\Currency;
+use App\Models\BankAccount;
+use App\Models\BankGateway;
+use App\Models\DepositBank;
 use Illuminate\Http\Request;
+use App\Models\WebhookRequest;
 use Spatie\WebhookClient\WebhookConfig;
-use Spatie\WebhookClient\WebhookResponse\RespondsToWebhook;
 use Symfony\Component\HttpFoundation\Response;
+use Spatie\WebhookClient\WebhookResponse\RespondsToWebhook;
 
 class SwanResponse implements RespondsToWebhook
 {
@@ -69,7 +72,7 @@ class SwanResponse implements RespondsToWebhook
                 $res_body = json_decode($response->getBody());
                 $access_token = $res_body->access_token;
 
-                $body = '{"query":"query Transaction($id: ID!) {\\n  transaction(id: $id) {\\n    id\\n    reference\\n    counterparty\\n    amount {\\n      currency\\n      value\\n    }\\n  }\\n}","variables":{"id": "'.$obj->resourceId.'"}}';
+                $body = '{"query":"query Transaction($id: ID!) {\\n  transaction(id: $id) {\\n    id\\n    reference\\n    counterparty\\n    amount {\\n      currency\\n      value\\n    }\\n    account {\\n      IBAN\\n    }\\n  }\\n}","variables":{"id": "'.$obj->resourceId.'"}}';
                 $headers = [
                     'Authorization' => 'Bearer '.$access_token,
                     'Content-Type' => 'application/json'
@@ -88,6 +91,23 @@ class SwanResponse implements RespondsToWebhook
                 $webrequest->currency_id = $currency ? $currency->id : 0;
 
                 $webrequest->save();
+                
+                $deposit = DepositBank::whereRaw("INSTR('".$details->reference."', deposit_number) > 0")->first();
+                if(!$deposit) {
+                    $new_deposit = new DepositBank();
+                    $iban = BankAccount::where('iban', $details->account->IBAN)->first();
+
+                    if(!$iban)
+                        return response()->json("failure");
+
+                    $new_deposit['deposit_number'] = $details->reference;
+                    $new_deposit['user_id'] = $iban->user_id;
+                    $new_deposit['currency_id'] = $webrequest->currency_id;
+                    $new_deposit['amount'] = $details->amount->value;
+                    $new_deposit['status'] = "pending";
+                    $new_deposit['sub_bank_id'] = null;
+                    $new_deposit->save();
+                }
 
                 return response()->json("success");
             } catch (\Exception $e) {
