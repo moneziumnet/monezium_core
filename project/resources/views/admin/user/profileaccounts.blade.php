@@ -308,9 +308,9 @@
         $('#modal-success-2').modal('show')
     }
 
-    $('#addpayment').on('click', function() {
-        window.location.reload();
-    });
+    // $('#addpayment').on('click', function() {
+    //     window.location.reload();
+    // });
 
     let accounttype = {'0':'All', '1':'Current', '2':'Card', '3':'Deposit', '4':'Loan', '5':'Escrow', '6':'Supervisor', '7':'Merchant', '8':'Crypto', '10':'Manager'};
     let _orignhtml = $('div#walletlist').html();
