@@ -138,7 +138,8 @@ class VirtualCardController extends Controller
         if(!$account) {
             return back()->with('error', 'Please create swan Bank account before creating virtual card.');
         }
-        $res = generate_card($bankaccount->information->client_id, $bankgateway->information->client_secret, $account->iban);
+        $redirect_url = route('user.card.index');
+        $res = generate_card($bankgateway->information->client_id, $bankgateway->information->client_secret, $account->iban, $redirect_url);
         if ($res[0] == 'error') {
             return redirect()->back()->with(array('warning' => $res[1]));
         }

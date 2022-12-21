@@ -1056,7 +1056,7 @@ if (!function_exists('generate_card_number')) {
 
 
 if (!function_exists('generate_card')) {
-    function generate_card($client_id, $client_secret, $iban) {
+    function generate_card($client_id, $client_secret, $iban, $redirect_url) {
         $client = New Client();
         try {
             $options = [
@@ -1108,7 +1108,6 @@ if (!function_exists('generate_card')) {
 
         }
         try {
-            $redirect_url = route('user.card.index');
             $body = '{"query":"\\nmutation MyMutation {\\n  addCard(\\n    input: {\\n      accountMembershipId: \\"'.$membership_id.'\\"\\n      withdrawal: true\\n      international: true\\n      nonMainCurrencyTransactions: true\\n      eCommerce: true\\n      consentRedirectUrl: \\"'.$redirect_url.'\\"\\n    }\\n  ) {\\n    ... on AddCardSuccessPayload {\\n      __typename\\n      card {\\n        statusInfo {\\n          ... on CardConsentPendingStatusInfo {\\n            __typename\\n            consent {\\n              consentUrl\\n            }\\n          }\\n        }\\n        id\\n      }\\n    }\\n  }\\n}\\n","variables":{}}';
             $headers = [
                 'Authorization' => 'Bearer '.$access_token,

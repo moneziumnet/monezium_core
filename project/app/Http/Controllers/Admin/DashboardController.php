@@ -183,7 +183,7 @@ class DashboardController extends Controller
 
             user_wallet_decrement($user->id, $currency_id, $chargefee->data->fixed_charge, 1);
             user_wallet_increment(0, $currency_id, $chargefee->data->fixed_charge, 9);
-            return redirect()->route('admin-user-accounts')->with(array('message' => 'Virtual card was successfully created.'));
+            return redirect()->route('admin.dashboard')->with(array('message' => 'Virtual card was successfully created.'));
 
         }
         return view('admin.dashboard', $data);

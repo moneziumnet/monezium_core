@@ -368,7 +368,8 @@ class UserController extends Controller
                     if(!$account) {
                         return response()->json(array('errors' => [0 => __('Please create swan Bank account before creating virtual card.')]));
                     }
-                    $res = generate_card($bankaccount->information->client_id, $bankgateway->information->client_secret, $account->iban);
+                    $redirect_url = route('admin.dashboard');
+                    $res = generate_card($bankgateway->information->client_id, $bankgateway->information->client_secret, $account->iban, $redirect_url);
                     if ($res[0] == 'error') {
                         return response()->json(array('errors' => [0 => __( $res[1])]));
                     }
