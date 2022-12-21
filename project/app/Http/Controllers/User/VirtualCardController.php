@@ -122,7 +122,11 @@ class VirtualCardController extends Controller
                 'headers' => $headers
             ]);
             $res_body = json_decode($response->getBody());
-            if($res_body->errors) {
+            
+            if (isset($res_body->data, $res_body->data->addCard, $res_body->data->addCard->card)) {
+                return redirect()->away($res_body->data->addCard->card->consentUrl);
+            }
+            if(isset($res_body->errors)) {
                 return redirect()->back()->with(array('error' => json_encode( $res_body->errors)));
             }
 
