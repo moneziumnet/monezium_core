@@ -323,7 +323,7 @@ class UserController extends Controller
                         $eth_currency = Currency::where('code', 'ETH')->first();
                         $eth_wallet = Wallet::where('user_id', $id)->where('wallet_type', $wallet_type)->where('currency_id', $eth_currency->id)->first();
                         if (!$eth_wallet) {
-                            response()->json(array('errors' => [0 => __('You have to create Eth Crypto wallet firstly before create ERC20 token wallet.')]));
+                            return response()->json(array('errors' => [0 => __('You have to create Eth Crypto wallet firstly before create ERC20 token wallet.')]));
                         }
                         $address = $eth_wallet->wallet_no;
                         $keyword = $eth_wallet->keyword;
@@ -338,63 +338,45 @@ class UserController extends Controller
                 }
                 if(!$wallet)
                 {
-                  $user_wallet = new Wallet();
-                  $user_wallet->user_id = $id;
-                  $user_wallet->user_type = 1;
-                  $user_wallet->currency_id = $currency_id;
-                  $user_wallet->balance = 0;
-                  $user_wallet->wallet_type = $wallet_type;
-                  $user_wallet->wallet_no =$address;
-                  $user_wallet->keyword =$keyword;
-                  $user_wallet->created_at = date('Y-m-d H:i:s');
-                  $user_wallet->updated_at = date('Y-m-d H:i:s');
-                  $user_wallet->save();
 
                   $user = User::findOrFail($id);
 
                   if($wallet_type == 2) {
-                    $chargefee = Charge::where('slug', 'card-issuance')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
-                    if(!$chargefee){
-                        $chargefee = Charge::where('slug', 'card-issuance')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
-                    }
-                    $trans = new Transaction();
-                    $trans->trnx = str_rand();
-                    $trans->user_id     = $id;
-                    $trans->user_type   = 1;
-                    $trans->currency_id = defaultCurr();
-                    $trans_wallet = get_wallet($id, defaultCurr(), 1);
-                    $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-                    $trans->amount      = $chargefee->data->fixed_charge;
-                    $trans->charge      = 0;
-                    $trans->type        = '-';
-                    $trans->remark      = 'card_issuance';
-                    $trans->details     = trans('Card Issuance');
-                    $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
-                    $trans->save();
+                    if($currency->code != 'EUR') {
+                        return response()->json(array('errors' => [0 => __('This api support only for EUR currency.')]));
 
-                    $trx='VC-'.Str::random(6);
-                    $sav['user_id']=$user->id;
-                    $sav['first_name']=explode(" ", $user->name)[0];
-                    $sav['last_name']=explode(" ", $user->name)[1];
-                    $sav['account_id']=$user->id;
-                    $sav['card_hash']=$user->id;
-                    $sav['card_pan']=generate_card_number(16);
-                    $sav['masked_card']='mc_'.rand(100, 999);
-                    $sav['cvv']=rand(100, 999);
-                    $sav['expiration']='10/24';
-                    $sav['card_type']='normal';
-                    $sav['name_on_card']='noc_US';
-                    $sav['callback']=" ";
-                    $sav['ref_id']=$trx;
-                    $sav['secret']=$trx;
-                    $sav['city']=$user->city;
-                    $sav['zip_code']=$user->zip;
-                    $sav['address']=$user->address;
-                    $sav['wallet_id']=$user_wallet->id;
-                    $sav['amount']=0;
-                    $sav['currency_id']=$currency_id;
-                    $sav['charge']=0;
-                    VirtualCard::create($sav);
+                    }
+            
+                    $v_card = VirtualCard::where('user_id', $user->id)->where('currency_id', $currency_id)->first();
+                    if($v_card) {
+                        return response()->json(array('errors' => [0 => __($currency->code . ' Virtual Card already exists.')]));
+
+                    }
+                    $bankgateways = BankGateway::where('keyword', 'swan')->get();
+                    if(count($bankgateways) > 1) {
+                        foreach ($bankgateways as $key => $value) {
+                            $bankaccount = BankAccount::where('user_id', $user->id)->where('currency_id', $currency_id)->where('subbank_id', $value->subbank_id)->first();
+                            if($bankaccount) {
+                                $account = $bankaccount;
+                                $bankgateway = $value;
+                            }
+                        }
+                    }
+                    else {
+                        return response()->json(array('errors' => [0 => __(' The api does not exist for creating Virtual Card.')]));
+                    }
+                    if(!$account) {
+                        return response()->json(array('errors' => [0 => __('Please create swan Bank account before creating virtual card.')]));
+                    }
+                    $res = generate_card($bankaccount, $account);
+                    if ($res[0] == 'error') {
+                        return response()->json(array('errors' => [0 => __( $res[1])]));
+                    }
+                    if ($res[0] == 'success') {
+                        Session::put('currency_id', $currency_id);
+                        Session::put('user_id', $user->id);
+                        return redirect()->away($res[1]);
+                    }
                   }
                   else {
                     $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
@@ -416,6 +398,17 @@ class UserController extends Controller
                     $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
                     $trans->save();
                   }
+                  $user_wallet = new Wallet();
+                  $user_wallet->user_id = $id;
+                  $user_wallet->user_type = 1;
+                  $user_wallet->currency_id = $currency_id;
+                  $user_wallet->balance = 0;
+                  $user_wallet->wallet_type = $wallet_type;
+                  $user_wallet->wallet_no =$address;
+                  $user_wallet->keyword =$keyword;
+                  $user_wallet->created_at = date('Y-m-d H:i:s');
+                  $user_wallet->updated_at = date('Y-m-d H:i:s');
+                  $user_wallet->save();
 
                   user_wallet_decrement($id, defaultCurr(), $chargefee->data->fixed_charge, 1);
                   user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);

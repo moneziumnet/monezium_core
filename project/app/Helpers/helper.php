@@ -1053,3 +1053,81 @@ if (!function_exists('generate_card_number')) {
         return $code;
     }
 }
+
+
+if (!function_exists('generate_card')) {
+    function generate_card($bankgateway, $account) {
+        $client = New Client();
+        try {
+            $options = [
+              'multipart' => [
+                [
+                  'name' => 'client_id',
+                  'contents' => $bankgateway->information->client_id
+                ],
+                [
+                  'name' => 'client_secret',
+                  'contents' => $bankgateway->information->client_secret
+                ],
+                [
+                  'name' => 'grant_type',
+                  'contents' => 'client_credentials'
+                ]
+            ]];
+          $response = $client->request('POST', 'https://oauth.swan.io/oauth2/token', $options);
+          $res_body = json_decode($response->getBody());
+          $access_token = $res_body->access_token;
+        } catch (\Throwable $th) {
+            return array('error', json_encode($th->getMessage()));
+        }
+        try {
+            $body = '{"query":"query MyQuery {\\n  accounts {\\n    edges {\\n      node {\\n        BIC\\n        IBAN\\n        memberships {\\n          edges {\\n            node {\\n              email\\n              id\\n            }\\n          }\\n        }\\n      }\\n    }\\n  }\\n}\\n","variables":{}}';
+            $headers = [
+                'Authorization' => 'Bearer '.$access_token,
+                'Content-Type' => 'application/json'
+            ];
+            $response = $client->request('POST', 'https://api.swan.io/sandbox-partner/graphql', [
+                'body' => $body,
+                'headers' => $headers
+            ]);
+            $res_body = json_decode($response->getBody());
+            $accountlist = $res_body->data->accounts->edges;
+            if(count($accountlist) > 0) {
+                foreach ($accountlist as $key => $value) {
+                    if($value->node->IBAN == $account->iban) {
+                        $membership_id = $value->node->memberships->edges[0]->node->id;
+                    }
+                }
+            }
+
+        } catch (\Throwable $th) {
+            return array('error', json_encode($th->getMessage()));
+        }
+        if(!$membership_id){
+            return array('error', 'The membership id for your swan bank account does not exist');
+
+        }
+        try {
+            $redirect_url = route('user.card.index');
+            $body = '{"query":"\\nmutation MyMutation {\\n  addCard(\\n    input: {\\n      accountMembershipId: \\"'.$membership_id.'\\"\\n      withdrawal: true\\n      international: true\\n      nonMainCurrencyTransactions: true\\n      eCommerce: true\\n      consentRedirectUrl: \\"'.$redirect_url.'\\"\\n    }\\n  ) {\\n    ... on AddCardSuccessPayload {\\n      __typename\\n      card {\\n        statusInfo {\\n          ... on CardConsentPendingStatusInfo {\\n            __typename\\n            consent {\\n              consentUrl\\n            }\\n          }\\n        }\\n        id\\n      }\\n    }\\n  }\\n}\\n","variables":{}}';
+            $headers = [
+                'Authorization' => 'Bearer '.$access_token,
+                'Content-Type' => 'application/json'
+            ];
+            $response = $client->request('POST', 'https://api.swan.io/sandbox-partner/graphql', [
+                'body' => $body,
+                'headers' => $headers
+            ]);
+            $res_body = json_decode($response->getBody());
+            if (isset($res_body->data, $res_body->data->addCard, $res_body->data->addCard->card)) {
+                return array('success', $res_body->data->addCard->card->consentUrl);
+
+            }
+            return array('error', "Can't create a Card, becouse this gateway is not on live.");
+
+
+        } catch (\Throwable $th) {
+            return array('error', json_encode($th->getMessage()));
+        }
+    }
+}

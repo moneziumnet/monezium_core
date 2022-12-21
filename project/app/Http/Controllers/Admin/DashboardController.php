@@ -121,6 +121,71 @@ class DashboardController extends Controller
             user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
             return redirect()->route('admin.dashboard')->with(array('message' => $user->name.'\'s Swan Bank Account has been created successfully.'));
         }
+        if(request('consentId')){
+            $currency_id = Session::get('currency_id');
+            $user_id = Session::get('user_id');
+            $user = User::findOrFail($user_id);
+            $chargefee = Charge::where('slug', 'card-issuance')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
+            if(!$chargefee){
+                $chargefee = Charge::where('slug', 'card-issuance')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
+            }
+            $trans = new Transaction();
+            $trans->trnx = str_rand();
+            $trans->user_id     = $user_id;
+            $trans->user_type   = 1;
+            $trans->currency_id = $currency_id;
+            $trans_wallet = get_wallet($id, $currency_id, 1);
+            $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+            $trans->amount      = $chargefee->data->fixed_charge;
+            $trans->charge      = 0;
+            $trans->type        = '-';
+            $trans->remark      = 'card_issuance';
+            $trans->details     = trans('Card Issuance');
+            $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
+            $trans->save();
+
+            $trx='VC-'.Str::random(6);
+            $sav['user_id']=$user->id;
+            $sav['first_name']=explode(" ", $user->name)[0];
+            $sav['last_name']=explode(" ", $user->name)[1];
+            $sav['account_id']=$user->id;
+            $sav['card_hash']=$user->id;
+            $sav['card_pan']=generate_card_number(16);
+            $sav['masked_card']='mc_'.rand(100, 999);
+            $sav['cvv']=rand(100, 999);
+            $sav['expiration']='10/24';
+            $sav['card_type']='normal';
+            $sav['name_on_card']='noc_US';
+            $sav['callback']=" ";
+            $sav['ref_id']=$trx;
+            $sav['secret']=$trx;
+            $sav['city']=$user->city;
+            $sav['zip_code']=$user->zip;
+            $sav['address']=$user->address;
+            $sav['wallet_id']=$user_wallet->id;
+            $sav['amount']=0;
+            $sav['currency_id']=$currency_id;
+            $sav['charge']=0;
+            VirtualCard::create($sav);
+            $gs = Generalsetting::first();
+            $address = $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
+
+            $user_wallet = new Wallet();
+            $user_wallet->user_id = $user_id;
+            $user_wallet->user_type = 1;
+            $user_wallet->currency_id = $currency_id;
+            $user_wallet->balance = 0;
+            $user_wallet->wallet_type = 2;
+            $user_wallet->wallet_no =$address;
+            $user_wallet->created_at = date('Y-m-d H:i:s');
+            $user_wallet->updated_at = date('Y-m-d H:i:s');
+            $user_wallet->save();
+
+            user_wallet_decrement($user->id, $currency_id, $chargefee->data->fixed_charge, 1);
+            user_wallet_increment(0, $currency_id, $chargefee->data->fixed_charge, 9);
+            return redirect()->route('admin-user-accounts')->with(array('message' => 'Virtual card was successfully created.'));
+
+        }
         return view('admin.dashboard', $data);
     }
     public function passwordreset()
