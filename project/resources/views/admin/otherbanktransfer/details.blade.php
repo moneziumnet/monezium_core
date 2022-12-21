@@ -95,7 +95,7 @@
                 </div>
             @elseif ($data->status == 0 && $status_color == 'primary')
                 <div class="row action-button">
-                    <div class="col-md-12 mt-2">
+                    <div class="col-md-6 mt-2">
                         <button
                             class="btn btn-primary w-100"
                             id="send_request"
@@ -103,6 +103,15 @@
                             data-target="#statusModal"
                             data-href="{{route('admin.other.banks.transfer.status', ['id1' => $data->id, 'status' => 3])}}"
                         >{{__("Send Request")}}</button>
+                    </div>
+                    <div class="col-md-6 mt-2">
+                        <button
+                            class="btn btn-danger w-100"
+                            id="reject_transfer"
+                            data-toggle="modal"
+                            data-target="#statusModal"
+                            data-href="{{route('admin.other.banks.transfer.status', ['id1' => $data->id, 'status' => 2])}}"
+                        >{{__("Reject")}}</button>
                     </div>
                 </div>
             @elseif ($data->status != 0 )
