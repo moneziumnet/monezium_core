@@ -30,7 +30,7 @@ class DepositBankController extends Controller
     }
 
     public function index(){
-        $data['deposits'] = DepositBank::orderby('id','desc')->whereUserId(auth()->id())->with('user')->paginate(10);
+        $data['deposits'] = DepositBank::orderby('id','desc')->whereUserId(auth()->id())->where('sub_bank_id', '!=', null)->with('user')->paginate(10);
         return view('user.depositbank.index',$data);
     }
 
