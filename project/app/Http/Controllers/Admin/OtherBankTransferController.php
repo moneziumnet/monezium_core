@@ -505,6 +505,9 @@ class OtherBankTransferController extends Controller
                         'headers' => $headers
                     ]);
                     $res_body = json_decode($response->getBody());
+                    if ($res_body->data->initiateCreditTransfers->message) {
+                      return response()->json(array('errors' => [ 0 => $res_body->data->initiateCreditTransfers->message.'\n This Bank gateway is not on live.' ]));
+                    }
                     $transaction_id = $res_body->data->initiateCreditTransfers->payment->id;
                     $confirm_url = $res_body->data->initiateCreditTransfers->payment->statusInfo->consent->consentUrl;
                     $msg = __('Status Updated Successfully. Please following url to confirm payment. ').$confirm_url;
