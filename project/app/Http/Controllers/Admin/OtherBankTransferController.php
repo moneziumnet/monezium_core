@@ -505,6 +505,7 @@ class OtherBankTransferController extends Controller
                         'headers' => $headers
                     ]);
                     $res_body = json_decode($response->getBody());
+                    dd($res_body);
                     $transaction_id = $res_body->data->initiateCreditTransfers->payment->id;
                     $confirm_url = $res_body->data->initiateCreditTransfers->payment->statusInfo->consent->consentUrl;
                     $msg = __('Status Updated Successfully. Please following url to confirm payment. ').$confirm_url;
