@@ -506,7 +506,7 @@ class OtherBankTransferController extends Controller
                     ]);
                     $res_body = json_decode($response->getBody());
                     if ($res_body->data->initiateCreditTransfers->message) {
-                      return response()->json(array('errors' => [ 0 => $res_body->data->initiateCreditTransfers->message.'\n This Bank gateway is not on live.' ]));
+                      return response()->json(array('errors' => [ 0 => $res_body->data->initiateCreditTransfers->message.' This Bank gateway is not on live.' ]));
                     }
                     $transaction_id = $res_body->data->initiateCreditTransfers->payment->id;
                     $confirm_url = $res_body->data->initiateCreditTransfers->payment->statusInfo->consent->consentUrl;
@@ -520,9 +520,6 @@ class OtherBankTransferController extends Controller
         else {
             $transaction_id = str_rand();
         }
-
-
-
         
         $data->transaction_no = $transaction_id;
         $data->status = $id2;
