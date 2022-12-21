@@ -122,11 +122,11 @@ class VirtualCardController extends Controller
                 'headers' => $headers
             ]);
             $res_body = json_decode($response->getBody());
-            
+
             if (isset($res_body->data, $res_body->data->addCard, $res_body->data->addCard->card)) {
                 return redirect()->away($res_body->data->addCard->card->consentUrl);
             }
-            dd($res_body);
+            return redirect()->back()->with(array('warning' => "Can't create a Card, becouse this gateway is not on live."));
 
         } catch (\Throwable $th) {
             return redirect()->back()->with(array('warning' => json_encode($th->getMessage())));
