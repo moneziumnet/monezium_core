@@ -1056,18 +1056,18 @@ if (!function_exists('generate_card_number')) {
 
 
 if (!function_exists('generate_card')) {
-    function generate_card($bankgateway, $account) {
+    function generate_card($client_id, $client_secret, $iban) {
         $client = New Client();
         try {
             $options = [
               'multipart' => [
                 [
                   'name' => 'client_id',
-                  'contents' => $bankgateway->information->client_id
+                  'contents' => $client_id
                 ],
                 [
                   'name' => 'client_secret',
-                  'contents' => $bankgateway->information->client_secret
+                  'contents' => $client_secret
                 ],
                 [
                   'name' => 'grant_type',
@@ -1094,7 +1094,7 @@ if (!function_exists('generate_card')) {
             $accountlist = $res_body->data->accounts->edges;
             if(count($accountlist) > 0) {
                 foreach ($accountlist as $key => $value) {
-                    if($value->node->IBAN == $account->iban) {
+                    if($value->node->IBAN == $iban) {
                         $membership_id = $value->node->memberships->edges[0]->node->id;
                     }
                 }
