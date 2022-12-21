@@ -371,8 +371,8 @@ class UserController extends Controller
                     $redirect_url = route('admin.dashboard');
                     $res = generate_card($bankgateway->information->client_id, $bankgateway->information->client_secret, $account->iban, $redirect_url);
                     if ($res[0] == 'error') {
-                        redirect(route('admin-user-accounts',$id))->with('unsuccess', $res[1]);
-                        return response()->json(array('errors' => [0 => __( $res[1])]));
+                        return redirect(route('admin-user-accounts',$id))->with('unsuccess', $res[1]);
+                        // return response()->json(array('errors' => [0 => __( $res[1])]));
                     }
                     if ($res[0] == 'success') {
                         Session::put('currency_id', $currency_id);
