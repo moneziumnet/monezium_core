@@ -149,8 +149,8 @@
             var reject_url = e.target.getAttribute('data-reject-url');
             
             if(e.target.getAttribute('data-hasgateway') == "true") {
-                $('#user_name').text(bankaccount.user.name);
-                $('#user_addr').text(bankaccount.user.address);
+                $('#user_name').text(bankaccount.user.company_name ?? bankaccount.user.name);
+                $('#user_addr').text(bankaccount.user.company_address ?? bankaccount.user.address);
             } else if(res_data) {
                 $('#user_name').text(res_data.sub_institution.name);
                 $('#user_addr').text(res_data.sub_institution.address);
