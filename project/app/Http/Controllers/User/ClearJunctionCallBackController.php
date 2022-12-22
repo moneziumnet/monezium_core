@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Handler;
+namespace App\Http\Controllers\User;
 
 use DateTime;
 use GuzzleHttp\Client;
@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\WebhookRequest;
 use App\Http\Controllers\Controller;
 
-class ClearJunctionResponse extends Controller
+class ClearJunctionCallBackController extends Controller
 {
     public function payin(Request $request)
     {
