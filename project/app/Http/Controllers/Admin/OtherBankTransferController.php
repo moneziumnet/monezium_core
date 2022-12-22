@@ -45,7 +45,7 @@ class OtherBankTransferController extends Controller
         'style' => function(BalanceTransfer $data) {
             $transaction_id = $data->transaction_no;
             $webhook_request = WebhookRequest::where('transaction_id', $transaction_id )->first();
-            if($data->status == '0' && (!$webhook_request || $webhook_request->status == "processing")) {
+            if(($data->status == '0' || $data->status == '3') && (!$webhook_request || $webhook_request->status == "processing")) {
                 return "background-color: #ffcaca;";
             } else {
                 return "background-color: #ffffff;";
@@ -398,7 +398,7 @@ class OtherBankTransferController extends Controller
             else if($bankgateway->keyword == 'clearjunction') {
                 $clientorder = rand(1000000, 9999999);
                 $payer_type = $user->company_name ? "corporate" : "individual"; 
-                $payer_name = $user->company_name ?  '"name":"'.$data->beneficiary->name.'"' : '"firstName":"'.explode(" ",$data->beneficiary->name, 2)[0].'","lastName":"'.explode(" ",$data->beneficiary->name, 2)[1].'"';
+                $payer_name = $user->company_name ?  '"name":"'.$user->company_name.'"' : '"firstName":"'.explode(" ",$user->name, 2)[0].'","lastName":"'.explode(" ",$user->name, 2)[1].'"';
                 $type =   $data->beneficiary->type == 'RETAIL' ? "individual" : "corporate";
                 $payee_name = $data->beneficiary->type == 'RETAIL' ? '"firstName":"'.explode(" ",$data->beneficiary->name, 2)[0].'","lastName":"'.explode(" ",$data->beneficiary->name, 2)[1].'"' : '"name":"'.$data->beneficiary->name.'"';
                 $body = '{
