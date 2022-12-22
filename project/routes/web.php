@@ -21,9 +21,8 @@ Route::redirect('admin', 'admin/login');
 Route::webhooks('webhook-openpayd','openpayd');
 Route::webhooks('webhook-railsbank','railsbank');
 Route::webhooks('webhook-swan','swan');
-Route::post('cj-payin', [ClearJunctionResponse::class, 'payin']);
-Route::post('cj-payout', [ClearJunctionResponse::class, 'payout']);
-
+Route::post('cj-payin', [ClearJunctionResponse::class, 'payin'])->name('cj-payin');
+Route::post('cj-payout', [ClearJunctionResponse::class, 'payout'])->name('cj-payout');
 Route::get('check-user-plan/{key}', function($key){
     if($key == env('APP_KEY')) {
         $user_list = User::all();
