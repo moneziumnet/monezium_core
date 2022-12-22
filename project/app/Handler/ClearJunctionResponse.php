@@ -40,6 +40,9 @@ class ClearJunctionResponse extends Controller
             case "settled":
                 $webrequest->status = "completed";
                 break;
+            case "captured":
+                $webrequest->status = "completed";
+                break;
             default:
                 $webrequest->status = "failed";
                 break;
