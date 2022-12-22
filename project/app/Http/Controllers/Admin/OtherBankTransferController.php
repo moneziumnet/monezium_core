@@ -405,7 +405,7 @@ class OtherBankTransferController extends Controller
                     "amount": '.$data->final_amount.',
                     "description": "'.$data->description.'",
                     "payee": {
-                      '.$type.': {
+                      "'.$type.'": {
                         '.$payee_name.'
                       }
                     },
