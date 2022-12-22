@@ -49,22 +49,42 @@ class ClearJunctionCallBackController extends Controller
         $webrequest->gateway_type = "clearjunction";
         $webrequest->is_pay_in = true;
         $webrequest->save();
+        if ($obj->label == null) {
+            $deposit = DepositBank::Where('deposit_number', $obj->orderReference)->first();
+            if(!$deposit) {
+                $new_deposit = new DepositBank();
+                $bankaccount = BankAccount::where('iban', $obj->paymentDetails->payeeRequisite->iban)->first();
+    
+                if(!$bankaccount)
+                    return response()->json($obj->orderReference);
+    
+                $new_deposit['deposit_number'] = $obj->orderReference;
+                $new_deposit['user_id'] = $bankaccount->user_id;
+                $new_deposit['currency_id'] = $webrequest->currency_id;
+                $new_deposit['amount'] = $obj->amount;
+                $new_deposit['status'] = "pending";
+                $new_deposit['sub_bank_id'] = $bankaccount->subbank_id;
+                $new_deposit->save();
+            }
+        }
+        else {
+            $deposit = DepositBank::whereRaw("INSTR('".$obj->label."', deposit_number) > 0")->first();
+            if(!$deposit) {
+                $new_deposit = new DepositBank();
+                $bankaccount = BankAccount::where('iban', $obj->paymentDetails->payeeRequisite->iban)->first();
+    
+                if(!$bankaccount)
+                    return response()->json($obj->orderReference);
+    
+                $new_deposit['deposit_number'] = $obj->label;
+                $new_deposit['user_id'] = $bankaccount->user_id;
+                $new_deposit['currency_id'] = $webrequest->currency_id;
+                $new_deposit['amount'] = $obj->amount;
+                $new_deposit['status'] = "pending";
+                $new_deposit['sub_bank_id'] = $bankaccount->subbank_id;
+                $new_deposit->save();
+            }
 
-        $deposit = DepositBank::whereRaw("INSTR('".$obj->label."', deposit_number) > 0")->first();
-        if(!$deposit) {
-            $new_deposit = new DepositBank();
-            $bankaccount = BankAccount::where('iban', $obj->paymentDetails->payeeRequisite->iban)->first();
-
-            if(!$bankaccount)
-                return response()->json($obj->orderReference);
-
-            $new_deposit['deposit_number'] = $obj->label;
-            $new_deposit['user_id'] = $bankaccount->user_id;
-            $new_deposit['currency_id'] = $webrequest->currency_id;
-            $new_deposit['amount'] = $obj->amount;
-            $new_deposit['status'] = "pending";
-            $new_deposit['sub_bank_id'] = $bankaccount->subbank_id;
-            $new_deposit->save();
         }
 
         return response()->json($obj->orderReference);

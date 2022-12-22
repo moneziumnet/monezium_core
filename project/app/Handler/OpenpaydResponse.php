@@ -39,23 +39,45 @@ class OpenpaydResponse implements RespondsToWebhook
 
             $webrequest->save();
 
-            $deposit = DepositBank::whereRaw("INSTR('".$obj->transactionId."', deposit_number) > 0")->first();
-            if(!$deposit) {
-                $new_deposit = new DepositBank();
-                $user = User::where('holder_id', $obj->accountHolderId)->first();
 
-                if(!$user)
-                    return response()->json("failure");
-
-                $new_deposit['deposit_number'] = $obj->transactionId;
-                $new_deposit['user_id'] = $user->id;
-                $new_deposit['currency_id'] = $webrequest->currency_id;
-                $new_deposit['amount'] = $obj->amount->value;
-                $new_deposit['status'] = "pending";
-                $new_deposit['details'] = $obj->transactionReference;
-                $new_deposit['sub_bank_id'] = null;
-                $new_deposit->save();
+            if ($obj->transactionReference == null) {
+                $deposit = DepositBank::whereRaw("INSTR('".$obj->transactionId."', deposit_number) > 0")->first();
+                if(!$deposit) {
+                    $new_deposit = new DepositBank();
+                    $user = User::where('holder_id', $obj->accountHolderId)->first();
+    
+                    if(!$user)
+                        return response()->json("failure");
+    
+                    $new_deposit['deposit_number'] = $obj->transactionId;
+                    $new_deposit['user_id'] = $user->id;
+                    $new_deposit['currency_id'] = $webrequest->currency_id;
+                    $new_deposit['amount'] = $obj->amount->value;
+                    $new_deposit['status'] = "pending";
+                    $new_deposit['details'] = $obj->transactionReference;
+                    $new_deposit['sub_bank_id'] = null;
+                    $new_deposit->save();
+                }
             }
+            else {
+                $deposit = DepositBank::whereRaw("INSTR('".$obj->transactionReference."', deposit_number) > 0")->first();
+                if(!$deposit) {
+                    $new_deposit = new DepositBank();
+                    $user = User::where('holder_id', $obj->accountHolderId)->first();
+    
+                    if(!$user)
+                        return response()->json("failure");
+    
+                    $new_deposit['deposit_number'] = $obj->transactionReference;
+                    $new_deposit['user_id'] = $user->id;
+                    $new_deposit['currency_id'] = $webrequest->currency_id;
+                    $new_deposit['amount'] = $obj->amount->value;
+                    $new_deposit['status'] = "pending";
+                    $new_deposit['sub_bank_id'] = null;
+                    $new_deposit->save();
+                }
+            }
+
 
             return response()->json("success");
         }
