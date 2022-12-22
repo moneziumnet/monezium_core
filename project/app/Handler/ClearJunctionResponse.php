@@ -99,6 +99,6 @@ class ClearJunctionResponse extends Controller
         }
         $webrequest->gateway_type = "clearjunction";
         $webrequest->save();
-        return response()->json("success");
+        return response()->json(['http_status_code' => '200', 'body' => $obj->orderReference]);
     }
 }
