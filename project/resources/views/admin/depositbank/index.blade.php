@@ -143,7 +143,7 @@
             var send_info = JSON.parse(e.target.getAttribute('data-sendinfo'));
             var document_url = e.target.getAttribute('data-docu');
             var deposit_number = e.target.getAttribute('data-number');
-            var deposit_description = e.target.getAttribute('data-description');
+            var deposit_description = e.target.getAttribute('data-description')??"";
             var deposit_status = e.target.getAttribute('data-status');
             var complete_url = e.target.getAttribute('data-complete-url');
             var reject_url = e.target.getAttribute('data-reject-url');
