@@ -397,6 +397,8 @@ class OtherBankTransferController extends Controller
             }
             else if($bankgateway->keyword == 'clearjunction') {
                 $clientorder = rand(1000000, 9999999);
+                $payer_type = $user->company_name ? "corporate" : "individual"; 
+                $payer_name = $user->company_name ?  '"name":"'.$data->beneficiary->name.'"' : '"firstName":"'.explode(" ",$data->beneficiary->name, 2)[0].'","lastName":"'.explode(" ",$data->beneficiary->name, 2)[1].'"';
                 $type =   $data->beneficiary->type == 'RETAIL' ? "individual" : "corporate";
                 $payee_name = $data->beneficiary->type == 'RETAIL' ? '"firstName":"'.explode(" ",$data->beneficiary->name, 2)[0].'","lastName":"'.explode(" ",$data->beneficiary->name, 2)[1].'"' : '"name":"'.$data->beneficiary->name.'"';
                 $body = '{
@@ -408,6 +410,11 @@ class OtherBankTransferController extends Controller
                     "payee": {
                       "'.$type.'": {
                         '.$payee_name.'
+                      }
+                    },
+                    "payer": {
+                      "'.$payer_type.'": {
+                        '.$payer_name.'
                       }
                     },
                     "payeeRequisite": {
