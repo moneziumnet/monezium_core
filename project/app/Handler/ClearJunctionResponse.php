@@ -58,7 +58,7 @@ class ClearJunctionResponse extends Controller
             $bankaccount = BankAccount::where('iban', $obj->paymentDetails->payeeRequisite->iban)->first();
 
             if(!$bankaccount)
-                return response()->json("failure");
+                return response()->json(['http_status_code' => '200', 'body' => $obj->orderReference]);
 
             $new_deposit['deposit_number'] = $obj->label;
             $new_deposit['user_id'] = $bankaccount->user_id;
@@ -69,7 +69,7 @@ class ClearJunctionResponse extends Controller
             $new_deposit->save();
         }
 
-        return response()->json("success");
+        return response()->json(['http_status_code' => '200', 'body' => $obj->orderReference]);
     }
 
     public function payout(Request $request) {
