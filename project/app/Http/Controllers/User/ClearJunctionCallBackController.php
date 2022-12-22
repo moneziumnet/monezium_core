@@ -37,9 +37,6 @@ class ClearJunctionCallBackController extends Controller
             case "pending":
                 $webrequest->status = "processing";
                 break;
-            case "settled":
-                $webrequest->status = "completed";
-                break;
             case "captured":
                 $webrequest->status = "completed";
                 break;
@@ -87,10 +84,10 @@ class ClearJunctionCallBackController extends Controller
         
         switch($obj->status) {
             case "created":
-            case "pending":
+            case "settled":
                 $webrequest->status = "processing";
                 break;
-            case "settled":
+            case "captured":
                 $webrequest->status = "completed";
                 break;
             default:
