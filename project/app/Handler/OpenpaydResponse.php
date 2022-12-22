@@ -32,7 +32,7 @@ class OpenpaydResponse implements RespondsToWebhook
             $webrequest->amount = $obj->amount->value;
             $webrequest->currency_id = $currency ? $currency->id : 0;
             $webrequest->status = strtolower($obj->status);
-            $webrequest->reference = $obj->transactionReference;
+            $webrequest->reference = $obj->transactionReference ?? $obj->transactionId;
             $webrequest->failure_reason = $obj->failureReason??"";
             $webrequest->gateway_type = "openpayd";
             $webrequest->is_pay_in = true;

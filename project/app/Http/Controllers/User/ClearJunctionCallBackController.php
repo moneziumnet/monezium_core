@@ -29,6 +29,7 @@ class ClearJunctionCallBackController extends Controller
         $webrequest->transaction_id = $obj->orderReference;
         $webrequest->sender_name = $obj->paymentDetails->payerRequisite->name;
         $webrequest->sender_address = "";
+        $webrequest->reference = $obj->label ?? $obj->orderReference;
         $webrequest->amount = $obj->amount;
         $webrequest->currency_id = $currency ? $currency->id : 0;
         
@@ -45,7 +46,6 @@ class ClearJunctionCallBackController extends Controller
                 $webrequest->status = "failed";
                 break;
         }
-        $webrequest->reference = $obj->label;
         $webrequest->gateway_type = "clearjunction";
         $webrequest->is_pay_in = true;
         $webrequest->save();
