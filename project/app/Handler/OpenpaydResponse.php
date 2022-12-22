@@ -20,7 +20,7 @@ class OpenpaydResponse implements RespondsToWebhook
             if(!$obj->transactionReference)
                 return response()->json("failure");
             $currency = Currency::where('code', $obj->amount->currency)->first();
-            $webrequest = WebhookRequest::where('reference', $obj->transactionReference)
+            $webrequest = WebhookRequest::where('transaction_id', $obj->transactionId)
                 ->where('gateway_type', 'openpayd')
                 ->first();
             if(!$webrequest)

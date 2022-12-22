@@ -26,7 +26,7 @@ class ClearJunctionCallBackController extends Controller
         if(!$webrequest)
             $webrequest = new WebhookRequest();
         
-        $webrequest->transaction_id = $obj->clientOrder;
+        $webrequest->transaction_id = $obj->orderReference;
         $webrequest->sender_name = $obj->paymentDetails->payerRequisite->name;
         $webrequest->sender_address = "";
         $webrequest->amount = $obj->amount;
