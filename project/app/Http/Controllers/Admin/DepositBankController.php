@@ -75,6 +75,7 @@ class DepositBankController extends Controller
                                 data-sendinfo = \''.json_encode($send_info).'\'
                                 data-number="'.$data->deposit_number.'"
                                 data-status="'.$data->status.'"
+                                data-description="'.$data->details.'"
                                 data-userinfo=\'{"name":"'.($user_info->company_name ?? $user_info->name ).'","address":"'.($user_info->company_address ?? $user_info->address ).'"}\'
                                 data-complete-url="'.route('admin.deposits.bank.status',['id1' => $data->id, 'id2' => 'complete']).'"
                                 data-reject-url="'.route('admin.deposits.bank.status',['id1' => $data->id, 'id2' => 'reject']).'"
