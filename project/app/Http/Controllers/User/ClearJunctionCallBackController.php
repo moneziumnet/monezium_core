@@ -45,7 +45,7 @@ class ClearJunctionCallBackController extends Controller
                 $webrequest->status = "failed";
                 break;
         }
-        $webrequest->reference = $obj->label;
+        $webrequest->reference = $obj->label ?? '';
         $webrequest->gateway_type = "clearjunction";
         $webrequest->is_pay_in = true;
         $webrequest->save();
