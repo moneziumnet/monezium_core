@@ -35,7 +35,7 @@ class VirtualCardController extends Controller
             $first_name = Session::get('first_name');
             $last_name = Session::get('last_name');
             $user_wallet =  Wallet::where('user_id', auth()->user()->id)->where('wallet_type', 2)->where('currency_id', $currency_id)->first();
-            $currency=Currency::where('id', $request->currency_id)->first();
+            $currency=Currency::where('id', $currency_id)->first();
             if(!$user_wallet){
                 $gs = Generalsetting::first();
                 $user_wallet = new Wallet();
