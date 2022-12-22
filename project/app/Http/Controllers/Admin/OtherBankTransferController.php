@@ -404,6 +404,7 @@ class OtherBankTransferController extends Controller
                     "currency": "'.$currency->code.'",
                     "amount": '.$data->final_amount.',
                     "description": "'.$data->description.'",
+                    "postbackUrl": "'.url('/cj-payout').'",
                     "payee": {
                       "'.$type.'": {
                         '.$payee_name.'
