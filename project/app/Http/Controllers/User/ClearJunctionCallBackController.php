@@ -19,7 +19,7 @@ class ClearJunctionCallBackController extends Controller
         $obj = str2obj($request->getContent());
         
         $currency = Currency::where('code', $obj->currency)->first();
-        $webrequest = WebhookRequest::where('reference', $obj->label)
+        $webrequest = WebhookRequest::where('transaction_id', $obj->orderReference)
             ->where('gateway_type', 'clearjunction')
             ->where('is_pay_in', true)
             ->first();
@@ -45,7 +45,7 @@ class ClearJunctionCallBackController extends Controller
                 $webrequest->status = "failed";
                 break;
         }
-        $webrequest->reference = $obj->label ?? '';
+        $webrequest->reference = $obj->label;
         $webrequest->gateway_type = "clearjunction";
         $webrequest->is_pay_in = true;
         $webrequest->save();
