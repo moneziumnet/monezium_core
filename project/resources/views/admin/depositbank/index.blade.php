@@ -187,8 +187,12 @@
             }else {
                 $('.send-info').addClass('d-none');
             }
-            
-            $('#deposit_description').text(deposit_description + " / " + deposit_number);
+            if (bankaccount) {
+                $('#deposit_description').text(deposit_description + " / " + deposit_number);
+            } else {
+                $('#deposit_description').text(deposit_description);
+            }
+
             if(deposit_status == "pending"){
                 $('#complete_deposit').attr('data-href', complete_url);
                 $('#reject_deposit').attr('data-href', reject_url);
