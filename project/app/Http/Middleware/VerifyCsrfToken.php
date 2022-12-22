@@ -27,6 +27,7 @@ class VerifyCsrfToken extends Middleware
         'webhook-openpayd',
         'webhook-railsbank',
         'webhook-swan',
-        '/cj-payin'
+        '/cj-payin',
+        '/cj-payout'
     ];
 }
