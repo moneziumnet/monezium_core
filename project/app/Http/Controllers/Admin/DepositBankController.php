@@ -136,8 +136,10 @@ class DepositBankController extends Controller
         }
 
         $webhook_request = WebhookRequest::where('reference', 'LIKE', '%'.$data->deposit_number)->first();
+        $sender_name = "System Account";
         if($webhook_request) {
             $data->amount = $webhook_request->amount;
+            $sender_name = $webhook_request->sender_name;
         }
         $data->status = $id2;
         $data->save();
@@ -191,7 +193,7 @@ class DepositBankController extends Controller
             $trans->remark      = $remark;
             $trans->details     = trans('Deposit complete');
 
-            $trans->data        = '{"sender":"System Account", "receiver":"'.($referral_user->company_name ?? $referral_user->name).'", "description": "'.$data->details.' / '.$data->deposit_number.'"}';
+            $trans->data        = '{"sender":"'.$sender_name.'", "receiver":"'.($referral_user->company_name ?? $referral_user->name).'", "description": "'.$data->details.' / '.$data->deposit_number.'"}';
             $trans->save();
         }
         $final_chargefee = $transaction_global_cost + $transaction_custom_cost;
@@ -216,7 +218,7 @@ class DepositBankController extends Controller
         $trans->remark      = 'Deposit_create';
         $trans->details     = trans('Deposit complete');
 
-        $trans->data        = '{"sender":"System Account", "receiver":"'.($user->company_name ?? $user->name).'", "description": "'.$data->details.' / '.$data->deposit_number.'"}';
+        $trans->data        = '{"sender":"'.$sender_name.'", "receiver":"'.($user->company_name ?? $user->name).'", "description": "'.$data->details.' / '.$data->deposit_number.'"}';
         $trans->save();
 
         $data->update(['status' => 'complete']);
