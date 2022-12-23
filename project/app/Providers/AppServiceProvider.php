@@ -34,6 +34,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+	if (env('APP_ENV') !== 'local') {
+		    \URL::forceScheme('https');
+	  // $this->app['request']->server->set('HTTPS', true);
+        }
 
         view()->composer('*',function($settings){
             $settings->with('seo', DB::table('seotools')->first());
