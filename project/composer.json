@@ -26,6 +26,7 @@
         "nexmo/client": "*",
         "paypal/rest-api-sdk-php": "*",
         "phpmailer/phpmailer": "^6.6",
+        "phpoffice/phpspreadsheet": "^1.26",
         "psr/simple-cache": "2.0",
         "razorpay/razorpay": "^2.8",
         "spatie/laravel-cookie-consent": "^3.2",
