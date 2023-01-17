@@ -7,6 +7,8 @@
 <li class="list-group-item d-flex justify-content-between">@lang('SWIFT/BIC')<span>{{$item->beneficiary->swift_bic}}</span></li>
 <li class="list-group-item d-flex justify-content-between">@lang('Account/IBAN')<span>{{$item->beneficiary->account_iban}}</span></li>
 <li class="list-group-item d-flex justify-content-between">@lang('Amount')<span>{{ $item->currency->symbol }}{{ amount($item->final_amount, 1, 2) }} {{ $item->currency->code }}</span></li>
+<li class="list-group-item d-flex justify-content-between">@lang('Charge')<span>{{ $item->currency->symbol }}{{ amount($item->cost, 1, 2) }} {{ $item->currency->code }}</span></li>
+<li class="list-group-item d-flex justify-content-between">@lang('Full Amount')<span>{{ $item->currency->symbol }}{{ amount($item->amount, 1, 2) }} {{ $item->currency->code }}</span></li>
 <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Description')<span>{{ $item->description }}</span></li>
 @php
     $subbank = App\Models\SubInsBank::whereId($item->subbank)->first();

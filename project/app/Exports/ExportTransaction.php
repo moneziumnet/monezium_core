@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
-class ExportTransaction implements FromView,ShouldAutoSize
+class ExportTransaction implements FromView
 {
     /**
     * @return \Illuminate\Support\Collection

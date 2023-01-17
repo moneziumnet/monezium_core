@@ -93,10 +93,10 @@
                         <div class="form-group mt-3">
                             <label class="form-label required">{{__('Payment Type')}}</label>
                             <select name="payment_type" id="payment_type" class="form-select" required>
-                                <option value="">{{ __('Select Payment Type') }}</option>
-                                <option value="SWIFT">{{__('SWIFT')}}</option>
+                                <option value="">{{ __('Select Payment Type') }}</option>                               
                                 <option value="SEPA">{{__('SEPA')}}</option>
                                 <option value="SEPA_INSTANT">{{__('SEPA_INSTANT')}}</option>
+								<option value="SWIFT">{{__('SWIFT')}}</option>
                             </select>
                         </div>
 

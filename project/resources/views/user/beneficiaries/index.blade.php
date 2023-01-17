@@ -205,6 +205,7 @@
                           <a href="" id="copy_transfer" class="btn w-50" >
                             @lang('Copy Transaction')
                           </a>
+						   
                   </div>
               </div>
           </div>

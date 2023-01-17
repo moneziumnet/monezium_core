@@ -557,7 +557,17 @@ class UserController extends Controller
         $wallet_id = request('wallet_id');
         $e_time = request('e_time');
         return Excel::download( new ExportTransaction($search, $remark, $s_time, $e_time, $wallet_id), 'transaction.pdf',\Maatwebsite\Excel\Excel::DOMPDF);
-    }
+    
+		//$data = [$search, $remark, $remark, $wallet_id, $e_time];
+        //$pdf = PDF::loadView( 'user.export.transaction', $data);
+		//return $pdf->download('transaction.pdf');
+	
+	
+	
+	
+	
+	}
+	
 
     public function affilate_code()
     {

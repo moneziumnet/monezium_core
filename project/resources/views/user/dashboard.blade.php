@@ -292,12 +292,12 @@
             </div>
             @if ($user->kyc_status == 1)
             <div class="col-auto ms-auto d-print-none">
-                <div class="btn-list">
+                <!--<div class="btn-list">
 
                   <a  data-bs-toggle="modal" data-bs-target="#modal-bank-create" class="btn btn-primary d-sm-inline-block">
                       <i class="fas fa-plus me-1"></i> {{__('Create Bank Account')}}
                   </a>
-                </div>
+                </div>-->
               </div>
             @endif
           </div>
@@ -348,7 +348,7 @@
     <div class="row justify-content mt-3" style="max-height: 368px;overflow-y: scroll;">
         @if (count($bankaccountlist) != 0)
             @foreach ($bankaccountlist as $item)
-                <div class="col-sm-6 col-md-4 mb-3">
+                <div class="col-sm-6 col-md-6 mb-6">
                     <div class="card h-100 card--info-item">
                     <div class="text-end icon">
                         <i class="fas ">
@@ -357,7 +357,7 @@
                     </div>
                     <div class="card-body">
                         <div class="h3 m-0 text-uppercase"> {{$item->iban}}</div>
-                        <div class="h4 m-0 text-uppercase"> {{ $item->swift }}</div>
+                        <div class="h4 m-0 text-uppercase"> SWIFT: {{ $item->swift }}</div>
                         <div class="row">
                             <div class="col text-muted">{{ __($item->subbank->name) }} </div>
                             <div class="col h4 m-0 text-uppercase text-center">{{ __($item->currency->code) }} </div>

@@ -86,42 +86,43 @@
 						<table class="table card-table table-vcenter text-nowrap datatable">
 						  <thead>
 							<tr>
-							    <th class="w-1">@lang('No').</th>
-								<th>@lang('Date')</th>
-								<th>@lang('Transaction ID')</th>
+							    <!--<th class="w-1">@lang('No').</th>-->
+								<th>@lang('Date') / @lang('Transaction ID')</th>								
 								<th>@lang('Sender')</th>
 								<th>@lang('Receiver')</th>
-								<th>@lang('Remark')</th>
+								<th >@lang('Description')</th>
 								<th>@lang('Amount')</th>
+								<th>@lang('Fee')</th>
 								<th class="text-end"  style="padding-right: 28px;">@lang('Details')</th>
 							</tr>
 						  </thead>
 						  <tbody>
-              @php
-                $i = ($transactions->currentpage() - 1) * $transactions->perpage() + 1;
-              @endphp
+						  @php
+							$i = ($transactions->currentpage() - 1) * $transactions->perpage() + 1;
+						  @endphp
 							@forelse ($transactions as $key=>$data)
 							<tr>
-								<td data-label="@lang('No')">
+								<!--<td data-label="@lang('No')">
 								  <div>
 									<span class="text-muted">{{ $i++ }}</span>
 								  </div>
+								</td>-->
+								<td data-label="@lang('Date')">{{dateFormat($data->created_at,'d-M-Y')}} </br> {{__(str_dis($data->trnx))}} </td>
+								
+								<td data-label="@lang('Sender')">
+									{{__(json_decode($data->data)->sender ?? "")}}
 								</td>
-								<td data-label="@lang('Date')">{{dateFormat($data->created_at,'d-M-Y')}}</td>
-								<td data-label="@lang('Transaction ID')">
-								{{__(str_dis($data->trnx))}}
+								<td data-label="@lang('Receiver')">
+									{{__(json_decode($data->data)->receiver ?? "")}}
 								</td>
-                <td data-label="@lang('Sender')">
-                    {{__(json_decode($data->data)->sender ?? "")}}
-                </td>
-                <td data-label="@lang('Receiver')">
-                    {{__(json_decode($data->data)->receiver ?? "")}}
-                </td>
-								<td data-label="@lang('Remark')">
-								<span class="badge badge-dark">{{ucwords(str_replace('_',' ',$data->remark))}}</span>
+								<td   style="white-space: normal; max-width:400px;" data-label="@lang('Description')">
+									{{__(json_decode($data->data)->description ?? "")}} </br> <span class="badge badge-dark">{{ucwords(str_replace('_',' ',$data->remark))}}</span>
 								</td>
 								<td data-label="@lang('Amount')">
 									<span class="{{$data->type == '+' ? 'text-success':'text-danger'}}">{{$data->type}} {{amount($data->amount,$data->currency->type,2)}} {{$data->currency->code}}</span>
+								</td>
+								<td data-label="@lang('Fee')" class="text-end">									
+									<span class="{{$data->type == '+' ? 'text-danger':'text-danger'}}">{{'-'}} {{amount($data->charge,$data->currency->type,2)}} {{$data->currency->code}}</span>								
 								</td>
 								<td data-label="@lang('Details')" class="text-end">
 									<button class="btn btn-primary btn-sm details" data-data="{{$data}}">@lang('Details')</button>

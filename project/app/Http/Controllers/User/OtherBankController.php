@@ -147,11 +147,11 @@ class OtherBankController extends Controller
                 return redirect()->back()->with('unsuccess','Your monthly limitation of transaction is over.');
             }
 
-
-
- 
-
+			
+			
             $data = new BalanceTransfer();
+			
+			
 
             $txnid = Str::random(4).time();
             if ($file = $request->file('document'))
@@ -177,6 +177,8 @@ class OtherBankController extends Controller
             $data->status = 0;
             $data->save();
 
+			user_wallet_decrement($user->id, $data->currency_id, $data->amount);
+			user_wallet_increment(0, $data->currency_id, $data->cost, 9);
             // $trans = new Transaction();
             // $trans->trnx = $txnid;
             // $trans->user_id     = $user->id;
