@@ -265,7 +265,7 @@ if (!function_exists('access')) {
 if (!function_exists('mailSend')) {
     function mailSend($key, array $data, $user)
     {
-        $gs = GeneralSetting::first();
+        $gs = Generalsetting::first();
         $template = EmailTemplate::where('email_type', $key)->first();
 
         $message = str_replace('{name}', $user->name, $template->email_body);
@@ -273,7 +273,7 @@ if (!function_exists('mailSend')) {
         foreach ($data as $key => $value) {
             $message = str_replace("{" . $key . "}", $value, $message);
         }
-        
+
         if ($gs->is_smtp == 1) {
             $data = [
                 'to' => $user->email,
@@ -516,7 +516,7 @@ if (!function_exists('user_wallet_increment')) {
                     $trans->type = '-';
                     $trans->remark = 'card_issuance';
                     $trans->details = trans('Card Issuance');
-                    $trans->data = '{"sender":"' . ($user->company_name ?? $user->name) . '", "receiver":"System Account"}';
+                    $trans->data = '{"sender":"' . ($user->company_name ?? $user->name) . '", "receiver":"'.$gs->disqus.'"}';
                     $trans->save();
                 } else {
                     $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
@@ -535,7 +535,7 @@ if (!function_exists('user_wallet_increment')) {
                     $trans->type = '-';
                     $trans->remark = 'wallet_create';
                     $trans->details = trans('Wallet Create');
-                    $trans->data = '{"sender":"' . ($user->company_name ?? $user->name) . '", "receiver":"System Account"}';
+                    $trans->data = '{"sender":"' . ($user->company_name ?? $user->name) . '", "receiver":"'.$gs->disqus.'"}';
                     $trans->save();
                 }
                 user_wallet_decrement($auth_id, defaultCurr(), $chargefee->data->fixed_charge, 1);
@@ -704,6 +704,7 @@ if (!function_exists('wallet_monthly_fee')) {
         $now = Carbontime::now();
         $user = User::findOrFail($user_id);
         $wallets = Wallet::where('user_id', $user->id)->where('wallet_type', 1)->get();
+        $gs = Generalsetting::first();
         if ($wallets) {
             if ($user->wallet_maintenance && $now->gt($user->wallet_maintenance)) {
                 $user->wallet_maintenance = Carbontime::now()->addDays(30);
@@ -727,7 +728,7 @@ if (!function_exists('wallet_monthly_fee')) {
                     $trans->wallet_id = isset($trans_wallet) ? $trans_wallet->id : null;
                     $trans->remark = 'wallet_monthly_fee';
                     $trans->details = trans('Wallet Maintenance');
-                    $trans->data = '{"sender":"' . ($user->company_name ?? $user->name) . '", "receiver":"System Account"}';
+                    $trans->data = '{"sender":"' . ($user->company_name ?? $user->name) . '", "receiver":"'.$gs->disqus.'"}';
                     $trans->save();
 
                     $user->update();
@@ -764,7 +765,7 @@ if (!function_exists('wallet_monthly_fee')) {
                     $trans->wallet_id = isset($trans_wallet) ? $trans_wallet->id : null;
                     $trans->remark = 'card_monthly_fee';
                     $trans->details = trans('Card Maintenance');
-                    $trans->data = '{"sender":"' . ($user->company_name ?? $user->name) . '", "receiver":"System Account"}';
+                    $trans->data = '{"sender":"' . ($user->company_name ?? $user->name) . '", "receiver":"'.$gs->disqus.'"}';
                     $trans->save();
 
                     $user->update();
