@@ -61,6 +61,10 @@ class UserController extends Controller
                     $name = $data->company_name ?? $data->name;
                     return $name;
                 })
+                ->editColumn('balance', function(User $data) {
+                    $currency = Currency::findOrFail(defaultCurr());
+                    return showPrice(userBalance($data->id), $currency);
+                })
                 ->addColumn('action', function(User $data) {
                     return '<div class="btn-group mb-1">
                         <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -346,7 +350,7 @@ class UserController extends Controller
                         return response()->json(array('errors' => [0 => __('This api support only for EUR currency.')]));
 
                     }
-            
+
                     $v_card = VirtualCard::where('user_id', $user->id)->where('currency_id', $currency_id)->first();
                     if($v_card) {
                         return response()->json(array('errors' => [0 => __($currency->code . ' Virtual Card already exists.')]));
@@ -1331,7 +1335,7 @@ class UserController extends Controller
             $input['kyc_info'] = json_encode(array_values($request->form_builder));
             $input['request_date'] = date('Y-m-d H:i:s');
             $data->fill($input)->save();
-    
+
             $msg = __('New Data Added Successfully.').' '.'<a href="'.route("admin.user.kycinfo", $request->user_id).'">'.__('View Lists.').'</a>';
             return response()->json($msg);
         }
@@ -1415,7 +1419,7 @@ class UserController extends Controller
                     $balance = $userBalance - $totalAmt;
                     user_wallet_decrement($trnx->user_id, $currency_id, $totalAmt);
                     user_wallet_decrement(0, $currency_id, $trnx->charge, 9);
-                    
+
                     $trnx->currency_id = $currency_id;
                     $trnx->amount      = $amount;
                     $trnx->charge      = $charge;
