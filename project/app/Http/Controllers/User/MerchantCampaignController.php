@@ -312,7 +312,7 @@ class MerchantCampaignController extends Controller
                 $trans->type        = '-';
                 $trans->remark      = 'wallet_create';
                 $trans->details     = trans('Wallet Create');
-                $trans->data        = '{"sender":"'.$campaign_user->name.'", "receiver":"System Account"}';
+                $trans->data        = '{"sender":"'.$campaign_user->name.'", "receiver":"'.$gs->disqus.'"}';
                 $trans->save();
 
                 user_wallet_decrement($campaign_user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);

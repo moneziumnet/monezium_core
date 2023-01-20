@@ -39,6 +39,7 @@ class DashboardController extends Controller
 
     public function index()
     {
+        $gs = Generalsetting::first();
         if (Auth::guard('admin')->user()->IsSuper()) {
             $data['ainstitutions'] = Admin::orderBy('id', 'desc')->where('tenant_id', '!=', '')->get();
             $data['languages'] = Language::all();
@@ -114,7 +115,7 @@ class DashboardController extends Controller
             $trans->type        = '-';
             $trans->remark      = 'bank_account_create';
             $trans->details     = trans('Bank Account Create');
-            $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
+            $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
             $trans->save();
 
             user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
@@ -141,7 +142,7 @@ class DashboardController extends Controller
             $trans->type        = '-';
             $trans->remark      = 'card_issuance';
             $trans->details     = trans('Card Issuance');
-            $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
+            $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
             $trans->save();
 
             $trx='VC-'.Str::random(6);
@@ -167,7 +168,6 @@ class DashboardController extends Controller
             $sav['currency_id']=$currency_id;
             $sav['charge']=0;
             VirtualCard::create($sav);
-            $gs = Generalsetting::first();
             $address = $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
 
             $user_wallet = new Wallet();

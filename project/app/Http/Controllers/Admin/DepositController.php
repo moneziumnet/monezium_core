@@ -64,6 +64,7 @@ class DepositController extends Controller
     }
 
     public function status($id1,$id2){
+        $gs = Generalsetting::findOrFail(1);
         $data = Deposit::findOrFail($id1);
 
         if($data->status == 'complete'){
@@ -116,7 +117,7 @@ class DepositController extends Controller
             $trans->remark      = $remark;
             $trans->details     = trans('Deposit complete');
 
-            $trans->data        = '{"sender":"System Account", "receiver":"'.($referral_user->company_name ?? $referral_user->name).'"}, "description":"'.$data->deposit_number.'"}';
+            $trans->data        = '{"sender":"'.$gs->disqus.'", "receiver":"'.($referral_user->company_name ?? $referral_user->name).'"}, "description":"'.$data->deposit_number.'"}';
             $trans->save();
         }
         $final_chargefee = $transaction_global_cost + $transaction_custom_cost;
@@ -141,11 +142,10 @@ class DepositController extends Controller
         $trans->remark      = 'Deposit_create';
         $trans->details     = trans('Deposit complete');
 
-        $trans->data        = '{"sender":"System Account", "receiver":"'.($user->company_name ?? $user->name).'"}, "description":"'.$data->deposit_number.'"}';
+        $trans->data        = '{"sender":"'.$gs->disqus.'", "receiver":"'.($user->company_name ?? $user->name).'"}, "description":"'.$data->deposit_number.'"}';
         $trans->save();
 
         $data->update(['status' => 'complete']);
-        $gs = Generalsetting::findOrFail(1);
 
             $to = $user->email;
             $subject = " You have deposited successfully.";

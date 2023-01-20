@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Currency;
-use App\Models\GeneralSetting;
+use App\Models\Generalsetting;
 use App\Models\Transaction;
 use App\Models\Withdraw;
 use App\Models\WithdrawMethod;
@@ -19,27 +19,27 @@ class WithdrawMethodController extends Controller
     public function datatables()
     {
          $datas = WithdrawMethod::orderBy('id','desc');
-  
+
 
             return Datatables::of($datas)
 
             ->editColumn('id', function(WithdrawMethod $data) {
                 return '<div>
                         '.$data->id.'
-                       
+
                 </div>';
-            }) 
+            })
             ->editColumn('method', function(WithdrawMethod $data){
                 return  '<div>
                             '.$data->method.'
-                            
+
                         </div>';
             })
             ->editColumn('fixed', function(WithdrawMethod $data){
                 $curr = Currency::where('is_default','=',1)->first();
                 return  '<div>
                             '.$curr->symbol.$data->fixed.'
-                           
+
                         </div>';
             })
             ->editColumn('percentage', function(WithdrawMethod $data){
@@ -68,7 +68,7 @@ class WithdrawMethodController extends Controller
               </div>
             </div>';
 
-            }) 
+            })
 
             ->rawColumns(['id','method','fixed','percentage','status','created_at','action'])
             ->toJson();

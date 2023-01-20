@@ -8,6 +8,7 @@ use App\Models\Currency;
 use App\Models\LoanPlan;
 use App\Models\UserLoan;
 use App\Models\Transaction;
+use App\Models\Generalsetting;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\InstallmentLog;
@@ -89,7 +90,7 @@ class UserLoanController extends Controller
     public function loanRequest(Request $request){
 
         $user = auth()->user();
-
+        $gs = Generalsetting::first();
         if($user->bank_plan_id === null){
             return redirect()->route('user.loans.plan')->with('warning','You have to buy a plan to loan');
         }
@@ -162,7 +163,7 @@ class UserLoanController extends Controller
         $trans->type        = '+';
         $trans->remark      = 'loan_create';
         $trans->details     = trans('loan requesting');
-        $trans->data        = '{"sender":"System Account", "receiver":"'.(auth()->user()->company_name ?? auth()->user()->name).'"}';
+        $trans->data        = '{"sender":"'.$gs->disqus.'", "receiver":"'.(auth()->user()->company_name ?? auth()->user()->name).'"}';
         $trans->save();
 
         return redirect()->route('user.loans.index')->with('message','Loan Requesting Successfully');

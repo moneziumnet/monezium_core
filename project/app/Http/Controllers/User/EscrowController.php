@@ -272,7 +272,7 @@ class EscrowController extends Controller
             $trans->type        = '-';
             $trans->remark      = 'wallet_create';
             $trans->details     = trans('Wallet Create');
-            $trans->data        = '{"sender":"'.($recipient->company_name ?? $recipient->name).'", "receiver":"System Account", "description": "'.$escrow->description.'"}';
+            $trans->data        = '{"sender":"'.($recipient->company_name ?? $recipient->name).'", "receiver":"'.$gs->disqus.'", "description": "'.$escrow->description.'"}';
             $trans->save();
 
             user_wallet_decrement($recipient->id, defaultCurr(), $chargefee->data->fixed_charge, 1);

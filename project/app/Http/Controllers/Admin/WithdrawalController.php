@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Transaction;
 use App\Models\Withdrawals;
 use App\Models\Currency;
+use App\Models\Generalsetting;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Wallet;
@@ -44,7 +45,7 @@ class WithdrawalController extends Controller
     public function withdrawReject(Request $request, Withdrawals $withdraw)
     {
         $request->validate(['reason_of_reject' => 'required']);
-
+        $gs = Generalsetting::first();
         $withdraw->status = 2;
         $withdraw->reject_reason = $request->reason_of_reject;
         $withdraw->save();
@@ -113,7 +114,7 @@ class WithdrawalController extends Controller
             $trnx->remark      = 'withdraw_reject';
             $trnx->type        = '+';
             $trnx->details     = trans('Withdraw request rejected');
-            $trnx->data        = '{"sender":"System Account", "receiver":"'.($user->company_name ?? $user->name).'"}';
+            $trnx->data        = '{"sender":"'.$gs->disqus.'", "receiver":"'.($user->company_name ?? $user->name).'"}';
             $trnx->save();
 
         } else{
@@ -136,7 +137,7 @@ class WithdrawalController extends Controller
             $trnx->remark      = 'withdraw_reject';
             $trnx->type        = '+';
             $trnx->details     = trans('Withdraw request rejected');
-            $trnx->data        = '{"sender":"System Account", "receiver":"'.($user->company_name ?? $user->name).'"}';
+            $trnx->data        = '{"sender":"'.$gs->disqus.'", "receiver":"'.($user->company_name ?? $user->name).'"}';
             $trnx->save();
 
         }

@@ -53,7 +53,7 @@ class CryptoWithdrawController extends Controller
 
     public function status($id1,$id2){
         $data = CryptoWithdraw::findOrFail($id1);
-
+        $gs = Generalsetting::findOrFail(1);
         if($data->status == 1){
           $msg = 'Deposits already completed';
           return response()->json($msg);
@@ -177,12 +177,12 @@ class CryptoWithdrawController extends Controller
             $trnx->remark      = 'withdraw_reject';
             $trnx->type        = '+';
             $trnx->details     = trans('Withdraw request rejected');
-            $trnx->data        = '{"sender":"System Account", "receiver":"'.($user->company_name ?? $user->name ).'"}';
+            $trnx->data        = '{"sender":"'.$gs->disqus.'", "receiver":"'.($user->company_name ?? $user->name ).'"}';
             $trnx->save();
 
 
         }
-        $gs = Generalsetting::findOrFail(1);
+
 
             $to = $user->email;
             $subject = " You have withdrawed successfully.";

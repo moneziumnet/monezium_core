@@ -173,7 +173,7 @@ class AccessController extends Controller
                 $trans->type        = '-';
                 $trans->remark      = 'wallet_create';
                 $trans->details     = trans('Wallet Create');
-                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
+                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
                 $trans->save();
 
                 user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
@@ -235,7 +235,7 @@ class AccessController extends Controller
                 $trans->type        = '-';
                 $trans->remark      = 'wallet_create';
                 $trans->details     = trans('Wallet Create');
-                $trans->data        = '{"sender":"'.(User::findOrFail($request->user_id)->company_name ?? User::findOrFail($request->user_id)->name).'", "receiver":"System Account"}';
+                $trans->data        = '{"sender":"'.(User::findOrFail($request->user_id)->company_name ?? User::findOrFail($request->user_id)->name).'", "receiver":"'.$gs->disqus.'"}';
                 $trans->save();
 
                 user_wallet_decrement($request->user_id, defaultCurr(), $chargefee->data->fixed_charge, 1);

@@ -26,6 +26,7 @@ use Auth;
 class RailsBankController extends Controller
 {
     public function store(Request $request){
+        $gs = Generalsetting::first();
         $currency = Currency::whereId($request->currency)->first();
         if ($currency->code != 'EUR'){
             return redirect()->back()->with(array('warning' => 'Sorry, Currently Railsbank API only supports for EUR because this API is not product version.'));
@@ -133,7 +134,7 @@ class RailsBankController extends Controller
         $trans->type        = '-';
         $trans->remark      = 'bank_account_create';
         $trans->details     = trans('Bank Account Create');
-        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
+        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
         $trans->save();
 
         user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);

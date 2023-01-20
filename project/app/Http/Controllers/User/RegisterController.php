@@ -193,7 +193,7 @@ class RegisterController extends Controller
         $trans->type        = '-';
         $trans->remark      = 'wallet_create';
         $trans->details     = trans('Wallet Create');
-        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
+        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
         $trans->save();
 
         $trans = new Transaction();
@@ -208,7 +208,7 @@ class RegisterController extends Controller
         $trans->type        = '-';
         $trans->remark      = 'price_plan';
         $trans->details     = trans('Price Plan');
-        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
+        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
         $trans->save();
 
         if ($gs->is_verification_email == 1) {
@@ -261,7 +261,7 @@ class RegisterController extends Controller
                     $mainUserTrans->charge      = 0;
                     $mainUserTrans->type        = '+';
                     $mainUserTrans->remark      = 'Referral Bonus';
-                    $mainUserTrans->data        = '{"sender":"System Account", "receiver":"'.($mainUser->company_name ?? $mainUser->name).'"}';
+                    $mainUserTrans->data        = '{"sender":"'.$gs->disqus.'", "receiver":"'.($mainUser->company_name ?? $mainUser->name).'"}';
                     $mainUserTrans->details     = trans('Referral Bonus');
 
                     // $mainUserTrans->email = $mainUser->email;
@@ -287,7 +287,7 @@ class RegisterController extends Controller
                     $newUserTrans->charge      = 0;
                     $newUserTrans->type        = '+';
                     $newUserTrans->remark      = 'Referral Bonus';
-                    $newUserTrans->data        = '{"sender":"System Account", "receiver":"'.($user->company_name ?? $user->name).'"}';
+                    $newUserTrans->data        = '{"sender":"'.$gs->disqus.'", "receiver":"'.($user->company_name ?? $user->name).'"}';
                     $newUserTrans->details     = trans('Referral Bonus');
 
                     // $newUserTrans->email = $user->email;

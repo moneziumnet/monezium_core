@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Subscription;
 
 use App\Http\Controllers\Controller;
 use App\Models\BankPlan;
+use App\Models\Generalsetting;
 use App\Models\User;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
@@ -14,7 +15,7 @@ class SubscriptionController extends Controller
 
         $userBalance = user_wallet_balance(auth()->id(),$request->currency_id);
         $plan = BankPlan::findOrFail($request->bank_plan_id);
-
+        $gs = Generalsetting::first();
         if($plan->amount > $userBalance)
         {
             return redirect()->route('user.dashboard')->with('error', 'Your Balance not Available.');
@@ -32,7 +33,7 @@ class SubscriptionController extends Controller
         $trnx->remark      = 'upgrade_plan';
         $trnx->type        = '-';
         $trnx->details     = trans('Upgrade Plan');
-        $trnx->data        = '{"sender":"'.(User::findOrFail(auth()->id())->company_name ?? User::findOrFail(auth()->id())->name).'", "receiver":"System Account"}';
+        $trnx->data        = '{"sender":"'.(User::findOrFail(auth()->id())->company_name ?? User::findOrFail(auth()->id())->name).'", "receiver":"'.$gs->disqus.'"}';
         $trnx->save();
         user_wallet_decrement(auth()->id(), $request->currency_id, $plan->amount);
         user_wallet_increment(0, $request->currency_id, $plan->amount, 9);

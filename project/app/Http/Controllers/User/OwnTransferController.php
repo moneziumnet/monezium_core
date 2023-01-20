@@ -94,7 +94,7 @@ class OwnTransferController extends Controller
                 $trans->charge      = 0;
                 $trans->type        = '-';
                 $trans->remark      = 'card_issuance';
-                $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"System Account"}';
+                $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.$gs->disqus.'"}';
                 $trans->details     = trans('Card Issuance');
                 $trans->save();
             }
@@ -118,7 +118,7 @@ class OwnTransferController extends Controller
                 $trans->type        = '-';
                 $trans->remark      = 'wallet_create';
                 $trans->details     = trans('Wallet Create');
-                $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"System Account"}';
+                $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.$gs->disqus.'"}';
                 $trans->save();
             }
             user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);

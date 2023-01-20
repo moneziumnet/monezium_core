@@ -210,6 +210,7 @@ class KycManageController extends Controller
     {
         $user = User::findOrFail($id1);
         $user->kyc_status = $id2;
+        $gs = Generalsetting::first();
 
         if($id2 == 1) { //Approve
             $pre_sections = explode(" , ", $user->section);
@@ -233,7 +234,7 @@ class KycManageController extends Controller
                         $trans->type        = '-';
                         $trans->remark      = 'section_enable';
                         $trans->details     = $section.trans(' Section Create');
-                        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
+                        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
                         $trans->save();
 
                         user_wallet_decrement($id1, defaultCurr(), $manualfee->data->fixed_charge, 1);

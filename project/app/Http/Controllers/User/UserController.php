@@ -45,6 +45,7 @@ class UserController extends Controller
     public function index()
     {
         wallet_monthly_fee(auth()->id());
+        $gs = Generalsetting::first();
         $data['user'] = Auth::user();
         $wallets = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('wallet_type', 1)->with('currency')->get();
         $data['wallets'] = $wallets;
@@ -121,7 +122,7 @@ class UserController extends Controller
             $trans->type        = '-';
             $trans->remark      = 'bank_account_create';
             $trans->details     = trans('Bank Account Create');
-            $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
+            $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
             $trans->save();
 
             user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
@@ -168,7 +169,7 @@ class UserController extends Controller
         $trans->type        = '-';
         $trans->remark      = 'wallet_create';
         $trans->details     = trans('Wallet Create');
-        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
+        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
         $trans->save();
 
         user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
@@ -235,7 +236,7 @@ class UserController extends Controller
         $trans->type        = '-';
         $trans->remark      = 'wallet_create';
         $trans->details     = trans('Wallet Create');
-        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
+        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
         $trans->save();
 
         user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
@@ -557,17 +558,17 @@ class UserController extends Controller
         $wallet_id = request('wallet_id');
         $e_time = request('e_time');
         return Excel::download( new ExportTransaction($search, $remark, $s_time, $e_time, $wallet_id), 'transaction.pdf',\Maatwebsite\Excel\Excel::DOMPDF);
-    
+
 		//$data = [$search, $remark, $remark, $wallet_id, $e_time];
         //$pdf = PDF::loadView( 'user.export.transaction', $data);
 		//return $pdf->download('transaction.pdf');
-	
-	
-	
-	
-	
+
+
+
+
+
 	}
-	
+
 
     public function affilate_code()
     {

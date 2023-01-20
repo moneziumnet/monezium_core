@@ -136,7 +136,7 @@ class ExchangeMoneyController extends Controller
                 $trans->type        = '-';
                 $trans->remark      = 'card_issuance';
                 $trans->details     = trans('Card Issuance');
-                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
+                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
                 $trans->save();
             }
             else {
@@ -157,7 +157,7 @@ class ExchangeMoneyController extends Controller
                 $trans->type        = '-';
                 $trans->remark      = 'wallet_create';
                 $trans->details     = trans('Wallet Create');
-                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
+                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
                 $trans->save();
             }
             user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);

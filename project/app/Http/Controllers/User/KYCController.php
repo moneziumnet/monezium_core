@@ -171,6 +171,7 @@ class KYCController extends Controller
     public function kyc_status(Request $request) {
         $user = User::findOrFail($request->id);
         $user->kyc_status = $request->status;
+        $gs = Generalsetting::first();
         if($request->status == 2) {
             $user->kyc_token = null;
         }
@@ -196,7 +197,7 @@ class KYCController extends Controller
                         $trans->type        = '-';
                         $trans->remark      = 'section_enable';
                         $trans->details     = $section.trans(' Section Create');
-                        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
+                        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
                         $trans->save();
 
                         user_wallet_decrement($request->id, defaultCurr(), $manualfee->data->fixed_charge, 1);

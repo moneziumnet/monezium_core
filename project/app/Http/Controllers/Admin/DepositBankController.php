@@ -66,7 +66,7 @@ class DepositBankController extends Controller
 
                 @$detail = SubInsBank::where('id', $data->sub_bank_id)->with('subInstitution')->first();
                 $send_info = WebhookRequest::where('reference', 'LIKE', '%'.$data->deposit_number)->with('currency')->first();
-                
+
 
                 if(!$detail) {
                     $user_info = User::find($data->user_id);
@@ -81,7 +81,7 @@ class DepositBankController extends Controller
                                 data-reject-url="'.route('admin.deposits.bank.status',['id1' => $data->id, 'id2' => 'reject']).'"
                                 onclick=getDetails(event)
                                 class="btn btn-sm btn-primary detailsBtn">' . __("Details") . '</a>
-                        </div>';                    
+                        </div>';
                 }
                 if($detail->hasGateway()){
                     @$bankaccount = BankAccount::whereUserId($data->user_id)->where('subbank_id', $detail->id)->where('currency_id', $data->currency_id)->with('user')->first();
@@ -127,6 +127,7 @@ class DepositBankController extends Controller
 
     public function status($id1,$id2){
         $data = DepositBank::findOrFail($id1);
+        $gs = Generalsetting::findOrFail(1);
 
         if($data->status == 'complete' || $data->status == 'reject'){
           $msg = $data->status == 'complete'
@@ -136,7 +137,7 @@ class DepositBankController extends Controller
         }
 
         $webhook_request = WebhookRequest::where('reference', 'LIKE', '%'.$data->deposit_number)->first();
-        $sender_name = "System Account";
+        $sender_name = $gs->disqus;
         if($webhook_request) {
             $data->amount = $webhook_request->amount;
             $sender_name = $webhook_request->sender_name;
@@ -229,7 +230,6 @@ class DepositBankController extends Controller
             $campaign->status = 1;
             $campaign->update();
         }
-        $gs = Generalsetting::findOrFail(1);
 
             $to = $user->email;
             $subject = " You have deposited successfully.";

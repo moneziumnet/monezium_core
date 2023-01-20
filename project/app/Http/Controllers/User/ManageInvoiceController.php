@@ -494,6 +494,7 @@ class ManageInvoiceController extends Controller
     public function invoicePaymentSubmit(Request $request)
     {
         $invoice = Invoice::findOrFail($request->invoice_id);
+        $gs = Generalsetting::first();
         if (auth()->user() && auth()->id() == $invoice->user_id) {
             redirect(route('user.dashboard'))->with('error','You can not pay yourself.');
         }
@@ -539,7 +540,6 @@ class ManageInvoiceController extends Controller
             $wallet = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('currency_id',$invoice->currency_id)->where('wallet_type', 1)->first();
 
             if(!$wallet){
-                $gs = Generalsetting::first();
                 $wallet =  Wallet::create([
                     'user_id'     => auth()->id(),
                     'user_type'   => 1,
@@ -568,7 +568,7 @@ class ManageInvoiceController extends Controller
                 $trans->type        = '-';
                 $trans->remark      = 'wallet_create';
                 $trans->details     = trans('Wallet Create');
-                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
+                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
                 $trans->save();
 
                 user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
@@ -597,7 +597,7 @@ class ManageInvoiceController extends Controller
             $trans->remark      = 'invoice_tax_fee';
             $trans->details     = trans('Invoice Tax Fee');
             $trans->invoice_num = $invoice->number;
-            $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"System Account", "description": "'.$invoice->description.'"}';
+            $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.$gs->disqus.'", "description": "'.$invoice->description.'"}';
             $trans->save();
 
             $wallet->balance -= $invoice->final_amount;
@@ -651,7 +651,7 @@ class ManageInvoiceController extends Controller
                 $trans->type        = '-';
                 $trans->remark      = 'wallet_create';
                 $trans->details     = trans('Wallet Create');
-                $trans->data        = '{"sender":"'.(User::findOrFail($invoice->user_id)->company_name ?? User::findOrFail($invoice->user_id)->name).'", "receiver":"System Account"}';
+                $trans->data        = '{"sender":"'.(User::findOrFail($invoice->user_id)->company_name ?? User::findOrFail($invoice->user_id)->name).'", "receiver":"'.$gs->disqus.'"}';
                 $trans->save();
 
                 user_wallet_decrement($invoice->user_id, defaultCurr(), $chargefee->data->fixed_charge, 1);
@@ -721,6 +721,7 @@ class ManageInvoiceController extends Controller
     public function invoice_link_pay(Request $request)
     {
         $url = Auth::check() ? route('user.dashboard') : route('user.login');
+        $gs = Generalsetting::first();
 
         if($request->payment == 'gateway'){
             return redirect($url)->with('message','Gateway Payment completed');
@@ -762,7 +763,6 @@ class ManageInvoiceController extends Controller
             $wallet = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('currency_id',$invoice->currency_id)->where('wallet_type', 1)->first();
 
             if(!$wallet){
-                $gs = Generalsetting::first();
                 $wallet =  Wallet::create([
                     'user_id'     => auth()->id(),
                     'user_type'   => 1,
@@ -791,7 +791,7 @@ class ManageInvoiceController extends Controller
                 $trans->type        = '-';
                 $trans->remark      = 'wallet_create';
                 $trans->details     = trans('Wallet Create');
-                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account", "description": "'.$invoice->description.'"}';
+                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'", "description": "'.$invoice->description.'"}';
                 $trans->save();
 
                 user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
@@ -820,7 +820,7 @@ class ManageInvoiceController extends Controller
             $trans->remark      = 'invoice_tax_fee';
             $trans->details     = trans('Invoice Tax Fee');
             $trans->invoice_num = $invoice->number;
-            $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"System Account"}';
+            $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.$gs->disqus.'"}';
             $trans->save();
 
             $wallet->balance -= $invoice->final_amount;
@@ -874,7 +874,7 @@ class ManageInvoiceController extends Controller
                 $trans->type        = '-';
                 $trans->remark      = 'wallet_create';
                 $trans->details     = trans('Wallet Create');
-                $trans->data        = '{"sender":"'.(User::findOrFail($invoice->user_id)->company_name ?? User::findOrFail($invoice->user_id)->name).'", "receiver":"System Account"}';
+                $trans->data        = '{"sender":"'.(User::findOrFail($invoice->user_id)->company_name ?? User::findOrFail($invoice->user_id)->name).'", "receiver":"'.$gs->disqus.'"}';
                 $trans->save();
 
                 user_wallet_decrement($invoice->user_id, defaultCurr(), $chargefee->data->fixed_charge, 1);

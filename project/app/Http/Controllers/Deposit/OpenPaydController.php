@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Validator;
 class OpenPaydController extends Controller
 {
     public function store(Request $request){
+        $gs = Generalsetting::first();
         $client = New Client();
         $user = User::findOrFail($request->user);
         $bankgateway = BankGateway::where('subbank_id', $request->subbank)->first();
@@ -195,7 +196,7 @@ class OpenPaydController extends Controller
         $trans->type        = '-';
         $trans->remark      = 'bank_account_create';
         $trans->details     = trans('Bank Account Create');
-        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
+        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
         $trans->save();
 
         user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);

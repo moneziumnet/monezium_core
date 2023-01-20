@@ -400,7 +400,7 @@ class UserController extends Controller
                     $trans->type        = '-';
                     $trans->remark      = 'wallet_create';
                     $trans->details     = trans('Wallet Create');
-                    $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
+                    $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
                     $trans->save();
                   }
                   $user_wallet = new Wallet();
@@ -578,6 +578,7 @@ class UserController extends Controller
 
         public function upgradePlan(Request $request, $id)
         {
+            $gs = Generalsetting::first();
             $rules = [
                 'subscription_type' => 'required',
             ];
@@ -609,7 +610,7 @@ class UserController extends Controller
             $trnx->remark      = 'upgrade_plan';
             $trnx->type        = '-';
             $trnx->details     = trans('Upgrade Plan');
-            $trnx->data        = '{"sender":"'.(User::findOrFail($id)->company_name ?? User::findOrFail($id)->name).'", "receiver":"System Account"}';
+            $trnx->data        = '{"sender":"'.(User::findOrFail($id)->company_name ?? User::findOrFail($id)->name).'", "receiver":"'.$gs->disqus.'"}';
             $trnx->save();
             user_wallet_decrement($id, $currency_id, $plan->amount);
             user_wallet_increment(0, $currency_id, $plan->amount, 9);
@@ -1082,7 +1083,7 @@ class UserController extends Controller
                     $trans->charge      = 0;
                     $trans->type        = '-';
                     $trans->remark      = 'card_issuance';
-                    $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
+                    $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
                     $trans->details     = trans('Card Issuance');
                     $trans->save();
                 }
@@ -1106,7 +1107,7 @@ class UserController extends Controller
                     $trans->type        = '-';
                     $trans->remark      = 'wallet_create';
                     $trans->details     = trans('Wallet Create');
-                    $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
+                    $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
                     $trans->save();
                 }
                 user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
@@ -1718,6 +1719,7 @@ class UserController extends Controller
             $userBalance = user_wallet_balance($wallet->user_id, $wallet->currency->id, $wallet->wallet_type);
             $manualfee = Charge::findOrFail($request->charge_id);
             $customfee = Charge::where('plan_id', $manualfee->plan_id)->where('user_id', $wallet->user_id)->where('name', $manualfee->name)->first();
+            $gs = Generalsetting::first();
             if ($customfee) {
                 $manualfee = $customfee;
             }
@@ -1738,7 +1740,7 @@ class UserController extends Controller
             $trans->charge      = 0;
             $trans->type        = '-';
             $trans->remark      = 'manual_fee_'.str_replace(' ', '_', $manualfee->name);
-            $trans->data        = '{"sender":"'.(User::findOrFail($wallet->user_id)->company_name ?? User::findOrFail($wallet->user_id)->name).'", "receiver":"System Account"}';
+            $trans->data        = '{"sender":"'.(User::findOrFail($wallet->user_id)->company_name ?? User::findOrFail($wallet->user_id)->name).'", "receiver":"'.$gs->disqus.'"}';
             $trans->details     = trans('manual_fee');
             $trans->save();
             return redirect()->back()->with(array('message' => 'Done Manual fee successfully'));
@@ -1819,6 +1821,7 @@ class UserController extends Controller
         public function updateModules(Request $request, $id)
         {
             $user = User::findOrFail($id);
+            $gs = Generalsetting::first();
             foreach($request->section as $key=>$section){
                 if (!$user->sectionCheck($section)) {
                     $manualfee = Charge::where('user_id', $id )->where('plan_id', $user->bank_plan_id)->where('name', $section)->first();
@@ -1838,7 +1841,7 @@ class UserController extends Controller
                         $trans->type        = '-';
                         $trans->remark      = 'section_enable';
                         $trans->details     = $section.trans(' Section Create');
-                        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
+                        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
                         $trans->save();
 
                         user_wallet_decrement($id, defaultCurr(), $manualfee->data->fixed_charge, 1);

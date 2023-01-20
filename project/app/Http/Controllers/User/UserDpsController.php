@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Currency;
 use App\Models\DpsPlan;
 use App\Models\InstallmentLog;
+use App\Models\Generalsetting;
 use App\Models\Transaction;
 use App\Models\UserDps;
 use Illuminate\Http\Request;
@@ -46,6 +47,7 @@ class UserDpsController extends Controller
 
     public function dpsSubmit(Request $request){
         $user = auth()->user();
+        $gs = Generalsetting::first();
 
         if(user_wallet_balance(auth()->id(),$request->input('currency_id'), 3) >= $request->per_installment){
             $data = new UserDps();
@@ -89,7 +91,7 @@ class UserDpsController extends Controller
             $trans->charge      = 0;
             $trans->type        = '-';
             $trans->remark      = 'Dps_create';
-            $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"System Account"}';
+            $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.$gs->disqus.'"}';
             $trans->details     = trans('Dps created');
 
             // $trans->email = auth()->user()->email;

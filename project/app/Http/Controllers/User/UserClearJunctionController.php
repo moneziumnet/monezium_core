@@ -9,6 +9,7 @@ use App\Models\BankGateway;
 use App\Models\User;
 use App\Models\Charge;
 use App\Models\BankAccount;
+use App\Models\Generalsetting;
 use App\Models\Country;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
@@ -60,6 +61,7 @@ class UserClearJunctionController extends Controller
 
     public function AllocateIbanCreate(Request $request) {
       $currency = Currency::whereId($request->currency)->first();
+      $gs = Generalsetting::first();
       if ($currency->code != 'EUR'){
         return redirect()->back()->with(array('warning' => 'Sorry, Currently Clear Junction API only supports for EUR.'));
       }
@@ -213,7 +215,7 @@ class UserClearJunctionController extends Controller
             $trans->type        = '-';
             $trans->remark      = 'bank_account_create';
             $trans->details     = trans('Bank Account Create');
-            $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
+            $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
             $trans->save();
 
             user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
@@ -248,7 +250,7 @@ class UserClearJunctionController extends Controller
             $trans->type        = '-';
             $trans->remark      = 'bank_account_create';
             $trans->details     = trans('Bank Account Create');
-            $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
+            $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
             $trans->save();
 
             user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);

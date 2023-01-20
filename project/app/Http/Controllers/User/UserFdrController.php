@@ -7,6 +7,7 @@ use App\Models\Currency;
 use App\Models\FdrPlan;
 use App\Models\Transaction;
 use App\Models\UserFdr;
+use App\Models\Generalsetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
@@ -54,6 +55,7 @@ class UserFdrController extends Controller
     }
 
     public function fdrRequest(Request $request){
+        $gs = Generalsetting::first();
         // $user = auth()->user();
         // dd($request);
         // if($user->balance >= $request->fdr_amount){
@@ -101,7 +103,7 @@ class UserFdrController extends Controller
             // $trans->profit = "minus";
             // $trans->txnid = $data->transaction_no;
             // $trans->user_id = auth()->id();
-            $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"System Account"}';
+            $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.$gs->disqus.'"}';
             $trans->save();
 
             return redirect()->route('user.invest.index')->with('success','Loan Requesting Successfully');

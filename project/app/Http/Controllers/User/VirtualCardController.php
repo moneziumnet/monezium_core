@@ -69,7 +69,7 @@ class VirtualCardController extends Controller
                 $trans->type        = '-';
                 $trans->remark      = 'card_issuance';
                 $trans->details     = trans('Card Issuance');
-                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
+                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
                 $trans->save();
 
                 user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
@@ -149,7 +149,7 @@ class VirtualCardController extends Controller
             Session::put('last_name', $request->last_name);
             return redirect()->away($res[1]);
         }
-        
+
     }
 
     public function transaction($id) {
@@ -237,7 +237,7 @@ class VirtualCardController extends Controller
                 $trans->charge      = 0;
                 $trans->type        = '-';
                 $trans->remark      = 'card_issuance';
-                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
+                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
                 $trans->details     = trans('Card Issuance');
                 $trans->save();
             }
@@ -261,7 +261,7 @@ class VirtualCardController extends Controller
                 $trans->type        = '-';
                 $trans->remark      = 'wallet_create';
                 $trans->details     = trans('Wallet Create');
-                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"System Account"}';
+                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
                 $trans->save();
             }
             user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);

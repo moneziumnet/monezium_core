@@ -97,7 +97,7 @@ class TransferController extends Controller
             $trans->type        = '-';
             $trans->remark      = 'wallet_create';
             $trans->details     = trans('Wallet Create');
-            $trans->data        = '{"sender":"'.($receiver->company_name ?? $receiver->name).'", "receiver":"System Account"}';
+            $trans->data        = '{"sender":"'.($receiver->company_name ?? $receiver->name).'", "receiver":"'.$gs->disqus.'"}';
             $trans->save();
 
             user_wallet_decrement($receiver->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
