@@ -9,6 +9,7 @@ use App\Models\Follow;
 use App\Models\Rating;
 use App\Models\Wallet;
 use App\Models\Plan;
+use App\Models\KycForm;
 use App\Models\Charge;
 use App\Models\UserDps;
 use App\Models\UserFdr;
@@ -43,6 +44,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Auth;
 use Illuminate\Contracts\Auth\Authenticatable as OtherAuth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 use App\Classes\EthereumRpcService;
 
 class UserController extends Controller
@@ -129,30 +131,84 @@ class UserController extends Controller
         //*** GET Request
     public function create()
     {
-        return view('admin.user.create');
+        $userType = 'user';
+        $userForms = KycForm::where('user_type',$userType == 'user' ? 1 : 2)->get();
+        return view('admin.user.create',compact('userForms'));
     }
 
             //*** POST Request
     public function store(Request $request)
     {
-        $rules = [
-            'name'=> 'required',
-            'email' => 'required|unique:users',
-            'photo' => 'required|mimes:jpeg,jpg,png,svg',
-            'password'=> 'required',
-            'phone'=> 'required',
-        ];
 
+        $rules = [
+            'email'   => 'required|email|unique:users',
+            'phone' => 'required',
+            'password' => 'required||min:6|confirmed'
+        ];
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-        return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
+            return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
         }
-       //--- Validation Section Ends
 
-        //--- Logic Section
-        $data = new User();
+        $gs = Generalsetting::first();
+        $subscription = BankPlan::findOrFail(1);
+
+        $user = new User;
         $input = $request->all();
+        $input['bank_plan_id'] = $subscription->id;
+        $input['plan_end_date'] = Carbon::now()->addDays($subscription->days);//Carbon::now()->addDays(365);
+        $input['password'] = bcrypt($request['password']);
+        $input['account_number'] = $gs->account_no_prefix . date('ydis') . random_int(100000, 999999);
+        $token = md5(time() . $request->name . $request->email);
+        $input['verification_link'] = $token;
+        $input['referral_id'] = $request->input('reff')? $request->input('reff'):'0';
+        $input['affilate_code'] = md5($request->name . $request->email);
+        $input['name'] = trim($request->firstname)." ".trim($request->lastname);
+        $input['dob'] = $request->customer_dob;
+        $input['kyc_method'] = 'manual';
+        $input['phone'] = preg_replace("/[^0-9]/", "", $request->phone);
+        $userType = 'user';
+        $userForms = KycForm::where('user_type',$userType == 'user' ? 1 : 2)->get();
+
+        $requireInformations = [];
+        if($userForms){
+            foreach($userForms as $key=>$value){
+                if($value->type == 1){
+                    $requireInformations['text'][$key] = strtolower(str_replace(' ', '_', $value->label));
+                }
+                elseif($value->type == 3){
+                    $requireInformations['textarea'][$key] = strtolower(str_replace(' ', '_', $value->label));
+                }else{
+                    $requireInformations['file'][$key] = strtolower(str_replace(' ', '_', $value->label));
+                }
+            }
+        }
+
+
+        $details = [];
+        foreach($requireInformations as $key=>$infos){
+            foreach($infos as $index=>$info){
+
+                if($request->has($info)){
+                    if($request->hasFile($info)){
+                        if ($file = $request->file($info))
+                        {
+                           $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
+                           $file->move('assets/images',$name);
+                           $details[$info] = [$name,$key];
+                        }
+                    }else{
+                        $details[$info] = [$request->$info,$key];
+                    }
+                }
+            }
+        }
+        if(!empty($details)){
+            $input['kyc_info'] = json_encode($details,true);
+            $input['kyc_status'] = 1;
+        }
+
         if ($file = $request->file('photo'))
         {
             $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
@@ -160,11 +216,96 @@ class UserController extends Controller
             $input['photo'] = $name;
         }
 
-        $input['password'] = bcrypt($request['password']);
-        $data->fill($input)->save();
-        //--- Logic Section Ends
 
-        //--- Redirect Section
+        if($request->form_select == 1) {
+            $subscription = BankPlan::where('type', 'corporate')->where('keyword', $subscription->keyword)->first();
+            $input['bank_plan_id'] = $subscription->id;
+            $input['plan_end_date'] = Carbon::now()->addDays($subscription->days);
+            $input['company_name'] = $request->company_name;
+            $input['company_reg_no'] = $request->company_reg_no;
+            $input['company_vat_no'] = $request->company_vat_no;
+            $input['company_dob'] = $request->company_dob;
+            $input['company_type'] = $request->company_type;
+            $input['company_city'] = $request->company_city;
+            $input['company_country'] = $request->company_country;
+            $input['company_zipcode'] = $request->company_zipcode;
+            $input['company_address'] = $request->company_address;
+            $input['personal_code'] = null;
+            $input['your_id'] = null;
+            $input['issued_authority'] = null;
+            $input['date_of_issue'] = null;
+            $input['date_of_expire'] = null;
+        }
+
+        if($request->form_select == 0) {
+            $input['personal_code'] = $request->personal_code;
+            $input['your_id'] = $request->your_id;
+            $input['issued_authority'] = $request->issued_authority;
+            $input['date_of_issue'] = $request->date_of_issue;
+            $input['date_of_expire'] = $request->date_of_expire;
+            $input['company_type'] = null;
+            $input['company_city'] = null;
+            $input['company_country'] = null;
+            $input['company_zipcode'] = null;
+            $input['company_name'] = null;
+            $input['company_reg_no'] = null;
+            $input['company_vat_no'] = null;
+            $input['company_dob'] = null;
+            $input['company_address'] = null;
+        }
+
+        $user->fill($input)->save();
+        $default_currency = Currency::where('is_default','1')->first();
+        $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
+        if(!$chargefee) {
+            $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
+        }
+
+        $user_wallet = new Wallet();
+        $user_wallet->user_id = $user->id;
+        $user_wallet->user_type = 1;
+        $user_wallet->currency_id = $default_currency->id;
+        $user_wallet->balance = -1 * ($chargefee->data->fixed_charge + $subscription->amount);
+        $user_wallet->wallet_type = 1;
+        $user_wallet->wallet_no =$gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
+        $user_wallet->created_at = date('Y-m-d H:i:s');
+        $user_wallet->updated_at = date('Y-m-d H:i:s');
+        $user_wallet->save();
+
+        $trans = new Transaction();
+        $trans->trnx = str_rand();
+        $trans->user_id     = $user->id;
+        $trans->user_type   = 1;
+        $trans->currency_id = $default_currency->id;
+        $trans->amount      = $chargefee->data->fixed_charge;
+        $trans_wallet       = get_wallet($user->id, $default_currency->id, 1);
+        $trans->wallet_id   = $user_wallet->id;
+        $trans->charge      = 0;
+        $trans->type        = '-';
+        $trans->remark      = 'wallet_create';
+        $trans->details     = trans('Wallet Create');
+        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
+        $trans->save();
+
+        $trans = new Transaction();
+        $trans->trnx = str_rand();
+        $trans->user_id     = $user->id;
+        $trans->user_type   = 1;
+        $trans->currency_id = $default_currency->id;
+        $trans->amount      = $subscription->amount;
+        $trans_wallet       = get_wallet($user->id, defaultCurr(), 1);
+        $trans->wallet_id   = $user_wallet->id;
+        $trans->charge      = 0;
+        $trans->type        = '-';
+        $trans->remark      = 'price_plan';
+        $trans->details     = trans('Price Plan');
+        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
+        $trans->save();
+
+
+
+        $user->email_verified = 'Yes';
+        $user->update();
         $msg = __('New Data Added Successfully.').'<a href="'.route('admin.user.index').'">'.__('View Lists.').'</a>';;
 
         return response()->json($msg);
