@@ -61,12 +61,12 @@
              </div>
             <div class="form-group">
                <label for="title">{{ __('Title') }} *</label>
-               <input type="text" class="form-control" id="title"
+               <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="title"
                   placeholder="{{ __('Enter Title') }}" value="" required>
             </div>
             <div class="form-group">
                <label for="url">{{ __('Url') }} *</label>
-               <input type="text" class="form-control" id="url"
+               <input type="url" class="form-control" id="url"
                   placeholder="{{ __('Enter Url') }}" value="" required>
             </div>
             <div class="form-group">

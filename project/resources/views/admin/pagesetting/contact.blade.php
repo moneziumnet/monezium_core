@@ -39,7 +39,7 @@
                 </div>
               </div>
           </div>
-        
+
         <div class="form-group">
           <label for="side_title">{{ __('Contact Title') }} *</label>
           <textarea class="form-control summernote"  id="side_title" name="side_title" required rows="3" placeholder="{{__('Contact title')}}">{{$data->side_title}}</textarea>
@@ -52,7 +52,7 @@
 
         <div class="form-group">
           <label for="contact_email">{{ __('Contact Us Email Address') }} *</label>
-          <input type="text" class="form-control" id="contact_email" name="contact_email"  placeholder="{{ __('Contact Us Email Address') }}" value="{{$data->contact_email}}" required>
+          <input type="email" class="form-control" id="contact_email" name="contact_email"  placeholder="{{ __('Contact Us Email Address') }}" value="{{$data->contact_email}}" required>
         </div>
 
         <div class="form-group">
@@ -62,12 +62,12 @@
 
         <div class="form-group">
           <label for="site">{{ __('Website') }} *</label>
-          <input type="text" class="form-control" id="site" value="{{$data->site}}" name="site"  placeholder="{{ __('Website') }}" value="" required>
+          <input type="url" class="form-control" id="site" value="{{$data->site}}" name="site"  placeholder="{{ __('Website') }}" value="" required>
         </div>
 
         <div class="form-group">
           <label for="phone">{{ __('Phone') }} *</label>
-          <input type="text" class="form-control" id="phone" value="{{$data->phone}}" name="phone"  placeholder="{{ __('Phone') }}" value="" required>
+          <input type="number" class="form-control" id="phone" value="{{$data->phone}}" name="phone"  placeholder="{{ __('Phone') }}" value="" required>
         </div>
 
         <div class="form-group">

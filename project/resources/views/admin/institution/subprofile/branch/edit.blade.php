@@ -4,7 +4,7 @@
 
 <div class="card">
   <div class="d-sm-flex align-items-center justify-content-between py-3">
-    <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Edit Branch') }} 
+    <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Edit Branch') }}
     <a class="btn btn-primary btn-rounded btn-sm" href="{{route('admin.subinstitution.branches',$data->subins_id)}}"><i class="fas fa-arrow-left"></i> {{ __('Back') }}</a>
     </h5>
     <ol class="breadcrumb py-0 m-0">
@@ -31,7 +31,7 @@
           {{ csrf_field() }}
               <div class="form-group">
                 <label for="inp-name">{{ __('Branch Name') }}</label>
-                <input type="text" class="form-control" id="inp-branch-name" name="branch_name" placeholder="{{ __('Enter Branch Name') }}" value="{{$data->name}}" required>
+                <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="inp-branch-name" name="branch_name" placeholder="{{ __('Enter Branch Name') }}" value="{{$data->name}}" required>
               </div>
           <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Update') }}</button>
         </form>

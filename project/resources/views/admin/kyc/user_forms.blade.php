@@ -37,10 +37,10 @@
             <div class="append">
                 <div class="form-group">
                     <label>@lang('label')</label>
-                    <input class="form-control" type="text" name="label" required>
+                    <input class="form-control" type="text" pattern="[^()/><\][;!|]+" name="label" required>
                 </div>
             </div>
-            
+
             <div class="form-group">
                 <label>@lang('Required')</label>
                 <select class="form-control" name="required" required>
@@ -60,7 +60,7 @@
                                 <div class="form-group">
                                     <label class="font-weight-bold">@lang($field->label) <small class="text--danger" >({{$field->required == 1 ? 'Required':'Optional'}})</small> </label>
                                     @if($field->type == 1)
-                                        <input class="form-control" type="text" placeholder="{{strtolower($field->label)}}">
+                                        <input class="form-control" type="text" pattern="[^()/><\][;!|]+" placeholder="{{strtolower($field->label)}}">
                                     @else
                                         <textarea class="form-control"></textarea>
                                     @endif
@@ -73,7 +73,7 @@
                                     <a href="javascript:void(0)" data-id="{{$field->id}}"  class="btn  btn-danger delete"><i class="fas fa-times"></i></a>
                                 </div>
                             </div>
-                    </div> 
+                    </div>
 
                 @elseif($field->type == 2)
                     <div class="row">
@@ -92,7 +92,7 @@
                                     <a href="javascript:void(0)" data-id="{{$field->id}}" class="btn  btn-danger delete"><i class="fas fa-times"></i></a>
                             </div>
                             </div>
-                    </div> 
+                    </div>
                 @endif
             @empty
                 <div class="form-group text-center">
@@ -128,11 +128,11 @@
                     <div class="append">
                         <div class="form-group">
                             <label>@lang('label')</label>
-                            <input class="form-control" type="text" name="label" required>
+                            <input class="form-control" type="text" pattern="[^()/><\][;!|]+" name="label" required>
                         </div>
-                       
+
                     </div>
-                   
+
                     <div class="form-group">
                         <label>@lang('Required')</label>
                         <select class="form-control" name="required" required>
@@ -140,13 +140,13 @@
                             <option value="0">@lang('No')</option>
                         </select>
                     </div>
-        
+
                 </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-dark" data-dismiss="modal">@lang('Close')</button>
               <button type="submit"  class="btn btn-primary">@lang('Update')</button>
             </div>
-            
+
         </form>
       </div>
     </div>
@@ -162,7 +162,7 @@
                 @csrf
                 <input type="hidden" name="id">
                 <div class="modal-body text-center">
-                    
+
                     <i class="las la-exclamation-circle text-danger display-2 mb-15"></i>
                     <h4 class="text--secondary mb-15">@lang('Are you sure want to delete this?')</h4>
 
@@ -171,7 +171,7 @@
               <button type="button" class="btn btn-dark" data-dismiss="modal">@lang('Close')</button>
               <button type="submit"  class="btn btn-danger">@lang('Delete')</button>
             </div>
-            
+
             </form>
       </div>
     </div>
@@ -180,7 +180,7 @@
 @stop
 
 @section('scripts')
-    
+
 <script>
     'use strict';
 (function ($) {

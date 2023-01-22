@@ -27,22 +27,22 @@
 
             <div class="form-group">
               <label for="hero_title">{{  __('Hero Title')  }}</label>
-              <input type="text" class="form-control" id="hero_title" name="hero_title"  placeholder="{{ __('Enter About Title') }}" value="{{ $data->hero_title }}" required>
+              <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="hero_title" name="hero_title"  placeholder="{{ __('Enter About Title') }}" value="{{ $data->hero_title }}" required>
             </div>
 
             <div class="form-group">
                 <label for="hero_subtitle">{{  __('Hero Subtitle')  }}</label>
-                <input type="text" class="form-control" id="hero_subtitle" name="hero_subtitle"  placeholder="{{ __('Enter Subtitle') }}" value="{{ $data->hero_subtitle }}" required>
+                <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="hero_subtitle" name="hero_subtitle"  placeholder="{{ __('Enter Subtitle') }}" value="{{ $data->hero_subtitle }}" required>
             </div>
 
             <div class="form-group">
                 <label for="hero_btn_url">{{  __('Hero Button Url')  }}</label>
-                <input type="text" class="form-control" id="hero_btn_url" name="hero_btn_url"  placeholder="{{ __('Enter Button Url') }}" value="{{ $data->hero_btn_url }}" required>
+                <input type="url" class="form-control" id="hero_btn_url" name="hero_btn_url"  placeholder="{{ __('Enter Button Url') }}" value="{{ $data->hero_btn_url }}" required>
             </div>
 
             <div class="form-group">
                 <label for="hero_link">{{  __('Hero Video Link')  }}</label>
-                <input type="text" class="form-control" id="hero_link" name="hero_link"  placeholder="{{ __('Enter Video Link') }}" value="{{ $data->hero_link }}" required>
+                <input type="url" class="form-control" id="hero_link" name="hero_link"  placeholder="{{ __('Enter Video Link') }}" value="{{ $data->hero_link }}" required>
             </div>
 
             <div class="form-group">

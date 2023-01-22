@@ -22,7 +22,7 @@
       </div>
 
       <div class="card-body">
-        
+
         <form class="geniusform" action="{{route('admin.requestdomain.update',$data->id)}}" method="POST" enctype="multipart/form-data">
 
             @include('includes.admin.form-both')
@@ -30,7 +30,7 @@
 
             <div class="form-group">
                 <label for="inp-name">{{ __('Name') }}</label>
-                <input type="text" class="form-control" id="inp-name" name="name"  placeholder="{{ __('Enter Name') }}" value="{{$data->name}}" required>
+                <input type="text" pattern="[^()/><\][-;!|]+" class="form-control" id="inp-name" name="name"  placeholder="{{ __('Enter Name') }}" value="{{$data->name}}" required>
             </div>
 
             <div class="form-group">
@@ -44,13 +44,13 @@
             </div>
 
             <div class="form-group">
-                <label for="password2" class="d-block">{{ __('Password Confirmation') }}</label> 
+                <label for="password2" class="d-block">{{ __('Password Confirmation') }}</label>
                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" placeholder="{{ __('Enter confirm password') }}" required autocomplete="new-password">
             </div>
 
             <div class="form-group">
                 <label for="inp-domains">{{ __('Domain configration') }}</label>
-                <input type="text" class="form-control" id="inp-domains" name="domains"  placeholder="{{ __('Enter domain name') }}" value="{{$data->domain_name}}" required>
+                <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="inp-domains" name="domains"  placeholder="{{ __('Enter domain name') }}" value="{{$data->domain_name}}" required>
                 <span>{{ __('how to add-on domain in your hosting panel.') }}<a
                                 href="{{ asset('assets/pdf/adddomain.pdf') }}" class="m-2"
                                 target="_blank">{{ __('Document') }}</a></span>

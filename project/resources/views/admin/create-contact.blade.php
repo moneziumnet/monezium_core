@@ -117,7 +117,7 @@
           <div class="col-md-6">
             <div class="form-group">
               <label for="date-of-expire">{{ __('Date of Expire') }}</label>
-              <input type="text" pattern="[^()/><\][;!|]+" class="form-control datepicker" id="expire_date" name="expire_date" data-provide="datepicker" readonly data-date-format="dd-mm-yyyy" placeholder="{{ __('dd-mm-yyyy') }}" value="{{isset($contact)?$contact->date_of_expire?date('d-m-Y', strtotime($contact->date_of_expire)):'':''}}" required>
+              <input type="text" class="form-control datepicker" id="expire_date" name="expire_date" data-provide="datepicker" readonly data-date-format="dd-mm-yyyy" placeholder="{{ __('dd-mm-yyyy') }}" value="{{isset($contact)?$contact->date_of_expire?date('d-m-Y', strtotime($contact->date_of_expire)):'':''}}" required>
             </div>
           </div>
         </div>

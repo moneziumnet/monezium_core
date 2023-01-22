@@ -27,12 +27,12 @@
 
             <div class="form-group">
                 <label for="strategy_title">{{ __('Strategy Title') }} *</label>
-                <input type="text" class="form-control" id="strategy_title" name="strategy_title"  placeholder="{{ __('Strategy Title') }}" value="{{ $ps->strategy_title }}" required>
+                <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="strategy_title" name="strategy_title"  placeholder="{{ __('Strategy Title') }}" value="{{ $ps->strategy_title }}" required>
             </div>
 
             <div class="form-group">
               <label for="strategy_details">{{ __('Strategy Subtitle') }} *</label>
-              <input type="text" class="form-control" id="strategy_details" name="strategy_details"  placeholder="{{ __('Strategy Subtitle') }}" value="{{ $ps->strategy_details }}" required>
+              <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="strategy_details" name="strategy_details"  placeholder="{{ __('Strategy Subtitle') }}" value="{{ $ps->strategy_details }}" required>
             </div>
 
 

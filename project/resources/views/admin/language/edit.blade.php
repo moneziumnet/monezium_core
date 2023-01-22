@@ -23,7 +23,7 @@
       </div>
 
       <div class="card-body">
-        
+
         <form class="geniusform" action="{{route('admin.lang.update',$data->id)}}" method="POST" enctype="multipart/form-data">
           {{csrf_field()}}
           @include('includes.admin.form-both')
@@ -35,7 +35,7 @@
               </div>
             </div>
             <div class="col-lg-7">
-              <input type="text" class="input-field" name="language" placeholder="{{ __('Language') }}" value="{{$data->language}}" required="">
+              <input type="text" pattern="[^()/><\][;!|]+" class="input-field" name="language" placeholder="{{ __('Language') }}" value="{{$data->language}}" required="">
             </div>
           </div>
 

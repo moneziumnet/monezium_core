@@ -33,14 +33,14 @@
               <div class="col-md-6">
                 <div class="form-group">
                     <label for="name">{{ __('Bank Name') }}</label>
-                    <input type="text" class="form-control" id="name" name="name" placeholder="{{ __('Enter Bank Name') }}" value="" required>
+                    <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="name" name="name" placeholder="{{ __('Enter Bank Name') }}" value="" required>
                   </div>
               </div>
 
               <div class="col-md-6">
                 <div class="form-group">
                     <label for="address">{{ __('Bank Address') }}</label>
-                    <input type="text" class="form-control" id="address" name="address" placeholder="{{ __('Bank Address') }}"  value="" required>
+                    <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="address" name="address" placeholder="{{ __('Bank Address') }}"  value="" required>
                   </div>
               </div>
 
@@ -117,7 +117,7 @@
                 $('#gateway_detail').append(''+`<div class="col-md-6">
                     <div class="form-group">
                         <label for="iban">${key}</label>
-                        <input type="text" class="form-control" id="iban" name="key[${key}]"  min="1" value="${value}" required>
+                        <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="iban" name="key[${key}]"  min="1" value="${value}" required>
                       </div>
                   </div>`+'');
                   id++;

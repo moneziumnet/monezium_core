@@ -30,14 +30,14 @@
               <div class="col-md-6">
                 <div class="form-group">
                     <label for="title">{{ __('Bank Name') }}</label>
-                    <input type="text" class="form-control" id="title" name="title" placeholder="{{ __('Enter Bank Name') }}" value="{{$data->title}}" required>
+                    <input type="text"  pattern="[^()/><\][;!|]+"  class="form-control" id="title" name="title" placeholder="{{ __('Enter Bank Name') }}" value="{{$data->title}}" required>
                   </div>
               </div>
 
               <div class="col-md-6">
                 <div class="form-group">
                     <label for="processing_time">{{ __('Processing Time') }}</label>
-                    <input type="text" class="form-control" id="processing_time" name="processing_time" placeholder="{{ __('Enter Processing Time') }}" min="1" value="{{$data->processing_time}}" required>
+                    <input type="text"  pattern="[^()/><\][;!|]+"  class="form-control" id="processing_time" name="processing_time" placeholder="{{ __('Enter Processing Time') }}" min="1" value="{{$data->processing_time}}" required>
                   </div>
               </div>
           </div>
@@ -120,9 +120,9 @@
                   <span class="remove lang-remove"><i class="fas fa-times"></i></span>
                   <div class="row">
                     <div class="col-md-6">
-                      <input type="text" name="form_builder[{{ $key }}][field_name]" class="form-control" placeholder="{{ __('Field Name') }}" value="{{ $info['field_name'] }}">
+                      <input type="text" pattern="[^()/><\][;!|]+" name="form_builder[{{ $key }}][field_name]" class="form-control" placeholder="{{ __('Field Name') }}" value="{{ $info['field_name'] }}">
                     </div>
-    
+
                     <div class="col-md-3">
                       <select name="form_builder[{{ $key }}][type]" class="form-control">
                           <option value="text" {{ $info['type'] == 'text' ? 'selected' : '' }}> {{__('Input')}} </option>
@@ -130,7 +130,7 @@
                           <option value="file" {{ $info['type'] == 'file' ? 'selected' : '' }}> {{__('File upload')}} </option>
                       </select>
                     </div>
-    
+
                     <div class="col-md-3">
                       <select name="form_builder[{{ $key }}][validation]" class="form-control">
                           <option value="required" {{ $info['validation'] == 'required' ? 'selected' : '' }}> {{__('Required')}} </option>
@@ -177,7 +177,7 @@ $("#lang-btn").on('click', function(){
             <span class="remove lang-remove"><i class="fas fa-times"></i></span>
             <div class="row">
               <div class="col-md-6">
-                <input type="text" name="form_builder[${id}][field_name]" class="form-control" placeholder="{{ __('Field Name') }}">
+                <input type="text"  pattern="[^()/><\][;!|]+"  name="form_builder[${id}][field_name]" class="form-control" placeholder="{{ __('Field Name') }}">
               </div>
 
               <div class="col-md-3">
@@ -213,7 +213,7 @@ $(document).on('click','.lang-remove', function(){
             <span class="remove lang-remove"><i class="fas fa-times"></i></span>
             <div class="row">
               <div class="col-md-6">
-                <input type="text" name="form_builder[1][field_name]" class="form-control" placeholder="{{ __('Field Name') }}">
+                <input type="text"  pattern="[^()/><\][;!|]+"  name="form_builder[1][field_name]" class="form-control" placeholder="{{ __('Field Name') }}">
               </div>
 
               <div class="col-md-3">

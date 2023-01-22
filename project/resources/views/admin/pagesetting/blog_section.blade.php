@@ -29,7 +29,7 @@
 
             <div class="form-group">
                 <label for="title">{{ __('Blog Section Title') }} *</label>
-                <input type="text" class="form-control" id="title" name="blog_section_title"  placeholder="{{ __('Title') }}" value="{{ $ps->blog_section_title }}" required>
+                <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="title" name="blog_section_title"  placeholder="{{ __('Title') }}" value="{{ $ps->blog_section_title }}" required>
             </div>
 
             <div class="form-group">

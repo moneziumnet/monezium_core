@@ -92,11 +92,11 @@
                     @if(!isset($bank_gateway) || $bank_gateway->keyword == 'openpayd')
                         <div class="form-group">
                             <label for="inp-name">{{ __('IBAN') }}</label>
-                            <input type="text" class="form-control" name="iban" required />
+                            <input type="text" pattern="[^()/><\][;!|]+" class="form-control" name="iban" required />
                         </div>
                         <div class="form-group">
                             <label for="inp-name">{{ __('SWIFT') }}</label>
-                            <input type="text" class="form-control" name="swift" required />
+                            <input type="text" pattern="[^()/><\][;!|]+" class="form-control" name="swift" required />
                         </div>
                     @endif
                     <input type="hidden" name="subbank" value="{{$data->id}}">

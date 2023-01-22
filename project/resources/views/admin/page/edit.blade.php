@@ -33,12 +33,12 @@
 
             <div class="form-group">
                 <label for="title">{{ __('Title') }}</label>
-                <input type="text" class="form-control" id="title" name="title" value="{{$data->title}}"  placeholder="{{ __('Title') }}" value="" required>
+                <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="title" name="title" value="{{$data->title}}"  placeholder="{{ __('Title') }}" value="" required>
             </div>
 
             <div class="form-group">
                 <label for="inp-slug">{{ __('Slug') }}</label>
-                <input type="text" class="form-control" id="inp-slug" value="{{$data->slug}}" name="slug"  placeholder="{{ __('Enter Slug') }}" value="" required>
+                <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="inp-slug" value="{{$data->slug}}" name="slug"  placeholder="{{ __('Enter Slug') }}" value="" required>
             </div>
 
             <div class="form-group">
@@ -56,7 +56,7 @@
           <div class="showbox d-none">
             <div class="form-group">
               <label for="meta_tag">{{ __('Meta Tags') }}</label>
-              <input type="text" class="form-control" id="meta_tag" name="meta_tag" value="{{$data->meta_tag}}" placeholder="{{ __('Meta Tags') }}">
+              <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="meta_tag" name="meta_tag" value="{{$data->meta_tag}}" placeholder="{{ __('Meta Tags') }}">
             </div>
 
             <div class="form-group">
@@ -84,7 +84,7 @@
 @section('scripts')
 <script>
   "use strict";
-  
+
  $('#meta_tag').tagify();
 
  $(document).on('click','#seo',function(){

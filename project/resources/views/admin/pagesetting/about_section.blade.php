@@ -28,7 +28,7 @@
 
           <div class="form-group">
             <label for="inp-title">{{  __('About Title')  }}</label>
-            <input type="text" class="form-control" id="inp-title" name="about_title"  placeholder="{{ __('Enter About Title') }}" value="{{ $data->about_title }}" required>
+            <input type="text"  pattern="[^()/><\][;!|]+" class="form-control" id="inp-title" name="about_title"  placeholder="{{ __('Enter About Title') }}" value="{{ $data->about_title }}" required>
           </div>
 
           <div class="form-group">
@@ -55,7 +55,7 @@
           </div>
 
           <label for="about_link">{{  __('About Link')  }}</label>
-            <input type="text" class="form-control" id="about_link" name="about_link"  placeholder="{{ __('Enter About Link') }}" value="{{ $data->about_link }}" required>
+            <input type="text"  pattern="[^()/><\][;!|]+" class="form-control" id="about_link" name="about_link"  placeholder="{{ __('Enter About Link') }}" value="{{ $data->about_link }}" required>
           </div>
 
           <div class="featured-keyword-area p-4">
@@ -66,7 +66,7 @@
                             <span class="remove lang-remove"><i class="fas fa-times"></i></span>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <input type="text" class="form-control" name="about_attributes[]" placeholder="{{ __('Enter Anout Attribute') }}" value="{{ $data }}" required>
+                                    <input type="text"  pattern="[^()/><\][;!|]+" class="form-control" name="about_attributes[]" placeholder="{{ __('Enter Anout Attribute') }}" value="{{ $data }}" required>
                                 </div>
                             </div>
                         </div>
@@ -103,7 +103,7 @@ $("#lang-btn").on('click', function(){
                                   '<span class="remove lang-remove"><i class="fas fa-times"></i></span>'+
                                   '<div class="row">'+
                                     '<div class="col-md-12">'+
-                                    '<input type="text" class="form-control" name="about_attributes[]" placeholder="{{ __('Enter About Attribute') }}" value="" required>'+
+                                    '<input type="text"  pattern="[^()/><\][;!|]+" class="form-control" name="about_attributes[]" placeholder="{{ __('Enter About Attribute') }}" value="" required>'+
                                     '</div>'+
                                   '</div>'+
                                 '</div>'+

@@ -32,7 +32,7 @@
           <div class="form-group">
             <input type="hidden" name="subins_id" value="{{ $data->id }}">
             <label for="inp-branch-name">{{ __('Branch Name') }}</label>
-            <input type="text" class="form-control" id="inp-branch-name" name="branch_name" placeholder="{{ __('Enter Branch Name') }}" value="" autocomplete="off" required>
+            <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="inp-branch-name" name="branch_name" placeholder="{{ __('Enter Branch Name') }}" value="" autocomplete="off" required>
           </div>
           <!-- </div> -->
           <!-- </div> -->

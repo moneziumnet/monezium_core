@@ -31,14 +31,14 @@
               <div class="col-md-6">
                 <div class="form-group">
                     <label for="name">{{ __('Bank Name') }}</label>
-                    <input type="text" class="form-control" id="name" name="name" placeholder="{{ __('Enter Bank Name') }}" value="{{$data->name}}" required>
+                    <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="name" name="name" placeholder="{{ __('Enter Bank Name') }}" value="{{$data->name}}" required>
                   </div>
               </div>
 
               <div class="col-md-6">
                 <div class="form-group">
                     <label for="address">{{ __('Bank Address') }}</label>
-                    <input type="text" class="form-control" id="address" name="address" placeholder="{{ __('Bank Address') }}" min="1" value="{{$data->address}}" required>
+                    <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="address" name="address" placeholder="{{ __('Bank Address') }}" min="1" value="{{$data->address}}" required>
                   </div>
               </div>
 
@@ -80,7 +80,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="{{strval($key)}}">{{ strval($key) }}</label>
-                        <input type="text" class="form-control" id="{{$key}}" name="key[{{strval($key)}}]" placeholder="{{ __('Please input correct value') }}" value="{{$value}}" required>
+                        <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="{{$key}}" name="key[{{strval($key)}}]" placeholder="{{ __('Please input correct value') }}" value="{{$value}}" required>
                     </div>
                 </div>
             @endforeach
