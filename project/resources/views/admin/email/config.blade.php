@@ -48,7 +48,7 @@
 
           <div class="form-group">
             <label>{{ __('SMTP Port') }} *</label>
-            <input type="text" class="input-field" placeholder="{{ __('Mail Port') }}" name="smtp_port" value="{{ $gs->smtp_port }}" required>
+            <input type="number" class="input-field" placeholder="{{ __('Mail Port') }}" name="smtp_port" value="{{ $gs->smtp_port }}" required>
           </div>
 
           <div class="form-group">
@@ -58,22 +58,22 @@
 
           <div class="form-group">
             <label>{{ __('SMTP Username') }} *</label>
-            <input type="text" class="input-field" placeholder="{{ __('Mail Username') }}" name="smtp_user" value="{{ $gs->smtp_user }}" required>
+            <input type="text" pattern="[^()/><\][;!|]+" class="input-field" placeholder="{{ __('Mail Username') }}" name="smtp_user" value="{{ $gs->smtp_user }}" required>
           </div>
 
           <div class="form-group">
             <label>{{ __('SMTP Password') }} *</label>
-            <input type="text" class="input-field" placeholder="{{ __('Mail Password') }}" name="smtp_pass" value="{{ $gs->smtp_pass }}" required>
+            <input type="password" class="input-field" placeholder="{{ __('Mail Password') }}" name="smtp_pass" value="{{ $gs->smtp_pass }}" required>
           </div>
 
           <div class="form-group">
             <label>{{ __('From Email') }} *</label>
-            <input type="text" class="input-field" placeholder="{{ __('From Email') }}" name="from_email" value="{{ $gs->from_email }}" required>
+            <input type="email" class="input-field" placeholder="{{ __('From Email') }}" name="from_email" value="{{ $gs->from_email }}" required>
           </div>
 
           <div class="form-group">
             <label>{{ __('From Name') }} *</label>
-            <input type="text" class="input-field" placeholder="{{ __('From Name') }}" name="from_name" value="{{ $gs->from_name }}" required>
+            <input type="text" pattern="[^()/><\][-;!|]+" class="input-field" placeholder="{{ __('From Name') }}" name="from_name" value="{{ $gs->from_name }}" required>
           </div>
 
 

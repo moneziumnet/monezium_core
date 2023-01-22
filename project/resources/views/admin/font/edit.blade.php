@@ -21,7 +21,7 @@
       </div>
 
       <div class="card-body">
-       
+
         <form class="geniusform" action="{{route('admin.font.update',$data->id)}}" method="POST" enctype="multipart/form-data">
           {{csrf_field()}}
           @include('includes.admin.form-both')
@@ -33,7 +33,7 @@
               </div>
             </div>
             <div class="col-lg-7">
-              <input type="text" class="input-field" name="font_family" placeholder="{{__('Font Family')}}" required="" value="{{$data->font_family}}">
+              <input type="text" pattern="[^()/><\][;!|]+" class="input-field" name="font_family" placeholder="{{__('Font Family')}}" required="" value="{{$data->font_family}}">
             </div>
           </div>
 

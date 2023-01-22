@@ -25,12 +25,12 @@
                         @if($charge->data)
                         @foreach ($charge->data as $key => $value)
                             <div class="form-group">
-                              <label for="">{{ucwords(str_replace('_',' ',$key))}} 
+                              <label for="">{{ucwords(str_replace('_',' ',$key))}}
                                 @if ($key == 'percent_charge' || $key == 'commission')
                                   (%)
-                                @endif 
+                                @endif
                                 <span class="text-danger">*</span></label>
-                              <input type="text" name="{{$key}}" class="form-control" value="{{@$value}}">
+                              <input type="text" pattern="[^()/><\][;!|]+" name="{{$key}}" class="form-control" value="{{@$value}}">
                             </div>
                         @endforeach
                             @if ($charge->name == 'Transfer Money')

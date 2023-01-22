@@ -40,7 +40,7 @@
           <div class="form-group">
             <label for="inp-name">{{ __('Email Subject') }} *</label>
             <small>{{ __('(In Any Language)') }}</small>
-            <input type="text" class="input-field" name="subject" placeholder="{{ __('Email Subject') }}" value="" required="">
+            <input type="text" pattern="[^()/><\][;!|]+" class="input-field" name="subject" placeholder="{{ __('Email Subject') }}" value="" required="">
           </div>
 
 

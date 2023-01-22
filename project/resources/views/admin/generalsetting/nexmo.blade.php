@@ -29,7 +29,7 @@
             <div class="col-md-12">
                 <div class="form-group">
                     <label for="inp-key">{{  __('Key')  }}</label>
-                    <input type="text" class="form-control" id="inp-key" name="nexmo_key"  placeholder="{{ __('Key') }}" value="{{ $gs->nexmo_key }}">
+                    <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="inp-key" name="nexmo_key"  placeholder="{{ __('Key') }}" value="{{ $gs->nexmo_key }}">
                 </div>
             </div>
 

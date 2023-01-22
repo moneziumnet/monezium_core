@@ -29,7 +29,7 @@
             <div class="col-md-12">
                 <div class="form-group">
                     <label for="inp-sid">{{  __('Account Sid')  }}</label>
-                    <input type="text" class="form-control" id="inp-sid" name="twilio_account_sid"  placeholder="{{ __('Account Sid') }}" value="{{ $gs->twilio_account_sid }}">
+                    <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="inp-sid" name="twilio_account_sid"  placeholder="{{ __('Account Sid') }}" value="{{ $gs->twilio_account_sid }}">
                 </div>
             </div>
 
@@ -37,14 +37,14 @@
                 <div class="form-group">
                     <label for="inp-token">{{  __('Auth Token')  }}</label>
                     <input type="text" class="form-control" id="inp-token" name="twilio_auth_token"  placeholder="{{ __('Auth Token') }}" value="{{ $gs->twilio_auth_token }}">
-                </div>    
+                </div>
             </div>
 
             <div class="col-md-12">
                 <div class="form-group">
                     <label for="inp-number">{{  __('Default Phone Number')  }}</label>
-                    <input type="text" class="form-control" id="inp-number" name="twilio_default_number"  placeholder="{{ __('Default Phone Number') }}" value="{{ $gs->twilio_default_number }}">
-                </div>    
+                    <input type="number" class="form-control" id="inp-number" name="twilio_default_number"  placeholder="{{ __('Default Phone Number') }}" value="{{ $gs->twilio_default_number }}">
+                </div>
             </div>
 
             <div class="col-md-12">

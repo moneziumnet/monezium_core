@@ -28,7 +28,7 @@
 
         <div class="form-group">
             <label for="title">{{ __('Title') }}</label>
-            <input type="text" class="input-field" name="title" placeholder="{{ __('Title') }}" required="" value="{{ $data->title }}">
+            <input type="text" pattern="[^()/><\][;!|]+" class="input-field" name="title" placeholder="{{ __('Title') }}" required="" value="{{ $data->title }}">
         </div>
 
         <div class="row">
@@ -46,7 +46,7 @@
           <div class="col-md-11">
             <div class="form-group">
               <label for="count">{{ __('Count Value') }}</label>
-              <input type="text" class="input-field" name="count" placeholder="{{ __('Enter Value') }}" required="" value="{{ $data->count }}">
+              <input type="number" class="input-field" name="count" placeholder="{{ __('Enter Value') }}" required="" value="{{ $data->count }}">
             </div>
           </div>
         </div>

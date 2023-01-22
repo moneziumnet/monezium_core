@@ -31,14 +31,14 @@
           <div class="col-md-6">
             <div class="form-group">
               <label for="full-name">{{ __('Contact') }}</label>
-              <input type="text" class="form-control" id="contact" name="contact" placeholder="{{ __('Contact') }}" value="{{isset($contact)?$contact->contact:''}}" required>
+              <input type="text" pattern="[^()/><\][-;!|]+" class="form-control" id="contact" name="contact" placeholder="{{ __('Contact') }}" value="{{isset($contact)?$contact->contact:''}}" required>
             </div>
           </div>
 
           <div class="col-md-6">
             <div class="form-group">
               <label for="full-name">{{ __('Name') }}</label>
-              <input type="text" class="form-control" id="full_name" name="fullname" placeholder="{{ __('Enter Name') }}" value="{{isset($contact)?$contact->full_name:''}}" required>
+              <input type="text" pattern="[^()/><\][-;!|]+" class="form-control" id="full_name" name="fullname" placeholder="{{ __('Enter Name') }}" value="{{isset($contact)?$contact->full_name:''}}" required>
             </div>
           </div>
           <div class="col-md-6">
@@ -50,38 +50,38 @@
           <div class="col-md-6">
             <div class="form-group">
               <label for="personal-code">{{ __('Personal Code/Number') }}</label>
-              <input type="text" class="form-control" id="personal-code" name="personal_code" placeholder="{{ __('Enter Personal Code/Number') }}" value="{{isset($contact)?$contact->personal_code:''}}">
+              <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="personal-code" name="personal_code" placeholder="{{ __('Enter Personal Code/Number') }}" value="{{isset($contact)?$contact->personal_code:''}}">
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group">
               <label for="your-email">{{ __('Your Email') }}</label>
-              <input type="text" class="form-control" id="your-email" name="your_email" placeholder="{{ __('Enter Your Email') }}" value="{{isset($contact)?$contact->c_email:''}}">
+              <input type="email" class="form-control" id="your-email" name="your_email" placeholder="{{ __('Enter Your Email') }}" value="{{isset($contact)?$contact->c_email:''}}">
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group">
               <label for="your-phone">{{ __('Your Phone') }}</label>
-              <input type="text" class="form-control" id="your-phone" name="your_phone" placeholder="{{ __('Enter Phone Number') }}" value="{{isset($contact)?$contact->c_phone:''}}">
+              <input type="number" class="form-control" id="your-phone" name="your_phone" placeholder="{{ __('Enter Phone Number') }}" value="{{isset($contact)?$contact->c_phone:''}}">
             </div>
           </div>
 
           <div class="col-md-6">
             <div class="form-group">
               <label for="your-address">{{ __('Address') }}</label>
-              <input type="text" class="form-control" id="your-address" name="your_address" placeholder="{{ __('Enter Address') }}" value="{{isset($contact)?$contact->c_address:''}}">
+              <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="your-address" name="your_address" placeholder="{{ __('Enter Address') }}" value="{{isset($contact)?$contact->c_address:''}}">
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group">
               <label for="c_city">{{ __('Your City') }}</label>
-              <input type="text" class="form-control" id="c_city" name="c_city" placeholder="{{ __('Enter City') }}" value="{{isset($contact)?$contact->c_city:''}}">
+              <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="c_city" name="c_city" placeholder="{{ __('Enter City') }}" value="{{isset($contact)?$contact->c_city:''}}">
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group">
               <label for="c_zipcode">{{ __('Zip Code') }}</label>
-              <input type="text" class="form-control" id="c_zipcode" name="c_zipcode" placeholder="{{ __('Enter Zip Code') }}" value="{{isset($contact)?$contact->c_zip_code:''}}">
+              <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="c_zipcode" name="c_zipcode" placeholder="{{ __('Enter Zip Code') }}" value="{{isset($contact)?$contact->c_zip_code:''}}">
             </div>
           </div>
           <div class="col-md-6">
@@ -98,14 +98,14 @@
           <div class="col-md-6">
             <div class="form-group">
               <label for="your-id">{{ __('Your ID Number') }}</label>
-              <input type="text" class="form-control" id="your-id" name="your_id" placeholder="{{ __('Enter Your ID Number') }}" value="{{isset($contact)?$contact->id_number:''}}">
+              <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="your-id" name="your_id" placeholder="{{ __('Enter Your ID Number') }}" value="{{isset($contact)?$contact->id_number:''}}">
             </div>
           </div>
 
           <div class="col-md-6">
             <div class="form-group">
               <label for="your-id" required>{{ __('Provider Authority Name') }}</label>
-              <input type="text" class="form-control" id="issued_authority" name="issued_authority" placeholder="{{ __('Enter Provider Authority Name') }}" value="{{isset($contact)?$contact->issued_authority:''}}">
+              <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="issued_authority" name="issued_authority" placeholder="{{ __('Enter Provider Authority Name') }}" value="{{isset($contact)?$contact->issued_authority:''}}">
             </div>
           </div>
           <div class="col-md-6">
@@ -117,7 +117,7 @@
           <div class="col-md-6">
             <div class="form-group">
               <label for="date-of-expire">{{ __('Date of Expire') }}</label>
-              <input type="text" class="form-control datepicker" id="expire_date" name="expire_date" data-provide="datepicker" readonly data-date-format="dd-mm-yyyy" placeholder="{{ __('dd-mm-yyyy') }}" value="{{isset($contact)?$contact->date_of_expire?date('d-m-Y', strtotime($contact->date_of_expire)):'':''}}" required>
+              <input type="text" pattern="[^()/><\][;!|]+" class="form-control datepicker" id="expire_date" name="expire_date" data-provide="datepicker" readonly data-date-format="dd-mm-yyyy" placeholder="{{ __('dd-mm-yyyy') }}" value="{{isset($contact)?$contact->date_of_expire?date('d-m-Y', strtotime($contact->date_of_expire)):'':''}}" required>
             </div>
           </div>
         </div>

@@ -20,7 +20,7 @@
         </div>
 
         <div class="card-body">
-          
+
           <form class="geniusform" action="{{route('admin.tlang.create')}}" method="POST" enctype="multipart/form-data">
             {{csrf_field()}}
             @include('includes.admin.form-both')
@@ -32,7 +32,7 @@
                 </div>
               </div>
               <div class="col-lg-7">
-                <input type="text" class="input-field" name="language" placeholder="{{ __('Language') }}" required="" value="English">
+                <input type="text" pattern="[^()/><\][;!|]+" class="input-field" name="language" placeholder="{{ __('Language') }}" required="" value="English">
               </div>
             </div>
 
@@ -95,13 +95,13 @@
                       <div class="col-lg-6">
                         <textarea name="keys[]" class="form-control" placeholder="{{ __('Enter Language Key') }}" readonly="">{{ $key }}</textarea>
                       </div>
-  
+
                       <div class="col-lg-6">
                         <textarea  name="values[]" class="form-control" placeholder="{{ __('Enter Language Value') }}" required="">{{ $val}}</textarea>
                       </div>
                     </div>
                   </div>
-  
+
                 @endforeach
 
 

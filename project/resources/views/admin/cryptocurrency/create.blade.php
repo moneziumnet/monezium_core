@@ -31,27 +31,27 @@
 
           <div class="form-group">
             <label for="c-name">{{ __('Name') }}</label>
-            <input type="text" class="form-control" name="curr_name" placeholder="{{ __('Enter Currency Name') }}" required="" value="">
+            <input type="text" pattern="[^()/><\][-;!|]+" class="form-control" name="curr_name" placeholder="{{ __('Enter Currency Name') }}" required="" value="">
           </div>
 
           <div class="form-group">
             <label for="keyword">{{ __('Keyword') }}</label>
-            <input type="text" class="form-control" name="keyword" placeholder="{{ __('Enter Crypto Keyword') }}" required="" value="">
+            <input type="text" pattern="[^()/><\][;!|]+" class="form-control" name="keyword" placeholder="{{ __('Enter Crypto Keyword') }}" required="" value="">
           </div>
 
           <div class="form-group">
             <label for="inp-code">{{ __('Code') }}</label>
-            <input type="text" class="form-control" id="inp-code" name="code" placeholder="{{ __('Enter Currency code') }}" required="" value="">
+            <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="inp-code" name="code" placeholder="{{ __('Enter Currency code') }}" required="" value="">
           </div>
 
           <div class="form-group">
             <label for="inp-symbol">{{ __('Symbol') }}</label>
-            <input type="text" class="form-control" id="inp-symbol" name="symbol" placeholder="{{ __('Enter Currency symbol') }}" required="" value="">
+            <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="inp-symbol" name="symbol" placeholder="{{ __('Enter Currency symbol') }}" required="" value="">
           </div>
 
           <div class="form-group">
             <label for="inp-rate">{{ __('Rate') }}</label>
-            <input type="text" class="form-control" id="inp-rate" name="rate" placeholder="{{ __('Enter Currency Rate') }}" required="" value="">
+            <input type="number" step="any" class="form-control" id="inp-rate" name="rate" placeholder="{{ __('Enter Currency Rate') }}" required="" value="">
           </div>
 
 

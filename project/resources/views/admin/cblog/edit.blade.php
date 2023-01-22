@@ -31,12 +31,12 @@
             {{ csrf_field() }}
             <div class="form-group">
                 <label for="inp-name">{{ __('Name') }}</label>
-                <input type="text" class="form-control" id="inp-name" name="name"  placeholder="{{ __('Enter Name') }}" value="{{ $data->name }}" required>
+                <input type="text" pattern="[^()/><\][-;!|]+" class="form-control" id="inp-name" name="name"  placeholder="{{ __('Enter Name') }}" value="{{ $data->name }}" required>
             </div>
 
             <div class="form-group">
                 <label for="inp-slug">{{ __('Slug') }}</label>
-                <input type="text" class="form-control" id="inp-slug" name="slug"  placeholder="{{ __('Enter Slug') }}" value="{{ $data->slug }}" required>
+                <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="inp-slug" name="slug"  placeholder="{{ __('Enter Slug') }}" value="{{ $data->slug }}" required>
             </div>
 
             <div class="form-group ">
