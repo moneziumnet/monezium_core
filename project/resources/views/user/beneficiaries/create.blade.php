@@ -36,7 +36,7 @@
                                         <option value="CORPORATE"> {{__("CORPORATE")}}</option>
                                     </select>
                                 </div>
-								
+
                                 <div id='retail' style="display: block" >
 								<div class="row">
                                     <div class="form-group mb-3 mt-3 col-md-6">
@@ -56,7 +56,7 @@
                                         <input name="company_name" id="company_name" class="form-control" autocomplete="off" placeholder="{{__('Tech LTD')}}" type="text" value="{{ old('company_name') }}" >
                                     </div>
                                 </div>
-								
+
                             </div>
                             <hr/>
                             <div class="row">
@@ -111,7 +111,8 @@
 
                                 <div class="form-group mb-3 mt-3 col-md-6">
                                     <label class="form-label required">{{__('Account/IBAN')}}</label>
-                                    <input name="account_iban" id="account_iban" class="form-control" autocomplete="off" placeholder="{{__('Enter Account/IBAN')}}" type="text" value="{{ old('account_iban') }}" min="1" required>
+                                    <input name="account_iban" id="account_iban" class="form-control iban-input" autocomplete="off" placeholder="{{__('Enter Account/IBAN')}}" type="text" value="{{ old('account_iban') }}" min="1" required>
+                                    <small class="text-danger iban-validation"></small>
                                 </div>
                             </div>
 

@@ -54,6 +54,22 @@
     <script src="{{asset('assets/user/')}}/js/instascan.min.js"></script>
     <script>
       'use strict';
+      $('.iban-input').on('change', function(){
+            var url   = 'https://api.ibanapi.com/v1/validate-basic/' +  $(this).val() + '?api_key=cbc7f99c5f6ac88aa9494b2f3bd09592acf90361';
+            $.ajax({
+                url: url,
+                dataType: 'jsonp',
+                success: function (data) {
+                    console.log(data)
+                    if(data.result != 200) {
+                        $('.iban-validation').addClass('text-danger').text( $('.iban-input').val() + ':' + data.message);
+                        $('.iban-input').val('');
+                    }
+                }
+            });
+        })
+
+
       $('.scan').click(function(){
           var scanner = new Instascan.Scanner({ video: document.getElementById('preview'), scanPeriod: 5, mirror: false });
           scanner.addListener('scan',function(content){
