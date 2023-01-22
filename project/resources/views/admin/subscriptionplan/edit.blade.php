@@ -30,7 +30,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label for="name">{{ __('Name') }}</label>
-                <input type="text" class="form-control" id="name" name="name" placeholder="{{ __('Enter Name') }}" value="{{ $data->name }}" required>
+                <input type="text" pattern="[^()/><\][-;!|]+" class="form-control" id="name" name="name" placeholder="{{ __('Enter Name') }}" value="{{ $data->name }}" required>
               </div>
             </div>
 
@@ -57,7 +57,7 @@
               </div>
             </div>
           </div>
-          
+
           <button type="submit" id="submit-btn" class="btn btn-primary w-100 mt-2">{{ __('Submit') }}</button>
 
       </form>
@@ -84,7 +84,7 @@
                                     '<span class="remove lang-remove"><i class="fas fa-times"></i></span>'+
                                     '<div class="row">'+
                                       '<div class="col-md-12">'+
-                                      '<input type="text" class="form-control" name="attribute[]" placeholder="{{ __('Enter Plan Attribute') }}" value="" required>'+
+                                      '<input type="text" pattern="[^()/><\][;!|]+" class="form-control" name="attribute[]" placeholder="{{ __('Enter Plan Attribute') }}" value="" required>'+
                                       '</div>'+
                                     '</div>'+
                                   '</div>'+

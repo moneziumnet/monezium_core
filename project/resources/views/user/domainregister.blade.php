@@ -16,15 +16,15 @@
                 <div class="row g-3">
                     <div class="col-sm-6">
                         <label for="name" class="form-label">@lang('Your Name')</label>
-                        <input type="text" id="name" name="name" placeholder="{{ __('Enter Your Name') }}" class="form-control form--control" required> 
+                        <input type="text" pattern="[^()/><\][-;!|]+" id="name" name="name" placeholder="{{ __('Enter Your Name') }}" class="form-control form--control" required>
                     </div>
                     <div class="col-sm-6">
                         <label for="email" class="form-label">@lang('Your Email')</label>
-                        <input type="text" id="email" name="email" placeholder="{{ __('Enter Your Email') }}" class="form-control form--control" required> 
+                        <input type="email" id="email" name="email" placeholder="{{ __('Enter Your Email') }}" class="form-control form--control" required>
                     </div>
                     <div class="col-sm-6">
                         <label for="phone" class="form-label">@lang('Your Phone')</label>
-                        <input type="text" id="phone" name="phone" placeholder="{{ __('Enter Your Phone') }}" class="form-control form--control" required> 
+                        <input type="number" id="phone" name="phone" placeholder="{{ __('Enter Your Phone') }}" class="form-control form--control" required>
                     </div>
                     <div class="col-sm-6">
                         <label for="domains" class="form-label">@lang('Domain configration')</label>
@@ -46,31 +46,31 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="inp-name" class="form-label">{{ __('Company Name') }}</label>
-                            <input type="text" class="form-control form--control" id="inp-name" name="iname" placeholder="{{ __('Enter Company Name') }}" value="" required>
+                            <input type="text" pattern="[^()/><\][;!|]+" class="form-control form--control" id="inp-name" name="iname" placeholder="{{ __('Enter Company Name') }}" value="" required>
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="inp-name" class="form-label">{{ __('VAT Number') }}</label>
-                            <input type="text" class="form-control form--control" id="vat" name="vat" placeholder="{{ __('Enter VAT Number') }}" value="{{$data->vat}}" required>
+                            <input type="text" pattern="[^()/><\][;!|]+" class="form-control form--control" id="vat" name="vat" placeholder="{{ __('Enter VAT Number') }}" value="{{$data->vat}}" required>
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="inp-name" class="form-label">{{ __('Address') }}</label>
-                            <input type="text" class="form-control form--control" id="address" name="address" placeholder="{{ __('Enter Address') }}" value="" required>
+                            <input type="text" pattern="[^()/><\][;!|]+" class="form-control form--control" id="address" name="address" placeholder="{{ __('Enter Address') }}" value="" required>
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="inp-name" class="form-label">{{ __('City') }}</label>
-                            <input type="text" class="form-control form--control" id="city" name="city" placeholder="{{ __('Enter City') }}" value="" required>
+                            <input type="text" pattern="[^()/><\][;!|]+" class="form-control form--control" id="city" name="city" placeholder="{{ __('Enter City') }}" value="" required>
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="inp-name" class="form-label">{{ __('Zip Code') }}</label>
-                            <input type="text" class="form-control form--control" id="zip" name="zip" placeholder="{{ __('Enter Zip Code') }}" value="" required>
+                            <input type="text" pattern="[^()/><\][;!|]+" class="form-control form--control" id="zip" name="zip" placeholder="{{ __('Enter Zip Code') }}" value="" required>
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -94,7 +94,7 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="inp-phone" class="form-label">{{ __('Phone of Institution') }}</label>
-                            <input type="text" class="form-control form--control" id="inp-phone" name="iphone" placeholder="{{ __('Enter Phone') }}" value="" required>
+                            <input type="number" class="form-control form--control" id="inp-phone" name="iphone" placeholder="{{ __('Enter Phone') }}" value="" required>
                         </div>
                     </div>
                     <div class="mt-2">
@@ -103,7 +103,7 @@
                             <label class="form-check-label" for="accept">@lang('I accept all the') <a href="#0" class="text--base">@lang('privacy & policy')</a></label>
                         </div>
                     </div>
-                    
+
                     <div class="col-sm-12 d-flex flex-wrap justify-content-between align-items-center">
                         <button type="submit" class="cmn--btn bg--base me-3">
                             @lang('Register Now')

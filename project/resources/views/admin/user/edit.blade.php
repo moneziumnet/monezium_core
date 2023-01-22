@@ -153,24 +153,24 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="inp-name">{{ __('Name') }}</label>
-                                <input type="text" class="form-control" id="inp-name" name="name" placeholder="{{ __('Enter Name') }}" value="{{ $data->name }}" required>
+                                <input type="text" pattern="[^()/><\][-;!|]+" class="form-control" id="inp-name" name="name" placeholder="{{ __('Enter Name') }}" value="{{ $data->name }}" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="inp-email">{{ __('Email') }}</label>
-                                <input type="text" class="form-control" id="inp-email" name="email" placeholder="{{ __('Enter Email') }}" value="{{ $data->email }}" disabled="">
+                                <input type="email" class="form-control" id="inp-email" name="email" placeholder="{{ __('Enter Email') }}" value="{{ $data->email }}" disabled="">
                             </div>
                             <div class="form-group">
                                 <label for="inp-phone">{{ __('Phone') }}</label>
-                                <input type="text" class="form-control" id="inp-phone" name="phone" placeholder="{{ __('Enter Phone') }}" value="{{ $data->phone }}" required>
+                                <input type="number" class="form-control" id="inp-phone" name="phone" placeholder="{{ __('Enter Phone') }}" value="{{ $data->phone }}" required>
                             </div>
                                     @php
                                         $userType = explode(',', $data->user_type);
                                     @endphp
-                            
+
                             <div class="form-group">
                                 <label for="inp-name">{{ __('Type') }}</label>
-                
+
                                 <select class="select mb-3" name="user_type[]" multiple  id="user_type">
                                     {{-- <option value="">{{ __('Select Customer Type') }}</option> --}}
                                     @foreach(DB::table('customer_types')->orderBy('type_name','asc')->get() as $c_type)
@@ -178,33 +178,33 @@
                                     @endforeach
                                 </select>
                             </div>
-                            
+
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="inp-address">{{ __('Address') }}</label>
-                                <input type="text" class="form-control" id="inp-address" name="address" placeholder="{{ __('Enter Address') }}" value="{{ $data->address }}" required>
+                                <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="inp-address" name="address" placeholder="{{ __('Enter Address') }}" value="{{ $data->address }}" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="inp-city">{{ __('City') }}</label>
-                                <input type="text" class="form-control" id="inp-city" name="city" placeholder="{{ __('Enter City') }}" value="{{ $data->city }}" required>
+                                <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="inp-city" name="city" placeholder="{{ __('Enter City') }}" value="{{ $data->city }}" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="inp-vat">{{ __('VAT Number') }}</label>
-                                <input type="text" class="form-control" id="inp-vat" name="vat" placeholder="{{ __('Enter VAT') }}" value="{{ $data->vat }}">
+                                <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="inp-vat" name="vat" placeholder="{{ __('Enter VAT') }}" value="{{ $data->vat }}">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="inp-zip">{{ __('Postal Code') }}</label>
-                                <input type="text" class="form-control" id="inp-zip" name="zip" placeholder="{{ __('Enter Zip') }}" value="{{ $data->zip }}" required>
+                                <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="inp-zip" name="zip" placeholder="{{ __('Enter Zip') }}" value="{{ $data->zip }}" required>
                             </div>
                         </div>
-                        
+
 
                         <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Submit') }}</button>
 

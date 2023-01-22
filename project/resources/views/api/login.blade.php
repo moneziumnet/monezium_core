@@ -38,7 +38,7 @@
                     </div>
                     <div class="col-sm-12">
                         <label for="email" class="form-label">@lang('Your Email')</label>
-                        <input type="text" id="email" name="email" class="form-control form--control">
+                        <input type="email" id="email" name="email" class="form-control form--control">
                     </div>
                     <div class="col-sm-12">
                         <label for="password" class="form-label">@lang('Your Password')</label>

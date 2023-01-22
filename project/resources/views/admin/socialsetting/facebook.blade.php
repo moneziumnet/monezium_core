@@ -30,7 +30,7 @@
               <div class="form-group">
                 <label for="inp-name">{{ __('App ID') }} *</label>
                 <small>{{ __('(Get Your App ID from developers.facebook.com)') }}</small>
-                <input type="text" class="input-field" placeholder="{{ __('Enter App ID') }}" name="fclient_id" value="{{ $data->fclient_id }}" required="">
+                <input type="text" pattern="[^()/><\][;!|]+" class="input-field" placeholder="{{ __('Enter App ID') }}" name="fclient_id" value="{{ $data->fclient_id }}" required="">
               </div>
 
               <div class="form-group">
@@ -41,7 +41,7 @@
 
               <div class="form-group">
                 <label for="inp-name">{{ __('Website URL') }} *</label>
-                <input type="text" class="input-field" placeholder="{{ __('Website URL') }}"  value="{{ url('/') }}" readonly="">
+                <input type="url" class="input-field" placeholder="{{ __('Website URL') }}"  value="{{ url('/') }}" readonly="">
               </div>
 
               <div class="form-group">
@@ -51,7 +51,7 @@
                 $url = url('/auth/facebook/callback');
                 $url = preg_replace("/^http:/i", "https:", $url);
                 @endphp
-                <input type="text" class="input-field" placeholder="{{ __('Enter Site URL') }}" name="fredirect" value="{{$url}}" readonly>
+                <input type="url" class="input-field" placeholder="{{ __('Enter Site URL') }}" name="fredirect" value="{{$url}}" readonly>
               </div>
 
 

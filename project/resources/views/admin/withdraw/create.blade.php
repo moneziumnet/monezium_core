@@ -27,43 +27,43 @@
                         @csrf
 
                             <div class="row">
-                            
+
                                 <div class="form-group col-md-12 col-12">
 
                                     <label for="">@lang('Method Name') <span class="text-danger">*</span> </label>
-                                    <input type="text" name="name" class="form-control" autocomplete="off">
-                                
-                                </div> 
-                                
-                
+                                    <input type="text" pattern="[^()/><\][;!|]+" name="name" class="form-control" autocomplete="off">
+
+                                </div>
+
+
                                 <div class="form-group col-md-6 col-12">
 
                                     <label for="">@lang('Fixed charge')</label>
-                                    <input type="text" name="fixed_charge" class="form-control" required>
-                                
-                                </div>  
+                                    <input type="number" step="any" name="fixed_charge" class="form-control" required>
+
+                                </div>
                                 <div class="form-group col-md-6 col-12">
 
                                     <label for="">@lang('Percent charge')</label>
-                                    <input type="text" name="percent_charge" class="form-control" required>
-                                
-                                </div>  
+                                    <input type="number" step="any" name="percent_charge" class="form-control" required>
 
-                                
+                                </div>
+
+
                                 <div class="form-group col-md-6 col-12">
 
                                     <label for="">@lang('Minimum Amount')</label>
-                                    <input type="text" name="min_amount" class="form-control">
-                                
-                                </div> 
-                                
+                                    <input type="number" step="any" name="min_amount" class="form-control">
+
+                                </div>
+
                                 <div class="form-group col-md-6 col-12">
 
                                     <label for="">@lang('Maximum Amount')</label>
-                                    <input type="text" name="max_amount" class="form-control">
-                                
-                                </div> 
-    
+                                    <input type="number" step="any" name="max_amount" class="form-control">
+
+                                </div>
+
                                     <div class="form-group col-md-6 col-12">
 
                                     <label for="">@lang('Select Currency')</label>
@@ -73,8 +73,8 @@
                                         <option value="{{ $item->id }}">{{ $item->code }}</option>
                                         @endforeach
                                     </select>
-                                
-                                </div> 
+
+                                </div>
                                     <div class="form-group col-md-6 col-12">
 
                                     <label for="">@lang('Status')</label>
@@ -83,9 +83,9 @@
                                         <option value="0">@lang('Inactive')</option>
                                         <option value="1">@lang('Active')</option>
                                     </select>
-                                
-                                </div> 
-                                
+
+                                </div>
+
                                 <div class="form-group col-md-12">
                                     <label for="">@lang('Instructions for Withdraw')</label>
                                     <textarea name="withdraw_instruction" id="" rows="5" class="form-control summernote">{{old('withdraw_instruction')}}</textarea>
@@ -96,9 +96,9 @@
                                     <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Submit') }}</button>
                                 </div>
                             </div>
-                    
-                    
-                        
+
+
+
                     </form>
                 </div>
             </div>

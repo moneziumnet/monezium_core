@@ -55,7 +55,7 @@
               {{ csrf_field() }}
               <div class="form-group">
                 <label for="inp-phone">{{ __('Phone Number') }}</label>
-                <input type="text" class="form-control" id="inp-phone" name="phone" placeholder="{{ __('Enter Phone') }}" value="{{ $data->phone }}" required>
+                <input type="number" class="form-control" id="inp-phone" name="phone" placeholder="{{ __('Enter Phone') }}" value="{{ $data->phone }}" required>
               </div>
               @php
               $userType = explode(',', $data->user_type);

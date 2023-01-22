@@ -21,11 +21,11 @@
         $supervisor = DB::table('customer_types')->where('type_name', 'Supervisors')->first()->id;
         $merchant   = DB::table('customer_types')->where('type_name', 'Merchants')->first()->id;
         $wallet_type_list = [
-            '1' => 'Current', 
-            '2' => 'Card', 
-            '3' => 'Deposit', 
-            '4' => 'Loan', 
-            '5' => 'Escrow', 
+            '1' => 'Current',
+            '2' => 'Card',
+            '3' => 'Deposit',
+            '4' => 'Loan',
+            '5' => 'Escrow',
             '8' => 'Crypto'
         ];
         if (in_array($supervisor, $userType)) {
@@ -75,7 +75,7 @@
                                 </div>
                                 <div class="form-group mt-3">
                                     <label class="form-label required">{{ __('Currency') }}</label>
-                                    <input type="text" class="form-control" value="{{ $wallet->currency->code }}"
+                                    <input type="text" pattern="[^()/><\][;!|]+" class="form-control" value="{{ $wallet->currency->code }}"
                                         readonly />
                                 </div>
                                 <div class="form-group mb-3 mt-3">
@@ -103,7 +103,7 @@
                                 <div class="form-group mt-3">
                                     <label class="form-label required">{{ __('Description') }}</label>
                                     <textarea name="description" id="description" class="form-control" autocomplete="off"
-                                        placeholder="{{ __('Please input description') }}" type="text" required></textarea>
+                                        placeholder="{{ __('Please input description') }}" type="text" pattern="[^()/><\][;!|]+" required></textarea>
                                 </div>
                                 <input type="hidden" name="wallet_id" value="{{$wallet->id}}" />
                                 <div class="form-footer">

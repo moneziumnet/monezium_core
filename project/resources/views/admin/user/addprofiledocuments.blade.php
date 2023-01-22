@@ -29,7 +29,7 @@
               {{ csrf_field() }}
               <div class="form-group">
                 <label for="inp-name">{{ __('Name') }}</label>
-                <input name="document_name" class="form-control" autocomplete="off" placeholder="{{__('Name')}}" type="text" required>
+                <input name="document_name" class="form-control" autocomplete="off" placeholder="{{__('Name')}}" type="text" pattern="[^()/><\][;!|]+" required>
               </div>
               <div class="form-group">
                 <label for="full-name">{{ __('Choose File') }}</label>
@@ -40,9 +40,9 @@
               </div>
             </form>
           </div>
-            
 
-        
+
+
       </div>
         </div>
       </div>

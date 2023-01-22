@@ -29,34 +29,34 @@
             <form class="geniusform" action="{{route('admin-user.transaction-edit', $transaction->id)}}" method="POST" enctype="multipart/form-data">
 
               @include('includes.admin.form-both')
-    
+
               {{ csrf_field() }}
-    
+
               <div class="form-group">
                 <label for="title">{{ __('Transaction Date') }}</label>
                 <input type="text" class="form-control" id="transaction_date" name="transaction_date" placeholder="{{ __('Transaction Date') }}" value="{{ $transaction->created_at}}" readonly required>
               </div>
-    
+
               <div class="form-group">
                 <label for="trnx">{{ __('Transaction ID') }}</label>
-                <input type="text" class="form-control" id="trnx" name="trnx" placeholder="{{ __('Transaction Date') }}" value="{{ $transaction->trnx}}" readonly required>
+                <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="trnx" name="trnx" placeholder="{{ __('Transaction Date') }}" value="{{ $transaction->trnx}}" readonly required>
               </div>
-             
+
               <div class="form-group">
                 <label for="description">{{ __('Description') }}</label>
-                <input type="text" class="form-control" id="description" name="description" placeholder="{{ __('Enter Description') }}" value="{{ $transaction->details}}" required>
+                <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="description" name="description" placeholder="{{ __('Enter Description') }}" value="{{ $transaction->details}}" required>
               </div>
-    
+
               <div class="form-group">
                 <label for="remark">{{ __('Remark') }}</label>
-                <input type="text" class="form-control" id="remark" name="remark" placeholder="{{ __('Enter Remark') }}" value="{{ $transaction->remark}}" required>
+                <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="remark" name="remark" placeholder="{{ __('Enter Remark') }}" value="{{ $transaction->remark}}" required>
               </div>
-    
+
               <div class="form-group">
                 <label for="amount">{{ __('Amount') }} ({{$currency->code}})</label>
                 <input type="number" class="form-control amount_check" id="amount" name="amount" placeholder="{{ __('0.00') }}" min="1" step="0.01" value="{{$transaction->amount}}" required>
               </div>
-              
+
               <div class="form-group">
                 <label for="charge">{{ __('Charge') }} ({{$currency->code}})</label>
                 <input type="number" class="form-control amount_check" id="charge" name="charge" placeholder="{{ __('0.00') }}" step="0.01" value="{{ $transaction->charge}}">
@@ -64,16 +64,16 @@
 
               <div class="form-group">
                 <label for="sender">{{ __('Sender') }}</label>
-                <input type="text" class="form-control" id="sender" name="sender" placeholder="{{ __('Enter sender name') }}" value="{{__(json_decode($transaction->data)->sender ?? "")}}">
+                <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="sender" name="sender" placeholder="{{ __('Enter sender name') }}" value="{{__(json_decode($transaction->data)->sender ?? "")}}">
               </div>
 
               <div class="form-group">
                 <label for="receiver">{{ __('Receiver') }}</label>
-                <input type="text" class="form-control" id="receiver" name="receiver" placeholder="{{ __('Enter receiver name') }}" value="{{__(json_decode($transaction->data)->receiver ?? "")}}">
+                <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="receiver" name="receiver" placeholder="{{ __('Enter receiver name') }}" value="{{__(json_decode($transaction->data)->receiver ?? "")}}">
               </div>
 
               <button type="submit" id="submit-btn" class="btn btn-primary w-100 mt-2">{{ __('Update') }}</button>
-        
+
               </form>
         </div>
         </div>
@@ -93,7 +93,7 @@
       $('.amount_check').keypress(function(event) {
           return isNumber(event, this)
       });
-    
+
         function isNumber(evt, element) {
             var charCode = (evt.which) ? evt.which : event.keyCode
 

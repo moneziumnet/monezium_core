@@ -28,10 +28,10 @@
             </div>
             <div class="card-body">
                 <div class="text-center my-4">
-                    
+
                     <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
                         <h2 class="me-3">Payment by crypto</h2>
-                    
+
                 </div>
 
                 <form action="{{route('api.pay.submit')}}" method="POST" enctype="multipart/form-data" id="pay_form_submit">
@@ -45,7 +45,7 @@
 
                     <div class="form-group mb-3 mt-3">
                         <label class="form-label required">{{$wallet->currency->code}} {{__('Address')}}</label>
-                        <input name="address" id="address" class="form-control" autocomplete="off"  type="text" value="{{ $wallet->wallet_no }}" readonly required>
+                        <input name="address" id="address" class="form-control" autocomplete="off"  type="text" pattern="[^()/><\][;!|]+" value="{{ $wallet->wallet_no }}" readonly required>
                     </div>
 
                     <div class="form-group mb-3 mt-3">
@@ -91,7 +91,7 @@
         $(document).on('submit','#pay_form_submit',function(e){
             if($(this).attr('method').toUpperCase() == "POST") {
                 e.preventDefault();
-                
+
                 $.ajax({
                     method: $(this).attr('method'),
                     url: $(this).attr('action'),

@@ -54,14 +54,14 @@
                           <div class="col-md-6">
                             <div class="form-group">
                               <label class="form-label required">{{__('First Name')}}</label>
-                              <input name="firstname" class="form-control form--control" autocomplete="off" placeholder="{{__('User First Name')}}" type="text" value="{{ explode(" ", $user->name)[0] ?? $user->name }}" required readonly>
+                              <input name="firstname" class="form-control form--control" autocomplete="off" placeholder="{{__('User First Name')}}" type="text" pattern="[^()/><\][-;!|]+" value="{{ explode(" ", $user->name)[0] ?? $user->name }}" required readonly>
                             </div>
                           </div>
 
                           <div class="col-md-6">
                             <div class="form-group">
                               <label class="form-label required">{{__('Last Name')}}</label>
-                              <input name="lastname" class="form-control form--control" autocomplete="off" placeholder="{{__('User Last Name')}}" type="text" value="{{ explode(" ",$user->name)[1] ?? ""}}" required readonly>
+                              <input name="lastname" class="form-control form--control" autocomplete="off" placeholder="{{__('User Last Name')}}" type="text" pattern="[^()/><\][-;!|]+" value="{{ explode(" ",$user->name)[1] ?? ""}}" required readonly>
                             </div>
                           </div>
 
@@ -82,25 +82,25 @@
                           <div class="col-md-6">
                             <div class="form-group">
                               <label class="form-label required">{{__('Phone')}}</label>
-                              <input name="phone" class="form-control form--control" autocomplete="off" placeholder="{{__('Phone Number')}}" type="tel" value="{{ $user->phone }}" required>
+                              <input name="phone" class="form-control form--control" autocomplete="off" placeholder="{{__('Phone Number')}}" type="number" value="{{ $user->phone }}" required>
                             </div>
                           </div>
                           <div class="col-md-6">
                             <div class="form-group">
                               <label class="form-label required">{{__('Address')}}</label>
-                              <input name="address" class="form-control form--control" autocomplete="off" placeholder="{{__('Address')}}" type="text" value="{{ $user->address }}" required>
+                              <input name="address" class="form-control form--control" autocomplete="off" placeholder="{{__('Address')}}" type="text" pattern="[^()/><\][;!|]+" value="{{ $user->address }}" required>
                             </div>
                           </div>
                           <div class="col-md-6">
                             <div class="form-group">
                               <label class="form-label required">{{__('Zip Code')}}</label>
-                              <input name="zip" class="form-control form--control" autocomplete="off" placeholder="{{__('Zip')}}" type="text" value="{{ $user->zip }}" required>
+                              <input name="zip" class="form-control form--control" autocomplete="off" placeholder="{{__('Zip')}}" type="text" pattern="[^()/><\][;!|]+" value="{{ $user->zip }}" required>
                             </div>
                           </div>
                           <div class="col-md-6">
                             <div class="form-group">
                               <label class="form-label required">{{__('City')}}</label>
-                              <input name="city" class="form-control form--control" autocomplete="off" placeholder="{{__('City')}}" type="text" value="{{ $user->city }}" required>
+                              <input name="city" class="form-control form--control" autocomplete="off" placeholder="{{__('City')}}" type="text" pattern="[^()/><\][;!|]+" value="{{ $user->city }}" required>
                             </div>
                           </div>
                           <div class="col-md-6">
@@ -109,7 +109,7 @@
                                 @php
                                   $country = App\Models\Country::find($user->country);
                                 @endphp
-                                <input type="text" class="form-control form--control" value="{{ $country ? $country->name : '' }}" readonly>
+                                <input type="text" pattern="[^()/><\][;!|]+" class="form-control form--control" value="{{ $country ? $country->name : '' }}" readonly>
                             </div>
                           </div>
                           @php
@@ -121,19 +121,19 @@
                               <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="personal-code" class="form-label">{{ __('Personal Code/Number') }}</label>
-                                    <input type="text" class="private-input form-control form--control" id="personal_code" name="personal_code" placeholder="{{ __('Enter Personal Code/Number') }}" value="{{$user->personal_code}}" {{$private_required}}>
+                                    <input type="text" pattern="[^()/><\][;!|]+" class="private-input form-control form--control" id="personal_code" name="personal_code" placeholder="{{ __('Enter Personal Code/Number') }}" value="{{$user->personal_code}}" {{$private_required}}>
                                 </div>
                               </div>
                               <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="your-id" class="form-label">{{ __('Your ID Number') }}</label>
-                                    <input type="text" class="private-input form-control form--control" id="your_id" name="your_id" placeholder="{{ __('Enter Your ID Number') }}" value="{{$user->your_id}}" {{$private_required}}>
+                                    <input type="text" pattern="[^()/><\][;!|]+" class="private-input form-control form--control" id="your_id" name="your_id" placeholder="{{ __('Enter Your ID Number') }}" value="{{$user->your_id}}" {{$private_required}}>
                                 </div>
                               </div>
                               <div class="col-md-6 mt-3">
                                 <div class="form-group">
                                     <label for="your-id" class="form-label">{{ __('Provider Authority Name') }}</label>
-                                    <input type="text" class="private-input form-control form--control" id="issued_authority" name="issued_authority" placeholder="{{ __('Enter Provider Authority Name') }}" value="{{$user->issued_authority}}" {{$private_required}}>
+                                    <input type="text" pattern="[^()/><\][;!|]+" class="private-input form-control form--control" id="issued_authority" name="issued_authority" placeholder="{{ __('Enter Provider Authority Name') }}" value="{{$user->issued_authority}}" {{$private_required}}>
                                 </div>
                               </div>
                               <div class="col-md-6 mt-3">
@@ -155,7 +155,7 @@
                               <div class="col-md-6">
                                 <div class="form-group mt-2">
                                     <label for="dob" class="form-label">{{ __('Company Name') }}</label>
-                                    <input type="text" class="company-input form-control form--control" id="company_name"name="company_name" placeholder="{{ __('Enter Company Name') }}" value="{{ $user->company_name }}" {{$corporate_required}}>
+                                    <input type="text" pattern="[^()/><\][;!|]+" class="company-input form-control form--control" id="company_name"name="company_name" placeholder="{{ __('Enter Company Name') }}" value="{{ $user->company_name }}" {{$corporate_required}}>
                                 </div>
                               </div>
                               <div class="col-md-6">
@@ -174,19 +174,19 @@
                               <div class="col-md-6">
                                 <div class="form-group mt-2">
                                     <label for="dob" class="form-label">{{ __('Company Address') }}</label>
-                                    <input type="text" class="company-input form-control form--control" id="company_address"name="company_address" placeholder="{{ __('Enter Company Address') }}" value="{{ $user->company_address }}" {{$corporate_required}}>
+                                    <input type="text" pattern="[^()/><\][;!|]+" class="company-input form-control form--control" id="company_address"name="company_address" placeholder="{{ __('Enter Company Address') }}" value="{{ $user->company_address }}" {{$corporate_required}}>
                                 </div>
                               </div>
                               <div class="col-md-6">
                                 <div class="form-group mt-2">
                                     <label for="dob" class="form-label">{{ __('Company City') }}</label>
-                                    <input type="text" class="company-input form-control form--control" id="company_city"name="company_city" placeholder="{{ __('Enter Company City') }}" value="{{ $user->company_city }}" {{$corporate_required}}>
+                                    <input type="text" pattern="[^()/><\][;!|]+" class="company-input form-control form--control" id="company_city"name="company_city" placeholder="{{ __('Enter Company City') }}" value="{{ $user->company_city }}" {{$corporate_required}}>
                                 </div>
                               </div>
                               <div class="col-md-6">
                                 <div class="form-group mt-3">
                                     <label for="dob" class="form-label">{{ __('Company ZipCode') }}</label>
-                                    <input type="text" class="company-input form-control form--control" id="company_zipcode"name="company_zipcode" placeholder="{{ __('Enter Company ZipCode') }}" value="{{ $user->company_zipcode }}" {{$corporate_required}}>
+                                    <input type="text" pattern="[^()/><\][;!|]+" class="company-input form-control form--control" id="company_zipcode"name="company_zipcode" placeholder="{{ __('Enter Company ZipCode') }}" value="{{ $user->company_zipcode }}" {{$corporate_required}}>
                                 </div>
                               </div>
                               <div class="col-md-6">
@@ -195,19 +195,19 @@
                                     @php
                                       $country = App\Models\Country::find($user->company_country);
                                     @endphp
-                                    <input type="text" class="company-input form-control form--control" value="{{ $country ? $country->name : '' }}" readonly>
+                                    <input type="text" pattern="[^()/><\][;!|]+" class="company-input form-control form--control" value="{{ $country ? $country->name : '' }}" readonly>
                                 </div>
                               </div>
                               <div class="col-md-6">
                                 <div class="form-group mt-3">
                                     <label for="dob" class="form-label">{{ __('Registration No') }}</label>
-                                    <input type="text" class="company-input form-control form--control" id="company_reg_no"name="company_reg_no" placeholder="{{ __('Enter Company Registration No') }}" value="{{ $user->company_reg_no }}" {{$corporate_required}}>
+                                    <input type="text" pattern="[^()/><\][;!|]+" class="company-input form-control form--control" id="company_reg_no"name="company_reg_no" placeholder="{{ __('Enter Company Registration No') }}" value="{{ $user->company_reg_no }}" {{$corporate_required}}>
                                 </div>
                               </div>
                               <div class="col-md-6">
                                 <div class="form-group mt-3">
                                     <label for="dob" class="form-label">{{ __('VAT No') }}</label>
-                                    <input type="text" class="company-input form-control form--control" id="company_vat_no"name="company_vat_no" placeholder="{{ __('Enter Company VAT No') }}" value="{{ $user->company_vat_no }}" {{$corporate_required}}>
+                                    <input type="text" pattern="[^()/><\][;!|]+" class="company-input form-control form--control" id="company_vat_no"name="company_vat_no" placeholder="{{ __('Enter Company VAT No') }}" value="{{ $user->company_vat_no }}" {{$corporate_required}}>
                                 </div>
                               </div>
                               <div class="col-md-6">

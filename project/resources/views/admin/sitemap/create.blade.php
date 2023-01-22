@@ -36,7 +36,7 @@
               </div>
             </div>
             <div class="col-lg-7">
-              <input type="text" class="input-field" name="sitemap_url" placeholder="{{__('Enter Sitemap Url')}}" required="">
+              <input type="url" class="input-field" name="sitemap_url" placeholder="{{__('Enter Sitemap Url')}}" required="">
             </div>
           </div>
 

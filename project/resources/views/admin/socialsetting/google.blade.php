@@ -32,7 +32,7 @@
               <div class="form-group">
                 <label for="inp-name">{{ __('Client ID') }} *</label>
                 <small>{{ __('(Get Your Client ID from console.cloud.google.com)') }}</small>
-                <input type="text" class="input-field" placeholder="{{ __('Enter Client ID') }}" name="gclient_id" value="{{ $data->gclient_id }}" required="">
+                <input type="text" pattern="[^()/><\][;!|]+" class="input-field" placeholder="{{ __('Enter Client ID') }}" name="gclient_id" value="{{ $data->gclient_id }}" required="">
               </div>
 
               <div class="form-group">
@@ -43,13 +43,13 @@
 
               <div class="form-group">
                 <label for="inp-name">{{ __('Website URL') }} *</label>
-                <input type="text" class="input-field" placeholder="{{ __('Website URL') }}"  value="{{ url('/') }}" readonly="">
+                <input type="url" class="input-field" placeholder="{{ __('Website URL') }}"  value="{{ url('/') }}" readonly="">
               </div>
 
               <div class="form-group">
                 <label for="inp-name">{{ __('Redirect URL') }} *</label>
                 <small>{{ __('(Copy this url and paste it to your Redirect URL in console.cloud.google.com.)') }}</small>
-                <input type="text" class="input-field" placeholder="{{ __('Enter Site URL') }}" name="gredirect" value="{{url('/auth/google/callback')}}" readonly>
+                <input type="url" class="input-field" placeholder="{{ __('Enter Site URL') }}" name="gredirect" value="{{url('/auth/google/callback')}}" readonly>
               </div>
 
               <button type="submit" id="submit-btn" class="btn btn-primary">{{ __('Submit') }}</button>

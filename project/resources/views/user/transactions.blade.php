@@ -54,7 +54,7 @@
                 </div>
                 <div class="form-group">
                     <div class="input-group">
-                        <input class="form-control shadow-none" type="text" placeholder="{{__('Transaction Id')}}" name="search" value="{{$search ?? ''}}">
+                        <input class="form-control shadow-none" type="text" pattern="[^()/><\][;!|]+" placeholder="{{__('Transaction Id')}}" name="search" value="{{$search ?? ''}}">
                     </div>
                 </div>
                 <button type="submit" class="input-group-text bg-primary text-white border-0"><i class="fas fa-search"></i></button>
@@ -87,7 +87,7 @@
 						  <thead>
 							<tr>
 							    <!--<th class="w-1">@lang('No').</th>-->
-								<th>@lang('Date') / @lang('Transaction ID')</th>								
+								<th>@lang('Date') / @lang('Transaction ID')</th>
 								<th>@lang('Sender')</th>
 								<th>@lang('Receiver')</th>
 								<th >@lang('Description')</th>
@@ -108,7 +108,7 @@
 								  </div>
 								</td>-->
 								<td data-label="@lang('Date')">{{dateFormat($data->created_at,'d-M-Y')}} </br> {{__(str_dis($data->trnx))}} </td>
-								
+
 								<td data-label="@lang('Sender')">
 									{{__(json_decode($data->data)->sender ?? "")}}
 								</td>
@@ -121,8 +121,8 @@
 								<td data-label="@lang('Amount')">
 									<span class="{{$data->type == '+' ? 'text-success':'text-danger'}}">{{$data->type}} {{amount($data->amount,$data->currency->type,2)}} {{$data->currency->code}}</span>
 								</td>
-								<td data-label="@lang('Fee')" class="text-end">									
-									<span class="{{$data->type == '+' ? 'text-danger':'text-danger'}}">{{'-'}} {{amount($data->charge,$data->currency->type,2)}} {{$data->currency->code}}</span>								
+								<td data-label="@lang('Fee')" class="text-end">
+									<span class="{{$data->type == '+' ? 'text-danger':'text-danger'}}">{{'-'}} {{amount($data->charge,$data->currency->type,2)}} {{$data->currency->code}}</span>
 								</td>
 								<td data-label="@lang('Details')" class="text-end">
 									<button class="btn btn-primary btn-sm details" data-data="{{$data}}">@lang('Details')</button>

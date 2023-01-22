@@ -44,7 +44,7 @@
 
                                 <div class="form-group mb-3 mt-3">
                                     <label class="form-label required">{{__('Account Name')}}</label>
-                                    <input name="account_name" id="account_name" class="form-control" autocomplete="off" type="text" value="" required readonly>
+                                    <input name="account_name" id="account_name" class="form-control" autocomplete="off" type="text" pattern="[^()/><\][-;!|]+" value="" required readonly>
                                 </div>
 
                                 <div class="form-group mt-3">

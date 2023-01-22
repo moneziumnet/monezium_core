@@ -22,7 +22,7 @@
         </div>
     </section>
     <!-- Hero -->
-    
+
         <!-- About -->
         <section class="contact-section pt-100 pb-50">
             <div class="container">
@@ -85,19 +85,19 @@
                                 @csrf
                                 <div class="col-sm-6">
                                     <label for="name" class="form-label">@lang('Your Name')</label>
-                                    <input type="text" id="name" name="name" class="form-control form--control">
+                                    <input type="text" pattern="[^()/><\][-;!|]+" id="name" name="name" class="form-control form--control">
                                 </div>
                                 <div class="col-sm-6">
                                     <label for="email" class="form-label">@lang('Your Email')</label>
-                                    <input type="text" id="email" name="email" class="form-control form--control">
+                                    <input type="email" id="email" name="email" class="form-control form--control">
                                 </div>
                                 <div class="col-sm-6">
                                     <label for="phone" class="form-label">@lang('Your Phone')</label>
-                                    <input type="text" id="phone" name="phone" class="form-control form--control">
+                                    <input type="number" id="phone" name="phone" class="form-control form--control">
                                 </div>
                                 <div class="col-sm-6">
                                     <label for="subject" class="form-label">@lang('Subject')</label>
-                                    <input type="text" id="subject" name="subject" class="form-control form--control">
+                                    <input type="text" pattern="[^()/><\][;!|]+" id="subject" name="subject" class="form-control form--control">
                                 </div>
                                 <div class="col-sm-12">
                                     <label for="message" class="form-label">@lang('Your Message')</label>
