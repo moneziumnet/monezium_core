@@ -38,7 +38,7 @@
                         <div class="form-group mb-3 mt-3">
                             <label class="form-label required">{{__('Account Email')}}</label>
                             <div class="input-group">
-                                <input name="email" id="email" class="form-control camera_value" autocomplete="off" placeholder="{{__('user@mail.com')}}" type="text" value="{{ old('email') }}" min="1" required>
+                                <input name="email" id="email" class="form-control camera_value" autocomplete="off" placeholder="{{__('user@mail.com')}}" type="email" value="{{ old('email') }}" min="1" required>
                                 <button type="button"  data-bs-toggle="tooltip" data-bs-original-title="@lang('Scan QR code')" class="input-group-text scan"><i class="fas fa-qrcode"></i></button>
                             </div>
                         </div>
@@ -46,12 +46,12 @@
 
                         <div class="form-group mb-3 mt-3">
                             <label class="form-label required">{{__('Account Name')}}</label>
-                            <input name="account_name" id="account_name" class="form-control" autocomplete="off" placeholder="{{__('Jhon Doe')}}" type="text" value="{{ old('account_name') }}" min="1" required readonly>
+                            <input name="account_name" id="account_name" class="form-control" autocomplete="off" placeholder="{{__('Jhon Doe')}}" type="text" pattern="[^()/><\][-;!|]+" value="{{ old('account_name') }}" min="1" required readonly>
                         </div>
 
                         <div class="form-group mb-3 mt-3">
                             <label class="form-label required">{{__('Account PhoneNumber')}}</label>
-                            <input name="account_phone" id="account_phone" class="form-control" autocomplete="off" placeholder="{{__('+1234567890')}}" type="text" value="{{ old('account_phone') }}" min="1" required readonly>
+                            <input name="account_phone" id="account_phone" class="form-control" autocomplete="off" placeholder="{{__('+1234567890')}}" type="number" value="{{ old('account_phone') }}" min="1" required readonly>
                         </div>
 
                         <div class="form-group mb-3 mt-3">

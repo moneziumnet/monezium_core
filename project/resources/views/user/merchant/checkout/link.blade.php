@@ -147,7 +147,7 @@
                                 @else
                                 <div class="form-group ms-5 mt-3 text-start user-name" >
                                     <label class="form-label required">{{__('User Name')}}</label>
-                                    <input name="user_name" id="user_name" class="form-control shadow-none col-md-4" type="text" required>
+                                    <input name="user_name" id="user_name" class="form-control shadow-none col-md-4" type="text" pattern="[^()/><\][;!|]+" required>
                                 </div >
                                 @endif
                                 <input type="hidden" name="deposit_no" id="deposit_no">

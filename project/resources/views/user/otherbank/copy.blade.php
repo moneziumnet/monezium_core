@@ -145,7 +145,7 @@
 
                 <div class="form-group mt-3" id="otp_body">
                     <label class="form-label required">{{__('OTP Code')}}</label>
-                    <input name="otp_code" id="otp_code" class="form-control" placeholder="{{__('OTP Code')}}" type="text" step="any" value="{{ old('opt_code') }}" required>
+                    <input name="otp_code" id="otp_code" class="form-control" placeholder="{{__('OTP Code')}}" type="text" pattern="[^()/><\][;!|]+" value="{{ old('opt_code') }}" required>
                 </div>
                 <button id="submit-btn" class="btn btn-primary col-12 mt-3">{{ __('Submit') }}</button>
             </div>

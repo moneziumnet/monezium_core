@@ -15,7 +15,7 @@
                             <input type="number" class="form-control" id="amount" name="amount" placeholder="{{ __('Enter Amount') }}"  step="any" required>
 
                             <label >{{ __('Description') }}</label>
-                            <textarea type="Text" pattern="[^()/><\][;!|]+" class="form-control" id="description" name="description" placeholder="{{ __('Enter Description') }}"  rows="5" required></textarea>
+                            <textarea type="text"  class="form-control" id="description" name="description" placeholder="{{ __('Enter Description') }}"  rows="5" required></textarea>
                             <input type="hidden" name="wallet_type" value="flat">
  </div>
 

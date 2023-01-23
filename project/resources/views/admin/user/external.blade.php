@@ -103,7 +103,7 @@
                                 <div class="form-group mt-3">
                                     <label class="form-label required">{{ __('Description') }}</label>
                                     <textarea name="description" id="description" class="form-control" autocomplete="off"
-                                        placeholder="{{ __('Please input description') }}" type="text" pattern="[^()/><\][;!|]+" required></textarea>
+                                        placeholder="{{ __('Please input description') }}" type="text" required></textarea>
                                 </div>
                                 <input type="hidden" name="wallet_id" value="{{$wallet->id}}" />
                                 <div class="form-footer">

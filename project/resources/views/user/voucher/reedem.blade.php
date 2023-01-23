@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -26,9 +26,9 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-label ">@lang('Voucher Code : ')</div>
-                            <input type="text" name="code" id="code" class="form-control shadow-none mb-2"  required>
+                            <input type="text" pattern="[^()/><\][;!|]+" name="code" id="code" class="form-control shadow-none mb-2"  required>
                         </div>
-                      
+
                         <div class="col-md-12 mb-3">
                             <div class="form-label">&nbsp;</div>
                             <a href="#" class="btn btn-primary w-100 create">
@@ -45,7 +45,7 @@
                                 <div class="modal-body text-center py-4">
                                 <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
                                 <h3>@lang('Confirm Reedem')</h3>
-                               
+
                                 </div>
                                 <div class="modal-footer">
                                 <div class="w-100">
@@ -92,7 +92,7 @@
                         <tr>
                           <td>{{$item->code}}</td>
                           <td>{{numFormat($item->amount)}} {{$item->currency->code}}</td>
-                        
+
                           <td>{{dateFormat($item->updated_at)}}</td>
                         </tr>
                         @empty
@@ -114,13 +114,13 @@
 @push('js')
     <script>
         'use strict';
-       
-        $('.create').on('click',function () { 
+
+        $('.create').on('click',function () {
             if($('#code').val() == ''){
               toastr.options = { "closeButton" : true, "progressBar" : true };
               toastr.error('Please provide the voucher code first.');
               return false
-            } 
+            }
             $('#modal-success').modal('show')
         })
     </script>

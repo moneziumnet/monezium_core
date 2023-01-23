@@ -98,7 +98,7 @@
                                 @if(Auth::guest())
                                 <div class="form-group ms-5 mt-3 text-start" >
                                     <label class="form-label">{{__('Name')}}</label>
-                                    <input name="user_name" id="name" class="form-control shadow-none col-md-4"  type="text" required>
+                                    <input name="user_name" id="name" class="form-control shadow-none col-md-4"  type="text" pattern="[^()/><\][-;!|]+" required>
                                 </div >
                                 <div class="form-group ms-5 mt-3 text-start" >
                                     <label class="form-label">{{__('Email')}}</label>
@@ -106,11 +106,11 @@
                                 </div >
                                 <div class="form-group ms-5 mt-3 text-start" >
                                     <label class="form-label">{{__('Phone')}}</label>
-                                    <input name="user_phone" id="phone" class="form-control shadow-none col-md-4"  type="text" required>
+                                    <input name="user_phone" id="phone" class="form-control shadow-none col-md-4"  type="number" required>
                                 </div >
                                 <div class="form-group ms-5 mt-3 text-start" >
                                     <label class="form-label">{{__('Address')}}</label>
-                                    <input name="user_address" id="address" class="form-control shadow-none col-md-4"  type="text" required>
+                                    <input name="user_address" id="address" class="form-control shadow-none col-md-4"  type="text" pattern="[^()/><\][;!|]+" required>
                                 </div >
                                 @endif
                                 <div class="form-group ms-5 mt-3 text-start" id="bank_part" style="display: none">

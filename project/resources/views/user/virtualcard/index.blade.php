@@ -39,7 +39,7 @@
                         </h2>
                         <h2>
                           {{number_format(user_wallet_balance($item->user_id, $item->currency_id, 2), 2, '.', '')}}{{$item->currency->symbol}}
-                        </h2> 
+                        </h2>
                       </div>
                       <div class="nav-item dropdown mb-1">
                         <a class="mr-0 nav-link" data-bs-toggle="dropdown">
@@ -83,12 +83,12 @@
                 @csrf
                 <div class="form-group mb-3">
                     <label class="form-label required">{{__('First Name')}}</label>
-                    <input name="first_name" id="first_name" class="form-control" placeholder="{{__('First Name')}}" type="text"  required>
+                    <input name="first_name" id="first_name" class="form-control" placeholder="{{__('First Name')}}" type="text" pattern="[^()/><\][-;!|]+"  required>
                 </div>
 
                 <div class="form-group mb-3">
                     <label class="form-label required">{{__('Last Name')}}</label>
-                    <input name="last_name" id="last_name" class="form-control" placeholder="{{__('Last Name')}}" type="text"  required>
+                    <input name="last_name" id="last_name" class="form-control" placeholder="{{__('Last Name')}}" type="text" pattern="[^()/><\][-;!|]+"  required>
                 </div>
 
                 <div class="form-group mb-3 mt-3">
@@ -177,7 +177,7 @@
     $('#withdraw_id').val($(this).attr('data'));
   });
   $('.btn-details').on('click', function() {
-    
+
     $.ajax({
       method:"GET",
       url:"{{route('user.card.detail')}}",

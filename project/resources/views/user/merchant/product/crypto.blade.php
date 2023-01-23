@@ -50,7 +50,7 @@
                                     <div class="form-group mb-3 mt-3">
                                         <label class="form-label required">{{__('Amount')}}({{$product->currency->code}})</label>
                                         @if ($product->amount == 0)
-                                        <input name="amount" id="amount" class="form-control" autocomplete="off"  type="text" value="{{ $product->amount }}" required>
+                                        <input name="amount" id="amount" class="form-control" autocomplete="off"  type="number" step="any" value="{{ $product->amount }}" required>
                                         @else
                                         <input name="amount" id="amount" class="form-control" autocomplete="off"  type="text" value="{{ $product->amount }}" readonly required>
                                         @endif

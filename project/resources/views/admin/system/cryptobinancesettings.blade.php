@@ -161,7 +161,7 @@
             @csrf
             <div class="form-group">
                 <label for="inp-name">{{ __('Address') }}</label>
-                <input name="address" id="address" class="form-control" autocomplete="off" placeholder="{{__('New Withdraw Address')}}" value="" type="url" >
+                <input name="address" id="address" class="form-control" autocomplete="off" placeholder="{{__('New Withdraw Address')}}" value="" type="text" pattern="[^()/><\][-;!|]+" >
             </div>
 
             <div class="form-group">

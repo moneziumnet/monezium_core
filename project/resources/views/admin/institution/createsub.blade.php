@@ -93,7 +93,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label for="inp-phone">{{ __('Phone of Institution') }}</label>
-                <input type="phone" class="form-control" id="inp-phone" name="phone" placeholder="{{ __('Enter Phone') }}" value="" required>
+                <input type="number" class="form-control" id="inp-phone" name="phone" placeholder="{{ __('Enter Phone') }}" value="" required>
               </div>
             </div>
 

@@ -30,7 +30,7 @@
                                   (%)
                                 @endif
                                 <span class="text-danger">*</span></label>
-                              <input type="text" pattern="[^()/><\][;!|]+" name="{{$key}}" class="form-control" value="{{@$value}}">
+                              <input type="number" step="any" name="{{$key}}" class="form-control" value="{{@$value}}">
                             </div>
                         @endforeach
                             @if ($charge->name == 'Transfer Money')

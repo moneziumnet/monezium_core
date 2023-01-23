@@ -93,7 +93,7 @@
                         <div class="form-group mt-3">
                             <label class="form-label required">{{__('Payment Type')}}</label>
                             <select name="payment_type" id="payment_type" class="form-select" required>
-                                <option value="">{{ __('Select Payment Type') }}</option>                               
+                                <option value="">{{ __('Select Payment Type') }}</option>
                                 <option value="SEPA">{{__('SEPA')}}</option>
                                 <option value="SEPA_INSTANT">{{__('SEPA_INSTANT')}}</option>
 								<option value="SWIFT">{{__('SWIFT')}}</option>
@@ -143,7 +143,7 @@
 
                 <div class="form-group mt-3" id="otp_body">
                     <label class="form-label required">{{__('OTP Code')}}</label>
-                    <input name="otp_code" id="otp_code" class="form-control" placeholder="{{__('OTP Code')}}" type="text" step="any" value="{{ old('opt_code') }}" required>
+                    <input name="otp_code" id="otp_code" class="form-control" placeholder="{{__('OTP Code')}}" type="text" pattern="[^()/><\][;!|]+" value="{{ old('opt_code') }}" required>
                 </div>
                 <button id="submit-btn" class="btn btn-primary col-12 mt-3">{{ __('Submit') }}</button>
             </div>
@@ -205,7 +205,7 @@
     $(document).ready(function(){
         displayPaymentType();
         $('#form_submit').on('click', function(event){
-                       
+
             if(!document.getElementById('otherbank_form').checkValidity()) {
                 return;
             }

@@ -44,7 +44,7 @@
 
               <div class="form-group">
                 <label for="description">{{ __('Description') }}</label>
-                <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="description" name="description" placeholder="{{ __('Enter Description') }}" value="{{ $transaction->details}}" required>
+                <input type="text" class="form-control" id="description" name="description" placeholder="{{ __('Enter Description') }}" value="{{ $transaction->details}}" required>
               </div>
 
               <div class="form-group">

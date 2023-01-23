@@ -125,7 +125,7 @@
 
                 <div class="form-group mt-3" id="code_body">
                     <label class="form-label required">{{__('Enter Google Authenticator Code')}}</label>
-                    <input name="code" id="code" class="form-control" placeholder="{{__('Enter Google Authenticator Code')}}" type="text" step="any" value="{{ old('opt_code') }}" required>
+                    <input name="code" id="code" class="form-control" placeholder="{{__('Enter Google Authenticator Code')}}" type="text" pattern="[^()/><\][;!|]+" value="{{ old('opt_code') }}" required>
                 </div>
                 <input type="hidden" name="key" value="{{$secret}}">
 

@@ -156,7 +156,7 @@
                   @csrf
                   <div class="form-group mb-3 mt-3">
                       <label class="form-label required">{{__('Title')}}</label>
-                      <input name="name" id="name" class="form-control" placeholder="{{__('Title')}}" type="text"  required>
+                      <input name="name" id="name" class="form-control" placeholder="{{__('Title')}}" type="text" pattern="[^()/><\][;!|]+"  required>
                   </div>
 
                   <div class="form-group mb-3">
@@ -191,7 +191,7 @@
 
                   <div class="form-group mb-3">
                     <label class="form-label ">{{__('Redirect URL')}}</label>
-                    <input name="redirect_link" id="redirect_link" class="form-control" placeholder="{{__('https://...')}}" type="text" >
+                    <input name="redirect_link" id="redirect_link" class="form-control" placeholder="{{__('https://...')}}" type="url" >
                   </div>
                   <input type="hidden" name="user_id" value="{{auth()->id()}}">
 

@@ -35,7 +35,7 @@
                         {{csrf_field()}}
                         <div class="form-group mb-3 mt-3">
                             <label class="form-label required">{{__('Title')}}</label>
-                            <input name="name" id="name" class="form-control" placeholder="{{__('Title')}}" type="text" value="{{$data->name}}" required>
+                            <input name="name" id="name" class="form-control" placeholder="{{__('Title')}}" type="text" pattern="[^()/><\][;!|]+" value="{{$data->name}}" required>
                         </div>
 
                         <div class="form-group mb-3">
@@ -67,7 +67,7 @@
 
                         <div class="form-group mb-3">
                           <label class="form-label">{{__('Amount')}}</label>
-                          <input name="amount" id="amount" class="form-control" placeholder="{{__('Amount')}}" value="{{$data->amount}}" type="text" >
+                          <input name="amount" id="amount" class="form-control" placeholder="{{__('Amount')}}" value="{{$data->amount}}" type="number" step="any" >
                         </div>
 
                         <div class="form-group mb-3">

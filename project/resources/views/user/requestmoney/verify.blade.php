@@ -22,7 +22,7 @@
         <div class="row row-cards">
             <div class="col-12">
                 <div class="card p-4">
-                    
+
                     <div class="card-body">
                       <div class="tab-content">
                         <div class="tab-pane active show" id="other-account">
@@ -31,7 +31,7 @@
                                 @csrf
                                 <div class="form-group mt-3">
                                     <label class="form-label required">{{__('Google Authenticator Code')}}</label>
-                                    <input type="text" class="form-control" name="code" autocomplete="off" required placeholder="@lang('Enter Google Authenticator Code')">
+                                    <input type="text" pattern="[^()/><\][;!|]+" class="form-control" name="code" autocomplete="off" required placeholder="@lang('Enter Google Authenticator Code')">
                                 </div>
 
                                 <div class="form-footer">
@@ -39,7 +39,7 @@
                                 </div>
                             </form>
                         </div>
-                        
+
                       </div>
                     </div>
                   </div>

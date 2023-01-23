@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -64,7 +64,7 @@
 @push('js')
 <script>
     'use strict';
-  
+
     function myFunction() {
       var copyText = document.getElementById("cronjobURL");
       copyText.select();

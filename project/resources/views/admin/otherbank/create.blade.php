@@ -103,7 +103,7 @@
             <div class="col-md-6">
               <div class="form-group">
                   <label for="percent_charge">{{ __('Percent Charge') }} (%)</label>
-                  <input type="number" class="form-control" id="percent_charge" name="percent_charge" placeholder="{{ __('0') }}" min="1" value="" required>
+                  <input type="number" step="any" class="form-control" id="percent_charge" name="percent_charge" placeholder="{{ __('0') }}" min="1" value="" required>
                 </div>
             </div>
          </div>

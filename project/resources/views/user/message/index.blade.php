@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -32,7 +32,7 @@
                 <div class="card">
                     @if (count($convs) == 0)
                         <h3 class="text-center py-5">{{__('No Data Found')}}</h3>
-                    @else 
+                    @else
                         <div class="table-responsive">
                             <table class="table table-vcenter table-mobile-md card-table">
                                 <thead>
@@ -57,7 +57,7 @@
                                           {{$conv->message}}
                                         </div>
                                       </td>
-      
+
                                       <td data-label="{{ __('Time') }}">
                                         <div>
                                           {{$conv->created_at->diffForHumans()}}
@@ -69,7 +69,7 @@
                                           <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#confirm-delete" data-href="{{route('user.message.delete1',$conv->id)}}"class="link remove-btn btn d-block btn-sm btn-danger"><i class="fa fa-trash"></i></a>
                                         </div>
                                       </td>
-      
+
                                     </tr>
                                   @endforeach
                                 </tbody>
@@ -96,14 +96,14 @@
           @csrf
           <div class="modal-body">
             <div class="form-group mb-2">
-              <input type="text" class="form-control" name="subject" placeholder="{{ __('Subject') }}" autocomplete="off" required="">
+              <input type="text" pattern="[^()/><\][;!|]+" class="form-control" name="subject" placeholder="{{ __('Subject') }}" autocomplete="off" required="">
             </div>
-  
+
             <div class="form-group">
               <textarea class="form-control" name="message" name="message" placeholder="{{ __('Your Message') }}" rows="10"></textarea>
             </div>
           </div>
-  
+
           <div class="modal-footer">
               <button type="submit" id="submit-btn" class="btn btn-primary">{{ __('Submit') }}</button>
           </div>

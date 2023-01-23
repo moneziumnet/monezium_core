@@ -415,7 +415,7 @@
         <div class="col-md-6">
           <div class="form-group">
             <label for="your-phone">{{ __('Your Phone') }}</label>
-            <input type="phone" class="form-control" id="your-phone" name="your_phone" placeholder="{{ __('Enter Phone Number') }}" value="">
+            <input type="number" class="form-control" id="your-phone" name="your_phone" placeholder="{{ __('Enter Phone Number') }}" value="">
           </div>
         </div>
 

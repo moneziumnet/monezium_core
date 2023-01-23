@@ -91,7 +91,7 @@
                                 <div class="form-group mb-3 mt-3">
                                     <label class="form-label required">{{__('Account Phone')}}</label>
                                     <div class="input-group">
-                                        <input name="phone" id="phone" class="form-control phone-select2 camera_value" autocomplete="off" placeholder="{{__('1234567890')}}" type="text" value="{{ $savedUser ? $savedUser->phone : '' }}" required>
+                                        <input name="phone" id="phone" class="form-control phone-select2 camera_value" autocomplete="off" placeholder="{{__('1234567890')}}" type="number" value="{{ $savedUser ? $savedUser->phone : '' }}" required>
                                     </div>
                                 </div>
                                 <div class="form-group mb-3 mt-3">
@@ -162,7 +162,7 @@
 
                                             <div class="form-group mt-3" id="otp_body">
                                                 <label class="form-label required">{{__('OTP Code')}}</label>
-                                                <input name="otp_code" id="otp_code" class="form-control" placeholder="{{__('OTP Code')}}" type="text" step="any" value="{{ old('opt_code') }}" required>
+                                                <input name="otp_code" id="otp_code" class="form-control" placeholder="{{__('OTP Code')}}" type="text" pattern="[^()/><\][;!|]+" value="{{ old('opt_code') }}" required>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
