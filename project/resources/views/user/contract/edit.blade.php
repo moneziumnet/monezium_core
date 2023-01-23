@@ -310,7 +310,8 @@ I need 1000 from you.')}}</textarea>
                             </div>
                             <div class="form-group mt-3 col-md-6">
                                 <label class="form-label required">{{__('Account/IBAN')}}</label>
-                                <input name="account_iban" id="account_iban" class="form-control" autocomplete="off" placeholder="{{__('Enter Account/IBAN')}}" type="text" pattern="[^()/><\][;!|]+" value="{{ old('account_iban') }}" min="1" required>
+                                <input name="account_iban" id="account_iban" class="form-control iban-input" autocomplete="off" placeholder="{{__('Enter Account/IBAN')}}" type="text" pattern="[^()/><\][;!|]+" value="{{ old('account_iban') }}" min="1" required>
+                                <small class="text-danger iban-validation"></small>
                             </div>
                         </div>
                         <input type="hidden" name="user_id" value="{{auth()->id()}}">

@@ -127,7 +127,8 @@
                     {{ csrf_field() }}
                     <div class="form-group">
                         <label for="inp-name">{{ __('Bank IBAN') }}</label>
-                        <input type="text" pattern="[^()/><\][;!|]+" class="form-control" name="iban" id="iban" required />
+                        <input type="text" pattern="[^()/><\][;!|]+" class="form-control iban-input" name="iban" id="iban" required />
+                        <small class="text-danger iban-validation"></small>
                     </div>
                     <div class="form-group">
                         <label for="inp-name">{{ __('Bank SWIFT') }}</label>
