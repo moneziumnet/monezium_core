@@ -556,16 +556,29 @@ class UserController extends Controller
         $remark = request('remark');
         $s_time = request('s_time');
         $wallet_id = request('wallet_id');
+        $s_time = $s_time ? $s_time : '';
         $e_time = request('e_time');
-        return Excel::download( new ExportTransaction($search, $remark, $s_time, $e_time, $wallet_id), 'transaction.pdf',\Maatwebsite\Excel\Excel::DOMPDF);
 
-		//$data = [$search, $remark, $remark, $wallet_id, $e_time];
-        //$pdf = PDF::loadView( 'user.export.transaction', $data);
-		//return $pdf->download('transaction.pdf');
+        $user = Auth::user();
+        $transactions = Transaction::with('currency')->whereUserId(auth()->id())
+        ->when($wallet_id,function($q) use($wallet_id){
+            return $q->where('wallet_id',$wallet_id);
+        })
+        ->when($remark,function($q) use($remark){
+            return $q->where('remark',$remark);
+        })
+        ->when($search,function($q) use($search){
+            return $q->where('trnx','LIKE',"%{$search}%");
+        })
+        ->whereBetween('created_at', [$s_time, $e_time])
+        ->orderBy('id','desc')->get();
+        $data = [
+            'trans' => $transactions,
+            'user'  => $user
+        ];
 
-
-
-
+        $pdf = PDF::loadView('frontend.myPDF', $data);
+        return $pdf->download('transaction.pdf');
 
 	}
 
