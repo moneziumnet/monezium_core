@@ -50,7 +50,7 @@
                                     <div class="form-group mb-3 mt-3">
                                         <label class="form-label required">{{__('Amount')}}({{$campaign->currency->code}})</label>
                                         @if ($campaign->amount == 0)
-                                        <input name="amount" id="amount" class="form-control" autocomplete="off"  type="text" value="{{ $campaign->amount }}" required>
+                                        <input name="amount" id="amount" class="form-control" autocomplete="off"  type="number" step="any" value="{{ $campaign->amount }}" required>
                                         @else
                                         <input name="amount" id="amount" class="form-control" autocomplete="off"  type="text" value="{{ $campaign->amount }}" readonly required>
                                         @endif

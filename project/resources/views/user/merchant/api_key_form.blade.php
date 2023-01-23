@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @push('css')
-    
+
 @endpush
 
 @section('contents')
@@ -19,7 +19,7 @@
 
 <div class="page-body">
     <div class="container-xl">
-        
+
         <div class="row row-cards">
             <div class="col-12">
                 <div class="card">
@@ -33,8 +33,8 @@
                           </div>
                     </div>
                 </div>
-                
-            
+
+
             </div>
         </div>
     </div>
@@ -44,7 +44,7 @@
 @push('js')
 <script>
     'use strict';
-  
+
     function myFunction() {
       var copyText = document.getElementById("cronjobURL");
       copyText.select();

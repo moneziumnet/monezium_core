@@ -32,7 +32,7 @@
                                 @php
                                     $prefix = 'prefix_'.$type;
                                 @endphp
-                                <input type="text" name="{{$prefix}}" class="form-control shadow-none" value="{{$invoice_setting->number_generator->$prefix ?? ''}}" required>
+                                <input type="text" pattern="[^()/><\][;!|]+" name="{{$prefix}}" class="form-control shadow-none" value="{{$invoice_setting->number_generator->$prefix ?? ''}}" required>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <div class="form-label">{{__( $type.' Number length ')}}</div>

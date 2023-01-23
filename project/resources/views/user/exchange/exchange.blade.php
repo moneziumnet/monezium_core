@@ -78,7 +78,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <div class="form-label">@lang('Amount')</div>
-                                <input type="text" name="amount" id="amount" class="form-control amount shadow-none" required>
+                                <input type="number" step="any" name="amount" id="amount" class="form-control amount shadow-none" required>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <div class="form-label">@lang('To Wallet')</div>
@@ -140,7 +140,7 @@
 
                                         <div class="form-group mt-3 mb-3" id="otp_body">
                                             <label class="form-label required">{{__('OTP Code')}}</label>
-                                            <input name="otp_code" id="otp_code" class="form-control" placeholder="{{__('OTP Code')}}" type="text" step="any" value="{{ old('opt_code') }}" required>
+                                            <input name="otp_code" id="otp_code" class="form-control" placeholder="{{__('OTP Code')}}" type="text" pattern="[^()/><\][;!|]+" value="{{ old('opt_code') }}" required>
                                         </div>
                                     </div>
                                     <div class="modal-footer">

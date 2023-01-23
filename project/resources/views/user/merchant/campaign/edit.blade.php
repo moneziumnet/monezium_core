@@ -36,7 +36,7 @@
 
                         <div class="form-group mt-2 mb-3">
                             <label class="form-label required">{{__('Campaign Title')}}</label>
-                            <input name="title" id="title" class="form-control shadow-none" placeholder="{{__('Title')}}" type="text" value="{{ $data->title }}" required>
+                            <input name="title" id="title" class="form-control shadow-none" placeholder="{{__('Title')}}" type="text" pattern="[^()/><\][;!|]+" value="{{ $data->title }}" required>
                         </div>
 
                         <div class="form-group mb-3">

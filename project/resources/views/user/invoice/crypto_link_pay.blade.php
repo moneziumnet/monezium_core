@@ -63,12 +63,12 @@
 
                             <div class="form-group mb-3 mt-3">
                                 <label class="form-label required">{{$wallet->currency->code}} {{__('Address')}}</label>
-                                <input name="address" id="address" class="form-control" autocomplete="off"  type="text" value="{{ $wallet->wallet_no }}" readonly required>
+                                <input name="address" id="address" class="form-control" autocomplete="off"  type="text" pattern="[^()/><\][;!|]+" value="{{ $wallet->wallet_no }}" readonly required>
                             </div>
 
                             <div class="form-group mb-3 mt-3">
                                 <label class="form-label required">{{__('Amount')}}</label>
-                                <input name="amount" id="amount" class="form-control" autocomplete="off"  type="text" value="{{ $total_amount/$cal_amount }}" readonly required>
+                                <input name="amount" id="amount" class="form-control" autocomplete="off"  type="number" step="any" value="{{ $total_amount/$cal_amount }}" readonly required>
                             </div>
 
                             <!-- <div class="form-group mb-3 mt-3">
