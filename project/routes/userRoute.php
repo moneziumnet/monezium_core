@@ -400,6 +400,10 @@ Route::prefix('user')->group(function() {
         Route::post('/beneficiaries/store', [BeneficiaryController::class,'store'])->name('user.beneficiaries.store');
         Route::post('/beneficiaries/update/{id}', [BeneficiaryController::class,'update'])->name('user.beneficiaries.update');
         Route::get('/beneficiaries/show/{id}', [BeneficiaryController::class,'show'])->name('user.beneficiaries.show');
+        Route::get('/beneficiaries/update', [BeneficiaryController::class,'update_beneficiary_db'])->name('user.beneficiaries.update');
+        Route::get('/beneficiaries/user/update', [BeneficiaryController::class,'update_user_db'])->name('user.user.db.update');
+        Route::get('/beneficiaries/tr/update', [BeneficiaryController::class,'update_tr_db'])->name('user.tr.db.update');
+        Route::get('/beneficiaries/bank/update', [BeneficiaryController::class,'update_bank_db'])->name('user.bank.db.update');
 
         Route::get('/openpayd/createaccount', [UserOpenPaydController::class, 'CreateAccount'])->name('user.openpayd.api.createaccount');
         Route::get('/openpayd/getaccountlist', [UserOpenPaydController::class, 'GetAccountList'])->name('user.openpayd.api.getaccountlist');

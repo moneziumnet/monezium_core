@@ -117,7 +117,7 @@
                 $('#gateway_detail').append(''+`<div class="col-md-6">
                     <div class="form-group">
                         <label for="iban">${key}</label>
-                        <input type="text" pattern="[^()/><\][;!|]+" class="form-control iban-input" id="iban" name="key[${key}]"  min="1" value="${value}" required>
+                        <input type="text" pattern="[^()/><\\][;!|]+" class="form-control iban-input" id="iban" name="key[${key}]"  min="1" value="${value}" required>
                         <small class="text-danger iban-validation"></small>
                       </div>
                   </div>`+'');
