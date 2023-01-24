@@ -115,6 +115,8 @@ Route::prefix('user')->group(function() {
       Route::get('/transactions-export', [UserController::class,'transactionExport'])->name('user.transaction-export');
       Route::get('/transactions-pdf', [UserController::class,'transactionPDF'])->name('user.transaction-pdf');
       Route::get('/transaction/details/{id}', [UserController::class,'trxDetails'])->name('user.trxDetails');
+      Route::get('/transaction/details/pdf/{id}', [UserController::class,'trxDetails_pdf'])->name('user.trxDetails.pdf');
+      Route::post('/transactions/details/mail', [UserController::class,'sendToMail'])->name('user.trxDetails.mail');
 
       Route::get('/shop', [UserShopController::class,'index'])->name('user.shop.index');
       Route::get('/shop/order/{id}', [UserShopController::class,'order'])->name('user.shop.order');

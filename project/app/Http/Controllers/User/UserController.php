@@ -319,6 +319,95 @@ class UserController extends Controller
         return view('user.trx_details',compact('user','transaction'));
     }
 
+    public function trxDetails_pdf($id)
+    {
+        $user = Auth::user();
+        $transaction = Transaction::where('id',$id)->whereUserId(auth()->id())->get();
+        $data = [
+            'trans' => $transaction,
+            'user'  => $user
+        ];
+
+        $pdf = PDF::loadView('frontend.myPDF', $data);
+        return $pdf->download('transaction.pdf');
+    }
+
+    public function sendToMail(Request $request)
+    {
+        $gs = Generalsetting::first();
+        $tran = Transaction::where('id',$request->trx_id)->whereUserId(auth()->id())->first();
+
+
+        $to = $request->email;
+        $subject = "Transaction Detail";
+
+        $msg_body = '
+        <!DOCTYPE html>
+        <html>
+        <head>
+        <style>
+        table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+        }
+
+        td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+        }
+
+        tr:nth-child(even) {
+          background-color: #dddddd;
+        }
+        </style>
+        </head>
+        <body>
+
+        <h2>Transaction Detail</h2>
+        <p> Hello '.auth()->user()->company_name ?? auth()->user()->name.'.</p>
+        <p> This is Transacton Detail.</p>
+        <p> Please confirm current.</p>
+
+        <table>
+          <tr>
+            <th style="width:15%;font-size:8px;">Date/Transaction No.</th>
+            <th style="width:15%;font-size:8px;">Sender</th>
+            <th style="width:15%;font-size:8px;">Receiver</th>
+            <th style="width:30%;font-size:8px;">Description</th>
+            <th style="width:15%;font-size:8px;">Amount</th>
+            <th style="width:10%;font-size:8px;">Fee</th>
+          </tr>
+          <tr>
+            <td style="font-size:8px;">'.date('d-m-Y', strtotime($tran->created_at)).' <br/> '.$tran->trnx.'</td>
+            <td style="font-size:8px;">'.json_decode($tran->data)->sender ?? "".'</td>
+            <td style="font-size:8px;">'.json_decode($tran->data)->receiver ?? "".'</td>
+            <td style="text-align: left; font-size:8px;">'.json_decode($tran->data)->description ?? "".'<br/>'.ucwords(str_replace('_',' ',$tran->remark)).'</td>
+            <td style="text-align: left;font-size:8px;">'.$tran->type.' '.amount($tran->amount,$tran->currency->type,2).' '.$tran->currency->code.' </td>
+            <td style="text-align: left;font-size:8px;">- '.amount($tran->charge,$tran->currency->type,2).' '.$tran->currency->code.' </td>
+          </tr>
+
+        </table>
+
+        </body>
+        </html>
+
+        ';
+
+        $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
+        $headers .= "MIME-Version: 1.0" . "\r\n";
+        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+
+        // More headers
+
+        @sendMail($to,$subject,$msg_body,$headers);
+
+
+
+        return back()->with('message','This transaction\'s detail has been sent to your email.');
+    }
+
     public function profile()
     {
         $user = Auth::user();

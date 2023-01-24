@@ -156,11 +156,56 @@
             <div class="modal-footer">
             <div class="w-100">
                 <div class="row">
-                <div class="col"><a href="#" class="btn w-100" data-bs-dismiss="modal">
-                    @lang('Close')
-                    </a></div>
+                    <div class="col-sm-6">
+                        <a class="print_pdf btn btn-primary w-100" >
+                            @lang('Print PDF')
+                        </a>
+                    </div>
+                    <div class="col-sm-6">
+                        <a href="#" class="send_email btn btn-green w-100" data-bs-dismiss="modal">
+                            @lang('Send Email')
+                        </a>
+                    </div>
+                    <div class="col mt-2">
+                        <a href="#" class="btn w-100" data-bs-dismiss="modal">
+                        @lang('Close')
+                        </a>
+                    </div>
                 </div>
             </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal modal-blur fade" id="modal-success-mail" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-status bg-primary"></div>
+            <div class="modal-body text-center py-4">
+              <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+              <h3>{{__('Send E-mail')}}</h3>
+              <div class="row text-start">
+                  <div class="col">
+                      <form action="{{ route('user.trxDetails.mail') }}" method="post">
+                          @csrf
+                          <div class="row">
+                              <div class="form-group mt-2">
+                                  <label class="form-label required">{{__('Email Address')}}</label>
+                                  <input name="email" id="email" class="form-control shadow-none" placeholder="{{__('test@gmail.com')}}" type="email" value="{{$user->email}}" required>
+                              </div>
+                          </div>
+                          <input name="trx_id" id="trx_id" type="hidden" required>
+                          <div class="row mt-3">
+                              <div class="col">
+                                  <button type="submit" class="btn btn-primary w-100 confirm">
+                                  {{__('Send')}}
+                                  </button>
+                              </div>
+                          </div>
+                      </form>
+                  </div>
+              </div>
             </div>
         </div>
         </div>
@@ -173,7 +218,10 @@
 
       $('.details').on('click',function () {
         var url = "{{url('user/transaction/details/')}}"+'/'+$(this).data('data').id
+        var pdf_url = "{{url('user/transaction/details/pdf/')}}"+'/'+$(this).data('data').id
         $('.trx_details').text($(this).data('data').details)
+        $('#trx_id').val($(this).data('data').id)
+        $('.print_pdf').attr('href', pdf_url)
         $.get(url,function (res) {
           if(res == 'empty'){
             $('.list-group').html("<p>@lang('No details found!')</p>")
@@ -183,6 +231,9 @@
           $('#modal-success').modal('show')
         })
       })
+      $('.send_email').on('click',function() {
+            $('#modal-success-mail').modal('show');
+        })
     </script>
 
 @endpush
