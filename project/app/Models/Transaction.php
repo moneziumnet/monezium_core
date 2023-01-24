@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model
 {
+    // protected $casts = [
+    //     'data' => 'encrypted',
+    // ];
+
     public function user()
     {
         return $this->belongsTo('App\Models\User')->withDefault();

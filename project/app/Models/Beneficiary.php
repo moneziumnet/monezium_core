@@ -26,12 +26,17 @@ class Beneficiary extends Model
     ];
 
     // protected $casts = [
-    //     'name' => 'encrypted',
+    //     'bank_name' => 'encrypted',
     //     'address' => 'encrypted',
     //     'bank_address' => 'encrypted',
     //     'swift_bic' => 'encrypted',
     //     'account_iban' => 'encrypted',
-    //     'details' => 'encrypted',
+    //     'name' => 'encrypted',
+    //     'email' => 'encrypted',
+    //     'phone' => 'encrypted',
+    //     'registration_no' => 'encrypted',
+    //     'vat_no' => 'encrypted',
+    //     'contact_person' => 'encrypted',
     // ];
 
 
