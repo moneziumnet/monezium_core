@@ -741,7 +741,7 @@ if (!function_exists('wallet_monthly_fee')) {
             }
         }
         $cards = Wallet::where('user_id', $user->id)->where('wallet_type', 2)->get();
-        if ($cards) {
+        if (count($cards) > 0) {
             if ($user->card_maintenance && $now->gt($user->card_maintenance)) {
                 $user->card_maintenance = Carbontime::now()->addDays(30);
                 $chargefee = Charge::where('slug', 'card-maintenance')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
