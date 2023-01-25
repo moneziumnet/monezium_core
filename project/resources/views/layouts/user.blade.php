@@ -64,12 +64,18 @@
                 success: function (data) {
                     console.log(data)
                     if(data.result != 200) {
+                        $('.iban-validation').removeClass('text-success')
                         $('.iban-validation').addClass('text-danger').text( data.message);
                         $('.iban-input').val('');
                     }
+                    else if (data.result == 200) {
+                        $('.iban-validation').removeClass('text-danger')
+                        $('.iban-validation').addClass('text-success').text(data.message);
+                    }
                 },
                 error: function(httpObj, textStatus) {
-                    $('.iban-validation').addClass('text-danger').text('Iban Validation Api is expired, Please contact Support Team');
+                    $('.iban-validation').removeClass('text-success')
+                    $('.iban-validation').addClass('text-danger').text('Iban Validation Api is expired or Api is not correct, Please contact Support Team');
                     $('.iban-input').val('');
                 }
             });
