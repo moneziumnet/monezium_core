@@ -25,19 +25,19 @@ class Beneficiary extends Model
         'type'
     ];
 
-    // protected $casts = [
-    //     'bank_name' => 'encrypted',
-    //     'address' => 'encrypted',
-    //     'bank_address' => 'encrypted',
-    //     'swift_bic' => 'encrypted',
-    //     'account_iban' => 'encrypted',
-    //     'name' => 'encrypted',
-    //     'email' => 'encrypted',
-    //     'phone' => 'encrypted',
-    //     'registration_no' => 'encrypted',
-    //     'vat_no' => 'encrypted',
-    //     'contact_person' => 'encrypted',
-    // ];
+    protected $casts = [
+        'bank_name' => 'encrypted',
+        'address' => 'encrypted',
+        'bank_address' => 'encrypted',
+        'swift_bic' => 'encrypted',
+        'account_iban' => 'encrypted',
+        'name' => 'encrypted',
+        'email' => 'encrypted',
+        'phone' => 'encrypted',
+        'registration_no' => 'encrypted',
+        'vat_no' => 'encrypted',
+        'contact_person' => 'encrypted',
+    ];
 
 
     public function transfers(){
