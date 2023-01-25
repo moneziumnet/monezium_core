@@ -84,7 +84,7 @@
                                     '<span class="remove lang-remove"><i class="fas fa-times"></i></span>'+
                                     '<div class="row">'+
                                       '<div class="col-md-12">'+
-                                      '<input type="text" pattern="[^()/><\][;!|]+" class="form-control" name="attribute[]" placeholder="{{ __('Enter Plan Attribute') }}" value="" required>'+
+                                      '<input type="text" pattern="[^()/><\\][;!|]+" class="form-control" name="attribute[]" placeholder="{{ __('Enter Plan Attribute') }}" value="" required>'+
                                       '</div>'+
                                     '</div>'+
                                   '</div>'+

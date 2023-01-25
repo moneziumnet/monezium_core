@@ -374,10 +374,10 @@ I need 1000 from you.')}}</textarea>
             str_html += `
             <div class="row form-group mb-3 mt-3">
                 <div class="col-md-4 mb-3">
-                    <input type="text" pattern="[^()/><\][;!|]+" name="default_item[]" class="form-control shadow-none itemname" value="${keys[index]}" readonly>
+                    <input type="text" pattern="[^()/><\\][;!|]+" name="default_item[]" class="form-control shadow-none itemname" value="${keys[index]}" readonly>
                 </div>
                 <div class="col-md-8 mb-3">
-                    <input type="text" pattern="[^()/><\][;!|]+" name="default_value[]" class="form-control shadow-none itemvalue" value="${values[index]}" readonly >
+                    <input type="text" pattern="[^()/><\\][;!|]+" name="default_value[]" class="form-control shadow-none itemvalue" value="${values[index]}" readonly >
                 </div>
             </div>
             `;
@@ -392,10 +392,10 @@ I need 1000 from you.')}}</textarea>
         $('.extra-container').append(`
             <div class="row form-group mb-3 mt-3">
                 <div class="col-md-4 mb-3">
-                    <input type="text" pattern="[^()/><\][;!|]+" name="item[]" class="form-control shadow-none itemname" required>
+                    <input type="text" pattern="[^()/><\\][;!|]+" name="item[]" class="form-control shadow-none itemname" required>
                 </div>
                 <div class="col-md-7 mb-3">
-                    <input type="text" pattern="[^()/><\][;!|]+" name="value[]" class="form-control shadow-none itemvalue" required>
+                    <input type="text" pattern="[^()/><\\][;!|]+" name="value[]" class="form-control shadow-none itemvalue" required>
                 </div>
                 <div class="col-md-1 mb-3">
                     <button type="button" class="btn btn-danger w-100 remove"><i class="fas fa-times"></i></button>
@@ -408,10 +408,10 @@ I need 1000 from you.')}}</textarea>
         $('.description-extra-container').append(`
             <div class="row form-group mb-3 mt-3">
                 <div class="col-md-4 mb-3">
-                    <input type="text" pattern="[^()/><\][;!|]+" name="desc_title[]" class="form-control shadow-none itemname">
+                    <input type="text" pattern="[^()/><\\][;!|]+" name="desc_title[]" class="form-control shadow-none itemname">
                 </div>
                 <div class="col-md-7 mb-3">
-                    <textarea type="text" pattern="[^()/><\][;!|]+" rows="5" name="desc_text[]" class="form-control shadow-none itemvalue"></textarea>
+                    <textarea type="text" rows="5" name="desc_text[]" class="form-control shadow-none itemvalue"></textarea>
                 </div>
                 <div class="col-md-1 mb-3">
                     <button type="button" class="btn btn-danger w-100 remove"><i class="fas fa-times"></i></button>

@@ -99,7 +99,7 @@ $("#lang-btn").on('click', function(){
                 </div>
 
                 <div class="col-md-4">
-                    <input type="text" pattern="[^()/><\][;!|]+" name="form_builder[${id}][label]" class="form-control" placeholder="{{ __('Input Label value') }}" required>
+                    <input type="text" pattern="[^()/><\\][;!|]+" name="form_builder[${id}][label]" class="form-control" placeholder="{{ __('Input Label value') }}" required>
                 </div>
 
                 <div class="col-md-4">
@@ -138,7 +138,7 @@ $(document).on('click','.lang-remove', function(){
                 </div>
 
                 <div class="col-md-4">
-                    <input type="text" pattern="[^()/><\][;!|]+" name="form_builder[1][label]" class="form-control" placeholder="{{ __('Input Label value') }}" required>
+                    <input type="text" pattern="[^()/><\\][;!|]+" name="form_builder[1][label]" class="form-control" placeholder="{{ __('Input Label value') }}" required>
                 </div>
 
                 <div class="col-md-4">

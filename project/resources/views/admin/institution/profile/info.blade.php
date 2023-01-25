@@ -61,7 +61,7 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <label for="inp-name">{{ __('City') }}</label>
-                    <input type="text" pattern="[^()/><\][;!|]+" pattern="[^()/><\][;!|]+" class="form-control" id="city" name="city" placeholder="{{ __('Enter City') }}" value="{{$data->city}}">
+                    <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="city" name="city" placeholder="{{ __('Enter City') }}" value="{{$data->city}}">
                   </div>
                 </div>
                 <div class="col-md-6">

@@ -177,7 +177,7 @@ $("#lang-btn").on('click', function(){
             <span class="remove lang-remove"><i class="fas fa-times"></i></span>
             <div class="row">
               <div class="col-md-6">
-                <input type="text"  pattern="[^()/><\][;!|]+"  name="form_builder[${id}][field_name]" class="form-control" placeholder="{{ __('Field Name') }}">
+                <input type="text"  pattern="[^()/><\\][;!|]+"  name="form_builder[${id}][field_name]" class="form-control" placeholder="{{ __('Field Name') }}">
               </div>
 
               <div class="col-md-3">
@@ -213,7 +213,7 @@ $(document).on('click','.lang-remove', function(){
             <span class="remove lang-remove"><i class="fas fa-times"></i></span>
             <div class="row">
               <div class="col-md-6">
-                <input type="text"  pattern="[^()/><\][;!|]+"  name="form_builder[1][field_name]" class="form-control" placeholder="{{ __('Field Name') }}">
+                <input type="text"  pattern="[^()/><\\][;!|]+"  name="form_builder[1][field_name]" class="form-control" placeholder="{{ __('Field Name') }}">
               </div>
 
               <div class="col-md-3">

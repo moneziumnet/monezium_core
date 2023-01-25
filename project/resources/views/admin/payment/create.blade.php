@@ -91,11 +91,11 @@ $("#lang-btn").on('click', function(){
             <span class="remove lang-remove"><i class="fas fa-times"></i></span>
             <div class="row">
               <div class="col-md-4">
-                <input type="text" pattern="[^()/><\][;!|]+" name="form_builder[${id}][field]" class="form-control" placeholder="{{ __('Field Name') }}">
+                <input type="text" pattern="[^()/><\\][;!|]+" name="form_builder[${id}][field]" class="form-control" placeholder="{{ __('Field Name') }}">
               </div>
 
               <div class="col-md-7">
-                <input type="text" pattern="[^()/><\][;!|]+" name="form_builder[${id}][value]" class="form-control" placeholder="{{ __('Field value') }}">
+                <input type="text" pattern="[^()/><\\][;!|]+" name="form_builder[${id}][value]" class="form-control" placeholder="{{ __('Field value') }}">
               </div>
 
             </div>
@@ -117,11 +117,11 @@ $(document).on('click','.lang-remove', function(){
             <span class="remove lang-remove"><i class="fas fa-times"></i></span>
             <div class="row">
               <div class="col-md-4">
-                <input type="text" pattern="[^()/><\][;!|]+" name="form_builder[1][field]" class="form-control" placeholder="{{ __('Field Name') }}">
+                <input type="text" pattern="[^()/><\\][;!|]+" name="form_builder[1][field]" class="form-control" placeholder="{{ __('Field Name') }}">
               </div>
 
               <div class="col-md-7">
-                <input type="text" pattern="[^()/><\][;!|]+" name="form_builder[1][value]" class="form-control" placeholder="{{ __('Field value') }}">
+                <input type="text" pattern="[^()/><\\][;!|]+" name="form_builder[1][value]" class="form-control" placeholder="{{ __('Field value') }}">
               </div>
 
             </div>

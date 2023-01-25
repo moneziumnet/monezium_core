@@ -414,7 +414,7 @@
 
                    <div class="row">
                         <div class="col-md-5 mb-3">
-                            <input type="text" pattern="[^()/><\][;!|]+" name="item[]" class="form-control shadow-none itemname" required>
+                            <input type="text" pattern="[^()/><\\][;!|]+" name="item[]" class="form-control shadow-none itemname" required>
                         </div>
                         <div class="col-md-4 mb-3">
                             <input type="number" step="any" name="amount[]" class="form-control shadow-none amount" required>

@@ -103,7 +103,7 @@ $("#lang-btn").on('click', function(){
                                   '<span class="remove lang-remove"><i class="fas fa-times"></i></span>'+
                                   '<div class="row">'+
                                     '<div class="col-md-12">'+
-                                    '<input type="text"  pattern="[^()/><\][;!|]+" class="form-control" name="about_attributes[]" placeholder="{{ __('Enter About Attribute') }}" value="" required>'+
+                                    '<input type="text"  pattern="[^()/><\\][;!|]+" class="form-control" name="about_attributes[]" placeholder="{{ __('Enter About Attribute') }}" value="" required>'+
                                     '</div>'+
                                   '</div>'+
                                 '</div>'+
