@@ -171,6 +171,9 @@ class KycManageController extends Controller
             $app_status = $SBObject->getApplicantStatus($applicantId);
             $requireInformations = [];
             $details = [];
+            if($app_status->SELFIE == null && $app_status->IDENTITY == null) {
+                return back()->with('warning','This customer did not complete KYC verification step.');
+            }
 
             foreach ($app_status->SELFIE->imageIds as $key => $value) {
                 if($value) {
