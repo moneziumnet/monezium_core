@@ -91,6 +91,8 @@ class CreateGeneralsettingsTable extends Migration
             $table->string('nexmo_secret')->nullable();
             $table->string('nexmo_default_number')->nullable();
             $table->tinyInteger('nexmo_status')->default(0);
+            $table->text('ibanapi')->nullable();
+            $table->text('currency_api')->nullable();
             $table->tinyInteger('two_factor')->default(0);
             $table->tinyInteger('kyc')->default(0);
             $table->text('menu')->nullable();

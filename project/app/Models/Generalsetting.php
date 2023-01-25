@@ -79,6 +79,8 @@ class Generalsetting extends Model
             'nexmo_secret',
             'nexmo_default_number',
             'nexmo_status',
+            'currency_api',
+            'ibanapi',
             'module_section',
             'user_module',
             'other_bank_limit',

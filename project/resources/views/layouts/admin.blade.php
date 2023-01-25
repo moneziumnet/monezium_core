@@ -143,6 +143,24 @@
 
   <script>
     'use strict';
+    $('.iban-input').on('keyup', function(){
+            var url   = 'https://api.ibanapi.com/v1/validate/' +  $(this).val() + '?api_key=ab7c440b7e4e503addff50a3c04becb796a103bf';
+            $.ajax({
+                url: url,
+                dataType: 'jsonp',
+                success: function (data) {
+                    console.log(data)
+                    if(data.result != 200) {
+                        $('.iban-validation').addClass('text-danger').text( data.message);
+                        $('.iban-input').val('');
+                    }
+                },
+                error: function(httpObj, textStatus) {
+                    $('.iban-validation').addClass('text-danger').text('Iban Validation Api is expired, Please contact Support Team');
+                    $('.iban-input').val('');
+                }
+            });
+        })
     function showDiv(select) {
             var company_input_list = $('.company-input');
             var private_input_list = $('.private-input');

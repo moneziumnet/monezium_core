@@ -54,17 +54,21 @@
     <script src="{{asset('assets/user/')}}/js/instascan.min.js"></script>
     <script>
       'use strict';
-      $('.iban-input').on('change', function(){
-            var url   = 'https://api.ibanapi.com/v1/validate-basic/' +  $(this).val() + '?api_key=cbc7f99c5f6ac88aa9494b2f3bd09592acf90361';
+      $('.iban-input').on('keyup', function(){
+            var url   = 'https://api.ibanapi.com/v1/validate/' +  $(this).val() + '?api_key=ab7c440b7e4e503addff50a3c04becb796a103bf';
             $.ajax({
                 url: url,
                 dataType: 'jsonp',
                 success: function (data) {
                     console.log(data)
                     if(data.result != 200) {
-                        $('.iban-validation').addClass('text-danger').text( $('.iban-input').val() + ':' + data.message);
+                        $('.iban-validation').addClass('text-danger').text( data.message);
                         $('.iban-input').val('');
                     }
+                },
+                error: function(httpObj, textStatus) {
+                    $('.iban-validation').addClass('text-danger').text('Iban Validation Api is expired, Please contact Support Team');
+                    $('.iban-input').val('');
                 }
             });
         })

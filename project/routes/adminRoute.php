@@ -528,6 +528,8 @@ Route::prefix('admin')->group(function () {
     // Update Nexmo
     Route::get('/nexmo-sms-settings', [GeneralSettingController::class, 'nexmo'])->name('admin.gs.nexmo');
     Route::get('/currency-api-settings', [GeneralSettingController::class, 'currencyapi'])->name('admin.gs.currencyapi');
+    Route::get('/ibanapi-api-settings', [GeneralSettingController::class, 'ibanapi'])->name('admin.gs.ibanapi');
+
   });
 
   Route::group(['middleware' => 'permissions:Home page Setting'], function () {

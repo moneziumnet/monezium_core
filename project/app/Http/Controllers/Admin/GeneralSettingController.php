@@ -55,7 +55,7 @@ class GeneralSettingController extends Controller
                 $data->push();
             }
 
-            
+
             if(isset($input['menu'])){
                 $input['menu'] =  $this->setMenu($input);
             }
@@ -131,7 +131,7 @@ class GeneralSettingController extends Controller
             }
 
             $this->emailConfig($input);
-            
+
             $data->update($input);
 
 
@@ -277,9 +277,13 @@ class GeneralSettingController extends Controller
         // Update Nexmo
         return view('admin.generalsetting.nexmo');
     }
-    
+
     public function currencyapi(){
         return view('admin.generalsetting.currencyrate');
+    }
+
+    public function ibanapi(){
+        return view('admin.generalsetting.ibanapi');
     }
 
     public function status($field,$value)
@@ -302,7 +306,7 @@ class GeneralSettingController extends Controller
 
     public function emailConfig($input)
     {
-        
+
          try {
              $this->setEnv('MAIL_HOST',$input['smtp_host']);
              $this->setEnv('MAIL_PORT',$input['smtp_port']);
@@ -312,7 +316,7 @@ class GeneralSettingController extends Controller
              if(isset($input['molly_key'])){
                 $this->setEnv('MOLLIE_KEY',$input['molly_key']);
              }
-             
+
          } catch (\Throwable $e) {
 
          }

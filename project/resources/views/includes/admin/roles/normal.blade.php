@@ -271,7 +271,7 @@
     <div id="system_setting" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         @if(getModule('Email Setting'))
-          <a class="nav-link collapsed collapse-item sub-nav-link " href="#" data-toggle="collapse" data-target="#email_settings" aria-expanded="true"
+          <a class="collapse-item nav-link sub-nav-link" href="#" data-toggle="collapse" data-target="#email_settings" aria-expanded="true"
             aria-controls="collapseTable">
             <span>{{  __('Email Settings') }}</span>
           </a>
@@ -284,24 +284,15 @@
           </div>
         @endif
 
-        <a class="collapse-item nav-link sub-nav-link collapsed" href="{{ route('admin.system.accounts') }}">{{ __('System Accounts') }}</a>
-        <a class="collapse-item nav-link sub-nav-link collapsed" href="{{ route('admin.gs.nexmo') }}">{{ __('Phone(Nexmo) Setting') }}</a>
+        <a class="collapse-item" href="{{ route('admin.system.accounts') }}">{{ __('System Accounts') }}</a>
+        <a class="collapse-item" href="{{ route('admin.gs.currencyapi') }}">{{ __('API Settings') }}</a>
 
         @if(getModule('Currency Setting'))
-          <a class="collapse-item nav-link sub-nav-link collapsed" href="#" data-toggle="collapse" data-target="#payment_gateways" aria-expanded="true"
-            aria-controls="collapseTable">
-            <span>{{  __('Currency Settings') }}</span>
-          </a>
-          <div id="payment_gateways" class="collapse" aria-labelledby="headingTable" data-parent="#system_setting">
-            <div class="bg-white py-2 collapse-inner rounded">
-              <a class="collapse-item" href="{{ route('admin.currency.index') }}">{{ __('Currencies') }}</a>
-              <a class="collapse-item" href="{{ route('admin.gs.currencyapi') }}">{{ __('Currency API') }}</a>
-            </div>
-          </div>
+        <a class="collapse-item" href="{{ route('admin.currency.index') }}">{{ __('Currencies') }}</a>
         @endif
 
         @if(getModule('Language Manage'))
-          <a class="collapse-item nav-link sub-nav-link collapsed" href="#" data-toggle="collapse" data-target="#langs" aria-expanded="true"
+          <a class="collapse-item nav-link sub-nav-link" href="#" data-toggle="collapse" data-target="#langs" aria-expanded="true"
             aria-controls="collapseTable">
             <span>{{  __('Language Settings') }}</span>
           </a>
