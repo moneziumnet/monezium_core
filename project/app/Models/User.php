@@ -17,24 +17,24 @@ class User extends Authenticatable
         'plan_end_date',
     ];
 
-    // protected $casts = [
-    //     'name' => 'encrypted',
-    //     'zip' => 'encrypted',
-    //     'city' => 'encrypted',
-    //     'address' => 'encrypted',
-    //     'street' => 'encrypted',
-    //     'phone' => 'encrypted',
-    //     'vat' => 'encrypted',
-    //     'email' => 'encrypted',
-    //     'company_name' => 'encrypted',
-    //     'company_type' => 'encrypted',
-    //     'company_reg_no' => 'encrypted',
-    //     'company_vat_no' => 'encrypted',
-    //     'company_address' => 'encrypted',
-    //     'company_city' => 'encrypted',
-    //     'personal_code' => 'encrypted',
-    //     'your_id' => 'encrypted',
-    // ];
+    protected $casts = [
+        'name' => 'encrypted',
+        'zip' => 'encrypted',
+        'city' => 'encrypted',
+        'address' => 'encrypted',
+        'street' => 'encrypted',
+        'phone' => 'encrypted',
+        'vat' => 'encrypted',
+        'email' => 'encrypted',
+        'company_name' => 'encrypted',
+        'company_type' => 'encrypted',
+        'company_reg_no' => 'encrypted',
+        'company_vat_no' => 'encrypted',
+        'company_address' => 'encrypted',
+        'company_city' => 'encrypted',
+        'personal_code' => 'encrypted',
+        'your_id' => 'encrypted',
+    ];
 
     public function sectionCheck($value){
         $sections = explode(" , ", $this->section);
