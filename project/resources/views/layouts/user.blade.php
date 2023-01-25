@@ -55,7 +55,9 @@
     <script>
       'use strict';
       $('.iban-input').on('keyup', function(){
-            var url   = 'https://api.ibanapi.com/v1/validate/' +  $(this).val() + '?api_key=ab7c440b7e4e503addff50a3c04becb796a103bf';
+            var ibanapi = '{{ $gs->ibanapi }}';
+
+            var url   = 'https://api.ibanapi.com/v1/validate/' +  $(this).val() + '?api_key=' + ibanapi;
             $.ajax({
                 url: url,
                 dataType: 'jsonp',
