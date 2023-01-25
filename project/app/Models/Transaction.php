@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model
 {
-    // protected $casts = [
-    //     'data' => 'encrypted',
-    // ];
+    protected $casts = [
+        'data' => 'encrypted',
+    ];
 
     public function user()
     {
