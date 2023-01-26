@@ -190,6 +190,7 @@ class UserICOController extends Controller
         $data->currency_id = $currency->id;
         $data->white_paper = $name;
         $data->save();
+        send_notification(auth()->id(), 'New ICO token has been created by '.auth()->user()->name.' Please check.', route('admin.ico.index'));
 
         return redirect()->back()->with('message','New ICO Token has been created successfully');
     }

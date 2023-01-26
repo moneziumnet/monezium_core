@@ -276,7 +276,7 @@
                                           <td data-label="{{ __('Action') }}">
                                             <div>
                                               @if ($data->status == 1)
-                                              <a href="#" id="dpsfinish" data-id="{{$data->id}}" class="btn finish">
+                                              <a href="#" id="dpsfinish" data-id="{{$data->id}}" class="btn dpsfinish">
                                                 @lang('Finish')
                                                 </a>
                                               @endif
@@ -549,7 +549,7 @@
                                           <td data-label="{{ __('Action') }}">
                                             <div>
                                               @if ($data->status == 1)
-                                              <a href="#" id="fdrfinish" data-id="{{$data->id}}" class="btn finish">
+                                              <a href="#" id="fdrfinish" data-id="{{$data->id}}" class="btn fdrfinish">
                                                 @lang('Finish')
                                                 </a>
                                               @endif
@@ -580,7 +580,7 @@
             @csrf
             <div class="modal-body">
               <div class="form-group">
-                  <input type="hidden" name="plan_Id" id="plan_Id" value="">
+                  <input type="hidden" name="plan_Id" id="fdrplan_Id" value="">
               </div>
             </div>
             <div class="modal-footer">
@@ -635,7 +635,7 @@
         $this=$(this);
         var data_id = $this.attr('data-id');
         $('#modal-success-2').modal('show');
-        $('#plan_Id').val(data_id);
+        $('#fdrplan_Id').val(data_id);
     })
 
 </script>

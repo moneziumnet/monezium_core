@@ -73,7 +73,7 @@ class UserLoanController extends Controller
     }
 
     public function loanfinish(Request $request){
-        $loan = UserLoan::whereId($request->plan_Id)->first();
+        $loan = UserLoan::whereId($request->planId)->first();
         if($loan){
             $plan = LoanPlan::whereId($loan->plan_Id)->first();
             user_wallet_decrement($loan->user_id, $loan->currency_id, $loan->per_installment_amount*$loan->total_installment - $loan->paid_amount, 4);
@@ -81,6 +81,8 @@ class UserLoanController extends Controller
             $loan->status = 3;
             $loan->next_installment = NULL;
             $loan->update();
+            send_notification(auth()->id(), 'Loan finsih has been requested by '.auth()->user()->name.' Please check.', route('admin.loan.show', $loan->id));
+
             return redirect()->back()->with('message','Finish Requesting Successfully');
         }else {
             return redirect()->back()->with('warning','There is not your loan plan');
@@ -165,7 +167,7 @@ class UserLoanController extends Controller
         $trans->details     = trans('loan requesting');
         $trans->data        = '{"sender":"'.$gs->disqus.'", "receiver":"'.(auth()->user()->company_name ?? auth()->user()->name).'"}';
         $trans->save();
-
+        send_notification(auth()->id(), 'Loan has been requested by '.auth()->user()->name.' Please check.', route('admin.loan.show', $data->id));
         return redirect()->route('user.loans.index')->with('message','Loan Requesting Successfully');
     }
 
