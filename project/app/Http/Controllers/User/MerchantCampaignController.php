@@ -98,6 +98,8 @@ class MerchantCampaignController extends Controller
         $input['ref_id'] ='CP-'.Str::random(6);
         $input['logo'] = $name;
         $data->fill($input)->save();
+        send_notification(auth()->id(), 'New Campaign has been created by '.auth()->user()->name.' Please check.', route('admin.campaign.index'));
+
          return redirect()->back()->with('message','New Campaign has been created successfully');
     }
 
@@ -242,6 +244,7 @@ class MerchantCampaignController extends Controller
             $input['status'] = 1;
             $newdonation->fill($input)->save();
             if(auth()->user()) {
+                send_notification(auth()->id(), 'Campaign has been donated by '.auth()->user()->name.' Please check.', route('admin.donation.index'));
                 return redirect(route('user.shop.index'))->with('message','You have donated for Campaign successfully (Payment Gateway).');
             }
             else {

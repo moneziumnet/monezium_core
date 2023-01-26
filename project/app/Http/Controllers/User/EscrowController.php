@@ -151,6 +151,7 @@ class EscrowController extends Controller
         $trnx->details     = trans('Made escrow to '). $receiver->email;
         $trnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name).'", "description": "'.$request->description.'"}';
         $trnx->save();
+        send_notification(auth()->id(), 'New Escrow has been requested by '.auth()->user()->name.' Please check.', route('admin.escrow.onHold'));
 
         return redirect(route('user.escrow.index'))->with('message','Escrow has been created successfully');
     }
@@ -213,6 +214,8 @@ class EscrowController extends Controller
         $dispute->message = $request->message;
         if($request->file) $dispute->file = MediaHelper::handleMakeImage($request->file);
         $dispute->save();
+        send_notification(auth()->id(), 'Dispute about Escrow has been created by '.auth()->user()->name.' Please check.', route('admin.escrow.disputed'));
+
         return back()->with('message','Replied submitted');
     }
 
@@ -300,6 +303,7 @@ class EscrowController extends Controller
 
         $escrow->status = 1;
         $escrow->save();
+        send_notification(auth()->id(), 'Holding Escrow has been released by '.auth()->user()->name.' Please check.', route('admin.escrow.manage'));
 
         return back()->with('message','Escrow has been released');
 
