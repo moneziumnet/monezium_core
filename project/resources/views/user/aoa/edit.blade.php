@@ -252,7 +252,7 @@ I need 1000 from you.')}}</textarea>
             <h3>{{__('Create New Beneficiary')}}</h3>
             <div class="row text-start">
                 <div class="col">
-                    <form action="{{route('user.contract.beneficiary.create')}}" method="post" enctype="multipart/form-data">
+                    <form action="{{route('user.contract.beneficiary.create')}}" method="post" enctype="multipart/form-data" id="iban-submit">
                         @csrf
                         <div class="row">
                             <div class="form-group mt-3 col-md-6">
@@ -320,7 +320,7 @@ I need 1000 from you.')}}</textarea>
                             </div>
                             <div class="form-group mt-3 col-md-6">
                                 <label class="form-label required">{{__('Account/IBAN')}}</label>
-                                <input name="account_iban" id="account_iban" class="form-control iban-input" autocomplete="off" placeholder="{{__('Enter Account/IBAN')}}" type="text" pattern="[^()/><\][;!|]+" value="{{ old('account_iban') }}" min="1" required>
+                                <input name="account_iban" id="account_iban" class="form-control iban-input" autocomplete="off" placeholder="{{__('Enter Account/IBAN')}}" type="text" value="{{ old('account_iban') }}" min="1" required>
                                 <small class="text-danger iban-validation"></small>
                             </div>
                         </div>

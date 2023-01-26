@@ -25,7 +25,7 @@
                 <div class="card p-5">
                     <div class="gocover" style="background: url({{ asset('assets/images/'.$gs->loader) }}) no-repeat scroll center center rgba(45, 45, 45, 0.5);"></div>
                         @includeIf('includes.flash')
-                        <form action="{{route('user.beneficiaries.update', $beneficiary->id)}}" method="POST" enctype="multipart/form-data">
+                        <form action="{{route('user.beneficiaries.update', $beneficiary->id)}}" method="POST" enctype="multipart/form-data" id="iban-submit">
                             @csrf
 
                             <div class="row">
@@ -107,7 +107,7 @@
 
                                 <div class="form-group mb-3 mt-3 col-md-6">
                                     <label class="form-label required">{{__('Account/IBAN')}}</label>
-                                    <input name="account_iban" id="account_iban" class="form-control iban-input" autocomplete="off" placeholder="{{__('Enter Account/IBAN')}}" type="text" pattern="[^()/><\][;!|]+" value="{{ $beneficiary->account_iban  }}" min="1" required>
+                                    <input name="account_iban" id="account_iban" class="form-control iban-input" autocomplete="off" placeholder="{{__('Enter Account/IBAN')}}" type="text" value="{{ $beneficiary->account_iban  }}" min="1" required>
                                     <small class="text-danger iban-validation"></small>
                                 </div>
                             </div>

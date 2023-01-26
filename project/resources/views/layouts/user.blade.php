@@ -54,31 +54,35 @@
     <script src="{{asset('assets/user/')}}/js/instascan.min.js"></script>
     <script>
       'use strict';
-      $('.iban-input').on('keyup', function(){
+      var submit_flag = false;
+      $(document).on('submit', '#iban-submit', function(e){
             var ibanapi = '{{ $gs->ibanapi }}';
-
-            var url   = 'https://api.ibanapi.com/v1/validate/' +  $(this).val() + '?api_key=' + ibanapi;
-            $.ajax({
-                url: url,
-                dataType: 'jsonp',
-                success: function (data) {
-                    console.log(data)
-                    if(data.result != 200) {
-                        $('.iban-validation').removeClass('text-success')
-                        $('.iban-validation').addClass('text-danger').text( data.message);
-                        $('.iban-input').val('');
-                    }
-                    else if (data.result == 200) {
-                        $('.iban-validation').removeClass('text-danger')
-                        $('.iban-validation').addClass('text-success').text(data.message);
-                    }
-                },
-                error: function(httpObj, textStatus) {
-                    $('.iban-validation').removeClass('text-success')
-                    $('.iban-validation').addClass('text-danger').text('Iban Validation Api is expired or Api is not correct, Please contact Support Team');
-                    $('.iban-input').val('');
+            var url   = 'https://api.ibanapi.com/v1/validate/' +  $('.iban-input').val() + '?api_key=' + ibanapi;
+            if(!submit_flag) {
+                if(document.getElementById('iban-submit').checkValidity()) {
+                    e.preventDefault();
+                    $.ajax({
+                        url: url,
+                        dataType: 'jsonp',
+                        success: function (data) {
+                            if(data.result != 200) {
+                                $('.iban-validation').removeClass('text-success')
+                                $('.iban-validation').addClass('text-danger').text( data.message);
+                            }
+                            else if (data.result == 200) {
+                                $('.iban-validation').removeClass('text-danger')
+                                $('.iban-validation').addClass('text-success').text(data.message);
+                                submit_flag=true;
+                                $('#iban-submit').submit();
+                            }
+                        },
+                        error: function(httpObj, textStatus) {
+                            $('.iban-validation').removeClass('text-success')
+                            $('.iban-validation').addClass('text-danger').text('Iban Validation Api is expired or Api is not correct, Please contact Support Team');
+                        }
+                    });
                 }
-            });
+            }
         })
 
 

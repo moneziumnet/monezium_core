@@ -123,11 +123,11 @@
                     <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
                     <h3>@lang('Enter Bank Account Info')</h3>
                 </div>
-                <form class="mt-4 mx-3" action="{{route('admin-user-bank-updateinfo')}}" method="POST" id="iban-form" >
+                <form class="mt-4 mx-3" action="{{route('admin-user-bank-updateinfo')}}" method="POST" id="iban-submit" >
                     {{ csrf_field() }}
                     <div class="form-group">
                         <label for="inp-name">{{ __('Bank IBAN') }}</label>
-                        <input type="text" pattern="[^()/><\][;!|]+" class="form-control iban-input" name="iban" id="iban" required />
+                        <input type="text" class="form-control iban-input" name="iban" id="iban" required />
                         <small class="text-danger iban-validation"></small>
                     </div>
                     <div class="form-group">
