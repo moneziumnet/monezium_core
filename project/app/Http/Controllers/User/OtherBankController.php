@@ -23,7 +23,7 @@ class OtherBankController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     public function othersend($id){
         $data['bankaccounts'] = BankAccount::whereUserId(auth()->id())->pluck('subbank_id');
         $data['banks'] = SubInsBank::where('status', 1)->get();
@@ -147,11 +147,11 @@ class OtherBankController extends Controller
                 return redirect()->back()->with('unsuccess','Your monthly limitation of transaction is over.');
             }
 
-			
-			
+
+
             $data = new BalanceTransfer();
-			
-			
+
+
 
             $txnid = Str::random(4).time();
             if ($file = $request->file('document'))
@@ -202,6 +202,7 @@ class OtherBankController extends Controller
             // $user->decrement('balance',$finalAmount);
             // $currency = defaultCurr();
             // user_wallet_decrement(auth()->id(),$currency->id,$finalAmount);
+            send_notification($user->id, 'Bank transfer has been created by '.auth()->user()->name.' Please check.', route('admin-user-banks', $user->id));
 
             return redirect(route('user.beneficiaries.index'))->with('message','Money Send successfully.');
 

@@ -10,6 +10,7 @@ use App\Models\MerchantWallet;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Wallet;
+use App\Models\ActionNotification;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Support\Carbon as Carbontime;
@@ -1129,5 +1130,16 @@ if (!function_exists('generate_card')) {
         } catch (\Throwable $th) {
             return array('error', json_encode($th->getMessage()));
         }
+    }
+}
+
+if (!function_exists('send_notification')) {
+    function send_notification($user_id, $des, $url)
+    {
+        $notification = new ActionNotification;
+        $notification->user_id = $user_id;
+        $notification->description = $des;
+        $notification->url = $url;
+        $notification->save();
     }
 }
