@@ -11,13 +11,20 @@ use App\Models\DepositBank;
 use Illuminate\Http\Request;
 use App\Models\WebhookRequest;
 use App\Http\Controllers\Controller;
+use \Spatie\WebhookClient\Models\WebhookCall;
 
 class ClearJunctionCallBackController extends Controller
 {
     public function payin(Request $request)
     {
         $obj = str2obj($request->getContent());
-        
+        $clearjunction = new WebhookCall();
+        $clearjunction->name = 'clearjunction';
+        $clearjunction->payload =str2obj($request->getContent());
+        $clearjunction->url = route('cj-payin');
+        $clearjunction->save();
+
+
         $currency = Currency::where('code', $obj->currency)->first();
         $webrequest = WebhookRequest::where('transaction_id', $obj->orderReference)
             ->where('gateway_type', 'clearjunction')
@@ -25,14 +32,14 @@ class ClearJunctionCallBackController extends Controller
             ->first();
         if(!$webrequest)
             $webrequest = new WebhookRequest();
-        
+
         $webrequest->transaction_id = $obj->orderReference;
         $webrequest->sender_name = $obj->paymentDetails->payerRequisite->name;
         $webrequest->sender_address = "";
         $webrequest->reference = $obj->label ?? $obj->orderReference;
         $webrequest->amount = $obj->amount;
         $webrequest->currency_id = $currency ? $currency->id : 0;
-        
+
         switch($obj->status) {
             case "created":
             case "captured":
@@ -54,10 +61,10 @@ class ClearJunctionCallBackController extends Controller
             if(!$deposit) {
                 $new_deposit = new DepositBank();
                 $bankaccount = BankAccount::where('iban', $obj->paymentDetails->payeeRequisite->iban)->first();
-    
+
                 if(!$bankaccount)
                     return response()->json($obj->orderReference);
-    
+
                 $new_deposit['deposit_number'] = $obj->orderReference;
                 $new_deposit['user_id'] = $bankaccount->user_id;
                 $new_deposit['currency_id'] = $webrequest->currency_id;
@@ -72,10 +79,10 @@ class ClearJunctionCallBackController extends Controller
             if(!$deposit) {
                 $new_deposit = new DepositBank();
                 $bankaccount = BankAccount::where('iban', $obj->paymentDetails->payeeRequisite->iban)->first();
-    
+
                 if(!$bankaccount)
                     return response()->json($obj->orderReference);
-    
+
                 $new_deposit['deposit_number'] = $obj->label;
                 $new_deposit['user_id'] = $bankaccount->user_id;
                 $new_deposit['currency_id'] = $webrequest->currency_id;
@@ -92,17 +99,22 @@ class ClearJunctionCallBackController extends Controller
 
     public function payout(Request $request) {
         $obj = str2obj($request->getContent());
-        
+        $clearjunction = new WebhookCall();
+        $clearjunction->name = 'clearjunction';
+        $clearjunction->payload =str2obj($request->getContent());
+        $clearjunction->url = route('cj-payout');
+        $clearjunction->save();
+
         $webrequest = WebhookRequest::where('transaction_id', $obj->orderReference)
             ->where('gateway_type', 'clearjunction')
             ->where('is_pay_in', false)
             ->first();
         if(!$webrequest)
             $webrequest = new WebhookRequest();
-        
+
         $webrequest->transaction_id = $obj->orderReference;
         $webrequest->is_pay_in = false;
-        
+
         switch($obj->status) {
             case "created":
             case "pending":
