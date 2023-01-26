@@ -41,6 +41,14 @@ class DepositBankController extends Controller
                 $date = date('d-m-Y',strtotime($data->created_at));
                 return $date;
             })
+            ->editColumn('deposit_number', function(DepositBank $data) {
+                $send_info = WebhookRequest::where('reference', 'LIKE', '%'.$data->deposit_number)->with('currency')->first();
+                $deposit_no = $data->deposit_number;
+                if ($send_info) {
+                    $deposit_no = $send_info->transaction_id;
+                }
+                return $deposit_no;
+            })
             ->addColumn('customer_name',function(DepositBank $data){
                 $data = User::where('id',$data->user_id)->first();
                 return $data->company_name ?? $data->name;
@@ -75,7 +83,7 @@ class DepositBankController extends Controller
                                 data-sendinfo = \''.json_encode($send_info).'\'
                                 data-number="'.$data->deposit_number.'"
                                 data-status="'.$data->status.'"
-                                data-description="'.$data->details.'"
+                                data-description="'.($data->details ?? $send_info->reference).'"
                                 data-userinfo=\'{"name":"'.($user_info->company_name ?? $user_info->name ).'","address":"'.($user_info->company_address ?? $user_info->address ).'"}\'
                                 data-complete-url="'.route('admin.deposits.bank.status',['id1' => $data->id, 'id2' => 'complete']).'"
                                 data-reject-url="'.route('admin.deposits.bank.status',['id1' => $data->id, 'id2' => 'reject']).'"
@@ -117,7 +125,7 @@ class DepositBankController extends Controller
                         class="btn btn-sm btn-primary detailsBtn">' . __("Details") . '</a>
                 </div>';
             })
-            ->rawColumns(['created_at','customer_name','customer_email','amount','status', 'action'])
+            ->rawColumns(['created_at','customer_name','customer_email','amount','status', 'deposit_number', 'action'])
             ->toJson();
     }
 
