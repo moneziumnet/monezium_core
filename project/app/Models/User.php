@@ -25,7 +25,6 @@ class User extends Authenticatable
         'street' => 'encrypted',
         'phone' => 'encrypted',
         'vat' => 'encrypted',
-        'email' => 'encrypted',
         'company_name' => 'encrypted',
         'company_type' => 'encrypted',
         'company_reg_no' => 'encrypted',

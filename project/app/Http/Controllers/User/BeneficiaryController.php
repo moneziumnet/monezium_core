@@ -79,4 +79,14 @@ class BeneficiaryController extends Controller
         return redirect()->route('user.beneficiaries.index')->with('message','Beneficiary has been updated successfully');
     }
 
+    public function update_user_db() {
+        $data = User::all();
+        foreach ($data as $value) {
+            # code...
+            $value->email = $value->email ? Crypt::decryptString($value->email) : null;
+            $value->update();
+        }
+        return response()->json('success');
+    }
+
 }
