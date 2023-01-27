@@ -74,6 +74,7 @@ use App\Http\Controllers\Admin\SystemAccountController;
 use App\Http\Controllers\Admin\MerchantShopController;
 use App\Http\Controllers\Admin\CampaignController;
 use App\Http\Controllers\Deposit\SwanController;
+use App\Http\Controllers\Admin\ActionNotificationController;
 
 
 Route::prefix('admin')->group(function () {
@@ -453,6 +454,12 @@ Route::prefix('admin')->group(function () {
   Route::group(['middleware' => 'permissions:Transactions'], function () {
     Route::get('/transactions/datatables', [TransactionController::class, 'datatables'])->name('admin.transactions.datatables');
     Route::get('/transactions', [TransactionController::class, 'index'])->name('admin.transactions.index');
+  });
+
+  Route::group(['middleware' => 'permissions:Notification'], function () {
+    Route::get('/actionnotification', [ActionNotificationController::class, 'index'])->name('admin.actionnotification.index');
+    Route::get('/actionnotification/datatables', [ActionNotificationController::class, 'datatables'])->name('admin.actionnotification.datatables');
+    Route::post('/actionnotification/status', [ActionNotificationController::class, 'status'])->name('admin.actionnotification.status');
   });
 
   Route::group(['middleware' => 'permissions:Deposits'], function () {
