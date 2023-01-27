@@ -238,6 +238,15 @@
   </li>
 @endif
 
+@if(getModule('Notification'))
+  <li class="nav-item">
+    <a class="nav-link" href="{{ route('admin.actionnotification.index') }}">
+      <i class="fas fa-bell"></i>
+      <span>{{ __('Notification') }}</span>
+    </a>
+  </li>
+@endif
+
   <!-- @if(getModule('Manage Blog'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#blog" aria-expanded="true"

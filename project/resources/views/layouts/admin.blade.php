@@ -145,7 +145,7 @@
     'use strict';
     var submit_flag = false;
       $(document).on('submit', '#iban-submit', function(e){
-            var ibanapi = '{{ $gs->ibanapi }}';
+            var ibanapi = '{{ $gs->ibanapi ?? '' }}';
             var url   = 'https://api.ibanapi.com/v1/validate/' +  $('.iban-input').val() + '?api_key=' + ibanapi;
             if(!submit_flag) {
                 if(document.getElementById('iban-submit').checkValidity()) {

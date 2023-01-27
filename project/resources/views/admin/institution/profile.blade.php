@@ -273,6 +273,15 @@
           <div class="col-md-6">
             <div class="form-group">
               <div class="custom-control custom-switch">
+                <input type="checkbox" name="section[]" value="Notification" {{ $data->sectionCheck('Notification') ? 'checked' : '' }} class="custom-control-input" id="notification">
+                <label class="custom-control-label" for="notification">{{__('Notification')}}</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <div class="custom-control custom-switch">
                 <input type="checkbox" name="section[]" value="Deposits" {{ $data->sectionCheck('Deposits') ? 'checked' : '' }} class="custom-control-input" id="Deposits">
                 <label class="custom-control-label" for="Deposits">{{__('Deposits')}}</label>
               </div>
