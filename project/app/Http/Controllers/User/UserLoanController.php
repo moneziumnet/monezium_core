@@ -81,7 +81,7 @@ class UserLoanController extends Controller
             $loan->status = 3;
             $loan->next_installment = NULL;
             $loan->update();
-            send_notification(auth()->id(), 'Loan finsih has been requested by '.auth()->user()->name.' Please check.', route('admin.loan.show', $loan->id));
+            send_notification(auth()->id(), 'Loan finsih has been requested by '.auth()->user()->name.'. Please check.', route('admin.loan.show', $loan->id));
 
             return redirect()->back()->with('message','Finish Requesting Successfully');
         }else {
@@ -167,7 +167,7 @@ class UserLoanController extends Controller
         $trans->details     = trans('loan requesting');
         $trans->data        = '{"sender":"'.$gs->disqus.'", "receiver":"'.(auth()->user()->company_name ?? auth()->user()->name).'"}';
         $trans->save();
-        send_notification(auth()->id(), 'Loan has been requested by '.auth()->user()->name.' Please check.', route('admin.loan.show', $data->id));
+        send_notification(auth()->id(), 'Loan has been requested by '.auth()->user()->name.'. Please check.', route('admin.loan.show', $data->id));
         return redirect()->route('user.loans.index')->with('message','Loan Requesting Successfully');
     }
 

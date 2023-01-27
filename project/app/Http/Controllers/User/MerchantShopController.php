@@ -66,7 +66,7 @@ class MerchantShopController extends Controller
         $data->logo = $logo_name;
         $data->url = $request->url;
         $data->save();
-        send_notification($request->merchant_id, 'Merchant Shop has been created by '.auth()->user()->name.' Please check.', route('admin.merchant.shop.index', $request->merchant_id));
+        send_notification($request->merchant_id, 'Merchant Shop has been created by '.auth()->user()->name.'. Please check.', route('admin.merchant.shop.index', $request->merchant_id));
         return redirect(route('user.merchant.shop.index'))->with('message','Merchant Shop has been created successfully');
     }
 

@@ -202,7 +202,7 @@ class OtherBankController extends Controller
             // $user->decrement('balance',$finalAmount);
             // $currency = defaultCurr();
             // user_wallet_decrement(auth()->id(),$currency->id,$finalAmount);
-            send_notification($user->id, 'Bank transfer has been created by '.auth()->user()->name.' Please check.', route('admin-user-banks', $user->id));
+            send_notification($user->id, 'Bank transfer has been created by '.auth()->user()->name.'. Please check.', route('admin-user-banks', $user->id));
 
             return redirect(route('user.beneficiaries.index'))->with('message','Money Send successfully.');
 

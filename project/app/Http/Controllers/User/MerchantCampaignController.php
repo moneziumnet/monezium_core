@@ -98,7 +98,7 @@ class MerchantCampaignController extends Controller
         $input['ref_id'] ='CP-'.Str::random(6);
         $input['logo'] = $name;
         $data->fill($input)->save();
-        send_notification(auth()->id(), 'New Campaign has been created by '.auth()->user()->name.' Please check.', route('admin.campaign.index'));
+        send_notification(auth()->id(), 'New Campaign has been created by '.auth()->user()->name.'. Please check.', route('admin.campaign.index'));
 
          return redirect()->back()->with('message','New Campaign has been created successfully');
     }
@@ -244,10 +244,13 @@ class MerchantCampaignController extends Controller
             $input['status'] = 1;
             $newdonation->fill($input)->save();
             if(auth()->user()) {
-                send_notification(auth()->id(), 'Campaign has been donated by '.auth()->user()->name.' Please check.', route('admin.donation.index'));
+                send_notification($data->user_id, 'Campaign has been donated by '.$request->user_name.'. Please check.', route('admin.donation.index'));
+
                 return redirect(route('user.shop.index'))->with('message','You have donated for Campaign successfully (Payment Gateway).');
             }
             else {
+                send_notification($data->user_id, 'Campaign has been donated by '.$request->user_name.'. Please check.', route('admin.donation.index'));
+
                 return redirect(url('/'))->with('message','You have donated for Campaign successfully (Payment Gateway).');
             }
         }
@@ -345,6 +348,7 @@ class MerchantCampaignController extends Controller
             $input['status'] = 1;
             $newdonation->fill($input)->save();
 
+            send_notification($data->user_id, 'Campaign has been donated by '.$request->user_name.'. Please check.', route('admin.donation.index'));
 
             return redirect()->back()->with('message','You have donated for Campaign successfully.');
         }
@@ -368,9 +372,13 @@ class MerchantCampaignController extends Controller
             $newdonation->fill($input)->save();
 
             if(auth()->user()) {
+                send_notification($data->user_id, 'Campaign has been donated by '.$request->user_name.'. Please check.', route('admin.donation.index'));
+
                 return redirect(route('user.shop.index'))->with('message','You have donated for Campaign successfully (Deposit Bank).');
             }
             else {
+                send_notification($data->user_id, 'Campaign has been donated by '.$request->user_name.'. Please check.', route('admin.donation.index'));
+
                 return redirect(url('/'))->with('message','You have donated for Campaign successfully (Deposit Bank).');
             }
 
@@ -454,9 +462,13 @@ class MerchantCampaignController extends Controller
             }
 
             if(auth()->user()) {
+                send_notification($data->user_id, 'Campaign has been donated by '.$request->user_name.'. Please check.', route('admin.donation.index'));
+
                 return redirect(route('user.shop.index'))->with('message','You have donated for Campaign successfully (Crypto).');
             }
             else {
+                send_notification($data->user_id, 'Campaign has been donated by '.$request->user_name.'. Please check.', route('admin.donation.index'));
+
                 return redirect(url('/'))->with('message','You have donated for Campaign successfully (Crypto).');
             }
         }
