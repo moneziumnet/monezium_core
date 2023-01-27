@@ -980,6 +980,30 @@ if (!function_exists('Crypto_Balance')) {
     }
 }
 
+if (!function_exists('Crypto_Net_Check')) {
+    function Crypto_Net_Check($type)
+    {
+        $amount = 0;
+            if ($type == 'BTC') {
+                $amount = RPC_BTC_Balance('verifychain', []);
+                if ($amount == 'error') {
+                    $amount = 'error';
+                }
+
+            }
+            else {
+                $amount = RPC_ETH('eth_blockNumber', []);
+                if ($amount == 'error') {
+                    $amount = 'error';
+                } else {
+                    $amount = hexdec($amount) / pow(10, 18);
+                }
+
+            }
+        return $amount;
+    }
+}
+
 if (!function_exists('Crypto_Merchant_Balance')) {
     function Crypto_Merchant_Balance($auth_id, $currency_id, $shop_id)
     {

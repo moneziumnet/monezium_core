@@ -37,11 +37,16 @@ class ExchangeMoneyController extends Controller
             $currencies[$key]->rate = $rate->data->rates->$code ?? $value->rate;
         }
 
-        $crypto_currencies = Currency::where('status',1)->whereType('2')->get();
-        foreach ($crypto_currencies as $key => $value) {
-            $code = $value->code;
-            $crypto_currencies[$key]->rate =  $rate->data->rates->$code ?? $value->rate;
+        $crypto_list = Currency::where('status',1)->whereType('2')->get();
+        $crypto_currencies = [];
+        foreach ($crypto_list as $key => $value) {
+            $check = Crypto_Net_Check($value->code);
+            if($check != 'error') {
+                $crypto_currencies[$key] = $crypto_list[$key];
+                $crypto_currencies[$key]->rate =  $rate->data->rates->$code ?? $value->rate;
+            }
         }
+        $crypto_currencies = json_encode($crypto_currencies);
         $recentExchanges = ExchangeMoney::where('user_id',auth()->id())->with(['fromCurr','toCurr'])->latest()->take(7)->get();
         $user = auth()->user();
         return view('user.exchange.exchange',compact('wallets','currencies','recentExchanges', 'crypto_currencies', 'user', 'rate'));
