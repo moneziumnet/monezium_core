@@ -303,7 +303,7 @@ class EscrowController extends Controller
 
         $escrow->status = 1;
         $escrow->save();
-        send_notification(auth()->id(), 'Holding Escrow has been released by '.auth()->user()->name.'. Please check.', route('admin.escrow.manage'));
+        send_notification($recipient->id, 'Holding Escrow has been released by '.auth()->user()->name.'. Please check.', route('admin.escrow.manage'));
 
         return back()->with('message','Escrow has been released');
 
