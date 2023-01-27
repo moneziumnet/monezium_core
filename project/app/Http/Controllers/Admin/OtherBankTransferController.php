@@ -225,13 +225,6 @@ class OtherBankTransferController extends Controller
       return response()->json(array('errors' => [ 0 =>  __('Status already rejected.') ]));
     }
     $user = User::whereId($data->user_id)->first();
-    if ($id2 == 2) {
-      if ($user) {
-        // $user->increment('balance', $data->final_amount);
-        $currency_id = Currency::whereIsDefault(1)->first()->id;
-        // user_wallet_increment($user->id, $currency_id, $data->final_amount);
-      }
-    }
     if ($id2 == 3) {
         $currency = Currency::where('id',$data->currency_id)->first();
         $customer_bank = BankAccount::whereUserId($user->id)->where('subbank_id',$data->subbank)->where('currency_id', $data->currency_id)->first();
@@ -397,7 +390,7 @@ class OtherBankTransferController extends Controller
             }
             else if($bankgateway->keyword == 'clearjunction') {
                 $clientorder = rand(1000000, 9999999);
-                $payer_type = $user->company_name ? "corporate" : "individual"; 
+                $payer_type = $user->company_name ? "corporate" : "individual";
                 $payer_name = $user->company_name ?  '"name":"'.$user->company_name.'"' : '"firstName":"'.explode(" ",$user->name, 2)[0].'","lastName":"'.explode(" ",$user->name, 2)[1].'"';
                 $type =   $data->beneficiary->type == 'RETAIL' ? "individual" : "corporate";
                 $payee_name = $data->beneficiary->type == 'RETAIL' ? '"firstName":"'.explode(" ",$data->beneficiary->name, 2)[0].'","lastName":"'.explode(" ",$data->beneficiary->name, 2)[1].'"' : '"name":"'.$data->beneficiary->name.'"';
@@ -528,7 +521,7 @@ class OtherBankTransferController extends Controller
         else {
             $transaction_id = str_rand();
         }
-        
+
         $data->transaction_no = $transaction_id;
         $data->status = $id2;
         $data->update();
@@ -539,7 +532,7 @@ class OtherBankTransferController extends Controller
       // user_wallet_decrement($user->id, $data->currency_id, $data->amount);
       $trans_wallet = get_wallet($user->id, $data->currency_id);
       // user_wallet_increment(0, $data->currency_id, $data->cost, 9);
-      
+
       user_wallet_decrement($user->id, $data->currency_id, $data->amount);
       user_wallet_increment(0, $data->currency_id, $data->cost, 9);
 
@@ -567,6 +560,9 @@ class OtherBankTransferController extends Controller
     if ($id2 == 2) {
       $data->status = $id2;
       $data->update();
+      user_wallet_increment($user->id, $data->currency_id, $data->amount);
+      user_wallet_decrement(0, $data->currency_id, $data->cost, 9);
+
       $msg = __('Status Updated Successfully.');
     }
 
