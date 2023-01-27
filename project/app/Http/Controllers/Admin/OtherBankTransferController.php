@@ -533,8 +533,8 @@ class OtherBankTransferController extends Controller
       $trans_wallet = get_wallet($user->id, $data->currency_id);
       // user_wallet_increment(0, $data->currency_id, $data->cost, 9);
 
-      user_wallet_decrement($user->id, $data->currency_id, $data->amount);
-      user_wallet_increment(0, $data->currency_id, $data->cost, 9);
+    //   user_wallet_decrement($user->id, $data->currency_id, $data->amount);
+    //   user_wallet_increment(0, $data->currency_id, $data->cost, 9);
 
       $trans = new Transaction();
       $trans->trnx = Str::random(4).time();
