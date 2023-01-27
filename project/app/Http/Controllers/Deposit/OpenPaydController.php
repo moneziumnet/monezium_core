@@ -491,6 +491,7 @@ class OpenPaydController extends Controller
         $deposit['details'] = $request->details;
         $deposit['status'] = "pending";
         $deposit->save();
+        send_notification(auth()->id(), 'Bank has been deposited by '. auth()->user()->name.'. Please check.', route('admin.deposits.bank.index'));
 
         $gs =  Generalsetting::findOrFail(1);
         $user = auth()->user();

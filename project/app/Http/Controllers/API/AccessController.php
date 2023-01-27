@@ -117,6 +117,8 @@ class AccessController extends Controller
             $deposit['sub_bank_id'] = $bankaccount->subbank_id;
             $deposit['status'] = "pending";
             $deposit->save();
+            send_notification($request->user_id, 'Bank has been deposited. Please check.', route('admin.deposits.bank.index'));
+
 
             return response()->json([
                 'type' => 'mt_payment_success',

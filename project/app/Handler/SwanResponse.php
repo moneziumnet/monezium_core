@@ -19,7 +19,7 @@ class SwanResponse implements RespondsToWebhook
     public function respondToValidWebhook(Request $request, WebhookConfig $config): Response
     {
         $obj = json_decode($request->getContent());
-        
+
         if(!isset($obj->resourceId)) {
             return response()->json('error');
         }
@@ -58,7 +58,7 @@ class SwanResponse implements RespondsToWebhook
             $webrequest->is_pay_in = true;
 
             $gateway_list = BankGateway::where('keyword', 'swan')->get();
-            
+
             foreach($gateway_list as $gateway_item) {
                 $client = New Client();
                 try {
@@ -100,7 +100,7 @@ class SwanResponse implements RespondsToWebhook
                     $webrequest->currency_id = $currency ? $currency->id : 0;
 
                     $webrequest->save();
-                    
+
                     $deposit = DepositBank::whereRaw("INSTR('".$details->reference."', deposit_number) > 0")->first();
                     if(!$deposit) {
                         $new_deposit = new DepositBank();
@@ -116,6 +116,8 @@ class SwanResponse implements RespondsToWebhook
                         $new_deposit['status'] = "pending";
                         $new_deposit['sub_bank_id'] = null;
                         $new_deposit->save();
+                        send_notification($iban->user_id, 'Bank has been deposited by '.$details->counterparty.'. Please check.', route('admin.deposits.bank.index'));
+
                     }
 
                     return response()->json("success");

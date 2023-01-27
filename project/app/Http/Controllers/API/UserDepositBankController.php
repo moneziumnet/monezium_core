@@ -69,6 +69,7 @@ class UserDepositBankController extends Controller
             $deposit['status'] = "pending";
             $deposit->save();
 
+            send_notification($user_id, 'Bank has been deposited. Please check.', route('admin.deposits.bank.index'));
 
             $gs =  Generalsetting::findOrFail(1);
             $user = User::whereId($user_id)->first();

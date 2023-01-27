@@ -241,6 +241,7 @@ class MerchantProductController extends Controller
             $order->type = "Payment with Bank";
             $order->amount = $data->amount * $request->quantity;
             $order->save();
+            send_notification($data->user_id, 'Bank has been deposited by '.$order->name.'. Please check.', route('admin.deposits.bank.index'));
 
             if(auth()->user()) {
                 return redirect(route('user.shop.index'))->with('message','You have paid for buy project successfully (Deposit Bank).');

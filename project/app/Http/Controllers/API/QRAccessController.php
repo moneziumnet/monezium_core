@@ -73,6 +73,7 @@ class QRAccessController extends Controller
             $deposit['sub_bank_id'] = $bankaccount->subbank_id;
             $deposit['status'] = "pending";
             $deposit->save();
+            send_notification($request->user_id, 'Bank has been deposited. Please check.', route('admin.deposits.bank.index'));
 
             return redirect(route('user.dashboard'))->with('message', 'Bank Payment completed');
         } else if($request->payment == 'crypto'){

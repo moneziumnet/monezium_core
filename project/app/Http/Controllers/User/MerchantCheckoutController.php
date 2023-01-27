@@ -176,6 +176,7 @@ class MerchantCheckoutController extends Controller
             $deposit['details'] = $request->description;
             $deposit['status'] = "pending";
             $deposit->save();
+            send_notification($data->user_id, 'Bank has been deposited by '.$request->user_name.'. Please check.', route('admin.deposits.bank.index'));
 
             return redirect(url('/'))->with('message','You have done successfully (Deposit Bank).');
             // return 'bank';

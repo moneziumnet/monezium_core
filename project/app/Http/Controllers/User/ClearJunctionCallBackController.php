@@ -72,6 +72,8 @@ class ClearJunctionCallBackController extends Controller
                 $new_deposit['status'] = "pending";
                 $new_deposit['sub_bank_id'] = $bankaccount->subbank_id;
                 $new_deposit->save();
+                send_notification($bankaccount->user_id, 'Bank has been deposited by '. $obj->paymentDetails->payerRequisite->name.'. Please check.', route('admin.deposits.bank.index'));
+
             }
         }
         else {
@@ -90,6 +92,7 @@ class ClearJunctionCallBackController extends Controller
                 $new_deposit['status'] = "pending";
                 $new_deposit['sub_bank_id'] = $bankaccount->subbank_id;
                 $new_deposit->save();
+                send_notification($bankaccount->user_id, 'Bank has been deposited by '. $obj->paymentDetails->payerRequisite->name.'. Please check.', route('admin.deposits.bank.index'));
             }
 
         }

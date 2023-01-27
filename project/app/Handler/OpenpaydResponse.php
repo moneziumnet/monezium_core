@@ -25,7 +25,7 @@ class OpenpaydResponse implements RespondsToWebhook
                 ->first();
             if(!$webrequest)
                 $webrequest = new WebhookRequest();
-            
+
             $webrequest->transaction_id = $obj->transactionId;
             $webrequest->sender_name = $obj->senderName;
             $webrequest->sender_address = $obj->senderAddress;
@@ -45,10 +45,10 @@ class OpenpaydResponse implements RespondsToWebhook
                 if(!$deposit) {
                     $new_deposit = new DepositBank();
                     $user = User::where('holder_id', $obj->accountHolderId)->first();
-    
+
                     if(!$user)
                         return response()->json("failure");
-    
+
                     $new_deposit['deposit_number'] = $obj->transactionId;
                     $new_deposit['user_id'] = $user->id;
                     $new_deposit['currency_id'] = $webrequest->currency_id;
@@ -57,6 +57,7 @@ class OpenpaydResponse implements RespondsToWebhook
                     $new_deposit['details'] = $obj->transactionReference;
                     $new_deposit['sub_bank_id'] = null;
                     $new_deposit->save();
+                    send_notification($user->id, 'Bank has been deposited by '.$obj->senderName.'. Please check.', route('admin.deposits.bank.index'));
                 }
             }
             else {
@@ -64,10 +65,10 @@ class OpenpaydResponse implements RespondsToWebhook
                 if(!$deposit) {
                     $new_deposit = new DepositBank();
                     $user = User::where('holder_id', $obj->accountHolderId)->first();
-    
+
                     if(!$user)
                         return response()->json("failure");
-    
+
                     $new_deposit['deposit_number'] = $obj->transactionReference;
                     $new_deposit['user_id'] = $user->id;
                     $new_deposit['currency_id'] = $webrequest->currency_id;
@@ -75,6 +76,8 @@ class OpenpaydResponse implements RespondsToWebhook
                     $new_deposit['status'] = "pending";
                     $new_deposit['sub_bank_id'] = null;
                     $new_deposit->save();
+                    send_notification($user->id, 'Bank has been deposited by '.$obj->senderName.'. Please check.', route('admin.deposits.bank.index'));
+
                 }
             }
 
@@ -88,7 +91,7 @@ class OpenpaydResponse implements RespondsToWebhook
                 ->first();
             if(!$webrequest)
                 $webrequest = new WebhookRequest();
-            
+
             $webrequest->transaction_id = $obj->transactionId;
             $webrequest->status = strtolower($obj->status);
             $webrequest->gateway_type = "openpayd";

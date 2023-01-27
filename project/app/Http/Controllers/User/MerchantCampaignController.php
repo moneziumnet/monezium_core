@@ -364,6 +364,8 @@ class MerchantCampaignController extends Controller
             $deposit['details'] = $request->description;
             $deposit['status'] = "pending";
             $deposit->save();
+            send_notification($data->user_id, 'Bank has been deposited by '.$request->user_name.'. Please check.', route('admin.deposits.bank.index'));
+
 
             $newdonation = new CampaignDonation();
             $input = $request->all();
