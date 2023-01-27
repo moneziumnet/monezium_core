@@ -174,29 +174,32 @@ class KycManageController extends Controller
             if($app_status->SELFIE == null && $app_status->IDENTITY == null) {
                 return back()->with('warning','This customer did not complete KYC verification step.');
             }
+            if($app_status->SELFIE->imageIds) {
+                foreach ($app_status->SELFIE->imageIds as $key => $value) {
+                    if($value) {
+                        $image = $SBObject->getImage($inspectionId, $value);
+                        $fileName = uniqid() . '.png';
 
-            foreach ($app_status->SELFIE->imageIds as $key => $value) {
-                if($value) {
-                    $image = $SBObject->getImage($inspectionId, $value);
-                    $fileName = uniqid() . '.png';
+                        $file = $folderPath . $fileName;
 
-                    $file = $folderPath . $fileName;
-
-                    file_put_contents($file, $image);
-                    $requireInformations['file'][$key] = strtolower($app_status->SELFIE->idDocType);
-                    $details[$app_status->SELFIE->idDocType.'_Image_'.($key+1)] = [$fileName,'file'];
+                        file_put_contents($file, $image);
+                        $requireInformations['file'][$key] = strtolower($app_status->SELFIE->idDocType);
+                        $details[$app_status->SELFIE->idDocType.'_Image_'.($key+1)] = [$fileName,'file'];
+                    }
                 }
             }
-            foreach ($app_status->IDENTITY->imageIds as $key => $value) {
-                if($value) {
-                    $image = $SBObject->getImage($inspectionId, $value);
-                    $fileName = uniqid() . '.png';
+            if($app_status->IDENTITY->imageIds) {
+                foreach ($app_status->IDENTITY->imageIds as $key => $value) {
+                    if($value) {
+                        $image = $SBObject->getImage($inspectionId, $value);
+                        $fileName = uniqid() . '.png';
 
-                    $file = $folderPath . $fileName;
+                        $file = $folderPath . $fileName;
 
-                    file_put_contents($file, $image);
-                    $requireInformations['file'][count($app_status->SELFIE->imageIds)+$key] = strtolower($app_status->IDENTITY->idDocType);
-                    $details[$app_status->IDENTITY->idDocType.'_Image_'.($key+1)] = [$fileName,'file'];
+                        file_put_contents($file, $image);
+                        $requireInformations['file'][count($app_status->SELFIE->imageIds)+$key] = strtolower($app_status->IDENTITY->idDocType);
+                        $details[$app_status->IDENTITY->idDocType.'_Image_'.($key+1)] = [$fileName,'file'];
+                    }
                 }
             }
             $details['ID_TYPE'] = [$app_data->info->idDocs[0]->idDocType ?? '', 'text'];
