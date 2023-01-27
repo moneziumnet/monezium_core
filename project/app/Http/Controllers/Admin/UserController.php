@@ -65,7 +65,7 @@ class UserController extends Controller
                 })
                 ->editColumn('balance', function(User $data) {
                     $currency = Currency::findOrFail(defaultCurr());
-                    return showPrice(userBalance($data->id), $currency);
+                    return $currency->symbol.userBalance($data->id);
                 })
                 ->addColumn('action', function(User $data) {
                     return '<div class="btn-group mb-1">

@@ -176,7 +176,7 @@
                columns: [
                         { data: 'name', name: 'name' },
                         { data: 'email', name: 'email' },
-                        { data: 'balance', name: 'balance' },
+                        { data: 'balance', searchable: false, name: 'balance' },
                         { data: 'status',searchable: false, orderable: false},
                         { data: 'verify',searchable: false, orderable: false},
             			{ data: 'action', searchable: false, orderable: false }
