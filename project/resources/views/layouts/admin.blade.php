@@ -22,7 +22,119 @@
   <link href="{{asset('assets/admin/css/plugin.css')}}" rel="stylesheet" />
   <link href="{{ asset('assets/admin/css/ruang-admin.css') }}" rel="stylesheet">
   <link href="{{ asset('assets/admin/css/custom.css') }}" rel="stylesheet">
+    <style>
+        .notification-ui a:after {
+    display: none;
+}
 
+.notification-ui_icon {
+    position: relative;
+}
+
+.notification-ui_icon .unread-notification {
+    display: inline-block;
+    height: 7px;
+    width: 7px;
+    border-radius: 7px;
+    background-color: #66BB6A;
+    position: absolute;
+    top: 24px;
+    left: 12px;
+}
+
+@media (min-width: 900px) {
+    .notification-ui_icon .unread-notification {
+        left: 20px;
+    }
+}
+
+.notification-ui_dd {
+    padding: 0;
+    border-radius: 10px;
+    -webkit-box-shadow: 0 5px 20px -3px rgba(0, 0, 0, 0.16);
+    box-shadow: 0 5px 20px -3px rgba(0, 0, 0, 0.16);
+    border: 0;
+    max-width: 400px;
+}
+
+@media (min-width: 900px) {
+    .notification-ui_dd {
+        min-width: 400px;
+        position: absolute;
+        left: -192px;
+        top: 70px;
+    }
+}
+
+.notification-ui_dd:after {
+    content: "";
+    position: absolute;
+    top: -30px;
+    left: calc(50% - 7px);
+    border-top: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 15px solid #fff;
+    border-left: 15px solid transparent;
+}
+
+.notification-ui_dd .notification-ui_dd-header {
+    border-bottom: 1px solid #ddd;
+    padding: 15px;
+}
+
+.notification-ui_dd .notification-ui_dd-header h3 {
+    margin-bottom: 0;
+}
+
+.notification-ui_dd .notification-ui_dd-content {
+    max-height: 500px;
+    overflow: auto;
+}
+
+.notification-list {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    padding: 20px 0;
+    margin: 0 25px;
+    border-bottom: 1px solid #ddd;
+}
+
+.notification-list--unread {
+    position: relative;
+}
+
+.notification-list--unread:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -25px;
+    height: calc(100% + 1px);
+    border-left: 2px solid #29B6F6;
+}
+
+.notification-list .notification-list_img img {
+    height: 48px;
+    width: 48px;
+    border-radius: 50px;
+    margin-right: 20px;
+}
+
+.notification-list .notification-list_detail p {
+    margin-bottom: 5px;
+    line-height: 1.2;
+}
+
+.notification-list .notification-list_feature-img img {
+    height: 48px;
+    width: 48px;
+    border-radius: 5px;
+    margin-left: 20px;
+}
+    </style>
   @yield('styles')
 
 </head>
@@ -62,6 +174,42 @@
             <i class="fa fa-bars"></i>
           </button>
           <ul class="navbar-nav ml-auto">
+            @php
+             use App\Models\ActionNotification;
+             $notificationlist = ActionNotification::where('status', 0)->orderBy('status','asc')->orderBy('created_at','desc')->limit(3)->get();
+            @endphp
+            <li class="nav-item dropdown notification-ui">
+                <a class="nav-link dropdown-toggle notification-ui_icon" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <i class="fa fa-bell"></i>
+                    @if(count($notificationlist) > 0)
+                        <span class="unread-notification"></span>
+                    @endif
+                </a>
+                <div class="dropdown-menu notification-ui_dd" aria-labelledby="navbarDropdown">
+                    <div class="notification-ui_dd-header">
+                        <h3 class="text-center">Notification</h3>
+                    </div>
+                    <div class="notification-ui_dd-content">
+                        @if(count($notificationlist) == 0)
+                            <div class="notification-list_detail text-center mt-3">
+                                <p>No Notification</p>
+                            </div>
+                        @endif
+                        @foreach ($notificationlist as $item)
+                            <div class="notification-list notification-list--unread">
+                                <div class="notification-list_detail">
+                                    <p><b>{{$item->user->company_name ?? $item->user->name}}, </b> {{$item->description}}</p>
+                                    <p><small>{{time_elapsed_string($item->created_at)}}</small></p>
+                                </div>
+
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="notification-ui_dd-footer p-3">
+                        <a href={{route('admin.actionnotification.index')}} class="btn btn-success btn-block">View All</a>
+                    </div>
+                </div>
+            </li>
             <li class="nav-item dropdown no-arrow mx-1">
               <a class="nav-link pr-0" target="_blank" href="{{url('/')}}">
                   <i class="fas fa-globe fa-fw"></i>
