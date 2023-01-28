@@ -40,7 +40,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">{{ __('Update Status') }}</h5>
+                    <h5 class="modal-title">{{ __('Update Notification Status') }}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -55,7 +55,7 @@
 
                         <div class="modal-footer">
                             <button class="btn btn-secondary" data-dismiss="modal">{{ __('Cancel') }}</button>
-                            <button type="submit" class="btn btn-success">{{ __('Update') }}</button>
+                            <button type="submit" class="btn btn-success">{{ __('Check') }}</button>
                         </div>
                     </div>
             </div>
