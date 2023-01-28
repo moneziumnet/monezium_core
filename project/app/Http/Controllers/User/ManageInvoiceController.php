@@ -513,7 +513,7 @@ class ManageInvoiceController extends Controller
             $deposit['sub_bank_id'] = $bankaccount->subbank_id;
             $deposit['status'] = "pending";
             $deposit->save();
-            send_notification($invoice->user_id, 'Bank has been deposited by '.auth()->user()->name.'. Please check.', route('admin.deposits.bank.index'));
+            send_notification($invoice->user_id, 'Bank has been deposited by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.deposits.bank.index'));
 
 
             $invoice->payment_status = 1;

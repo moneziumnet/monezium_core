@@ -98,7 +98,7 @@ class MerchantCampaignController extends Controller
         $input['ref_id'] ='CP-'.Str::random(6);
         $input['logo'] = $name;
         $data->fill($input)->save();
-        send_notification(auth()->id(), 'New Campaign has been created by '.auth()->user()->name.'. Please check.', route('admin.campaign.index'));
+        send_notification(auth()->id(), 'New Campaign has been created by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.campaign.index'));
 
          return redirect()->back()->with('message','New Campaign has been created successfully');
     }

@@ -77,9 +77,9 @@
             searching: true,
             ajax: '{{ route('admin.actionnotification.datatables') }}',
             columns: [
-                { data: 'user_name', name: 'user_name' },
+                { data: 'user_name', searchable:false, name: 'user_name' },
                 { data: 'description', name: 'description' },
-                { data: 'status', name: 'status' },
+                { data: 'status', searchable:false, name: 'status' },
             ],
             language: {
                 processing: '<img src="{{ asset('assets/images/' . $gs->admin_loader) }}">'

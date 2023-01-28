@@ -827,7 +827,7 @@ class UserController extends Controller
             $KycForms->status = 3;
         }
         $KycForms->save();
-        send_notification(auth()->id(), 'KYC/AML has been submitted to Admin by '.auth()->user()->name.'. Please check.', route('admin.user.kycinfo', auth()->id()));
+        send_notification(auth()->id(), 'KYC/AML has been submitted to Admin by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.user.kycinfo', auth()->id()));
         return redirect()->route('user.aml.kyc.history')->with('message','KYC submitted successfully');
     }
 

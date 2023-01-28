@@ -47,7 +47,7 @@ class UserFdrController extends Controller
             $fdr->next_profit_time = NULL;
             $fdr->status = 2;
             $fdr->update();
-            send_notification(auth()->id(), 'FDR Finish has been requested by '.auth()->user()->name.'. Please check.', route('admin.fdr.closed'));
+            send_notification(auth()->id(), 'FDR Finish has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.fdr.closed'));
 
             return redirect()->back()->with('message','Finish Requesting Successfully');
         }else {
@@ -106,7 +106,7 @@ class UserFdrController extends Controller
             // $trans->user_id = auth()->id();
             $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.$gs->disqus.'"}';
             $trans->save();
-            send_notification(auth()->id(), 'FDR has been requested by '.auth()->user()->name.'. Please check.', route('admin.fdr.running'));
+            send_notification(auth()->id(), 'FDR has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.fdr.running'));
 
             return redirect()->route('user.invest.index')->with('success','FDR Requesting Successfully');
         }else{
