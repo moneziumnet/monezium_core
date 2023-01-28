@@ -174,42 +174,43 @@
             <i class="fa fa-bars"></i>
           </button>
           <ul class="navbar-nav ml-auto">
-            @php
-             use App\Models\ActionNotification;
-             $notificationlist = ActionNotification::where('status', 0)->orderBy('status','asc')->orderBy('created_at','desc')->limit(3)->get();
-            @endphp
-            <li class="nav-item dropdown notification-ui">
-                <a class="nav-link dropdown-toggle notification-ui_icon" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    <i class="fa fa-bell"></i>
-                    @if(count($notificationlist) > 0)
-                        <span class="unread-notification"></span>
-                    @endif
-                </a>
-                <div class="dropdown-menu notification-ui_dd" aria-labelledby="navbarDropdown">
-                    <div class="notification-ui_dd-header">
-                        <h3 class="text-center">Notification</h3>
-                    </div>
-                    <div class="notification-ui_dd-content">
-                        @if(count($notificationlist) == 0)
-                            <div class="notification-list_detail text-center mt-3">
-                                <p>No Notification</p>
-                            </div>
+            @if(Auth::guard('admin')->user()->IsSuper() == false)
+                @php
+                    $notificationlist = App\Models\ActionNotification::where('status', 0)->orderBy('status','asc')->orderBy('created_at','desc')->limit(3)->get();
+                @endphp
+                <li class="nav-item dropdown notification-ui">
+                    <a class="nav-link dropdown-toggle notification-ui_icon" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <i class="fa fa-bell"></i>
+                        @if(count($notificationlist) > 0)
+                            <span class="unread-notification"></span>
                         @endif
-                        @foreach ($notificationlist as $item)
-                            <div class="notification-list notification-list--unread">
-                                <div class="notification-list_detail">
-                                    <p><b>{{$item->user->company_name ?? $item->user->name}}, </b> {{$item->description}}</p>
-                                    <p><small>{{time_elapsed_string($item->created_at)}}</small></p>
+                    </a>
+                    <div class="dropdown-menu notification-ui_dd" aria-labelledby="navbarDropdown">
+                        <div class="notification-ui_dd-header">
+                            <h3 class="text-center">Notification</h3>
+                        </div>
+                        <div class="notification-ui_dd-content">
+                            @if(count($notificationlist) == 0)
+                                <div class="notification-list_detail text-center mt-3">
+                                    <p>No Notification</p>
                                 </div>
+                            @endif
+                            @foreach ($notificationlist as $item)
+                                <div class="notification-list notification-list--unread">
+                                    <div class="notification-list_detail">
+                                        <p><b>{{$item->user->company_name ?? $item->user->name}}, </b> {{$item->description}}</p>
+                                        <p><small>{{time_elapsed_string($item->created_at)}}</small></p>
+                                    </div>
 
-                            </div>
-                        @endforeach
+                                </div>
+                            @endforeach
+                        </div>
+                        <div class="notification-ui_dd-footer p-3">
+                            <a href={{route('admin.actionnotification.index')}} class="btn btn-success btn-block">View All</a>
+                        </div>
                     </div>
-                    <div class="notification-ui_dd-footer p-3">
-                        <a href={{route('admin.actionnotification.index')}} class="btn btn-success btn-block">View All</a>
-                    </div>
-                </div>
-            </li>
+                </li>
+            @endif
             <li class="nav-item dropdown no-arrow mx-1">
               <a class="nav-link pr-0" target="_blank" href="{{url('/')}}">
                   <i class="fas fa-globe fa-fw"></i>
