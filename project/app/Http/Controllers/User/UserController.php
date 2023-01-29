@@ -18,6 +18,7 @@ use App\Models\BankAccount;
 use App\Models\BankGateway;
 use App\Models\Transaction;
 use App\Models\KycRequest;
+use App\Models\LoginActivity;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
@@ -887,6 +888,13 @@ class UserController extends Controller
         $data->amount = $amount;
         $data->save();
       }
+
+      public function history()
+      {
+          $history = LoginActivity::where('user_id', auth()->id())->orderBy('created_at', 'desc')->paginate(20);
+          return view('user.loginactivity', compact('history'));
+      }
+
 
 
 }

@@ -50,6 +50,9 @@
           <a class="dropdown-item" href="{{route('user.securityform')}}">
             {{__('Security')}}
           </a>
+          <a class="dropdown-item" href="{{route('user.login.activity')}}">
+            {{__('Login Activity')}}
+          </a>
           <a class="dropdown-item" href="{{route('user.aml.kyc')}}">
             {{__('AML/KYC')}}
           </a>

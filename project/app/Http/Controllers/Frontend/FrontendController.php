@@ -93,7 +93,7 @@ class FrontendController extends Controller
             return view('frontend.superindex', $data);
         }
 
-        $data['bankplans'] = BankPlan::orderBy('amount', 'asc')->limit(3)->get();
+        $data['bankplans'] = BankPlan::where('type', 'private')->orderBy('amount', 'asc')->limit(3)->get();
         $data['loanplans'] = LoanPlan::orderBy('id', 'desc')->whereStatus(1)->limit(3)->get();
         $data['depositsplans'] = DpsPlan::orderBy('id', 'desc')->whereStatus(1)->limit(3)->get();
         $data['fdrplans'] = FdrPlan::orderBy('id', 'desc')->whereStatus(1)->limit(3)->get();
