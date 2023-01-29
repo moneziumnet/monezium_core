@@ -4,8 +4,10 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Generalsetting;
+use App\Models\LoginActivity;
 use Auth;
 use Illuminate\Http\Request;
+use Request as facade_request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
@@ -53,6 +55,13 @@ class LoginController extends Controller
             if(session()->get('setredirectroute') != NULL){
               return response()->json(session()->get('setredirectroute'));
             }
+            $activity = new LoginActivity();
+            $activity->subject = 'User Login Successfully.';
+            $activity->url = facade_request::fullUrl();
+            $activity->ip = facade_request::ip();
+            $activity->agent = facade_request::header('user-agent');
+            $activity->user_id = Auth::user()->id;
+            $activity->save();
             return response()->json(route('user.dashboard'));
         }
 
@@ -69,7 +78,7 @@ class LoginController extends Controller
       Auth::guard('web')->logout();
       session()->forget('setredirectroute');
       session()->forget('affilate');
-    
+
       return redirect('/');
     }
 
