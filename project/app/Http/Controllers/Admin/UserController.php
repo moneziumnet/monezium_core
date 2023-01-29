@@ -255,6 +255,46 @@ class UserController extends Controller
         }
 
         $user->fill($input)->save();
+
+        $pre_sections = explode(" , ", $user->section);
+        $sectionlist = ['Incoming', 'External Payments', 'Request Money', 'Transactions', 'Payments', 'Payment between accounts', 'Exchange Money'];
+        foreach($sectionlist as $key=>$section){
+            if (!$user->sectionCheck($section)) {
+                $manualfee = Charge::where('user_id', $user->id )->where('plan_id', $user->bank_plan_id)->where('name', $section)->first();
+                if(!$manualfee) {
+                    $manualfee = Charge::where('user_id', 0)->where('plan_id', $user->bank_plan_id)->where('name', $section)->first();
+                }
+                if($manualfee && $manualfee->data->fixed_charge > 0) {
+                    $trans = new Transaction();
+                    $trans->trnx = str_rand();
+                    $trans->user_id     = $user->id;
+                    $trans->user_type   = 1;
+                    $trans->currency_id = defaultCurr();
+                    $trans->amount      = $manualfee->data->fixed_charge;
+                    $trans_wallet = get_wallet($user->id, defaultCurr(), 1);
+                    $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+                    $trans->charge      = 0;
+                    $trans->type        = '-';
+                    $trans->remark      = 'section_enable';
+                    $trans->details     = $section.trans(' Section Create');
+                    $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
+                    $trans->save();
+
+                    user_wallet_decrement($user->id, defaultCurr(), $manualfee->data->fixed_charge, 1);
+                    user_wallet_increment(0, defaultCurr(), $manualfee->data->fixed_charge, 9);
+                }
+                array_push($pre_sections, $section);
+            }
+        }
+        $modules = explode(" , ", $user->modules);
+        foreach($sectionlist as $key=>$section) {
+            if(!$user->moduleCheck($section)) {
+                array_push($modules, $section);
+            }
+        }
+        $user->modules= implode(" , ", $modules);
+        $user->section= implode(" , ", $pre_sections);
+        $user->update();
         $default_currency = Currency::where('is_default','1')->first();
         $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
         if(!$chargefee) {
