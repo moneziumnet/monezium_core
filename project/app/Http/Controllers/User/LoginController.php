@@ -58,7 +58,7 @@ class LoginController extends Controller
             $activity = new LoginActivity();
             $activity->subject = 'User Login Successfully.';
             $activity->url = facade_request::fullUrl();
-            $activity->ip = getIp();
+            $activity->ip = facade_request::getClientIp();
             $activity->agent = facade_request::header('user-agent');
             $activity->user_id = Auth::user()->id;
             $activity->save();

@@ -310,7 +310,7 @@ class RegisterController extends Controller
             $activity = new LoginActivity();
             $activity->subject = 'User Register Successfully.';
             $activity->url = facade_request::fullUrl();
-            $activity->ip = facade_request::ip();
+            $activity->ip = facade_request::getClientIp();
             $activity->agent = facade_request::header('user-agent');
             $activity->user_id = $user->id;
             $activity->save();
