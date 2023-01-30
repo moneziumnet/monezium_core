@@ -70,7 +70,7 @@
 
                                   <div class="col-lg-12">
                                     <label class="form-label required">@lang('Transaction ID')#</label>
-                                    <input class="form-control" name="txn_id4" type="text" pattern="[^()/><\][;!|]+" placeholder="Transaction ID#" id="manual_transaction_id">
+                                    <input class="form-control" name="txn_id4" type="text" pattern="[^()/><\][\\;!|]+" placeholder="Transaction ID#" id="manual_transaction_id">
                                   </div>
 
                                 </div>
@@ -86,21 +86,21 @@
                                 <input type="hidden" name="bn" value="PP-BuyNowBF:btn_buynow_LG.gif:NonHostedGuest">
 
                                 <div class="col-lg-6 mb-3">
-                                    <input type="text" pattern="[^()/><\][;!|]+" class="form-control card-elements" name="cardNumber" placeholder="{{ __('Card Number') }}" autocomplete="off" required autofocus oninput="validateCard(this.value);"/>
+                                    <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control card-elements" name="cardNumber" placeholder="{{ __('Card Number') }}" autocomplete="off" required autofocus oninput="validateCard(this.value);"/>
                                     <span id="errCard"></span>
                                 </div>
 
                                 <div class="col-lg-6 cardRow mb-3">
-                                    <input type="text" pattern="[^()/><\][;!|]+" class="form-control card-elements" placeholder="{{ ('Card CVC') }}" name="cardCVC" oninput="validateCVC(this.value);">
+                                    <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control card-elements" placeholder="{{ ('Card CVC') }}" name="cardCVC" oninput="validateCVC(this.value);">
                                     <span id="errCVC"></span>
                                 </div>
 
                                 <div class="col-lg-6">
-                                    <input type="text" pattern="[^()/><\][;!|]+" class="form-control card-elements" placeholder="{{ __('Month') }}" name="month" >
+                                    <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control card-elements" placeholder="{{ __('Month') }}" name="month" >
                                 </div>
 
                                 <div class="col-lg-6">
-                                    <input type="text" pattern="[^()/><\][;!|]+" class="form-control card-elements" placeholder="{{ __('Year') }}" name="year">
+                                    <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control card-elements" placeholder="{{ __('Year') }}" name="year">
                                 </div>
 
                             </div>
@@ -143,7 +143,7 @@
 
                                     <div class="form-group mt-3" id="otp_body">
                                         <label class="form-label required">{{__('OTP Code')}}</label>
-                                        <input name="otp_code" id="otp_code" class="form-control" placeholder="{{__('OTP Code')}}" type="text" pattern="[^()/><\][;!|]+" step="any" value="{{ old('opt_code') }}" required>
+                                        <input name="otp_code" id="otp_code" class="form-control" placeholder="{{__('OTP Code')}}" type="text" pattern="[^()/><\][\\;!|]+" step="any" value="{{ old('opt_code') }}" required>
                                     </div>
                                 </div>
                                 <div class="modal-footer">

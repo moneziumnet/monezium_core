@@ -20,7 +20,7 @@
 
           <form action="">
             <div class="input-group">
-                <input class="form-control shadow-none" type="text" pattern="[^()/><\][;!|]+" placeholder="{{__('Transaction id')}}" name="search" value="{{$search ?? ''}}">
+                <input class="form-control shadow-none" type="text" pattern="[^()/><\][\\;!|]+" placeholder="{{__('Transaction id')}}" name="search" value="{{$search ?? ''}}">
                 <button type="submit" class="input-group-text bg-primary text-white border-0"><i class="fas fa-search"></i></button>
             </div>
           </form>

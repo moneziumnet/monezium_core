@@ -74,7 +74,7 @@
                         <div class="modal-body ">
                             <div class="form-group">
                                 <input type="hidden" name="key" value="{{$secret}}">
-                                <input type="text" pattern="[^()/><\][;!|]+" class="form-control" name="code" placeholder="@lang('Enter Google Authenticator Code')">
+                                <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" name="code" placeholder="@lang('Enter Google Authenticator Code')">
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -100,7 +100,7 @@
                         @csrf
                         <div class="modal-body">
                             <div class="form-group">
-                                <input type="text" pattern="[^()/><\][;!|]+" class="form-control" name="code" placeholder="@lang('Enter Google Authenticator Code')">
+                                <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" name="code" placeholder="@lang('Enter Google Authenticator Code')">
                             </div>
                         </div>
                         <div class="modal-footer">

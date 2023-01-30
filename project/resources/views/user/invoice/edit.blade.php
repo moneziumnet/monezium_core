@@ -118,7 +118,7 @@
                             @if ($loop->first)
                             <div class="form-label">{{__('Item name')}}</div>
                             @endif
-                            <input type="text" pattern="[^()/><\][;!|]+" name="item[]" class="form-control shadow-none itemname" required value="{{$value->name}}">
+                            <input type="text" pattern="[^()/><\][\\;!|]+" name="item[]" class="form-control shadow-none itemname" required value="{{$value->name}}">
                         </div>
                         <div class="col-md-4 mb-3">
                             @if ($loop->first)
@@ -245,7 +245,7 @@
                         <div class = "row">
                             <div class="form-group mt-2">
                                 <label class="form-label required">{{__('Tax Name')}}</label>
-                                <input name="name" id="name" class="form-control shadow-none" placeholder="{{__('Tax Name')}}" type="text" pattern="[^()/><\][;!|]+" value="{{ old('name') }}" required>
+                                <input name="name" id="name" class="form-control shadow-none" placeholder="{{__('Tax Name')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('name') }}" required>
                             </div>
                             <div class="form-group mt-2">
                                 <label class="form-label required">{{__('Tax rate')}}</label>
@@ -296,18 +296,18 @@
 
                                 <div class="form-group mt-3 col-md-6">
                                     <label class="form-label required">{{__('First Name')}}</label>
-                                    <input name="firstname" id="firstname" class="form-control" autocomplete="off" placeholder="{{__('John')}}" type="text" pattern="[^()/><\][-;!|]+" value="{{ old('firstname') }}" required>
+                                    <input name="firstname" id="firstname" class="form-control" autocomplete="off" placeholder="{{__('John')}}" type="text" pattern="[^()/><\][\\\-;!|]+" value="{{ old('firstname') }}" required>
                                 </div>
 
                                 <div class="form-group mt-3 col-md-6">
                                     <label class="form-label required">{{__('Last Name')}}</label>
-                                    <input name="lastname" id="lastname" class="form-control" autocomplete="off" placeholder="{{__('Doe')}}" type="text" pattern="[^()/><\][-;!|]+" value="{{ old('lastname') }}" required>
+                                    <input name="lastname" id="lastname" class="form-control" autocomplete="off" placeholder="{{__('Doe')}}" type="text" pattern="[^()/><\][\\\-;!|]+" value="{{ old('lastname') }}" required>
                                 </div>
                             </div>
                             <div id='corporate' style="display: none">
                                 <div class="form-group mt-3 col-md-6">
                                     <label class="form-label required">{{__('Company Name')}}</label>
-                                    <input name="company_name" id="company_name" class="form-control" autocomplete="off" placeholder="{{__('Tech LTD')}}" type="text" pattern="[^()/><\][;!|]+" value="{{ old('company_name') }}" >
+                                    <input name="company_name" id="company_name" class="form-control" autocomplete="off" placeholder="{{__('Tech LTD')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('company_name') }}" >
                                 </div>
                             </div>
                             <hr class="my-3"/>
@@ -317,7 +317,7 @@
                             </div>
                             <div class="form-group mt-3 col-md-6">
                                 <label class="form-label required">{{__('Address')}}</label>
-                                <input name="address" id="address" class="form-control shadow-none" placeholder="{{__('Address')}}" type="text" pattern="[^()/><\][;!|]+" value="{{ old('address') }}" required>
+                                <input name="address" id="address" class="form-control shadow-none" placeholder="{{__('Address')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('address') }}" required>
                             </div>
                             <div class="form-group mt-3 col-md-6">
                                 <label class="form-label required">{{__('Phone Number')}}</label>
@@ -325,28 +325,28 @@
                             </div>
                             <div class="form-group mt-3 col-md-6">
                                 <label class="form-label required">{{__('Registration NO')}}</label>
-                                <input name="registration_no" id="registration_no" class="form-control shadow-none" placeholder="{{__('Registration NO')}}" type="text" pattern="[^()/><\][;!|]+" value="{{ old('registration_no') }}" required>
+                                <input name="registration_no" id="registration_no" class="form-control shadow-none" placeholder="{{__('Registration NO')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('registration_no') }}" required>
                             </div>
                             <div class="form-group mt-3 col-md-6">
                                 <label class="form-label required">{{__('VAT NO')}}</label>
-                                <input name="vat_no" id="vat_no" class="form-control shadow-none" placeholder="{{__('VAT NO')}}" type="text" pattern="[^()/><\][;!|]+" value="{{ old('vat_no') }}" required>
+                                <input name="vat_no" id="vat_no" class="form-control shadow-none" placeholder="{{__('VAT NO')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('vat_no') }}" required>
                             </div>
                             <div class="form-group mt-3 col-md-6">
                                 <label class="form-label required">{{__('Contact Person')}}</label>
-                                <input name="contact_person" id="contact_person" class="form-control shadow-none" placeholder="{{__('Contact Person')}}" type="text" pattern="[^()/><\][;!|]+" value="{{ old('contact_person') }}" required>
+                                <input name="contact_person" id="contact_person" class="form-control shadow-none" placeholder="{{__('Contact Person')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('contact_person') }}" required>
                             </div>
                             <hr class="my-3"/>
                             <div class="form-group mt-3 col-md-6">
                                 <label class="form-label required">{{__('Bank Name')}}</label>
-                                <input name="bank_name" id="bank_name" class="form-control" autocomplete="off" placeholder="{{__('Enter Bank Name')}}" type="text" pattern="[^()/><\][;!|]+" value="{{ old('bank_name') }}" required>
+                                <input name="bank_name" id="bank_name" class="form-control" autocomplete="off" placeholder="{{__('Enter Bank Name')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('bank_name') }}" required>
                             </div>
                             <div class="form-group mt-3 col-md-6">
                                 <label class="form-label required">{{__('Bank Address')}}</label>
-                                <input name="bank_address" id="bank_address" class="form-control" autocomplete="off" placeholder="{{__('Enter Bank Address')}}" type="text" pattern="[^()/><\][;!|]+" value="{{ old('bank_address') }}" min="1" required>
+                                <input name="bank_address" id="bank_address" class="form-control" autocomplete="off" placeholder="{{__('Enter Bank Address')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('bank_address') }}" min="1" required>
                             </div>
                             <div class="form-group mt-3 col-md-6">
                                 <label class="form-label required">{{__('SWIFT/BIC')}}</label>
-                                <input name="swift_bic" id="swift_bic" class="form-control" autocomplete="off" placeholder="{{__('MEINATWW')}}" type="text" pattern="[^()/><\][;!|]+" value="{{ old('swift_bic') }}" min="1" required>
+                                <input name="swift_bic" id="swift_bic" class="form-control" autocomplete="off" placeholder="{{__('MEINATWW')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('swift_bic') }}" min="1" required>
                             </div>
                             <div class="form-group mt-3 col-md-6">
                                 <label class="form-label required">{{__('Account/IBAN')}}</label>
@@ -414,7 +414,7 @@
 
                    <div class="row">
                         <div class="col-md-5 mb-3">
-                            <input type="text" pattern="[^()/><\\][;!|]+" name="item[]" class="form-control shadow-none itemname" required>
+                            <input type="text" pattern="[^()/><\\][\\\\;!|]+" name="item[]" class="form-control shadow-none itemname" required>
                         </div>
                         <div class="col-md-4 mb-3">
                             <input type="number" step="any" name="amount[]" class="form-control shadow-none amount" required>

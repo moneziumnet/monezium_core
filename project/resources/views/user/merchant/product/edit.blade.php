@@ -36,7 +36,7 @@
 
                         <div class="form-group mt-2 mb-3">
                             <label class="form-label required">{{__('Product Name')}}</label>
-                            <input name="name" id="name" class="form-control shadow-none" placeholder="{{__('Name')}}" type="text" pattern="[^()/><\][-;!|]+" value="{{ $data->name }}" required>
+                            <input name="name" id="name" class="form-control shadow-none" placeholder="{{__('Name')}}" type="text" pattern="[^()/><\][\\\-;!|]+" value="{{ $data->name }}" required>
                         </div>
 
                         <div class="form-group mb-3">

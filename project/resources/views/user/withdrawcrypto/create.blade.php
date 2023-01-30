@@ -53,7 +53,7 @@
 
                         <div class="form-group mb-3 mt-3">
                             <label class="form-label required">{{__('Receiver Crypto Address')}}</label>
-                            <input name="sender_address" id="sender_address" class="form-control" autocomplete="off" placeholder="{{__('0x....')}}" type="text" pattern="[^()/><\][;!|]+" value="{{ old('sender_address') }}" required>
+                            <input name="sender_address" id="sender_address" class="form-control" autocomplete="off" placeholder="{{__('0x....')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('sender_address') }}" required>
                         </div>
 
 
@@ -83,7 +83,7 @@
 
                                     <div class="form-group mt-3" id="otp_body">
                                         <label class="form-label required">{{__('OTP Code')}}</label>
-                                        <input name="otp_code" id="otp_code" class="form-control" placeholder="{{__('OTP Code')}}" type="text" pattern="[^()/><\][;!|]+" value="{{ old('opt_code') }}" required>
+                                        <input name="otp_code" id="otp_code" class="form-control" placeholder="{{__('OTP Code')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('opt_code') }}" required>
                                     </div>
                                 </div>
                                 <div class="modal-footer">

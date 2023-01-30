@@ -36,7 +36,7 @@
 
                         <div class="form-group mb-3 mt-3">
                             <label class="form-label required">{{__('Name')}}</label>
-                            <input name="name" id="name" class="form-control" autocomplete="off" placeholder="{{__('Please Input Shop Name')}}" type="text" pattern="[^()/><\][;!|]+" required>
+                            <input name="name" id="name" class="form-control" autocomplete="off" placeholder="{{__('Please Input Shop Name')}}" type="text" pattern="[^()/><\][\\;!|]+" required>
                         </div>
 
                         <div class="form-group mb-3 mt-3">

@@ -46,7 +46,7 @@
 
                         <div class="form-group mb-3 mt-3">
                             <label class="form-label required">{{__('Account Name')}}</label>
-                            <input name="account_name" id="account_name" class="form-control" autocomplete="off" placeholder="{{__('Jhon Doe')}}" type="text" pattern="[^()/><\][-;!|]+" value="{{ old('account_name') }}" min="1" required readonly>
+                            <input name="account_name" id="account_name" class="form-control" autocomplete="off" placeholder="{{__('Jhon Doe')}}" type="text" pattern="[^()/><\][\\\-;!|]+" value="{{ old('account_name') }}" min="1" required readonly>
                         </div>
 
                         <div class="form-group mb-3 mt-3">

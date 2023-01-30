@@ -29,7 +29,7 @@
             <div class="row">
               <div class="col-lg-12">
                 <div class="form-input">
-                  <input type="text" pattern="[^()/><\][;!|]+" class="form-control" name="otp" placeholder="@lang('Type Your otp')" required="">
+                  <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" name="otp" placeholder="@lang('Type Your otp')" required="">
                 </div>
               </div>
             </div>

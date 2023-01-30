@@ -83,12 +83,12 @@
                 @csrf
                 <div class="form-group mb-3">
                     <label class="form-label required">{{__('First Name')}}</label>
-                    <input name="first_name" id="first_name" class="form-control" placeholder="{{__('First Name')}}" type="text" pattern="[^()/><\][-;!|]+"  required>
+                    <input name="first_name" id="first_name" class="form-control" placeholder="{{__('First Name')}}" type="text" pattern="[^()/><\][\\\-;!|]+"  required>
                 </div>
 
                 <div class="form-group mb-3">
                     <label class="form-label required">{{__('Last Name')}}</label>
-                    <input name="last_name" id="last_name" class="form-control" placeholder="{{__('Last Name')}}" type="text" pattern="[^()/><\][-;!|]+"  required>
+                    <input name="last_name" id="last_name" class="form-control" placeholder="{{__('Last Name')}}" type="text" pattern="[^()/><\][\\\-;!|]+"  required>
                 </div>
 
                 <div class="form-group mb-3 mt-3">

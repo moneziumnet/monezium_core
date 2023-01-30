@@ -188,7 +188,7 @@
                         <div class = "row">
                             <div class="form-group mt-2">
                                 <label class="form-label required">{{__('Category Name')}}</label>
-                                <input name="name" id="name" class="form-control shadow-none" placeholder="{{__('Name')}}" type="text" pattern="[^()/><\][;!|]+" value="{{ old('name') }}" required>
+                                <input name="name" id="name" class="form-control shadow-none" placeholder="{{__('Name')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('name') }}" required>
                             </div>
                         </div>
                         <input type="hidden" name="user_id" value="{{auth()->id()}}">
@@ -226,7 +226,7 @@
                         <div class = "row">
                             <div class="form-group mt-2 mb-3">
                                 <label class="form-label required">{{__('Title')}}</label>
-                                <input name="title" id="title" class="form-control shadow-none" placeholder="{{__('Title')}}" type="text" pattern="[^()/><\][;!|]+" value="{{ old('title') }}" required>
+                                <input name="title" id="title" class="form-control shadow-none" placeholder="{{__('Title')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('title') }}" required>
                             </div>
 
                             <div class="form-group mb-3">

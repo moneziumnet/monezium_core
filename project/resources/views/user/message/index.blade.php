@@ -96,7 +96,7 @@
           @csrf
           <div class="modal-body">
             <div class="form-group mb-2">
-              <input type="text" pattern="[^()/><\][;!|]+" class="form-control" name="subject" placeholder="{{ __('Subject') }}" autocomplete="off" required="">
+              <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" name="subject" placeholder="{{ __('Subject') }}" autocomplete="off" required="">
             </div>
 
             <div class="form-group">

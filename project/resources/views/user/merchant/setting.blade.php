@@ -39,7 +39,7 @@
                             <div class="row form-group mt-3">
                                 <div class="col-md-6 mx-auto">
                                     <div class="form-label">{{__( 'Client Id')}}</div>
-                                    <input type="text" pattern="[^()/><\][;!|]+" name="client_id" class="form-control shadow-none" value="{{$setting->information['client_id'] ?? ''}}" required>
+                                    <input type="text" pattern="[^()/><\][\\;!|]+" name="client_id" class="form-control shadow-none" value="{{$setting->information['client_id'] ?? ''}}" required>
                                 </div>
                             </div>
                             <div class="row form-group mt-3">
