@@ -42,6 +42,7 @@
                         <label for="password" class="form-label">@lang('Your Password')</label>
                         <input type="password" id="password" name="password" class="form-control form--control">
                     </div>
+                    <input type="hidden" id="global_ip" name="global_ip" class="form-control form--control">
                     <div class="col-sm-12">
                         <button type="submit" class="cmn--btn bg--base me-3">
                             @lang('Login Now')
@@ -60,5 +61,13 @@
 @endsection
 
 @push('js')
+<script type="text/javascript">
+    $(document).ready(function() {
+        $.getJSON("https://api.ipify.org/?format=json", function(e) {
+            $('#global_ip').val(e.ip);
+        });
+    })
+</script>
+
 
 @endpush

@@ -208,6 +208,8 @@
                         </div>
                     </div>
                 </div>
+                <input type="hidden" id="global_ip" name="global_ip" class="form-control form--control">
+
 
                 <div class="col-sm-12 d-flex flex-wrap justify-content-between align-items-center">
                     <button type="submit" class="cmn--btn bg--base me-3">
@@ -242,5 +244,11 @@
 @endsection
 
 @push('js')
-
+<script type="text/javascript">
+    $(document).ready(function() {
+        $.getJSON("https://api.ipify.org/?format=json", function(e) {
+            $('#global_ip').val(e.ip);
+        });
+    })
+</script>
 @endpush
