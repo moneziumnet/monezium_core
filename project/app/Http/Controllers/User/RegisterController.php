@@ -20,6 +20,7 @@ use App\Models\ReferralBonus;
 use App\Models\Wallet;
 use App\Models\RequestDomain;
 use App\Models\Generalsetting;
+use App\Models\LoginActivity;
 use Illuminate\Support\Carbon;
 use App\Models\UserSubscription;
 use PHPMailer\PHPMailer\PHPMailer;
@@ -304,6 +305,15 @@ class RegisterController extends Controller
 
             $user->email_verified = 'Yes';
             $user->update();
+
+            $activity = new LoginActivity();
+            $activity->subject = 'User Register Successfully.';
+            $activity->url = facade_request::fullUrl();
+            $activity->ip = facade_request::ip();
+            $activity->agent = facade_request::header('user-agent');
+            $activity->user_id = $user->id;
+            $activity->save();
+
             $notification = new Notification;
             $notification->user_id = $user->id;
             $notification->save();
