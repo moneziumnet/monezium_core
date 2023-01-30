@@ -46,7 +46,7 @@
 
           <div class="form-group">
               <label for="title">{{ __('Hero Section Title') }} *</label>
-              <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="title" name="hero_title"  placeholder="{{ __('Hero Section Title') }}" value="{{ $ps->hero_title }}" required>
+              <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="title" name="hero_title"  placeholder="{{ __('Hero Section Title') }}" value="{{ $ps->hero_title }}" required>
           </div>
 
           <div class="form-group">

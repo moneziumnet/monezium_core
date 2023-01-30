@@ -132,7 +132,7 @@
                     </div>
                     <div class="form-group">
                         <label for="inp-name">{{ __('Bank SWIFT') }}</label>
-                        <input type="text" pattern="[^()/><\][;!|]+" class="form-control" name="swift" id="swift" required />
+                        <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" name="swift" id="swift" required />
                     </div>
                     <input type="hidden" name="bank_account_id" id="bank_account_id">
                     <button type="submit" class="btn btn-primary w-100">{{ __('Confrim') }}</button>

@@ -30,14 +30,14 @@
               <div class="col-md-6">
                 <div class="form-group">
                     <label for="title">{{ __('Title') }}</label>
-                    <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="title" name="title" placeholder="{{ __('Enter Title') }}" value="{{ $data->title }}" required>
+                    <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="title" name="title" placeholder="{{ __('Enter Title') }}" value="{{ $data->title }}" required>
                 </div>
               </div>
 
               <div class="col-md-6">
                 <div class="form-group">
                     <label for="swift">{{ __('Swift Code') }}</label>
-                    <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="swift" name="swift_code" placeholder="{{ __('Enter Swift Code') }}" value="{{ $data->swift_code }}">
+                    <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="swift" name="swift_code" placeholder="{{ __('Enter Swift Code') }}" value="{{ $data->swift_code }}">
                 </div>
               </div>
           </div>

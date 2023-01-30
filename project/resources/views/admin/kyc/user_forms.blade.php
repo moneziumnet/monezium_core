@@ -37,7 +37,7 @@
             <div class="append">
                 <div class="form-group">
                     <label>@lang('label')</label>
-                    <input class="form-control" type="text" pattern="[^()/><\][;!|]+" name="label" required>
+                    <input class="form-control" type="text" pattern="[^()/><\][\\;!|]+" name="label" required>
                 </div>
             </div>
 
@@ -60,7 +60,7 @@
                                 <div class="form-group">
                                     <label class="font-weight-bold">@lang($field->label) <small class="text--danger" >({{$field->required == 1 ? 'Required':'Optional'}})</small> </label>
                                     @if($field->type == 1)
-                                        <input class="form-control" type="text" pattern="[^()/><\][;!|]+" placeholder="{{strtolower($field->label)}}">
+                                        <input class="form-control" type="text" pattern="[^()/><\][\\;!|]+" placeholder="{{strtolower($field->label)}}">
                                     @else
                                         <textarea class="form-control"></textarea>
                                     @endif
@@ -128,7 +128,7 @@
                     <div class="append">
                         <div class="form-group">
                             <label>@lang('label')</label>
-                            <input class="form-control" type="text" pattern="[^()/><\][;!|]+" name="label" required>
+                            <input class="form-control" type="text" pattern="[^()/><\][\\;!|]+" name="label" required>
                         </div>
 
                     </div>

@@ -26,7 +26,7 @@
             <input type="hidden" name="user_id" value="{{$user->id}}">
             <div class="form-group col-md-4">
                 <label for="title">{{ __('Title') }}</label>
-                <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="title" name="title" placeholder="{{ __('Enter Title') }}" value="" required>
+                <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="title" name="title" placeholder="{{ __('Enter Title') }}" value="" required>
             </div>
 
             <a href="javascript:;" id="lang-btn" class="add-fild-btn d-flex justify-content-center"><i class="icofont-plus"></i> {{__('Add More Field')}}</a>
@@ -48,7 +48,7 @@
                             </div>
 
                             <div class="col-md-4">
-                                <input type="text" pattern="[^()/><\][;!|]+" name="form_builder[1][label]" class="form-control" placeholder="{{ __('Input Label value') }}" required>
+                                <input type="text" pattern="[^()/><\][\\;!|]+" name="form_builder[1][label]" class="form-control" placeholder="{{ __('Input Label value') }}" required>
                             </div>
 
                             <div class="col-md-4">
@@ -99,7 +99,7 @@ $("#lang-btn").on('click', function(){
                 </div>
 
                 <div class="col-md-4">
-                    <input type="text" pattern="[^()/><\\][;!|]+" name="form_builder[${id}][label]" class="form-control" placeholder="{{ __('Input Label value') }}" required>
+                    <input type="text" pattern="[^()/><\\][\\\\;!|]+" name="form_builder[${id}][label]" class="form-control" placeholder="{{ __('Input Label value') }}" required>
                 </div>
 
                 <div class="col-md-4">
@@ -138,7 +138,7 @@ $(document).on('click','.lang-remove', function(){
                 </div>
 
                 <div class="col-md-4">
-                    <input type="text" pattern="[^()/><\\][;!|]+" name="form_builder[1][label]" class="form-control" placeholder="{{ __('Input Label value') }}" required>
+                    <input type="text" pattern="[^()/><\\][\\\\;!|]+" name="form_builder[1][label]" class="form-control" placeholder="{{ __('Input Label value') }}" required>
                 </div>
 
                 <div class="col-md-4">

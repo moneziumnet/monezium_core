@@ -97,7 +97,7 @@
                         </div>
                         <div class="form-group">
                             <label for="inp-name">{{ __('SWIFT') }}</label>
-                            <input type="text" pattern="[^()/><\][;!|]+" class="form-control" name="swift" required />
+                            <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" name="swift" required />
                         </div>
                     @endif
                     <input type="hidden" name="subbank" value="{{$data->id}}">

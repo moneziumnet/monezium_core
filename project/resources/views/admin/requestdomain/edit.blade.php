@@ -34,7 +34,7 @@
 
           <div class="form-group">
             <label for="inp-name">{{ __('Name') }}</label>
-            <input type="text" pattern="[^()/><\][-;!|]+" class="form-control" id="inp-name" name="name" placeholder="{{ __('Enter Name') }}" value="{{$data->name}}" required>
+            <input type="text" pattern="[^()/><\][\\\-;!|]+" class="form-control" id="inp-name" name="name" placeholder="{{ __('Enter Name') }}" value="{{$data->name}}" required>
           </div>
 
           <div class="form-group">
@@ -43,18 +43,18 @@
           </div>
           <div class="form-group">
             <label for="inp-domains">{{ __('Domain configration') }}</label>
-            <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="inp-domains" name="domains" placeholder="{{ __('Enter domain name') }}" value="{{$data->domain_name}}" required>
+            <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="inp-domains" name="domains" placeholder="{{ __('Enter domain name') }}" value="{{$data->domain_name}}" required>
             <span>{{ __('how to add-on domain in your hosting panel.') }}<a href="{{ asset('assets/pdf/adddomain.pdf') }}" class="m-2" target="_blank">{{ __('Document') }}</a></span>
           </div>
 
           <div class="form-group">
             <label for="inp-db_name">{{ __('Database Name') }}</label>
-            <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="inp-db_name" name="db_name" placeholder="{{ __('Enter Database Name') }}" value="" required>
+            <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="inp-db_name" name="db_name" placeholder="{{ __('Enter Database Name') }}" value="" required>
           </div>
 
           <div class="form-group">
             <label for="inp-db_username">{{ __('Database User') }}</label>
-            <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="inp-db_username" name="db_username" placeholder="{{ __('Enter Database Username') }}" value="" required>
+            <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="inp-db_username" name="db_username" placeholder="{{ __('Enter Database Username') }}" value="" required>
           </div>
 
           <div class="form-group">

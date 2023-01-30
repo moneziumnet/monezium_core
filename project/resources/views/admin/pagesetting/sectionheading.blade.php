@@ -26,7 +26,7 @@
             {{ csrf_field() }}
             <div class="form-group">
               <label for="service-title">{{ __('Service Title') }} *</label>
-              <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="service-title" name="service_title"  placeholder="{{ __('Service Title') }}" value="{{ $data->service_title }}" required>
+              <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="service-title" name="service_title"  placeholder="{{ __('Service Title') }}" value="{{ $data->service_title }}" required>
             </div>
 
             <div class="form-group">
@@ -36,7 +36,7 @@
 
             <div class="form-group">
               <label for="plan-title">{{ __('Plan Title') }} *</label>
-              <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="plan-title" name="plan_title"  placeholder="{{ __('Plan Title') }}" value="{{ $data->plan_title }}" required>
+              <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="plan-title" name="plan_title"  placeholder="{{ __('Plan Title') }}" value="{{ $data->plan_title }}" required>
             </div>
 
             <div class="form-group">
@@ -46,7 +46,7 @@
 
             <div class="form-group">
               <label for="review-title">{{ __('Testimonial Title') }} *</label>
-              <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="review-title" name="review_title"  placeholder="{{ __('Testimonial Title') }}" value="{{ $data->review_title }}" required>
+              <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="review-title" name="review_title"  placeholder="{{ __('Testimonial Title') }}" value="{{ $data->review_title }}" required>
             </div>
 
             <div class="form-group">
@@ -56,7 +56,7 @@
 
             <div class="form-group">
               <label for="blog-title">{{ __('Blog Title') }} *</label>
-              <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="blog-title" name="blog_title"  placeholder="{{ __('Blog Title') }}" value="{{ $data->blog_title }}" required>
+              <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="blog-title" name="blog_title"  placeholder="{{ __('Blog Title') }}" value="{{ $data->blog_title }}" required>
             </div>
 
             <div class="form-group">
@@ -66,7 +66,7 @@
 
             <div class="form-group">
               <label for="faq-title">{{ __('FAQ Title') }} *</label>
-              <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="faq-title" name="faq_title"  placeholder="{{ __('FAQ Title') }}" value="{{ $data->faq_title }}" required>
+              <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="faq-title" name="faq_title"  placeholder="{{ __('FAQ Title') }}" value="{{ $data->faq_title }}" required>
             </div>
 
             <div class="form-group">

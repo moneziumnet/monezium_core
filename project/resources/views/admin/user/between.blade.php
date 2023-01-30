@@ -50,7 +50,7 @@
 
                                 <div class="mx-auto col-md-6 mb-3">
                                     <div class="form-label">@lang('Currency')</div>
-                                    <input type="text" pattern="[^()/><\][;!|]+" class="form-control shadow-none" value="{{$wallet->currency->code}}" readonly>
+                                    <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control shadow-none" value="{{$wallet->currency->code}}" readonly>
                                 </div>
 
                                 <div class="mx-auto col-md-6 mb-3">

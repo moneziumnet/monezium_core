@@ -30,7 +30,7 @@
               <div class="form-group">
                 <label for="inp-name">{{ __('App ID') }} *</label>
                 <small>{{ __('(Get Your App ID from developers.facebook.com)') }}</small>
-                <input type="text" pattern="[^()/><\][;!|]+" class="input-field" placeholder="{{ __('Enter App ID') }}" name="fclient_id" value="{{ $data->fclient_id }}" required="">
+                <input type="text" pattern="[^()/><\][\\;!|]+" class="input-field" placeholder="{{ __('Enter App ID') }}" name="fclient_id" value="{{ $data->fclient_id }}" required="">
               </div>
 
               <div class="form-group">
