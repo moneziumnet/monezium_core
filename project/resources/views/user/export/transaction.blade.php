@@ -2,7 +2,7 @@
     <thead>
        <tr>
             <th colspan="6" style="text-align: center; font-size:18px;">
-               MoneziumNET<br/><br/><br/>
+                {{$gs->disqus}}<br/><br/><br/>
             </th>
         </tr>
 

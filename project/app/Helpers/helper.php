@@ -270,6 +270,7 @@ if (!function_exists('mailSend')) {
         $gs = Generalsetting::first();
         $template = EmailTemplate::where('email_type', $key)->first();
 
+
         $message = str_replace('{name}', $user->name, $template->email_body);
 
         foreach ($data as $key => $value) {
@@ -279,7 +280,7 @@ if (!function_exists('mailSend')) {
         if ($gs->is_smtp == 1) {
             $data = [
                 'to' => $user->email,
-                'subject' => $template->email_subject,
+                'subject' => ucwords(str_replace('_', ' ', $key)),
                 'body' => $message,
             ];
             $mailer = new GeniusMailer();

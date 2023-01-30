@@ -46,38 +46,6 @@
 
 
             <div class="col-md-3">
-              <div class="form-group">
-                <label for="inp-title">{{  __('KYC')  }}</label>
-                <div class="frm-btn btn-group mb-1">
-                    <button type="button" class="btn btn-sm btn-rounded dropdown-toggle btn-{{ $gs->kyc == 1 ? 'success' : 'danger' }}" data-toggle="dropdown"
-                      aria-haspopup="true" aria-expanded="false">
-                      {{ $gs->kyc == 1 ? __('Activated') : __('Deactivated')}}
-                    </button>
-                    <div class="dropdown-menu">
-                      <a class="dropdown-item drop-change" href="javascript:;" data-status="1" data-val="{{ __('Activated') }}" data-href="{{ route('admin.gs.status',['kyc',1]) }}">{{ __('Activate') }}</a>
-                      <a class="dropdown-item drop-change" href="javascript:;" data-status="0" data-val="{{ __('Deactivated') }}" data-href="{{ route('admin.gs.status',['kyc',0]) }}">{{ __('Deactivate') }}</a>
-                    </div>
-                  </div>
-              </div>
-            </div>
-
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="inp-title">{{  __('Two Factor Authentication')  }}</label>
-                <div class="frm-btn btn-group mb-1">
-                    <button type="button" class="btn btn-sm btn-rounded dropdown-toggle btn-{{ $gs->two_factor == 1 ? 'success' : 'danger' }}" data-toggle="dropdown"
-                      aria-haspopup="true" aria-expanded="false">
-                      {{ $gs->two_factor == 1 ? __('Activated') : __('Deactivated')}}
-                    </button>
-                    <div class="dropdown-menu">
-                      <a class="dropdown-item drop-change" href="javascript:;" data-status="1" data-val="{{ __('Activated') }}" data-href="{{ route('admin.gs.status',['two_factor',1]) }}">{{ __('Activate') }}</a>
-                      <a class="dropdown-item drop-change" href="javascript:;" data-status="0" data-val="{{ __('Deactivated') }}" data-href="{{ route('admin.gs.status',['two_factor',0]) }}">{{ __('Deactivate') }}</a>
-                    </div>
-                  </div>
-              </div>
-            </div>
-
-            <div class="col-md-3">
                 <div class="form-group">
                   <label for="inp-title">{{  __('Website Theme')  }}</label>
                   <div class="frm-btn btn-group mb-1">
@@ -97,21 +65,6 @@
 
 
         <div class="row">
-          <div class="col-md-4">
-            <div class="form-group">
-              <label for="inp-title">{{  __('Disqus')  }}</label>
-              <div class="frm-btn btn-group mb-1">
-                <button type="button" class="btn btn-sm btn-rounded dropdown-toggle btn-{{ $gs->is_disqus == 1 ? 'success' : 'danger' }}" data-toggle="dropdown"
-                  aria-haspopup="true" aria-expanded="false">
-                  {{ $gs->is_disqus == 1 ? __('Activated') : __('Deactivated')}}
-                </button>
-                <div class="dropdown-menu">
-                  <a class="dropdown-item drop-change" href="javascript:;" data-status="1" data-val="{{ __('Activated') }}" data-href="{{ route('admin.gs.status',['is_disqus',1]) }}">{{ __('Activate') }}</a>
-                  <a class="dropdown-item drop-change" href="javascript:;" data-status="0" data-val="{{ __('Deactivated') }}" data-href="{{ route('admin.gs.status',['is_disqus',0]) }}">{{ __('Deactivate') }}</a>
-                </div>
-              </div>
-            </div>
-          </div>
 
           <div class="col-md-4">
             <div class="form-group">

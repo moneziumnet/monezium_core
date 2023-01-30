@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use Datatables;
+use PDF;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Follow;
@@ -1667,8 +1668,16 @@ class UserController extends Controller
 
         public function transactionPDF($user_id)
         {
-            //return (new AdminExportTransaction($user_id))->download('transaction.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
-            return Excel::download( new AdminExportTransaction($user_id), 'transaction.pdf',\Maatwebsite\Excel\Excel::DOMPDF);
+            $user = User::findOrFail($user_id);
+            $transaction = Transaction::whereUserId($user_id)->orderBy('id', 'desc')->get();
+            $data = [
+                'trans' => $transaction,
+                'user'  => $user
+            ];
+
+            $pdf = PDF::loadView('frontend.myPDF', $data);
+            return $pdf->download('transaction.pdf');
+
         }
 
         public function transactionExport($user_id)

@@ -42,6 +42,7 @@ class ExchangeMoneyController extends Controller
         foreach ($crypto_list as $key => $value) {
             $check = Crypto_Net_Check($value->code);
             if($check != 'error') {
+                $code = $value->code;
                 $crypto_currencies[$key] = $crypto_list[$key];
                 $crypto_currencies[$key]->rate =  $rate->data->rates->$code ?? $value->rate;
             }

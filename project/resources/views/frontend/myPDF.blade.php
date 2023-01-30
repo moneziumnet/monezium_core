@@ -73,9 +73,10 @@
                     <th style="width:15%;font-size:8px;">Date/Transaction No.</th>
                     <th style="width:15%;font-size:8px;">Sender</th>
                     <th style="width:15%;font-size:8px;">Receiver</th>
-                    <th style="width:30%;font-size:8px;">Description</th>
+                    <th style="width:20%;font-size:8px;">Description</th>
                     <th style="width:15%;font-size:8px;">Amount</th>
                     <th style="width:10%;font-size:8px;">Fee</th>
+                    <th style="width:10%;font-size:8px;">Currency</th>
                 </tr>
             </thead>
 
@@ -90,8 +91,9 @@
                     <td style="font-size:8px;">{{__(json_decode($tran->data)->sender ?? "")}}</td>
                     <td style="font-size:8px;">{{__(json_decode($tran->data)->receiver ?? "")}}</td>
                     <td style="text-align: left; font-size:8px;">{{__(json_decode($tran->data)->description ?? "")}}<br/>{{ucwords(str_replace('_',' ',$tran->remark))}}</td>
-                    <td style="text-align: left;font-size:8px;">{{$tran->type}} {{amount($tran->amount,$tran->currency->type,2)}} {{$tran->currency->code}} </td>
-                    <td style="text-align: left;font-size:8px;">{{'-'}} {{amount($tran->charge,$tran->currency->type,2)}}  {{$tran->currency->code}} </td>
+                    <td style="text-align: left;font-size:8px;">{{$tran->type}} {{amount($tran->amount,$tran->currency->type,2)}}</td>
+                    <td style="text-align: left;font-size:8px;">{{'-'}} {{amount($tran->charge,$tran->currency->type,2)}} </td>
+                    <td style="text-align: left;font-size:8px;">{{$tran->currency->code}} </td>
 
                 </tr>
                 @php
