@@ -84,6 +84,7 @@ class Generalsetting extends Model
             'module_section',
             'user_module',
             'other_bank_limit',
+            'website_theme',
         ];
 
     public $timestamps = false;

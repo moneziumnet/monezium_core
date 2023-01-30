@@ -450,6 +450,26 @@ $('.drop-change').on('click',function(){
 
 });
 
+$('.theme-change').on('click',function(){
+  var $this = $(this);
+  var link = $this.data('href');
+  var btn = $this.parent().prev();
+  var lastClass = btn.attr('class').split(' ').pop();
+  btn.removeClass(lastClass);
+  if($this.data('status') == '1'){
+    btn.addClass('btn-primary');
+  }else{
+    btn.addClass('btn-success');
+  }
+  btn.text($this.data('val'));
+
+  $.get(link, function(data) {
+  }).done(function(data) {
+    toastr.success(data);
+  })
+
+});
+
 
 
 $('.mytags').tagify();
