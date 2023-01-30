@@ -13,6 +13,8 @@ use App\Models\Wallet;
 use App\Models\ActionNotification;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
+use Request as facade_request;
+
 use Illuminate\Support\Carbon as Carbontime;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -1196,5 +1198,21 @@ if (!function_exists('time_elapsed_string')) {
 
         if (!$full) $string = array_slice($string, 0, 1);
         return $string ? implode(', ', $string) . ' ago' : 'just now';
+    }
+}
+
+if (!function_exists('getIp')) {
+     function getIp(){
+        foreach (array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $key){
+            if (array_key_exists($key, $_SERVER) === true){
+                foreach (explode(',', $_SERVER[$key]) as $ip){
+                    $ip = trim($ip); // just to be safe
+                    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false){
+                        return $ip;
+                    }
+                }
+            }
+        }
+        return facade_request::ip(); // it will return the server IP if the client IP is not found using this method.
     }
 }

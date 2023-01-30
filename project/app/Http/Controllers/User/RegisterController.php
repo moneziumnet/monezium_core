@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
 use App\Models\Notification;
 use App\Models\Charge;
 use Illuminate\Http\Request;
+use Request as facade_request;
 use App\Classes\GeniusMailer;
 use App\Models\ReferralBonus;
 use App\Models\Wallet;
