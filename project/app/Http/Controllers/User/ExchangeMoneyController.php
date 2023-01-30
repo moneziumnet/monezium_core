@@ -200,6 +200,14 @@ class ExchangeMoneyController extends Controller
                 return back()->with('error','Insufficient balance to your '.$fromWallet->currency->code.' wallet');
             }
         }
+        $defaultAmount = $request->amount / $from_rate;
+        $finalAmount   = $defaultAmount * getRate( $toWallet->currency);
+        if ($toWallet->currency->type == 2) {
+            if($finalAmount > Crypto_Balance(0, $toWallet->currency->id)){
+                return back()->with('error','Insufficient balance to this system '.$toWallet->currency->code.' wallet, pleasae contact to admin.');
+            }
+        }
+
         if($user->referral_id != 0)
         {
             $transaction_custom_fee = check_custom_transaction_fee($request->amount/$from_rate, $user,  'exchange');
@@ -263,8 +271,7 @@ class ExchangeMoneyController extends Controller
 
 
 
-        $defaultAmount = $request->amount / $from_rate;
-        $finalAmount   = $defaultAmount * getRate( $toWallet->currency);
+
 
         $fromWallet->balance -=  $totalAmount;
 
