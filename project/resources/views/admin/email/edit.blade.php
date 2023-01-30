@@ -67,13 +67,13 @@
 
           <div class="form-group">
             <label>{{ __('Email Type') }} *</label>
-            <input type="text" pattern="[^()/><\][;!|]+" class="input-field" placeholder="{{ __('Email Type') }}" required="" value="{{$data->email_type}}" disabled="">
+            <input type="text" pattern="[^()/><\][\\;!|]+" class="input-field" placeholder="{{ __('Email Type') }}" required="" value="{{$data->email_type}}" disabled="">
           </div>
 
           <div class="form-group">
             <label>{{ __('Email Subject') }} *</label>
             <small>{{ __('(In Any Language)') }}</small>
-            <input type="text" pattern="[^()/><\][;!|]+" class="input-field" name="email_subject" placeholder="{{ __('Email Subject') }}" required="" value="{{$data->email_subject}}">
+            <input type="text" pattern="[^()/><\][\\;!|]+" class="input-field" name="email_subject" placeholder="{{ __('Email Subject') }}" required="" value="{{$data->email_subject}}">
           </div>
 
           <div class="form-group">

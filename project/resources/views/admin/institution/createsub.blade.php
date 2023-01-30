@@ -45,31 +45,31 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label for="inp-name">{{ __('Company Name') }}</label>
-                <input type="text" pattern="[^()/><\][-;!|]+" class="form-control" id="inp-name" name="name" placeholder="{{ __('Enter Name') }}" value="" required>
+                <input type="text" pattern="[^()/><\][\\\-;!|]+" class="form-control" id="inp-name" name="name" placeholder="{{ __('Enter Name') }}" value="" required>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">
                 <label for="inp-name">{{ __('VAT Number') }}</label>
-                <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="vat" name="vat" placeholder="{{ __('Enter VAT Number') }}" value="">
+                <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="vat" name="vat" placeholder="{{ __('Enter VAT Number') }}" value="">
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">
                 <label for="inp-name">{{ __('Address') }}</label>
-                <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="address" name="address" placeholder="{{ __('Enter Address') }}" value="">
+                <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="address" name="address" placeholder="{{ __('Enter Address') }}" value="">
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">
                 <label for="inp-name">{{ __('City') }}</label>
-                <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="city" name="city" placeholder="{{ __('Enter City') }}" value="">
+                <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="city" name="city" placeholder="{{ __('Enter City') }}" value="">
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">
                 <label for="inp-name">{{ __('Zip Code') }}</label>
-                <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="zip" name="zip" placeholder="{{ __('Enter Zip Code') }}" value="">
+                <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="zip" name="zip" placeholder="{{ __('Enter Zip Code') }}" value="">
               </div>
             </div>
             <div class="col-md-6">

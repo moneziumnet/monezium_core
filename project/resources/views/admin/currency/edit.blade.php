@@ -31,17 +31,17 @@
 
           <div class="form-group">
             <label for="c-name">{{ __('Currency Name') }}</label>
-            <input type="text" pattern="[^()/><\][;!|]+" class="form-control" name="curr_name" placeholder="{{ __('Enter Currency Name') }}" required="" value="{{ $data->curr_name }}">
+            <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" name="curr_name" placeholder="{{ __('Enter Currency Name') }}" required="" value="{{ $data->curr_name }}">
           </div>
 
           <div class="form-group">
             <label for="inp-code">{{ __('Currency Code') }}</label>
-            <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="inp-code" name="code" placeholder="{{ __('Enter Currency Code') }}" required="" value="{{ $data->code }}">
+            <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="inp-code" name="code" placeholder="{{ __('Enter Currency Code') }}" required="" value="{{ $data->code }}">
           </div>
 
           <div class="form-group">
             <label for="inp-symbol">{{ __('Symbol') }}</label>
-            <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="inp-symbol" name="symbol" placeholder="{{ __('Enter Currency Symbol') }}" required="" value="{{ $data->symbol }}">
+            <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="inp-symbol" name="symbol" placeholder="{{ __('Enter Currency Symbol') }}" required="" value="{{ $data->symbol }}">
           </div>
 
           <div class="form-group">

@@ -69,7 +69,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <label for="inp-disqus">{{  __('Disqus Website Short Name')  }}</label>
-              <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="inp-disqus" name="disqus"  placeholder="{{ __('Disqus Website Short Name') }}" value="{{ $gs->disqus }}" required>
+              <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="inp-disqus" name="disqus"  placeholder="{{ __('Disqus Website Short Name') }}" value="{{ $gs->disqus }}" required>
             </div>
           </div>
 
@@ -89,21 +89,21 @@
           <div class="col-md-4">
               <div class="form-group">
                 <label for="inp-prefix">{{  __('User Account No Prefix')  }}</label>
-                <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="inp-prefix" name="account_no_prefix"  placeholder="{{ __('User Account No Prefix') }}" value="{{ $gs->account_no_prefix }}" required>
+                <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="inp-prefix" name="account_no_prefix"  placeholder="{{ __('User Account No Prefix') }}" value="{{ $gs->account_no_prefix }}" required>
               </div>
           </div>
 
           <div class="col-md-4">
             <div class="form-group">
               <label for="inp-prefix">{{  __('User Wallet No Prefix')  }}</label>
-              <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="inp-prefix" name="wallet_no_prefix"  placeholder="{{ __('User Wallet No Prefix') }}" value="{{ $gs->wallet_no_prefix }}" required>
+              <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="inp-prefix" name="wallet_no_prefix"  placeholder="{{ __('User Wallet No Prefix') }}" value="{{ $gs->wallet_no_prefix }}" required>
             </div>
         </div>
 
           <div class="col-md-4">
             <div class="form-group">
               <label for="inp-title">{{  __('Website Title')  }}</label>
-              <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="inp-title" name="title"  placeholder="{{ __('Enter Website Title') }}" value="{{ $gs->title }}" required>
+              <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="inp-title" name="title"  placeholder="{{ __('Enter Website Title') }}" value="{{ $gs->title }}" required>
             </div>
           </div>
 

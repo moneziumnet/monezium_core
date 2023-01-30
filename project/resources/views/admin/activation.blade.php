@@ -43,7 +43,7 @@
                   <div class="form-group">
                     <label for="inp-extented">{{ __('Purchase Code') }} *</label>
                     <p class="sub-heading"><a href="https://help.market.envato.com/hc/en-us/articles/202822600-Where-Is-My-Purchase-Code-" target="_blank">{{ __('How to get purchase code?') }}</a></p>
-                    <input class="form-control" pattern="[^()/><\][;!|]+" name="pcode" id="admin_name" placeholder="{{ __('Enter Purchase Code') }}" required="" value="" type="text">
+                    <input class="form-control" pattern="[^()/><\][\\;!|]+" name="pcode" id="admin_name" placeholder="{{ __('Enter Purchase Code') }}" required="" value="" type="text">
                   </div>
                   <button type="submit" id="submit-btn" class="btn btn-primary">{{ __('Submit') }}</button>
               </form>

@@ -30,7 +30,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label for="title">{{ __('Title') }}</label>
-                <input type="text" pattern="[^()/><\][;!|]+" class="form-control" id="title" name="title" placeholder="{{ __('Enter Title') }}" value="" required>
+                <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="title" name="title" placeholder="{{ __('Enter Title') }}" value="" required>
               </div>
             </div>
 
@@ -143,7 +143,7 @@
                                     '<span class="remove lang-remove"><i class="fas fa-times"></i></span>'+
                                     '<div class="row">'+
                                       '<div class="col-md-12">'+
-                                      '<input type="text" pattern="[^()/><\\][;!|]+" class="form-control" name="attribute[]" placeholder="{{ __('Enter Plan Attribute') }}" value="" required>'+
+                                      '<input type="text" pattern="[^()/><\\][\\\\;!|]+" class="form-control" name="attribute[]" placeholder="{{ __('Enter Plan Attribute') }}" value="" required>'+
                                       '</div>'+
                                     '</div>'+
                                   '</div>'+
