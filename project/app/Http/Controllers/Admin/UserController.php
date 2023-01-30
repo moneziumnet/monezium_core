@@ -19,6 +19,7 @@ use App\Models\Wishlist;
 use App\Models\Withdraw;
 use App\Models\OrderedItem;
 use App\Models\Transaction;
+use App\Models\LoginActivity;
 use App\Models\Withdrawals;
 use App\Models\SubInsBank;
 use App\Models\CryptoDeposit;
@@ -1711,6 +1712,24 @@ class UserController extends Controller
                             })
 
                             ->rawColumns(['action'])
+                            ->toJson();
+        }
+
+        public function profileLoginHistory($id)
+        {
+            $user = User::findOrFail($id);
+            $data['data'] = $user;
+            return view('admin.user.profileloginhistory',$data);
+        }
+
+        public function loginhistorydatatables($id)
+        {
+            $datas = LoginActivity::where('user_id',$id)->orderBy('created_at','desc')->get();
+
+            return Datatables::of($datas)
+                            ->editColumn('created_at', function(LoginActivity $data) {
+                                return dateFormat($data->created_at,'d-M-Y h:i:s');
+                            })
                             ->toJson();
         }
 

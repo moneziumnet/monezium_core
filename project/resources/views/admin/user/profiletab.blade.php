@@ -43,5 +43,8 @@
                 <a class="nav-link {{menu('admin.user.kycinfo')}}" id="modules" href="{{route('admin.user.kycinfo',$data->id) }}" role="button" >AML/KYC</a>
             </li>
         @endif
+        <li class="nav-item">
+            <a class="nav-link {{menu('admin-user-login-history')}} " id="modules" href="{{route('admin-user-login-history',$data->id) }}" role="button" >Login History</a>
+        </li>
     </ul>
 </div>
