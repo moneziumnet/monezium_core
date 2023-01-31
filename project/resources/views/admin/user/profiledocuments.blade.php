@@ -24,12 +24,12 @@
         @include('includes.admin.form-success')
         <div class="tab-pane fade show p-1 active" id="modules" role="tabpanel" aria-labelledby="modules-tab">
         <div class="card-body">
-        
-           
+
+
           <div class="row">
-            
-            <div class="table-responsive">
-              <div class="col-sm-12 text-right">
+
+            <div class="table-responsive mb-3 mt-3">
+              <div class="col-sm-12 text-right mb-3">
                 <a class="btn btn-primary" href="{{route('admin-user.createfile', $data->id)}}">
                   <i class="fas fa-plus"></i> {{__('Add Documents')}}
                 </a>
@@ -37,7 +37,7 @@
               <table id="geniustable" class="table table-hover dt-responsive" cellspacing="0" width="100%">
                 <thead class="thead-light">
                   <tr>
-      
+
                     <th>{{__('Name')}}</th>
                     <th>{{__('View Document')}}</th>
                     <th>{{__('Action')}}</th>
@@ -60,7 +60,7 @@
                             Actions
                             </button>
                             <div class="dropdown-menu" x-placement="bottom-start">
-                            <a href="javascript:;" data-toggle="modal" data-target="#deleteModal1" class="dropdown-item" data-href="{{route('admin-user.document-delete', $document->id)}}">{{__("Delete")}}</a>
+                            <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="{{route('admin-user.document-delete', $document->id)}}">{{__("Delete")}}</a>
                             </div>
                         </div>
                         </td>
@@ -71,10 +71,13 @@
                 </tbody>
               </table>
             </div>
+            @if($documents->hasPages())
+                {{ $documents->links() }}
+            @endif
           </div>
-            
 
-        
+
+
       </div>
         </div>
       </div>
@@ -84,7 +87,7 @@
 </div>
 <!--Row-->
 
-<div class="modal fade confirm-modal" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalTitle" aria-hidden="true">
+<div class="modal fade confirm1-modal" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -98,7 +101,7 @@
       </div>
       <div class="modal-footer">
         <a href="javascript:;" class="btn btn-secondary" data-dismiss="modal">{{ __("Cancel") }}</a>
-        <a href="javascript:;" class="btn btn-danger btn-ok">{{ __("Delete") }}</a>
+        <a href="javascript:;" class="btn btn-danger btn1-ok">{{ __("Delete") }}</a>
       </div>
     </div>
   </div>
@@ -108,34 +111,33 @@
 <script type="text/javascript">
   "use strict";
   $('.confirm1-modal').on('show.bs.modal', function(e) {
-    $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+    $(this).find('.btn1-ok').attr('href', $(e.relatedTarget).data('href'));
   });
 
-  $('.confirm1-modal .btn-ok').on('click', function(e) {
-    if(admin_loader == 1)
-    {
-      $('.Loader').show();
-    }
+//   $('.confirm1-modal .btn1-ok').on('click', function(e) {
+//     if(admin_loader == 1)
+//     {
+//       $('.Loader').show();
+//     }
 
-      $.ajax({
-      type:"GET",
-      url:$(this).attr('href'),
-      success:function(data)
-      {
-            $('.confirm1-modal').modal('hide');
-            table1.ajax.reload();
-            $('.alert-danger').hide();
-            $('.alert-success').show();
-            $('.alert-success p').html(data);
+//       $.ajax({
+//       type:"GET",
+//       url:$(this).attr('href'),
+//       success:function(data)
+//       {
+//             $('.confirm1-modal').modal('hide');
+//             $('.alert-danger').hide();
+//             $('.alert-success').show();
+//             $('.alert-success p').html(data);
 
-            if(admin_loader == 1)
-            {
-              $('.Loader').hide();
-            }
+//             if(admin_loader == 1)
+//             {
+//               $('.Loader').hide();
+//             }
 
-      }
-      });
-      return false;
-  });
+//       }
+//       });
+//       return false;
+//   });
 </script>
 @endsection

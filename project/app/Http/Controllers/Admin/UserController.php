@@ -48,6 +48,7 @@ use Illuminate\Contracts\Auth\Authenticatable as OtherAuth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use App\Classes\EthereumRpcService;
+use App\Classes\BoxApi;
 
 class UserController extends Controller
 {
@@ -615,7 +616,7 @@ class UserController extends Controller
         {
             //$data = Generalsetting::first();
             $user = User::findOrFail($id);
-            $documents = UserDocument::where('user_id',$user->id)->get();
+            $documents = UserDocument::where('user_id',$user->id)->latest()->paginate(20);
             $data['documents'] = $documents;
             $data['data'] = $user;
             return view('admin.user.profiledocuments',$data);
@@ -624,8 +625,12 @@ class UserController extends Controller
         public function createfile($id)
         {
             $user = User::findOrFail($id);
-           // dd($user);
             $data['data'] = $user;
+            $boxapi = new BoxApi();
+            $check = $boxapi->api_check();
+            if($check[0] == 'warning') {
+                return redirect()->back()->with($check[0], $check[1]);
+            }
             return view('admin.user.addprofiledocuments',$data);
         }
 
@@ -664,18 +669,28 @@ class UserController extends Controller
                         $user = User::findOrFail($id);
                         //store image file into directory and db
 
-                        $save = new UserDocument();
-                        $save->user_id = $user->id;
-                        $save->name = $request->input('document_name');
-                        $save->file = $file;
-                        $save->save();
-                        return redirect()->back()->with('success','Document Saved Successfully.');
+                        $box = new BoxApi();
+                        $res = $box->upload($request->input('document_name').'.'.$files->getClientOriginalExtension(),$path.'/'.$file);
+
+                        if (isset($res->entries)) {
+                            @unlink(public_path("assets/user_documents/" . $file));
+                            $save = new UserDocument();
+                            $save->user_id = $user->id;
+                            $save->name = $request->input('document_name');
+                            $save->file = $file;
+                            $save->file_id = $res->entries[0]->id;
+                            $save->save();
+                            return redirect()->back()->with('message','Document Saved Successfully.');
+                        }
+                        else {
+                            return redirect()->back()->with('warning',$res);
+                        }
                     } else {
-                        return redirect()->back()->with('unsuccess','Please check your file extention and document name.');
+                        return redirect()->back()->with('warning','Please check your file extention and document name.');
                     }
                 }
             } else {
-                return redirect()->back()->with('unsuccess','Please check your file extention and document name.');
+                return redirect()->back()->with('warning','Please check your file extention and document name.');
             }
         }
 
@@ -690,13 +705,22 @@ class UserController extends Controller
         public function fileView($id)
         {
             $document = UserDocument::findOrFail($id);
+            $box = new BoxApi();
+            $res = $box->download($document->file_id);
+            $folderPath = 'assets/pdf/';
+            $file = $folderPath.$document->file;
+            file_put_contents($file, $res);
+            return   response()->file("assets/pdf/" . $document->file, [
+                'Content-Disposition' => 'inline; filename="'. $document->file .'"'
+              ]);
 
             // $file = public_path("assets/user_documents/" . $document->file);
             // return Response::download($file);
 
-            return response()->file("assets/user_documents/" . $document->file, [
-                'Content-Disposition' => 'inline; filename="'. $document->file .'"'
-              ]);
+
+            // return response()->file("assets/user_documents/" . $document->file, [
+            //     'Content-Disposition' => 'inline; filename="'. $document->file .'"'
+            //   ]);
         }
 
         public function fileDestroy($id)
@@ -707,9 +731,15 @@ class UserController extends Controller
                 @unlink(public_path("assets/user_documents/" . $document->file));
             }
             $document->delete();
-            //--- Redirect Section
+            $box = new BoxApi();
+            $res = $box->delete($document->file_id);
+            if ($res != null) {
+                return redirect()->back()->with('warning',$res);
+
+            }
             $msg = 'Document Has Been Deleted Successfully.';
-            return redirect()->back()->with('success',$msg);
+            //--- Redirect Section
+            return redirect()->back()->with('message',$msg);
 
         }
 

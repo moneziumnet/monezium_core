@@ -8,6 +8,7 @@ node_modules/
 dist/
 assets/images/
 assets/doc/
+assets/pdf/
 
 # Compiled Java class files
 *.class
