@@ -9,5 +9,8 @@
         <li class="nav-item">
             <a class="nav-link {{menu('admin.gs.ibanapi')}}" id="information" href="{{route('admin.gs.ibanapi') }}" role="button" >IbanApi API</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link {{menu('admin.gs.boxapi')}}" id="information" href="{{route('admin.gs.boxapi') }}" role="button" >Box API</a>
+        </li>
     </ul>
 </div>

@@ -81,6 +81,8 @@ class Generalsetting extends Model
             'nexmo_status',
             'currency_api',
             'ibanapi',
+            'box_secret',
+            'box_id',
             'module_section',
             'user_module',
             'other_bank_limit',

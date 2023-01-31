@@ -538,6 +538,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/nexmo-sms-settings', [GeneralSettingController::class, 'nexmo'])->name('admin.gs.nexmo');
     Route::get('/currency-api-settings', [GeneralSettingController::class, 'currencyapi'])->name('admin.gs.currencyapi');
     Route::get('/ibanapi-api-settings', [GeneralSettingController::class, 'ibanapi'])->name('admin.gs.ibanapi');
+    Route::get('/box-api-settings', [GeneralSettingController::class, 'boxapi'])->name('admin.gs.boxapi');
 
   });
 

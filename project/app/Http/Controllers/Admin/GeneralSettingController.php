@@ -286,6 +286,10 @@ class GeneralSettingController extends Controller
         return view('admin.generalsetting.ibanapi');
     }
 
+    public function boxapi(){
+        return view('admin.generalsetting.boxapi');
+    }
+
     public function status($field,$value)
     {
         $prev = '';
