@@ -41,32 +41,49 @@
 </head>
 <body>
     <div>
-        <div class="row text-center">
+        <div class="text-center row text-wrap text-center">
             <div class="mt-3">
                     <img src="{{asset('assets/images/'.$gs->logo)}}" class="document-logo" style="width: auto;">
             </div>
             <div class="mt-3">
-                <h3>
+                <h3 class="font-weight-bold">
                     {{$gs->disqus}}<br/>
                 </h3>
+
             </div>
-            <div class="mt-3">
-                <h5 class="ms-1">{{$user->company_name ?? $user->name}}</h2>
+            <div class="mt-3" style="font-size:8px;">
+                    <b class="font-weight-bold" >{{__('First, Last name / Company name: ')}}</b>{{$user->company_name ?? $user->name}}
+
             </div>
-            <div class="mt-2">
-                <h5 class="ms-1">
-                    {{$user->company_address ?? $user->address}}<br/>
-                    {{$user->company_city ?? $user->city}}, {{$user->company_zipcode ?? $user->zip}}<br/>
-                </h5>
+            <div class="mt-3" style="font-size:8px;">
+                <b class="font-weight-bold" >{{__('Personal Code / Company Registration No: ')}}</b>{{$user->company_reg_no ?? $user->personal_code}}
             </div>
-            <div class="mt-2">
-                <h5 class="ms-1">
-                    E-mail: {{$user->email}}
-                </h5>
+            <div class="mt-2" style="font-size:8px;">
+                <b class="font-weight-bold" >{{__('Address: ')}}</b>{{$user->company_address ?? $user->address}}<br/>
+                {{$user->company_city ?? $user->city}}, {{$user->company_zipcode ?? $user->zip}}<br/>
+            </div>
+            <div class="mt-2 mb-3" style="font-size:8px;">
+                <b class="font-weight-bold" >{{__('Email: ')}}</b>{{$user->email}}
             </div>
         </div>
     </div>
-    <div class="table-responsive mt-3 mb-3">
+    <div class="text-center row text-wrap text-center">
+
+        <div class="mt-3">
+            <h6 class="font-weight-bold">
+                {{__('Transaction History')}}<br/>
+            </h6>
+
+        </div>
+        @if (isset($start_time) && isset($end_time))
+        <div>
+            <h6 class="font-weight-bold">
+                {{$start_time ? __('FROM ') : ''}}{{$start_time ?? '' }}{{__(' TILL ')}}{{$end_time}}<br/>
+            </h6>
+        </div>
+    </div>
+    @endif
+    <div class="table-responsive mb-3">
         <table class="table card-table table-vcenter text-wrap datatable justify-content-center">
             <thead>
                 <tr>

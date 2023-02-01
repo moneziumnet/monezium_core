@@ -664,10 +664,11 @@ class UserController extends Controller
         ->orderBy('id','desc')->get();
         $data = [
             'trans' => $transactions,
-            'user'  => $user
+            'user'  => $user,
+            'start_time'  => $s_time,
+            'end_time'  => $e_time
         ];
-        $html = view('frontend.myPDF', $data)->render();
-        $pdf = PDF::loadHTML($html);
+        $pdf = PDF::loadView('frontend.myPDF', $data);
         return $pdf->download('transaction.pdf');
 
 	}
