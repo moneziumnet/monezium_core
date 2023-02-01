@@ -46,7 +46,7 @@
                 @php
                     $image = URL::asset('assets/images/'.$gs->logo);
                 @endphp
-                    <img src="{{'data:image/png;base64,'.base64_encode(file_get_contents($image))}}" class="document-logo" style="width: auto;">
+                    <img src="{{$image}}" class="document-logo" style="width: auto;">
             </div>
             <div class="mt-3">
                 <h3 class="font-weight-bold">
