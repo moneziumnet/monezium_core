@@ -45,6 +45,7 @@
             <div class="mt-3">
                 @php
                     $image = asset('assets/images/'.$gs->logo);
+                    dd(asset('assets/images/'.$gs->logo));
                 @endphp
                     <img src="{{$image}}" class="document-logo" style="width: auto;">
             </div>
