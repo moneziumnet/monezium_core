@@ -666,7 +666,8 @@ class UserController extends Controller
             'trans' => $transactions,
             'user'  => $user
         ];
-        $pdf = PDF::loadView('frontend.myPDF', $data);
+        $html = view('frontend.myPDF', $data)->render();
+        $pdf = PDF::loadHTML($html);
         return $pdf->download('transaction.pdf');
 
 	}
