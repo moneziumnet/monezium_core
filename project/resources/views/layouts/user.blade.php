@@ -80,6 +80,10 @@
                                 $('.iban-validation').removeClass('text-danger')
                                 $('.iban-validation').addClass('text-success').text(data.message);
                                 submit_flag=true;
+                                if((data.data).hasOwnProperty('bank')) {
+                                    $('#bank_name').val(data.data.bank.bank_name)
+                                    $('#bank_address').val(data.data.bank.address)
+                                }
                                 $('#iban-submit').submit();
                             }
                         },
