@@ -68,7 +68,7 @@ class UserController extends Controller
                 })
                 ->editColumn('balance', function(User $data) {
                     $currency = Currency::findOrFail(defaultCurr());
-                    return $currency->symbol.userBalance($data->id);
+                    return $currency->symbol.round(userBalance($data->id), 2);
                 })
                 ->addColumn('action', function(User $data) {
                     return '<div class="btn-group mb-1">
@@ -653,7 +653,7 @@ class UserController extends Controller
                 } else {
 
                     //$allowedfileExtension = ['jpg', 'png', 'gif', 'pdf', 'jpeg', 'doc', 'docx', 'xls', 'xlsx'];
-                    $allowedfileExtension = ['pdf'];  // ['jpg', 'png', 'gif', 'pdf', 'jpeg', 'doc', 'docx', 'xls', 'xlsx'];
+                    $allowedfileExtension = ['pdf', 'txt', 'doc', 'docx', 'xls', 'xlsx'];  // ['jpg', 'png', 'gif', 'pdf', 'jpeg', 'doc', 'docx', 'xls', 'xlsx'];
                     $files = $request->file('document_file');
 
                     $extension = $files->getClientOriginalExtension();

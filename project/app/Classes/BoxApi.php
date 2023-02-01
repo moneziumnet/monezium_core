@@ -70,7 +70,7 @@ class BoxApi
         $client = new Client();
         try {
             $res = $this->basic_token();
-            $access_token = 'WOMm0v2L9XIdz7U2UKRLyA4SQC72XQN8';
+            $access_token = 'PkqTCLrBH0xXYyv8VWhTPpFUGccP312Z';
         } catch (\Throwable $th) {
             return ($th->getMessage());
         }
@@ -111,7 +111,7 @@ class BoxApi
         $client = new Client();
         try {
             $res = $this->basic_token();
-            $access_token = 'WOMm0v2L9XIdz7U2UKRLyA4SQC72XQN8';
+            $access_token = 'PkqTCLrBH0xXYyv8VWhTPpFUGccP312Z';
         } catch (\Throwable $th) {
             return ($th->getMessage());
         }
@@ -133,7 +133,7 @@ class BoxApi
         $client = new Client();
         try {
             $res = $this->basic_token();
-            $access_token = 'WOMm0v2L9XIdz7U2UKRLyA4SQC72XQN8';
+            $access_token = 'PkqTCLrBH0xXYyv8VWhTPpFUGccP312Z';
         } catch (\Throwable $th) {
             return ($th->getMessage());
         }
