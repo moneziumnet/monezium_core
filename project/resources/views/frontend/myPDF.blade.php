@@ -46,7 +46,7 @@
                 @php
                     $image = URL::asset('assets/images/'.$gs->logo);
                 @endphp
-                    <img src="{{$image}}" class="document-logo" style="width: auto;">
+                    <img src="http://monezium.eu/assets/images/kHsGpDAw1666009055.png" class="document-logo" style="width: auto;">
             </div>
             <div class="mt-3">
                 <h3 class="font-weight-bold">
