@@ -10,22 +10,22 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
     <!-- CSS files -->
     {{-- <link rel="shortcut icon" href="{{getPhoto($gs->favicon)}}"> --}}
-    <link rel="stylesheet" href="{{asset('assets/admin/css/font-awsome.min.css')}}">
+    <link rel="stylesheet" href="{{public_path('assets/admin/')}}/css/font-awsome.min.css">
 
-    <link href="{{asset('assets/user/')}}/css/tabler.min.css" rel="stylesheet"/>
-    <link href="{{asset('assets/user/')}}/css/tabler-flags.min.css" rel="stylesheet"/>
-    <link href="{{asset('assets/user/')}}/css/tabler-payments.min.css" rel="stylesheet"/>
-    <link href="{{asset('assets/user/')}}/css/tabler-vendors.min.css" rel="stylesheet"/>
-    <link href="{{asset('assets/user/css/custom.css')}}" rel="stylesheet"/>
-    <link href="{{asset('assets/user/')}}/css/demo.min.css" rel="stylesheet"/>
+    <link href="{{public_path('assets/user/')}}css/tabler.min.css" rel="stylesheet"/>
+    <link href="{{public_path('assets/user/')}}css/tabler-flags.min.css" rel="stylesheet"/>
+    <link href="{{public_path('assets/user/')}}css/tabler-payments.min.css" rel="stylesheet"/>
+    <link href="{{public_path('assets/user/')}}css/tabler-vendors.min.css" rel="stylesheet"/>
+    <link href="{{public_path('assets/user/')}}css/custom.css" rel="stylesheet"/>
+    <link href="{{public_path('assets/user/')}}css/demo.min.css" rel="stylesheet"/>
 
 
-    <link rel="stylesheet" type="text/css" href="{{asset('assets/user/')}}/css/bootstrap-4.3.1.css">
-    <script type="text/javascript" src="{{asset('assets/user/')}}/js/jquery-1.12.4.min.js"></script>
-    <link type="text/css" href="{{asset('assets/user/')}}/css/jquery-ui.css" rel="stylesheet">
-    <script type="text/javascript" src="{{asset('assets/user/')}}/js/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="{{asset('assets/user/')}}/js/jquery.signature.js"></script>
-    <link rel="stylesheet" type="text/css" href="{{asset('assets/user/')}}/css/jquery.signature.css">
+    <link rel="stylesheet" type="text/css" href="{{public_path('assets/user/')}}css/bootstrap-4.3.1.css">
+    <script type="text/javascript" src="{{public_path('assets/user/')}}js/jquery-1.12.4.min.js"></script>
+    <link type="text/css" href="{{public_path('assets/user/')}}css/jquery-ui.css" rel="stylesheet">
+    <script type="text/javascript" src="{{public_path('assets/user/')}}js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="{{public_path('assets/user/')}}js/jquery.signature.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{public_path('assets/user/')}}css/jquery.signature.css">
     <style>
 
         #document-des {
@@ -43,7 +43,7 @@
     <div>
         <div class="row text-center">
             <div class="mt-3">
-                    <img src="{{asset('assets/images/'.$gs->logo)}}" class="document-logo" style="width: auto;">
+                    <img src="{{public_path('assets/images/'.$gs->logo)}}" class="document-logo" style="width: auto;">
             </div>
             <div class="mt-3">
                 <h3>
@@ -113,10 +113,10 @@
     Clear Junction Limited, registered in England with registered number 10266827, Registered address: 4th Floor Imperial House, 15 Kingsway, London, United Kingdom,
     Clear Junction is authorised and regulated by the Financial Conduct Authority under reference number 90068
     </div>
-    <script src="{{asset('assets/admin/js/jquery.min.js')}}"></script>
+    <script src="{{public_path('assets/admin/')}}js/jquery.min.js"></script>
     <!-- Tabler Core -->
-    <script src="{{asset('assets/user/')}}/js/tabler.min.js"></script>
-    <script src="{{asset('assets/user/')}}/js/demo.min.js"></script>
+    <script src="{{public_path('assets/user/')}}js/tabler.min.js"></script>
+    {{-- <script src="{{public_path('assets/user/')}}js/demo.min.js"></script> --}}
     {{-- @include('notify.alert') --}}
     @stack('script')
 </body>
