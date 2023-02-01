@@ -44,7 +44,7 @@
         <div class="text-center row text-wrap text-center">
             <div class="mt-3">
                 @php
-                    $image = public_path('assets/images/').$gs->logo;
+                    $image = asset('assets/images/'.$gs->logo);
                 @endphp
                     <img src="{{$image}}" class="document-logo" style="width: auto;">
             </div>
