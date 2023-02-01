@@ -43,7 +43,10 @@
     <div>
         <div class="text-center row text-wrap text-center">
             <div class="mt-3">
-                    <img src="{{public_path('assets/images/'.$gs->logo)}}" class="document-logo" style="width: auto;">
+                @php
+                    $image = public_path('assets/images/').$gs->logo;
+                @endphp
+                    <img src="{{$image}}" class="document-logo" style="width: auto;">
             </div>
             <div class="mt-3">
                 <h3 class="font-weight-bold">
