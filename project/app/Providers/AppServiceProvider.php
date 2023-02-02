@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
-use URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -39,8 +38,6 @@ class AppServiceProvider extends ServiceProvider
 		    \URL::forceScheme('https');
 	  // $this->app['request']->server->set('HTTPS', true);
         }
-        $this->app['request']->server->set('HTTPS','on');
-        URL::forceScheme('https');
 
         view()->composer('*',function($settings){
             $settings->with('seo', DB::table('seotools')->first());
