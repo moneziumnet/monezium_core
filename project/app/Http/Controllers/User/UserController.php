@@ -667,12 +667,13 @@ class UserController extends Controller
         ->orderBy('id','desc')->get();
         $gs = Generalsetting::first();
         $image = asset('assets/images/'.$gs->logo);
+        $image_encode = base64_encode(file_get_contents($image));
         $data = [
             'trans' => $transactions,
             'user'  => $user,
             'start_time'  => $s_time,
             'end_time'  => $e_time,
-            'image' => $image
+            'image' => $image_encode
         ];
         $pdf = PDF::loadView('frontend.myPDF', $data);
         return $pdf->download('transaction.pdf');
