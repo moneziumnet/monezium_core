@@ -38,6 +38,9 @@
             height: 8rem;
             width: auto;
         }
+        .col {
+            flex: 1 0 0%;
+        }
 
         .col-1 {
             flex: 0 0 8.333333%;
@@ -110,7 +113,7 @@
 </head>
 <body>
     <div>
-        <div class="text-center row text-wrap text-center">
+        <div class="text-center col text-wrap text-center">
             <div class="mt-3">
                     <img src="{{'data:image/jpeg;base64,'.$image}}" class="document-logo" style="width: auto;">
             </div>
