@@ -666,7 +666,7 @@ class UserController extends Controller
         ->whereBetween('created_at', [$s_time, $e_time])
         ->orderBy('id','desc')->get();
         $gs = Generalsetting::first();
-        $image = url('assets/images/'.$gs->logo);
+        $image = public_path('assets/images/'.$gs->logo);
         $data = [
             'trans' => $transactions,
             'user'  => $user,
