@@ -324,9 +324,12 @@ class UserController extends Controller
     {
         $user = Auth::user();
         $transaction = Transaction::where('id',$id)->whereUserId(auth()->id())->get();
+        $gs = Generalsetting::first();
+        $image = asset('assets/images/'.$gs->logo);
         $data = [
             'trans' => $transaction,
-            'user'  => $user
+            'user'  => $user,
+            'image' => $image
         ];
 
         $pdf = PDF::loadView('frontend.myPDF', $data);
@@ -662,11 +665,14 @@ class UserController extends Controller
         })
         ->whereBetween('created_at', [$s_time, $e_time])
         ->orderBy('id','desc')->get();
+        $gs = Generalsetting::first();
+        $image = asset('assets/images/'.$gs->logo);
         $data = [
             'trans' => $transactions,
             'user'  => $user,
             'start_time'  => $s_time,
-            'end_time'  => $e_time
+            'end_time'  => $e_time,
+            'image' => $image
         ];
         $pdf = PDF::loadView('frontend.myPDF', $data);
         return $pdf->download('transaction.pdf');

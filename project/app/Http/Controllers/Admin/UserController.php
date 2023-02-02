@@ -1700,9 +1700,12 @@ class UserController extends Controller
         {
             $user = User::findOrFail($user_id);
             $transaction = Transaction::whereUserId($user_id)->orderBy('id', 'desc')->get();
+            $gs = Generalsetting::first();
+            $image = asset('assets/images/'.$gs->logo);
             $data = [
                 'trans' => $transaction,
-                'user'  => $user
+                'user'  => $user,
+                'image' => $image
             ];
 
             $pdf = PDF::loadView('frontend.myPDF', $data);
