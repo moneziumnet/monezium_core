@@ -667,7 +667,6 @@ class UserController extends Controller
         ->orderBy('id','desc')->get();
         $gs = Generalsetting::first();
         $image = asset('assets/images/'.$gs->logo);
-        dd($image);
         $data = [
             'trans' => $transactions,
             'user'  => $user,
@@ -675,7 +674,7 @@ class UserController extends Controller
             'end_time'  => $e_time,
             'image' => $image
         ];
-        $pdf = PDF::loadView('frontend.myPDF', $data);
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('frontend.myPDF', $data);
         return $pdf->download('transaction.pdf');
 
 	}
