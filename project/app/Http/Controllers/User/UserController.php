@@ -667,13 +667,6 @@ class UserController extends Controller
         ->orderBy('id','desc')->get();
         $gs = Generalsetting::first();
         $image = asset('assets/images/'.$gs->logo);
-        $contxt = stream_context_create([
-            'ssl' => [
-                'verify_peer' => FALSE,
-                'verify_peer_name' => FALSE,
-                'allow_self_signed'=> TRUE
-            ]
-        ]);
         $data = [
             'trans' => $transactions,
             'user'  => $user,
@@ -681,7 +674,7 @@ class UserController extends Controller
             'end_time'  => $e_time,
             'image' => $image
         ];
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->setHttpContext($contxt)->loadView('frontend.myPDF', $data);
+        $pdf = PDF::loadView('frontend.myPDF', $data);
         return $pdf->download('transaction.pdf');
 
 	}
