@@ -38,6 +38,8 @@ class AppServiceProvider extends ServiceProvider
 		    \URL::forceScheme('https');
 	  // $this->app['request']->server->set('HTTPS', true);
         }
+        $this->app['request']->server->set('HTTPS','on');
+        URL::forceScheme('https');
 
         view()->composer('*',function($settings){
             $settings->with('seo', DB::table('seotools')->first());
@@ -56,7 +58,7 @@ class AppServiceProvider extends ServiceProvider
             $settings->with('default_font', Font::where('is_default','=',1)->first());
             $settings->with('defaultCurrency', Session::get('currency') ?  DB::table('currencies')->where('id','=',Session::get('currency'))->first() : DB::table('currencies')->where('is_default','=',1)->first());
 
-            
+
 
             if (\Request::is('admin') || \Request::is('admin/*')) {
                 $data = DB::table('admin_languages')->where('is_default','=',1)->first();
