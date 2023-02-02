@@ -12,7 +12,7 @@
     {{-- <link rel="shortcut icon" href="{{getPhoto($gs->favicon)}}"> --}}
     {{-- <link rel="stylesheet" href="{{public_path('assets/admin/')}}css/font-awsome.min.css"> --}}
 
-    <link href="{{URL::asset('assets/user/')}}/css/tabler.min.css" rel="stylesheet"/>
+    {{-- <link href="{{URL::asset('assets/user/')}}/css/tabler.min.css" rel="stylesheet"/>
     <link href="{{URL::asset('assets/user/')}}/css/tabler-flags.min.css" rel="stylesheet"/>
     <link href="{{URL::asset('assets/user/')}}/css/tabler-payments.min.css" rel="stylesheet"/>
     <link href="{{URL::asset('assets/user/')}}/css/tabler-vendors.min.css" rel="stylesheet"/>
@@ -25,7 +25,8 @@
     <link type="text/css" href="{{URL::asset('assets/user/')}}/css/jquery-ui.css" rel="stylesheet">
     <script type="text/javascript" src="{{URL::asset('assets/user/')}}/js/jquery-ui.min.js"></script>
     <script type="text/javascript" src="{{URL::asset('assets/user/')}}/js/jquery.signature.js"></script>
-    <link rel="stylesheet" type="text/css" href="{{URL::asset('assets/user/')}}/css/jquery.signature.css">
+    <link rel="stylesheet" type="text/css" href="{{URL::asset('assets/user/')}}/css/jquery.signature.css"> --}}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <style>
 
         #document-des {
