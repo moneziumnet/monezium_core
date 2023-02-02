@@ -98,6 +98,14 @@
             flex: 0 0 100%;
             max-width: 100%;
         }
+        .row {
+            display: flex;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            margin-right: -15px;
+            margin-left: -15px;
+        }
+
     </style>
 </head>
 <body>
@@ -112,7 +120,7 @@
                 </h3>
 
             </div>
-            <div class="mt-3" style="font-size:8px;">
+            <div class="mt-3 row" style="font-size:8px;">
                 <div class="col-4">
                     <b class="font-weight-bold" >{{__('First, Last name / Company name: ')}}</b>
                 </div>
@@ -121,15 +129,31 @@
                 </div>
 
             </div>
-            <div class="mt-3" style="font-size:8px;">
-                <b class="font-weight-bold" >{{__('Personal Code / Company Registration No: ')}}</b>{{$user->company_reg_no ?? $user->personal_code}}
+            <div class="mt-3 row" style="font-size:8px;">
+                <div class="col-4">
+                    <b class="font-weight-bold" >{{__('Personal Code / Company Registration No: ')}}</b>
+                </div>
+                <div class="col-5">
+                    <p>{{$user->company_reg_no ?? $user->personal_code}}</p>
+                </div>
             </div>
-            <div class="mt-2" style="font-size:8px;">
-                <b class="font-weight-bold" >{{__('Address: ')}}</b>{{$user->company_address ?? $user->address}}<br/>
-                {{$user->company_city ?? $user->city}}, {{$user->company_zipcode ?? $user->zip}}<br/>
+            <div class="mt-2 row" style="font-size:8px;">
+                <div class="col-4">
+                    <b class="font-weight-bold" >{{__('Address: ')}}</b>
+                </div>
+                <div class="col-5">
+                    <p>{{$user->company_address ?? $user->address}}<br/>
+                    {{$user->company_city ?? $user->city}}, {{$user->company_zipcode ?? $user->zip}}<br/>
+                    </p>
+                </div>
             </div>
-            <div class="mt-2 mb-3" style="font-size:8px;">
-                <b class="font-weight-bold" >{{__('Email: ')}}</b>{{$user->email}}
+            <div class="mt-2 mb-3 row" style="font-size:8px;">
+                <div class="col-4">
+                    <b class="font-weight-bold" >{{__('Email: ')}}</b>
+                </div>
+                <div class="col-5">
+                    <p>{{$user->email}}</p>
+                </div>
             </div>
         </div>
     </div>
