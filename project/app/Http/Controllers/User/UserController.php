@@ -667,6 +667,7 @@ class UserController extends Controller
         ->orderBy('id','desc')->get();
         $gs = Generalsetting::first();
         $image = public_path('assets/images/'.$gs->logo);
+        dd($image);
         $data = [
             'trans' => $transactions,
             'user'  => $user,
