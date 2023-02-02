@@ -325,11 +325,12 @@ class UserController extends Controller
         $user = Auth::user();
         $transaction = Transaction::where('id',$id)->whereUserId(auth()->id())->get();
         $gs = Generalsetting::first();
-        $image = asset('assets/images/'.$gs->logo);
+        $image = public_path('assets/images/'.$gs->logo);
+        $image_encode = base64_encode(file_get_contents($image));
         $data = [
             'trans' => $transaction,
             'user'  => $user,
-            'image' => $image
+            'image' => $image_encode
         ];
 
         $pdf = PDF::loadView('frontend.myPDF', $data);
