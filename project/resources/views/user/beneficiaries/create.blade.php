@@ -96,17 +96,17 @@
                             <div class="row">
                                 <div class="form-group mb-3 mt-3 col-md-6">
                                     <label class="form-label required">{{__('Bank Name')}}</label>
-                                    <input name="bank_name" id="bank_name" class="form-control" autocomplete="off" placeholder="{{__('Enter Bank Name')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('bank_name') }}" required>
+                                    <input name="bank_name" id="bank_name" class="form-control" autocomplete="off" placeholder="{{__('Enter Bank Name')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('bank_name') }}" required readonly>
                                 </div>
 
                                 <div class="form-group mb-3 mt-3 col-md-6">
                                     <label class="form-label required">{{__('Bank Address')}}</label>
-                                    <input name="bank_address" id="bank_address" class="form-control" autocomplete="off" placeholder="{{__('Enter Bank Address')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('bank_address') }}" min="1" required>
+                                    <input name="bank_address" id="bank_address" class="form-control" autocomplete="off" placeholder="{{__('Enter Bank Address')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('bank_address') }}" min="1" required readonly>
                                 </div>
 
                                 <div class="form-group mb-3 mt-3 col-md-6">
                                     <label class="form-label required">{{__('SWIFT/BIC')}}</label>
-                                    <input name="swift_bic" id="swift_bic" class="form-control" autocomplete="off" placeholder="{{__('MEINATWW')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('swift_bic') }}" min="1" required>
+                                    <input name="swift_bic" id="swift_bic" class="form-control" autocomplete="off" placeholder="{{__('MEINATWW')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('swift_bic') }}" min="1" required readonly>
                                 </div>
 
                                 <div class="form-group mb-3 mt-3 col-md-6">

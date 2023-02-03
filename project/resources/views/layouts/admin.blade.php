@@ -311,6 +311,9 @@
                                 $('.iban-validation').removeClass('text-danger')
                                 $('.iban-validation').addClass('text-success').text(data.message);
                                 submit_flag=true;
+                                if((data.data).hasOwnProperty('bank')) {
+                                    $('#swift').val(data.data.bank.bic)
+                                }
                                 $('#iban-submit').submit();
                             }
                         },
