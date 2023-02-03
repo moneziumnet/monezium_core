@@ -13,7 +13,6 @@ use App\Models\Generalsetting;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use PDF;
 
 class GeniusMailer
 {
@@ -73,7 +72,6 @@ class GeniusMailer
         $objDemo->title = $setup->from_name;
         $objDemo->subject = $mailData['subject'];
         $objDemo->attach = $mailData['attach'] ?? null;
-
         try{
             Mail::send('admin.email.mailbody',$data, function ($message) use ($objDemo) {
                 $message->from($objDemo->from,$objDemo->title);
@@ -81,10 +79,9 @@ class GeniusMailer
                 $message->getHeaders()
                 ->addTextHeader('Content-Type', 'text/html; charset=utf-8\r\n');
                 $message->subject($objDemo->subject);
-                if($objDemo->attach){
-                    $pdf = PDF::loadView('frontend.myPDF', $data);
-                    $message->attachData($pdf->output(), "Transaction.pdf");
-                }
+                // if($objDemo->attach){
+                //     $message->attachData($objDemo->attach, "Transaction.pdf");
+                // }
             });
         }
         catch (\Exception $e){
