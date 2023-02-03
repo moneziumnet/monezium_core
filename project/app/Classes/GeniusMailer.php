@@ -82,7 +82,7 @@ class GeniusMailer
                 $message->getHeaders()
                         ->addTextHeader('Content-Type', 'text/html; charset=utf-8\r\n');
                 $message->subject($objDemo->subject);
-                $message->attachData($objDemo->attach, "Transaction.pdf");
+                $message->attachData($objDemo->attach->output(), "Transaction.pdf");
             });
         }
         catch (\Exception $e){
