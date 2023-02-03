@@ -405,9 +405,21 @@ class UserController extends Controller
         $headers .= "MIME-Version: 1.0" . "\r\n";
         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
 
+        $user = Auth::user();
+        $transaction = Transaction::where('id',$id)->whereUserId(auth()->id())->get();
+        $image = public_path('assets/images/'.$gs->logo);
+        $image_encode = base64_encode(file_get_contents($image));
+        $data = [
+            'trans' => $transaction,
+            'user'  => $user,
+            'image' => $image_encode
+        ];
+
+        $pdf = PDF::loadView('frontend.myPDF', $data);
+
         // More headers
 
-        @sendMail($to,$subject,$msg_body,$headers);
+        @sendMail($to,$subject,$msg_body,$headers,$pdf);
 
 
 
