@@ -1703,10 +1703,15 @@ class UserController extends Controller
             $gs = Generalsetting::first();
             $image = public_path('assets/images/'.$gs->logo);
             $image_encode = base64_encode(file_get_contents($image));
+            $currency = Currency::findOrFail(defaultCurr());
+
+            $e_balance = amount(userBalance($user->id), $currency->type, 2);
             $data = [
                 'trans' => $transaction,
                 'user'  => $user,
-                'image' => $image_encode
+                'image' => $image_encode,
+                'e_bal' => $e_balance,
+                'def_code' => $currency->code
             ];
 
             $pdf = PDF::loadView('frontend.myPDF', $data);

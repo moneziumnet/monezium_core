@@ -30,7 +30,7 @@
     <style>
 
         #document-des {
-            position: fixed;
+            position: absolute;
             bottom: 0;
             width: 100%;
         }
@@ -63,9 +63,14 @@
                 <b class="font-weight-bold" >{{__('Address: ')}}</b>{{$user->company_address ?? $user->address}}<br/>
                 {{$user->company_city ?? $user->city}}, {{$user->company_zipcode ?? $user->zip}}<br/>
             </div>
-            <div class="mt-2 mb-3" style="font-size:8px;">
+            <div class="mt-2" style="font-size:8px;">
                 <b class="font-weight-bold" >{{__('Email: ')}}</b>{{$user->email}}
             </div>
+            @if (isset($wallet) && $wallet != '')
+            <div class="mt-2 mb-3" style="font-size:8px;">
+                <b class="font-weight-bold" >{{__('Account No: ')}}</b>{{$wallet->wallet_no}}
+            </div>
+            @endif
         </div>
     </div>
     <div class="text-center row text-wrap text-center">
@@ -86,6 +91,17 @@
     @endif
     <div class="table-responsive mb-3">
         <table class="table card-table table-vcenter text-wrap datatable justify-content-center">
+            @if (isset($s_bal))
+                <tr style="align-content: flex-end">
+                    <td style="width:15%;font-size:8px;"></td>
+                    <td style="width:15%;font-size:8px;"></td>
+                    <td style="width:15%;font-size:8px;"></td>
+                    <td style="width:20%;font-size:8px;"></td>
+                    <td style="width:15%;font-size:8px;"></td>
+                    <td style="width:15%;font-size:8px;">Start Balance.</td>
+                    <td style="width:15%;font-size:8px;">{{$s_bal.$def_code}}</td>
+                </tr>
+            @endif
             <thead>
                 <tr>
                     <th style="width:15%;font-size:8px;">Date/Transaction No.</th>
@@ -99,6 +115,7 @@
             </thead>
 
             <tbody>
+
                 @php
                     $i = 1;
                 @endphp
@@ -118,13 +135,24 @@
                     $i++;
                 @endphp
                 @endforeach
+                @if (isset($e_bal))
+                    <tr style="align-content: flex-end">
+                        <td style="width:15%;font-size:8px;"></td>
+                        <td style="width:15%;font-size:8px;"></td>
+                        <td style="width:15%;font-size:8px;"></td>
+                        <td style="width:20%;font-size:8px;"></td>
+                        <td style="width:15%;font-size:8px;"></td>
+                        <td style="width:15%;font-size:8px;">End Balance.</td>
+                        <td style="width:15%;font-size:8px;">{{$e_bal.$def_code}}</td>
+                    </tr>
+                @endif
             </tbody>
         </table>
 
 
 
     </div>
-    <div id="document-des" style="text-align: center; font-size:8px;">
+    <div id="document-des" class="mt-5" style="text-align: center; font-size:8px;">
         The document is computer printout and does not require any additional signatures or the Financial Institution's seal.<br/>
     Monezium GE LLC registered in Georgia(Registration number: 4151104933; license number: 398/S/1B-7T/393/2021)cooperating with<br/>
     Monezium Spzoo, registered in Poland(Registration number: 0000728097 ; license number: MIP33/2019)<br/>

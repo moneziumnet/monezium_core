@@ -371,7 +371,7 @@ class UserController extends Controller
         <body>
 
         <h2>Transaction Detail</h2>
-        <p> Hello '.auth()->user()->company_name ?? auth()->user()->name.'.</p>
+        <p> Hello '.(auth()->user()->company_name ?? auth()->user()->name).'.</p>
         <p> This is Transacton Detail.</p>
         <p> Please confirm current.</p>
 
@@ -386,9 +386,9 @@ class UserController extends Controller
           </tr>
           <tr>
             <td style="font-size:8px;">'.date('d-m-Y', strtotime($tran->created_at)).' <br/> '.$tran->trnx.'</td>
-            <td style="font-size:8px;">'.json_decode($tran->data)->sender ?? "".'</td>
-            <td style="font-size:8px;">'.json_decode($tran->data)->receiver ?? "".'</td>
-            <td style="text-align: left; font-size:8px;">'.json_decode($tran->data)->description ?? "".'<br/>'.ucwords(str_replace('_',' ',$tran->remark)).'</td>
+            <td style="font-size:8px;">'.(json_decode($tran->data)->sender ?? "").'</td>
+            <td style="font-size:8px;">'.(json_decode($tran->data)->receiver ?? "").'</td>
+            <td style="text-align: left; font-size:8px;">'.(json_decode($tran->data)->description ?? "").'<br/>'.ucwords(str_replace('_',' ',$tran->remark)).'</td>
             <td style="text-align: left;font-size:8px;">'.$tran->type.' '.amount($tran->amount,$tran->currency->type,2).' '.$tran->currency->code.' </td>
             <td style="text-align: left;font-size:8px;">- '.amount($tran->charge,$tran->currency->type,2).' '.$tran->currency->code.' </td>
           </tr>
@@ -399,6 +399,8 @@ class UserController extends Controller
         </html>
 
         ';
+
+        dd($msg_body);
 
         $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
         $headers .= "MIME-Version: 1.0" . "\r\n";
@@ -666,15 +668,82 @@ class UserController extends Controller
         })
         ->whereBetween('created_at', [$s_time, $e_time])
         ->orderBy('id','desc')->get();
+
+        $s_transactions = Transaction::with('currency')->whereUserId(auth()->id())
+        ->when($wallet_id,function($q) use($wallet_id){
+            return $q->where('wallet_id',$wallet_id);
+        })
+        ->when($remark,function($q) use($remark){
+            return $q->where('remark',$remark);
+        })
+        ->when($search,function($q) use($search){
+            return $q->where('trnx','LIKE',"%{$search}%");
+        })
+        ->whereBetween('created_at', ['', $s_time])
+        ->orderBy('id','desc')->get();
+
+        $e_transactions = Transaction::with('currency')->whereUserId(auth()->id())
+        ->when($wallet_id,function($q) use($wallet_id){
+            return $q->where('wallet_id',$wallet_id);
+        })
+        ->when($remark,function($q) use($remark){
+            return $q->where('remark',$remark);
+        })
+        ->when($search,function($q) use($search){
+            return $q->where('trnx','LIKE',"%{$search}%");
+        })
+        ->whereBetween('created_at', ['', $e_time])
+        ->orderBy('id','desc')->get();
+
+        $currency_id = defaultCurr();
+        $def_code = Currency::findOrFail($currency_id)->code;
+        $client = new Client();
+        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency=' . $def_code);
+        $rate = json_decode($response->getBody());
+        $s_balance = 0;
+
+        foreach($s_transactions as $key => $value) {
+                $code = $value->currency->code;
+                if($value->type == '+') {
+                    $s_balance = $s_balance + $value->amount / ($rate->data->rates->$code ?? $value->currency->rate);
+
+                }
+                else {
+                    $s_balance = $s_balance - $value->amount / ($rate->data->rates->$code ?? $value->currency->rate);
+
+                }
+        }
+        $e_balance = 0;
+
+        foreach($e_transactions as $key => $value) {
+            $code = $value->currency->code;
+            if($value->type == '+') {
+                $e_balance = $e_balance + $value->amount / ($rate->data->rates->$code ?? $value->currency->rate);
+
+            }
+            else {
+                $e_balance = $e_balance - $value->amount / ($rate->data->rates->$code ?? $value->currency->rate);
+
+            }
+    }
+
+
         $gs = Generalsetting::first();
         $image = public_path('assets/images/'.$gs->logo);
         $image_encode = base64_encode(file_get_contents($image));
+        if($wallet_id != '') {
+            $wallet = Wallet::findOrFail($wallet_id);
+        }
         $data = [
             'trans' => $transactions,
             'user'  => $user,
             'start_time'  => $s_time,
             'end_time'  => $e_time,
-            'image' => $image_encode
+            'image' => $image_encode,
+            'wallet' => isset($wallet) ? $wallet : '',
+            's_bal' => amount($s_balance, Currency::findOrFail($currency_id)->type, 2),
+            'e_bal' => amount($e_balance, Currency::findOrFail($currency_id)->type, 2),
+            'def_code' => $def_code
         ];
         $pdf = PDF::loadView('frontend.myPDF', $data);
         return $pdf->download('transaction.pdf');
