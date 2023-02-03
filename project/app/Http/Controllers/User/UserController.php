@@ -416,11 +416,11 @@ class UserController extends Controller
             'image' => $image_encode
         ];
 
-        $pdf = PDF::loadView('frontend.myPDF', $data);
+        // $pdf = PDF::loadView('frontend.myPDF', $data);
 
         // More headers
 
-        @sendMail($to,$subject,$msg_body,$headers,$pdf->output());
+        @sendMail($to,$subject,$msg_body,$headers,$data);
 
 
 
