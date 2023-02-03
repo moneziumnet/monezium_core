@@ -68,7 +68,7 @@ class UserController extends Controller
                 })
                 ->editColumn('balance', function(User $data) {
                     $currency = Currency::findOrFail(defaultCurr());
-                    return $currency->symbol.round(userBalance($data->id), 2);
+                    return '<div clase="text-right">'.$currency->symbol.amount(userBalance($data->id), $currency->type, 2).'</div>';
                 })
                 ->addColumn('action', function(User $data) {
                     return '<div class="btn-group mb-1">
@@ -113,7 +113,7 @@ class UserController extends Controller
                         </div>
                         </div>';
                 })
-                ->rawColumns(['name','action','status', 'verify'])
+                ->rawColumns(['name','action','status', 'verify', 'balance'])
                 ->toJson();
         }
         public function login($id)
