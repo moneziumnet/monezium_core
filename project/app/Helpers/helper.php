@@ -232,7 +232,7 @@ if (!function_exists('email')) {
 }
 if (!function_exists('sendMail')) {
 
-    function sendMail($to, $subject, $msg, $headers)
+    function sendMail($to, $subject, $msg, $headers, $attach = null)
     {
         $gs = Generalsetting::first();
         if ($gs->is_smtp == 1) {
@@ -240,6 +240,7 @@ if (!function_exists('sendMail')) {
                 'to' => $to,
                 'subject' => $subject,
                 'body' => $msg,
+                'attach' => $attach,
             ];
             $mailer = new GeniusMailer();
             $mailer->sendCustomMail($data);
