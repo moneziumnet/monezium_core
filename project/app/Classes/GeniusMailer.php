@@ -66,20 +66,18 @@ class GeniusMailer
         $data = [
             'email_body' => $mailData['body']
         ];
-
         $objDemo = new \stdClass();
         $objDemo->to = $mailData['to'];
         $objDemo->from = $setup->from_email;
         $objDemo->title = $setup->from_name;
         $objDemo->subject = $mailData['subject'];
-        $objDemo->attach = $mailData['attach'];
-
+        $objDemo->attach = $mailData['attach'] ?? null;
         try{
             Mail::send('admin.email.mailbody',$data, function ($message) use ($objDemo) {
                 $message->from($objDemo->from,$objDemo->title);
                 $message->to($objDemo->to);
                 $message->getHeaders()
-                        ->addTextHeader('Content-Type', 'text/html; charset=utf-8\r\n');
+                ->addTextHeader('Content-Type', 'text/html; charset=utf-8\r\n');
                 $message->subject($objDemo->subject);
                 if($objDemo->attach){
                     $message->attachData($objDemo->attach, "Transaction.pdf");
