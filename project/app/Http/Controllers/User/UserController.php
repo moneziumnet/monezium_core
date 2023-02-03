@@ -400,7 +400,6 @@ class UserController extends Controller
 
         ';
 
-        dd($msg_body);
 
         $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
         $headers .= "MIME-Version: 1.0" . "\r\n";
