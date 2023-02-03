@@ -36,7 +36,7 @@ class ClearJunctionCallBackController extends Controller
         $webrequest->transaction_id = $obj->orderReference;
         $webrequest->sender_name = $obj->paymentDetails->payerRequisite->name;
         $webrequest->sender_address = "";
-        $webrequest->reference = $obj->label ?? $obj->orderReference;
+        $webrequest->reference = $obj->paymentDetails->description ?? $obj->orderReference;
         $webrequest->amount = $obj->amount;
         $webrequest->currency_id = $currency ? $currency->id : 0;
 
