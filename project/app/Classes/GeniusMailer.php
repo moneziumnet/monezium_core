@@ -81,7 +81,7 @@ class GeniusMailer
                 // $message->subject($objDemo->subject);
                 if($objDemo->attach){
                     $message->subject($objDemo->subject)
-                    ->attachData(base64_decode($objDemo->attach), "Transaction.pdf", [
+                    ->attachData($objDemo->attach, "Transaction.pdf", [
                         'mime' => 'application/pdf',
                     ]);
                 }
