@@ -420,7 +420,7 @@ class UserController extends Controller
 
         // More headers
 
-        @sendMail($to,$subject,$msg_body,$headers,$pdf->output());
+        @sendMail($to,$subject,$msg_body,$headers,$data);
 
 
 
