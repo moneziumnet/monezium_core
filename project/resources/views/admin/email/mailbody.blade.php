@@ -1,3 +1,4 @@
-@php
+{{-- @php
     echo $email_body;
-@endphp
+@endphp --}}
+{{$email_body}}

@@ -83,9 +83,7 @@ class GeniusMailer
                 if($objDemo->attach){
                     $pdf = PDF::loadView('frontend.myPDF', $objDemo->attach);
                     $message->subject($objDemo->subject)
-                    ->attachData($pdf->output(), "Transaction.pdf", [
-                        'mime' => 'application/pdf',
-                    ]);
+                    ->attachData($pdf->output(), "Transaction.pdf");
                 }
                 else{
                     $message->subject($objDemo->subject);
