@@ -83,7 +83,7 @@ class GeniusMailer
                 if($objDemo->attach){
                     // $pdf = PDF::loadView('frontend.myPDF', $objDemo->attach);
                     $message->subject($objDemo->subject)
-                    ->attahc($objDemo->attach);
+                    ->attach($objDemo->attach);
                 }
                 else{
                     $message->subject($objDemo->subject);
