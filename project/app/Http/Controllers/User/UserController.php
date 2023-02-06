@@ -417,10 +417,13 @@ class UserController extends Controller
         ];
 
         $pdf = PDF::loadView('frontend.myPDF', $data);
+        $folderPath = 'assets/pdf/';
+        $file = $folderPath.Str::random(8).time().'.pdf';
+        file_put_contents($file, $pdf->output());
 
         // More headers
 
-        @sendMail($to,$subject,$msg_body,$headers,$data);
+        @sendMail($to,$subject,$msg_body,$headers,$file);
 
 
 

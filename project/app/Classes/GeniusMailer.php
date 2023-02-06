@@ -79,15 +79,15 @@ class GeniusMailer
                 $message->to($objDemo->to);
                 $message->getHeaders()
                 ->addTextHeader('Content-Type', 'text/html; charset=utf-8\r\n');
-                $message->subject($objDemo->subject);
-                // if($objDemo->attach){
-                //     $pdf = PDF::loadView('frontend.myPDF', $objDemo->attach);
-                //     $message->subject($objDemo->subject)
-                //     ->attachData($pdf->output(), "Transaction.pdf");
-                // }
-                // else{
-                //     $message->subject($objDemo->subject);
-                // }
+                // $message->subject($objDemo->subject);
+                if($objDemo->attach){
+                    // $pdf = PDF::loadView('frontend.myPDF', $objDemo->attach);
+                    $message->subject($objDemo->subject)
+                    ->attahc($objDemo->attach);
+                }
+                else{
+                    $message->subject($objDemo->subject);
+                }
             });
         }
         catch (\Exception $e){
