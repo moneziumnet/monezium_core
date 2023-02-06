@@ -405,7 +405,7 @@ class UserController extends Controller
         $headers .= "MIME-Version: 1.0" . "\r\n";
         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
 
-
+        $msg_body = "This is Transacton Detail.";
         $user = Auth::user();
         $transaction = Transaction::where('id',$request->trx_id)->whereUserId(auth()->id())->get();
         $image = public_path('assets/images/'.$gs->logo);
