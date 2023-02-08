@@ -1182,6 +1182,7 @@ CREATE TABLE `generalsettings`  (
   `website_theme` tinyint(4) NOT NULL DEFAULT 0,
   `box_id` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
   `box_secret` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  `enterprise_id` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 

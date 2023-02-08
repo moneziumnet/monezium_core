@@ -37,6 +37,13 @@
                             <input type="text"  class="form-control" id="inp-key" name="box_secret"  placeholder="{{ __('Client Secret') }}" value="{{ $gs->box_secret }}">
                         </div>
                     </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="inp-key">{{  __('Enterprise Id')  }}</label>
+                            <input type="text"  class="form-control" id="inp-key" name="enterprise_id"  placeholder="{{ __('Enterprise ID') }}" value="{{ $gs->enterprise_id }}">
+                        </div>
+                    </div>
+
 
                 </div>
 

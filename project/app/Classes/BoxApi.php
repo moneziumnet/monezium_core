@@ -17,12 +17,14 @@ class BoxApi
     protected $endpoint = 'https://api.box.com';
     protected $client_id = null;
     protected $client_secret = null;
+    protected $enterprise_id = null;
 
     public function __construct()
     {
         $gs = Generalsetting::first();
         $this->client_id = (string) $gs->box_id;
         $this->client_secret = (string) $gs->box_secret;
+        $this->enterprise_id = (string) $gs->enterprise_id;
     }
 
     public function api_check() {
@@ -40,20 +42,11 @@ class BoxApi
         'form_params' => [
             'client_id' => $this->client_id,
             'client_secret' => $this->client_secret,
-            'grant_type' => 'client_credentials'
+            'grant_type' => 'client_credentials',
+            'box_subject_type' => 'enterprise',
+            'box_subject_id' => $this->enterprise_id
         ]];
         try {
-            $response = $client->request('POST', 'https://api.box.com/oauth2/token', $options);
-            $res_body = json_decode($response->getBody());
-            $option_2 = [
-                'form_params' => [
-                    'client_id' => $this->client_id,
-                    'client_secret' => $this->client_secret,
-                    'subject_token' => $res_body->access_token,
-                    'grant_type' => 'urn:ietf:params:oauth:grant-type:token-exchange',
-                    'scope' => 'item_upload item_preview base_explorer',
-                    'subject_token_type' => 'urn:ietf:params:oauth:token-type:access_token'
-                ]];
             $response = $client->request('POST', 'https://api.box.com/oauth2/token', $options);
             $res_body = json_decode($response->getBody());
             return($res_body);
@@ -70,7 +63,7 @@ class BoxApi
         $client = new Client();
         try {
             $res = $this->basic_token();
-            $access_token = 'PkqTCLrBH0xXYyv8VWhTPpFUGccP312Z';
+            $access_token = $res->access_token;
         } catch (\Throwable $th) {
             return ($th->getMessage());
         }
@@ -111,7 +104,7 @@ class BoxApi
         $client = new Client();
         try {
             $res = $this->basic_token();
-            $access_token = 'PkqTCLrBH0xXYyv8VWhTPpFUGccP312Z';
+            $access_token = $res->access_token;
         } catch (\Throwable $th) {
             return ($th->getMessage());
         }
@@ -133,7 +126,7 @@ class BoxApi
         $client = new Client();
         try {
             $res = $this->basic_token();
-            $access_token = 'PkqTCLrBH0xXYyv8VWhTPpFUGccP312Z';
+            $access_token = $res->access_token;
         } catch (\Throwable $th) {
             return ($th->getMessage());
         }
