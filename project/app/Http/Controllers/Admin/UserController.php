@@ -387,7 +387,7 @@ class UserController extends Controller
             $wallet = Wallet::findOrFail($request->wallet_id);
             $trax_details = $request->except('_token', 'wallet_id');
             $trax_details['sender'] = $request->fullname;
-            $trax_details['receiver'] = $wallet->user->name;
+            $trax_details['receiver'] = $wallet->user->company_name ?? $wallet->user->name;
             $trax_details = json_encode($trax_details, True);
 
             $user = User::findOrFail($wallet->user_id);
