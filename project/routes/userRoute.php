@@ -77,6 +77,7 @@ use App\Http\Controllers\User\WithdrawCryptoController;
 use App\Http\Controllers\User\VirtualCardController;
 use App\Http\Controllers\User\UserShopController;
 use App\Http\Controllers\Deposit\SwanController;
+use App\Http\Controllers\User\UserTelegramController;
 
 Route::prefix('user')->group(function() {
 
@@ -681,6 +682,10 @@ Route::prefix('user')->group(function() {
       Route::get('/change-password', [UserController::class,'changePasswordForm'])->name('user.change.password.form');
       Route::post('/change-password', [UserController::class,'changePassword'])->name('user.change.password');
       Route::post('qr-code-scan',   [UserController::class,'scanQR'])->name('scan.qr');
+
+      Route::get('/telegram', [UserTelegramController::class,'index'])->name('user.telegram.index');
+      Route::post('/telegram/generate', [UserTelegramController::class,'generate'])->name('user.telegram.pin.generate');
+
     });
 
 

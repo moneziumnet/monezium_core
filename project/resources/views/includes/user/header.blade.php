@@ -56,6 +56,9 @@
           <a class="dropdown-item" href="{{route('user.aml.kyc')}}">
             {{__('AML/KYC')}}
           </a>
+          <a class="dropdown-item" href="{{route('user.telegram.index')}}">
+            {{__('Pincode')}}
+          </a>
           {{-- <a class="dropdown-item" href="{{route('user.show2faForm')}}">
             {{__('2FA Security')}}
           </a> --}}

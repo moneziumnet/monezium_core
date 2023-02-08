@@ -11,6 +11,7 @@ use App\Http\Controllers\User\KYCController;
 use App\Http\Controllers\User\MerchantCheckoutController;
 use App\Http\Controllers\User\MerchantProductController;
 use App\Http\Controllers\User\MerchantCampaignController;
+use App\Http\Controllers\User\UserTelegramController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\QRAccessController;
 use App\Http\Controllers\User\ClearJunctionCallBackController;
@@ -81,3 +82,6 @@ Route::get('kyc-take-selfie/{id}', [KYCController::class,'onlineSelfie'])->name(
 Route::get('/qr/access', [QRAccessController::class, 'index'])->name('qr.pay.index');
 Route::get('/qr/access/crypto', [QRAccessController::class, 'crypto_pay'])->name('qr.pay.crypto');
 Route::post('/qr/access/submit', [QRAccessController::class, 'pay_submit'])->name('qr.pay.submit');
+
+Route::get('/telegram/login', [UserTelegramController::class, 'bot_login'])->name('user.telegram.login');
+Route::get('/telegram/logout', [UserTelegramController::class, 'bot_logout'])->name('user.telegram.logout');
