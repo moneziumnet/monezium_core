@@ -75,6 +75,7 @@ use App\Http\Controllers\Admin\MerchantShopController;
 use App\Http\Controllers\Admin\CampaignController;
 use App\Http\Controllers\Deposit\SwanController;
 use App\Http\Controllers\Admin\ActionNotificationController;
+use App\Http\Controllers\Admin\AdminBeneficiaryController;
 
 
 Route::prefix('admin')->group(function () {
@@ -313,6 +314,14 @@ Route::prefix('admin')->group(function () {
 
     Route::post('/username-by-email', [UserController::class,'username_by_email'])->name('admin.username.email');
     Route::post('/username-by-phone', [UserController::class,'username_by_phone'])->name('admin.username.phone');
+
+    Route::get('/user/beneficiary/{id}', [AdminBeneficiaryController::class, 'index'])->name('admin-user-beneficiary');
+    Route::get('/user/beneficiary/{id}/create', [AdminBeneficiaryController::class, 'create'])->name('admin-user-beneficiary-create');
+    Route::post('/user/beneficiary/store', [AdminBeneficiaryController::class, 'store'])->name('admin-user-beneficiary-store');
+    Route::get('/user/beneficiary/{id}/edit', [AdminBeneficiaryController::class, 'edit'])->name('admin-user-beneficiary-edit');
+    Route::post('/user/beneficiary/update/{id}', [AdminBeneficiaryController::class, 'update'])->name('admin-user-beneficiary-update');
+    Route::get('/user/beneficiary/datatables/{id}', [AdminBeneficiaryController::class, 'datatables'])->name('admin-user-beneficiary-database');
+    Route::get('/user/beneficiary/details/{id}', [AdminBeneficiaryController::class, 'details'])->name('admin-user-beneficiary-details');
 
   });
 
