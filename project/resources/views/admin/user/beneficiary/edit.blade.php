@@ -82,22 +82,22 @@
 
                                                 <div class="form-group mt-2 col-md-6">
                                                     <label class="form-label required">{{__('Phone')}}</label>
-                                                    <input name="phone" id="phone" class="form-control" autocomplete="off" placeholder="{{__('Enter Phone')}}" type="number" value="{{ $beneficiary->phone }}" min="1" required>
+                                                    <input name="phone" id="phone" class="form-control" autocomplete="off" placeholder="{{__('Enter Phone')}}" type="number" value="{{ $beneficiary->phone }}"  required>
                                                 </div>
 
                                                 <div class="form-group mt-2 col-md-6">
                                                     <label class="form-label required">{{__('Registration NO')}}</label>
-                                                    <input name="registration_no" id="registration_no" class="form-control" autocomplete="off" placeholder="{{__('Enter Registration NO')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ $beneficiary->registration_no }}" min="1" required>
+                                                    <input name="registration_no" id="registration_no" class="form-control" autocomplete="off" placeholder="{{__('Enter Registration NO')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ $beneficiary->registration_no }}"  required>
                                                 </div>
 
                                                 <div class="form-group mt-2 col-md-6">
                                                     <label class="form-label required">{{__('VAT NO')}}</label>
-                                                    <input name="vat_no" id="vat_no" class="form-control" autocomplete="off" placeholder="{{__('Enter VAT NO')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ $beneficiary->vat_no }}" min="1" required>
+                                                    <input name="vat_no" id="vat_no" class="form-control" autocomplete="off" placeholder="{{__('Enter VAT NO')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ $beneficiary->vat_no }}"  required>
                                                 </div>
 
                                                 <div class="form-group mt-2 col-md-6">
                                                     <label class="form-label required">{{__('Contact Person')}}</label>
-                                                    <input name="contact_person" id="contact_person" class="form-control" autocomplete="off" placeholder="{{__('Enter Contact Person')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ $beneficiary->contact_person }}" min="1" required>
+                                                    <input name="contact_person" id="contact_person" class="form-control" autocomplete="off" placeholder="{{__('Enter Contact Person')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ $beneficiary->contact_person }}"  required>
                                                 </div>
                                             </div>
                                             <hr/>
@@ -114,12 +114,12 @@
 
                                                 <div class="form-group mt-2 col-md-6">
                                                     <label class="form-label required">{{__('SWIFT/BIC')}}</label>
-                                                    <input name="swift_bic" id="swift" class="form-control" autocomplete="off" placeholder="{{__('MEINATWW')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ $beneficiary->swift_bic  }}" min="1" required readonly>
+                                                    <input name="swift_bic" id="swift" class="form-control" autocomplete="off" placeholder="{{__('MEINATWW')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ $beneficiary->swift_bic  }}"  required readonly>
                                                 </div>
 
                                                 <div class="form-group mt-2 col-md-6">
                                                     <label class="form-label required">{{__('Account/IBAN')}}</label>
-                                                    <input name="account_iban" id="account_iban" class="form-control iban-input" autocomplete="off" placeholder="{{__('Enter Account/IBAN')}}" type="text" value="{{ $beneficiary->account_iban  }}" min="1" required>
+                                                    <input name="account_iban" id="account_iban" class="form-control iban-input" autocomplete="off" placeholder="{{__('Enter Account/IBAN')}}" type="text" value="{{ $beneficiary->account_iban  }}"  required>
                                                     <small class="text-danger iban-validation"></small>
                                                 </div>
                                             </div>

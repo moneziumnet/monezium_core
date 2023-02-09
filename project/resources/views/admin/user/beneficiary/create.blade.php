@@ -77,27 +77,27 @@
 
                                                 <div class="form-group mt-2 col-md-6">
                                                     <label class="form-label required">{{__('Address')}}</label>
-                                                    <input name="address" id="address" class="form-control" autocomplete="off" placeholder="{{__('Enter Address')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('address') }}" min="1" required>
+                                                    <input name="address" id="address" class="form-control" autocomplete="off" placeholder="{{__('Enter Address')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('address') }}" required>
                                                 </div>
 
                                                 <div class="form-group mt-2 col-md-6">
                                                     <label class="form-label required">{{__('Phone')}}</label>
-                                                    <input name="phone" id="phone" class="form-control" autocomplete="off" placeholder="{{__('Enter Phone')}}" type="number" value="{{ old('phone') }}" min="1" required>
+                                                    <input name="phone" id="phone" class="form-control" autocomplete="off" placeholder="{{__('Enter Phone')}}" type="number" value="{{ old('phone') }}" required>
                                                 </div>
 
                                                 <div class="form-group mt-2 col-md-6">
                                                     <label class="form-label required">{{__('Registration NO')}}</label>
-                                                    <input name="registration_no" id="registration_no" class="form-control" autocomplete="off" placeholder="{{__('Enter Registration NO')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('registration_no') }}" min="1" required>
+                                                    <input name="registration_no" id="registration_no" class="form-control" autocomplete="off" placeholder="{{__('Enter Registration NO')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('registration_no') }}" required>
                                                 </div>
 
                                                 <div class="form-group mt-2 col-md-6">
                                                     <label class="form-label required">{{__('VAT NO')}}</label>
-                                                    <input name="vat_no" id="vat_no" class="form-control" autocomplete="off" placeholder="{{__('Enter VAT NO')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('vat_no') }}" min="1" required>
+                                                    <input name="vat_no" id="vat_no" class="form-control" autocomplete="off" placeholder="{{__('Enter VAT NO')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('vat_no') }}" required>
                                                 </div>
 
                                                 <div class="form-group mt-2 col-md-6">
                                                     <label class="form-label required">{{__('Contact Person')}}</label>
-                                                    <input name="contact_person" id="contact_person" class="form-control" autocomplete="off" placeholder="{{__('Enter Contact Person')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('contact_person') }}" min="1" required>
+                                                    <input name="contact_person" id="contact_person" class="form-control" autocomplete="off" placeholder="{{__('Enter Contact Person')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('contact_person') }}" required>
                                                 </div>
                                             </div>
                                             <hr/>
@@ -109,17 +109,17 @@
 
                                                 <div class="form-group mt-2 col-md-6">
                                                     <label class="form-label required">{{__('Bank Address')}}</label>
-                                                    <input name="bank_address" id="bank_address" class="form-control" autocomplete="off" placeholder="{{__('Enter Bank Address')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('bank_address') }}" min="1" required readonly>
+                                                    <input name="bank_address" id="bank_address" class="form-control" autocomplete="off" placeholder="{{__('Enter Bank Address')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('bank_address') }}" required readonly>
                                                 </div>
 
                                                 <div class="form-group mt-2 col-md-6">
                                                     <label class="form-label required">{{__('SWIFT/BIC')}}</label>
-                                                    <input name="swift_bic" id="swift" class="form-control" autocomplete="off" placeholder="{{__('MEINATWW')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('swift_bic') }}" min="1" required readonly>
+                                                    <input name="swift_bic" id="swift" class="form-control" autocomplete="off" placeholder="{{__('MEINATWW')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('swift_bic') }}" required readonly>
                                                 </div>
 
                                                 <div class="form-group mt-2 col-md-6">
                                                     <label class="form-label required">{{__('Account/IBAN')}}</label>
-                                                    <input name="account_iban" id="account_iban" class="form-control iban-input" autocomplete="off" placeholder="{{__('Enter Account/IBAN')}}" type="text" value="{{ old('account_iban') }}" min="1" required>
+                                                    <input name="account_iban" id="account_iban" class="form-control iban-input" autocomplete="off" placeholder="{{__('Enter Account/IBAN')}}" type="text" value="{{ old('account_iban') }}" required>
                                                     <small class="text-danger iban-validation"></small>
                                                 </div>
                                             </div>
