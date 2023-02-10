@@ -36,7 +36,7 @@ class DepositBankController extends Controller
 
     public function create(){
         $data['bankaccounts'] = BankAccount::whereUserId(auth()->id())->pluck('subbank_id');
-        $data['banks'] = SubInsBank::all();
+        $data['banks'] = SubInsBank::where('status', 1)->get();
         $data['other_bank_limit'] = Generalsetting::first()->other_bank_limit;
         $data['user'] = auth()->user();
         return view('user.depositbank.create',$data);
