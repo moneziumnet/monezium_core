@@ -650,7 +650,7 @@ class UserController extends Controller
                 }
 
                         $save = new UserDocument();
-                        $save->user_id = $user->id;
+                        $save->user_id = $id;
                         $save->name = $request->document_name;
                         $save->file = $request->document_file;
                         $save->file_id = $request->file_id;
