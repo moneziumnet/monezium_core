@@ -649,16 +649,12 @@ class UserController extends Controller
                     return redirect()->back()->with('unsuccess','Select Valid file for upload');
                 }
 
-                if (!$request->hasFile('document_file')) {
-                    return redirect()->back()->with('unsuccess','Select Valid file for upload');
-                } else {
                         $save = new UserDocument();
                         $save->user_id = $user->id;
                         $save->name = $request->document_name;
                         $save->file = $request->document_file;
                         $save->file_id = $request->file_id;
                         $save->save();
-                }
             } else {
                 return redirect()->route('admin-user-documents')->with('warning','Please check your file extention and document name.');
             }
