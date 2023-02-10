@@ -39,7 +39,7 @@ href="https://cdn01.boxcdn.net/platform/elements/16.0.0/en-US/picker.css"
               </div>
               <div class="form-group">
                 <label for="full-name">{{ __('Choose File') }}</label>
-                <input type="text" class="form-control" id="document_file" name="document_file" required>
+                <input type="text" class="form-control" id="document_file" placeholder="{{__('Please choose file in Box.')}}" name="document_file" required>
               </div>
               <input type="hidden" id="file_id" name="file_id" >
 

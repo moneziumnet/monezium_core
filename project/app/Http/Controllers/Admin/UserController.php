@@ -660,7 +660,7 @@ class UserController extends Controller
                         $save->save();
                 }
             } else {
-                return redirect()->back()->with('warning','Please check your file extention and document name.');
+                return redirect()->route('admin-user-documents')->with('warning','Please check your file extention and document name.');
             }
         }
 
