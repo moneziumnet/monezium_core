@@ -17,14 +17,14 @@ class BoxApi
     protected $endpoint = 'https://api.box.com';
     protected $client_id = null;
     protected $client_secret = null;
-    protected $enterprise_id = null;
+    protected $box_user_id = null;
 
     public function __construct()
     {
         $gs = Generalsetting::first();
         $this->client_id = (string) $gs->box_id;
         $this->client_secret = (string) $gs->box_secret;
-        $this->enterprise_id = (string) $gs->enterprise_id;
+        $this->box_user_id = (string) $gs->box_user_id;
     }
 
     public function api_check() {
@@ -43,8 +43,8 @@ class BoxApi
             'client_id' => $this->client_id,
             'client_secret' => $this->client_secret,
             'grant_type' => 'client_credentials',
-            'box_subject_type' => 'enterprise',
-            'box_subject_id' => $this->enterprise_id
+            'box_subject_type' => 'user',
+            'box_subject_id' => $this->box_user_id
         ]];
         try {
             $response = $client->request('POST', 'https://api.box.com/oauth2/token', $options);
@@ -74,7 +74,7 @@ class BoxApi
             'multipart' => [
               [
                 'name' => 'attributes',
-                'contents' => '{"name":"'.$document_name.'", "parent":{"id":"0"}}'
+                'contents' => '{"name":"'.$document_name.'", "parent":{"id":"194158397950"}}'
               ],
               [
                 'name' => 'file',

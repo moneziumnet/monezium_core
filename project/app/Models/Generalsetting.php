@@ -83,7 +83,7 @@ class Generalsetting extends Model
             'ibanapi',
             'box_secret',
             'box_id',
-            'enterprise_id',
+            'box_user_id',
             'module_section',
             'user_module',
             'other_bank_limit',

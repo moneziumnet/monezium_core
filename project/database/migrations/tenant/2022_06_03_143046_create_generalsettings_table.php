@@ -94,7 +94,7 @@ class CreateGeneralsettingsTable extends Migration
             $table->text('ibanapi')->nullable();
             $table->text('box_id')->nullable();
             $table->text('box_secret')->nullable();
-            $table->text('enterprise_id')->nullable();
+            $table->text('box_user_id')->nullable();
             $table->text('currency_api')->nullable();
             $table->tinyInteger('two_factor')->default(0);
             $table->tinyInteger('kyc')->default(0);
