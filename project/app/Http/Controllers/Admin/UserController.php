@@ -655,10 +655,10 @@ class UserController extends Controller
                         $save->file = $request->document_file;
                         $save->file_id = $request->file_id;
                         $save->save();
-                return redirect()->route('admin-user-documents')->with('message','Document Saved Successfully.');
+                return redirect()->route('admin-user-documents', $id)->with('message','Document Saved Successfully.');
 
             } else {
-                return redirect()->route('admin-user-documents')->with('warning','Please check your file extention and document name.');
+                return redirect()->route('admin-user-documents', $id)->with('warning','Please check your file extention and document name.');
             }
         }
 
