@@ -631,6 +631,7 @@ class UserController extends Controller
             if($check[0] == 'warning') {
                 return redirect()->back()->with($check[0], $check[1]);
             }
+            $data['access_token'] =$boxapi->basic_token()->access_token;
             return view('admin.user.addprofiledocuments',$data);
         }
 
@@ -651,43 +652,12 @@ class UserController extends Controller
                 if (!$request->hasFile('document_file')) {
                     return redirect()->back()->with('unsuccess','Select Valid file for upload');
                 } else {
-
-                    //$allowedfileExtension = ['jpg', 'png', 'gif', 'pdf', 'jpeg', 'doc', 'docx', 'xls', 'xlsx'];
-                    $allowedfileExtension = ['pdf', 'txt', 'doc', 'docx', 'xls', 'xlsx'];  // ['jpg', 'png', 'gif', 'pdf', 'jpeg', 'doc', 'docx', 'xls', 'xlsx'];
-                    $files = $request->file('document_file');
-
-                    $extension = $files->getClientOriginalExtension();
-
-                    $check = in_array($extension, $allowedfileExtension);
-
-                    if ($check) {
-                        $path = public_path() . '/assets/user_documents';
-                        $files->move($path, $files->getClientOriginalName());
-                        // $path = $request->image->store('public/uploads/app_sliders');
-                        $file = $request->document_file->getClientOriginalName();
-                        //  exit;
-                        $user = User::findOrFail($id);
-                        //store image file into directory and db
-
-                        $box = new BoxApi();
-                        $res = $box->upload($request->input('document_name').'.'.$files->getClientOriginalExtension(),$path.'/'.$file);
-
-                        if (isset($res->entries)) {
-                            @unlink(public_path("assets/user_documents/" . $file));
-                            $save = new UserDocument();
-                            $save->user_id = $user->id;
-                            $save->name = $request->input('document_name');
-                            $save->file = $file;
-                            $save->file_id = $res->entries[0]->id;
-                            $save->save();
-                            return redirect()->back()->with('message','Document Saved Successfully.');
-                        }
-                        else {
-                            return redirect()->back()->with('warning',$res);
-                        }
-                    } else {
-                        return redirect()->back()->with('warning','Please check your file extention and document name.');
-                    }
+                        $save = new UserDocument();
+                        $save->user_id = $user->id;
+                        $save->name = $request->document_name;
+                        $save->file = $request->document_file;
+                        $save->file_id = $request->file_id;
+                        $save->save();
                 }
             } else {
                 return redirect()->back()->with('warning','Please check your file extention and document name.');
@@ -727,16 +697,10 @@ class UserController extends Controller
         {
             $document = UserDocument::findOrFail($id);
 
-            if (file_exists(public_path("assets/user_documents/" . $document->file))) {
-                @unlink(public_path("assets/user_documents/" . $document->file));
+            if (file_exists(public_path("assets/pdf/" . $document->file))) {
+                @unlink(public_path("assets/pdf/" . $document->file));
             }
             $document->delete();
-            $box = new BoxApi();
-            $res = $box->delete($document->file_id);
-            if ($res != null) {
-                return redirect()->back()->with('warning',$res);
-
-            }
             $msg = 'Document Has Been Deleted Successfully.';
             //--- Redirect Section
             return redirect()->back()->with('message',$msg);

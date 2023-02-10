@@ -1,4 +1,10 @@
 @extends('layouts.admin')
+@section('styles')
+<link
+rel="stylesheet"
+href="https://cdn01.boxcdn.net/platform/elements/16.0.0/en-US/picker.css"
+/>
+@endsection
 @section('content')
 
 <div class="card">
@@ -33,7 +39,11 @@
               </div>
               <div class="form-group">
                 <label for="full-name">{{ __('Choose File') }}</label>
-            <input type="file" class="form-control" id="document_file" name="document_file" required>
+                <input type="text" class="form-control" id="document_file" name="document_file" required>
+              </div>
+              <input type="hidden" id="file_id" name="file_id" >
+
+              <div class="container" style="height:600px; display: none" id="box_container">
               </div>
               <div class="form-group">
                 <button type="submit" class="btn btn-primary w-100">{{__('Submit')}}</button>
@@ -51,4 +61,48 @@
 </div>
 </div>
 <!--Row-->
+
+
+
+@endsection
+@section('scripts')
+  <script src="https://cdn01.boxcdn.net/platform/elements/16.0.0/en-US/picker.js"></script>
+  <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=es6,Intl"></script>
+  <script type="text/javascript">
+      "use strict";
+
+    $('#document_file').on('click', function() {
+        document.getElementById('box_container').style.display = "flex";
+
+    })
+      var folderId = "0";
+      var accessToken = "{{$access_token}}";
+      var filePicker = new Box.FilePicker();
+
+
+
+      // Attach event listener for when the choose button is pressed
+      filePicker.addListener('choose', function(items) {
+          // do something with the items array
+          console.log(JSON.stringify(items, null, 2));
+          $('#document_file').val(items[0]['name'])
+          $('#file_id').val(items[0]['id'])
+
+      });
+
+      // Attach event listener for when the cancel button is pressed
+      filePicker.addListener('cancel', function() {
+          // do something
+      });
+
+      filePicker.show(folderId, accessToken, {
+          container: ".container",
+          chooseButtonLabel: 'Select',
+          logoUrl:"{{ asset('assets/images/'.$gs->logo) }}",
+          maxSelectable:1,
+          canSetShareAccess:false
+      });
+
+
+  </script>
 @endsection
