@@ -301,6 +301,31 @@ class OtherBankTransferController extends Controller
                         $gb_beneficiary = '"iban":"'.$data->iban.'",
                                 "bic":"'.$data->swift_bic.'"';
                     }
+                    return [
+                        'body' =>
+                            '{"beneficiary":
+                                {"bankAccountCountry":"'.substr($data->iban, 0,2).'",
+                                "customerType":"'.$data->beneficiary->type.'",
+                                '.$customer_name.
+                                $gb_beneficiary.'
+                                },
+                            "amount":
+                                {"value":"'.$data->final_amount.'",
+                                "currency":"'.$currency->code.'"
+                                },
+                            "linkedAccountHolderId":"'.$user->holder_id.'",
+                            "accountId":"'.$account_id.'",
+                            "sweepSourceAccountId":"'.$master_account_id.'",
+                            "paymentType":"'.$data->payment_type.'",
+                            "reference":"'.$data->description.'"
+                            }',
+                        'headers' => [
+                        'Accept' => 'application/json',
+                        'Authorization' => 'Bearer '.$auth_token,
+                        'Content-Type' => 'application/json',
+                        'x-account-holder-id' => $accounter_id,
+                        ],
+                    ];
                     $response = $client->request('POST', 'https://secure-mt.openpayd.com/api/transactions/sweepPayout', [
                         'body' =>
                             '{"beneficiary":
