@@ -292,14 +292,22 @@ class OtherBankTransferController extends Controller
 
                 try {
                     $customer_name = $data->beneficiary->type == 'RETAIL' ? '"firstName":"'.explode(" ",$data->beneficiary->name, 2)[0].'","lastName":"'.explode(" ",$data->beneficiary->name, 2)[1].'",' : '"companyName":"'.$data->beneficiary->name.'",';
+                    if (substr($data->iban, 0,2) == 'GB' && $currency->code == 'GBP') {
+                        $gb_beneficiary = '"routingCodes": {
+                            "SORT_CODE": "'.substr($data->iban, -14, 6).'"
+                       },
+                       "accountNumber": "'.substr($data->iban, -8, 8).'"';
+                    } else {
+                        $gb_beneficiary = '"iban":"'.$data->iban.'",
+                                "bic":"'.$data->swift_bic.'"';
+                    }
                     $response = $client->request('POST', 'https://secure-mt.openpayd.com/api/transactions/sweepPayout', [
                         'body' =>
                             '{"beneficiary":
                                 {"bankAccountCountry":"'.substr($data->iban, 0,2).'",
                                 "customerType":"'.$data->beneficiary->type.'",
-                                '.$customer_name.'
-                                "iban":"'.$data->iban.'",
-                                "bic":"'.$data->swift_bic.'"
+                                '.$customer_name.
+                                $gb_beneficiary.'
                                 },
                             "amount":
                                 {"value":"'.$data->final_amount.'",
