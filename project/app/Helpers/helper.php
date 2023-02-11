@@ -943,6 +943,29 @@ if (!function_exists('RPC_BTC_Balance')) {
         return $res->result;
     }
 }
+if (!function_exists('RPC_BTC_Check')) {
+    function RPC_BTC_Check($method, $wallet_name, $link = 'http://localhost:18443')
+    {
+        $client = new Client();
+        $headers = [
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Basic ZGV2b3BzOjEyMzEyMw==',
+        ];
+        $body = '{
+            "method": "' . $method . '",
+            "params": [],
+            "id": 1,
+            "jsonrpc": "2.0"
+            }';
+        try {
+            $response = $client->request('POST', $link, ["headers" => $headers, "body" => $body]);
+            $res = json_decode($response->getBody());
+        } catch (\Throwable$th) {
+            return 'error';
+        }
+        return $res->result;
+    }
+}
 if (!function_exists('Crypto_Balance')) {
     function Crypto_Balance($auth_id, $currency_id)
     {
@@ -988,7 +1011,7 @@ if (!function_exists('Crypto_Net_Check')) {
     {
         $amount = 0;
             if ($type == 'BTC') {
-                $amount = RPC_BTC_Balance('verifychain', []);
+                $amount = RPC_BTC_Check('verifychain', []);
                 if ($amount == 'error') {
                     $amount = 'error';
                 }
