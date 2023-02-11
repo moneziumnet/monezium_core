@@ -89,10 +89,14 @@
                                     <select name="payment_type" id="payment_type" class="form-control" required>
                                         <option value="">{{ __('Select Payment Type') }}</option>
                                         @if ($wallet->currency->code == 'EUR')
+                                            <option value="SWIFT">{{__('SWIFT')}}</option>
                                             <option value="SEPA">{{ __('SEPA') }}</option>
                                             <option value="SEPA_INSTANT">{{ __('SEPA_INSTANT') }}</option>
+                                        @elseif ($wallet->currency->code == 'GBP')
+                                            <option value="SEPA_INSTANT">{{ __('SEPA_INSTANT') }}</option>
+                                        @else
+                                            <option value="SWIFT">{{ __('SWIFT') }}</option>
                                         @endif
-                                        <option value="SWIFT">{{ __('SWIFT') }}</option>
                                     </select>
                                 </div>
                                 <div class="form-group mb-3 mt-3 document-part d-none">
