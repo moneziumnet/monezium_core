@@ -293,7 +293,8 @@ class OtherBankTransferController extends Controller
                 // try {
                     $customer_name = $data->beneficiary->type == 'RETAIL' ? '"firstName":"'.explode(" ",$data->beneficiary->name, 2)[0].'","lastName":"'.explode(" ",$data->beneficiary->name, 2)[1].'",' : '"companyName":"'.$data->beneficiary->name.'",';
                     if (substr($data->iban, 0,2) == 'GB' && $currency->code == 'GBP') {
-                        $gb_beneficiary = '"routingCodes": {
+                        $gb_beneficiary = '"iban":"'.$data->iban.'",
+                        "bic":"'.$data->swift_bic.'",'.'"routingCodes": {
                             "SORT_CODE": "'.substr($data->iban, -14, 6).'"
                        },
                        "accountNumber": "'.substr($data->iban, -8, 8).'"';
