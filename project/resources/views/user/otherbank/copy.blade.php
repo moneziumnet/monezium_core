@@ -184,15 +184,12 @@
                 <option value="SEPA">{{__('SEPA')}}</option>
                 <option value="SEPA_INSTANT">{{__('SEPA_INSTANT')}}</option>
             `);
-        } else if ($('#currency option:selected').text() === 'GBP'){
-            $('#payment_type').html(`
-                <option value="">{{ __('Select Payment Type') }}</option>
-                <option value="CHAPS">{{__('CHAPS')}}</option>
-            `);
         } else {
             $('#payment_type').html(`
                 <option value="">{{ __('Select Payment Type') }}</option>
                 <option value="SWIFT">{{__('SWIFT')}}</option>
+                <option value="CHAPS">{{__('CHAPS')}}</option>
+
             `);
         }
     }
