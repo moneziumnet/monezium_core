@@ -290,7 +290,7 @@ class OtherBankTransferController extends Controller
                     return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
                 }
 
-                try {
+                // try {
                     $customer_name = $data->beneficiary->type == 'RETAIL' ? '"firstName":"'.explode(" ",$data->beneficiary->name, 2)[0].'","lastName":"'.explode(" ",$data->beneficiary->name, 2)[1].'",' : '"companyName":"'.$data->beneficiary->name.'",';
                     if (substr($data->iban, 0,2) == 'GB' && $currency->code == 'GBP') {
                         $gb_beneficiary = '"routingCodes": {
@@ -328,9 +328,9 @@ class OtherBankTransferController extends Controller
                     ]);
                     $res_body = json_decode($response->getBody());
                     $transaction_id = $res_body->transactionId  ;
-                } catch (\Throwable $th) {
-                return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
-                }
+                // } catch (\Throwable $th) {
+                // return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
+                // }
             }
             else if($bankgateway->keyword == 'railsbank') {
 
