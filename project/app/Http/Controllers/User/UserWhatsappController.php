@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Models\User;
-use App\Models\UserTelegram;
+use App\Models\UserWhatsapp;
 use App\Models\BotWebhook;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -20,6 +20,19 @@ class UserWhatsappController extends Controller
         $this->middleware('auth', ['except' => ['inbound', 'status']]);
     }
 
+    public function generate(Request $request)
+    {
+        $user = auth()->user();
+        $whatsapp = UserWhatsapp::where('user_id', $user->id)->first();
+        if(!$whatsapp){
+            $whatsapp = new UserWhatsapp();
+        }
+        $whatsapp->user_id = $user->id;
+        $whatsapp->pincode = Str::random(8);
+        $whatsapp->save();
+        return redirect()->back()->with('message','PinCode is generated successfully.');
+    }
+
     public function inbound(Request $request)
     {
         $data = $request->all();
@@ -30,28 +43,30 @@ class UserWhatsappController extends Controller
         $whatsapp_hook->save();
 
         $text = $data['message']['content']['text'];
-        $number = intval($text);
-        Log::Info($number);
-        if($number > 0) {
-            $random = rand(1, 8);
-            Log::Info($random);
-            $respond_number = $number * $random;
-            Log::Info($respond_number);
-            $url = "https://messages-sandbox.nexmo.com/v0.1/messages";
-            $params = ["to" => ["type" => "whatsapp", "number" => $data['from']['number']],
-                "from" => ["type" => "whatsapp", "number" => "14157386102"],
-                "message" => [
-                    "content" => [
-                        "type" => "text",
-                        "text" => "The answer is " . $respond_number . ", we multiplied by " . $random . "."
-                    ]
-                ]
-            ];
-            $headers = ["Authorization" => "Basic " . $gs->nexmo_key . ":" . $gs->nexmo_secret];
 
-            $client = new Client();
-            $response = $client->request('POST', $url, ["headers" => $headers, "json" => $params]);
-            $data = $response->getBody();
+        $gs = Generalsetting::first();
+        switch ($text) {
+            case 'Help':
+                $to_message = 'Welcome to '.$gs->disqus.'\n What could We help you?
+                We are here to help you with your problem.\n
+                Kindly choose an option to connect with our support team. \n
+                Firstly we have to login by using Login Command.';
+                $this->send_message($to_message, $data['from']['number']);
+                $to_message = 'Command 1: Login {email} {pincode}\n
+                            Command 2: Balance';
+                $this->send_message($to_message, $data['from']['number']);
+                break;
+            default:
+                # code...
+                $to_message = 'Welcome to '.$gs->disqus.'\n What could We help you?
+                We are here to help you with your problem.\n
+                Kindly choose an option to connect with our support team. \n
+                Firstly we have to login by using Login Command.';
+                $this->send_message($to_message, $data['from']['number']);
+                $to_message = 'Command 1: Login {email} {pincode}\n
+                            Command 2: Balance';
+                $this->send_message($to_message, $data['from']['number']);
+                break;
         }
         Log::Info($data);
     }
