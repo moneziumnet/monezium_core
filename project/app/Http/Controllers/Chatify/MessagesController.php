@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Chatify;
 
 use App\Models\ChFavorite as Favorite;
 use App\Models\ChMessage;
+use App\Models\ChMessage as Message;
 use App\Models\Generalsetting;
 use App\Models\User;
 use App\Facades\ChatifyMessenger as Chatify;
@@ -11,6 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request as FacadesRequest;
 use Illuminate\Support\Facades\Response;
@@ -84,6 +86,10 @@ class MessagesController extends Controller
             if ($fetch) {
                 $userAvatar = Chatify::getUserWithAvatar($fetch)->avatar;
             }
+        }
+
+        if ($fetch->company_name != "") {
+            $fetch->name = $fetch->company_name;
         }
 
         // send the response
@@ -249,8 +255,7 @@ class MessagesController extends Controller
      */
     public function getContacts(Request $request)
     {
-        // get all users that received/sent message from/to [Auth user]
-        $users = User::join('ch_messages', function ($join) {
+        $users = Message::join('users',  function ($join) {
             $join->on('ch_messages.from_id', '=', 'users.id')
                 ->orOn('ch_messages.to_id', '=', 'users.id');
         })
@@ -258,9 +263,10 @@ class MessagesController extends Controller
                 $q->where('ch_messages.from_id', Auth::user()->id)
                     ->orWhere('ch_messages.to_id', Auth::user()->id);
             })
-            ->where('users.id', '!=', Auth::user()->id)
-            ->select('users.*', DB::raw('MAX(ch_messages.created_at) max_created_at'))
+            ->where('users.id','!=',Auth::user()->id)
+            ->select('users.*',DB::raw('MAX(ch_messages.created_at) max_created_at'))
             ->orderBy('max_created_at', 'desc')
+            ->groupBy('users.id')
             ->paginate($request->per_page ?? $this->perPage);
 
         $usersList = $users->items();
@@ -268,6 +274,10 @@ class MessagesController extends Controller
         if (count($usersList) > 0) {
             $contacts = '';
             foreach ($usersList as $user) {
+                $user->name = Crypt::decryptString($user->name);
+                if ($user->company_name != "")
+                    $user->company_name = Crypt::decryptString($user->company_name);
+                
                 $contacts .= Chatify::getContactItem($user);
             }
         } else {
@@ -362,7 +372,8 @@ class MessagesController extends Controller
         $records = User::where('id', '!=', Auth::user()->id)
             ->paginate($request->per_page ?? $this->perPage);
         foreach ($records->items() as $record) {
-            if (str_contains($record->name, $input)) {
+            $displayName = $record->company_name == "" ? $record->name : $record->company_name;
+            if (str_contains($displayName, $input) || str_contains($record->name, $input)) {
                 $getRecords .= view('chatify.layouts.listItem', [
                     'get' => 'search_item',
                     'type' => 'user',

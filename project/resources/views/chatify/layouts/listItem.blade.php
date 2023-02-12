@@ -33,8 +33,11 @@
             </td>
             {{-- center side --}}
             <td>
+                @php
+                    $displayName = $user->company_name == "" ? $user->name : $user->company_name;
+                @endphp
                 <p data-id="{{ $user->id }}" data-type="user">
-                    {{ strlen($user->name) > 20 ? trim(substr($user->name,0,20)).'..' : $user->name }}
+                    {{ strlen($displayName) > 20 ? trim(substr($displayName, 0 ,20)).'..' : $displayName }}
                     <span>{{ $lastMessage->created_at->diffForHumans() }}</span></p>
                 <span>
             {{-- Last Message user indicator --}}
@@ -73,9 +76,12 @@
                 </div>
             </td>
             {{-- center side --}}
+            @php
+                $displayName = $user->company_name == "" ? $user->name : $user->company_name;
+            @endphp
             <td>
                 <p data-id="{{ $user->id }}" data-type="user">
-                {{ strlen($user->name) > 20 ? trim(substr($user->name,0,20)).'..' : $user->name }}
+                {{ strlen($displayName) > 20 ? trim(substr($displayName, 0, 20)).'..' : $displayName }}
             </td>
 
         </tr>
