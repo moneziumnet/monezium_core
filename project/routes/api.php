@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Chatify\Api\MessagesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\UserController;
@@ -68,7 +69,7 @@ Route::prefix('api')->group(function () {
     Route::post('/user/running-dps', [UserDpsController::class,'runningdps']);
     Route::post('/user/matured-dps', [UserDpsController::class,'matureddps']);
     Route::get('/user/dps-details/{id}', [UserDpsController::class,'dpsdetails']);
-   
+
     Route::post('/user/fdr', [UserFdrController::class,'fdr_index']);
     Route::get('/user/fdr-plan', [UserFdrController::class,'fdrplan']);
     Route::get('/user/fdr-details/{id}', [UserFdrController::class,'fdrdetails']);
@@ -97,12 +98,12 @@ Route::prefix('api')->group(function () {
     Route::post('user/beneficiaries',[BeneficiaryController::class,'beneficiaries']);
     Route::post('user/beneficiaries-details',[BeneficiaryController::class,'beneficiariesdetails']);
     Route::post('user/beneficiaries-create',[BeneficiaryController::class,'beneficiariescreate']);
-        
+
     Route::post('/user/vouchers', [VoucherController::class,'vouchers']);
     Route::post('/user/create-voucher', [VoucherController::class,'createvoucher']);
     Route::post('/user/reedem-voucher', [VoucherController::class,'reedemvoucher']);
     Route::post('/user/reedemed-history', [VoucherController::class,'reedemedhistory']);
-    
+
     Route::post('/user/invoices', [InvoiceController::class,'invoices']);
     Route::post('/user/create-invoice', [InvoiceController::class,'createinvoice']);
     Route::post('/user/invoice-view', [InvoiceController::class,'invoiceview']);
@@ -122,3 +123,73 @@ Route::prefix('api')->group(function () {
     Route::post('user/merchant-api-key',[MerchantController::class,'apikey']);
 
 });
+
+/**
+ * Authentication for pusher private channels
+ */
+Route::post('/chat/auth', [MessagesController::class,'pusherAuth'])->name('api.pusher.auth');
+
+/**
+ *  Fetch info for specific id [user/group]
+ */
+Route::post('/idInfo', [MessagesController::class,'idFetchData'])->name('api.idInfo');
+
+/**
+ * Send message route
+ */
+Route::post('/sendMessage', [MessagesController::class,'send'])->name('api.send.message');
+
+/**
+ * Fetch messages
+ */
+Route::post('/fetchMessages', [MessagesController::class,'fetch'])->name('api.fetch.messages');
+
+/**
+ * Download attachments route to create a downloadable links
+ */
+Route::get('/download/{fileName}', [MessagesController::class,'download'])->name('api.'.config('chatify.attachments.download_route_name'));
+
+/**
+ * Make messages as seen
+ */
+Route::post('/makeSeen', [MessagesController::class,'seen'])->name('api.messages.seen');
+
+/**
+ * Get contacts
+ */
+Route::get('/getContacts', [MessagesController::class,'getContacts'])->name('api.contacts.get');
+
+/**
+ * Star in favorite list
+ */
+Route::post('/star', [MessagesController::class,'favorite'])->name('api.star');
+
+/**
+ * get favorites list
+ */
+Route::post('/favorites', [MessagesController::class,'getFavorites'])->name('api.favorites');
+
+/**
+ * Search in messenger
+ */
+Route::get('/search', [MessagesController::class,'search'])->name('api.search');
+
+/**
+ * Get shared photos
+ */
+Route::post('/shared', [MessagesController::class,'sharedPhotos'])->name('api.shared');
+
+/**
+ * Delete Conversation
+ */
+Route::post('/deleteConversation', [MessagesController::class,'deleteConversation'])->name('api.conversation.delete');
+
+/**
+ * Delete Conversation
+ */
+Route::post('/updateSettings', [MessagesController::class,'updateSettings'])->name('api.avatar.update');
+
+/**
+ * Set active status
+ */
+Route::post('/setActiveStatus', [MessagesController::class,'setActiveStatus'])->name('api.activeStatus.set');

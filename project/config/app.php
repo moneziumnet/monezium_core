@@ -184,7 +184,7 @@ return [
         Yajra\DataTables\DataTablesServiceProvider::class,
         ZanySoft\Zip\ZipServiceProvider::class,
         Brian2694\Toastr\ToastrServiceProvider::class,
-        
+
 
         /*
          * Package Service Providers...
@@ -198,7 +198,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        
+
         App\Providers\TenancyServiceProvider::class,
 
         Yajra\DataTables\DataTablesServiceProvider::class,
@@ -270,6 +270,7 @@ return [
         // Update Nexmo
         'Nexmo' => Nexmo\Laravel\Facade\Nexmo::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'ChatifyMessenger' => App\Providers\ChatifyMessenger::class,
     ])->toArray(),
 
 ];

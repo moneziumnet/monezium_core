@@ -22,7 +22,7 @@
     @stack('css')
   </head>
 
-  <body >
+  <body>
     <div class="wrapper">
       @includeIf('includes.user.header')
       @if($gs->website_theme == 0)

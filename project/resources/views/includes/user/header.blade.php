@@ -43,6 +43,9 @@
           <a class="dropdown-item" href="{{route('user.module.view')}}">
             {{__('Module')}}
           </a>
+          <a class="dropdown-item" href="{{route(config('chatify.routes.prefix'))}}">
+             {{__('Chat')}}
+          </a>
           <a href="{{ route('user.change.password.form') }}" class="dropdown-item">{{__('Change Password')}}</a>
           <a class="dropdown-item" href="{{route('user.package.index')}}">
             {{__('Pricing Plan')}}

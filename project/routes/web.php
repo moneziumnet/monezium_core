@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\API\QRAccessController;
 use App\Http\Controllers\User\ClearJunctionCallBackController;
 use App\Models\User;
+use App\Http\Controllers\Chatify\MessagesController;
 
 Route::redirect('admin', 'admin/login');
 
@@ -57,16 +58,127 @@ Route::get('/blog/archive/{slug}', [FrontendController::class, 'blogarchive'])->
 Route::get('/services', [FrontendController::class, 'services'])->name('front.services');
 
 Route::get('/term-service', [FrontendController::class, 'termService'])->name('front.term-service');
+
+
+Route::prefix('chatify')->group(function () {
+
+    Route::get('/', [MessagesController::class, 'index'])->name(config('chatify.routes.prefix'));
+    /*
+    * This is the main app route [Chatify Messenger]
+    */
+    Route::get('/', [MessagesController::class, 'index'])->name(config('chatify.routes.prefix'));
+
+    /**
+     *  Fetch info for specific id [user/group]
+     */
+    Route::post('/idInfo', [MessagesController::class, 'idFetchData']);
+
+    /**
+     * Send message route
+     */
+    Route::post('/sendMessage', [MessagesController::class, 'send'])->name('send.message');
+
+    /**
+     * Fetch messages
+     */
+    Route::post('/fetchMessages', [MessagesController::class, 'fetch'])->name('fetch.messages');
+
+    /**
+     * Download attachments route to create a downloadable links
+     */
+    Route::get('/download/{fileName}', [MessagesController::class, 'download'])->name(config('chatify.attachments.download_route_name'));
+
+    /**
+     * Authentication for pusher private channels
+     */
+    Route::post('/chat/auth', [MessagesController::class, 'pusherAuth'])->name('pusher.auth');
+
+    /**
+     * Make messages as seen
+     */
+    Route::post('/makeSeen', [MessagesController::class, 'seen'])->name('messages.seen');
+
+    /**
+     * Get contacts
+     */
+    Route::get('/getContacts', [MessagesController::class, 'getContacts'])->name('contacts.get');
+
+    /**
+     * Update contact item data
+     */
+    Route::post('/updateContacts', [MessagesController::class, 'updateContactItem'])->name('contacts.update');
+
+
+    /**
+     * Star in favorite list
+     */
+    Route::post('/star', [MessagesController::class, 'favorite'])->name('star');
+
+    /**
+     * get favorites list
+     */
+    Route::post('/favorites', [MessagesController::class, 'getFavorites'])->name('favorites');
+
+    /**
+     * Search in messenger
+     */
+    Route::get('/search', [MessagesController::class, 'search'])->name('search');
+
+    /**
+     * Get shared photos
+     */
+    Route::post('/shared', [MessagesController::class, 'sharedPhotos'])->name('shared');
+
+    /**
+     * Delete Conversation
+     */
+    Route::post('/deleteConversation', [MessagesController::class, 'deleteConversation'])->name('conversation.delete');
+
+    /**
+     * Delete Message
+     */
+    Route::post('/deleteMessage', [MessagesController::class, 'deleteMessage'])->name('message.delete');
+
+    /**
+     * Update setting
+     */
+    Route::post('/updateSettings', [MessagesController::class, 'updateSettings'])->name('avatar.update');
+
+    /**
+     * Set active status
+     */
+    Route::post('/setActiveStatus', [MessagesController::class, 'setActiveStatus'])->name('activeStatus.set');
+
+
+    /*
+    * [Group] view by id
+    */
+    Route::get('/group/{id}', [MessagesController::class, 'index'])->name('group');
+
+    /*
+    * user view by id.
+    * Note : If you added routes after the [User] which is the below one,
+    * it will considered as user id.
+    *
+    * e.g. - The commented routes below :
+    */
+// Route::get('/route', function(){ return 'Munaf'; }); // works as a route
+    Route::get('/{id}', [MessagesController::class, 'index'])->name('user');
+// Route::get('/route', function(){ return 'Munaf'; }); // works as a user id
+});
+
 Route::get('/about', [FrontendController::class, 'about'])->name('front.about');
 Route::get('/contact', [FrontendController::class, 'contact'])->name('front.contact');
 Route::post('/contact', [FrontendController::class, 'contactemail'])->name('front.contact.submit');
 Route::get('/faq', [FrontendController::class, 'faq'])->name('front.faq');
 Route::get('/{slug}', [FrontendController::class, 'page'])->name('front.page');
 Route::post('/subscriber', [FrontendController::class, 'subscriber'])->name('front.subscriber');
+
 Route::get('view-invoice/{number}',   [ManageInvoiceController::class,'invoiceView'])->name('invoice.view');
 Route::get('pay-invoice/{number}',   [ManageInvoiceController::class,'invoicePaymentByLink'])->name('invoice.pay');
 Route::get('view-contract/{id}/{role}',   [UserContractManageController::class,'contract_view'])->name('contract.view');
 Route::get('view-aoa/{id}/{role}',   [UserContractManageController::class,'aoa_sign_view'])->name('aoa.view');
+
 Route::get('/currency/{id}', [FrontendController::class, 'currency'])->name('front.currency');
 Route::get('/language/{id}', [FrontendController::class, 'language'])->name('front.language');
 Route::get('/merchant/checkout/link/{id}',[MerchantCheckoutController::class,'link'])->name('user.merchant.checkout.link');

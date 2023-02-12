@@ -1,0 +1,136 @@
+/*app scroll*/
+.app-scroll::-webkit-scrollbar-thumb,
+.app-scroll-thin::-webkit-scrollbar-thumb {
+    background: #1e293b;
+}
+.app-scroll-thin::-webkit-scrollbar {
+    background: #2c2c2c;
+}
+.app-scroll::-webkit-scrollbar:hover,
+.app-scroll-thin::-webkit-scrollbar:hover {
+    background: #2c2c2c;
+}
+
+.messenger {
+    background: #1e293b;
+}
+.messages-container {
+    background: #1b2434;
+}
+.messenger-search[type="text"] {
+    background: #1e293b;
+    color: #fff;
+}
+.messenger-listView {
+    background: #1e293b;
+    border: 1px solid #1e293b;
+}
+.messenger-listView-tabs {
+    border-bottom: 1px solid #1e293b;
+}
+.messenger-listView-tabs a:hover,
+.messenger-listView-tabs a:focus {
+    background-color: #1e293b;
+}
+.messenger-favorites div.avatar {
+    border: 2px solid #1e293b;
+}
+.messenger-list-item:hover {
+    background: #1e293b;
+}
+.messenger-messagingView {
+    border-top: 1px solid #1e293b;
+    border-bottom: 1px solid #1e293b;
+    background: #1e293b;
+}
+.m-header-messaging {
+    background: #1b2434;
+}
+.messenger-infoView {
+    background: #1e293b;
+    border: 1px solid #1e293b;
+}
+.messenger-infoView > p {
+    color: #fff;
+}
+.divider {
+    border-top: 1px solid #2f2f2f;
+}
+.messenger-sendCard {
+    background: #1b2434;
+    border-top: 1px solid #1e293b;
+}
+.attachment-preview > p {
+    color: #fff;
+}
+.m-send {
+    color: #fff;
+}
+.message-card p {
+    background: #1e293b;
+    color: #fff;
+}
+.m-li-divider {
+    border-bottom: 1px solid #1e293b;
+}
+.m-header a,
+.m-header a:hover,
+.m-header a:focus {
+    text-decoration: none;
+    color: #fff;
+}
+.messenger-list-item td p {
+    color: #fff;
+}
+.activeStatus {
+    border: 2px solid #1e293b;
+}
+.messenger-list-item:hover .activeStatus {
+    border-color: #1e293b;
+}
+.messenger-favorites > div p {
+    color: #ffffff;
+}
+.avatar {
+    background-color: #1e293b;
+}
+/*
+***********************************************
+* Placeholder loading
+***********************************************
+*/
+.loadingPlaceholder-body div,
+.loadingPlaceholder-header tr td div {
+    background: #1e293b;
+    background-image: -webkit-linear-gradient(
+        left,
+        #1e293b 0%,
+        #1e293b 20%,
+        #1e293b 40%,
+        #1e293b 100%
+    );
+}
+
+/*
+***********************************************
+* App Modal
+***********************************************
+*/
+
+.app-modal-card {
+    background: rgba(50, 50, 50, 0.94);
+}
+.app-modal-header {
+    color: #fff;
+}
+.app-modal-body {
+    color: #fff;
+}
+
+.messages sub {
+    color: #fff;
+}
+
+.chatify-hover-delete-btn {
+    color: #ffffff;
+}
