@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Models\User;
 use App\Models\UserWhatsapp;
 use App\Models\BotWebhook;
+use App\Models\Currency;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
@@ -42,32 +43,93 @@ class UserWhatsappController extends Controller
         $whatsapp_hook->url = route('user.whatsapp.inbound');
         $whatsapp_hook->save();
 
-        $text = $data['message']['content']['text'];
-
         $gs = Generalsetting::first();
-        switch ($text) {
-            case 'Help':
-                $to_message = 'Welcome to '.$gs->disqus.'\n What could We help you?
-                We are here to help you with your problem.\n
-                Kindly choose an option to connect with our support team. \n
-                Firstly we have to login by using Login Command.';
-                $this->send_message($to_message, $data['from']['number']);
-                $to_message = 'Command 1: Login {email} {pincode}\n
-                            Command 2: Balance';
-                $this->send_message($to_message, $data['from']['number']);
-                break;
-            default:
-                # code...
-                $to_message = 'Welcome to '.$gs->disqus.'\n What could We help you?
-                We are here to help you with your problem.\n
-                Kindly choose an option to connect with our support team. \n
-                Firstly we have to login by using Login Command.';
-                $this->send_message($to_message, $data['from']['number']);
-                $to_message = 'Command 1: Login {email} {pincode}\n
-                            Command 2: Balance';
-                $this->send_message($to_message, $data['from']['number']);
-                break;
+        $text = $data['message']['content']['text'];
+        $text_split = explode(' ', $text);
+        if($text_split[0] == 'Login') {
+            $text = 'Login';
+            $email = $text_split[1];
+            $pincode = $text_split[2];
         }
+        $whatsapp_user = UserWhatsapp::where('phonenumber', $data['from']['number'])->first();
+        if($whatsapp_user && $whatsapp_user->status == 1) {
+            switch ($text) {
+                case 'Balance':
+                    $phone = $data['from']['number'];
+                    $whatsapp = UserWhatsapp::where('phonenumber', $phone)->first();
+                    if(!$whatsapp || $whatsapp->status == 1){
+                        $to_message = 'You did not login. Please login.\n Command 1: Login {email} {pincode}';
+                        $this->send_message($to_message, $phone);
+                    }
+                    $user = User::findOrFail($whatsapp->user_id);
+                    $currency = Currency::findOrFail(defaultCurr());
+                    $to_message = $currency->symbol.amount(userBalance($data->id), $currency->type, 2);
+                    $this->send_message($to_message, $phone);
+                    break;
+                case 'Beneficiary':
+                    break;
+                case 'BankTransfer':
+                    break;
+                default:
+                    # code...
+                    $to_message = 'Welcome to '.$gs->disqus.'\n What could We help you?
+                    We are here to help you with your problem.\n
+                    Kindly choose an option to connect with our support team. \n
+                    Firstly we have to login by using Login Command.';
+                    $this->send_message($to_message, $data['from']['number']);
+                    $to_message = 'Command 1: Login {email} {pincode}\n
+                                Command 2: Balance';
+                    $this->send_message($to_message, $data['from']['number']);
+                    break;
+            }
+        }
+        else{
+            switch ($text) {
+                case 'Help':
+                    $to_message = 'Welcome to '.$gs->disqus.'\n What could We help you?
+                    We are here to help you with your problem.\n
+                    Kindly choose an option to connect with our support team. \n
+                    Firstly we have to login by using Login Command.';
+                    $this->send_message($to_message, $data['from']['number']);
+                    $to_message = 'Command 1: Login {email} {pincode}\n
+                                Command 2: Balance';
+                    $this->send_message($to_message, $data['from']['number']);
+                    break;
+                case 'Login':
+                    $user = User::where('email', $email)->first();
+                    if(!$user) {
+                        $this->send_message('This user dose not exist in our system', $data['from']['number']);
+                    }
+                    $whatsapp = UserWhatsapp::where('user_id', $user->id)->where('pincode', $pincode)->first();
+                    if(!$whatsapp) {
+                        $this->send_message('Pincode is not matched with email. Please input again', $data['from']['number']);
+                    }
+                    if($whatsapp->status == 1) {
+                        $this->send_message('You are already login.', $data['from']['number']);
+                    }
+                    $whatsapp->phonenumber = $data['from']['number'];
+                    $whatsapp->status = 1;
+                    $whatsapp->save();
+                    $to_message = 'You login Successfully, Please use follow command list:\n
+                                Command 1: Beneficiary\n
+                                Command 2: BankTransfer\n
+                                Command 3: Balance\n';
+                    $this->send_message($to_message, $data['from']['number']);
+                    break;
+                default:
+                    # code...
+                    $to_message = 'Welcome to '.$gs->disqus.'\n What could We help you?
+                    We are here to help you with your problem.\n
+                    Kindly choose an option to connect with our support team. \n
+                    Firstly we have to login by using Login Command.';
+                    $this->send_message($to_message, $data['from']['number']);
+                    $to_message = 'Command 1: Login {email} {pincode}\n
+                                Command 2: Balance';
+                    $this->send_message($to_message, $data['from']['number']);
+                    break;
+            }
+        }
+
         Log::Info($data);
     }
 
