@@ -12,6 +12,7 @@ use App\Http\Controllers\User\MerchantCheckoutController;
 use App\Http\Controllers\User\MerchantProductController;
 use App\Http\Controllers\User\MerchantCampaignController;
 use App\Http\Controllers\User\UserTelegramController;
+use App\Http\Controllers\User\UserWhatsappController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\QRAccessController;
 use App\Http\Controllers\User\ClearJunctionCallBackController;
@@ -197,3 +198,7 @@ Route::post('/qr/access/submit', [QRAccessController::class, 'pay_submit'])->nam
 
 Route::get('/telegram/login', [UserTelegramController::class, 'bot_login'])->name('user.telegram.login');
 Route::get('/telegram/logout', [UserTelegramController::class, 'bot_logout'])->name('user.telegram.logout');
+
+Route::post('/whatsapp/inbound', [UserWhatsappController::class, 'inbound'])->name('user.whatsapp.inbound');
+Route::post('/whatsapp/status', [UserWhatsappController::class, 'status'])->name('user.whatsapp.status');
+
