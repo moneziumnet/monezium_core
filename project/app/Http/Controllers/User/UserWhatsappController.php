@@ -128,7 +128,7 @@ class UserWhatsappController extends Controller
                         $bank = json_decode($response->getBody());
                         //code...
                     } catch (\Throwable $th) {
-                        $this->send_message($th->getMessage(), $phone);
+                        $this->send_message($response->getBody(), $phone);
                         break;
                     }
                     if (isset($bank->data->bank)) {
