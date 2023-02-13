@@ -150,7 +150,9 @@ class UserWhatsappController extends Controller
         $url = "https://messages-sandbox.nexmo.com/v0.1/messages";
         $params = ["to" =>  $to_number,
             "from" => "14157386102",
-            "text" => $message
+            "text" => $message,
+            "channel" => "whatsapp",
+            "message_type" => "string"
         ];
         $headers = ["Authorization" => "Basic " . base64_encode($gs->nexmo_key . ":" . $gs->nexmo_secret)];
         $client = new Client();
