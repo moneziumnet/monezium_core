@@ -106,6 +106,7 @@ class UserWhatsappController extends Controller
                     }
                     else {
                         $this->send_message('Please select Beneficiary type.', $phone);
+                        break;
                     }
                     $beneficiary->name = $text_split[2];
                     if (filter_var($text_split[3], FILTER_VALIDATE_EMAIL)) {
@@ -113,6 +114,7 @@ class UserWhatsappController extends Controller
                     }
                     else {
                         $this->send_message('This email is not invalid.', $phone);
+                        break;
                     }
                     $beneficiary->phone = $text_split[4];
                     $beneficiary->address= $text_split[5];
@@ -127,6 +129,7 @@ class UserWhatsappController extends Controller
                         //code...
                     } catch (\Throwable $th) {
                         $this->send_message($th->getMessage(), $phone);
+                        break;
                     }
                     if (isset($bank->data->bank)) {
                         $beneficiary->account_iban = $text_split[9];
@@ -136,9 +139,11 @@ class UserWhatsappController extends Controller
                     }
                     else {
                         $this->send_message('Please input IBAN correctly', $phone);
+                        break;
                     }
                     $beneficiary->save();
                     $this->send_message('You have registered Beneficiary successfully.', $phone);
+                    break;
                 case 'BankTransfer':
                     break;
                 default:
