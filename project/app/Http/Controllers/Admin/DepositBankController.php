@@ -73,7 +73,7 @@ class DepositBankController extends Controller
             ->addColumn('action', function(DepositBank $data) {
 
                 @$detail = SubInsBank::where('id', $data->sub_bank_id)->with('subInstitution')->first();
-                $send_info = WebhookRequest::where('reference', 'LIKE', '%'.$data->deposit_number)->with('currency')->first();
+                $send_info = WebhookRequest::where('transaction_id', 'LIKE', '%'.$data->deposit_number)->orWhere('reference', 'LIKE', '%'.$data->deposit_number)->with('currency')->first();
 
 
                 if(!$detail) {

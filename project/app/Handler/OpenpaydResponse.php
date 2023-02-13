@@ -69,11 +69,12 @@ class OpenpaydResponse implements RespondsToWebhook
                     if(!$user)
                         return response()->json("failure");
 
-                    $new_deposit['deposit_number'] = $obj->transactionReference;
+                    $new_deposit['deposit_number'] = $obj->transactionId;
                     $new_deposit['user_id'] = $user->id;
                     $new_deposit['currency_id'] = $webrequest->currency_id;
                     $new_deposit['amount'] = $obj->amount->value;
                     $new_deposit['status'] = "pending";
+                    $new_deposit['details'] = $obj->transactionReference;
                     $new_deposit['sub_bank_id'] = null;
                     $new_deposit->save();
                     send_notification($user->id, 'Bank has been deposited by '.$obj->senderName.'. Please check.', route('admin.deposits.bank.index'));
