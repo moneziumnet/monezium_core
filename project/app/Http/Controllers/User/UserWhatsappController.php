@@ -58,7 +58,7 @@ class UserWhatsappController extends Controller
                     $phone = $data['from'];
                     $user = User::findOrFail($whatsapp_user->user_id);
                     $currency = Currency::findOrFail(defaultCurr());
-                    $to_message = $currency->symbol.amount(userBalance($data->id), $currency->type, 2);
+                    $to_message = $currency->symbol.amount(userBalance($user->id), $currency->type, 2);
                     $this->send_message($to_message, $phone);
                     break;
                 case 'Beneficiary':
