@@ -162,7 +162,7 @@ class KycManageController extends Controller
     public function kycDetails($id)
     {
         $data['user'] = User::findOrFail($id);
-        if ($data['user']->kyc_method == 'auto' && !$data['user']->kyc_info){
+        if ($data['user']->kyc_method == 'auto' && isset($data['user']->kyc_info) != null){
             $folderPath = 'assets/images/';
             $SBObject = new SumsubKYC();
             $app_data = $SBObject->getApplicantData($data['user']->kyc_token);
