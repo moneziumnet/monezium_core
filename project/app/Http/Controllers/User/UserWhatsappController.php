@@ -113,12 +113,12 @@ class UserWhatsappController extends Controller
                     break;
                 default:
                     # code...
-                    $to_message = 'Welcome to '.$gs->disqus.' \\n
-                    What could We help you? \\n
-                    We are here to help you with your problem. \\n
-                    Kindly choose an option to connect with our support team. \\n
-                    Firstly we have to login by using Login Command. \\n
-                    Command 1: Login {email} {pincode} \\n
+                    $to_message = 'Welcome to '.$gs->disqus.'
+                    What could We help you?
+                    We are here to help you with your problem.
+                    Kindly choose an option to connect with our support team.
+                    Firstly we have to login by using Login Command.
+                    Command 1: Login {email} {pincode}
                     Command 2: Help';
                     $this->send_message($to_message, $phone);
                     break;
