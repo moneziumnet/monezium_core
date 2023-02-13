@@ -52,7 +52,6 @@ body {
   left: 0px;
   right: 0px;
   z-index: 1;
-  background: transparent;
   width: 45%;
   min-width: 200px;
   overflow: auto;
@@ -133,7 +132,7 @@ body {
 }
 .messenger-tab {
   overflow: auto;
-  height: calc(100vh - 355px);
+  height: calc(100vh - 372px);
   display: none;
   position: relative;
 }
@@ -880,6 +879,7 @@ div.loadingPlaceholder-date {
   .messenger-listView {
     width: 100%;
     max-width: unset;
+    margin-top: 56px;
   }
   .listView-x {
     display: none;
@@ -919,6 +919,21 @@ div.loadingPlaceholder-date {
   }
   .chatify-md-block {
     display: block;
+  }
+}
+
+@media (max-width: 680px) {
+  .m-header-messaging {
+      margin-top: 56px;
+  }
+  .messenger-infoView > nav {
+    margin-top: 56px;
+  }
+  #imageModalBox {
+    margin-top: 56px;
+  }
+  .messenger-tab {
+    height: calc(100vh - 199px)!important;
   }
 }
 

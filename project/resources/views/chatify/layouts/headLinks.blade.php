@@ -1,5 +1,3 @@
-<title>{{ config('chatify.name') }}</title>
-
 {{-- Meta tags --}}
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="id" content="{{ $id }}">
@@ -21,6 +19,17 @@
 <link href="{{ asset('assets/chatify/css/style.css') }}" rel="stylesheet" />
 {{--<link href="{{ asset('assets/chatify/css/'.$dark_mode.'.mode.css') }}" rel="stylesheet" />--}}
 <link href="{{ asset('assets/chatify/css/app.css') }}" rel="stylesheet" />
+<style>
+    @media (max-width: 680px) {
+        .bg--section {
+            display: none;
+        }
 
+        .navbar-expand-xl {
+            z-index: 2;
+            position: relative;
+        }
+    }
+</style>
 {{-- Messenger Color Style--}}
 @include('chatify.layouts.messengerColor')

@@ -1264,6 +1264,7 @@ $(document).ready(function () {
   $("body").on("click", ".messenger-list-item", function () {
     if ($(this).find("tr[data-action]").attr("data-action") == "1") {
       $(".messenger-listView").hide();
+      $(".messenger-messagingView").show();
     }
     const dataId = $(this).find("p[data-id]").attr("data-id");
     const dataType = $(this).find("p[data-type]").attr("data-type");
