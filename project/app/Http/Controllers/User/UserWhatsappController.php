@@ -80,25 +80,16 @@ class UserWhatsappController extends Controller
                     Kindly choose an option to connect with our support team.
                     ';
                     $this->send_message($to_message, $phone);
-                    $to_message = 'Command 1: Login {email} {pincode}
-                                Command 2: Balance';
+                    $to_message = 'Command 1: Beneficiary
+                    Command 2: BankTransfer
+                    Command 3: Balance
+                    Command 4: Logout';
                     $this->send_message($to_message, $phone);
                     break;
             }
         }
         else{
             switch ($text) {
-                case 'Help':
-                    $to_message = 'Welcome to '.$gs->disqus.'
-                    What could We help you?
-                    We are here to help you with your problem.
-                    Kindly choose an option to connect with our support team.
-                    Firstly we have to login by using Login Command.';
-                    $this->send_message($to_message, $phone);
-                    $to_message = 'Command 1: Login {email} {pincode}
-                                Command 2: Balance';
-                    $this->send_message($to_message, $phone);
-                    break;
                 case 'Login':
                     $user = User::where('email', $email)->first();
                     if(!$user) {
@@ -118,7 +109,8 @@ class UserWhatsappController extends Controller
                                 Please use follow command list:
                                 Command 1: Beneficiary
                                 Command 2: BankTransfer
-                                Command 3: Balance';
+                                Command 3: Balance
+                                Command 4: Logout';
                     $this->send_message($to_message, $phone);
                     break;
                 default:
@@ -130,7 +122,7 @@ class UserWhatsappController extends Controller
                     Firstly we have to login by using Login Command.';
                     $this->send_message($to_message, $phone);
                     $to_message = 'Command 1: Login {email} {pincode}
-                                Command 2: Balance';
+                                   Command 2: Help';
                     $this->send_message($to_message, $phone);
                     break;
             }
