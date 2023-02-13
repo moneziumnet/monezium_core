@@ -58,7 +58,9 @@ class UserWhatsappController extends Controller
                     $phone = $data['from'];
                     $whatsapp = UserWhatsapp::where('phonenumber', $phone)->first();
                     if(!$whatsapp || $whatsapp->status == 1){
-                        $to_message = 'You did not login. Please login.\n Command 1: Login {email} {pincode}';
+                        $to_message = 'You did not login.
+                         Please login.
+                         Command 1: Login {email} {pincode}';
                         $this->send_message($to_message, $phone);
                     }
                     $user = User::findOrFail($whatsapp->user_id);
@@ -72,12 +74,13 @@ class UserWhatsappController extends Controller
                     break;
                 default:
                     # code...
-                    $to_message = 'Welcome to '.$gs->disqus.'\n What could We help you?
-                    We are here to help you with your problem.\n
-                    Kindly choose an option to connect with our support team. \n
+                    $to_message = 'Welcome to '.$gs->disqus.'
+                    What could We help you?
+                    We are here to help you with your problem.
+                    Kindly choose an option to connect with our support team.
                     Firstly we have to login by using Login Command.';
                     $this->send_message($to_message, $data['from']);
-                    $to_message = 'Command 1: Login {email} {pincode}\n
+                    $to_message = 'Command 1: Login {email} {pincode}
                                 Command 2: Balance';
                     $this->send_message($to_message, $data['from']);
                     break;
@@ -86,12 +89,13 @@ class UserWhatsappController extends Controller
         else{
             switch ($text) {
                 case 'Help':
-                    $to_message = 'Welcome to '.$gs->disqus.'\n What could We help you?
-                    We are here to help you with your problem.\n
-                    Kindly choose an option to connect with our support team. \n
+                    $to_message = 'Welcome to '.$gs->disqus.'
+                    What could We help you?
+                    We are here to help you with your problem.
+                    Kindly choose an option to connect with our support team.
                     Firstly we have to login by using Login Command.';
                     $this->send_message($to_message, $data['from']);
-                    $to_message = 'Command 1: Login {email} {pincode}\n
+                    $to_message = 'Command 1: Login {email} {pincode}
                                 Command 2: Balance';
                     $this->send_message($to_message, $data['from']);
                     break;
@@ -110,20 +114,22 @@ class UserWhatsappController extends Controller
                     $whatsapp->phonenumber = $data['from'];
                     $whatsapp->status = 1;
                     $whatsapp->save();
-                    $to_message = 'You login Successfully, Please use follow command list:\n
-                                Command 1: Beneficiary\n
-                                Command 2: BankTransfer\n
-                                Command 3: Balance\n';
+                    $to_message = 'You login Successfully,
+                                Please use follow command list:
+                                Command 1: Beneficiary
+                                Command 2: BankTransfer
+                                Command 3: Balance';
                     $this->send_message($to_message, $data['from']);
                     break;
                 default:
                     # code...
-                    $to_message = 'Welcome to '.$gs->disqus.'\n What could We help you?
-                    We are here to help you with your problem.\n
-                    Kindly choose an option to connect with our support team. \n
+                    $to_message = 'Welcome to '.$gs->disqus.'
+                    What could We help you?
+                    We are here to help you with your problem.
+                    Kindly choose an option to connect with our support team.
                     Firstly we have to login by using Login Command.';
                     $this->send_message($to_message, $data['from']);
-                    $to_message = 'Command 1: Login {email} {pincode}\n
+                    $to_message = 'Command 1: Login {email} {pincode}
                                 Command 2: Balance';
                     $this->send_message($to_message, $data['from']);
                     break;
