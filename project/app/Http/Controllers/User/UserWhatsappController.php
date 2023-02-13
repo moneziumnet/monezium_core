@@ -78,9 +78,7 @@ class UserWhatsappController extends Controller
                     What could We help you?
                     We are here to help you with your problem.
                     Kindly choose an option to connect with our support team.
-                    ';
-                    $this->send_message($to_message, $phone);
-                    $to_message = 'Command 1: Beneficiary
+                    Command 1: Beneficiary
                     Command 2: BankTransfer
                     Command 3: Balance
                     Command 4: Logout';
