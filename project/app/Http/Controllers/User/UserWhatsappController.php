@@ -46,12 +46,7 @@ class UserWhatsappController extends Controller
 
         $gs = Generalsetting::first();
         $text = $data['text'];
-        $text_split = explode(' ', $text);
-        if($text_split[0] == 'Login') {
-            $text = 'Login';
-            $email = $text_split[1];
-            $pincode = $text_split[2];
-        }
+
         $whatsapp_user = UserWhatsapp::where('phonenumber', $data['from'])->first();
         $phone = $data['from'];
         if($whatsapp_user && $whatsapp_user->status == 1) {
@@ -161,6 +156,12 @@ class UserWhatsappController extends Controller
             }
         }
         else{
+            $text_split = explode(' ', $text);
+            if($text_split[0] == 'Login') {
+                $text = 'Login';
+                $email = $text_split[1];
+                $pincode = $text_split[2];
+            }
             switch ($text) {
                 case 'Login':
                     $user = User::where('email', $email)->first();
