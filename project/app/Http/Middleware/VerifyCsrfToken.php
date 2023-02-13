@@ -28,6 +28,8 @@ class VerifyCsrfToken extends Middleware
         'webhook-railsbank',
         'webhook-swan',
         '/cj-payin',
-        '/cj-payout'
+        '/cj-payout',
+        '/whatsapp/inbound',
+        '/whatsapp/status'
     ];
 }

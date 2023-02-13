@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Models\User;
 use App\Models\UserTelegram;
+use App\Models\UserWhatsapp;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
@@ -19,7 +20,8 @@ class UserTelegramController extends Controller
     public function index()
     {
         $data['telegram'] = UserTelegram::where('user_id',auth()->id())->first();
-        return view('user.staff.telegram',$data);
+        $data['whatsapp'] = UserWhatsapp::where('user_id',auth()->id())->first();
+        return view('user.staff.pincode',$data);
     }
     public function generate(Request $request)
     {

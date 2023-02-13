@@ -78,6 +78,7 @@ use App\Http\Controllers\User\VirtualCardController;
 use App\Http\Controllers\User\UserShopController;
 use App\Http\Controllers\Deposit\SwanController;
 use App\Http\Controllers\User\UserTelegramController;
+use App\Http\Controllers\User\UserWhatsappController;
 
 Route::prefix('user')->group(function() {
 
@@ -683,8 +684,9 @@ Route::prefix('user')->group(function() {
       Route::post('/change-password', [UserController::class,'changePassword'])->name('user.change.password');
       Route::post('qr-code-scan',   [UserController::class,'scanQR'])->name('scan.qr');
 
-      Route::get('/telegram', [UserTelegramController::class,'index'])->name('user.telegram.index');
+      Route::get('/pincode', [UserTelegramController::class,'index'])->name('user.pincode.index');
       Route::post('/telegram/generate', [UserTelegramController::class,'generate'])->name('user.telegram.pin.generate');
+      Route::post('/whatsapp/generate', [UserWhatsappController::class,'generate'])->name('user.whatsapp.pin.generate');
 
     });
 
