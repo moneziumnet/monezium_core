@@ -56,14 +56,7 @@ class UserWhatsappController extends Controller
             switch ($text) {
                 case 'Balance':
                     $phone = $data['from'];
-                    $whatsapp = UserWhatsapp::where('phonenumber', $phone)->first();
-                    if(!$whatsapp || $whatsapp->status == 1){
-                        $to_message = 'You did not login.
-                         Please login.
-                         Command 1: Login {email} {pincode}';
-                        $this->send_message($to_message, $phone);
-                    }
-                    $user = User::findOrFail($whatsapp->user_id);
+                    $user = User::findOrFail($whatsapp_user->user_id);
                     $currency = Currency::findOrFail(defaultCurr());
                     $to_message = $currency->symbol.amount(userBalance($data->id), $currency->type, 2);
                     $this->send_message($to_message, $phone);
