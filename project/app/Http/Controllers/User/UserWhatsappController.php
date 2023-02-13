@@ -152,7 +152,7 @@ class UserWhatsappController extends Controller
             "from" => "14157386102",
             "text" => $message,
             "channel" => "whatsapp",
-            "message_type" => "string"
+            "message_type" => "text"
         ];
         $headers = [
             'Accept'=> 'application/json',
