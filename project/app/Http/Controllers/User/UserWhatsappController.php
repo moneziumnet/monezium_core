@@ -147,7 +147,7 @@ class UserWhatsappController extends Controller
     {
         $gs = Generalsetting::first();
 
-        $url = "https://messages-sandbox.nexmo.com/v0.1/messages";
+        $url = "https://messages-sandbox.nexmo.com/v1/messages";
         $params = ["to" =>  $to_number,
             "from" => "14157386102",
             "text" => $message,
