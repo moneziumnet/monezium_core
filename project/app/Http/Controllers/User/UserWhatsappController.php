@@ -52,20 +52,21 @@ class UserWhatsappController extends Controller
             $pincode = $text_split[2];
         }
         $whatsapp_user = UserWhatsapp::where('phonenumber', $data['from'])->first();
+        $phone = $data['from'];
         if($whatsapp_user && $whatsapp_user->status == 1) {
             switch ($text) {
                 case 'Balance':
-                    $phone = $data['from'];
                     $user = User::findOrFail($whatsapp_user->user_id);
                     $currency = Currency::findOrFail(defaultCurr());
                     $to_message = $currency->symbol.amount(userBalance($user->id), $currency->type, 2);
                     $this->send_message($to_message, $phone);
                     break;
                 case 'Logout':
-                    $phone = $data['from'];
                     $whatsapp = UserWhatsapp::where('phonenumber', $phone)->first();
                     $whatsapp->status = 0;
                     $whatsapp->save();
+                    $to_message = 'You have been log out successfully. ';
+                    $this->send_message($to_message, $phone);
                     break;
                 case 'Beneficiary':
                     break;
@@ -78,10 +79,10 @@ class UserWhatsappController extends Controller
                     We are here to help you with your problem.
                     Kindly choose an option to connect with our support team.
                     ';
-                    $this->send_message($to_message, $data['from']);
+                    $this->send_message($to_message, $phone);
                     $to_message = 'Command 1: Login {email} {pincode}
                                 Command 2: Balance';
-                    $this->send_message($to_message, $data['from']);
+                    $this->send_message($to_message, $phone);
                     break;
             }
         }
@@ -93,24 +94,24 @@ class UserWhatsappController extends Controller
                     We are here to help you with your problem.
                     Kindly choose an option to connect with our support team.
                     Firstly we have to login by using Login Command.';
-                    $this->send_message($to_message, $data['from']);
+                    $this->send_message($to_message, $phone);
                     $to_message = 'Command 1: Login {email} {pincode}
                                 Command 2: Balance';
-                    $this->send_message($to_message, $data['from']);
+                    $this->send_message($to_message, $phone);
                     break;
                 case 'Login':
                     $user = User::where('email', $email)->first();
                     if(!$user) {
-                        $this->send_message('This user dose not exist in our system', $data['from']);
+                        $this->send_message('This user dose not exist in our system', $phone);
                     }
                     $whatsapp = UserWhatsapp::where('user_id', $user->id)->where('pincode', $pincode)->first();
                     if(!$whatsapp) {
-                        $this->send_message('Pincode is not matched with email. Please input again', $data['from']);
+                        $this->send_message('Pincode is not matched with email. Please input again', $phone);
                     }
                     if($whatsapp->status == 1) {
-                        $this->send_message('You are already login.', $data['from']);
+                        $this->send_message('You are already login.', $phone);
                     }
-                    $whatsapp->phonenumber = $data['from'];
+                    $whatsapp->phonenumber = $phone;
                     $whatsapp->status = 1;
                     $whatsapp->save();
                     $to_message = 'You login Successfully,
@@ -118,7 +119,7 @@ class UserWhatsappController extends Controller
                                 Command 1: Beneficiary
                                 Command 2: BankTransfer
                                 Command 3: Balance';
-                    $this->send_message($to_message, $data['from']);
+                    $this->send_message($to_message, $phone);
                     break;
                 default:
                     # code...
@@ -127,10 +128,10 @@ class UserWhatsappController extends Controller
                     We are here to help you with your problem.
                     Kindly choose an option to connect with our support team.
                     Firstly we have to login by using Login Command.';
-                    $this->send_message($to_message, $data['from']);
+                    $this->send_message($to_message, $phone);
                     $to_message = 'Command 1: Login {email} {pincode}
                                 Command 2: Balance';
-                    $this->send_message($to_message, $data['from']);
+                    $this->send_message($to_message, $phone);
                     break;
             }
         }
