@@ -50,7 +50,7 @@ class UserWhatsappController extends Controller
         $whatsapp_user = UserWhatsapp::where('phonenumber', $data['from'])->first();
         $phone = $data['from'];
         if($whatsapp_user && $whatsapp_user->status == 1) {
-            $text_split = explode('\n', $text);
+            $text_split = explode("\n", $text);
             if($text_split[0] == 'BeneficiaryAdd') {
                 $text = $text_split[0];
             }
