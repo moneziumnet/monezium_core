@@ -98,47 +98,48 @@ class UserWhatsappController extends Controller
                     $this->send_message($to_message, $phone);
                     break;
                 case 'BeneficiaryAdd':
-                    $user = User::findOrFail($whatsapp_user->user_id);
-                    $beneficiary = new Beneficiary();
-                    $beneficiary->user_id = $user->id;
-                    if ($text_split[1] == 'Individual' || $text_split[1] == 'Corporate' ) {
-                        $beneficiary->type = $text_split[1] == 'Individual' ? 'RETAIL' : 'CORPORATE';
-                    }
-                    else {
-                        $this->send_message('Please select Beneficiary type.', $phone);
-                    }
-                    $beneficiary->name = $text_split[2];
-                    if (filter_var($text_split[3], FILTER_VALIDATE_EMAIL)) {
-                        $beneficiary->email = $text_split[3];
-                    }
-                    else {
-                        $this->send_message('This email is not invalid.', $phone);
-                    }
-                    $beneficiary->phone = $text_split[4];
-                    $beneficiary->address= $text_split[5];
-                    $beneficiary->registration_no = $text_split[6];
-                    $beneficiary->vat_no = $text_split[7];
-                    $beneficiary->contact_person = $text_split[8];
-                    $client = new Client();
-                    try {
-                        $url = 'https://api.ibanapi.com/v1/validate/'.$text_split[9].'?api_key='.$gs->ibanapi;
-                        $response = $client->request('GET', $url);
-                        $bank = json_decode($response->getBody());
-                        //code...
-                    } catch (\Throwable $th) {
-                        $this->send_message($th->getMessage(), $phone);
-                    }
-                    if (isset($bank->data->bank)) {
-                        $beneficiary->account_iban = $text_split[9];
-                        $beneficiary->bank_address = $bank->data->bank->address;
-                        $beneficiary->bank_name = $bank->data->bank->bank_name;
-                        $beneficiary->swift_bic = $bank->data->bank->bic;
-                    }
-                    else {
-                        $this->send_message('Please input IBAN correctly', $phone);
-                    }
-                    $beneficiary->save();
-                    $this->send_message('You have registered Beneficiary successfully.', $phone);
+                    $this->send_message($text_split[1], $phone);
+                    // $user = User::findOrFail($whatsapp_user->user_id);
+                    // $beneficiary = new Beneficiary();
+                    // $beneficiary->user_id = $user->id;
+                    // if ($text_split[1] == 'Individual' || $text_split[1] == 'Corporate' ) {
+                    //     $beneficiary->type = $text_split[1] == 'Individual' ? 'RETAIL' : 'CORPORATE';
+                    // }
+                    // else {
+                    //     $this->send_message('Please select Beneficiary type.', $phone);
+                    // }
+                    // $beneficiary->name = $text_split[2];
+                    // if (filter_var($text_split[3], FILTER_VALIDATE_EMAIL)) {
+                    //     $beneficiary->email = $text_split[3];
+                    // }
+                    // else {
+                    //     $this->send_message('This email is not invalid.', $phone);
+                    // }
+                    // $beneficiary->phone = $text_split[4];
+                    // $beneficiary->address= $text_split[5];
+                    // $beneficiary->registration_no = $text_split[6];
+                    // $beneficiary->vat_no = $text_split[7];
+                    // $beneficiary->contact_person = $text_split[8];
+                    // $client = new Client();
+                    // try {
+                    //     $url = 'https://api.ibanapi.com/v1/validate/'.$text_split[9].'?api_key='.$gs->ibanapi;
+                    //     $response = $client->request('GET', $url);
+                    //     $bank = json_decode($response->getBody());
+                    //     //code...
+                    // } catch (\Throwable $th) {
+                    //     $this->send_message($th->getMessage(), $phone);
+                    // }
+                    // if (isset($bank->data->bank)) {
+                    //     $beneficiary->account_iban = $text_split[9];
+                    //     $beneficiary->bank_address = $bank->data->bank->address;
+                    //     $beneficiary->bank_name = $bank->data->bank->bank_name;
+                    //     $beneficiary->swift_bic = $bank->data->bank->bic;
+                    // }
+                    // else {
+                    //     $this->send_message('Please input IBAN correctly', $phone);
+                    // }
+                    // $beneficiary->save();
+                    // $this->send_message('You have registered Beneficiary successfully.', $phone);
                 case 'BankTransfer':
                     break;
                 default:
