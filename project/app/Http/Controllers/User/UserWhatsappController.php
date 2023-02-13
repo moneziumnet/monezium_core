@@ -154,7 +154,12 @@ class UserWhatsappController extends Controller
             "channel" => "whatsapp",
             "message_type" => "string"
         ];
-        $headers = ["Authorization" => "Basic " . base64_encode($gs->nexmo_key . ":" . $gs->nexmo_secret)];
+        $headers = [
+            'Accept'=> 'application/json',
+            'Content-Type' => 'application/json',
+           'Authorization' => "Basic " . base64_encode($gs->nexmo_key . ":" . $gs->nexmo_secret)
+
+        ];
         $client = new Client();
         try {
             $response = $client->request('POST', $url, ["headers" => $headers, "json" => $params]);
