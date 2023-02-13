@@ -63,7 +63,7 @@ class UserTelegramController extends Controller
         $chat_id = request('chat_id');
         $telegram = UserTelegram::where('chat_id', $chat_id)->first();
         if(!$telegram) {
-            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Pincode is not matched with any user']);
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'You did not login before to our system.']);
         }
         if($telegram->status == 0) {
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'You are already logout.']);

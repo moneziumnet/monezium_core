@@ -61,6 +61,12 @@ class UserWhatsappController extends Controller
                     $to_message = $currency->symbol.amount(userBalance($user->id), $currency->type, 2);
                     $this->send_message($to_message, $phone);
                     break;
+                case 'Logout':
+                    $phone = $data['from'];
+                    $whatsapp = UserWhatsapp::where('phonenumber', $phone)->first();
+                    $whatsapp->status = 0;
+                    $whatsapp->save();
+                    break;
                 case 'Beneficiary':
                     break;
                 case 'BankTransfer':
@@ -71,7 +77,7 @@ class UserWhatsappController extends Controller
                     What could We help you?
                     We are here to help you with your problem.
                     Kindly choose an option to connect with our support team.
-                    Firstly we have to login by using Login Command.';
+                    ';
                     $this->send_message($to_message, $data['from']);
                     $to_message = 'Command 1: Login {email} {pincode}
                                 Command 2: Balance';
