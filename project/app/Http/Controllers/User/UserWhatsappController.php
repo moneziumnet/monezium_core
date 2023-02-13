@@ -69,6 +69,32 @@ class UserWhatsappController extends Controller
                     $this->send_message($to_message, $phone);
                     break;
                 case 'Beneficiary':
+                    $to_message = "
+                    Please input like this:
+                    '''
+                    BeneficiaryAdd
+                    BeneficiaryType(Individual/Corporate)
+                    BeneficiaryName(FirstName LastName:If beneficiarytype is corporate, input Companyname))
+                    Email
+                    Phone
+                    RegistrationNO
+                    VATNO
+                    ContactPerson
+                    AccountIBAN
+                    '''
+                    For example:
+                    BeneficiaryAdd
+                    Devops Tech LLC
+                    Alek Matin
+                    alek4@gmail.com
+                    123456789
+                    27 GRUDNIA 5  5A, Poznan, Poland
+                    0000820898
+                    PL7831811029
+                    Alek Matin
+                    GB1234567890
+                    ";
+                    $this->send_message($to_message, $phone);
                     break;
                 case 'BankTransfer':
                     break;
