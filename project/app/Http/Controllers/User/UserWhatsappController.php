@@ -138,7 +138,7 @@ class UserWhatsappController extends Controller
         $whatsapp_hook->payload = json_decode($request->getContent());
         $whatsapp_hook->url = route('user.whatsapp.status');
         $whatsapp_hook->save();
-        Log::Info(json_decode($request->getContent()));
+        Log::Info($request->getContent());
     }
 
     public function send_message($message, $to_number)
