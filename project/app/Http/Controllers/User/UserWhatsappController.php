@@ -110,6 +110,7 @@ class UserWhatsappController extends Controller
                     if($next_key == "email") {
                         if (!filter_var($text, FILTER_VALIDATE_EMAIL)) {
                             $to_message = "Please input correct email.";
+                            send_message_whatsapp($to_message, $phone);
                             return;
                         }
                     }
