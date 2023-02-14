@@ -110,7 +110,7 @@ class UserWhatsappController extends Controller
                     if($next_key == "email") {
                         if (!filter_var($text, FILTER_VALIDATE_EMAIL)) {
                             $to_message = "Please input correct email.";
-                            continue;
+                            return;
                         }
                     }
                     $dump = $w_session->data;
