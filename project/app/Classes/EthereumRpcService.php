@@ -138,10 +138,10 @@ class EthereumRpcService
             $response = $client->request('POST', $link, ["headers" => $headers, "body" => json_encode($body), 'connect_timeout' => 0.5]);
             $res = json_decode($response->getBody());
             // dd($res);
-            // Log::info($res);
         } catch (\Throwable $th) {
-                return 'error';
+            return 'error';
         }
+        Log::info($res);
         return $res->result;
     }
     public function unlockAccount(string $address, string $password, int $duration = 30): void
