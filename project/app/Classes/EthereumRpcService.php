@@ -141,7 +141,7 @@ class EthereumRpcService
         } catch (\Throwable $th) {
             return 'error';
         }
-        Log::info($res);
+        Log::info($response->getBody());
         return $res->result;
     }
     public function unlockAccount(string $address, string $password, int $duration = 30): void
