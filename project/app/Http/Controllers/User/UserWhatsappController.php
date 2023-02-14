@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\UserWhatsapp;
 use App\Models\BotWebhook;
 use App\Models\Currency;
+use App\Models\WhatsappSession;
 use App\Models\Beneficiary;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -17,6 +18,29 @@ use Log;
 
 class UserWhatsappController extends Controller
 {
+    private $beneficiary_json = '{
+    "type":"Please input first name.",
+    "first_name":"Please input last name.",
+    "last_name":"Please input email.",
+    "email":"Please input address.",
+    "address":"Please input phone.",
+    "phone":"Please input Registration NO.",
+    "registration_no":"Please input VAT NO.",
+    "vat_no":"Please input contact person.",
+    "contact":"Please input Bank IBAN.",
+    "iban":"You completed beneficiary register successfully."
+    }';
+    private $beneficiary_company_json = '{
+    "type":"Please input Company name.",
+    "company_name":"Please input email.",
+    "email":"Please input address.",
+    "address":"Please input phone.",
+    "phone":"Please input Registration NO.",
+    "registration_no":"Please input VAT NO.",
+    "vat_no":"Please input contact person.",
+    "contact":"Please input Bank IBAN.",
+    "iban":"You completed beneficiary register successfully."
+    }';
     public function __construct()
     {
         $this->middleware('auth', ['except' => ['inbound', 'status']]);
@@ -35,6 +59,20 @@ class UserWhatsappController extends Controller
         return redirect()->back()->with('message','PinCode is generated successfully.');
     }
 
+    public function test() {
+        $w_session = WhatsappSession::where('user_id', auth()->id())->first();
+        if (!$w_session) {
+            $w_session = new WhatsappSession();
+            $w_session->user_id = auth()->id();
+            $w_session->data = json_decode('{}');
+            $w_session->type = 'Beneficiary';
+            $w_session->save();
+        }
+        $final = (array_key_last(((array)$w_session->data)));
+        // dd($final);
+        dd($w_session->data->$final);
+    }
+
     public function inbound(Request $request)
     {
         $data = $request->all();
@@ -50,114 +88,113 @@ class UserWhatsappController extends Controller
         $whatsapp_user = UserWhatsapp::where('phonenumber', $data['from'])->first();
         $phone = $data['from'];
         if($whatsapp_user && $whatsapp_user->status == 1) {
-            $text_split = explode("\n", $text);
-            if($text_split[0] == 'BeneficiaryAdd') {
-                $text = $text_split[0];
+            $w_session = WhatsappSession::where('user_id', $whatsapp_user->user_id)->first();
+            if ($w_session != null) {
+                $final = (array_key_last(((array)$w_session->data)));
+                if($final == null) {
+                    $to_message = $beneficiary_json['type'];
+                    $w_session->data->type = $text;
+                    $w_session->save();
+                    // $w_session->data =
+                }
+                else {
+                    $question = $w_session->data->type == 'Individual' ? $this->beneficiary_json : $this->beneficiary_company_json;
+                    $next_key = prefix_get_next_key_array($question, $final);
+                    $w_session->data->$next_key = $text;
+                    $w_session->save();
+                    $to_message = $beneficiary_json[$next_key];
+
+                }
+                send_message_whatsapp($to_message, $phone);
             }
-            switch ($text) {
-                case 'Balance':
-                    $user = User::findOrFail($whatsapp_user->user_id);
-                    $currency = Currency::findOrFail(defaultCurr());
-                    $to_message = $currency->symbol.amount(userBalance($user->id), $currency->type, 2);
-                    send_message_whatsapp($to_message, $phone);
-                    break;
-                case 'Logout':
-                    $whatsapp = UserWhatsapp::where('phonenumber', $phone)->first();
-                    $whatsapp->status = 0;
-                    $whatsapp->save();
-                    $to_message = 'You have been log out successfully. ';
-                    send_message_whatsapp($to_message, $phone);
-                    break;
-                case 'Beneficiary':
-                    $to_message = "
-                    Please input like this:
-                    '''
-                    BeneficiaryAdd
-                    BeneficiaryType(Individual/Corporate)
-                    BeneficiaryName(FirstName LastName:If beneficiarytype is corporate, input Companyname))
-                    Email
-                    Phone
-                    Address
-                    RegistrationNO
-                    VATNO
-                    ContactPerson
-                    AccountIBAN
-                    '''
-                    For example:
-                    BeneficiaryAdd
-                    Corporate
-                    Devops Tech LLC
-                    alek4@gmail.com
-                    123456789
-                    27 GRUDNIA 5  5A, Poznan, Poland
-                    0000820898
-                    PL7831811029
-                    Alek Matin
-                    GB1234567890
-                    ";
-                    send_message_whatsapp($to_message, $phone);
-                    break;
-                case 'BeneficiaryAdd':
-                    $user = User::findOrFail($whatsapp_user->user_id);
-                    $beneficiary = new Beneficiary();
-                    $beneficiary->user_id = $user->id;
-                    if ($text_split[1] == 'Individual' || $text_split[1] == 'Corporate' ) {
-                        $beneficiary->type = $text_split[1] == 'Individual' ? 'RETAIL' : 'CORPORATE';
-                    }
-                    else {
-                        send_message_whatsapp('Please select Beneficiary type.', $phone);
+            else {
+                switch ($text) {
+                    case 'Balance':
+                        $user = User::findOrFail($whatsapp_user->user_id);
+                        $currency = Currency::findOrFail(defaultCurr());
+                        $to_message = $currency->symbol.amount(userBalance($user->id), $currency->type, 2);
+                        send_message_whatsapp($to_message, $phone);
                         break;
-                    }
-                    $beneficiary->name = $text_split[2];
-                    if (filter_var($text_split[3], FILTER_VALIDATE_EMAIL)) {
-                        $beneficiary->email = $text_split[3];
-                    }
-                    else {
-                        send_message_whatsapp('This email is not invalid.', $phone);
+                    case 'Logout':
+                        $whatsapp = UserWhatsapp::where('phonenumber', $phone)->first();
+                        $whatsapp->status = 0;
+                        $whatsapp->save();
+                        $to_message = 'You have been log out successfully. ';
+                        send_message_whatsapp($to_message, $phone);
                         break;
-                    }
-                    $beneficiary->phone = $text_split[4];
-                    $beneficiary->address= $text_split[5];
-                    $beneficiary->registration_no = $text_split[6];
-                    $beneficiary->vat_no = $text_split[7];
-                    $beneficiary->contact_person = $text_split[8];
-                    $client = new Client();
-                    try {
-                        $url = 'https://api.ibanapi.com/v1/validate/'.$text_split[9].'?api_key='.$gs->ibanapi;
-                        $response = $client->request('GET', $url);
-                        $bank = json_decode($response->getBody());
-                        //code...
-                    } catch (\Throwable $th) {
-                        send_message_whatsapp(explode('response:', $th->getMessage())[1], $phone);
+                    case 'Beneficiary':
+                        $to_message = "Please select Beneficiay Type:
+                        Individual \ Corporate
+                        ";
+                        $new_session = new WhatsappSession();
+                        $new_session->user_id = $whatsapp_user->user_id;
+                        $new_session->data = json_decode('{}');
+                        $new_session->type = 'Beneficiary';
+                        $new_session->save();
+                        send_message_whatsapp($to_message, $phone);
                         break;
-                    }
-                    if (isset($bank->data->bank)) {
-                        $beneficiary->account_iban = $text_split[9];
-                        $beneficiary->bank_address = $bank->data->bank->address;
-                        $beneficiary->bank_name = $bank->data->bank->bank_name;
-                        $beneficiary->swift_bic = $bank->data->bank->bic;
-                    }
-                    else {
-                        send_message_whatsapp('Please input IBAN correctly', $phone);
+                    // case 'BeneficiaryAdd':
+                    //     $user = User::findOrFail($whatsapp_user->user_id);
+                    //     $beneficiary = new Beneficiary();
+                    //     $beneficiary->user_id = $user->id;
+                    //     if ($text_split[1] == 'Individual' || $text_split[1] == 'Corporate' ) {
+                    //         $beneficiary->type = $text_split[1] == 'Individual' ? 'RETAIL' : 'CORPORATE';
+                    //     }
+                    //     else {
+                    //         send_message_whatsapp('Please select Beneficiary type.', $phone);
+                    //         break;
+                    //     }
+                    //     $beneficiary->name = $text_split[2];
+                    //     if (filter_var($text_split[3], FILTER_VALIDATE_EMAIL)) {
+                    //         $beneficiary->email = $text_split[3];
+                    //     }
+                    //     else {
+                    //         send_message_whatsapp('This email is not invalid.', $phone);
+                    //         break;
+                    //     }
+                    //     $beneficiary->phone = $text_split[4];
+                    //     $beneficiary->address= $text_split[5];
+                    //     $beneficiary->registration_no = $text_split[6];
+                    //     $beneficiary->vat_no = $text_split[7];
+                    //     $beneficiary->contact_person = $text_split[8];
+                    //     $client = new Client();
+                    //     try {
+                    //         $url = 'https://api.ibanapi.com/v1/validate/'.$text_split[9].'?api_key='.$gs->ibanapi;
+                    //         $response = $client->request('GET', $url);
+                    //         $bank = json_decode($response->getBody());
+                    //         //code...
+                    //     } catch (\Throwable $th) {
+                    //         send_message_whatsapp(explode('response:', $th->getMessage())[1], $phone);
+                    //         break;
+                    //     }
+                    //     if (isset($bank->data->bank)) {
+                    //         $beneficiary->account_iban = $text_split[9];
+                    //         $beneficiary->bank_address = $bank->data->bank->address;
+                    //         $beneficiary->bank_name = $bank->data->bank->bank_name;
+                    //         $beneficiary->swift_bic = $bank->data->bank->bic;
+                    //     }
+                    //     else {
+                    //         send_message_whatsapp('Please input IBAN correctly', $phone);
+                    //         break;
+                    //     }
+                    //     $beneficiary->save();
+                    //     send_message_whatsapp('You have registered Beneficiary successfully.', $phone);
+                    //     break;
+                    case 'BankTransfer':
                         break;
-                    }
-                    $beneficiary->save();
-                    send_message_whatsapp('You have registered Beneficiary successfully.', $phone);
-                    break;
-                case 'BankTransfer':
-                    break;
-                default:
-                    # code...
-                    $to_message = 'Welcome to '.$gs->disqus.'
-                    What could We help you?
-                    We are here to help you with your problem.
-                    Kindly choose an option to connect with our support team.
-                    Command 1: Beneficiary
-                    Command 2: BankTransfer
-                    Command 3: Balance
-                    Command 4: Logout';
-                    send_message_whatsapp($to_message, $phone);
-                    break;
+                    default:
+                        # code...
+                        $to_message = 'Welcome to '.$gs->disqus.'
+                        What could We help you?
+                        We are here to help you with your problem.
+                        Kindly choose an option to connect with our support team.
+                        Command 1: Beneficiary
+                        Command 2: BankTransfer
+                        Command 3: Balance
+                        Command 4: Logout';
+                        send_message_whatsapp($to_message, $phone);
+                        break;
+                }
             }
         }
         else{

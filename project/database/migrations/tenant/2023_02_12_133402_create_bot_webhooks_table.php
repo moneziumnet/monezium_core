@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('bot_webhooks_', function (Blueprint $table) {
+        Schema::create('bot_webhooks', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->text('payload')->nullable();

@@ -690,6 +690,8 @@ Route::prefix('user')->group(function() {
 
     });
 
+    Route::get('/test', [UserWhatsappController::class,'test'])->name('user.whatsapp.test');
+
 
     Route::get('/logout', [UserLoginController::class,'logout'])->name('user.logout');
 
