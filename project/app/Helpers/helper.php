@@ -12,7 +12,7 @@ use App\Models\User;
 use App\Models\Wallet;
 use App\Models\ActionNotification;
 use App\Models\UserWhatsapp;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 use Carbon\Carbon;
 use GuzzleHttp\Client;
