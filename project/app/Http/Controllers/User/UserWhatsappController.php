@@ -92,7 +92,7 @@ class UserWhatsappController extends Controller
             if ($w_session != null) {
                 $final = (array_key_last(((array)$w_session->data)));
                 if($final == null) {
-                    $to_message = $beneficiary_json['type'];
+                    $to_message = $this->beneficiary_json['type'];
                     $w_session->data->type = $text;
                     $w_session->save();
                     // $w_session->data =
