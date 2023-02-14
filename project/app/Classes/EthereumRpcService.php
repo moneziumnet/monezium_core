@@ -3,6 +3,7 @@
 namespace App\Classes;
 
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Log;
 
 class EthereumException extends \ErrorException
 
@@ -136,7 +137,7 @@ class EthereumRpcService
         try {
             $response = $client->request('POST', $link, ["headers" => $headers, "body" => json_encode($body), 'connect_timeout' => 0.5]);
             $res = json_decode($response->getBody());
-
+            Log::Info($res);
         } catch (\Throwable $th) {
                 return 'error';
         }
