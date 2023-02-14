@@ -18,29 +18,29 @@ use Log;
 
 class UserWhatsappController extends Controller
 {
-    private $beneficiary_json = '{
-    "type":"Please input first name.",
-    "first_name":"Please input last name.",
-    "last_name":"Please input email.",
-    "email":"Please input address.",
-    "address":"Please input phone.",
-    "phone":"Please input Registration NO.",
-    "registration_no":"Please input VAT NO.",
-    "vat_no":"Please input contact person.",
-    "contact":"Please input Bank IBAN.",
-    "iban":"You completed beneficiary register successfully."
-    }';
-    private $beneficiary_company_json = '{
-    "type":"Please input Company name.",
-    "company_name":"Please input email.",
-    "email":"Please input address.",
-    "address":"Please input phone.",
-    "phone":"Please input Registration NO.",
-    "registration_no":"Please input VAT NO.",
-    "vat_no":"Please input contact person.",
-    "contact":"Please input Bank IBAN.",
-    "iban":"You completed beneficiary register successfully."
-    }';
+    private $beneficiary_json =array(
+    "type"=>"Please input first name.",
+    "first_name"=>"Please input last name.",
+    "last_name"=>"Please input email.",
+    "email"=>"Please input address.",
+    "address"=>"Please input phone.",
+    "phone"=>"Please input Registration NO.",
+    "registration_no"=>"Please input VAT NO.",
+    "vat_no"=>"Please input contact person.",
+    "contact"=>"Please input Bank IBAN.",
+    "iban"=>"You completed beneficiary register successfully."
+    );
+    private $beneficiary_company_json = array(
+    "type"=>"Please input Company name.",
+    "company_name"=>"Please input email.",
+    "email"=>"Please input address.",
+    "address"=>"Please input phone.",
+    "phone"=>"Please input Registration NO.",
+    "registration_no"=>"Please input VAT NO.",
+    "vat_no"=>"Please input contact person.",
+    "contact"=>"Please input Bank IBAN.",
+    "iban"=>"You completed beneficiary register successfully.");
+
     public function __construct()
     {
         $this->middleware('auth', ['except' => ['inbound', 'status']]);
@@ -69,7 +69,7 @@ class UserWhatsappController extends Controller
             $w_session->save();
         }
         $final = (array_key_last(((array)$w_session->data)));
-        // dd($final);
+        dd($this->beneficiary_json['type']);
         dd($w_session->data->$final);
     }
 
