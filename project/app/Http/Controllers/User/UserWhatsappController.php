@@ -92,7 +92,7 @@ class UserWhatsappController extends Controller
             if ($w_session != null) {
                 $final = (array_key_last(((array)$w_session->data)));
                 if($final == null) {
-                    if (!( $text == 'Individual' || $text == 'Corporate')) {
+                    if ( $text == 'Individual' || $text == 'Corporate') {
                         $question = $text == 'Individual' ? $this->beneficiary_json : $this->beneficiary_company_json;
                         $to_message = $question['type'];
                         $dump = $w_session->data;
