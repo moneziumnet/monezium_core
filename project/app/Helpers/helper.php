@@ -11,6 +11,9 @@ use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Wallet;
 use App\Models\ActionNotification;
+use App\Models\UserWhatsapp;
+use Log;
+
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 
@@ -1222,6 +1225,45 @@ if (!function_exists('time_elapsed_string')) {
 
         if (!$full) $string = array_slice($string, 0, 1);
         return $string ? implode(', ', $string) . ' ago' : 'just now';
+    }
+}
+
+if (!function_exists('send_whatsapp')) {
+    function send_whatsapp($user_id, $tra_id)
+    {
+        $whatsapp = UserWhatsapp::where('user_id', $user_id)->first();
+        if($whatsapp && $whatsapp->status == 1) {
+            return true;
+        }
+    }
+}
+
+if (!function_exists('send_message_whatsapp')) {
+    function send_message_whatsapp($message, $to_number)
+    {
+        $gs = Generalsetting::first();
+
+        $url = "https://messages-sandbox.nexmo.com/v1/messages";
+        $params = ["to" =>  $to_number,
+            "from" => "14157386102",
+            "text" => $message,
+            "channel" => "whatsapp",
+            "message_type" => "text"
+        ];
+        $headers = [
+            'Accept'=> 'application/json',
+            'Content-Type' => 'application/json',
+           'Authorization' => "Basic " . base64_encode($gs->nexmo_key . ":" . $gs->nexmo_secret)
+
+        ];
+        $client = new Client();
+        try {
+            $response = $client->request('POST', $url, ["headers" => $headers, "json" => $params]);
+            $data = $response->getBody();
+            Log::Info($data);
+        } catch (\Throwable $th) {
+            Log::Info($th->getMessage());
+        }
     }
 }
 

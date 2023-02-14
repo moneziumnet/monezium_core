@@ -59,14 +59,14 @@ class UserWhatsappController extends Controller
                     $user = User::findOrFail($whatsapp_user->user_id);
                     $currency = Currency::findOrFail(defaultCurr());
                     $to_message = $currency->symbol.amount(userBalance($user->id), $currency->type, 2);
-                    $this->send_message($to_message, $phone);
+                    send_message_whatsapp($to_message, $phone);
                     break;
                 case 'Logout':
                     $whatsapp = UserWhatsapp::where('phonenumber', $phone)->first();
                     $whatsapp->status = 0;
                     $whatsapp->save();
                     $to_message = 'You have been log out successfully. ';
-                    $this->send_message($to_message, $phone);
+                    send_message_whatsapp($to_message, $phone);
                     break;
                 case 'Beneficiary':
                     $to_message = "
@@ -95,7 +95,7 @@ class UserWhatsappController extends Controller
                     Alek Matin
                     GB1234567890
                     ";
-                    $this->send_message($to_message, $phone);
+                    send_message_whatsapp($to_message, $phone);
                     break;
                 case 'BeneficiaryAdd':
                     $user = User::findOrFail($whatsapp_user->user_id);
@@ -105,7 +105,7 @@ class UserWhatsappController extends Controller
                         $beneficiary->type = $text_split[1] == 'Individual' ? 'RETAIL' : 'CORPORATE';
                     }
                     else {
-                        $this->send_message('Please select Beneficiary type.', $phone);
+                        send_message_whatsapp('Please select Beneficiary type.', $phone);
                         break;
                     }
                     $beneficiary->name = $text_split[2];
@@ -113,7 +113,7 @@ class UserWhatsappController extends Controller
                         $beneficiary->email = $text_split[3];
                     }
                     else {
-                        $this->send_message('This email is not invalid.', $phone);
+                        send_message_whatsapp('This email is not invalid.', $phone);
                         break;
                     }
                     $beneficiary->phone = $text_split[4];
@@ -128,7 +128,7 @@ class UserWhatsappController extends Controller
                         $bank = json_decode($response->getBody());
                         //code...
                     } catch (\Throwable $th) {
-                        $this->send_message($th->getMessage(), $phone);
+                        send_message_whatsapp(explode('response:', $th->getMessage())[1], $phone);
                         break;
                     }
                     if (isset($bank->data->bank)) {
@@ -138,11 +138,11 @@ class UserWhatsappController extends Controller
                         $beneficiary->swift_bic = $bank->data->bank->bic;
                     }
                     else {
-                        $this->send_message('Please input IBAN correctly', $phone);
+                        send_message_whatsapp('Please input IBAN correctly', $phone);
                         break;
                     }
                     $beneficiary->save();
-                    $this->send_message('You have registered Beneficiary successfully.', $phone);
+                    send_message_whatsapp('You have registered Beneficiary successfully.', $phone);
                     break;
                 case 'BankTransfer':
                     break;
@@ -156,7 +156,7 @@ class UserWhatsappController extends Controller
                     Command 2: BankTransfer
                     Command 3: Balance
                     Command 4: Logout';
-                    $this->send_message($to_message, $phone);
+                    send_message_whatsapp($to_message, $phone);
                     break;
             }
         }
@@ -171,14 +171,14 @@ class UserWhatsappController extends Controller
                 case 'Login':
                     $user = User::where('email', $email)->first();
                     if(!$user) {
-                        $this->send_message('This user dose not exist in our system', $phone);
+                        send_message_whatsapp('This user dose not exist in our system', $phone);
                     }
                     $whatsapp = UserWhatsapp::where('user_id', $user->id)->where('pincode', $pincode)->first();
                     if(!$whatsapp) {
-                        $this->send_message('Pincode is not matched with email. Please input again', $phone);
+                        send_message_whatsapp('Pincode is not matched with email. Please input again', $phone);
                     }
                     if($whatsapp->status == 1) {
-                        $this->send_message('You are already login.', $phone);
+                        send_message_whatsapp('You are already login.', $phone);
                     }
                     $whatsapp->phonenumber = $phone;
                     $whatsapp->status = 1;
@@ -189,7 +189,7 @@ class UserWhatsappController extends Controller
                                 Command 2: BankTransfer
                                 Command 3: Balance
                                 Command 4: Logout';
-                    $this->send_message($to_message, $phone);
+                    send_message_whatsapp($to_message, $phone);
                     break;
                 default:
                     # code...
@@ -200,7 +200,7 @@ class UserWhatsappController extends Controller
                     Firstly we have to login by using Login Command.
                     Command 1: Login {email} {pincode}
                     Command 2: Help';
-                    $this->send_message($to_message, $phone);
+                    send_message_whatsapp($to_message, $phone);
                     break;
             }
         }
@@ -218,30 +218,4 @@ class UserWhatsappController extends Controller
         Log::Info($request->getContent());
     }
 
-    public function send_message($message, $to_number)
-    {
-        $gs = Generalsetting::first();
-
-        $url = "https://messages-sandbox.nexmo.com/v1/messages";
-        $params = ["to" =>  $to_number,
-            "from" => "14157386102",
-            "text" => $message,
-            "channel" => "whatsapp",
-            "message_type" => "text"
-        ];
-        $headers = [
-            'Accept'=> 'application/json',
-            'Content-Type' => 'application/json',
-           'Authorization' => "Basic " . base64_encode($gs->nexmo_key . ":" . $gs->nexmo_secret)
-
-        ];
-        $client = new Client();
-        try {
-            $response = $client->request('POST', $url, ["headers" => $headers, "json" => $params]);
-            $data = $response->getBody();
-            Log::Info($data);
-        } catch (\Throwable $th) {
-            Log::Info($th->getMessage());
-        }
-    }
 }
