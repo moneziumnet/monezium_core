@@ -93,14 +93,18 @@ class UserWhatsappController extends Controller
                 $final = (array_key_last(((array)$w_session->data)));
                 if($final == null) {
                     $to_message = $this->beneficiary_json['type'];
-                    $w_session->data->type = $text;
+                    $dump = $w_session->data;
+                    $dump->type = $text;
+                    $w_session->data = $dump;
                     $w_session->save();
                     // $w_session->data =
                 }
                 else {
                     $question = $w_session->data->type == 'Individual' ? $this->beneficiary_json : $this->beneficiary_company_json;
                     $next_key = prefix_get_next_key_array($question, $final);
-                    $w_session->data->$next_key = $text;
+                    $dump = $w_session->data;
+                    $dump->$next_key = $text;
+                    $w_session->data = $dump;
                     $w_session->save();
                     $to_message = $beneficiary_json[$next_key];
 
