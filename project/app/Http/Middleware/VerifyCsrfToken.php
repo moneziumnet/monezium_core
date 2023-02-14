@@ -30,6 +30,7 @@ class VerifyCsrfToken extends Middleware
         '/cj-payin',
         '/cj-payout',
         '/whatsapp/inbound',
-        '/whatsapp/status'
+        '/whatsapp/status',
+        '/telegram/inbound'
     ];
 }

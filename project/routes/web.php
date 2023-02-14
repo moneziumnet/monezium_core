@@ -198,6 +198,7 @@ Route::post('/qr/access/submit', [QRAccessController::class, 'pay_submit'])->nam
 
 Route::get('/telegram/login', [UserTelegramController::class, 'bot_login'])->name('user.telegram.login');
 Route::get('/telegram/logout', [UserTelegramController::class, 'bot_logout'])->name('user.telegram.logout');
+Route::post('/telegram/inbound', [UserTelegramController::class, 'inbound'])->name('user.telegram.inbound');
 
 Route::post('/whatsapp/inbound', [UserWhatsappController::class, 'inbound'])->name('user.whatsapp.inbound');
 Route::post('/whatsapp/status', [UserWhatsappController::class, 'status'])->name('user.whatsapp.status');

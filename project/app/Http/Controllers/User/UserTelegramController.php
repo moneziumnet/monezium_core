@@ -14,7 +14,7 @@ class UserTelegramController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['bot_login', 'bot_logout']]);
+        $this->middleware('auth', ['except' => ['bot_login', 'bot_logout', 'inbound']]);
     }
 
     public function index()
@@ -22,6 +22,17 @@ class UserTelegramController extends Controller
         $data['telegram'] = UserTelegram::where('user_id',auth()->id())->first();
         $data['whatsapp'] = UserWhatsapp::where('user_id',auth()->id())->first();
         return view('user.staff.pincode',$data);
+    }
+
+    public function inbound(Request $request)
+    {
+        $data = $request->all();
+        $whatsapp_hook = new BotWebhook();
+        $whatsapp_hook->name = 'telegram';
+        $whatsapp_hook->payload = json_decode($request->getContent());
+        $whatsapp_hook->url = route('user.telegram.inbound');
+        $whatsapp_hook->save();
+
     }
     public function generate(Request $request)
     {
