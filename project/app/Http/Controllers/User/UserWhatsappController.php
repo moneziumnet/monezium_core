@@ -106,7 +106,7 @@ class UserWhatsappController extends Controller
                     $dump->$next_key = $text;
                     $w_session->data = $dump;
                     $w_session->save();
-                    $to_message = $beneficiary_json[$next_key];
+                    $to_message = $question[$next_key];
 
                 }
                 send_message_whatsapp($to_message, $phone);
