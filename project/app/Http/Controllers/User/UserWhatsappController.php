@@ -96,7 +96,7 @@ class UserWhatsappController extends Controller
                         $question = $text == 'Individual' ? $this->beneficiary_json : $this->beneficiary_company_json;
                         $to_message = $question['type'];
                         $dump = $w_session->data;
-                        $dump->type = $text;
+                        $dump->type = $text == 'Individual' ? 'RETAIL' : 'CORPORATE';;
                         $w_session->data = $dump;
                         $w_session->save();
                     }
@@ -111,6 +111,33 @@ class UserWhatsappController extends Controller
                         if (!filter_var($text, FILTER_VALIDATE_EMAIL)) {
                             $to_message = "Please input correct email.";
                             send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+                    }
+                    if($next_key == "iban") {
+                        $client = new Client();
+                        try {
+                            $url = 'https://api.ibanapi.com/v1/validate/'.$text.'?api_key='.$gs->ibanapi;
+                            $response = $client->request('GET', $url);
+                            $bank = json_decode($response->getBody());
+                            //code...
+                        } catch (\Throwable $th) {
+                            send_message_whatsapp(explode('response:', $th->getMessage())[1], $phone);
+                            return;
+                        }
+                        if (isset($bank->data->bank)) {
+                            $dump = $w_session->data;
+                            $dump->account_iban = $text;
+                            $dump->bank_address = $bank->data->bank->address;
+                            $dump->bank_name = $bank->data->bank->bank_name;
+                            $dump->swift_bic = $bank->data->bank->bic;
+                            $w_session->data = $dump;
+                            $w_session->save();
+                            send_message_whatsapp('You completed beneficiary register successfully.', $phone);
+                            return;
+                        }
+                        else {
+                            send_message_whatsapp('Please input IBAN correctly', $phone);
                             return;
                         }
                     }
