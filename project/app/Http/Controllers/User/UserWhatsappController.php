@@ -251,6 +251,11 @@ class UserWhatsappController extends Controller
                             send_message_whatsapp($to_message, $phone);
                             return;
                         }
+                        else {
+                            $to_message = "Please input number to select Bank account correctly.";
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
                     }
                     if($next_key == "account_iban") {
                         $client = new Client();
