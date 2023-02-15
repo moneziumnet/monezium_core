@@ -257,6 +257,33 @@ class UserWhatsappController extends Controller
                             return;
                         }
                     }
+                    if($next_key == "currency_id") {
+                        $subbank = SubInsBank::find($w_session->data->subbank);
+                        if($subbank->hasGateway()){
+                            $currencies = BankAccount::whereUserId($whatsapp_user->user_id)->where('subbank_id', $w_session->data->subbank)->with('currency')->get();
+                        } else {
+                            $currencies = BankPoolAccount::where('bank_id', $w_session->data->subbank)->with('currency')->get();
+                        }
+                        $currency_list = [];
+                        foreach ($currencies as $key => $currency) {
+                            array_push($currency_list, $currency->currency->id);
+                        }
+                        if (in_array($text, $currency_list)) {
+
+                            $to_message = $question['currency_id'];
+                            $dump = $w_session->data;
+                            $dump->currency_id = $text;
+                            $w_session->data = $dump;
+                            $w_session->save();
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+                        else {
+                            $to_message = "Please input number to select currency correctly.";
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+                    }
                     if($next_key == "account_iban") {
                         $client = new Client();
                         try {
