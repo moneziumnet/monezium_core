@@ -373,14 +373,45 @@ class UserWhatsappController extends Controller
 
 
                         $to_message = $question['amount'];
+                        $extra_string = "\nSWIFT\nSEPA\nSEPA_INSTANT";
+                        if ($currency->code == 'EUR') {
+                            $extra_string = "\nSWIFT\nSEPA\nSEPA_INSTANT";
+                        }
+                        else {
+                            $extra_string = "\nSWIFT\nCHAPS";
+                        }
                         $dump = $w_session->data;
                         $dump->cost = $transaction_global_cost*$rate;
-                        $dump->final_amount = $text;
+                        $dump->final_amount = (float)$text;
                         $dump->amount = $text + $transaction_global_cost*$rate;
                         $w_session->data = $dump;
                         $w_session->save();
-                        send_message_whatsapp($to_message, $phone);
+                        send_message_whatsapp($to_message.$extra_string, $phone);
                         return;
+                    }
+                    if($next_key == "payment_type") {
+                        $currency = Currency::findOrFail($w_session->data->currency_id);
+                        if ($currency->code == 'EUR'){
+                            $currency_list = ['SEPA', 'SWIFT', 'SEPA_INSTANT'];
+                        }
+                        else {
+                            $currency_list = ['SWIFT', 'CHAPS'];
+                        }
+
+                        if (in_array($text, $currency_list)) {
+                            $to_message = $question['payment_type'];
+                            $dump = $w_session->data;
+                            $dump->payment_type = $text;
+                            $w_session->data = $dump;
+                            $w_session->save();
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+                        else {
+                            $to_message = "Please select payment type correctly.";
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
                     }
                     if($next_key == "account_iban") {
                         $client = new Client();
