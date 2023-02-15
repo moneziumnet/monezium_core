@@ -284,6 +284,25 @@ class UserWhatsappController extends Controller
                             return;
                         }
                     }
+                    if($next_key == "amount") {
+                        if (!is_numeric($text)) {
+                            $to_message = "Please input number for amount correctly.";
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+                        if ($text >= $gs->other_bank_limit) {
+                            $to_message = "Please input less amount than ".$gs->other_bank_limit;
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+                        $to_message = $question['amount'];
+                        $dump = $w_session->data;
+                        $dump->amount = $text;
+                        $w_session->data = $dump;
+                        $w_session->save();
+                        send_message_whatsapp($to_message, $phone);
+                        return;
+                    }
                     if($next_key == "account_iban") {
                         $client = new Client();
                         try {
