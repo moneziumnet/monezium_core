@@ -122,7 +122,7 @@ class UserWhatsappController extends Controller
                             $bank = json_decode($response->getBody());
                             //code...
                         } catch (\Throwable $th) {
-                            send_message_whatsapp(explode('response:', $th->getMessage())[1], $phone);
+                            send_message_whatsapp(explode('response:', $th->getMessage())[1].'\\n Please input IBAN correctly.', $phone);
                             return;
                         }
                         if (isset($bank->data->bank)) {
@@ -136,9 +136,9 @@ class UserWhatsappController extends Controller
                             $beneficiary = new Beneficiary();
                             $input = json_decode(json_encode($w_session), true);;
 
-                            $input['user_id'] = $w_session->id;
+                            $input['user_id'] = $w_session->user_id;
                             if($w_session->data->type == 'RETAIL') {
-                                $input['name'] =  trim($w_session->data->firstname)." ".trim($w_session->data->lastname);
+                                $input['name'] =  trim($w_session->data->first_name)." ".trim($w_session->data->last_name);
                             }
                             else {
                                 $input['name'] =  $w_session->data->company_name;
