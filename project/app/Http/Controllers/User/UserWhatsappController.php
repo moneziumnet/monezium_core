@@ -89,7 +89,7 @@ class UserWhatsappController extends Controller
         $phone = $data['from'];
         if($whatsapp_user && $whatsapp_user->status == 1) {
             $w_session = WhatsappSession::where('user_id', $whatsapp_user->user_id)->first();
-            if ($w_session != null && $w_session->data != null) {
+            if ($w_session != null && $w_session->data != null && $w_session->type == "Beneficiary") {
                 if($text == '#') {
                     $w_session->data = null;
                     $w_session->save();
@@ -199,54 +199,23 @@ class UserWhatsappController extends Controller
                         $new_session->save();
                         send_message_whatsapp($to_message, $phone);
                         break;
-                    // case 'BeneficiaryAdd':
-                    //     $user = User::findOrFail($whatsapp_user->user_id);
-                    //     $beneficiary = new Beneficiary();
-                    //     $beneficiary->user_id = $user->id;
-                    //     if ($text_split[1] == 'Individual' || $text_split[1] == 'Corporate' ) {
-                    //         $beneficiary->type = $text_split[1] == 'Individual' ? 'RETAIL' : 'CORPORATE';
-                    //     }
-                    //     else {
-                    //         send_message_whatsapp('Please select Beneficiary type.', $phone);
-                    //         break;
-                    //     }
-                    //     $beneficiary->name = $text_split[2];
-                    //     if (filter_var($text_split[3], FILTER_VALIDATE_EMAIL)) {
-                    //         $beneficiary->email = $text_split[3];
-                    //     }
-                    //     else {
-                    //         send_message_whatsapp('This email is not invalid.', $phone);
-                    //         break;
-                    //     }
-                    //     $beneficiary->phone = $text_split[4];
-                    //     $beneficiary->address= $text_split[5];
-                    //     $beneficiary->registration_no = $text_split[6];
-                    //     $beneficiary->vat_no = $text_split[7];
-                    //     $beneficiary->contact_person = $text_split[8];
-                    //     $client = new Client();
-                    //     try {
-                    //         $url = 'https://api.ibanapi.com/v1/validate/'.$text_split[9].'?api_key='.$gs->ibanapi;
-                    //         $response = $client->request('GET', $url);
-                    //         $bank = json_decode($response->getBody());
-                    //         //code...
-                    //     } catch (\Throwable $th) {
-                    //         send_message_whatsapp(explode('response:', $th->getMessage())[1], $phone);
-                    //         break;
-                    //     }
-                    //     if (isset($bank->data->bank)) {
-                    //         $beneficiary->account_iban = $text_split[9];
-                    //         $beneficiary->bank_address = $bank->data->bank->address;
-                    //         $beneficiary->bank_name = $bank->data->bank->bank_name;
-                    //         $beneficiary->swift_bic = $bank->data->bank->bic;
-                    //     }
-                    //     else {
-                    //         send_message_whatsapp('Please input IBAN correctly', $phone);
-                    //         break;
-                    //     }
-                    //     $beneficiary->save();
-                    //     send_message_whatsapp('You have registered Beneficiary successfully.', $phone);
-                    //     break;
                     case 'BankTransfer':
+                        $beneficiary_list = Beneficiary::where('user_id',  $whatsapp_user->user_id)->get();
+                        $beneficiaries = '';
+                        foreach ($beneficiary_list as $key => $beneficiary) {
+                            $beneficiaries = $beneficiaries.$beneficiary->id.':'.$beneficiary->name."\n";
+                        }
+                        $to_message = "Please select Beneficiary\n 1:\n\nPlease type in # to go back to menu
+                        ";
+                        $new_session = WhatsappSession::where('user_id', $whatsapp_user->user_id)->first();
+                        if(!$new_session) {
+                            $new_session = new WhatsappSession();
+                        }
+                        $new_session->user_id = $whatsapp_user->user_id;
+                        $new_session->data = json_decode('{}');
+                        $new_session->type = 'BankTransfer';
+                        $new_session->save();
+                        send_message_whatsapp($to_message, $phone);
                         break;
                     default:
                         # code...
