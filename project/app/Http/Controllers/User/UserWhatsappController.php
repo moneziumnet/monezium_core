@@ -418,7 +418,40 @@ class UserWhatsappController extends Controller
                         $dump->des = $text;
                         $w_session->data = $dump;
                         $w_session->save();
+                        $beneficiary = Beneficiary::findOrFail($w_session->data->beneficiary_id);
+
+                        $balance_transfer = new BalanceTransfer();
+
+
+
+                        $txnid = Str::random(4).time();
+
+                        $balance_transfer->user_id = $whatsapp_user->user_id;
+                        $balance_transfer->transaction_no = $txnid;
+                        $balance_transfer->currency_id = $w_session->data->currency_id;
+                        $balance_transfer->subbank = $w_session->data->subbank;
+                        $balance_transfer->iban = $beneficiary->account_iban;
+                        $balance_transfer->swift_bic = $beneficiary->swift_bic;
+                        $balance_transfer->beneficiary_id = $w_session->data->beneficiary_id;
+                        $balance_transfer->type = 'other';
+                        $balance_transfer->cost = $w_session->data->cost;
+                        $balance_transfer->payment_type = $w_session->data->payment_type;
+                        $balance_transfer->amount = $w_session->data->amount;
+                        $balance_transfer->final_amount = $w_session->data->final_amount;
+                        $balance_transfer->description = $w_session->data->des;
+                        $balance_transfer->status = 0;
+                        $balance_transfer->save();
+
+                        $w_session->data = null;
+                        $w_session->save();
+
+                        // user_wallet_decrement($whatsapp_user->user_id, $balance_transfer->currency_id, $balance_transfer->amount);
+                        // user_wallet_increment(0, $balance_transfer->currency_id, $balance_transfer->cost, 9);
+
                         send_message_whatsapp('You completed Bank Transfer successfully.', $phone);
+                        $user = User::findOrFail($whatsapp_user->user_id);
+                        send_notification($user->id, 'Bank transfer has been created by '.($user->company_name ?? $user->name).' via Whatsapp. Please check.', route('admin-user-banks', $user->id));
+
                         return;
 
                     }
