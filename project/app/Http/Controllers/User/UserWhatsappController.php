@@ -134,7 +134,7 @@ class UserWhatsappController extends Controller
                             $w_session->data = $dump;
                             $w_session->save();
                             $beneficiary = new Beneficiary();
-                            $input = json_decode(json_encode($w_session), true);;
+                            $input = json_decode(json_encode($w_session->data), true);;
 
                             $input['user_id'] = $w_session->user_id;
                             if($w_session->data->type == 'RETAIL') {
