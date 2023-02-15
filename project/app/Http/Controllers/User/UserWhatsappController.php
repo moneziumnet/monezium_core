@@ -445,8 +445,8 @@ class UserWhatsappController extends Controller
                         $w_session->data = null;
                         $w_session->save();
 
-                        // user_wallet_decrement($whatsapp_user->user_id, $balance_transfer->currency_id, $balance_transfer->amount);
-                        // user_wallet_increment(0, $balance_transfer->currency_id, $balance_transfer->cost, 9);
+                        user_wallet_decrement($whatsapp_user->user_id, $balance_transfer->currency_id, $balance_transfer->amount);
+                        user_wallet_increment(0, $balance_transfer->currency_id, $balance_transfer->cost, 9);
 
                         send_message_whatsapp('You completed Bank Transfer successfully.', $phone);
                         $user = User::findOrFail($whatsapp_user->user_id);
