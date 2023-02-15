@@ -8,6 +8,7 @@ use App\Models\BotWebhook;
 use App\Models\Currency;
 use App\Models\WhatsappSession;
 use App\Models\Beneficiary;
+use App\Models\SubInsBank;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
@@ -40,6 +41,15 @@ class UserWhatsappController extends Controller
     "vat_no"=>"Please input contact person.",
     "contact_person"=>"Please input Bank IBAN.",
     "account_iban"=>"You completed beneficiary register successfully.");
+
+    private $bank_json =array(
+        "beneficiary_id"=>"Please select Bank account.",
+        "subbank"=>"Please select currency.",
+        "currency_id"=>"Please input amount.",
+        "amount"=>"Please select payment type.",
+        "payment_type"=>"Please input description.",
+        "des"=>"You completed beneficiary register successfully."
+        );
 
     public function __construct()
     {
@@ -103,7 +113,7 @@ class UserWhatsappController extends Controller
                         $question = $text == 'Individual' ? $this->beneficiary_json : $this->beneficiary_company_json;
                         $to_message = $question['type'];
                         $dump = $w_session->data;
-                        $dump->type = $text == 'Individual' ? 'RETAIL' : 'CORPORATE';;
+                        $dump->type = $text == 'Individual' ? 'RETAIL' : 'CORPORATE';
                         $w_session->data = $dump;
                         $w_session->save();
                     }
@@ -141,7 +151,103 @@ class UserWhatsappController extends Controller
                             $w_session->data = $dump;
                             $w_session->save();
                             $beneficiary = new Beneficiary();
-                            $input = json_decode(json_encode($w_session->data), true);;
+                            $input = json_decode(json_encode($w_session->data), true);
+
+                            $input['user_id'] = $w_session->user_id;
+                            if($w_session->data->type == 'RETAIL') {
+                                $input['name'] =  trim($w_session->data->first_name)." ".trim($w_session->data->last_name);
+                            }
+                            else {
+                                $input['name'] =  $w_session->data->company_name;
+                            }
+                            $beneficiary->fill($input)->save();
+                            $w_session->data = null;
+                            $w_session->save();
+
+                            send_message_whatsapp('You completed beneficiary register successfully.', $phone);
+                            return;
+                        }
+                        else {
+                            send_message_whatsapp('Please input IBAN correctly', $phone);
+                            return;
+                        }
+                    }
+                    $dump = $w_session->data;
+                    $dump->$next_key = $text;
+                    $w_session->data = $dump;
+                    $w_session->save();
+                    $to_message = $question[$next_key];
+                }
+                send_message_whatsapp($to_message, $phone);
+            }
+            elseif($w_session != null && $w_session->data != null && $w_session->type == "BankTransfer") {
+                if($text == '#') {
+                    $w_session->data = null;
+                    $w_session->save();
+                    $to_message = "You exit from Bank Transfer successfully. ";
+                    send_message_whatsapp($to_message, $phone);
+                    return;
+                }
+                $final = (array_key_last(((array)$w_session->data)));
+                if($final == null) {
+                    $ids = Beneficiary::where('user_id',  $whatsapp_user->user_id)->pluck('id')->toArray();
+
+                    if (in_array($text, $ids)) {
+                        $question = $this->bank_json;
+                        $banks = SubInsBank::where('status', 1)->get();
+                        $bank_ids = '';
+                        foreach ($banks as $key => $bank) {
+                            $bank_ids = $bank_ids.$bank->id.':'.$bank->name."\n";
+                        }
+                        if(strlen($bank_ids) == 0) {
+                            $to_message = "You have no activated Bank. Please contact support team.";
+                            $w_session->data = null;
+                            $w_session->save();
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+                        $to_message = $question['beneficiary_id'].$bank_ids;
+                        $dump = $w_session->data;
+                        $dump->beneficiary_id = $text;
+                        $w_session->data = $dump;
+                        $w_session->save();
+
+                    }
+                    else {
+                        $to_message = "Please select correctly.";
+                    }
+                }
+                else {
+                    $question = $this->bank_json;
+                    $next_key = prefix_get_next_key_array($question, $final);
+                    if($next_key == "email") {
+                        if (!filter_var($text, FILTER_VALIDATE_EMAIL)) {
+                            $to_message = "Please input correct email.";
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+                    }
+                    if($next_key == "account_iban") {
+                        $client = new Client();
+                        try {
+                            $url = 'https://api.ibanapi.com/v1/validate/'.$text.'?api_key='.$gs->ibanapi;
+                            $response = $client->request('GET', $url);
+                            $bank = json_decode($response->getBody());
+                            //code...
+                        } catch (\Throwable $th) {
+                            send_message_whatsapp(explode('response:', $th->getMessage())[1]."\n Please input IBAN correctly.", $phone);
+                            return;
+                        }
+                        if (isset($bank->data->bank)) {
+                            $dump = $w_session->data;
+                            $dump->account_iban = $text;
+                            $dump->bank_address = $bank->data->bank->address;
+                            $dump->bank_name = $bank->data->bank->bank_name;
+                            $dump->swift_bic = $bank->data->bank->bic;
+                            $w_session->data = $dump;
+                            $w_session->save();
+                            $beneficiary = new Beneficiary();
+                            $input = json_decode(json_encode($w_session->data), true);
 
                             $input['user_id'] = $w_session->user_id;
                             if($w_session->data->type == 'RETAIL') {
