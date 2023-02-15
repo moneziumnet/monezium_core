@@ -183,7 +183,10 @@ class UserWhatsappController extends Controller
                         $to_message = "Please select Beneficiay Type:
                         Individual \ Corporate
                         ";
-                        $new_session = new WhatsappSession();
+                        $new_session = WhatsappSession::where('user_id', $whatsapp_user->user_id)->first();
+                        if(!$new_session) {
+                            $new_session = new WhatsappSession();
+                        }
                         $new_session->user_id = $whatsapp_user->user_id;
                         $new_session->data = json_decode('{}');
                         $new_session->type = 'Beneficiary';
