@@ -12,6 +12,7 @@ use App\Models\SubInsBank;
 use App\Models\BankAccount;
 use App\Models\BankPoolAccount;
 use App\Models\BankPlan;
+use App\Models\PlanDetail;
 use App\Models\BalanceTransfer;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
