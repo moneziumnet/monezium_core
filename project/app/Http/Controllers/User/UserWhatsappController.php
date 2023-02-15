@@ -11,6 +11,8 @@ use App\Models\Beneficiary;
 use App\Models\SubInsBank;
 use App\Models\BankAccount;
 use App\Models\BankPoolAccount;
+use App\Models\BankPlan;
+use App\Models\BalanceTransfer;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
@@ -295,9 +297,85 @@ class UserWhatsappController extends Controller
                             send_message_whatsapp($to_message, $phone);
                             return;
                         }
+                        $user = User::findOrFail($whatsapp_user->user_id);
+
+                        $bank_plan = BankPlan::whereId($user->bank_plan_id)->first();
+                        $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'withdraw')->first();
+                        $dailySend = BalanceTransfer::whereUserId($user->id)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus(1)->sum('amount');
+                        $monthlySend = BalanceTransfer::whereUserId($user->id)->whereMonth('created_at', '=', date('m'))->whereStatus(1)->sum('amount');
+
+                        if($dailySend > $global_range->daily_limit){
+                            $to_message = "Daily send limit over.";
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+
+                        if($monthlySend > $global_range->monthly_limit){
+                            $to_message = "Monthly send limit over.";
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+
+
+
+                        $dailyTransactions = BalanceTransfer::whereType('other')->whereUserId($user->id)->whereDate('created_at', now())->get();
+                        $monthlyTransactions = BalanceTransfer::whereType('other')->whereUserId($user->id)->whereMonth('created_at', now()->month())->get();
+                        $transaction_global_cost = 0;
+                        $currency = Currency::findOrFail($w_session->data->currency_id);
+                        $rate = getRate($currency);
+                        $transaction_global_fee = check_global_transaction_fee($text/$rate, $user, 'withdraw');
+
+                        if($transaction_global_fee)
+                        {
+                            $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($text/($rate*100)) * $transaction_global_fee->data->percent_charge;
+                        }
+                        $finalAmount = $text + $transaction_global_cost*$rate;
+
+                        if($global_range->min > $text/$rate){
+                            $to_message = 'Request Amount should be greater than this '.$global_range->min;
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+
+                        if($global_range->max < $text/$rate){
+                            $to_message = 'Request Amount should be less than this '.$global_range->max;
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+
+                        $balance = user_wallet_balance($user->id, $w_session->data->currency_id);
+
+                        if($balance < 0 || $finalAmount > $balance){
+                            $to_message = 'Insufficient Balance!';
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+
+                        if($global_range->daily_limit <= $finalAmount){
+                            $to_message = 'Your daily limitation of transaction is over.';
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+
+                        if($global_range->daily_limit <= $dailyTransactions->sum('final_amount')){
+                            $to_message = 'Your daily limitation of transaction is over.';
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+
+
+                        if($global_range->monthly_limit < $monthlyTransactions->sum('final_amount')){
+                            $to_message = 'Your monthly limitation of transaction is over.';
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+
+
                         $to_message = $question['amount'];
                         $dump = $w_session->data;
-                        $dump->amount = $text;
+                        $dump->cost = $transaction_global_cost*$rate;
+                        $dump->final_amount = $text;
+                        $dump->amount = $text + $transaction_global_cost*$rate;
                         $w_session->data = $dump;
                         $w_session->save();
                         send_message_whatsapp($to_message, $phone);
