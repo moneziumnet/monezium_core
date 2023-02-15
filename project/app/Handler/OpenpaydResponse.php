@@ -78,7 +78,6 @@ class OpenpaydResponse implements RespondsToWebhook
                     $new_deposit['sub_bank_id'] = null;
                     $new_deposit->save();
                     send_notification($user->id, 'Bank has been deposited by '.$obj->senderName.'. Please check.', route('admin.deposits.bank.index'));
-                    send_whatsapp($user_id, $obj->transacctionId);
 
                 }
             }

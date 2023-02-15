@@ -1229,10 +1229,11 @@ if (!function_exists('time_elapsed_string')) {
 }
 
 if (!function_exists('send_whatsapp')) {
-    function send_whatsapp($user_id, $tra_id)
+    function send_whatsapp($user_id, $message)
     {
         $whatsapp = UserWhatsapp::where('user_id', $user_id)->first();
-        if($whatsapp && $whatsapp->status == 1) {
+        if($whatsapp && $whatsapp->phonenumber != null) {
+            send_message_whatsapp($message, $whatsapp->phonenumber);
             return true;
         }
     }
