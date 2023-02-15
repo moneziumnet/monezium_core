@@ -105,7 +105,7 @@ class UserWhatsappController extends Controller
                     }
                 }
                 else {
-                    $question = $w_session->data->type == 'Individual' ? $this->beneficiary_json : $this->beneficiary_company_json;
+                    $question = $w_session->data->type == 'RETAIL' ? $this->beneficiary_json : $this->beneficiary_company_json;
                     $next_key = prefix_get_next_key_array($question, $final);
                     if($next_key == "email") {
                         if (!filter_var($text, FILTER_VALIDATE_EMAIL)) {
