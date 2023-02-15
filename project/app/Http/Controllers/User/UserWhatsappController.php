@@ -413,46 +413,14 @@ class UserWhatsappController extends Controller
                             return;
                         }
                     }
-                    if($next_key == "account_iban") {
-                        $client = new Client();
-                        try {
-                            $url = 'https://api.ibanapi.com/v1/validate/'.$text.'?api_key='.$gs->ibanapi;
-                            $response = $client->request('GET', $url);
-                            $bank = json_decode($response->getBody());
-                            //code...
-                        } catch (\Throwable $th) {
-                            send_message_whatsapp(explode('response:', $th->getMessage())[1]."\n Please input IBAN correctly.", $phone);
-                            return;
-                        }
-                        if (isset($bank->data->bank)) {
-                            $dump = $w_session->data;
-                            $dump->account_iban = $text;
-                            $dump->bank_address = $bank->data->bank->address;
-                            $dump->bank_name = $bank->data->bank->bank_name;
-                            $dump->swift_bic = $bank->data->bank->bic;
-                            $w_session->data = $dump;
-                            $w_session->save();
-                            $beneficiary = new Beneficiary();
-                            $input = json_decode(json_encode($w_session->data), true);
+                    if($next_key == "des") {
+                        $dump = $w_session->data;
+                        $dump->des = $text;
+                        $w_session->data = $dump;
+                        $w_session->save();
+                        send_message_whatsapp('You completed Bank Transfer successfully.', $phone);
+                        return;
 
-                            $input['user_id'] = $w_session->user_id;
-                            if($w_session->data->type == 'RETAIL') {
-                                $input['name'] =  trim($w_session->data->first_name)." ".trim($w_session->data->last_name);
-                            }
-                            else {
-                                $input['name'] =  $w_session->data->company_name;
-                            }
-                            $beneficiary->fill($input)->save();
-                            $w_session->data = null;
-                            $w_session->save();
-
-                            send_message_whatsapp('You completed beneficiary register successfully.', $phone);
-                            return;
-                        }
-                        else {
-                            send_message_whatsapp('Please input IBAN correctly', $phone);
-                            return;
-                        }
                     }
                     $dump = $w_session->data;
                     $dump->$next_key = $text;
