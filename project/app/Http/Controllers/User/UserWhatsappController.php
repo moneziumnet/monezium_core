@@ -187,8 +187,7 @@ class UserWhatsappController extends Controller
                         send_message_whatsapp($to_message, $phone);
                         break;
                     case 'Beneficiary':
-                        $to_message = "Please select Beneficiay Type: \nIndividual \ Corporate\n\n
-                        Please type in # to go back to menu
+                        $to_message = "Please select Beneficiay Type: \nIndividual \ Corporate\n\nPlease type in # to go back to menu
                         ";
                         $new_session = WhatsappSession::where('user_id', $whatsapp_user->user_id)->first();
                         if(!$new_session) {
