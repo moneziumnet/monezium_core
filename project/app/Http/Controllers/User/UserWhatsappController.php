@@ -43,8 +43,8 @@ class UserWhatsappController extends Controller
     "account_iban"=>"You completed beneficiary register successfully.");
 
     private $bank_json =array(
-        "beneficiary_id"=>"Please select Bank account.",
-        "subbank"=>"Please select currency.",
+        "beneficiary_id"=>"Please input number to select Bank account.",
+        "subbank"=>"Please input number to select currency.",
         "currency_id"=>"Please input amount.",
         "amount"=>"Please select payment type.",
         "payment_type"=>"Please input description.",
@@ -206,7 +206,7 @@ class UserWhatsappController extends Controller
                             send_message_whatsapp($to_message, $phone);
                             return;
                         }
-                        $to_message = $question['beneficiary_id'].$bank_ids;
+                        $to_message = $question['beneficiary_id']."\n".$bank_ids;
                         $dump = $w_session->data;
                         $dump->beneficiary_id = $text;
                         $w_session->data = $dump;
@@ -316,7 +316,7 @@ class UserWhatsappController extends Controller
                             send_message_whatsapp($to_message, $phone);
                             break;
                         }
-                        $to_message = "Please select Beneficiary\n ".$beneficiaries."Please type in # to go back to menu
+                        $to_message = "Please input number to select Beneficiary\n ".$beneficiaries."Please type in # to go back to menu
                         ";
                         $new_session = WhatsappSession::where('user_id', $whatsapp_user->user_id)->first();
                         if(!$new_session) {
