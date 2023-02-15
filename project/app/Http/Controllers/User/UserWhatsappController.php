@@ -27,8 +27,8 @@ class UserWhatsappController extends Controller
     "phone"=>"Please input Registration NO.",
     "registration_no"=>"Please input VAT NO.",
     "vat_no"=>"Please input contact person.",
-    "contact"=>"Please input Bank IBAN.",
-    "iban"=>"You completed beneficiary register successfully."
+    "contact_person"=>"Please input Bank IBAN.",
+    "account_iban"=>"You completed beneficiary register successfully."
     );
     private $beneficiary_company_json = array(
     "type"=>"Please input Company name.",
@@ -38,8 +38,8 @@ class UserWhatsappController extends Controller
     "phone"=>"Please input Registration NO.",
     "registration_no"=>"Please input VAT NO.",
     "vat_no"=>"Please input contact person.",
-    "contact"=>"Please input Bank IBAN.",
-    "iban"=>"You completed beneficiary register successfully.");
+    "contact_person"=>"Please input Bank IBAN.",
+    "account_iban"=>"You completed beneficiary register successfully.");
 
     public function __construct()
     {
@@ -114,7 +114,7 @@ class UserWhatsappController extends Controller
                             return;
                         }
                     }
-                    if($next_key == "iban") {
+                    if($next_key == "account_iban") {
                         $client = new Client();
                         try {
                             $url = 'https://api.ibanapi.com/v1/validate/'.$text.'?api_key='.$gs->ibanapi;
@@ -133,6 +133,20 @@ class UserWhatsappController extends Controller
                             $dump->swift_bic = $bank->data->bank->bic;
                             $w_session->data = $dump;
                             $w_session->save();
+                            $beneficiary = new Beneficiary();
+                            $input = json_decode(json_encode($w_session), true);;
+
+                            $input['user_id'] = $w_session->id;
+                            if($w_session->data->type == 'RETAIL') {
+                                $input['name'] =  trim($w_session->data->firstname)." ".trim($w_session->data->lastname);
+                            }
+                            else {
+                                $input['name'] =  $w_session->data->company_name;
+                            }
+                            $beneficiary->fill($input)->save();
+                            $w_session->data = null;
+                            $w_session->save();
+
                             send_message_whatsapp('You completed beneficiary register successfully.', $phone);
                             return;
                         }
