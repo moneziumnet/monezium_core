@@ -89,7 +89,7 @@ class UserWhatsappController extends Controller
         $phone = $data['from'];
         if($whatsapp_user && $whatsapp_user->status == 1) {
             $w_session = WhatsappSession::where('user_id', $whatsapp_user->user_id)->first();
-            if ($w_session != null) {
+            if ($w_session != null && $w_session->data != null) {
                 $final = (array_key_last(((array)$w_session->data)));
                 if($final == null) {
                     if ( $text == 'Individual' || $text == 'Corporate') {
