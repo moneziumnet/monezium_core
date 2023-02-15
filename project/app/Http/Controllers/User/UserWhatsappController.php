@@ -90,6 +90,13 @@ class UserWhatsappController extends Controller
         if($whatsapp_user && $whatsapp_user->status == 1) {
             $w_session = WhatsappSession::where('user_id', $whatsapp_user->user_id)->first();
             if ($w_session != null && $w_session->data != null) {
+                if($text == '#') {
+                    $w_session->data = null;
+                    $w_session->save();
+                    $to_message = "You exit from beneficiary register successfully. ";
+                    send_message_whatsapp($to_message, $phone);
+                    return;
+                }
                 $final = (array_key_last(((array)$w_session->data)));
                 if($final == null) {
                     if ( $text == 'Individual' || $text == 'Corporate') {
@@ -180,8 +187,8 @@ class UserWhatsappController extends Controller
                         send_message_whatsapp($to_message, $phone);
                         break;
                     case 'Beneficiary':
-                        $to_message = "Please select Beneficiay Type:
-                        Individual \ Corporate
+                        $to_message = "Please select Beneficiay Type: \nIndividual \ Corporate\n\n
+                        Please type in # to go back to menu
                         ";
                         $new_session = WhatsappSession::where('user_id', $whatsapp_user->user_id)->first();
                         if(!$new_session) {
