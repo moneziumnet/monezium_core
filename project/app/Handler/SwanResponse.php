@@ -101,7 +101,7 @@ class SwanResponse implements RespondsToWebhook
 
                     $webrequest->save();
 
-                    $deposit = DepositBank::whereRaw("INSTR('".$details->reference."', deposit_number) > 0")->first();
+                    $deposit = DepositBank::whereRaw("INSTR('".$details->reference."', deposit_number) > 0")->orwhereRaw("INSTR('".$obj->resourceId."', deposit_number) > 0")->first();
                     if(!$deposit) {
                         $new_deposit = new DepositBank();
                         $iban = BankAccount::where('iban', $details->account->IBAN)->first();
@@ -109,7 +109,7 @@ class SwanResponse implements RespondsToWebhook
                         if(!$iban)
                             return response()->json("failure");
 
-                        $new_deposit['deposit_number'] = $details->reference;
+                        $new_deposit['deposit_number'] = $obj->resourceId;
                         $new_deposit['user_id'] = $iban->user_id;
                         $new_deposit['currency_id'] = $webrequest->currency_id;
                         $new_deposit['amount'] = $details->amount->value;
@@ -117,7 +117,7 @@ class SwanResponse implements RespondsToWebhook
                         $new_deposit['sub_bank_id'] = null;
                         $new_deposit->save();
                         send_notification($iban->user_id, 'Bank has been deposited by '.$details->counterparty.'. Please check.', route('admin.deposits.bank.index'));
-
+                        send_whatsapp($iban->user_id, 'Bank has been deposited by '.$details->counterparty."\n Amount is ".$currency->symbol.$details->amount->value."\n Payment Gateway : Swan"."\n Transaction ID : ".$obj->resourceId."\nPlease check more details to click this url\n".route('user.depositbank.index'));
                     }
 
                     return response()->json("success");

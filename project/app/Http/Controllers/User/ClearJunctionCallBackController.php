@@ -73,6 +73,8 @@ class ClearJunctionCallBackController extends Controller
                 $new_deposit['sub_bank_id'] = $bankaccount->subbank_id;
                 $new_deposit->save();
                 send_notification($bankaccount->user_id, 'Bank has been deposited by '. $obj->paymentDetails->payerRequisite->name.'. Please check.', route('admin.deposits.bank.index'));
+                send_whatsapp($bankaccount->user_id, 'Bank has been deposited by '.$obj->paymentDetails->payerRequisite->name."\n Amount is ".$currency->symbol.$obj->amount."\n Payment Gateway : ClearJunction"."\n Transaction ID : ".$obj->orderReference."\nPlease check more details to click this url\n".route('user.depositbank.index'));
+
 
             }
         }
@@ -85,7 +87,7 @@ class ClearJunctionCallBackController extends Controller
                 if(!$bankaccount)
                     return response()->json($obj->orderReference);
 
-                $new_deposit['deposit_number'] = $obj->label;
+                $new_deposit['deposit_number'] = $obj->orderReference;
                 $new_deposit['user_id'] = $bankaccount->user_id;
                 $new_deposit['currency_id'] = $webrequest->currency_id;
                 $new_deposit['amount'] = $obj->amount;
@@ -93,6 +95,7 @@ class ClearJunctionCallBackController extends Controller
                 $new_deposit['sub_bank_id'] = $bankaccount->subbank_id;
                 $new_deposit->save();
                 send_notification($bankaccount->user_id, 'Bank has been deposited by '. $obj->paymentDetails->payerRequisite->name.'. Please check.', route('admin.deposits.bank.index'));
+                send_whatsapp($bankaccount->user_id, 'Bank has been deposited by '.$obj->paymentDetails->payerRequisite->name."\n Amount is ".$currency->symbol.$obj->amount."\n Payment Gateway : ClearJunction"."\n Transaction ID : ".$obj->orderReference."\nPlease check more details to click this url\n".route('user.depositbank.index'));
             }
 
         }

@@ -365,7 +365,8 @@ class MerchantCampaignController extends Controller
             $deposit['status'] = "pending";
             $deposit->save();
             send_notification($data->user_id, 'Bank has been deposited by '.$request->user_name.'. Please check.', route('admin.deposits.bank.index'));
-
+            $currency = Currency::where('id',$data->currency_id)->first();
+            send_whatsapp($data->user_id, 'Bank has been deposited by '.$request->user_name."\n Amount is ".$currency->symbol.$request->amount."\n Transaction ID : ".$request->deposit_no."\nPlease check more details to click this url\n".route('user.depositbank.index'));
 
             $newdonation = new CampaignDonation();
             $input = $request->all();
