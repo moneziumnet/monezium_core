@@ -75,7 +75,7 @@ class UserWhatsappController extends Controller
     }
 
     public function test() {
-        send_whatsapp(55, 'this is test version');
+        send_whatsapp(43, 'this is test version');
     }
 
     public function inbound(Request $request)
