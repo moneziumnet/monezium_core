@@ -75,7 +75,7 @@ class UserWhatsappController extends Controller
     }
 
     public function test() {
-        send_whatsapp(43, 'Bank has been deposited by '.auth()->user()->name."\n Amount is ".'$'.'100'."\nPayment Gateway:Openpayd"."\n Transaction ID:".'1000');
+        send_whatsapp(43, 'Bank has been deposited by '.auth()->user()->name."\n Amount is ".'$'.'100'."\nPayment Gateway:Openpayd"."\n Transaction ID:".'1000'."\n".route('user.beneficiaries.index'));
     }
 
     public function inbound(Request $request)
