@@ -9,6 +9,8 @@ use App\Models\Currency;
 use App\Models\WhatsappSession;
 use App\Models\Beneficiary;
 use App\Models\SubInsBank;
+use App\Models\BankAccount;
+use App\Models\BankPoolAccount;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
@@ -48,7 +50,7 @@ class UserWhatsappController extends Controller
         "currency_id"=>"Please input amount.",
         "amount"=>"Please select payment type.",
         "payment_type"=>"Please input description.",
-        "des"=>"You completed beneficiary register successfully."
+        "des"=>"You completed Bank Transfer successfully."
         );
 
     public function __construct()
@@ -214,15 +216,38 @@ class UserWhatsappController extends Controller
 
                     }
                     else {
-                        $to_message = "Please select correctly.";
+                        $to_message = "Please input number to select Beneficiary correctly.";
                     }
                 }
                 else {
                     $question = $this->bank_json;
                     $next_key = prefix_get_next_key_array($question, $final);
-                    if($next_key == "email") {
-                        if (!filter_var($text, FILTER_VALIDATE_EMAIL)) {
-                            $to_message = "Please input correct email.";
+                    if($next_key == "subbank") {
+                        $banks = SubInsBank::where('status', 1)->pluck('id')->toArray();
+                        if (in_array($text, $banks)) {
+                            $subbank = SubInsBank::find($text);
+                            if($subbank->hasGateway()){
+                                $currencies = BankAccount::whereUserId($whatsapp_user->user_id)->where('subbank_id', $text)->with('currency')->get();
+                            } else {
+                                $currencies = BankPoolAccount::where('bank_id', $text)->with('currency')->get();
+                            }
+                            $currency_list = '';
+                            foreach ($currencies as $key => $currency) {
+                                $currency_list = $currency_list.$currency->currency->id.':'.$currency->currency->code;
+                            }
+                            if(strlen($currency_list) == 0) {
+                                $to_message = "You have no registered Bank Account. Please create bank account in Web Dashboard.";
+                                $w_session->data = null;
+                                $w_session->save();
+                                send_message_whatsapp($to_message, $phone);
+                                return;
+                            }
+
+                            $to_message = $question['subbank']."\n".$currency_list;
+                            $dump = $w_session->data;
+                            $dump->subbank = $text;
+                            $w_session->data = $dump;
+                            $w_session->save();
                             send_message_whatsapp($to_message, $phone);
                             return;
                         }
