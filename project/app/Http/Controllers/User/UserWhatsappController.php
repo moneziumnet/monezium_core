@@ -205,7 +205,12 @@ class UserWhatsappController extends Controller
                         foreach ($beneficiary_list as $key => $beneficiary) {
                             $beneficiaries = $beneficiaries.$beneficiary->id.':'.$beneficiary->name."\n";
                         }
-                        $to_message = "Please select Beneficiary\n 1:\n\nPlease type in # to go back to menu
+                        if(strlen($beneficiaries) == 0) {
+                            $to_message = "You have no registered beneficiary. Please register beneficiary.";
+                            send_message_whatsapp($to_message, $phone);
+                            break;
+                        }
+                        $to_message = "Please select Beneficiary\n ".$beneficiaries."Please type in # to go back to menu
                         ";
                         $new_session = WhatsappSession::where('user_id', $whatsapp_user->user_id)->first();
                         if(!$new_session) {
