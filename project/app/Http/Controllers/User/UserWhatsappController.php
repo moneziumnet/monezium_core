@@ -75,17 +75,7 @@ class UserWhatsappController extends Controller
     }
 
     public function test() {
-        $w_session = WhatsappSession::where('user_id', auth()->id())->first();
-        if (!$w_session) {
-            $w_session = new WhatsappSession();
-            $w_session->user_id = auth()->id();
-            $w_session->data = json_decode('{}');
-            $w_session->type = 'Beneficiary';
-            $w_session->save();
-        }
-        $final = (array_key_last(((array)$w_session->data)));
-        dd($this->beneficiary_json['type']);
-        dd($w_session->data->$final);
+        send_whatsapp(43, 'this is test version');
     }
 
     public function inbound(Request $request)
