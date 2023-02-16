@@ -290,6 +290,10 @@ class GeneralSettingController extends Controller
         return view('admin.generalsetting.boxapi');
     }
 
+    public function telegramapi(){
+        return view('admin.generalsetting.telegramapi');
+    }
+
     public function status($field,$value)
     {
         $prev = '';

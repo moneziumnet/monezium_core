@@ -548,6 +548,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/currency-api-settings', [GeneralSettingController::class, 'currencyapi'])->name('admin.gs.currencyapi');
     Route::get('/ibanapi-api-settings', [GeneralSettingController::class, 'ibanapi'])->name('admin.gs.ibanapi');
     Route::get('/box-api-settings', [GeneralSettingController::class, 'boxapi'])->name('admin.gs.boxapi');
+    Route::get('/telegram-api-settings', [GeneralSettingController::class, 'telegramapi'])->name('admin.gs.telegramapi');
 
   });
 
