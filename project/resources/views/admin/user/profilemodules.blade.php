@@ -157,7 +157,7 @@
                   </div>
                 </div>
 
-                
+
                 <div class="col-md-6">
                   <div class="form-group">
                     <div class="custom-control custom-switch">
@@ -256,8 +256,6 @@
       </div>
     </div>
   </div>
-</div>
-</div>
 </div>
 <!--Row-->
 @endsection
