@@ -1270,11 +1270,13 @@ if (!function_exists('send_message_whatsapp')) {
 }
 
 if (!function_exists('send_staff_telegram')) {
-    function send_staff_telegram($message)
+    function send_staff_telegram($message, $module)
     {
         $telegram_users = UserTelegram::where('chat_id', '!=', NULL)->where('status', 1)->get();
+        $gs = Generalsetting::first();
+
         foreach ($telegram_users as $key => $telegram) {
-            if(check_user_type_by_id(5, $telegram->user_id)) {
+            if(check_user_type_by_id(5, $telegram->user_id) && $gs->telegram_section_check($module)) {
                 send_message_telegram($telegram->user_id, $message);
             }
         }
