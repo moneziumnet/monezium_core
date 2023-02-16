@@ -130,6 +130,13 @@ class GeneralSettingController extends Controller
                 $input['user_module'] = '';
             }
 
+            if (!empty($request->telegram_section)) {
+                $input['telegram_section'] = implode(" , ", $request->telegram_section);
+            }
+            else {
+                $input['telegram_section'] = '';
+            }
+
             $this->emailConfig($input);
 
             $data->update($input);
@@ -291,7 +298,9 @@ class GeneralSettingController extends Controller
     }
 
     public function telegramapi(){
-        return view('admin.generalsetting.telegramapi');
+        $data = Generalsetting::first();
+        $data['data'] = $data;
+        return view('admin.generalsetting.telegramapi', $data);
     }
 
     public function status($field,$value)

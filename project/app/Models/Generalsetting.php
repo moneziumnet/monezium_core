@@ -94,6 +94,16 @@ class Generalsetting extends Model
 
     public $timestamps = false;
 
+    public function telegram_section_check($value)
+    {
+        $sections = explode(" , ", $this->telegram_section);
+        if (in_array($value, $sections)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     public function sectionCheck($value)
     {
         $sections = explode(" , ", $this->module_section);
