@@ -84,6 +84,7 @@ class Generalsetting extends Model
             'box_secret',
             'box_id',
             'box_user_id',
+            'telegram_token',
             'module_section',
             'user_module',
             'other_bank_limit',
