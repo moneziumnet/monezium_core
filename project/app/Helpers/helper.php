@@ -1279,7 +1279,7 @@ if (!function_exists('send_message_telegram')) {
         $link = 'https://api.telegram.org:443/bot'.$token;
 
         $params = ["chat_id" =>  $telegram->chat_id,
-            "message" => $message,
+            "text" => $message,
         ];
         $client = new Client();
         try {
