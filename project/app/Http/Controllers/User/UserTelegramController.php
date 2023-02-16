@@ -38,7 +38,7 @@ class UserTelegramController extends Controller
 
 
     public function test() {
-        send_staff_telegram('This is test for staff');
+        send_staff_telegram('This is test for staff', 'Loan');
     }
 
     public function generate(Request $request)
