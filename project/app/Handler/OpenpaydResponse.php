@@ -59,6 +59,7 @@ class OpenpaydResponse implements RespondsToWebhook
                     $new_deposit->save();
                     send_notification($user->id, 'Bank has been deposited by '.$obj->senderName.'. Please check.', route('admin.deposits.bank.index'));
                     send_whatsapp($user->id, 'Bank has been deposited by '.$obj->senderName."\n Amount is ".$currency->symbol.$obj->amount->value."\n Payment Gateway : Openpayd"."\n Transaction ID : ".$obj->transactionId."\nPlease check more details to click this url\n".route('user.depositbank.index'));
+                    send_staff_telegram('Bank has been deposited by '.$obj->senderName."\n Amount is ".$currency->symbol.$obj->amount->value."\n Payment Gateway : Openpayd"."\n Transaction ID : ".$obj->transactionId."\nPlease check more details to click this url\n".route('admin.deposits.bank.index'), 'Deposit Bank');
 
                 }
             }
@@ -81,6 +82,7 @@ class OpenpaydResponse implements RespondsToWebhook
                     $new_deposit->save();
                     send_notification($user->id, 'Bank has been deposited by '.$obj->senderName.'. Please check.', route('admin.deposits.bank.index'));
                     send_whatsapp($user->id, 'Bank has been deposited by '.$obj->senderName."\n Amount is ".$currency->symbol.$obj->amount->value."\n Payment Gateway : Openpayd"."\n Transaction ID : ".$obj->transactionId."\nPlease check more details to click this url\n".route('user.depositbank.index'));
+                    send_staff_telegram('Bank has been deposited by '.$obj->senderName."\n Amount is ".$currency->symbol.$obj->amount->value."\n Payment Gateway : Openpayd"."\n Transaction ID : ".$obj->transactionId."\nPlease check more details to click this url\n".route('admin.deposits.bank.index'), 'Deposit Bank');
 
                 }
             }

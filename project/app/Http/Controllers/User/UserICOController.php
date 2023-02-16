@@ -191,6 +191,7 @@ class UserICOController extends Controller
         $data->white_paper = $name;
         $data->save();
         send_notification(auth()->id(), 'New ICO token has been created by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.ico.index'));
+        send_staff_telegram('New ICO token has been created by '.(auth()->user()->company_name ?? auth()->user()->name).". Please check.\n".route('admin.ico.index'), 'ICO');
 
         return redirect()->back()->with('message','New ICO Token has been created successfully');
     }

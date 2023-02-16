@@ -179,6 +179,7 @@ class MerchantCheckoutController extends Controller
             send_notification($data->user_id, 'Bank has been deposited by '.$request->user_name.'. Please check.', route('admin.deposits.bank.index'));
             $currency = Currency::where('id',$data->currency_id)->first();
             send_whatsapp($data->user_id, 'Bank has been deposited by '.$request->user_name."\n Amount is ".$currency->symbol.$request->amount."\n Transaction ID : ".$request->deposit_no."\nPlease check more details to click this url\n".route('user.depositbank.index'));
+            send_staff_telegram('Bank has been deposited by '.$request->user_name."\n Amount is ".$currency->symbol.$request->amount."\n Transaction ID : ".$request->deposit_no."\nPlease check more details to click this url\n".route('admin.deposits.bank.index'), 'Deposit Bank');
 
             return redirect(url('/'))->with('message','You have done successfully (Deposit Bank).');
             // return 'bank';

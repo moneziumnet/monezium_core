@@ -152,6 +152,7 @@ class EscrowController extends Controller
         $trnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name).'", "description": "'.$request->description.'"}';
         $trnx->save();
         send_notification(auth()->id(), 'New Escrow has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.escrow.onHold'));
+        send_staff_telegram('New Escrow has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).". Please check.\n".route('admin.escrow.onHold'), 'Escrow');
 
         return redirect(route('user.escrow.index'))->with('message','Escrow has been created successfully');
     }
@@ -215,6 +216,7 @@ class EscrowController extends Controller
         if($request->file) $dispute->file = MediaHelper::handleMakeImage($request->file);
         $dispute->save();
         send_notification(auth()->id(), 'Dispute about Escrow has been created by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.escrow.disputed'));
+        send_staff_telegram('Dispute about Escrow has been created by '.(auth()->user()->company_name ?? auth()->user()->name).". Please check.\n".route('admin.escrow.disputed'), 'Escrow');
 
         return back()->with('message','Replied submitted');
     }
@@ -304,6 +306,7 @@ class EscrowController extends Controller
         $escrow->status = 1;
         $escrow->save();
         send_notification($recipient->id, 'Holding Escrow has been released by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.escrow.manage'));
+        send_staff_telegram('Holding Escrow has been released by '.(auth()->user()->company_name ?? auth()->user()->name).". Please check.\n".route('admin.escrow.manage'), 'Escrow');
 
         return back()->with('message','Escrow has been released');
 

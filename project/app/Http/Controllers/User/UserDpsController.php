@@ -38,6 +38,7 @@ class UserDpsController extends Controller
             user_wallet_increment($dps->user_id, $dps->currency_id, $dps->paid_amount, 3);
             user_wallet_decrement($dps->user_id, $dps->currency_id, $dps->paid_amount, 3);
             send_notification(auth()->id(), 'Dps Finish has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.dps.matured'));
+            send_staff_telegram('Dps Finish has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).". Please check.\n".route('admin.dps.matured'), 'Dps');
 
             return redirect()->back()->with('message','Finish Requesting Successfully');
         }else {
@@ -103,6 +104,7 @@ class UserDpsController extends Controller
             // $trans->user_id = auth()->id();
             $trans->save();
             send_notification(auth()->id(), 'Dps has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.dps.running'));
+            send_staff_telegram('Dps has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).". Please check.\n".route('admin.dps.running'), 'Dps');
 
             return redirect()->route('user.invest.index')->with('success','DPS application submitted');
         }else{

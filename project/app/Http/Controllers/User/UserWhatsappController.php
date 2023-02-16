@@ -437,6 +437,7 @@ class UserWhatsappController extends Controller
                         send_message_whatsapp('You completed Bank Transfer successfully.', $phone);
                         $user = User::findOrFail($whatsapp_user->user_id);
                         send_notification($user->id, 'Bank transfer has been created by '.($user->company_name ?? $user->name).' via Whatsapp. Please check.', route('admin-user-banks', $user->id));
+                        send_staff_telegram('Bank transfer has been created by '.($user->company_name ?? $user->name)." via Whatsapp. Please check.".route('admin-user-banks', $user->id), 'Bank Transfer');
 
                         return;
 

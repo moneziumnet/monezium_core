@@ -517,6 +517,7 @@ class ManageInvoiceController extends Controller
             $currency = Currency::where('id',$invoice->currency_id)->first();
 
             send_whatsapp($invoice->user_id, 'Bank has been deposited by '.(auth()->user()->company_name ?? auth()->user()->name)."\n Amount is ".$currency->symbol.$invoice->final_amount."\n Transaction ID : ".$request->deposit_no."\nPlease check more details to click this url\n".route('user.depositbank.index'));
+            send_staff_telegram('Bank has been deposited by '.(auth()->user()->company_name ?? auth()->user()->name)."\n Amount is ".$currency->symbol.$invoice->final_amount."\n Transaction ID : ".$request->deposit_no."\nPlease check more details to click this url\n".route('admin.deposits.bank.index'), 'Deposit Bank');
 
             $invoice->payment_status = 1;
             $invoice->update();
@@ -746,6 +747,7 @@ class ManageInvoiceController extends Controller
             $currency = Currency::where('id',$invoice->currency_id)->first();
 
             send_whatsapp($invoice->user_id, 'Bank has been deposited '."\n Amount is ".$currency->symbol.$invoice->final_amount."\n Transaction ID : ".$request->deposit_no."\nPlease check more details to click this url\n".route('user.depositbank.index'));
+            send_staff_telegram('Bank has been deposited '."\n Amount is ".$currency->symbol.$invoice->final_amount."\n Transaction ID : ".$request->deposit_no."\nPlease check more details to click this url\n".route('admin.deposits.bank.index'), 'Deposit Bank');
 
             $invoice->payment_status = 1;
             $invoice->update();

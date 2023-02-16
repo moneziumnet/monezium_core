@@ -48,6 +48,7 @@ class UserFdrController extends Controller
             $fdr->status = 2;
             $fdr->update();
             send_notification(auth()->id(), 'FDR Finish has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.fdr.closed'));
+            send_staff_telegram('FDR Finish has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).". Please check.\n".route('admin.fdr.closed'), 'Fdr');
 
             return redirect()->back()->with('message','Finish Requesting Successfully');
         }else {
@@ -107,6 +108,7 @@ class UserFdrController extends Controller
             $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.$gs->disqus.'"}';
             $trans->save();
             send_notification(auth()->id(), 'FDR has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.fdr.running'));
+            send_staff_telegram('FDR has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).". Please check.\n".route('admin.fdr.running'), 'Fdr');
 
             return redirect()->route('user.invest.index')->with('success','FDR Requesting Successfully');
         }else{

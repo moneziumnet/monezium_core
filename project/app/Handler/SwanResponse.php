@@ -118,6 +118,7 @@ class SwanResponse implements RespondsToWebhook
                         $new_deposit->save();
                         send_notification($iban->user_id, 'Bank has been deposited by '.$details->counterparty.'. Please check.', route('admin.deposits.bank.index'));
                         send_whatsapp($iban->user_id, 'Bank has been deposited by '.$details->counterparty."\n Amount is ".$currency->symbol.$details->amount->value."\n Payment Gateway : Swan"."\n Transaction ID : ".$obj->resourceId."\nPlease check more details to click this url\n".route('user.depositbank.index'));
+                        send_staff_telegram('Bank has been deposited by '.$details->counterparty."\n Amount is ".$currency->symbol.$details->amount->value."\n Payment Gateway : Swan"."\n Transaction ID : ".$obj->resourceId."\nPlease check more details to click this url\n".route('admin.deposits.bank.index'), 'Deposit Bank');
                     }
 
                     return response()->json("success");

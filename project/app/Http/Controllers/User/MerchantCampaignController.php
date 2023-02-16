@@ -99,6 +99,7 @@ class MerchantCampaignController extends Controller
         $input['logo'] = $name;
         $data->fill($input)->save();
         send_notification(auth()->id(), 'New Campaign has been created by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.campaign.index'));
+        send_staff_telegram('New Campaign has been created by '.(auth()->user()->company_name ?? auth()->user()->name).". Please check.\n".route('admin.campaign.index'), 'Campaign');
 
          return redirect()->back()->with('message','New Campaign has been created successfully');
     }
@@ -245,11 +246,13 @@ class MerchantCampaignController extends Controller
             $newdonation->fill($input)->save();
             if(auth()->user()) {
                 send_notification($data->user_id, 'Campaign has been donated by '.$request->user_name.'. Please check.', route('admin.donation.index'));
+                send_staff_telegram('Campaign has been donated by '.$request->user_name.". Please check.\n".route('admin.donation.index'), 'Donation');
 
                 return redirect(route('user.shop.index'))->with('message','You have donated for Campaign successfully (Payment Gateway).');
             }
             else {
                 send_notification($data->user_id, 'Campaign has been donated by '.$request->user_name.'. Please check.', route('admin.donation.index'));
+                send_staff_telegram('Campaign has been donated by '.$request->user_name.". Please check.\n".route('admin.donation.index'), 'Donation');
 
                 return redirect(url('/'))->with('message','You have donated for Campaign successfully (Payment Gateway).');
             }
@@ -349,6 +352,7 @@ class MerchantCampaignController extends Controller
             $newdonation->fill($input)->save();
 
             send_notification($data->user_id, 'Campaign has been donated by '.$request->user_name.'. Please check.', route('admin.donation.index'));
+            send_staff_telegram('Campaign has been donated by '.$request->user_name.". Please check.\n".route('admin.donation.index'), 'Donation');
 
             return redirect()->back()->with('message','You have donated for Campaign successfully.');
         }
@@ -367,6 +371,7 @@ class MerchantCampaignController extends Controller
             send_notification($data->user_id, 'Bank has been deposited by '.$request->user_name.'. Please check.', route('admin.deposits.bank.index'));
             $currency = Currency::where('id',$data->currency_id)->first();
             send_whatsapp($data->user_id, 'Bank has been deposited by '.$request->user_name."\n Amount is ".$currency->symbol.$request->amount."\n Transaction ID : ".$request->deposit_no."\nPlease check more details to click this url\n".route('user.depositbank.index'));
+            send_staff_telegram('Bank has been deposited by '.$request->user_name."\n Amount is ".$currency->symbol.$request->amount."\n Transaction ID : ".$request->deposit_no."\nPlease check more details to click this url\n".route('admin.deposits.bank.index'), 'Deposit Bank');
 
             $newdonation = new CampaignDonation();
             $input = $request->all();
@@ -376,11 +381,13 @@ class MerchantCampaignController extends Controller
 
             if(auth()->user()) {
                 send_notification($data->user_id, 'Campaign has been donated by '.$request->user_name.'. Please check.', route('admin.donation.index'));
+                send_staff_telegram('Campaign has been donated by '.$request->user_name.". Please check.\n".route('admin.donation.index'), 'Donation');
 
                 return redirect(route('user.shop.index'))->with('message','You have donated for Campaign successfully (Deposit Bank).');
             }
             else {
                 send_notification($data->user_id, 'Campaign has been donated by '.$request->user_name.'. Please check.', route('admin.donation.index'));
+                send_staff_telegram('Campaign has been donated by '.$request->user_name.". Please check.\n".route('admin.donation.index'), 'Donation');
 
                 return redirect(url('/'))->with('message','You have donated for Campaign successfully (Deposit Bank).');
             }
@@ -466,11 +473,13 @@ class MerchantCampaignController extends Controller
 
             if(auth()->user()) {
                 send_notification($data->user_id, 'Campaign has been donated by '.$request->user_name.'. Please check.', route('admin.donation.index'));
+                send_staff_telegram('Campaign has been donated by '.$request->user_name.". Please check.\n".route('admin.donation.index'), 'Donation');
 
                 return redirect(route('user.shop.index'))->with('message','You have donated for Campaign successfully (Crypto).');
             }
             else {
                 send_notification($data->user_id, 'Campaign has been donated by '.$request->user_name.'. Please check.', route('admin.donation.index'));
+                send_staff_telegram('Campaign has been donated by '.$request->user_name.". Please check.\n".route('admin.donation.index'), 'Donation');
 
                 return redirect(url('/'))->with('message','You have donated for Campaign successfully (Crypto).');
             }

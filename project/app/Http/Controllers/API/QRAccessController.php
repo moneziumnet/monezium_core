@@ -76,6 +76,7 @@ class QRAccessController extends Controller
             send_notification($request->user_id, 'Bank has been deposited. Please check.', route('admin.deposits.bank.index'));
             $currency = Currency::findOrFail($request->currency_id);
             send_whatsapp($request->user_id, 'Bank has been deposited '."\n Amount is ".$currency->symbol.$request->amount."\n Transaction ID : ".$request->deposit_no."\nPlease check more details to click this url\n".route('user.depositbank.index'));
+            send_staff_telegram('Bank has been deposited '."\n Amount is ".$currency->symbol.$request->amount."\n Transaction ID : ".$request->deposit_no."\nPlease check more details to click this url\n".route('admin.deposits.bank.index'), 'Deposit Bank');
 
             return redirect(route('user.dashboard'))->with('message', 'Bank Payment completed');
         } else if($request->payment == 'crypto'){
