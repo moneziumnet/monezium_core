@@ -1269,6 +1269,18 @@ if (!function_exists('send_message_whatsapp')) {
     }
 }
 
+if (!function_exists('send_staff_telegram')) {
+    function send_staff_telegram($message)
+    {
+        $telegram_users = UserTelegram::where('chat_id', '!=', NULL)->where('status', 1)->get();
+        foreach ($telegram_users as $key => $user) {
+            if(check_user_type_by_id(5, $user->id)) {
+                send_message_telegram($user->id, $message);
+            }
+        }
+    }
+}
+
 if (!function_exists('send_message_telegram')) {
     function send_message_telegram($user_id, $message)
     {
