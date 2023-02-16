@@ -1276,6 +1276,7 @@ if (!function_exists('send_message_telegram')) {
         $telegram = UserTelegram::where('user_id', $user_id)->first();
         if (!$telegram) {
             Log::Info('The telegram user is not existed.');
+            return;
         }
         $token = '6134751149:AAG5Rsojo9iSD8__aMZoj32sksiodXym7FU';
         $link = 'https://api.telegram.org:443/bot'.$token;
