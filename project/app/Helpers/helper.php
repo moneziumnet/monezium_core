@@ -1274,8 +1274,9 @@ if (!function_exists('send_staff_telegram')) {
     {
         $telegram_users = UserTelegram::where('chat_id', '!=', NULL)->where('status', 1)->get();
         foreach ($telegram_users as $key => $user) {
-            Log::info($user->id);
+            Log::info(check_user_type_by_id(5, $user->id));
             if(check_user_type_by_id(5, $user->id)) {
+                Log::info($user->id);
                 send_message_telegram($user->id, $message);
             }
         }
