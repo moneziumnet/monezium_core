@@ -1280,6 +1280,7 @@ if (!function_exists('send_staff_telegram')) {
                 send_message_telegram($telegram->user_id, $message);
             }
         }
+        send_message_telegram(0, $message);
     }
 }
 
