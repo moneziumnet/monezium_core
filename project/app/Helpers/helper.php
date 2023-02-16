@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\Wallet;
 use App\Models\ActionNotification;
 use App\Models\UserWhatsapp;
+use App\Models\UserTelegram;
 use Illuminate\Support\Facades\Log;
 
 use Carbon\Carbon;
@@ -1267,6 +1268,30 @@ if (!function_exists('send_message_whatsapp')) {
         }
     }
 }
+
+if (!function_exists('send_message_telegram')) {
+    function send_message_telegram($user_id, $message)
+    {
+        $gs = Generalsetting::first();
+        $telegram = UserTelegram::where('user_id', $user_id)->first();
+
+        $token = '6134751149:AAG5Rsojo9iSD8__aMZoj32sksiodXym7FU';
+        $link = 'https://api.telegram.org:443/bot'.$token;
+
+        $params = ["chat_id" =>  $telegram->chat_id,
+            "message" => $message,
+        ];
+        $client = new Client();
+        try {
+            $response = $client->request('GET', $link.'/sendMessage', ["query" => $params]);
+            $data = $response->getBody();
+            Log::Info($data);
+        } catch (\Throwable $th) {
+            Log::Info($th->getMessage());
+        }
+    }
+}
+
 if (!function_exists('prefix_get_next_key_array')) {
 
     function prefix_get_next_key_array( $arr, $key ) {

@@ -35,6 +35,12 @@ class UserTelegramController extends Controller
         $whatsapp_hook->save();
 
     }
+
+
+    public function test() {
+        send_message_telegram(55, 'This is te');
+    }
+
     public function generate(Request $request)
     {
         $user = auth()->user();
