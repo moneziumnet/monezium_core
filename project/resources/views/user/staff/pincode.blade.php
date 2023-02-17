@@ -52,7 +52,7 @@
                     <div class="row ">
                         <div class="col-md-6">
                             <label>@lang('Please scan QR code to join our Whatsapp bot : ')</label>
-                            <img src="{{generateQR('https://wa.me/'.$gs->whatsapp_bot_number.'?text=He')}}" class="" alt="">
+                            <img src="{{generateQR('https://wa.me/'.$gs->whatsapp_bot_number.'?text=Hi')}}" class="" alt="">
                             <a href='https://web.whatsapp.com/send?phone={{$gs->whatsapp_bot_number}}&text=Hi' class="" alt="" target="_blank">{{__(' Or Click here me')}}</a>
                         </div>
                     </div>

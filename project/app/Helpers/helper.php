@@ -1247,7 +1247,7 @@ if (!function_exists('send_message_whatsapp')) {
 
         $url = "https://messages-sandbox.nexmo.com/v1/messages";
         $params = ["to" =>  $to_number,
-            "from" => "14157386102",
+            "from" => $gs->whatsapp_bot_number,
             "text" => $message,
             "channel" => "whatsapp",
             "message_type" => "text"
