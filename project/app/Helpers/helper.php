@@ -1293,7 +1293,7 @@ if (!function_exists('send_message_telegram')) {
             Log::Info('The telegram user is not existed.');
             return;
         }
-        $token = '6134751149:AAG5Rsojo9iSD8__aMZoj32sksiodXym7FU';
+        $token = $gs->telegram_token;
         $link = 'https://api.telegram.org:443/bot'.$token;
 
         $params = ["chat_id" =>  $telegram->chat_id,
