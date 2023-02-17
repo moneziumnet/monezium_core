@@ -504,14 +504,7 @@ class UserWhatsappController extends Controller
                         break;
                     default:
                         # code...
-                        $to_message = 'Welcome to '.$gs->disqus.'
-                        What could We help you?
-                        We are here to help you with your problem.
-                        Kindly choose an option to connect with our support team.
-                        Command 1: Beneficiary
-                        Command 2: BankTransfer
-                        Command 3: Balance
-                        Command 4: Logout';
+                        $to_message = "Welcome to ".$gs->disqus."\nWhat could We help you?\nWe are here to help you with your problem.\nKindly choose an option to connect with our support team.\nCommand 1: Beneficiary\nCommand 2: BankTransfer\nCommand 3: Balance\nCommand 4: Logout";
                         send_message_whatsapp($to_message, $phone);
                         break;
                 }
@@ -540,23 +533,12 @@ class UserWhatsappController extends Controller
                     $whatsapp->phonenumber = $phone;
                     $whatsapp->status = 1;
                     $whatsapp->save();
-                    $to_message = 'You login Successfully,
-                                Please use follow command list:
-                                Command 1: Beneficiary
-                                Command 2: BankTransfer
-                                Command 3: Balance
-                                Command 4: Logout';
+                    $to_message = "You login Successfully,\nPlease use follow command list:\nCommand 1: Beneficiary\nCommand 2: BankTransfer\nCommand 3: Balance\nCommand 4: Logout";
                     send_message_whatsapp($to_message, $phone);
                     break;
                 default:
                     # code...
-                    $to_message = 'Welcome to '.$gs->disqus.'
-                    What could We help you?
-                    We are here to help you with your problem.
-                    Kindly choose an option to connect with our support team.
-                    Firstly we have to login by using Login Command.
-                    Command 1: Login {email} {pincode}
-                    Command 2: Help';
+                    $to_message = "Welcome to ".$gs->disqus."\nWhat could We help you?\nWe are here to help you with your problem.\nKindly choose an option to connect with our support team.\nFirstly we have to login by using Login Command.\nCommand 1: Login {email} {pincode}\nCommand 2: Help";
                     send_message_whatsapp($to_message, $phone);
                     break;
             }
