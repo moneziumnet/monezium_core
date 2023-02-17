@@ -132,7 +132,7 @@ class UserWhatsappController extends Controller
                             //code...
                         } catch (RequestException  $e) {
                             Log::info($e->getResponse()->getBody());
-                            send_message_whatsapp(explode('response:', $e->getMessage())[1]."\n Please input IBAN correctly.", $phone);
+                            send_message_whatsapp(json_decode($e->getResponse()->getBody())->message."\n Please input IBAN correctly.", $phone);
                             return;
                         }
                         if (isset($bank->data->bank)) {
