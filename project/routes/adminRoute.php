@@ -549,6 +549,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/ibanapi-api-settings', [GeneralSettingController::class, 'ibanapi'])->name('admin.gs.ibanapi');
     Route::get('/box-api-settings', [GeneralSettingController::class, 'boxapi'])->name('admin.gs.boxapi');
     Route::get('/telegram-api-settings', [GeneralSettingController::class, 'telegramapi'])->name('admin.gs.telegramapi');
+    Route::post('/telegram/generate', [GeneralSettingController::class, 'telegram_generate'])->name('admin.telegram.pin.generate');
 
   });
 

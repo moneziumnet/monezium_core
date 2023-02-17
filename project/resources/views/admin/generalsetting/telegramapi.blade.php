@@ -19,6 +19,28 @@
         <div class="card mt-3 p-3">
             <div class="gocover" style="background: url({{asset('assets/images/'.$gs->admin_loader)}}) no-repeat scroll center center rgba(45, 45, 45, 0.5);">
             </div>
+                <form action="{{route('admin.telegram.pin.generate')}}" id="form" method="post" enctype="multipart/form-data">
+
+                @csrf
+                    <div class="row ">
+                        <div class="col-md-6">
+                            <div class="form-label ">@lang('Telegram Pin Code : ')</div>
+                            <input type="text" name="code" id="code" class="form-control shadow-none mb-2" value="{{$telegram->pincode ?? ''}}" readonly>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-label">&nbsp;</div>
+                            <button type="submit" class="btn btn-primary w-100 create">
+                                @lang('Generate')
+                            </button>
+                        </div>
+                    </div>
+                </form>
+        </div>
+
+        <div class="card mt-3 p-3">
+            <div class="gocover" style="background: url({{asset('assets/images/'.$gs->admin_loader)}}) no-repeat scroll center center rgba(45, 45, 45, 0.5);">
+            </div>
             <form class="geniusform ms-2" action="{{ route('admin.gs.update') }}" method="POST" enctype="multipart/form-data">
 
                 @include('includes.admin.form-both')

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 use App\Models\Generalsetting;
+use App\Models\UserTelegram;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\Currency;
@@ -300,7 +301,20 @@ class GeneralSettingController extends Controller
     public function telegramapi(){
         $data = Generalsetting::first();
         $data['data'] = $data;
+        $data['telegram'] = UserTelegram::where('user_id', 0)->first();
         return view('admin.generalsetting.telegramapi', $data);
+    }
+
+    public function telegram_generate(Request $request)
+    {
+        $telegram = UserTelegram::where('user_id', 0)->first();
+        if(!$telegram){
+            $telegram = new UserTelegram();
+        }
+        $telegram->user_id = 0;
+        $telegram->pincode = Str::random(8);
+        $telegram->save();
+        return redirect()->back()->with('message','PinCode is generated successfully.');
     }
 
     public function status($field,$value)
