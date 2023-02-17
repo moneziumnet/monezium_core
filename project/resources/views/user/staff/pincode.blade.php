@@ -23,6 +23,12 @@
         <div class="row">
             <div class="card">
                 <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label>@lang('Please click this to join our Telegram bot : ')</label>
+                            <a href='https://t.me/testbank321bot' class="" alt="" target="_blank">{{__('Click here me')}}</a>
+                        </div>
+                    </div>
                     <form action="{{route('user.telegram.pin.generate')}}" id="form" method="post" enctype="multipart/form-data">
                     @csrf
                         <div class="row ">
@@ -43,6 +49,13 @@
             </div>
             <div class="card mt-1">
                 <div class="card-body">
+                    <div class="row ">
+                        <div class="col-md-6">
+                            <label>@lang('Please scan QR code to join our Whatsapp bot : ')</label>
+                            <img src="{{generateQR('https://wa.me/14157386102?text=Hi')}}" class="" alt="">
+                            <a href='https://web.whatsapp.com/send?phone=14157386102&text=Hi' class="" alt="" target="_blank">{{__('Or Click here me')}}</a>
+                        </div>
+                    </div>
                     <form action="{{route('user.whatsapp.pin.generate')}}" id="form" method="post" enctype="multipart/form-data">
                     @csrf
                         <div class="row ">

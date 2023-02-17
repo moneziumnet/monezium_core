@@ -19,6 +19,12 @@
         <div class="card mt-3 p-3">
             <div class="gocover" style="background: url({{asset('assets/images/'.$gs->admin_loader)}}) no-repeat scroll center center rgba(45, 45, 45, 0.5);">
             </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label>@lang('Please click this to join our Telegram bot : ')</label>
+                    <a href='https://t.me/testbank321bot' class="" alt="" target="_blank">{{__('Click here me')}}</a>
+                </div>
+            </div>
                 <form action="{{route('admin.telegram.pin.generate')}}" id="form" method="post" enctype="multipart/form-data">
 
                 @csrf

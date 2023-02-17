@@ -40,7 +40,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="inp-key">{{  __('User Id')  }}</label>
-                            <input type="text"  class="form-control" id="inp-key" name="box_user_id"  placeholder="{{ __('Enterprise ID') }}" value="{{ $gs->box_user_id }}">
+                            <input type="text"  class="form-control" id="inp-key" name="box_user_id"  placeholder="{{ __('Box User ID') }}" value="{{ $gs->box_user_id }}">
                         </div>
                     </div>
 
