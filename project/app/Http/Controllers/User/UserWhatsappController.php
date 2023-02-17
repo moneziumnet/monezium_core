@@ -19,6 +19,7 @@ use Illuminate\Http\Request;
 use App\Models\Generalsetting;
 use App\Http\Controllers\Controller;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use Log;
 
 
@@ -124,16 +125,15 @@ class UserWhatsappController extends Controller
                     }
                     if($next_key == "account_iban") {
                         $client = new Client();
-                        // try {
+                        try {
                             $url = 'https://api.ibanapi.com/v1/validate/'.$text.'?api_key='.$gs->ibanapi;
                             $response = $client->request('GET', $url);
-                            Log::info($response->json());
                             $bank = json_decode($response->getBody());
                             //code...
-                        // } catch (\Throwable $th) {
-                        //     send_message_whatsapp(explode('response:', $th->getMessage())[1]."\n Please input IBAN correctly.", $phone);
-                        //     return;
-                        // }
+                        } catch (ClientException  $th) {
+                            send_message_whatsapp(explode('response:', $th->getMessage())[1]."\n Please input IBAN correctly.", $phone);
+                            return;
+                        }
                         if (isset($bank->data->bank)) {
                             $dump = $w_session->data;
                             $dump->account_iban = $text;
