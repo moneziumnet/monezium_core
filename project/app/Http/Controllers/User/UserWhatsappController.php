@@ -125,15 +125,18 @@ class UserWhatsappController extends Controller
                     }
                     if($next_key == "account_iban") {
                         $client = new Client();
-                        try {
+                        // try {
                             $url = 'https://api.ibanapi.com/v1/validate/'.$text.'?api_key='.$gs->ibanapi;
                             $response = $client->request('GET', $url);
+                            Log::info($response);
+
                             $bank = json_decode($response->getBody());
                             //code...
-                        } catch (ClientException  $th) {
-                            send_message_whatsapp(explode('response:', $th->getMessage())[1]."\n Please input IBAN correctly.", $phone);
-                            return;
-                        }
+                        // } catch (ClientException  $th) {
+                        //     Log::info($th->getMessage());
+                        //     send_message_whatsapp(explode('response:', $th->getMessage())[1]."\n Please input IBAN correctly.", $phone);
+                        //     return;
+                        // }
                         if (isset($bank->data->bank)) {
                             $dump = $w_session->data;
                             $dump->account_iban = $text;
