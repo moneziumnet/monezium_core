@@ -41,6 +41,13 @@
 
                     <div class="col-md-12">
                         <div class="form-group">
+                            <label for="inp-phone">{{  __('Whatsapp Bot Phone number')  }}</label>
+                            <input type="number" class="form-control" id="inp-phone" name="whatsapp_bot_number"  placeholder="{{ __('Phonenumber') }}" value="{{ $gs->whatsapp_bot_number }}">
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
                             <label for="inp-name">{{ __('Status') }}</label>
                             <select class="form-control mb-3" name="nexmo_status">
                             <option value="1" {{ $gs->nexmo_status == 1 ? 'selected' : '' }}>{{ __('YES') }}</option>

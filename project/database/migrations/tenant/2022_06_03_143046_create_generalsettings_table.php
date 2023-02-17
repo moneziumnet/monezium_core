@@ -89,6 +89,7 @@ class CreateGeneralsettingsTable extends Migration
             $table->tinyInteger('twilio_status')->default(0);
             $table->string('nexmo_key')->nullable();
             $table->string('nexmo_secret')->nullable();
+            $table->string('whatsapp_bot_number')->nullable();
             $table->string('nexmo_default_number')->nullable();
             $table->tinyInteger('nexmo_status')->default(0);
             $table->text('ibanapi')->nullable();

@@ -85,6 +85,7 @@ class Generalsetting extends Model
             'box_id',
             'box_user_id',
             'telegram_token',
+            'whatsapp_bot_number',
             'telegram_section',
             'module_section',
             'user_module',
