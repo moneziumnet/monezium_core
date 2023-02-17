@@ -94,7 +94,7 @@ class UserWhatsappController extends Controller
                 if($text == '#') {
                     $w_session->data = null;
                     $w_session->save();
-                    $to_message = "You exit from beneficiary register successfully. ";
+                    $to_message = "You exit from beneficiary register. ";
                     send_message_whatsapp($to_message, $phone);
                     return;
                 }
@@ -225,9 +225,7 @@ class UserWhatsappController extends Controller
                                 $currency_list = $currency_list.$currency->currency->id.':'.$currency->currency->code;
                             }
                             if(strlen($currency_list) == 0) {
-                                $to_message = "You have no registered Bank Account. Please create bank account in Web Dashboard.";
-                                $w_session->data = null;
-                                $w_session->save();
+                                $to_message = "You have no registered Bank Account. Please create bank account in Web Dashboard. Or Please select other Bank Account.";
                                 send_message_whatsapp($to_message, $phone);
                                 return;
                             }
