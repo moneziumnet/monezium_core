@@ -22,7 +22,7 @@
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label>@lang('Please click this to join our Telegram bot : ')</label>
-                    <a href='https://t.me/testbank321bot' class="" alt="" target="_blank">{{__('Click here me')}}</a>
+                    <a href='https://t.me/moneziumbot' class="" alt="" target="_blank">{{__('Click here me')}}</a>
                 </div>
             </div>
                 <form action="{{route('admin.telegram.pin.generate')}}" id="form" method="post" enctype="multipart/form-data">
