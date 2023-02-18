@@ -1277,17 +1277,17 @@ if (!function_exists('send_staff_telegram')) {
 
         foreach ($telegram_users as $key => $telegram) {
             if(check_user_type_by_id(5, $telegram->user_id) && $gs->telegram_section_check($module)) {
-                send_message_telegram($telegram->user_id, $message);
+                send_message_telegram($message, $telegram->chat_id);
             }
         }
     }
 }
 
 if (!function_exists('send_message_telegram')) {
-    function send_message_telegram($user_id, $message)
+    function send_message_telegram($message, $chat_id)
     {
         $gs = Generalsetting::first();
-        $telegram = UserTelegram::where('user_id', $user_id)->first();
+        $telegram = UserTelegram::where('chat_id', $chat_id)->first();
         if (!$telegram) {
             Log::Info('The telegram user is not existed.');
             return;
