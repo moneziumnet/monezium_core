@@ -327,6 +327,12 @@
                 }
             }
         })
+        $('.iban-input').on('keypress', function(e){
+            var key = e.keyCode;
+            if (key === 32) {
+            e.preventDefault();
+            }
+        })
     function showDiv(select) {
             var company_input_list = $('.company-input');
             var private_input_list = $('.private-input');

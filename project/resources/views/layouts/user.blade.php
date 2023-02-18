@@ -97,6 +97,13 @@
             }
         })
 
+        $('.iban-input').on('keypress', function(e){
+            var key = e.keyCode;
+            if (key === 32) {
+            e.preventDefault();
+            }
+        })
+
 
       $('.scan').click(function(){
           var scanner = new Instascan.Scanner({ video: document.getElementById('preview'), scanPeriod: 5, mirror: false });
