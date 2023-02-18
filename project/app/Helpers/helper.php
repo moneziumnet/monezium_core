@@ -967,8 +967,14 @@ if (!function_exists('RPC_BTC_Check')) {
         } catch (\Throwable$th) {
             return 'error';
         }
-        Log::info($response->getBody());
-        return $res->result;
+        if ($res->result) {
+            $check_flag = "ok";
+        }
+        else {
+            $check_flag = 'error';
+        }
+
+        return $check_flag;
     }
 }
 if (!function_exists('Crypto_Balance')) {
