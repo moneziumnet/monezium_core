@@ -967,7 +967,7 @@ if (!function_exists('RPC_BTC_Check')) {
         } catch (\Throwable$th) {
             return 'error';
         }
-        Log::info($res);
+        Log::info($response->getBody());
         return $res->result;
     }
 }
