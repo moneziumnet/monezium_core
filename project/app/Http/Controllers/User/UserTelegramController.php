@@ -25,6 +25,37 @@ use Log;
 
 class UserTelegramController extends Controller
 {
+    private $beneficiary_json =array(
+        "type"=>"Please input first name.",
+        "first_name"=>"Please input last name.",
+        "last_name"=>"Please input email.",
+        "email"=>"Please input address.",
+        "address"=>"Please input phone.",
+        "phone"=>"Please input Registration NO.",
+        "registration_no"=>"Please input VAT NO.",
+        "vat_no"=>"Please input contact person.",
+        "contact_person"=>"Please input Bank IBAN.",
+        "account_iban"=>"You completed beneficiary register successfully."
+        );
+        private $beneficiary_company_json = array(
+        "type"=>"Please input Company name.",
+        "company_name"=>"Please input email.",
+        "email"=>"Please input address.",
+        "address"=>"Please input phone.",
+        "phone"=>"Please input Registration NO.",
+        "registration_no"=>"Please input VAT NO.",
+        "vat_no"=>"Please input contact person.",
+        "contact_person"=>"Please input Bank IBAN.",
+        "account_iban"=>"You completed beneficiary register successfully.");
+
+        private $bank_json =array(
+            "beneficiary_id"=>"Please input number to select Bank account.",
+            "subbank"=>"Please input number to select currency.",
+            "currency_id"=>"Please input amount.",
+            "amount"=>"Please select payment type.",
+            "payment_type"=>"Please input description.",
+            "des"=>"You completed Bank Transfer successfully."
+            );
     public function __construct()
     {
         $this->middleware('auth', ['except' => ['bot_login', 'bot_logout', 'inbound']]);
