@@ -98,7 +98,8 @@ class FrontendController extends Controller
         $data['depositsplans'] = DpsPlan::orderBy('id', 'desc')->whereStatus(1)->limit(3)->get();
         $data['fdrplans'] = FdrPlan::orderBy('id', 'desc')->whereStatus(1)->limit(3)->get();
         $client = New Client();
-        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency=USD');
+        $currency = Currency::findOrFail(defaultCurr());
+        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency='.$currency->code);
         $data['rate'] = json_decode($response->getBody());
         return view('frontend.index', $data);
     }
