@@ -66,11 +66,9 @@
             <div class="mt-2" style="font-size:8px;">
                 <b class="font-weight-bold" >{{__('Email: ')}}</b>{{$user->email}}
             </div>
-            @if (isset($wallet) && $wallet != '')
             <div class="mt-2 mb-3" style="font-size:8px;">
-                <b class="font-weight-bold" >{{__('Account No: ')}}</b>{{$wallet->wallet_no}}
+                <b class="font-weight-bold" >{{__('Account No: ')}}</b>{{$user->account_number}}
             </div>
-            @endif
         </div>
     </div>
     <div class="text-center row text-wrap text-center">
