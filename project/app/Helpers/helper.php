@@ -1287,15 +1287,10 @@ if (!function_exists('send_message_telegram')) {
     function send_message_telegram($message, $chat_id)
     {
         $gs = Generalsetting::first();
-        $telegram = UserTelegram::where('chat_id', $chat_id)->first();
-        if (!$telegram) {
-            Log::Info('The telegram user is not existed.');
-            return;
-        }
         $token = $gs->telegram_token;
         $link = 'https://api.telegram.org:443/bot'.$token;
 
-        $params = ["chat_id" =>  $telegram->chat_id,
+        $params = ["chat_id" =>  $chat_id,
             "text" => $message,
         ];
         $client = new Client();
