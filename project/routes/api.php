@@ -32,29 +32,103 @@ use App\Http\Controllers\API\MerchantController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::middleware('auth:sanctum')->group(function () {
+    Route::prefix('api/chatify')->group(function () {
+        // chatify
+        /**
+         * Authentication for pusher private channels
+         */
+        Route::post('/chat/auth', [MessagesController::class, 'pusherAuth'])->name('api.pusher.auth');
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+        /**
+         *  Fetch info for specific id [user/group]
+         */
+        Route::post('/idInfo', [MessagesController::class, 'idFetchData'])->name('api.idInfo');
+
+        /**
+         * Send message route
+         */
+        Route::post('/sendMessage', [MessagesController::class, 'send'])->name('api.send.message');
+
+        /**
+         * Fetch messages
+         */
+        Route::post('/fetchMessages', [MessagesController::class, 'fetch'])->name('api.fetch.messages');
+
+        /**
+         * Download attachments route to create a downloadable links
+         */
+        Route::get('/download/{fileName}', [MessagesController::class, 'download'])->name('api.' . config('chatify.attachments.download_route_name'));
+
+        /**
+         * Make messages as seen
+         */
+        Route::post('/makeSeen', [MessagesController::class, 'seen'])->name('api.messages.seen');
+
+        /**
+         * Get contacts
+         */
+        Route::get('/getContacts', [MessagesController::class, 'getContacts'])->name('api.contacts.get');
+
+        /**
+         * Star in favorite list
+         */
+        Route::post('/star', [MessagesController::class, 'favorite'])->name('api.star');
+
+        /**
+         * get favorites list
+         */
+        Route::post('/favorites', [MessagesController::class, 'getFavorites'])->name('api.favorites');
+
+        /**
+         * Search in messenger
+         */
+        Route::get('/search', [MessagesController::class, 'search'])->name('api.search');
+
+        /**
+         * Get shared photos
+         */
+        Route::post('/shared', [MessagesController::class, 'sharedPhotos'])->name('api.shared');
+
+        /**
+         * Delete Conversation
+         */
+        Route::post('/deleteConversation', [MessagesController::class, 'deleteConversation'])->name('api.conversation.delete');
+
+        /**
+         * Delete Conversation
+         */
+        Route::post('/updateSettings', [MessagesController::class, 'updateSettings'])->name('api.avatar.update');
+
+        /**
+         * Set active status
+         */
+        Route::post('/setActiveStatus', [MessagesController::class, 'setActiveStatus'])->name('api.activeStatus.set');
+    });
 });
-Route::prefix('api')->group(function () {
-    Route::post('/user/login', [UserController::class,'login']);
-    Route::post('/user/register', [UserController::class,'register']);
-    Route::post('/user/forgot', [UserController::class, 'forgot']);
-    Route::post('/user/dashboard', [UserController::class,'dashboard']);
-    Route::get('/user/packages', [UserController::class,'packages']);
-    Route::post('/user/change-password', [UserController::class,'changepassword']);
-    Route::post('/user/support-tickets', [UserController::class,'supportmessage']);
 
-    Route::post('/user/loan', [UserLoanController::class,'loan_index']);
-    Route::get('/user/loan-plan', [UserLoanController::class,'loanplan']);
-    Route::post('/user/pending-loans', [UserLoanController::class,'pendingloan']);
-    Route::post('/user/running-loans', [UserLoanController::class,'runningloan']);
-    Route::post('/user/paid-loans', [UserLoanController::class,'paidloan']);
-    Route::post('/user/rejected-loans', [UserLoanController::class,'rejectedloan']);
-    Route::post('/user/loan-amount', [UserLoanController::class,'loanamount']);
-    Route::post('/user/loan-request', [UserLoanController::class,'loanrequest']);
-    Route::post('/user/loan-finish', [UserLoanController::class,'loanfinish']);
-    Route::get('/user/loan-logs/{id}', [UserLoanController::class,'loanlog']);
+//Route::middleware('auth:api')->get('/user', function (Request $request) {
+//    return $request->user();
+//});
+Route::prefix('api')->group(function () {
+    Route::post('/user/login', [UserController::class, 'login']);
+    Route::post('/user/register', [UserController::class, 'register']);
+    Route::post('/user/forgot', [UserController::class, 'forgot']);
+    Route::post('/user/dashboard', [UserController::class, 'dashboard']);
+    Route::get('/user/packages', [UserController::class, 'packages']);
+    Route::post('/user/change-password', [UserController::class, 'changepassword']);
+    Route::post('/user/support-tickets', [UserController::class, 'supportmessage']);
+
+    Route::post('/user/loan', [UserLoanController::class, 'loan_index']);
+    Route::get('/user/loan-plan', [UserLoanController::class, 'loanplan']);
+    Route::post('/user/pending-loans', [UserLoanController::class, 'pendingloan']);
+    Route::post('/user/running-loans', [UserLoanController::class, 'runningloan']);
+    Route::post('/user/paid-loans', [UserLoanController::class, 'paidloan']);
+    Route::post('/user/rejected-loans', [UserLoanController::class, 'rejectedloan']);
+    Route::post('/user/loan-amount', [UserLoanController::class, 'loanamount']);
+    Route::post('/user/loan-request', [UserLoanController::class, 'loanrequest']);
+    Route::post('/user/loan-finish', [UserLoanController::class, 'loanfinish']);
+    Route::get('/user/loan-logs/{id}', [UserLoanController::class, 'loanlog']);
 
     Route::post('/user/send-money', [SendController::class, 'sendmoney']);
     Route::post('/user/request-money', [SendController::class, 'requestmoney']);
@@ -64,132 +138,61 @@ Route::prefix('api')->group(function () {
     Route::post('/user/receive', [SendController::class, 'receive']);
 
     // Route::post('register', 'API\UserController@register');
-    Route::post('/user/dps', [UserDpsController::class,'dps_index']);
-    Route::get('/user/dps-plan', [UserDpsController::class,'dpsplan']);
-    Route::post('/user/running-dps', [UserDpsController::class,'runningdps']);
-    Route::post('/user/matured-dps', [UserDpsController::class,'matureddps']);
-    Route::get('/user/dps-details/{id}', [UserDpsController::class,'dpsdetails']);
+    Route::post('/user/dps', [UserDpsController::class, 'dps_index']);
+    Route::get('/user/dps-plan', [UserDpsController::class, 'dpsplan']);
+    Route::post('/user/running-dps', [UserDpsController::class, 'runningdps']);
+    Route::post('/user/matured-dps', [UserDpsController::class, 'matureddps']);
+    Route::get('/user/dps-details/{id}', [UserDpsController::class, 'dpsdetails']);
 
-    Route::post('/user/fdr', [UserFdrController::class,'fdr_index']);
-    Route::get('/user/fdr-plan', [UserFdrController::class,'fdrplan']);
-    Route::get('/user/fdr-details/{id}', [UserFdrController::class,'fdrdetails']);
-    Route::post('/user/running-fdr', [UserFdrController::class,'runningfdr']);
-    Route::post('/user/closed-fdr', [UserFdrController::class,'closedfdr']);
-    Route::post('/user/apply-fdr', [UserFdrController::class,'applyfdr']);
-    Route::post('/user/finish-fdr', [UserFdrController::class,'finishfdr']);
+    Route::post('/user/fdr', [UserFdrController::class, 'fdr_index']);
+    Route::get('/user/fdr-plan', [UserFdrController::class, 'fdrplan']);
+    Route::get('/user/fdr-details/{id}', [UserFdrController::class, 'fdrdetails']);
+    Route::post('/user/running-fdr', [UserFdrController::class, 'runningfdr']);
+    Route::post('/user/closed-fdr', [UserFdrController::class, 'closedfdr']);
+    Route::post('/user/apply-fdr', [UserFdrController::class, 'applyfdr']);
+    Route::post('/user/finish-fdr', [UserFdrController::class, 'finishfdr']);
 
-    Route::post('user/fetch-withdraw-list',[UserWithdrawController::class,'withdraw']);
-    Route::post('user/withdraw-create',[UserWithdrawController::class,'withdrawcreate']);
-    Route::post('user/withdraw-details',[UserWithdrawController::class,'withdrawdetails']);
+    Route::post('user/fetch-withdraw-list', [UserWithdrawController::class, 'withdraw']);
+    Route::post('user/withdraw-create', [UserWithdrawController::class, 'withdrawcreate']);
+    Route::post('user/withdraw-details', [UserWithdrawController::class, 'withdrawdetails']);
 
-    Route::post('user/withdrawbank',[UserWithdrawBankController::class,'withdrawbank']);
+    Route::post('user/withdrawbank', [UserWithdrawBankController::class, 'withdrawbank']);
 
-    Route::post('user/deposit',[UserDepositController::class,'deposit']);
-    Route::post('user/deposit-details',[UserDepositController::class,'depositdetails']);
+    Route::post('user/deposit', [UserDepositController::class, 'deposit']);
+    Route::post('user/deposit-details', [UserDepositController::class, 'depositdetails']);
 
-    Route::post('user/other-bank-transfer',[UserOtherBankController::class,'otherbanktransfer']);
-    Route::get('user/other-bank',[UserOtherBankController::class,'otherbank']);
-    Route::post('user/other-bank-send',[UserOtherBankController::class,'otherbanksend']);
+    Route::post('user/other-bank-transfer', [UserOtherBankController::class, 'otherbanktransfer']);
+    Route::get('user/other-bank', [UserOtherBankController::class, 'otherbank']);
+    Route::post('user/other-bank-send', [UserOtherBankController::class, 'otherbanksend']);
 
-    Route::post('user/depositsbank',[UserDepositBankController::class,'depositsbank']);
-    Route::post('user/deposit-bank-create',[UserDepositBankController::class,'depositbankcreate']);
-    Route::post('user/deposit-gateways',[UserDepositBankController::class,'depositgateways']);
+    Route::post('user/depositsbank', [UserDepositBankController::class, 'depositsbank']);
+    Route::post('user/deposit-bank-create', [UserDepositBankController::class, 'depositbankcreate']);
+    Route::post('user/deposit-gateways', [UserDepositBankController::class, 'depositgateways']);
 
-    Route::post('user/beneficiaries',[BeneficiaryController::class,'beneficiaries']);
-    Route::post('user/beneficiaries-details',[BeneficiaryController::class,'beneficiariesdetails']);
-    Route::post('user/beneficiaries-create',[BeneficiaryController::class,'beneficiariescreate']);
+    Route::post('user/beneficiaries', [BeneficiaryController::class, 'beneficiaries']);
+    Route::post('user/beneficiaries-details', [BeneficiaryController::class, 'beneficiariesdetails']);
+    Route::post('user/beneficiaries-create', [BeneficiaryController::class, 'beneficiariescreate']);
 
-    Route::post('/user/vouchers', [VoucherController::class,'vouchers']);
-    Route::post('/user/create-voucher', [VoucherController::class,'createvoucher']);
-    Route::post('/user/reedem-voucher', [VoucherController::class,'reedemvoucher']);
-    Route::post('/user/reedemed-history', [VoucherController::class,'reedemedhistory']);
+    Route::post('/user/vouchers', [VoucherController::class, 'vouchers']);
+    Route::post('/user/create-voucher', [VoucherController::class, 'createvoucher']);
+    Route::post('/user/reedem-voucher', [VoucherController::class, 'reedemvoucher']);
+    Route::post('/user/reedemed-history', [VoucherController::class, 'reedemedhistory']);
 
-    Route::post('/user/invoices', [InvoiceController::class,'invoices']);
-    Route::post('/user/create-invoice', [InvoiceController::class,'createinvoice']);
-    Route::post('/user/invoice-view', [InvoiceController::class,'invoiceview']);
-    Route::post('/user/invoice-url', [InvoiceController::class,'invoiceurl']);
+    Route::post('/user/invoices', [InvoiceController::class, 'invoices']);
+    Route::post('/user/create-invoice', [InvoiceController::class, 'createinvoice']);
+    Route::post('/user/invoice-view', [InvoiceController::class, 'invoiceview']);
+    Route::post('/user/invoice-url', [InvoiceController::class, 'invoiceurl']);
 
-    Route::post('/user/make-escrow', [EscrowController::class,'makeescrow']);
-    Route::post('/user/my-escrow', [EscrowController::class,'myescrow']);
-    Route::post('/user/fetch-escrow-pending', [EscrowController::class,'escrowpending']);
+    Route::post('/user/make-escrow', [EscrowController::class, 'makeescrow']);
+    Route::post('/user/my-escrow', [EscrowController::class, 'myescrow']);
+    Route::post('/user/fetch-escrow-pending', [EscrowController::class, 'escrowpending']);
 
-    Route::post('user/exchange-money-history',[ExchangeMoneyController::class,'exchangemoneyhistory']);
-    Route::post('user/exchange-recents',[ExchangeMoneyController::class,'exchangerecents']);
-    Route::post('user/exchange-money',[ExchangeMoneyController::class,'exchangemoney']);
+    Route::post('user/exchange-money-history', [ExchangeMoneyController::class, 'exchangemoneyhistory']);
+    Route::post('user/exchange-recents', [ExchangeMoneyController::class, 'exchangerecents']);
+    Route::post('user/exchange-money', [ExchangeMoneyController::class, 'exchangemoney']);
 
-    Route::post('user/transactions',[TransactionController::class,'transactions']);
-    Route::post('user/transfer-logs',[TransactionController::class,'transferlogs']);
+    Route::post('user/transactions', [TransactionController::class, 'transactions']);
+    Route::post('user/transfer-logs', [TransactionController::class, 'transferlogs']);
 
-    Route::post('user/merchant-api-key',[MerchantController::class,'apikey']);
-
+    Route::post('user/merchant-api-key', [MerchantController::class, 'apikey']);
 });
-
-/**
- * Authentication for pusher private channels
- */
-Route::post('/chat/auth', [MessagesController::class,'pusherAuth'])->name('api.pusher.auth');
-
-/**
- *  Fetch info for specific id [user/group]
- */
-Route::post('/idInfo', [MessagesController::class,'idFetchData'])->name('api.idInfo');
-
-/**
- * Send message route
- */
-Route::post('/sendMessage', [MessagesController::class,'send'])->name('api.send.message');
-
-/**
- * Fetch messages
- */
-Route::post('/fetchMessages', [MessagesController::class,'fetch'])->name('api.fetch.messages');
-
-/**
- * Download attachments route to create a downloadable links
- */
-Route::get('/download/{fileName}', [MessagesController::class,'download'])->name('api.'.config('chatify.attachments.download_route_name'));
-
-/**
- * Make messages as seen
- */
-Route::post('/makeSeen', [MessagesController::class,'seen'])->name('api.messages.seen');
-
-/**
- * Get contacts
- */
-Route::get('/getContacts', [MessagesController::class,'getContacts'])->name('api.contacts.get');
-
-/**
- * Star in favorite list
- */
-Route::post('/star', [MessagesController::class,'favorite'])->name('api.star');
-
-/**
- * get favorites list
- */
-Route::post('/favorites', [MessagesController::class,'getFavorites'])->name('api.favorites');
-
-/**
- * Search in messenger
- */
-Route::get('/search', [MessagesController::class,'search'])->name('api.search');
-
-/**
- * Get shared photos
- */
-Route::post('/shared', [MessagesController::class,'sharedPhotos'])->name('api.shared');
-
-/**
- * Delete Conversation
- */
-Route::post('/deleteConversation', [MessagesController::class,'deleteConversation'])->name('api.conversation.delete');
-
-/**
- * Delete Conversation
- */
-Route::post('/updateSettings', [MessagesController::class,'updateSettings'])->name('api.avatar.update');
-
-/**
- * Set active status
- */
-Route::post('/setActiveStatus', [MessagesController::class,'setActiveStatus'])->name('api.activeStatus.set');

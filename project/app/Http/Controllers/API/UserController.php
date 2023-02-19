@@ -4,6 +4,8 @@ namespace App\Http\Controllers\API;
 
 use Session;
 use Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use App\Models\User;
 use App\Models\UserApiCred;
 use App\Models\Wallet;
@@ -29,14 +31,19 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+            'device_name' => 'required',
+        ]);
+
         $user = User::where('email', $request->email)->first();
-        if (Hash::check($request->password, $user->password)){
-            $cred = UserApiCred::whereUserId($user->id)->first();
-            $user->access_key = $cred->access_key;
-            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $user]);
-        } else {
-            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Invalid email/password']);
+
+        if (! $user || ! Hash::check($request->password, $user->password)) {
+            abort(response()->json('The provided credentials are incorrect.', 401));
         }
+
+        return $user->createToken($request->device_name)->plainTextToken;
     }
 
     public function register(Request $request)

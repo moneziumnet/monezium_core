@@ -36,6 +36,7 @@ class Kernel extends ConsoleKernel
                 $client->request('GET', $site_url);
             }
         })->daily();
+        $schedule->command('sanctum:prune-expired --hours=24')->daily();
     }
 
     /**

@@ -20,9 +20,11 @@ class Authenticate extends Middleware
             if($request->is('admin') || $request->is('admin/*')){
                 return redirect('/admin/login');
             }elseif($request->is('user') || $request->is('user/*')){
-               
+
                 return redirect('/user/login');
-            }else{
+            } elseif ($request->is('api') || $request->is('api/*')) {
+                abort(response()->json('Your token is valid', 401));
+            } else {
                 return redirect()->guest(route('front.index'));
             }
         }
