@@ -33,7 +33,7 @@ use App\Http\Controllers\API\MerchantController;
 |
 */
 Route::middleware('auth:sanctum')->group(function () {
-    Route::prefix('api/chatify')->group(function () {
+    Route::prefix('api')->group(function () {
         // chatify
         /**
          * Authentication for pusher private channels
