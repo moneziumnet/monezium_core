@@ -350,6 +350,125 @@ class BankPlanController extends Controller
                 'plan_id' => $data->id,
                 'user_id' => 0
             ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Deposit Crypto 1',
+                'slug' => 'deposit_crypto',
+                'data' => '{"percent_charge":"1","fixed_charge":"2","from":"1","till":"5000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+            DB::table('charges')->insert([
+                'name' => 'Deposit Crypto 2',
+                'slug' => 'deposit_crypto',
+                'data' => '{"percent_charge":"1","fixed_charge":"3","from":"5001","till":"20000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+            DB::table('charges')->insert([
+                'name' => 'Deposit Crypto 3',
+                'slug' => 'deposit_crypto',
+                'data' => '{"percent_charge":"1","fixed_charge":"2","from":"20001","till":"50000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Exchange Crypto to Crypto 1',
+                'slug' => 'exchange_c_c',
+                'data' => '{"percent_charge":"1","fixed_charge":"2","from":"1","till":"5000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Exchange Crypto to Crypto 2',
+                'slug' => 'exchange_c_c',
+                'data' => '{"percent_charge":"1","fixed_charge":"3","from":"5001","till":"20000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Exchange Crypto to Crypto 3',
+                'slug' => 'exchange_c_c',
+                'data' => '{"percent_charge":"1","fixed_charge":"2","from":"20001","till":"50000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Exchange Crypto to Fiat 1',
+                'slug' => 'exchange_c_f',
+                'data' => '{"percent_charge":"1","fixed_charge":"2","from":"1","till":"5000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Exchange Crypto to Fiat 2',
+                'slug' => 'exchange_c_f',
+                'data' => '{"percent_charge":"1","fixed_charge":"3","from":"5001","till":"20000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Exchange Crypto to Fiat 3',
+                'slug' => 'exchange_c_f',
+                'data' => '{"percent_charge":"1","fixed_charge":"2","from":"20001","till":"50000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Exchange Fiat to Crypto 1',
+                'slug' => 'exchange_f_c',
+                'data' => '{"percent_charge":"1","fixed_charge":"2","from":"1","till":"5000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Exchange Fiat to Crypto 2',
+                'slug' => 'exchange_f_c',
+                'data' => '{"percent_charge":"1","fixed_charge":"3","from":"5001","till":"20000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Exchange Fiat to Crypto 3',
+                'slug' => 'exchange_f_c',
+                'data' => '{"percent_charge":"1","fixed_charge":"2","from":"20001","till":"50000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Withdraw Crypto 1',
+                'slug' => 'withdraw_crypto',
+                'data' => '{"percent_charge":"1","fixed_charge":"2","from":"1","till":"5000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Withdraw Crypto 2',
+                'slug' => 'withdraw_crypto',
+                'data' => '{"percent_charge":"1","fixed_charge":"3","from":"5001","till":"20000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
+            DB::table('charges')->insert([
+                'name' => 'Withdraw Crypto 3',
+                'slug' => 'withdraw_crypto',
+                'data' => '{"percent_charge":"1","fixed_charge":"2","from":"20001","till":"50000"}',
+                'plan_id' => $data->id,
+                'user_id' => 0
+            ]);
+
             $modules = explode(" , ", "Shop , Loan , Investments , Payments , Incoming , Cards , External Payments , Payment between accounts , Internal Payment , Crypto , Request Money , Exchange Money , Transactions , Voucher , Merchant Shop , Merchant Product , Merchant Checkout , Merchant Transaction , Merchant Campaign , Merchant own Account , Merchant Request Money , Invoice , Contracts , Escrow , ICO");
             foreach ($modules as $key => $value) {
                 DB::table('charges')->insert([
