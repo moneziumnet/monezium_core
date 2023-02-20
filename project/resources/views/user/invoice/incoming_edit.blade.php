@@ -238,6 +238,11 @@
                             </div>
                             <hr class="my-3"/>
                             <div class="form-group mt-3 col-md-6">
+                                <label class="form-label required">{{__('Account/IBAN')}}</label>
+                                <input name="account_iban" id="account_iban" class="form-control iban-input" autocomplete="off" placeholder="{{__('Enter Account/IBAN')}}" type="text" value="{{ old('account_iban') }}" min="1" required>
+                                <small class="text-danger iban-validation"></small>
+                            </div>
+                            <div class="form-group mt-3 col-md-6">
                                 <label class="form-label required">{{__('Bank Name')}}</label>
                                 <input name="bank_name" id="bank_name" class="form-control" autocomplete="off" placeholder="{{__('Enter Bank Name')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('bank_name') }}" required readonly>
                             </div>
@@ -248,11 +253,6 @@
                             <div class="form-group mt-3 col-md-6">
                                 <label class="form-label required">{{__('SWIFT/BIC')}}</label>
                                 <input name="swift_bic" id="swift_bic" class="form-control" autocomplete="off" placeholder="{{__('MEINATWW')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('swift_bic') }}" min="1" required readonly>
-                            </div>
-                            <div class="form-group mt-3 col-md-6">
-                                <label class="form-label required">{{__('Account/IBAN')}}</label>
-                                <input name="account_iban" id="account_iban" class="form-control iban-input" autocomplete="off" placeholder="{{__('Enter Account/IBAN')}}" type="text" value="{{ old('account_iban') }}" min="1" required>
-                                <small class="text-danger iban-validation"></small>
                             </div>
                         </div>
                         <input type="hidden" name="user_id" value="{{auth()->id()}}">

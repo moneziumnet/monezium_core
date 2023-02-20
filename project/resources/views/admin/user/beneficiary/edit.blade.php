@@ -103,6 +103,12 @@
                                             <hr/>
                                             <div class="row">
                                                 <div class="form-group mt-2 col-md-6">
+                                                    <label class="form-label required">{{__('Account/IBAN')}}</label>
+                                                    <input name="account_iban" id="account_iban" class="form-control iban-input" autocomplete="off" placeholder="{{__('Enter Account/IBAN')}}" type="text" value="{{ $beneficiary->account_iban  }}"  required>
+                                                    <small class="text-danger iban-validation"></small>
+                                                </div>
+
+                                                <div class="form-group mt-2 col-md-6">
                                                     <label class="form-label required">{{__('Bank Name')}}</label>
                                                     <input name="bank_name" id="bank_name" class="form-control" autocomplete="off" placeholder="{{__('Enter Bank Name')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ $beneficiary->bank_name }}" required readonly>
                                                 </div>
@@ -115,12 +121,6 @@
                                                 <div class="form-group mt-2 col-md-6">
                                                     <label class="form-label required">{{__('SWIFT/BIC')}}</label>
                                                     <input name="swift_bic" id="swift" class="form-control" autocomplete="off" placeholder="{{__('MEINATWW')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ $beneficiary->swift_bic  }}"  required readonly>
-                                                </div>
-
-                                                <div class="form-group mt-2 col-md-6">
-                                                    <label class="form-label required">{{__('Account/IBAN')}}</label>
-                                                    <input name="account_iban" id="account_iban" class="form-control iban-input" autocomplete="off" placeholder="{{__('Enter Account/IBAN')}}" type="text" value="{{ $beneficiary->account_iban  }}"  required>
-                                                    <small class="text-danger iban-validation"></small>
                                                 </div>
                                             </div>
 
