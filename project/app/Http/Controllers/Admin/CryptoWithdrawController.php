@@ -81,7 +81,7 @@ class CryptoWithdrawController extends Controller
             user_wallet_increment($data->user_id, $data->currency_id, $data->amount, 8);
             $transaction_global_cost = 0;
 
-            $transaction_global_fee = check_global_transaction_fee($data->amount/$crypto_rate, $user, 'withdraw');
+            $transaction_global_fee = check_global_transaction_fee($data->amount/$crypto_rate, $user, 'withdraw_crypto');
             if($transaction_global_fee)
             {
                 $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($data->amount/($crypto_rate*100)) * $transaction_global_fee->data->percent_charge;
@@ -91,7 +91,7 @@ class CryptoWithdrawController extends Controller
             if($user->referral_id != 0)
             {
                 $transaction_custom_cost = 0;
-                $transaction_custom_fee = check_custom_transaction_fee($data->amount/$crypto_rate, User::whereId($data->user_id)->first(), 'withdraw');
+                $transaction_custom_fee = check_custom_transaction_fee($data->amount/$crypto_rate, User::whereId($data->user_id)->first(), 'withdraw_crypto');
                 if($transaction_custom_fee) {
                     $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($data->amount/(100*$crypto_rate)) * $transaction_custom_fee->data->percent_charge;
                 }

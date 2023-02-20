@@ -254,6 +254,8 @@
             var amount = parseFloat($('.amount').val())
             var fromCode = from.data('code')
             var toCode   = to.data('code')
+            var fromtype = from.data('type')
+            var totype   = to.data('type')
             var fromRate = from.data('rate')
             var toRate =to.data('rate')
             console.log(fromRate)
@@ -262,7 +264,7 @@
             var defaultAmount = amount/fromRate;
             var finalAmount = defaultAmount * toRate;
 
-            var url = "{{url('user/exchange-money/calcharge')}}"+'/'+defaultAmount;
+            var url = "{{url('user/exchange-money/calcharge')}}"+'/'+defaultAmount+'/'+fromtype+'/'+totype;
             $.get(url,function (res) {
 
                 $('.fromCurr').text(fromCode)

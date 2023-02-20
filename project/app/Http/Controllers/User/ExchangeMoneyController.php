@@ -178,7 +178,18 @@ class ExchangeMoneyController extends Controller
         // if ($request->amount < $global_range->min || $request->amount > $global_range->max) {
         //     return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
         // }
-        $transaction_global_fee = check_global_transaction_fee($request->amount/$from_rate, $user, 'exchange');
+        if ($fromWallet->currency->type == 1 && $toWallet->currency->type == 1 ) {
+            $transaction_global_fee = check_global_transaction_fee($request->amount/$from_rate, $user, 'exchange');
+        }
+        else if ($fromWallet->currency->type == 2 && $toWallet->currency->type == 1 ) {
+            $transaction_global_fee = check_global_transaction_fee($request->amount/$from_rate, $user, 'exchange_c_f');
+        }
+        else if ($fromWallet->currency->type == 1 && $toWallet->currency->type == 2 ) {
+            $transaction_global_fee = check_global_transaction_fee($request->amount/$from_rate, $user, 'exchange_f_c');
+        }
+        else if ($fromWallet->currency->type == 2 && $toWallet->currency->type == 2 ) {
+            $transaction_global_fee = check_global_transaction_fee($request->amount/$from_rate, $user, 'exchange_c_c');
+        }
         if($transaction_global_fee)
         {
             $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/($from_rate*100)) * $transaction_global_fee->data->percent_charge;
@@ -210,7 +221,18 @@ class ExchangeMoneyController extends Controller
 
         if($user->referral_id != 0)
         {
-            $transaction_custom_fee = check_custom_transaction_fee($request->amount/$from_rate, $user,  'exchange');
+            if ($fromWallet->currency->type == 1 && $toWallet->currency->type == 1 ) {
+                $transaction_custom_fee = check_custom_transaction_fee($request->amount/$from_rate, $user,  'exchange');
+            }
+            else if ($fromWallet->currency->type == 2 && $toWallet->currency->type == 1 ) {
+                $transaction_custom_fee = check_custom_transaction_fee($request->amount/$from_rate, $user,  'exchange_c_f');
+            }
+            else if ($fromWallet->currency->type == 1 && $toWallet->currency->type == 2 ) {
+                $transaction_custom_fee = check_custom_transaction_fee($request->amount/$from_rate, $user,  'exchange_f_c');
+            }
+            else if ($fromWallet->currency->type == 2 && $toWallet->currency->type == 2 ) {
+                $transaction_custom_fee = check_custom_transaction_fee($request->amount/$from_rate, $user,  'exchange_c_c');
+            }
             if($transaction_custom_fee) {
                 $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/($from_rate*100)) * $transaction_custom_fee->data->percent_charge;
             }
@@ -535,7 +557,7 @@ class ExchangeMoneyController extends Controller
         return back()->with('message','Money exchanged successfully.');
     }
 
-    public function calcharge($amount)
+    public function calcharge($amount, $fromtype, $totype)
     {
         $user= auth()->user();
         // $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'send')->first();
@@ -543,7 +565,18 @@ class ExchangeMoneyController extends Controller
         // if ($amount < $global_range->min || $amount > $global_range->max) {
         //     return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
         // }
-        $transaction_global_fee = check_global_transaction_fee($amount, $user, 'exchange');
+        if ($fromtype == 1 && $totype == 1 ) {
+            $transaction_global_fee = check_global_transaction_fee($amount, $user, 'exchange');
+        }
+        else if ($fromtype == 2 && $fromtype == 1 ) {
+            $transaction_global_fee = check_global_transaction_fee($amount, $user, 'exchange_c_f');
+        }
+        else if ($fromtype == 1 && $fromtype == 2 ) {
+            $transaction_global_fee = check_global_transaction_fee($amount, $user, 'exchange_f_c');
+        }
+        else if ($fromtype == 2 && $fromtype == 2 ) {
+            $transaction_global_fee = check_global_transaction_fee($amount, $user, 'exchange_c_c');
+        }
         if($transaction_global_fee)
         {
             $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($amount/100) * $transaction_global_fee->data->percent_charge;
@@ -552,6 +585,18 @@ class ExchangeMoneyController extends Controller
         if($user->referral_id != 0)
         {
             $transaction_custom_fee = check_custom_transaction_fee($amount, $user,  'exchange');
+            if ($fromtype == 1 && $totype == 1 ) {
+                $transaction_custom_fee = check_custom_transaction_fee($amount, $user, 'exchange');
+            }
+            else if ($fromtype == 2 && $totype == 1 ) {
+                $transaction_custom_fee = check_custom_transaction_fee($amount, $user, 'exchange_c_f');
+            }
+            else if ($fromtype == 1 && $totype == 2 ) {
+                $transaction_custom_fee = check_custom_transaction_fee($amount, $user, 'exchange_f_c');
+            }
+            else if ($fromtype == 2 && $totype == 2 ) {
+                $transaction_custom_fee = check_custom_transaction_fee($amount, $user, 'exchange_c_c');
+            }
             if($transaction_custom_fee) {
                 $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($amount/100) * $transaction_custom_fee->data->percent_charge;
             }
