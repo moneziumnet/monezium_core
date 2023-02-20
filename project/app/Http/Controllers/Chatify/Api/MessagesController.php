@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
+use Illuminate\Support\Facades\Crypt;
 
 class MessagesController extends Controller
 {
@@ -52,6 +53,9 @@ class MessagesController extends Controller
             if($fetch){
                 $userAvatar = Chatify::getUserWithAvatar($fetch)->avatar;
             }
+        }
+        if ($fetch->company_name != "") {
+            $fetch->name = $fetch->company_name;
         }
 
         // send the response
@@ -220,9 +224,21 @@ class MessagesController extends Controller
         ->orderBy('max_created_at', 'desc')
         ->groupBy('users.id')
         ->paginate($request->per_page ?? $this->perPage);
+        $usersList = $users->items();
+        if (count($usersList) > 0) {
+            $contacts = '';
+            foreach ($usersList as $user) {
+                $user->name = Crypt::decryptString($user->name);
+                if ($user->company_name != "")
+                    $user->company_name = Crypt::decryptString($user->company_name);
 
+                $contacts .= Chatify::getContactItem($user);
+            }
+        } else {
+            $contacts = [];
+        }
         return response()->json([
-            'contacts' => $users->items(),
+            'contacts' => $contacts,
             'total' => $users->total() ?? 0,
             'last_page' => $users->lastPage() ?? 1,
         ], 200);
@@ -276,6 +292,7 @@ class MessagesController extends Controller
         $input = trim(filter_var($request['input']));
         $records = User::where('id','!=',Auth::user()->id)
                     ->where('name', 'LIKE', "%{$input}%")
+                    ->orWhere('company_name', 'LIKE', "%{$input}%")
                     ->paginate($request->per_page ?? $this->perPage);
 
         foreach ($records->items() as $index => $record) {
