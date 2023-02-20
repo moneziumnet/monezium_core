@@ -212,7 +212,7 @@
                                     <h5 class="title">{{ $data->title}}</h5>
                                 </div>
                                 <div class="right">
-                                    <h5 class="title">{{ $data->amount.$currency->symbol }} </h5>
+                                    <h5 class="title">{{ $currency->symbol.$data->amount }} </h5>
                                     <span>@lang('Amount')</span>
                                 </div>
                             </div>
@@ -223,7 +223,7 @@
                                             @lang('Maximum Send Money (Daily)')
                                         </div>
                                         <div class="info">
-                                            {{ plan_details_by_type('send', $data->id)->daily_limit.$currency->symbol }}
+                                            {{ $currency->symbol.plan_details_by_type('send', $data->id)->daily_limit }}
                                         </div>
                                     </li>
 
@@ -233,7 +233,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ plan_details_by_type('send', $data->id)->monthly_limit.$currency->symbol }}
+                                            {{ $currency->symbol.plan_details_by_type('send', $data->id)->monthly_limit }}
                                         </div>
                                     </li>
 
@@ -243,7 +243,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ plan_details_by_type('recieve', $data->id)->daily_limit.$currency->symbol }}
+                                            {{ $currency->symbol.plan_details_by_type('recieve', $data->id)->daily_limit }}
                                         </div>
                                     </li>
 
@@ -253,7 +253,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ plan_details_by_type('recieve', $data->id)->monthly_limit.$currency->symbol }}
+                                            {{ $currency->symbol.plan_details_by_type('recieve', $data->id)->monthly_limit }}
                                         </div>
                                     </li>
 
@@ -263,7 +263,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ plan_details_by_type('withdraw', $data->id)->daily_limit.$currency->symbol }}
+                                            {{ $currency->symbol.plan_details_by_type('withdraw', $data->id)->daily_limit }}
                                         </div>
                                     </li>
 
@@ -273,7 +273,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ plan_details_by_type('withdraw', $data->id)->monthly_limit.$currency->symbol }}
+                                            {{ $currency->symbol.plan_details_by_type('withdraw', $data->id)->monthly_limit }}
                                         </div>
                                     </li>
 
@@ -283,7 +283,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ plan_details_by_type('deposit', $data->id)->daily_limit.$currency->symbol }}
+                                            {{ $currency->symbol.plan_details_by_type('deposit', $data->id)->daily_limit }}
                                         </div>
                                     </li>
 
@@ -293,7 +293,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ plan_details_by_type('deposit', $data->id)->monthly_limit.$currency->symbol }}
+                                            {{ $currency->symbol.plan_details_by_type('deposit', $data->id)->monthly_limit }}
                                         </div>
                                     </li>
 
@@ -303,7 +303,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ plan_details_by_type('escrow', $data->id)->daily_limit.$currency->symbol }}
+                                            {{ $currency->symbol.plan_details_by_type('escrow', $data->id)->daily_limit }}
                                         </div>
                                     </li>
 
@@ -313,7 +313,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ plan_details_by_type('escrow', $data->id)->monthly_limit.$currency->symbol }}
+                                            {{ $currency->symbol.plan_details_by_type('escrow', $data->id)->monthly_limit }}
                                         </div>
                                     </li>
 
@@ -355,7 +355,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ $data->per_installment.$currency->symbol }}
+                                            {{ $currency->symbol.$data->per_installment }}
                                         </div>
                                     </li>
 
@@ -365,7 +365,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ $data->final_amount.$currency->symbol }}
+                                            {{ $currency->symbol.$data->final_amount }}
                                         </div>
                                     </li>
 
@@ -375,7 +375,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ round($data->final_amount + $data->user_profit,2).$currency->symbol }}
+                                            {{ $currency->symbol.round($data->final_amount + $data->user_profit,2) }}
                                         </div>
                                     </li>
 
@@ -428,7 +428,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ $data->min_amount.$currency->symbol }}
+                                            {{ $currency->symbol.$data->min_amount }}
                                         </div>
                                     </li>
 
@@ -438,7 +438,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ $data->max_amount.$currency->symbol }}
+                                            {{ $currency->symbol.$data->max_amount }}
                                         </div>
                                     </li>
 
@@ -505,7 +505,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ $data->min_amount.$currency->symbol }}
+                                            {{ $currency->symbol.$data->min_amount }}
                                         </div>
                                     </li>
 
@@ -515,7 +515,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ $data->max_amount.$currency->symbol }}
+                                            {{ $currency->symbol.$data->max_amount }}
                                         </div>
                                     </li>
 
