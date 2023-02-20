@@ -15,7 +15,8 @@ class PricingPlanController extends Controller
     }
 
     public function index(){
-        $data['packages'] = BankPlan::all();
+        $type = auth()->user()->company_name ? 'corporate' : 'private';
+        $data['packages'] = BankPlan::where('type', $type)->orderBy('amount', 'asc')->get();
         return view('user.package.index',$data);
     }
 

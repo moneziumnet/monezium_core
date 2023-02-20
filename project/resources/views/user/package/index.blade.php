@@ -49,7 +49,7 @@
                                             @lang('Maximum Send Money (Daily)')
                                         </div>
                                         <div class="info">
-                                            {{$currency->symbol}}{{ $data->daily_send }}
+                                            {{$currency->symbol}}{{ plan_details_by_type('send', $data->id)->daily_limit }}
                                         </div>
                                     </li>
 
@@ -59,7 +59,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{$currency->symbol}}{{ $data->monthly_send }}
+                                            {{$currency->symbol}}{{ plan_details_by_type('send', $data->id)->monthly_limit }}
                                         </div>
                                     </li>
 
@@ -69,7 +69,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{$currency->symbol}}{{ $data->daily_receive }}
+                                            {{$currency->symbol}}{{ plan_details_by_type('recieve', $data->id)->daily_limit }}
                                         </div>
                                     </li>
 
@@ -79,7 +79,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{$currency->symbol}}{{ $data->monthly_receive }}
+                                            {{$currency->symbol}}{{ plan_details_by_type('recieve', $data->id)->monthly_limit }}
                                         </div>
                                     </li>
 
@@ -89,7 +89,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{$currency->symbol}}{{ $data->daily_withdraw }}
+                                            {{$currency->symbol}}{{ plan_details_by_type('withdraw', $data->id)->daily_limit  }}
                                         </div>
                                     </li>
                                     <li>
@@ -98,17 +98,59 @@
                                         </div>
 
                                         <div class="info">
-                                            {{$currency->symbol}}{{ $data->monthly_withdraw }}
+                                            {{$currency->symbol}}{{ plan_details_by_type('withdraw', $data->id)->monthly_limit  }}
                                         </div>
                                     </li>
+
                                     <li>
                                         <div class="name">
-                                            @lang('Maximum Loan Amount (Monthly)')
+                                            @lang('Maximum Deposit Money (Daily)')
                                         </div>
+
                                         <div class="info">
-                                            {{$currency->symbol}}{{ $data->loan_amount }}
+                                            {{$currency->symbol}}{{ plan_details_by_type('deposit', $data->id)->daily_limit }}
                                         </div>
                                     </li>
+
+                                    <li>
+                                        <div class="name">
+                                            @lang('Maximum Deposit Money (Monthly)')
+                                        </div>
+
+                                        <div class="info">
+                                            {{$currency->symbol}}{{ plan_details_by_type('deposit', $data->id)->monthly_limit }}
+                                        </div>
+                                    </li>
+
+                                    <li>
+                                        <div class="name">
+                                            @lang('Maximum Escrow Money (Daily)')
+                                        </div>
+
+                                        <div class="info">
+                                            {{$currency->symbol}}{{ plan_details_by_type('escrow', $data->id)->daily_limit }}
+                                        </div>
+                                    </li>
+
+                                    <li>
+                                        <div class="name">
+                                            @lang('Maximum Escrow Money (Monthly)')
+                                        </div>
+
+                                        <div class="info">
+                                            {{$currency->symbol}}{{ plan_details_by_type('escrow', $data->id)->monthly_limit }}
+                                        </div>
+                                    </li>
+
+                                    <li>
+                                        <div class="name">
+                                            @lang('Installment Interval')
+                                        </div>
+                                        <div class="info">
+                                            {{ $data->days }} {{ __('Days')}}
+                                        </div>
+                                    </li>
+
 
                                 @if ($data->attribute)
                                     @foreach (json_decode($data->attribute,true) as $key=>$attribute)
