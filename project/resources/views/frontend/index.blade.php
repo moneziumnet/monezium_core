@@ -205,9 +205,6 @@
             <div class="tab-pane fade show active" id="priceplan">
                 <div class="row g-4 justify-content-center pricing--wrapper">
                     @foreach ($bankplans as $key=>$data)
-                    @php
-                        $code = $currency->code;
-                    @endphp
                     <div class="col-lg-4 col-sm-10 col-md-6">
                         <div class="plan__item">
                             <div class="plan__item-header">
@@ -215,7 +212,7 @@
                                     <h5 class="title">{{ $data->title}}</h5>
                                 </div>
                                 <div class="right">
-                                    <h5 class="title">{{ $data->amount*$rate->data->rates->$code.$currency->symbol }} </h5>
+                                    <h5 class="title">{{ $data->amount.$currency->symbol }} </h5>
                                     <span>@lang('Amount')</span>
                                 </div>
                             </div>
@@ -226,7 +223,7 @@
                                             @lang('Maximum Send Money (Daily)')
                                         </div>
                                         <div class="info">
-                                            {{ $data->daily_send*$rate->data->rates->$code.$currency->symbol }}
+                                            {{ plan_details_by_type('send', $data->id)->daily_limit.$currency->symbol }}
                                         </div>
                                     </li>
 
@@ -236,7 +233,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ $data->monthly_send*$rate->data->rates->$code.$currency->symbol }}
+                                            {{ plan_details_by_type('send', $data->id)->monthly_limit.$currency->symbol }}
                                         </div>
                                     </li>
 
@@ -246,7 +243,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ $data->daily_receive*$rate->data->rates->$code.$currency->symbol }}
+                                            {{ plan_details_by_type('recieve', $data->id)->daily_limit.$currency->symbol }}
                                         </div>
                                     </li>
 
@@ -256,7 +253,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ $data->monthly_receive*$rate->data->rates->$code.$currency->symbol }}
+                                            {{ plan_details_by_type('recieve', $data->id)->monthly_limit.$currency->symbol }}
                                         </div>
                                     </li>
 
@@ -266,26 +263,60 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ $data->daily_withdraw*$rate->data->rates->$code.$currency->symbol }}
+                                            {{ plan_details_by_type('withdraw', $data->id)->daily_limit.$currency->symbol }}
                                         </div>
                                     </li>
+
                                     <li>
                                         <div class="name">
                                             @lang('Maximum Withdraw Amount (Monthly)')
                                         </div>
 
                                         <div class="info">
-                                            {{ $data->monthly_withdraw*$rate->data->rates->$code.$currency->symbol }}
+                                            {{ plan_details_by_type('withdraw', $data->id)->monthly_limit.$currency->symbol }}
                                         </div>
                                     </li>
+
                                     <li>
                                         <div class="name">
-                                            @lang('Maximum Loan Amount (Monthly)')
+                                            @lang('Maximum Deposit Amount (Daily)')
                                         </div>
+
                                         <div class="info">
-                                            {{ $data->loan_amount*$rate->data->rates->$code.$currency->symbol }}
+                                            {{ plan_details_by_type('deposit', $data->id)->daily_limit.$currency->symbol }}
                                         </div>
                                     </li>
+
+                                    <li>
+                                        <div class="name">
+                                            @lang('Maximum Deposit Amount (Monthly)')
+                                        </div>
+
+                                        <div class="info">
+                                            {{ plan_details_by_type('deposit', $data->id)->monthly_limit.$currency->symbol }}
+                                        </div>
+                                    </li>
+
+                                    <li>
+                                        <div class="name">
+                                            @lang('Maximum Escrow Amount (Daily)')
+                                        </div>
+
+                                        <div class="info">
+                                            {{ plan_details_by_type('escrow', $data->id)->daily_limit.$currency->symbol }}
+                                        </div>
+                                    </li>
+
+                                    <li>
+                                        <div class="name">
+                                            @lang('Maximum Escrow Amount (Monthly)')
+                                        </div>
+
+                                        <div class="info">
+                                            {{ plan_details_by_type('escrow', $data->id)->monthly_limit.$currency->symbol }}
+                                        </div>
+                                    </li>
+
                                     <li>
                                         <div class="name">
                                             @lang('Installment Interval')
@@ -324,7 +355,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ $data->per_installment*$rate->data->rates->$code.$currency->symbol }}
+                                            {{ $data->per_installment.$currency->symbol }}
                                         </div>
                                     </li>
 
@@ -334,7 +365,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ $data->final_amount*$rate->data->rates->$code.$currency->symbol }}
+                                            {{ $data->final_amount.$currency->symbol }}
                                         </div>
                                     </li>
 
@@ -344,7 +375,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ round($data->final_amount + $data->user_profit,2)*$rate->data->rates->$code.$currency->symbol }}
+                                            {{ round($data->final_amount + $data->user_profit,2).$currency->symbol }}
                                         </div>
                                     </li>
 
@@ -397,7 +428,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ $data->min_amount*$rate->data->rates->$code.$currency->symbol }}
+                                            {{ $data->min_amount.$currency->symbol }}
                                         </div>
                                     </li>
 
@@ -407,7 +438,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ $data->max_amount*$rate->data->rates->$code.$currency->symbol }}
+                                            {{ $data->max_amount.$currency->symbol }}
                                         </div>
                                     </li>
 
@@ -474,7 +505,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ $data->min_amount*$rate->data->rates->$code.$currency->symbol }}
+                                            {{ $data->min_amount.$currency->symbol }}
                                         </div>
                                     </li>
 
@@ -484,7 +515,7 @@
                                         </div>
 
                                         <div class="info">
-                                            {{ $data->max_amount*$rate->data->rates->$code.$currency->symbol }}
+                                            {{ $data->max_amount.$currency->symbol }}
                                         </div>
                                     </li>
 

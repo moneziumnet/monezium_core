@@ -13,6 +13,7 @@ use App\Models\Wallet;
 use App\Models\ActionNotification;
 use App\Models\UserWhatsapp;
 use App\Models\UserTelegram;
+use App\Models\PlanDetail;
 use Illuminate\Support\Facades\Log;
 
 use Carbon\Carbon;
@@ -1322,6 +1323,14 @@ if (!function_exists('prefix_get_next_key_array')) {
         }
 
         return $next_key;
+    }
+}
+
+if (!function_exists('plan_details_by_type')) {
+
+    function plan_details_by_type( $type, $plan_id ) {
+        $plandetail= PlanDetail::where('plan_id', $plan_id)->where('type', $type)->first();
+        return $plandetail;
     }
 }
 

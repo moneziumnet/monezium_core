@@ -100,7 +100,6 @@ class FrontendController extends Controller
         $client = New Client();
         $currency = Currency::findOrFail(defaultCurr());
         $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency='.$currency->code);
-        $data['rate'] = json_decode($response->getBody());
         return view('frontend.index', $data);
     }
 
