@@ -13,7 +13,7 @@
         @else
         <li class="nav-item">
             <a class="nav-link
-                    {{ menu('user.bank.transaction.account.index') }}
+                    {{ menu('user.bank.transaction.account.index', $item->id) }}
                 " href="{{ route('user.bank.transaction.account.index', $item->id) }}"
                 role="button">
                 {{ __($item->iban) }}
