@@ -48,12 +48,6 @@ class EthereumRpcService
         $signature = $this->getFunctionSignature('transfer(address,uint256)');
         $to = str_pad(substr($to, 2), 64, '0', STR_PAD_LEFT);
         $value = str_pad($this->bcdechex($this->toWei($value, $decimals)), 64, '0', STR_PAD_LEFT);
-        dd([
-            'from' => $from,
-            'to' => $tokenContract,
-            'data' => $signature . $to . $value,
-            'value' => '0x0',
-        ]);
         // $value = "0x".dechex((int)($value*pow(10,18)));
         // dd($value);
         // $eth_balance = $this->getEtherBalance($from);
