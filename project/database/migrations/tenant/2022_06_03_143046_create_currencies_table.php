@@ -22,6 +22,7 @@ class CreateCurrenciesTable extends Migration
             $table->unsignedInteger('type')->default(1)->comment('1 => fiat, 2 => crypto');
             $table->string('address')->nullable();
             $table->string('keyword')->nullable();
+            $table->unsignedInteger('cryptodecimal')->default(18);
             $table->unsignedInteger('status')->default(1)->comment('1 => active, 0 => inactive');
             $table->unsignedDecimal('rate', 20, 10);
             $table->timestamps();

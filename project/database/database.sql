@@ -1040,6 +1040,7 @@ CREATE TABLE `currencies`  (
   `curr_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `type` int(10) UNSIGNED NOT NULL DEFAULT 1 COMMENT '1 => fiat, 2 => crypto',
   `status` int(10) UNSIGNED NOT NULL DEFAULT 1 COMMENT '1 => active, 0 => inactive',
+  `cryptodecimal` int(10) UNSIGNED NOT NULL DEFAULT 18,
   `rate` decimal(20, 10) UNSIGNED NOT NULL,
   `created_at` timestamp(0) NULL DEFAULT NULL,
   `updated_at` timestamp(0) NULL DEFAULT NULL,
@@ -1053,11 +1054,11 @@ CREATE TABLE `currencies`  (
 -- ----------------------------
 -- Records of currencies
 -- ----------------------------
-INSERT INTO `currencies` VALUES (1, 0, '$', 'USD', 'United State Dollar', 1, 1, 1.0000000000, NULL, NULL, NULL, NULL);
-INSERT INTO `currencies` VALUES (2, 1, '€', 'EUR', 'European Currency', 1, 1, 0.8790350000, NULL, NULL, NULL, NULL);
-INSERT INTO `currencies` VALUES (3, 0, '£', 'GBP', 'Greate British Pound', 1, 1, 0.7376150000, NULL, NULL, NULL, NULL);
-INSERT INTO `currencies` VALUES (4, 0, 'Ð', 'ETH', 'Ethereum', 2, 1, 0.0005300000, NULL, NULL, '0x00B325CCa0bBBf311605B5c5a0B1e3Ff0fc722FB', NULL);
-INSERT INTO `currencies` VALUES (5, 0, '₿', 'BTC', 'Bitcoin', 2, 1, 0.0000225900, NULL, NULL, '51b6075e223e18f89513338047bd7cd0f4dc889f8dbce5d254de6aa9282818b9', NULL);
+INSERT INTO `currencies` VALUES (1, 0, '$', 'USD', 'United State Dollar', 1, 1, 18, 1.0000000000, NULL, NULL, NULL, NULL);
+INSERT INTO `currencies` VALUES (2, 1, '€', 'EUR', 'European Currency', 1, 1, 18, 0.8790350000, NULL, NULL, NULL, NULL);
+INSERT INTO `currencies` VALUES (3, 0, '£', 'GBP', 'Greate British Pound', 1, 1, 18, 0.7376150000, NULL, NULL, NULL, NULL);
+INSERT INTO `currencies` VALUES (4, 0, 'Ð', 'ETH', 'Ethereum', 2, 1, 18, 0.0005300000, NULL, NULL, '0x00B325CCa0bBBf311605B5c5a0B1e3Ff0fc722FB', NULL);
+INSERT INTO `currencies` VALUES (5, 0, '₿', 'BTC', 'Bitcoin', 2, 1, 18, 0.0000225900, NULL, NULL, '51b6075e223e18f89513338047bd7cd0f4dc889f8dbce5d254de6aa9282818b9', NULL);
 
 -- ----------------------------
 -- Table structure for dps_plans
