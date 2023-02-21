@@ -66,6 +66,24 @@ class MessagesController extends Controller
         ]);
     }
 
+
+    /**
+     * Fetch all user data
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function allUserData(Request $request)
+    {
+        // User
+        $users = User::where('id', '!=', Auth::user()->id)->get();
+
+        // send the response
+        return Response::json([
+            'users' => $users
+        ]);
+    }
+
     /**
      * This method to make a links for the attachments
      * to be downloadable.
@@ -224,21 +242,8 @@ class MessagesController extends Controller
         ->orderBy('max_created_at', 'desc')
         ->groupBy('users.id')
         ->paginate($request->per_page ?? $this->perPage);
-        $usersList = $users->items();
-        if (count($usersList) > 0) {
-            $contacts = '';
-            foreach ($usersList as $user) {
-                $user->name = Crypt::decryptString($user->name);
-                if ($user->company_name != "")
-                    $user->company_name = Crypt::decryptString($user->company_name);
-
-                $contacts .= Chatify::getContactItem($user);
-            }
-        } else {
-            $contacts = [];
-        }
         return response()->json([
-            'contacts' => $contacts,
+            'contacts' => $users->items(),
             'total' => $users->total() ?? 0,
             'last_page' => $users->lastPage() ?? 1,
         ], 200);
