@@ -61,7 +61,7 @@
 
                         <h3 class="text-center py-5">{{__('No Transaction Data Found')}}</h3>
                         @else
-                                <div class="table-responsive">
+                                <div class="table-responsive" style="max-height: 600px;overflow-y: scroll;">
 
                                     <table class="table card-table table-vcenter text-nowrap datatable">
                                     <thead>
