@@ -550,7 +550,7 @@ class UserTelegramController extends Controller
             $subbank_id = $value->subinsbank->id;
            }
         }
-        send_staff_telegram('This is test for staff', (isset($subbank_id) ?? 'test'));
+        send_staff_telegram('This is test for staff'.(isset($subbank_id) ?? 'test'),  'Loan');
     }
 
     public function generate(Request $request)
