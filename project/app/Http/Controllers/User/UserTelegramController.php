@@ -545,10 +545,10 @@ class UserTelegramController extends Controller
 
     public function test() {
         $subbank = BankGateway::where('keyword', 'openpayd')->with('subinsbank')->get();
-        dd($subbank);
         foreach ($subbank as $key => $value) {
-           if($value->subinsbank->status == 1) {
-            $subbank_id = $value->subinsbank->id;
+            if($value->subinsbank->status == 1) {
+                $subbank_id = $value->subinsbank->id;
+                dd($value->subinsbank);
            }
         }
         send_staff_telegram('This is test for staff'.(isset($subbank_id) ?? 'test'),  'Loan');
