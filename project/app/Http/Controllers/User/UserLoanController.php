@@ -156,18 +156,6 @@ class UserLoanController extends Controller
         $input['currency_id'] = $request->currency_id;
         $data->fill($input)->save();
 
-        $trans = new Transaction();
-        $trans->trnx = $txnid;
-        $trans->user_id     = $user->id;
-        $trans->user_type   = 1;
-        $trans->currency_id = $request->currency_id;
-        $trans->amount      = $request->loan_amount;
-        $trans->charge      = 0;
-        $trans->type        = '+';
-        $trans->remark      = 'loan_create';
-        $trans->details     = trans('loan requesting');
-        $trans->data        = '{"sender":"'.$gs->disqus.'", "receiver":"'.(auth()->user()->company_name ?? auth()->user()->name).'"}';
-        $trans->save();
         send_notification(auth()->id(), 'Loan has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.loan.show', $data->id));
         send_staff_telegram('Loan has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).". Please check.\n".route('admin.loan.show', $data->id), 'Loan');
         return redirect()->route('user.loans.index')->with('message','Loan Requesting Successfully');

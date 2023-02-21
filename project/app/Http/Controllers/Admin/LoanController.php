@@ -7,6 +7,7 @@ use App\Models\Currency;
 use App\Models\InstallmentLog;
 use App\Models\User;
 use App\Models\UserLoan;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Datatables;
 use Illuminate\Support\Carbon;
@@ -166,6 +167,18 @@ class LoanController extends Controller
       if($id2 == 1){
         if($user = User::where('id',$data->user_id)->first()){
           $currency = Currency::whereId($data->currency_id)->first()->id;
+          $trans = new Transaction();
+          $trans->trnx = $data->transaction_no;
+          $trans->user_id     = $data->user_id;
+          $trans->user_type   = 1;
+          $trans->currency_id = $data->currency_id;
+          $trans->amount      = $data->total_amount;
+          $trans->charge      = 0;
+          $trans->type        = '+';
+          $trans->remark      = 'loan_create';
+          $trans->details     = trans('loan requesting');
+          $trans->data        = '{"sender":"'.$gs->disqus.'", "receiver":"'.($user->company_name ?? $user->name).'"}';
+          $trans->save();
           user_wallet_increment($user->id, $currency, $data->loan_amount, 4);
         }
         $data->next_installment = Carbon::now()->addDays($data->plan->installment_interval);
