@@ -55,7 +55,6 @@ class UserBankTransactionController extends Controller
 
             $data['transactions'] = Transaction::where('user_id',auth()->id())->whereIn('remark', ['External_Payment', 'Deposit_create' ])->whereIn('trnx', $bankdeposits)->orwhereIn('trnx', $balancetransfer)->latest()->paginate(20);
         }
-        else
 
         return view('user.bank.index',$data);
     }
