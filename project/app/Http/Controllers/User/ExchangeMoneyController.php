@@ -568,13 +568,13 @@ class ExchangeMoneyController extends Controller
         if ($fromtype == 1 && $totype == 1 ) {
             $transaction_global_fee = check_global_transaction_fee($amount, $user, 'exchange');
         }
-        else if ($fromtype == 2 && $fromtype == 1 ) {
+        else if ($fromtype == 2 && $totype == 1 ) {
             $transaction_global_fee = check_global_transaction_fee($amount, $user, 'exchange_c_f');
         }
-        else if ($fromtype == 1 && $fromtype == 2 ) {
+        else if ($fromtype == 1 && $totype == 2 ) {
             $transaction_global_fee = check_global_transaction_fee($amount, $user, 'exchange_f_c');
         }
-        else if ($fromtype == 2 && $fromtype == 2 ) {
+        else if ($fromtype == 2 && $totype == 2 ) {
             $transaction_global_fee = check_global_transaction_fee($amount, $user, 'exchange_c_c');
         }
         if($transaction_global_fee)
