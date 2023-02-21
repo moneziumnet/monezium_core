@@ -8,6 +8,7 @@ use App\Models\InstallmentLog;
 use App\Models\User;
 use App\Models\UserLoan;
 use App\Models\Transaction;
+use App\Models\Generalsetting;
 use Illuminate\Http\Request;
 use Datatables;
 use Illuminate\Support\Carbon;
@@ -163,6 +164,8 @@ class LoanController extends Controller
         $msg = 'Already Running this loan!';
         return response()->json($msg);
       }
+      $gs = Generalsetting::first();
+
 
       if($id2 == 1){
         if($user = User::where('id',$data->user_id)->first()){
