@@ -59,6 +59,20 @@ class UserBankTransactionController extends Controller
         return view('user.bank.index',$data);
     }
 
+    public function bank_transaction($id)
+    {
+
+        $user = Auth::user();
+        $data['bankaccounts'] = BankAccount::where('user_id', $user->id)->orderBy('id', 'asc')->get();
+        $bankaccount = BankAccount::where('id', $id)->first();
+        $bankdeposits = DepositBank::where('sub_bank_id', $bankaccount->subbank_id)->where('currency_id', $bankaccount->currency_id)->where('user_id', auth()->id())->where('status', 'complete')->pluck('deposit_number');
+        $balancetransfer = BalanceTransfer::where('subbank', $bankaccount->subbank_id)->where('currency_id', $bankaccount->currency_id)->where('user_id', auth()->id())->where('status', 1)->where('type', 'other')->pluck('transaction_no');
+
+        $data['transactions'] = Transaction::where('user_id',auth()->id())->whereIn('remark', ['External_Payment', 'Deposit_create' ])->whereIn('trnx', $bankdeposits)->orwhereIn('trnx', $balancetransfer)->latest()->paginate(20);
+
+        return view('user.bank.banktransaction',$data);
+    }
+
     public function trxDetails($id)
     {
         $user = Auth::user();
