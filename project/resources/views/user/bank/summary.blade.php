@@ -47,47 +47,51 @@
 
 <div class="page-body">
     <div class="container-xl">
-        <div class="row row-cards">
+        <div class="row row-cards justify-content-center">
           <div class="col-sm-12 text-right" style="text-align: right">
             @php
               $str_end_time = $e_time ?? '';
             @endphp
             {{__('Total Fee Balance: '.$balance)}}
           </div>
-            <div class="col-12">
+          @if ($flag)
+            <div class="col-5">
                 <div class="card">
-                    @if ($flag)
                         @if (count($transactions) == 0)
 
                         <h3 class="text-center py-5">{{__('No Transaction Data Found')}}</h3>
                         @else
-                        <div class="table-responsive">
+                                <div class="table-responsive">
 
-                            <table class="table card-table table-vcenter text-nowrap datatable">
-                              <thead>
-                                <tr>
-                                    <th class="text-end">@lang('Fee')</th>
-                                    <th>@lang('Amount')</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                @foreach ($transactions as $key=>$data)
-                                <tr>
-                                    <td data-label="@lang('Fee')" class="text-end">
-                                        <span class="text-success h3">{{__($data['fee'])}}</span>
-                                    </td>
-                                    <td data-label="@lang('Amount')">
-                                        <span class="text-danger">{{__($data['balance'])}}</span>
-                                    </td>
-                                </tr>
-                                @endforeach
+                                    <table class="table card-table table-vcenter text-nowrap datatable">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-end">@lang('Fee')</th>
+                                            <th>@lang('Amount')</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($transactions as $key=>$data)
+                                        <tr>
+                                            <td data-label="@lang('Fee')" class="text-end">
+                                                <span class="text-success h3">{{__($data['fee'])}}</span>
+                                            </td>
+                                            <td data-label="@lang('Amount')">
+                                                <span class="text-danger">{{__($data['balance'])}}</span>
+                                            </td>
+                                        </tr>
+                                        @endforeach
 
-                              </tbody>
-                            </table>
+                                    </tbody>
+                                    </table>
                         </div>
                         @endif
+                </div>
+            </div>
 
-                    @else
+            @else
+            <div class="col-12">
+                <div class="card">
                         @if (count($transactions) == 0)
 
                         <h3 class="text-center py-5">{{__('No Transaction Data Found')}}</h3>
@@ -138,7 +142,9 @@
                         </div>
                         @endif
                     {{ $transactions->links() }}
-                    @endif
+                </div>
+            </div>
+            @endif
                 </div>
             </div>
         </div>
