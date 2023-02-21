@@ -106,6 +106,7 @@ class EthereumRpcService
         } catch (\Throwable $th) {
                 return 'error';
         }
+        dd($res);
         if (isset($res->error)) {
             return $res;
             // throw new EthereumException(sprintf('Ethereum client error: %s', $res->error->message));
