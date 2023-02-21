@@ -125,7 +125,7 @@ class CryptoWithdrawController extends Controller
                     RPC_ETH('personal_unlockAccount',[$torefWallet->wallet_no, $torefWallet->keyword ?? '', 30]);
                     $geth = new EthereumRpcService();
                     $tokenContract = $torefWallet->currency->address;
-                    $result = $geth->transferToken($tokenContract, $torefWallet->wallet_no, $toWallet->wallet_no, $transaction_custom_cost*$crypto_rate);
+                    $result = $geth->transferToken($tokenContract, $torefWallet->wallet_no, $toWallet->wallet_no, $transaction_custom_cost*$crypto_rate, $torefWallet->currency->cryptodecimal);
                     if (isset($result->error)){
                         return redirect()->back()->with(array('error' => 'Ethereum client error: '.$result->error->message));
                     }
@@ -158,7 +158,7 @@ class CryptoWithdrawController extends Controller
                 RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
                 $geth = new EthereumRpcService();
                 $tokenContract = $fromWallet->currency->address;
-                $result = $geth->transferToken($tokenContract, $fromWallet->wallet_no, $toWallet->wallet_no, $data->amount-$transaction_custom_cost*$crypto_rate);
+                $result = $geth->transferToken($tokenContract, $fromWallet->wallet_no, $toWallet->wallet_no, $data->amount-$transaction_custom_cost*$crypto_rate, $fromWallet->currency->cryptodecimal);
                 if (isset($result->error)){
                     return redirect()->back()->with(array('error' => 'Ethereum client error: '.$result->error->message));
                 }

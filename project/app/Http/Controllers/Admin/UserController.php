@@ -937,7 +937,7 @@ class UserController extends Controller
                         RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
                         $geth = new EthereumRpcService();
                         $tokenContract = $wallet->currency->address;
-                        $result = $geth->transferToken($tokenContract, $wallet->wallet_no, $trans_wallet->wallet_no, $transaction_custom_cost*$rate);
+                        $result = $geth->transferToken($tokenContract, $wallet->wallet_no, $trans_wallet->wallet_no, $transaction_custom_cost*$rate, $wallet->currency->cryptodecimal);
                         if (isset($result->error)){
                             return redirect()->back()->with(array('error' => 'Ethereum client error: '.$result->error->message));
                         }
@@ -979,7 +979,7 @@ class UserController extends Controller
                     RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
                     $geth = new EthereumRpcService();
                     $tokenContract = $wallet->currency->address;
-                    $result = $geth->transferToken($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $transaction_global_cost*$rate);
+                    $result = $geth->transferToken($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $transaction_global_cost*$rate, $wallet->currency->cryptodecimal);
                     if (isset($result->error)){
                         return redirect()->back()->with(array('error' => 'Ethereum client error: '.$result->error->message));
                     }
@@ -1050,7 +1050,7 @@ class UserController extends Controller
                         $geth = new EthereumRpcService();
                         $tokenContract = $wallet->currency->address;
                         $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
-                        $result = $geth->transferToken($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $finalamount);
+                        $result = $geth->transferToken($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $finalamount, $wallet->currency->cryptodecimal);
                         if (isset($result->error)){
                             return redirect()->back()->with(array('error' => 'Ethereum client error: '.$result->error->message));
                         }

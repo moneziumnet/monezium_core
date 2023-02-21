@@ -43,11 +43,11 @@ class EthereumRpcService
         ]]);
     }
 
-    public function transferToken(string $tokenContract, string $from, string $to, float $value)
+    public function transferToken(string $tokenContract, string $from, string $to, float $value, int $decimals = 18)
     {
         $signature = $this->getFunctionSignature('transfer(address,uint256)');
         $to = str_pad(substr($to, 2), 64, '0', STR_PAD_LEFT);
-        $value = str_pad($this->bcdechex($this->toWei($value)), 64, '0', STR_PAD_LEFT);
+        $value = str_pad($this->bcdechex($this->toWei($value, $decimals)), 64, '0', STR_PAD_LEFT);
         // $value = "0x".dechex((int)($value*pow(10,18)));
         // dd($value);
         // $eth_balance = $this->getEtherBalance($from);
