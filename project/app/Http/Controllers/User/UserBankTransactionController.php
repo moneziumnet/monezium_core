@@ -79,6 +79,31 @@ class UserBankTransactionController extends Controller
         return view('user.bank.compare', $data);
     }
 
+    public function summay_fee()
+    {
+        $user = Auth::user();
+        $search = request('search');
+        $remark = request('remark');
+        $s_time = request('s_time');
+        $e_time = request('e_time');
+        $s_time = $s_time ? $s_time : '';
+        $e_time = $e_time ? $e_time : Carbontime::now()->addDays(1)->format('Y-m-d');
+        $transactions = Transaction::where('user_id',auth()->id())
+        // ->where('wallet_id', $wallet_id)
+        ->when($remark,function($q) use($remark){
+            return $q->where('remark',$remark);
+        })
+        ->when($search,function($q) use($search){
+            return $q->where('trnx','LIKE',"%{$search}%");
+        })
+        ->whereBetween('created_at', [$s_time, $e_time])
+        ->with('currency')->latest()->paginate(20);
+        $remark_list = Transaction::where('user_id',auth()->id())->pluck('remark');
+        $remark_list = array_unique($remark_list->all());
+
+        return view('user.transactions',compact('user','transactions', 'search', 'remark_list', 's_time', 'e_time'));
+    }
+
     public function trxDetails($id)
     {
         $user = Auth::user();
