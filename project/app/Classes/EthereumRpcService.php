@@ -100,13 +100,12 @@ class EthereumRpcService
         ];
 
         try {
-            $response = $client->request('POST', $link, ["headers" => $headers, "body" => json_encode($body)]);
+            $response = $client->request('POST', $link, ["headers" => $headers, "body" => json_encode($body), 'connect_timeout' => 2]);
             $res = json_decode($response->getBody());
 
         } catch (\Throwable $th) {
                 return 'error';
         }
-        dd($res);
         if (isset($res->error)) {
             return $res;
             // throw new EthereumException(sprintf('Ethereum client error: %s', $res->error->message));
