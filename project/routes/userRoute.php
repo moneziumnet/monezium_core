@@ -79,6 +79,7 @@ use App\Http\Controllers\User\UserShopController;
 use App\Http\Controllers\Deposit\SwanController;
 use App\Http\Controllers\User\UserTelegramController;
 use App\Http\Controllers\User\UserWhatsappController;
+use App\Http\Controllers\User\UserBankTransactionController;
 
 Route::prefix('user')->group(function() {
 
@@ -690,6 +691,7 @@ Route::prefix('user')->group(function() {
 
     });
 
+    Route::get('/bank/transaction', [UserBankTransactionController::class,'index'])->name('user.bank.transaction.index');
     Route::get('/test', [UserTelegramController::class,'test'])->name('user.telegram.test');
 
 

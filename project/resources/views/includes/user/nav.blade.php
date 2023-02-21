@@ -254,6 +254,32 @@
             </li>
             @endif
 
+            @if(isEnabledUserModule('Report'))
+            <li class="nav-item dropdown {{ request()->routeIs('user.bank.transaction.index') ? 'active' : '' }}">
+                <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
+                  <span class="nav-link-icon d-md-none d-lg-inline-block">
+                    <i class="fas fa-file"></i>
+                  </span>
+                  <span class="nav-link-title">
+                    {{__('Report')}}
+                  </span>
+                </a>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="{{route('user.bank.transaction.index')}}">
+                    {{__('Bank Transaction')}}
+                  </a>
+
+                  <a class="dropdown-item" href="{{route('user.bank.transaction.index')}}">
+                    {{__('Compare Transaction')}}
+                  </a>
+
+                  <a class="dropdown-item" href="{{route('user.bank.transaction.index')}}">
+                    {{__('Summary Fee')}}
+                  </a>
+                </div>
+              </li>
+            @endif
+
             @if(isEnabledUserModule('ICO'))
             <li class="nav-item dropdown {{ request()->routeIs('user.ico') ? 'active' : '' }}">
               <a class="nav-link" href="{{route('user.ico')}}">
