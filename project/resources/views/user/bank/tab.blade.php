@@ -7,7 +7,7 @@
                         {{ menu('user.bank.transaction.index') }}
                     " href="{{ route('user.bank.transaction.index') }}"
                     role="button">
-                    {{ __('Bank transaction') }}
+                    {{ __($item->iban) }}
                 </a>
             </li>
         @else
@@ -16,7 +16,7 @@
                     {{ menu('user.bank.transaction.account.index') }}
                 " href="{{ route('user.bank.transaction.account.index', $item->id) }}"
                 role="button">
-                {{ __('Bank transaction') }}
+                {{ __($item->iban) }}
             </a>
         </li>
         @endif
