@@ -21,7 +21,7 @@ class EthereumRpcService
         return hexdec($this->call('eth_getBalance', [$address, 'latest'])) / (10 ** 18);
     }
 
-    public function getTokenBalance(string $contract, string $address)
+    public function getTokenBalance(string $contract, string $address, int $decimal)
     {
         $signature = $this->getFunctionSignature('balanceOf(address)');
         $balance = $this->call('eth_call', [[
@@ -31,7 +31,7 @@ class EthereumRpcService
         if ($balance == 'error')
         return $balance;
 
-        return hexdec($balance) / (10 ** 18);
+        return hexdec($balance) / (10 ** $decimal);
     }
 
     public function sendEther(string $from, string $to, float $value)

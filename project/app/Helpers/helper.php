@@ -1005,7 +1005,8 @@ if (!function_exists('Crypto_Balance')) {
             } else {
                 $geth = new App\Classes\EthereumRpcService();
                 $tokenContract = $wallet->currency->address;
-                $amount = $geth->getTokenBalance($tokenContract, $wallet->wallet_no);
+                $decimal = $wallet->currency->cryptodecimal;
+                $amount = $geth->getTokenBalance($tokenContract, $wallet->wallet_no, $decimal);
                 if ($amount == 'error') {
                     $amount = 0;
                 }
@@ -1064,7 +1065,8 @@ if (!function_exists('Crypto_Merchant_Balance')) {
             } else {
                 $geth = new App\Classes\EthereumRpcService();
                 $tokenContract = $wallet->currency->address;
-                $amount = $geth->getTokenBalance($tokenContract, $wallet->wallet_no);
+                $decimal = $wallet->currency->cryptodecimal;
+                $amount = $geth->getTokenBalance($tokenContract, $wallet->wallet_no, $decimal);
                 if ($amount == 'error') {
                     $amount = 0;
                 }
