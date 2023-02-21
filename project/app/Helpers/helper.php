@@ -317,7 +317,7 @@ if (!function_exists('sendSMS')) {
         try {
             // Update Nexmo
             nexmo($recipient, $message, $from);
-        } catch (\Throwable$th) {
+        } catch (\Throwable $th) {
 
         }
 
@@ -820,7 +820,7 @@ if (!function_exists('RPC_ETH')) {
             $response = $client->request('POST', $link, ["headers" => $headers, "body" => $body, 'connect_timeout' => 0.5]);
             $res = json_decode($response->getBody());
             return $res->result;
-        } catch (\Throwable$th) {
+        } catch (\Throwable $th) {
             return 'error';
         }
     }
@@ -842,7 +842,7 @@ if (!function_exists('RPC_ETH_Send')) {
             $response = $client->request('POST', $link, ["headers" => $headers, "body" => $body]);
             $res = json_decode($response->getBody());
             return $res->result;
-        } catch (\Throwable$th) {
+        } catch (\Throwable $th) {
             return 'error';
         }
     }
@@ -867,7 +867,7 @@ if (!function_exists('RPC_BTC_Create')) {
             $response = $client->request('POST', $link, ["headers" => $headers, "body" => $body]);
             $res = json_decode($response->getBody());
             $wallet_name = $res->result->name;
-        } catch (\Throwable$th) {
+        } catch (\Throwable $th) {
             return 'error';
         }
         try {
@@ -880,7 +880,7 @@ if (!function_exists('RPC_BTC_Create')) {
             $response = $client->request('POST', $link . '/wallet/' . $wallet_name, ["headers" => $headers, "body" => $body]);
             $res = json_decode($response->getBody());
             $wallet_address = $res->result;
-        } catch (\Throwable$th) {
+        } catch (\Throwable $th) {
             return 'error';
         }
         return $wallet_address;
@@ -906,7 +906,7 @@ if (!function_exists('RPC_BTC_Send')) {
         try {
             $response = $client->request('POST', $link . '/wallet/' . $wallet_name, ["headers" => $headers, "body" => $body]);
             $res = json_decode($response->getBody());
-        } catch (\Throwable$th) {
+        } catch (\Throwable $th) {
             return 'error';
         }
         $body = '{
@@ -918,7 +918,7 @@ if (!function_exists('RPC_BTC_Send')) {
         try {
             $response = $client->request('POST', $link . '/wallet/' . $wallet_name, ["headers" => $headers, "body" => $body]);
             $res = json_decode($response->getBody());
-        } catch (\Throwable$th) {
+        } catch (\Throwable $th) {
             return 'error';
         }
         return 'success';
@@ -942,7 +942,7 @@ if (!function_exists('RPC_BTC_Balance')) {
         try {
             $response = $client->request('POST', $link . '/wallet/' . $wallet_name, ["headers" => $headers, "body" => $body, 'connect_timeout' => 0.5]);
             $res = json_decode($response->getBody());
-        } catch (\Throwable$th) {
+        } catch (\Throwable $th) {
             return 'error';
         }
         return $res->result;
@@ -965,7 +965,7 @@ if (!function_exists('RPC_BTC_Check')) {
         try {
             $response = $client->request('POST', $link, ["headers" => $headers, "body" => $body]);
             $res = json_decode($response->getBody());
-        } catch (\Throwable$th) {
+        } catch (\Throwable $th) {
             return 'error';
         }
         if ($res->result) {

@@ -194,9 +194,7 @@ class ExchangeMoneyController extends Controller
         {
             $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/($from_rate*100)) * $transaction_global_fee->data->percent_charge;
         }
-        if($fromWallet->currency->type == 1 && $toWallet->currency->type == 1){
-            user_wallet_increment(0, $fromWallet->currency->id, $transaction_global_cost*$from_rate, 9);
-        }
+
         $transaction_custom_cost = 0;
         $charge = $transaction_global_cost*$from_rate;
         $totalAmount = $request->amount + $charge;
@@ -295,12 +293,7 @@ class ExchangeMoneyController extends Controller
 
 
 
-        $fromWallet->balance -=  $totalAmount;
 
-        $fromWallet->update();
-
-        $toWallet->balance += $finalAmount;
-        $toWallet->update();
 
         if($fromWallet->currency->code == 'ETH' && $toWallet->currency->type == 1) {
             RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
@@ -541,6 +534,17 @@ class ExchangeMoneyController extends Controller
                 return redirect()->back()->with(array('error' => 'Ethereum client error: '.$result->error->message));
             }
         }
+
+        if($fromWallet->currency->type == 1 && $toWallet->currency->type == 1){
+            user_wallet_increment(0, $fromWallet->currency->id, $transaction_global_cost*$from_rate, 9);
+        }
+
+        $fromWallet->balance -=  $totalAmount;
+
+        $fromWallet->update();
+
+        $toWallet->balance += $finalAmount;
+        $toWallet->update();
 
         $exchange = new ExchangeMoney();
         $exchange->trnx = str_rand();
