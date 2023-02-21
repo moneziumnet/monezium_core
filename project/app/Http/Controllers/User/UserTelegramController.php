@@ -548,7 +548,7 @@ class UserTelegramController extends Controller
         foreach ($subbank as $key => $value) {
             if($value->subinsbank->status == 1) {
                 $subbank_id = $value->subinsbank->id;
-                dd($value->subinsbank);
+                dd($value->subinsbank->id);
            }
         }
         send_staff_telegram('This is test for staff'.(isset($subbank_id) ?? 'test'),  'Loan');
