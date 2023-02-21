@@ -51,7 +51,7 @@
 
           <div class="form-group">
             <label for="inp-decimal">{{ __('Decimals') }}</label>
-            <input type="number"  class="form-control" id="inp-decimal" name="cryptodecimal" placeholder="{{ __('Enter Currency symbol') }}" required value="18">
+            <input type="number"  class="form-control" id="inp-decimal" name="cryptodecimal" placeholder="{{ __('Enter Currency Decimal') }}" required value="18">
           </div>
 
           <div class="form-group">

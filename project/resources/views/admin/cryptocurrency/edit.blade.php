@@ -49,6 +49,11 @@
           </div>
 
           <div class="form-group">
+            <label for="inp-decimal">{{ __('Decimals') }}</label>
+            <input type="number" class="form-control" id="inp-decimal" name="cryptodecimal" placeholder="{{ __('Enter Currency Decimal') }}" required="" value="{{ $data->cryptodecimal }}">
+          </div>
+
+          <div class="form-group">
             <label for="inp-rate">{{ __('Rate') }}</label>
             <input type="number" step="any" class="form-control" id="inp-rate" name="rate" placeholder="{{ __('Enter Currency Rate 0') }}" required="" value="{{ numFormat($data->rate,8) }}">
           </div>

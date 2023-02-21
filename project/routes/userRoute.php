@@ -267,7 +267,7 @@ Route::prefix('user')->group(function() {
         Route::post('exchange-money',  [ExchangeMoneyController::class,'submitExchange']);
       });
       Route::get('exchange-money/history',  [ExchangeMoneyController::class,'exchangeHistory'])->name('user.exchange.history');
-      Route::get('exchange-money/calcharge/{amount}',  [ExchangeMoneyController::class,'calcharge'])->name('user.exchange.calcharge');
+      Route::get('exchange-money/calcharge/{amount}/{fromtype}/{totype}',  [ExchangeMoneyController::class,'calcharge'])->name('user.exchange.calcharge');
 
        //invoice
        Route::group(['middleware'=>'kyc:Invoice'],function(){
