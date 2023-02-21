@@ -55,25 +55,25 @@
             {{__('Total Fee Balance: '.$balance)}}
           </div>
           @if ($flag)
-            <div class="col-5">
+            <div class="col-7">
                 <div class="card">
                         @if (count($transactions) == 0)
 
                         <h3 class="text-center py-5">{{__('No Transaction Data Found')}}</h3>
                         @else
-                                <div class="table-responsive" style="max-height: 600px;overflow-y: scroll;">
+                                <div class="table-responsive" style="max-height: 500px;overflow-y: scroll;">
 
                                     <table class="table card-table table-vcenter text-nowrap datatable">
                                     <thead>
                                         <tr>
-                                            <th class="text-end">@lang('Fee')</th>
+                                            <th >@lang('Fee')</th>
                                             <th>@lang('Amount')</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($transactions as $key=>$data)
                                         <tr>
-                                            <td data-label="@lang('Fee')" class="text-end">
+                                            <td data-label="@lang('Fee')" >
                                                 <span class="text-success h3">{{__($data['fee'])}}</span>
                                             </td>
                                             <td data-label="@lang('Amount')">
