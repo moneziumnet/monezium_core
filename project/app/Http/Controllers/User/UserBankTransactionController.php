@@ -7,8 +7,8 @@ use Auth;
 use Validator;
 use Carbon\Carbon;
 use App\Models\User;
-use App\Models\Order;
-use App\Models\Charge;
+use App\Models\DepositBank;
+use App\Models\BalanceTransfer;
 use App\Models\Wallet;
 use App\Traits\Payout;
 use App\Models\Currency;
@@ -47,9 +47,17 @@ class UserBankTransactionController extends Controller
     {
 
         $user = Auth::user();
-        $transactions = Transaction::where('user_id',auth()->id())->whereIn('remark', ['External_Payment', 'Deposit_create' ])->latest()->paginate(20);
+        $data['bankaccounts'] = BankAccount::where('user_id', $user->id)->orderBy('id', 'asc')->get();
+        if(count($data['bankaccounts']) > 0) {
+            $bankaccount = $data['bankaccounts'][0];
+            $bankdeposits = DepositBank::where('sub_bank_id', $bankaccount->subbank_id)->where('currency_id', $bankaccount->currency_id)->where('user_id', auth()->id())->where('status', 'complete')->pluck('deposit_number');
+            $balancetransfer = BalanceTransfer::where('subbank', $bankaccount->subbank_id)->where('currency_id', $bankaccount->currency_id)->where('user_id', auth()->id())->where('status', 1)->where('type', 'other')->pluck('transaction_no');
 
-        return view('user.bank.index',compact('transactions'));
+            $data['transactions'] = Transaction::where('user_id',auth()->id())->whereIn('remark', ['External_Payment', 'Deposit_create' ])->whereIn('trnx', $bankdeposits)->orwhereIn('trnx', $balanetransfer)->latest()->paginate(20);
+        }
+        else
+
+        return view('user.bank.index',$data);
     }
 
     public function trxDetails($id)

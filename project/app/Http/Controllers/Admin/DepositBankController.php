@@ -144,7 +144,7 @@ class DepositBankController extends Controller
           return redirect()->back()->with("error", $msg);
         }
 
-        $webhook_request = WebhookRequest::where('reference', 'LIKE', '%'.$data->deposit_number)->first();
+        $webhook_request = WebhookRequest::where('reference', 'LIKE', '%'.$data->deposit_number)->orWhere('transaction_id', $data->deposit_number)->first();
         $sender_name = $gs->disqus;
         if($webhook_request) {
             $data->amount = $webhook_request->amount;
