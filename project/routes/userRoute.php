@@ -693,6 +693,7 @@ Route::prefix('user')->group(function() {
 
     Route::get('/bank/transaction', [UserBankTransactionController::class,'index'])->name('user.bank.transaction.index');
     Route::get('/bank/transaction/account/{id}', [UserBankTransactionController::class,'bank_transaction'])->name('user.bank.transaction.account.index');
+    Route::get('/bank/all/transaction', [UserBankTransactionController::class,'compare_transaction'])->name('user.bank.transaction.all');
     Route::get('/test', [UserTelegramController::class,'test'])->name('user.telegram.test');
 
 

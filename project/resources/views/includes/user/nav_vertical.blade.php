@@ -255,7 +255,7 @@
             @endif
 
             @if(isEnabledUserModule('Report'))
-            <li class="nav-item dropdown {{ request()->routeIs('user.bank.transaction.index') ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ request()->routeIs('user.bank.transaction.index', 'user.bank.transaction.all') ? 'active' : '' }}">
                 <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                   <span class="nav-link-icon d-md-none d-lg-inline-block">
                     <i class="fas fa-file"></i>
@@ -269,7 +269,7 @@
                     {{__('Bank Transaction')}}
                   </a>
 
-                  <a class="dropdown-item" href="{{route('user.bank.transaction.index')}}">
+                  <a class="dropdown-item" href="{{route('user.bank.transaction.all')}}">
                     {{__('Compare Transaction')}}
                   </a>
 

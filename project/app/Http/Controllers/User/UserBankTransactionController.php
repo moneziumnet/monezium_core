@@ -73,6 +73,12 @@ class UserBankTransactionController extends Controller
         return view('user.bank.banktransaction',$data);
     }
 
+    public function compare_transaction()
+    {
+        $data['transactions'] = Transaction::where('user_id',auth()->id())->whereIn('remark', ['External_Payment', 'Deposit_create' ])->latest()->paginate(20);
+        return view('user.bank.compare', $data);
+    }
+
     public function trxDetails($id)
     {
         $user = Auth::user();
