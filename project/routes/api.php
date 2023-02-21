@@ -45,6 +45,12 @@ Route::middleware('auth:sanctum')->group(function () {
          */
         Route::post('/idInfo', [MessagesController::class, 'idFetchData'])->name('api.idInfo');
 
+
+        /**
+         *  Fetch all user info
+         */
+        Route::get('/alluser', [MessagesController::class, 'allUserData'])->name('api.alluser');
+
         /**
          * Send message route
          */
