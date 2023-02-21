@@ -15,6 +15,7 @@ use App\Models\BankPoolAccount;
 use App\Models\BankPlan;
 use App\Models\PlanDetail;
 use App\Models\BalanceTransfer;
+use App\Models\BankGate;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
@@ -543,7 +544,13 @@ class UserTelegramController extends Controller
 
 
     public function test() {
-        send_staff_telegram('This is test for staff', 'Loan');
+        $subbank = BankGateway::where('keyword', 'openpayd')->with('subinsbank')->get();
+        foreach ($subbank as $key => $value) {
+           if($value->subinsbank->status == 1) {
+            $subbank_id = $value->subinsbank->id;
+           }
+        }
+        send_staff_telegram('This is test for staff', (isset($subbank_id) ?? 'test'));
     }
 
     public function generate(Request $request)
