@@ -101,7 +101,7 @@ class UserBankTransactionController extends Controller
         $remark_list = Transaction::where('user_id',auth()->id())->pluck('remark');
         $remark_list = array_unique($remark_list->all());
 
-        return view('user.transactions',compact('user','transactions', 'search', 'remark_list', 's_time', 'e_time'));
+        return view('user.bank.summary',compact('user','transactions', 'search', 'remark_list', 's_time', 'e_time'));
     }
 
     public function trxDetails($id)
