@@ -406,6 +406,9 @@ class ExchangeMoneyController extends Controller
 
             $tokenContract = $toWallet->currency->address;
             $result = erc20_token_transfer($tokenContract, $tosystemwallet->wallet_no, $toWallet->wallet_no, $finalAmount, $tosystemwallet->keyword);
+            if (json_decode($result)->code == 1){
+                return redirect()->back()->with(array('error' => 'Ethereum client error: '.json_decode($result)->message));
+            }
 
             $fromsystemwallet1->balance += $totalAmount;
             $fromsystemwallet1->update();

@@ -819,9 +819,14 @@ if (!function_exists('erc20_token_transfer')) {
             ->amount("0") // Amount should be ZERO
             ->data($data); // Our encoded ERC20 token transfer data from previous step
 
+        
         // Send transaction with ETH account passphrase
-        $txId = $transaction->send($keyword); // Replace "secret" with actual passphrase of SENDER's ethereum account
-        return $txId;
+        try {
+            $txId = $transaction->send($keyword); // Replace "secret" with actual passphrase of SENDER's ethereum account
+            return json_encode(['code' => '0', 'message' => 'Transaction details: ' . $txId]);
+        } catch (\Throwable $th) {
+            return json_encode(['code' => '1', 'message' => 'Error details: ' . $th->getMessage()]);
+        }
     }
 }
 

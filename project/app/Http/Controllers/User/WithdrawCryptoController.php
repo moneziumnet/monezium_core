@@ -125,6 +125,9 @@ class WithdrawCryptoController extends Controller
             RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
             $tokenContract = $fromWallet->currency->address;
             $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $toWallet->wallet_no, $transaction_global_cost*$crypto_rate,  $fromWallet->keyword);
+            if (json_decode($result)->code == 1){
+                return redirect()->back()->with(array('error' => 'Ethereum client error: '.json_decode($result)->message));
+            }
         }
 
         if($user->referral_id != 0) {
@@ -147,6 +150,9 @@ class WithdrawCryptoController extends Controller
                 RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
                 $tokenContract = $fromWallet->currency->address;
                 $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $torefWallet->wallet_no, $transaction_custom_cost*$crypto_rate,  $fromWallet->keyword);
+                if (json_decode($result)->code == 1){
+                    return redirect()->back()->with(array('error' => 'Ethereum client error: '.json_decode($result)->message));
+                }
 
             }
             $trans = new Transaction();
@@ -177,6 +183,9 @@ class WithdrawCryptoController extends Controller
             RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
             $tokenContract = $fromWallet->currency->address;
             $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $request->sender_address, $messagefinal*$crypto_rate,  $fromWallet->keyword);
+            if (json_decode($result)->code == 1){
+                return redirect()->back()->with(array('error' => 'Ethereum client error: '.json_decode($result)->message));
+            }
         }
 
         $withdraw = new CryptoWithdraw();
