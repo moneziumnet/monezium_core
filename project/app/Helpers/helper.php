@@ -935,7 +935,7 @@ if (!function_exists('RPC_BTC_Send')) {
             $response = $client->request('POST', $link . '/wallet/' . $wallet_name, ["headers" => $headers, "body" => $body]);
             $res = json_decode($response->getBody());
             } catch (\Throwable $th) {
-            return json_encode(['code' => '1', 'message' => ' ' . $th->getMessage()]);
+            return json_encode(['code' => '1', 'message' => ' ' . $res->error->message]);
         }
 
         $body = '{
@@ -948,7 +948,7 @@ if (!function_exists('RPC_BTC_Send')) {
             $response = $client->request('POST', $link . '/wallet/' . $wallet_name, ["headers" => $headers, "body" => $body]);
             $res = json_decode($response->getBody());
         } catch (\Throwable $th) {
-            return json_encode(['code' => '2', 'message' => ' ' . $th->getMessage()]);
+            return json_encode(['code' => '2', 'message' => ' ' . $res->error->message]);
         }
         return json_encode(['code' => '0', 'message' => 'Transaction success!!!']);
     }
