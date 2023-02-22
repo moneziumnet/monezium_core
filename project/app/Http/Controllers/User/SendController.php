@@ -183,7 +183,10 @@ class SendController extends Controller
                     RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
                 }
                 else if($wallet->currency->code == 'BTC') {
-                    RPC_BTC_Send('sendtoaddress',[$trans_wallet->wallet_no, $transaction_custom_cost*$rate],$wallet->keyword);
+                    $res = RPC_BTC_Send('sendtoaddress',[$trans_wallet->wallet_no, amount($transaction_custom_cost*$rate, 2)],$wallet->keyword);
+                    if (isset($res->error->message)){
+                        return redirect()->back()->with(array('error' => __('Error: ') . $res->error->message));
+                    }
                 }
                 else {
                     RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
@@ -225,7 +228,10 @@ class SendController extends Controller
                 RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
             }
             else if($wallet->currency->code == 'BTC') {
-                RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, $transaction_global_cost*$rate],$wallet->keyword);
+                $res = RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, amount($transaction_global_cost*$rate, 2)],$wallet->keyword);
+                if (isset($res->error->message)){
+                    return redirect()->back()->with(array('error' => __('Error: ') . $res->error->message));
+                }
             }
             else {
                 RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
@@ -252,7 +258,10 @@ class SendController extends Controller
                     RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
                 }
                 else if($wallet->currency->code == 'BTC') {
-                    RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, $request->amount],$wallet->keyword);
+                    $res = RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, amount($request->amount, 2)],$wallet->keyword);
+                    if (isset($res->error->message)){
+                        return redirect()->back()->with(array('error' => __('Error: ') . $res->error->message));
+                    }
                 }
                 else {
                     RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);

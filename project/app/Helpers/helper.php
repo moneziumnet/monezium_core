@@ -15,6 +15,8 @@ use App\Models\UserWhatsapp;
 use App\Models\UserTelegram;
 use App\Models\PlanDetail;
 use Illuminate\Support\Facades\Log;
+use GuzzleHttp\Exception\RequestException;
+
 
 use Carbon\Carbon;
 use GuzzleHttp\Client;
@@ -819,7 +821,7 @@ if (!function_exists('erc20_token_transfer')) {
             ->amount("0") // Amount should be ZERO
             ->data($data); // Our encoded ERC20 token transfer data from previous step
 
-        
+
         // Send transaction with ETH account passphrase
         try {
             $txId = $transaction->send($keyword); // Replace "secret" with actual passphrase of SENDER's ethereum account
@@ -934,8 +936,9 @@ if (!function_exists('RPC_BTC_Send')) {
         try {
             $response = $client->request('POST', $link . '/wallet/' . $wallet_name, ["headers" => $headers, "body" => $body]);
             $res = json_decode($response->getBody());
-            } catch (\Throwable $th) {
-            return json_encode(['code' => '1', 'message' => ' ' . $res->error->message]);
+
+            } catch (RequestException $th) {
+            return json_decode($th->getResponse()->getBody());
         }
 
         $body = '{
@@ -947,10 +950,10 @@ if (!function_exists('RPC_BTC_Send')) {
         try {
             $response = $client->request('POST', $link . '/wallet/' . $wallet_name, ["headers" => $headers, "body" => $body]);
             $res = json_decode($response->getBody());
-        } catch (\Throwable $th) {
-            return json_encode(['code' => '2', 'message' => ' ' . $res->error->message]);
+        } catch (RequestExceptione $th) {
+            return json_decode($th->getResponse()->getBody());
         }
-        return json_encode(['code' => '0', 'message' => 'Transaction success!!!']);
+        return json_encode(['code' => '0', 'message' => 'Transaction success!']);
     }
 }
 

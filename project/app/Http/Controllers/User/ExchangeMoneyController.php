@@ -242,7 +242,10 @@ class ExchangeMoneyController extends Controller
                     RPC_ETH_Send('personal_sendTransaction', $tx, $fromWallet->keyword ?? '');
                 } elseif ($fromWallet->currency->code == 'BTC') {
                     $torefWallet = Wallet::where('user_id', $user->referral_id)->where('wallet_type', 8)->where('currency_id', $fromWallet->currency_id)->first();
-                    RPC_BTC_Send('sendtoaddress', [$torefWallet->wallet_no, $transaction_custom_cost * $from_rate], $fromWallet->keyword);
+                    $res = RPC_BTC_Send('sendtoaddress', [$torefWallet->wallet_no, amount($transaction_custom_cost * $from_rate, 2)], $fromWallet->keyword);
+                    if (isset($res->error->message)){
+                        return redirect()->back()->with(array('error' => __('Error: ') . $res->error->message));
+                    }
                 } else {
                     RPC_ETH('personal_unlockAccount', [$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
                     $tokenContract = $fromWallet->currency->address;
@@ -293,7 +296,10 @@ class ExchangeMoneyController extends Controller
             if (!$tosystemwallet1) {
                 return back()->with('error', $toWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
-            RPC_BTC_Send('sendtoaddress', [$tosystemwallet->wallet_no, $totalAmount], $fromWallet->keyword);
+            $res = RPC_BTC_Send('sendtoaddress', [$tosystemwallet->wallet_no, amount($totalAmount, 2)], $fromWallet->keyword);
+            if (isset($res->error->message)){
+                return redirect()->back()->with(array('error' => __('Error: ') . $res->error->message));
+            }
             $tosystemwallet1->balance -= $finalAmount;
             $tosystemwallet1->update();
         }
@@ -321,9 +327,9 @@ class ExchangeMoneyController extends Controller
             if (!$fromsystemwallet1) {
                 return back()->with('error', $fromWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
-            $result = RPC_BTC_Send('sendtoaddress', [$toWallet->wallet_no, $finalAmount], $tosystemwallet->keyword);
-            if (json_decode($result)->code != 0){
-                return back()->with('error', 'BTC client error: code = '. json_decode($result)->code . ' ' .json_decode($result)->message);
+            $res = RPC_BTC_Send('sendtoaddress', [$toWallet->wallet_no, amount($finalAmount, 2)], $tosystemwallet->keyword);
+            if (isset($res->error->message)){
+                return redirect()->back()->with(array('error' => __('Error: ') . $res->error->message));
             }
 
             $fromsystemwallet1->balance += $totalAmount;
@@ -335,7 +341,10 @@ class ExchangeMoneyController extends Controller
             RPC_ETH('personal_sendTransaction', $tx, $fromWallet->keyword ?? '');
         }
         if ($fromWallet->currency->code == 'BTC' && $toWallet->currency->code == 'BTC') {
-            RPC_BTC_Send('sendtoaddress', [$toWallet->wallet_no, $totalAmount], $fromWallet->keyword);
+            $res = RPC_BTC_Send('sendtoaddress', [$toWallet->wallet_no, amount($totalAmount, 2)], $fromWallet->keyword);
+            if (isset($res->error->message)){
+                return redirect()->back()->with(array('error' => __('Error: ') . $res->error->message));
+            }
         }
         if ($fromWallet->currency->code == 'ETH' && $toWallet->currency->code == 'BTC') {
             RPC_ETH('personal_unlockAccount', [$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
@@ -350,7 +359,10 @@ class ExchangeMoneyController extends Controller
 
             $tx = '{"from": "' . $fromWallet->wallet_no . '", "to": "' . $tosystemwallet->wallet_no . '", "value": "0x' . dechex($totalAmount * pow(10, 18)) . '"}';
             RPC_ETH_Send('personal_sendTransaction', $tx, $fromWallet->keyword ?? '');
-            RPC_BTC_Send('sendtoaddress', [$toWallet->wallet_no, $finalAmount], $fromsystemwallet->keyword);
+            $res = RPC_BTC_Send('sendtoaddress', [$toWallet->wallet_no, amount($finalAmount, 2)], $fromsystemwallet->keyword);
+            if (isset($res->error->message)){
+                return redirect()->back()->with(array('error' => __('Error: ') . $res->error->message));
+            }
         }
         if ($fromWallet->currency->code == 'BTC' && $toWallet->currency->code == 'ETH') {
             $tosystemwallet = get_wallet(0, $fromWallet->currency->id, 9);
@@ -361,7 +373,10 @@ class ExchangeMoneyController extends Controller
             if (!$fromsystemwallet) {
                 return back()->with('error', $toWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
-            RPC_BTC_Send('sendtoaddress', [$tosystemwallet->wallet_no, $totalAmount], $fromWallet->keyword);
+            $res = RPC_BTC_Send('sendtoaddress', [$tosystemwallet->wallet_no, amount($totalAmount, 2)], $fromWallet->keyword);
+            if (isset($res->error->message)){
+                return redirect()->back()->with(array('error' => __('Error: ') . $res->error->message));
+            }
             RPC_ETH('personal_unlockAccount', [$fromsystemwallet->wallet_no, $fromsystemwallet->keyword ?? '', 30]);
             $tx = '{"from": "' . $fromsystemwallet->wallet_no . '", "to": "' . $toWallet->wallet_no . '", "value": "0x' . dechex($finalAmount * pow(10, 18)) . '"}';
             RPC_ETH_Send('personal_sendTransaction', $tx, $fromsystemwallet->keyword ?? '');
@@ -395,7 +410,10 @@ class ExchangeMoneyController extends Controller
             if (!$fromsystemwallet) {
                 return back()->with('error', $toWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
-            RPC_BTC_Send('sendtoaddress', [$tosystemwallet->wallet_no, $totalAmount], $fromWallet->keyword);
+            $res = RPC_BTC_Send('sendtoaddress', [$tosystemwallet->wallet_no, amount($totalAmount, 2)], $fromWallet->keyword);
+            if (isset($res->error->message)){
+                return redirect()->back()->with(array('error' => __('Error: ') . $res->error->message));
+            }
 
             RPC_ETH('personal_unlockAccount', [$fromsystemwallet->wallet_no, $fromsystemwallet->keyword ?? '', 30]);
             $tokenContract = $toWallet->currency->address;
@@ -441,8 +459,8 @@ class ExchangeMoneyController extends Controller
             if (json_decode($result)->code == 1){
                 return back()->with('error', 'Ethereum client error: '.json_decode($result)->message);
             }
-            
-            RPC_BTC_Send('sendtoaddress', [$toWallet->wallet_no, $finalAmount], $fromsystemwallet->keyword);
+
+            $res = RPC_BTC_Send('sendtoaddress', [$toWallet->wallet_no, amount($finalAmount, 2)], $fromsystemwallet->keyword);
         }
         if ($fromWallet->currency->code != 'ETH' && $fromWallet->currency->code != 'BTC' && $fromWallet->currency->type == 2 && $toWallet->currency->code == 'ETH') {
             RPC_ETH('personal_unlockAccount', [$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);

@@ -106,7 +106,10 @@ class CryptoDepositController extends Controller
                     @RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
                 }
                 elseif($currency->code == 'BTC') {
-                    @RPC_BTC_Send('sendtoaddress',[$torefWallet->wallet_no, $transaction_custom_cost*$crypto_rate],$fromWallet->keyword);
+                    $res = RPC_BTC_Send('sendtoaddress',[$torefWallet->wallet_no, amount($transaction_custom_cost*$crypto_rate, 2)],$fromWallet->keyword);
+                    if (isset($res->error->message)){
+                        return redirect()->back()->with(array('error' => __('Error: ') . $res->error->message));
+                    }
                 }
                 $referral_user = User::findOrFail($user->referral_id);
                 $trans = new Transaction();
@@ -137,9 +140,9 @@ class CryptoDepositController extends Controller
                 $res = RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
             }
             elseif($currency->code == 'BTC') {
-                $res = RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, $final_amount*$crypto_rate],$fromWallet->keyword);
-                if (json_decode($res)->code != 0){
-                    return response()->json(array('errors' => [ 0 =>  __('you can not deposit because ') . json_decode($res)->message]));
+                $res = RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, amount($final_amount*$crypto_rate, 2)],$fromWallet->keyword);
+                if (isset($res->error->message)){
+                    return response()->json(array('errors' => [ 0 =>  __('you can not deposit because ') . $res->error->message]));
                 }
             }
             if($result1 == null || $result2 == null) {

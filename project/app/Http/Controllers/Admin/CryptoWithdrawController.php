@@ -117,7 +117,10 @@ class CryptoWithdrawController extends Controller
                 }
                 elseif($currency->code == 'BTC') {
                     $torefWallet = Wallet::where('user_id', $user->referral_id)->where('wallet_type', 8)->where('currency_id', $data->currency_id)->first();
-                    RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, $transaction_custom_cost*$crypto_rate],$torefWallet->keyword);
+                    $res = RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, amount($transaction_custom_cost*$crypto_rate, 2)],$torefWallet->keyword);
+                    if (isset($res->error->message)){
+                        return redirect()->back()->with(array('error' => __('Error: ') . $res->error->message));
+                    }
                 }
                 else{
                     $torefWallet = Wallet::where('user_id', $user->referral_id)->where('wallet_type', 8)->where('currency_id', $data->currency_id)->first();
@@ -150,7 +153,10 @@ class CryptoWithdrawController extends Controller
                 RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
             }
             elseif($currency->code == 'BTC') {
-                RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, ($data->amount-$transaction_custom_cost*$crypto_rate)],$fromWallet->keyword);
+                $res = RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, amount($data->amount-$transaction_custom_cost*$crypto_rate, 2)],$fromWallet->keyword);
+                if (isset($res->error->message)){
+                    return redirect()->back()->with(array('error' => __('Error: ') . $res->error->message));
+                }
             }
             else {
                 RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
