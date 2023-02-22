@@ -44,9 +44,6 @@
     <div class="container-xl">
         <div class="row row-cards justify-content-center">
           <div class="col-sm-12 text-right" style="text-align: right">
-            @php
-              $str_end_time = $e_time ?? '';
-            @endphp
             {{__('Total Fee Balance: '.$balance)}}
           </div>
           @if ($flag)
@@ -140,8 +137,6 @@
                 </div>
             </div>
             @endif
-                </div>
-            </div>
         </div>
     </div>
 </div>
