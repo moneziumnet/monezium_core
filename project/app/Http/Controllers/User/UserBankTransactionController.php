@@ -12,7 +12,7 @@ use App\Models\BalanceTransfer;
 use App\Models\Wallet;
 use App\Traits\Payout;
 use App\Models\Currency;
-use App\Models\UserLoan;
+use App\Models\Charge;
 use App\Models\SubInsBank;
 use App\Models\BankAccount;
 use App\Models\BankGateway;
@@ -45,11 +45,12 @@ class UserBankTransactionController extends Controller
 
     public function index()
     {
-
+        $bankaccount = request('bankaccount');
         $user = Auth::user();
         $data['bankaccounts'] = BankAccount::where('user_id', $user->id)->orderBy('id', 'asc')->get();
-        if(count($data['bankaccounts']) > 0) {
-            $bankaccount = $data['bankaccounts'][0];
+        $data['transactions'] = [];
+        if(count($data['bankaccounts']) > 0  && $bankaccount != null) {
+            $bankaccount = BankAccount::where('user_id', $user->id)->where('iban', $bankaccount)->first();
             $bankdeposits = DepositBank::where('sub_bank_id', $bankaccount->subbank_id)->where('currency_id', $bankaccount->currency_id)->where('user_id', auth()->id())->where('status', 'complete')->pluck('deposit_number');
             $balancetransfer = BalanceTransfer::where('subbank', $bankaccount->subbank_id)->where('currency_id', $bankaccount->currency_id)->where('user_id', auth()->id())->where('status', 1)->where('type', 'other')->pluck('transaction_no');
 
@@ -88,7 +89,7 @@ class UserBankTransactionController extends Controller
         $e_time = request('e_time');
         $s_time = $s_time ? $s_time : '';
         $e_time = $e_time ? $e_time : Carbontime::now()->addDays(1)->format('Y-m-d');
-        $remark_list = Transaction::where('user_id',auth()->id())->pluck('remark');
+        $remark_list = Charge::where('plan_id', $user->bank_plan_id)->where('user_id', 0)->pluck('slug');
         $remark_list = array_unique($remark_list->all());
         if($remark != 'all_mark' && $remark != null) {
             $transactions = Transaction::where('user_id',auth()->id())
@@ -125,18 +126,16 @@ class UserBankTransactionController extends Controller
         }
         else {
             $transactions = array();
-            $fee_list = Transaction::where('user_id',auth()->id())->pluck('remark');
-            $fee_list = array_unique($fee_list->all());
             $currency_id = defaultCurr();
             $def_code = Currency::findOrFail($currency_id)->code;
             $client = new Client();
             $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency=' . $def_code);
             $rate = json_decode($response->getBody());
-            foreach ($fee_list as $key => $fee) {
+            foreach ($remark_list as $key => $fee) {
                 $fee_transactions = Transaction::where('user_id',auth()->id())
                 // ->where('wallet_id', $wallet_id)
                 ->when($fee,function($q) use($fee){
-                    return $q->where('remark',$fee);
+                    return $q->where('remark','LIKE',"%{$fee}%");
                 })
                 ->whereBetween('created_at', [$s_time, $e_time])
                 ->with('currency')->latest()->paginate(20);

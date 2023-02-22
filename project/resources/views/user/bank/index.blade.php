@@ -9,7 +9,6 @@
 @section('contents')
 <div class="container-xl">
     <div class="page-header d-print-none">
-        @include('user.bank.tab')
 
         <div class="row align-items-center">
           <div class="col">
@@ -18,6 +17,22 @@
             </h2>
           </div>
         </div>
+        <div class="col-auto ms-auto d-print-none mt-3">
+
+            <div class="btn-list align-items-center">
+                <form action=""  class="d-flex justify-content-end">
+                    <div class="form-group me-3">
+                        <select  class="form-control me-2 shadow-none" onChange="window.location.href=this.value">
+                            <option value="{{filter('bankaccount','')}}">@lang('Select Bank Account')</option>
+                            @foreach ($bankaccounts as $value)
+                                <option value="{{filter('bankaccount',$value->iban)}}" {{request('bankaccount') == $value->iban ? 'selected':''}}>@lang(ucwords($value->iban))</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                </form>
+            </div>
+          </div>
     </div>
 
 </div>
