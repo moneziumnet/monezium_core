@@ -31,7 +31,7 @@
                                 @csrf
                                 <div class="form-group mt-3">
                                     <label class="form-label required">{{__('Google Authenticator Code')}}</label>
-                                    <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" name="code" autocomplete="off" required placeholder="@lang('Enter Google Authenticator Code')">
+                                    <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" name="code" autocomplete="off" required placeholder="@lang('Enter Google Authenticator Code')">
                                 </div>
 
                                 <div class="form-footer">

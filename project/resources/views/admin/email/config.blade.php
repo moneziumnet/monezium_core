@@ -58,7 +58,7 @@
 
           <div class="form-group">
             <label>{{ __('SMTP Username') }} *</label>
-            <input type="text" pattern="[^()/><\][\\;!|]+" class="input-field" placeholder="{{ __('Mail Username') }}" name="smtp_user" value="{{ $gs->smtp_user }}" required>
+            <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="input-field" placeholder="{{ __('Mail Username') }}" name="smtp_user" value="{{ $gs->smtp_user }}" required>
           </div>
 
           <div class="form-group">
@@ -73,7 +73,7 @@
 
           <div class="form-group">
             <label>{{ __('From Name') }} *</label>
-            <input type="text" pattern="[^()/><\][\\\-;!|]+" class="input-field" placeholder="{{ __('From Name') }}" name="from_name" value="{{ $gs->from_name }}" required>
+            <input type="text" pattern="[^()/><\][\\\-;&$@!|]+" class="input-field" placeholder="{{ __('From Name') }}" name="from_name" value="{{ $gs->from_name }}" required>
           </div>
 
 

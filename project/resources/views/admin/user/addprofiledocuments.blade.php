@@ -35,7 +35,7 @@ href="https://cdn01.boxcdn.net/platform/elements/16.0.0/en-US/picker.css"
               {{ csrf_field() }}
               <div class="form-group">
                 <label for="inp-name">{{ __('Name') }}</label>
-                <input name="document_name" class="form-control" autocomplete="off" placeholder="{{__('Name')}}" type="text" pattern="[^()/><\][\\;!|]+" required>
+                <input name="document_name" class="form-control" autocomplete="off" placeholder="{{__('Name')}}" type="text" pattern="[^()/><\][\\;&$@!|]+" required>
               </div>
               <div class="form-group">
                 <label for="full-name">{{ __('Choose File') }}</label>

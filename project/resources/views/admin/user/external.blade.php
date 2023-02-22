@@ -75,7 +75,7 @@
                                 </div>
                                 <div class="form-group mt-3">
                                     <label class="form-label required">{{ __('Currency') }}</label>
-                                    <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" value="{{ $wallet->currency->code }}"
+                                    <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" value="{{ $wallet->currency->code }}"
                                         readonly />
                                 </div>
                                 <div class="form-group mb-3 mt-3">

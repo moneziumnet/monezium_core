@@ -101,21 +101,21 @@
                                 <input type="hidden" name="bn" value="PP-BuyNowBF:btn_buynow_LG.gif:NonHostedGuest">
 
                                 <div class="col-lg-6 mb-3">
-                                    <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control card-elements" name="cardNumber" placeholder="{{ __('Card Number') }}" autocomplete="off" autofocus oninput="validateCard(this.value);"/>
+                                    <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control card-elements" name="cardNumber" placeholder="{{ __('Card Number') }}" autocomplete="off" autofocus oninput="validateCard(this.value);"/>
                                     <span id="errCard"></span>
                                 </div>
 
                                 <div class="col-lg-6 cardRow mb-3">
-                                    <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control card-elements" placeholder="{{ ('Card CVC') }}" name="cardCVC" oninput="validateCVC(this.value);">
+                                    <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control card-elements" placeholder="{{ ('Card CVC') }}" name="cardCVC" oninput="validateCVC(this.value);">
                                     <span id="errCVC"></span>
                                 </div>
 
                                 <div class="col-lg-6">
-                                    <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control card-elements" placeholder="{{ __('Month') }}" name="month" >
+                                    <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control card-elements" placeholder="{{ __('Month') }}" name="month" >
                                 </div>
 
                                 <div class="col-lg-6">
-                                    <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control card-elements" placeholder="{{ __('Year') }}" name="year">
+                                    <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control card-elements" placeholder="{{ __('Year') }}" name="year">
                                 </div>
 
                             </div>

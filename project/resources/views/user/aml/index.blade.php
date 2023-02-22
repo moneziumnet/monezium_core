@@ -39,7 +39,7 @@
                                 <div class="form-group mb-3 mt-3">
                                     <label class="form-label {{$field['required'] == 1 ? 'required':'Optional'}}">@lang($field['label'])</label>
                                     @if ($field['type'] == "Input")
-                                    <input type="text" pattern="[^()/><\][\\;!|]+" name="{{strtolower(str_replace(' ', '_', $field['label']))}}" class="form-control" autocomplete="off" placeholder="@lang($field['label'])" min="1" {{$field['required'] == 1 ? 'required':'Optional'}}>
+                                    <input type="text" pattern="[^()/><\][\\;&$@!|]+" name="{{strtolower(str_replace(' ', '_', $field['label']))}}" class="form-control" autocomplete="off" placeholder="@lang($field['label'])" min="1" {{$field['required'] == 1 ? 'required':'Optional'}}>
                                     @else
                                     <textarea class="form-control" name="{{strtolower(str_replace(' ', '_', $field['label']))}}" placeholder="@lang($field['label'])"></textarea>
                                     @endif

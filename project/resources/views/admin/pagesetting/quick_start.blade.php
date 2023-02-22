@@ -28,12 +28,12 @@
 
             <div class="form-group">
                 <label for="quick_title">{{ __('Quick Title') }} *</label>
-                <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="quick_title" name="quick_title"  placeholder="{{ __('Quick Title') }}" value="{{ $ps->quick_title }}" required>
+                <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="quick_title" name="quick_title"  placeholder="{{ __('Quick Title') }}" value="{{ $ps->quick_title }}" required>
             </div>
 
             <div class="form-group">
               <label for="quick_subtitle">{{ __('Quick Subtitle') }} *</label>
-              <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="quick_subtitle" name="quick_subtitle"  placeholder="{{ __('Quick Title') }}" value="{{ $ps->quick_subtitle }}" required>
+              <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="quick_subtitle" name="quick_subtitle"  placeholder="{{ __('Quick Title') }}" value="{{ $ps->quick_subtitle }}" required>
             </div>
 
             <div class="form-group">

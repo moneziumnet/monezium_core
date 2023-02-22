@@ -153,7 +153,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="inp-name">{{ __('Name') }}</label>
-                                <input type="text" pattern="[^()/><\][\\\-;!|]+" class="form-control" id="inp-name" name="name" placeholder="{{ __('Enter Name') }}" value="{{ $data->name }}" required>
+                                <input type="text" pattern="[^()/><\][\\\-;&$@!|]+" class="form-control" id="inp-name" name="name" placeholder="{{ __('Enter Name') }}" value="{{ $data->name }}" required>
                             </div>
 
                             <div class="form-group">
@@ -183,25 +183,25 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="inp-address">{{ __('Address') }}</label>
-                                <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="inp-address" name="address" placeholder="{{ __('Enter Address') }}" value="{{ $data->address }}" required>
+                                <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="inp-address" name="address" placeholder="{{ __('Enter Address') }}" value="{{ $data->address }}" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="inp-city">{{ __('City') }}</label>
-                                <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="inp-city" name="city" placeholder="{{ __('Enter City') }}" value="{{ $data->city }}" required>
+                                <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="inp-city" name="city" placeholder="{{ __('Enter City') }}" value="{{ $data->city }}" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="inp-vat">{{ __('VAT Number') }}</label>
-                                <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="inp-vat" name="vat" placeholder="{{ __('Enter VAT') }}" value="{{ $data->vat }}">
+                                <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="inp-vat" name="vat" placeholder="{{ __('Enter VAT') }}" value="{{ $data->vat }}">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="inp-zip">{{ __('Postal Code') }}</label>
-                                <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="inp-zip" name="zip" placeholder="{{ __('Enter Zip') }}" value="{{ $data->zip }}" required>
+                                <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="inp-zip" name="zip" placeholder="{{ __('Enter Zip') }}" value="{{ $data->zip }}" required>
                             </div>
                         </div>
 

@@ -30,12 +30,12 @@
 
           <div class="form-group">
             <label for="title">{{ __('Title') }}</label>
-            <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="title" name="title"  placeholder="{{ __('Enter Title') }}" value="" required>
+            <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="title" name="title"  placeholder="{{ __('Enter Title') }}" value="" required>
           </div>
 
           <div class="form-group">
             <label for="title">{{ __('Slug') }}</label>
-            <input type="text" pattern="[^()/><\][\\\-;!|]+" class="form-control" id="slug" name="slug"  placeholder="{{ __('Enter Slug') }}" value="" required>
+            <input type="text" pattern="[^()/><\][\\\-;&$@!|]+" class="form-control" id="slug" name="slug"  placeholder="{{ __('Enter Slug') }}" value="" required>
           </div>
 
           <div class="form-group">
@@ -68,13 +68,13 @@
 
           <div class="form-group">
               <label for="tags">{{ __('Tags') }}</label>
-              <input type="text" pattern="[^()/><\][\\;!|]+" class="mytags" name="tags" placeholder="{{ __('Tags') }}">
+              <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="mytags" name="tags" placeholder="{{ __('Tags') }}">
           </div>
 
 
           <div class="form-group">
               <label for="source">{{ __('Source') }}</label>
-              <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="source" name="source"  placeholder="{{ __('Source') }}" value="" required>
+              <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="source" name="source"  placeholder="{{ __('Source') }}" value="" required>
           </div>
 
           <div class="form-group">
@@ -87,7 +87,7 @@
           <div class="showbox d-none">
             <div class="form-group">
               <label for="meta_tag">{{ __('Meta Tags') }}</label>
-              <input type="text" pattern="[^()/><\][\\;!|]+" class="mytags" name="meta_tag" placeholder="{{ __('Meta Tags') }}">
+              <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="mytags" name="meta_tag" placeholder="{{ __('Meta Tags') }}">
             </div>
 
             <div class="form-group">

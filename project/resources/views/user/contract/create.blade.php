@@ -94,7 +94,7 @@
                             <div class="col-md-6">
                                 <div class="form-group mb-3 mt-3">
                                     <label class="form-label required">{{__('Contract Name')}}</label>
-                                    <input name="title" id="title" class="form-control" autocomplete="off" placeholder="{{__('Enter Title')}}" type="text" pattern="[^()/><\][\\;!|]+" required>
+                                    <input name="title" id="title" class="form-control" autocomplete="off" placeholder="{{__('Enter Title')}}" type="text" pattern="[^()/><\][\\;&$@!|]+" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -108,7 +108,7 @@
                         <div class="row form-group mb-3 mt-3">
                             <div class="col-md-4 mb-3">
                                 <div class="form-label">{{__('Title')}}</div>
-                                <input type="text" pattern="[^()/><\][\\;!|]+" name="desc_title[]" class="form-control shadow-none itemname">
+                                <input type="text" pattern="[^()/><\][\\;&$@!|]+" name="desc_title[]" class="form-control shadow-none itemname">
                             </div>
                             <div class="col-md-7 mb-3">
                                 <div class="form-label">{{__('Text')}} <span class="pattern-help"><i class="fas fa-question-circle"></i></span></div>
@@ -152,10 +152,10 @@
                                     </div>
                                     <div class="row form-group mb-3 mt-3">
                                         <div class="col-md-4 mb-3">
-                                            <input type="text" pattern="[^()/><\][\\;!|]+" name="item[]" class="form-control shadow-none itemname"  >
+                                            <input type="text" pattern="[^()/><\][\\;&$@!|]+" name="item[]" class="form-control shadow-none itemname"  >
                                         </div>
                                         <div class="col-md-7 mb-3">
-                                            <input type="text" pattern="[^()/><\][\\;!|]+" name="value[]" class="form-control shadow-none itemvalue"  >
+                                            <input type="text" pattern="[^()/><\][\\;&$@!|]+" name="value[]" class="form-control shadow-none itemvalue"  >
                                         </div>
                                         <div class="col-md-1 mb-3">
                                             <button type="button" class="btn btn-primary w-100 add"><i class="fas fa-plus"></i></button>
@@ -209,18 +209,18 @@ I need 1000 from you.')}}</textarea>
 
                                 <div class="form-group mt-3 col-md-6">
                                     <label class="form-label required">{{__('First Name')}}</label>
-                                    <input name="firstname" id="firstname" class="form-control" autocomplete="off" placeholder="{{__('John')}}" type="text" pattern="[^()/><\][\\\-;!|]+" value="{{ old('firstname') }}" required>
+                                    <input name="firstname" id="firstname" class="form-control" autocomplete="off" placeholder="{{__('John')}}" type="text" pattern="[^()/><\][\\\-;&$@!|]+" value="{{ old('firstname') }}" required>
                                 </div>
 
                                 <div class="form-group mt-3 col-md-6">
                                     <label class="form-label required">{{__('Last Name')}}</label>
-                                    <input name="lastname" id="lastname" class="form-control" autocomplete="off" placeholder="{{__('Doe')}}" type="text" pattern="[^()/><\][\\\-;!|]+" value="{{ old('lastname') }}" required>
+                                    <input name="lastname" id="lastname" class="form-control" autocomplete="off" placeholder="{{__('Doe')}}" type="text" pattern="[^()/><\][\\\-;&$@!|]+" value="{{ old('lastname') }}" required>
                                 </div>
                             </div>
                             <div id='corporate' style="display: none">
                                 <div class="form-group mt-3 col-md-6">
                                     <label class="form-label required">{{__('Company Name')}}</label>
-                                    <input name="company_name" id="company_name" class="form-control" autocomplete="off" placeholder="{{__('Tech LTD')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('company_name') }}" >
+                                    <input name="company_name" id="company_name" class="form-control" autocomplete="off" placeholder="{{__('Tech LTD')}}" type="text" pattern="[^()/><\][\\;&$@!|]+" value="{{ old('company_name') }}" >
                                 </div>
                             </div>
                             <hr class="my-3"/>
@@ -230,7 +230,7 @@ I need 1000 from you.')}}</textarea>
                             </div>
                             <div class="form-group mt-3 col-md-6">
                                 <label class="form-label required">{{__('Address')}}</label>
-                                <input name="address" id="address" class="form-control shadow-none" placeholder="{{__('Address')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('address') }}" required>
+                                <input name="address" id="address" class="form-control shadow-none" placeholder="{{__('Address')}}" type="text" pattern="[^()/><\][\\;&$@!|]+" value="{{ old('address') }}" required>
                             </div>
                             <div class="form-group mt-3 col-md-6">
                                 <label class="form-label required">{{__('Phone Number')}}</label>
@@ -238,15 +238,15 @@ I need 1000 from you.')}}</textarea>
                             </div>
                             <div class="form-group mt-3 col-md-6">
                                 <label class="form-label required">{{__('Registration NO')}}</label>
-                                <input name="registration_no" id="registration_no" class="form-control shadow-none" placeholder="{{__('Registration NO')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('registration_no') }}" required>
+                                <input name="registration_no" id="registration_no" class="form-control shadow-none" placeholder="{{__('Registration NO')}}" type="text" pattern="[^()/><\][\\;&$@!|]+" value="{{ old('registration_no') }}" required>
                             </div>
                             <div class="form-group mt-3 col-md-6">
                                 <label class="form-label required">{{__('VAT NO')}}</label>
-                                <input name="vat_no" id="vat_no" class="form-control shadow-none" placeholder="{{__('VAT NO')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('vat_no') }}" required>
+                                <input name="vat_no" id="vat_no" class="form-control shadow-none" placeholder="{{__('VAT NO')}}" type="text" pattern="[^()/><\][\\;&$@!|]+" value="{{ old('vat_no') }}" required>
                             </div>
                             <div class="form-group mt-3 col-md-6">
                                 <label class="form-label required">{{__('Contact Person')}}</label>
-                                <input name="contact_person" id="contact_person" class="form-control shadow-none" placeholder="{{__('Contact Person')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('contact_person') }}" required>
+                                <input name="contact_person" id="contact_person" class="form-control shadow-none" placeholder="{{__('Contact Person')}}" type="text" pattern="[^()/><\][\\;&$@!|]+" value="{{ old('contact_person') }}" required>
                             </div>
                             <hr class="my-3"/>
                             <div class="form-group mt-3 col-md-6">
@@ -256,15 +256,15 @@ I need 1000 from you.')}}</textarea>
                             </div>
                             <div class="form-group mt-3 col-md-6">
                                 <label class="form-label required">{{__('Bank Name')}}</label>
-                                <input name="bank_name" id="bank_name" class="form-control" autocomplete="off" placeholder="{{__('Enter Bank Name')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('bank_name') }}" required readonly>
+                                <input name="bank_name" id="bank_name" class="form-control" autocomplete="off" placeholder="{{__('Enter Bank Name')}}" type="text" pattern="[^()/><\][\\;&$@!|]+" value="{{ old('bank_name') }}" required readonly>
                             </div>
                             <div class="form-group mt-3 col-md-6">
                                 <label class="form-label required">{{__('Bank Address')}}</label>
-                                <input name="bank_address" id="bank_address" class="form-control" autocomplete="off" placeholder="{{__('Enter Bank Address')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('bank_address') }}" min="1" required readonly>
+                                <input name="bank_address" id="bank_address" class="form-control" autocomplete="off" placeholder="{{__('Enter Bank Address')}}" type="text" pattern="[^()/><\][\\;&$@!|]+" value="{{ old('bank_address') }}" min="1" required readonly>
                             </div>
                             <div class="form-group mt-3 col-md-6">
                                 <label class="form-label required">{{__('SWIFT/BIC')}}</label>
-                                <input name="swift_bic" id="swift_bic" class="form-control" autocomplete="off" placeholder="{{__('MEINATWW')}}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ old('swift_bic') }}" min="1" required readonly>
+                                <input name="swift_bic" id="swift_bic" class="form-control" autocomplete="off" placeholder="{{__('MEINATWW')}}" type="text" pattern="[^()/><\][\\;&$@!|]+" value="{{ old('swift_bic') }}" min="1" required readonly>
                             </div>
                         </div>
                         <input type="hidden" name="user_id" value="{{auth()->id()}}">
@@ -374,10 +374,10 @@ I need 1000 from you.')}}</textarea>
             str_html += `
             <div class="row form-group mb-3 mt-3">
                 <div class="col-md-4 mb-3">
-                    <input type="text" pattern="[^()/><\\][\\\\;!|]+" name="default_item[]" class="form-control shadow-none itemname" value="${keys[index]}" readonly>
+                    <input type="text" pattern="[^()/><\\][\\\\;&$@!|]+" name="default_item[]" class="form-control shadow-none itemname" value="${keys[index]}" readonly>
                 </div>
                 <div class="col-md-8 mb-3">
-                    <input type="text" pattern="[^()/><\\][\\\\;!|]+" name="default_value[]" class="form-control shadow-none itemvalue" value="${values[index]}" readonly >
+                    <input type="text" pattern="[^()/><\\][\\\\;&$@!|]+" name="default_value[]" class="form-control shadow-none itemvalue" value="${values[index]}" readonly >
                 </div>
             </div>
             `;
@@ -392,10 +392,10 @@ I need 1000 from you.')}}</textarea>
         $('.extra-container').append(`
             <div class="row form-group mb-3 mt-3">
                 <div class="col-md-4 mb-3">
-                    <input type="text" pattern="[^()/><\\][\\\\;!|]+" name="item[]" class="form-control shadow-none itemname" required>
+                    <input type="text" pattern="[^()/><\\][\\\\;&$@!|]+" name="item[]" class="form-control shadow-none itemname" required>
                 </div>
                 <div class="col-md-7 mb-3">
-                    <input type="text" pattern="[^()/><\\][\\\\;!|]+" name="value[]" class="form-control shadow-none itemvalue" required>
+                    <input type="text" pattern="[^()/><\\][\\\\;&$@!|]+" name="value[]" class="form-control shadow-none itemvalue" required>
                 </div>
                 <div class="col-md-1 mb-3">
                     <button type="button" class="btn btn-danger w-100 remove"><i class="fas fa-times"></i></button>
@@ -408,7 +408,7 @@ I need 1000 from you.')}}</textarea>
         $('.description-extra-container').append(`
             <div class="row form-group mb-3 mt-3">
                 <div class="col-md-4 mb-3">
-                    <input type="text" pattern="[^()/><\\][\\\\;!|]+" name="desc_title[]" class="form-control shadow-none itemname">
+                    <input type="text" pattern="[^()/><\\][\\\\;&$@!|]+" name="desc_title[]" class="form-control shadow-none itemname">
                 </div>
                 <div class="col-md-7 mb-3">
                     <textarea type="text" rows="5" name="desc_text[]" class="form-control shadow-none itemvalue"></textarea>

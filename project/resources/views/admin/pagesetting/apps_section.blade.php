@@ -27,7 +27,7 @@
 
             <div class="form-group">
               <label for="inp-title">{{  __('Apps Title')  }}</label>
-              <input type="text"  pattern="[^()/><\][\\;!|]+" class="form-control" id="inp-title" name="app_title"  placeholder="{{ __('Enter Apps Title') }}" value="{{ $data->app_title }}" required>
+              <input type="text"  pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="inp-title" name="app_title"  placeholder="{{ __('Enter Apps Title') }}" value="{{ $data->app_title }}" required>
             </div>
 
             <div class="form-group">
@@ -63,7 +63,7 @@
 
             <div class="form-group">
                 <label for="app_store_link">{{  __('About Store Link')  }}</label>
-                  <input type="text"  pattern="[^()/><\][\\;!|]+" class="form-control" id="app_store_link" name="app_store_link"  placeholder="{{ __('Enter About Link') }}" value="{{ $data->app_store_link }}" required>
+                  <input type="text"  pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="app_store_link" name="app_store_link"  placeholder="{{ __('Enter About Link') }}" value="{{ $data->app_store_link }}" required>
                 </div>
             </div>
 
@@ -82,7 +82,7 @@
 
             <div class="form-group p-3">
                 <label for="app_store_link">{{  __('About Store Link')  }}</label>
-                  <input type="text"  pattern="[^()/><\][\\;!|]+" class="form-control" id="app_store_link" name="app_store_link"  placeholder="{{ __('Enter About Link') }}" value="{{ $data->app_store_link }}" required>
+                  <input type="text"  pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="app_store_link" name="app_store_link"  placeholder="{{ __('Enter About Link') }}" value="{{ $data->app_store_link }}" required>
                 </div>
             </div>
 

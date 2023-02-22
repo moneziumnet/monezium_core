@@ -31,7 +31,7 @@
                                 <div class="form-group col-md-12 col-12">
 
                                     <label for="">@lang('Method Name') <span class="text-danger">*</span> </label>
-                                    <input type="text" pattern="[^()/><\][\\;!|]+" name="name" class="form-control" autocomplete="off">
+                                    <input type="text" pattern="[^()/><\][\\;&$@!|]+" name="name" class="form-control" autocomplete="off">
 
                                 </div>
 

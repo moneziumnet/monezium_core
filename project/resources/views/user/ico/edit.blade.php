@@ -36,26 +36,26 @@
                             <div class="form-group mt-2 mb-3">
                                 <label class="form-label required">{{ __('Name') }}</label>
                                 <input name="name" id="name" class="form-control shadow-none"
-                                    placeholder="{{ __('Name') }}" type="text" pattern="[^()/><\][\\\-;!|]+" value="{{ $item->name }}" required>
+                                    placeholder="{{ __('Name') }}" type="text" pattern="[^()/><\][\\\-;&$@!|]+" value="{{ $item->name }}" required>
                             </div>
 
                             <div class="form-group mb-3">
                                 <label class="form-label">{{ __('Code') }}</label>
                                 <input name="code" id="code" class="form-control shadow-none"
-                                    placeholder="{{ __('Code') }}" type="text" pattern="[^()/><\][\\;!|]+" value="{{ $item->currency->code }}" required>
+                                    placeholder="{{ __('Code') }}" type="text" pattern="[^()/><\][\\;&$@!|]+" value="{{ $item->currency->code }}" required>
                             </div>
 
                             <div class="form-group mb-3">
                                 <label class="form-label">{{ __('Symbol') }}</label>
                                 <input name="symbol" id="symbol" class="form-control shadow-none"
-                                    placeholder="{{ __('Symbol') }}" type="text" pattern="[^()/><\][\\;!|]+"
+                                    placeholder="{{ __('Symbol') }}" type="text" pattern="[^()/><\][\\;&$@!|]+"
                                     value="{{ $item->currency->symbol }}" required>
                             </div>
 
                             <div class="form-group mb-3">
                                 <label class="form-label">{{ __('Address') }}</label>
                                 <input name="address" id="address" class="form-control shadow-none"
-                                    placeholder="{{ __('Address') }}" type="text" pattern="[^()/><\][\\;!|]+"
+                                    placeholder="{{ __('Address') }}" type="text" pattern="[^()/><\][\\;&$@!|]+"
                                     value="{{ $item->currency->address }}" required>
                             </div>
 

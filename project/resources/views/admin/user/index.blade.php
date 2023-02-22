@@ -140,7 +140,7 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <input type="text" pattern="[^()/><\][\\;!|]+" class="form-control" id="subj1" name="subject"  placeholder="{{ __('Subject') }}" value="" required="">
+                                            <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="subj1" name="subject"  placeholder="{{ __('Subject') }}" value="" required="">
                                         </div>
 
                                         <div class="form-group">

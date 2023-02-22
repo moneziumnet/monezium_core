@@ -34,7 +34,7 @@
               </div>
             </div>
             <div class="col-lg-7">
-              <input type="text" pattern="[^()/><\][\\;!|]+" class="input-field" name="language" placeholder="{{ __('Language') }}" required="" value="English">
+              <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="input-field" name="language" placeholder="{{ __('Language') }}" required="" value="English">
             </div>
           </div>
 

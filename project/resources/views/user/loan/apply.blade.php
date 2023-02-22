@@ -83,7 +83,7 @@
                                 @if ($value['type'] == 'text')
                                     <div class="form-group mb-3 mt-3">
                                         <label class="form-label" {{$value['validation']}}> {{$value['field_name']}} </label>
-                                        <input type="text" pattern="[^()/><\][\\;!|]+" name="{{$value['field_name']}}" placeholder="{{$value['field_name']}}" class="form-control" autocomplete="off" {{$value['validation']}}>
+                                        <input type="text" pattern="[^()/><\][\\;&$@!|]+" name="{{$value['field_name']}}" placeholder="{{$value['field_name']}}" class="form-control" autocomplete="off" {{$value['validation']}}>
                                     </div>
                                 @endif
 

@@ -273,7 +273,7 @@ class SendController extends Controller
             $data->currency_id = $request->wallet_id;
             $data->type = 'own';
             $data->cost = $finalCharge*$rate;
-            $data->amount = $request->amount;
+            $data->amount = $finalamount;
             $data->description = $request->description;
             $data->status = 1;
             $data->save();

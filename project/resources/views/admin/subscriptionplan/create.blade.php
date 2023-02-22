@@ -30,7 +30,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label for="name">{{ __('Name') }}</label>
-                <input type="text"  pattern="[^()/><\][\\\-;!|]+" class="form-control" id="name" name="name" placeholder="{{ __('Enter Title') }}" value="" required>
+                <input type="text"  pattern="[^()/><\][\\\-;&$@!|]+" class="form-control" id="name" name="name" placeholder="{{ __('Enter Title') }}" value="" required>
               </div>
             </div>
 

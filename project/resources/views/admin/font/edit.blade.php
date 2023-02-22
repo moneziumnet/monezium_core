@@ -33,7 +33,7 @@
               </div>
             </div>
             <div class="col-lg-7">
-              <input type="text" pattern="[^()/><\][\\;!|]+" class="input-field" name="font_family" placeholder="{{__('Font Family')}}" required="" value="{{$data->font_family}}">
+              <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="input-field" name="font_family" placeholder="{{__('Font Family')}}" required="" value="{{$data->font_family}}">
             </div>
           </div>
 

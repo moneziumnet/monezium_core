@@ -33,11 +33,6 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="form-group">
-                    <div class="input-group">
-                        <input class="form-control shadow-none" type="text" pattern="[^()/><\][\\;!|]+" placeholder="{{__('Transaction Id')}}" name="search" value="{{$search ?? ''}}">
-                    </div>
-                </div>
                 <button type="submit" class="input-group-text bg-primary text-white border-0"><i class="fas fa-search"></i></button>
             </form>
         </div>
@@ -74,7 +69,7 @@
                                         @foreach ($transactions as $key=>$data)
                                         <tr>
                                             <td data-label="@lang('Fee')" >
-                                                <span class="text-success h3">{{__($data['fee'])}}</span>
+                                                <span class="text-success h3">{{__(ucwords(str_replace('_',' ',$data['fee'])))}}</span>
                                             </td>
                                             <td data-label="@lang('Amount')">
                                                 <span class="text-danger">{{__($data['balance'])}}</span>
