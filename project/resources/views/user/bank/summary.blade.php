@@ -135,8 +135,8 @@
                             </tbody>
                             </table>
                         </div>
+                        {{ $transactions->links() }}
                         @endif
-                    {{ $transactions->links() }}
                 </div>
             </div>
             @endif
