@@ -89,7 +89,7 @@ class UserBankTransactionController extends Controller
         $e_time = request('e_time');
         $s_time = $s_time ? $s_time : '';
         $e_time = $e_time ? $e_time : Carbontime::now()->addDays(1)->format('Y-m-d');
-        $remark_list = Charge::where('plan_id', $user->bank_plan_id)->where('user_id', 0)->pluck('slug');
+        $remark_list = Transaction::where('user_id',auth()->id())->pluck('remark');
         $remark_list = array_unique($remark_list->all());
         if($remark != 'all_mark' && $remark != null) {
             $transactions = Transaction::where('user_id',auth()->id())
@@ -135,7 +135,7 @@ class UserBankTransactionController extends Controller
                 $fee_transactions = Transaction::where('user_id',auth()->id())
                 // ->where('wallet_id', $wallet_id)
                 ->when($fee,function($q) use($fee){
-                    return $q->where('remark','LIKE',"%{$fee}%");
+                    return $q->where('remark',$fee);
                 })
                 ->whereBetween('created_at', [$s_time, $e_time])
                 ->with('currency')->latest()->paginate(20);
