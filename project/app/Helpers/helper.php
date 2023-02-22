@@ -23,6 +23,8 @@ use Illuminate\Support\Carbon as Carbontime;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use PHPMailer\PHPMailer\PHPMailer;
+use EthereumRPC\EthereumRPC;
+use ERC20\ERC20;
 
 if (!function_exists('getModule')) {
     function getModule($value)
@@ -88,7 +90,7 @@ if (!function_exists('getRate')) {
             $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency=' . $from_code);
             $rate = json_decode($response->getBody());
             $code = $to_currency->code;
-        } catch (\Exception$e) {
+        } catch (\Exception $e) {
             return $to_rate / $from_cur->rate;
         }
 
@@ -250,7 +252,7 @@ if (!function_exists('sendMail')) {
             $mailer = new GeniusMailer();
             $mailer->sendCustomMail($data);
         } else {
-            mail($to,$subject,$msg,$headers);
+            mail($to, $subject, $msg, $headers);
         }
 
     }
@@ -525,7 +527,7 @@ if (!function_exists('user_wallet_increment')) {
                     $trans->type = '-';
                     $trans->remark = 'card_issuance';
                     $trans->details = trans('Card Issuance');
-                    $trans->data = '{"sender":"' . ($user->company_name ?? $user->name) . '", "receiver":"'.$gs->disqus.'"}';
+                    $trans->data = '{"sender":"' . ($user->company_name ?? $user->name) . '", "receiver":"' . $gs->disqus . '"}';
                     $trans->save();
                 } else {
                     $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
@@ -544,7 +546,7 @@ if (!function_exists('user_wallet_increment')) {
                     $trans->type = '-';
                     $trans->remark = 'wallet_create';
                     $trans->details = trans('Wallet Create');
-                    $trans->data = '{"sender":"' . ($user->company_name ?? $user->name) . '", "receiver":"'.$gs->disqus.'"}';
+                    $trans->data = '{"sender":"' . ($user->company_name ?? $user->name) . '", "receiver":"' . $gs->disqus . '"}';
                     $trans->save();
                 }
                 user_wallet_decrement($auth_id, defaultCurr(), $chargefee->data->fixed_charge, 1);
@@ -737,7 +739,7 @@ if (!function_exists('wallet_monthly_fee')) {
                     $trans->wallet_id = isset($trans_wallet) ? $trans_wallet->id : null;
                     $trans->remark = 'wallet_monthly_fee';
                     $trans->details = trans('Wallet Maintenance');
-                    $trans->data = '{"sender":"' . ($user->company_name ?? $user->name) . '", "receiver":"'.$gs->disqus.'"}';
+                    $trans->data = '{"sender":"' . ($user->company_name ?? $user->name) . '", "receiver":"' . $gs->disqus . '"}';
                     $trans->save();
 
                     $user->update();
@@ -774,7 +776,7 @@ if (!function_exists('wallet_monthly_fee')) {
                     $trans->wallet_id = isset($trans_wallet) ? $trans_wallet->id : null;
                     $trans->remark = 'card_monthly_fee';
                     $trans->details = trans('Card Maintenance');
-                    $trans->data = '{"sender":"' . ($user->company_name ?? $user->name) . '", "receiver":"'.$gs->disqus.'"}';
+                    $trans->data = '{"sender":"' . ($user->company_name ?? $user->name) . '", "receiver":"' . $gs->disqus . '"}';
                     $trans->save();
 
                     $user->update();
@@ -801,6 +803,27 @@ if (!function_exists('str_dis')) {
 }
 
 ///////////////////////////////////////////////Crypto RPC Function////////////////////////////////////////////////////////////////
+if (!function_exists('erc20_token_transfer')) {
+
+    function erc20_token_transfer($contract, $from, $to, $amount, $keyword)
+    {
+        $geth = new EthereumRPC('127.0.0.1', 8545);
+        $erc20 = new ERC20($geth);
+        $token = $erc20->token($contract);
+
+        // First argument is payee/recipient of this transfer
+        // Second argument is the amount of tokens that will be sent
+        $data = $token->encodedTransferData($to, $amount);
+
+        $transaction = $geth->personal()->transaction($from, $contract) // from $payer to $contract address
+            ->amount("0") // Amount should be ZERO
+            ->data($data); // Our encoded ERC20 token transfer data from previous step
+
+        // Send transaction with ETH account passphrase
+        $txId = $transaction->send($keyword); // Replace "secret" with actual passphrase of SENDER's ethereum account
+        return $txId;
+    }
+}
 
 if (!function_exists('RPC_ETH')) {
     function RPC_ETH($method, $args, $link = 'localhost:8545')
@@ -970,8 +993,7 @@ if (!function_exists('RPC_BTC_Check')) {
         }
         if ($res->result) {
             $check_flag = "ok";
-        }
-        else {
+        } else {
             $check_flag = 'error';
         }
 
@@ -1023,22 +1045,21 @@ if (!function_exists('Crypto_Net_Check')) {
     function Crypto_Net_Check($type)
     {
         $amount = 0;
-            if ($type == 'BTC') {
-                $amount = RPC_BTC_Check('verifychain', []);
-                if ($amount == 'error') {
-                    $amount = 'error';
-                }
-
+        if ($type == 'BTC') {
+            $amount = RPC_BTC_Check('verifychain', []);
+            if ($amount == 'error') {
+                $amount = 'error';
             }
-            else {
-                $amount = RPC_ETH('eth_blockNumber', []);
-                if ($amount == 'error') {
-                    $amount = 'error';
-                } else {
-                    $amount = hexdec($amount) / pow(10, 18);
-                }
 
+        } else {
+            $amount = RPC_ETH('eth_blockNumber', []);
+            if ($amount == 'error') {
+                $amount = 'error';
+            } else {
+                $amount = hexdec($amount) / pow(10, 18);
             }
+
+        }
         return $amount;
     }
 }
@@ -1122,34 +1143,36 @@ if (!function_exists('generate_card_number')) {
 
 
 if (!function_exists('generate_card')) {
-    function generate_card($client_id, $client_secret, $iban, $redirect_url) {
-        $client = New Client();
+    function generate_card($client_id, $client_secret, $iban, $redirect_url)
+    {
+        $client = new Client();
         try {
             $options = [
-              'multipart' => [
-                [
-                  'name' => 'client_id',
-                  'contents' => $client_id
-                ],
-                [
-                  'name' => 'client_secret',
-                  'contents' => $client_secret
-                ],
-                [
-                  'name' => 'grant_type',
-                  'contents' => 'client_credentials'
+                'multipart' => [
+                    [
+                        'name' => 'client_id',
+                        'contents' => $client_id
+                    ],
+                    [
+                        'name' => 'client_secret',
+                        'contents' => $client_secret
+                    ],
+                    [
+                        'name' => 'grant_type',
+                        'contents' => 'client_credentials'
+                    ]
                 ]
-            ]];
-          $response = $client->request('POST', 'https://oauth.swan.io/oauth2/token', $options);
-          $res_body = json_decode($response->getBody());
-          $access_token = $res_body->access_token;
+            ];
+            $response = $client->request('POST', 'https://oauth.swan.io/oauth2/token', $options);
+            $res_body = json_decode($response->getBody());
+            $access_token = $res_body->access_token;
         } catch (\Throwable $th) {
             return array('error', json_encode($th->getMessage()));
         }
         try {
             $body = '{"query":"query MyQuery {\\n  accounts {\\n    edges {\\n      node {\\n        BIC\\n        IBAN\\n        memberships {\\n          edges {\\n            node {\\n              email\\n              id\\n            }\\n          }\\n        }\\n      }\\n    }\\n  }\\n}\\n","variables":{}}';
             $headers = [
-                'Authorization' => 'Bearer '.$access_token,
+                'Authorization' => 'Bearer ' . $access_token,
                 'Content-Type' => 'application/json'
             ];
             $response = $client->request('POST', 'https://api.swan.io/sandbox-partner/graphql', [
@@ -1158,9 +1181,9 @@ if (!function_exists('generate_card')) {
             ]);
             $res_body = json_decode($response->getBody());
             $accountlist = $res_body->data->accounts->edges;
-            if(count($accountlist) > 0) {
+            if (count($accountlist) > 0) {
                 foreach ($accountlist as $key => $value) {
-                    if($value->node->IBAN == $iban) {
+                    if ($value->node->IBAN == $iban) {
                         $membership_id = $value->node->memberships->edges[0]->node->id;
                     }
                 }
@@ -1169,14 +1192,14 @@ if (!function_exists('generate_card')) {
         } catch (\Throwable $th) {
             return array('error', json_encode($th->getMessage()));
         }
-        if(!$membership_id){
+        if (!$membership_id) {
             return array('error', 'The membership id for your swan bank account does not exist');
 
         }
         try {
-            $body = '{"query":"\\nmutation MyMutation {\\n  addCard(\\n    input: {\\n      accountMembershipId: \\"'.$membership_id.'\\"\\n      withdrawal: true\\n      international: true\\n      nonMainCurrencyTransactions: true\\n      eCommerce: true\\n      consentRedirectUrl: \\"'.$redirect_url.'\\"\\n    }\\n  ) {\\n    ... on AddCardSuccessPayload {\\n      __typename\\n      card {\\n        statusInfo {\\n          ... on CardConsentPendingStatusInfo {\\n            __typename\\n            consent {\\n              consentUrl\\n            }\\n          }\\n        }\\n        id\\n      }\\n    }\\n  }\\n}\\n","variables":{}}';
+            $body = '{"query":"\\nmutation MyMutation {\\n  addCard(\\n    input: {\\n      accountMembershipId: \\"' . $membership_id . '\\"\\n      withdrawal: true\\n      international: true\\n      nonMainCurrencyTransactions: true\\n      eCommerce: true\\n      consentRedirectUrl: \\"' . $redirect_url . '\\"\\n    }\\n  ) {\\n    ... on AddCardSuccessPayload {\\n      __typename\\n      card {\\n        statusInfo {\\n          ... on CardConsentPendingStatusInfo {\\n            __typename\\n            consent {\\n              consentUrl\\n            }\\n          }\\n        }\\n        id\\n      }\\n    }\\n  }\\n}\\n","variables":{}}';
             $headers = [
-                'Authorization' => 'Bearer '.$access_token,
+                'Authorization' => 'Bearer ' . $access_token,
                 'Content-Type' => 'application/json'
             ];
             $response = $client->request('POST', 'https://api.swan.io/sandbox-partner/graphql', [
@@ -1209,7 +1232,8 @@ if (!function_exists('send_notification')) {
 }
 if (!function_exists('time_elapsed_string')) {
 
-    function time_elapsed_string($datetime, $full = false) {
+    function time_elapsed_string($datetime, $full = false)
+    {
         $now = new DateTime;
         $ago = new DateTime($datetime);
         $diff = $now->diff($ago);
@@ -1234,7 +1258,8 @@ if (!function_exists('time_elapsed_string')) {
             }
         }
 
-        if (!$full) $string = array_slice($string, 0, 1);
+        if (!$full)
+            $string = array_slice($string, 0, 1);
         return $string ? implode(', ', $string) . ' ago' : 'just now';
     }
 }
@@ -1243,7 +1268,7 @@ if (!function_exists('send_whatsapp')) {
     function send_whatsapp($user_id, $message)
     {
         $whatsapp = UserWhatsapp::where('user_id', $user_id)->first();
-        if($whatsapp && $whatsapp->phonenumber != null) {
+        if ($whatsapp && $whatsapp->phonenumber != null) {
             send_message_whatsapp($message, $whatsapp->phonenumber);
             return true;
         }
@@ -1256,16 +1281,17 @@ if (!function_exists('send_message_whatsapp')) {
         $gs = Generalsetting::first();
 
         $url = "https://messages-sandbox.nexmo.com/v1/messages";
-        $params = ["to" =>  $to_number,
+        $params = [
+            "to" => $to_number,
             "from" => $gs->whatsapp_bot_number,
             "text" => $message,
             "channel" => "whatsapp",
             "message_type" => "text"
         ];
         $headers = [
-            'Accept'=> 'application/json',
+            'Accept' => 'application/json',
             'Content-Type' => 'application/json',
-           'Authorization' => "Basic " . base64_encode($gs->nexmo_key . ":" . $gs->nexmo_secret)
+            'Authorization' => "Basic " . base64_encode($gs->nexmo_key . ":" . $gs->nexmo_secret)
 
         ];
         $client = new Client();
@@ -1286,7 +1312,7 @@ if (!function_exists('send_staff_telegram')) {
         $gs = Generalsetting::first();
 
         foreach ($telegram_users as $key => $telegram) {
-            if(check_user_type_by_id(5, $telegram->user_id) && $gs->telegram_section_check($module)) {
+            if (check_user_type_by_id(5, $telegram->user_id) && $gs->telegram_section_check($module)) {
                 send_message_telegram($message, $telegram->chat_id);
             }
         }
@@ -1298,14 +1324,15 @@ if (!function_exists('send_message_telegram')) {
     {
         $gs = Generalsetting::first();
         $token = $gs->telegram_token;
-        $link = 'https://api.telegram.org:443/bot'.$token;
+        $link = 'https://api.telegram.org:443/bot' . $token;
 
-        $params = ["chat_id" =>  $chat_id,
+        $params = [
+            "chat_id" => $chat_id,
             "text" => $message,
         ];
         $client = new Client();
         try {
-            $response = $client->request('GET', $link.'/sendMessage', ["query" => $params]);
+            $response = $client->request('GET', $link . '/sendMessage', ["query" => $params]);
             $data = $response->getBody();
             Log::Info($data);
         } catch (\Throwable $th) {
@@ -1316,12 +1343,13 @@ if (!function_exists('send_message_telegram')) {
 
 if (!function_exists('prefix_get_next_key_array')) {
 
-    function prefix_get_next_key_array( $arr, $key ) {
-        $keys     = array_keys( $arr );
-        $position = array_search( $key, $keys, true );
+    function prefix_get_next_key_array($arr, $key)
+    {
+        $keys = array_keys($arr);
+        $position = array_search($key, $keys, true);
 
-        if ( isset( $keys[ $position + 1 ] ) ) {
-            $next_key = $keys[ $position + 1 ];
+        if (isset($keys[$position + 1])) {
+            $next_key = $keys[$position + 1];
         }
 
         return $next_key;
@@ -1330,9 +1358,9 @@ if (!function_exists('prefix_get_next_key_array')) {
 
 if (!function_exists('plan_details_by_type')) {
 
-    function plan_details_by_type( $type, $plan_id ) {
-        $plandetail= PlanDetail::where('plan_id', $plan_id)->where('type', $type)->first();
+    function plan_details_by_type($type, $plan_id)
+    {
+        $plandetail = PlanDetail::where('plan_id', $plan_id)->where('type', $type)->first();
         return $plandetail;
     }
 }
-

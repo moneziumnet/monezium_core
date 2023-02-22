@@ -13,6 +13,7 @@
         "coingate/coingate-php": "^4.1",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^3.0",
+        "furqansiddiqui/erc20-php": "^0.1.3",
         "guzzlehttp/guzzle": "^7.2",
         "illuminate/support": "^9.31",
         "instamojo/instamojo-php": "^1.0",
@@ -28,6 +29,7 @@
         "phpmailer/phpmailer": "^6.6",
         "phpoffice/phpspreadsheet": "^1.26",
         "psr/simple-cache": "2.0",
+        "pusher/pusher-php-server": "^7.2",
         "razorpay/razorpay": "^2.8",
         "spatie/laravel-cookie-consent": "^3.2",
         "spatie/laravel-sitemap": "^6.2",
@@ -38,8 +40,7 @@
         "symfony/mailgun-mailer": "^6.2",
         "twilio/sdk": "^6.42",
         "yajra/laravel-datatables-oracle": "^10.1",
-        "zanysoft/laravel-zip": "^2.0",
-        "pusher/pusher-php-server": "^7.2"
+        "zanysoft/laravel-zip": "^2.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
