@@ -934,9 +934,10 @@ if (!function_exists('RPC_BTC_Send')) {
         try {
             $response = $client->request('POST', $link . '/wallet/' . $wallet_name, ["headers" => $headers, "body" => $body]);
             $res = json_decode($response->getBody());
-        } catch (\Throwable $th) {
-            return 'error';
+            } catch (\Throwable $th) {
+            return json_encode(['code' => '1', 'message' => ' ' . $th->getMessage()]);
         }
+
         $body = '{
                 "method": "generatetoaddress",
                 "params": [1,"' . json_decode($args, true)[0] . '"],
@@ -947,9 +948,9 @@ if (!function_exists('RPC_BTC_Send')) {
             $response = $client->request('POST', $link . '/wallet/' . $wallet_name, ["headers" => $headers, "body" => $body]);
             $res = json_decode($response->getBody());
         } catch (\Throwable $th) {
-            return 'error';
+            return json_encode(['code' => '2', 'message' => ' ' . $th->getMessage()]);
         }
-        return 'success';
+        return json_encode(['code' => '0', 'message' => 'Transaction success!!!']);
     }
 }
 

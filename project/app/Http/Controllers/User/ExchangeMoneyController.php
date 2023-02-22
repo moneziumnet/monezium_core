@@ -322,7 +322,11 @@ class ExchangeMoneyController extends Controller
             if (!$fromsystemwallet1) {
                 return back()->with('error', $fromWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
-            RPC_BTC_Send('sendtoaddress', [$toWallet->wallet_no, $finalAmount], $tosystemwallet->keyword);
+            $result = RPC_BTC_Send('sendtoaddress', [$toWallet->wallet_no, $finalAmount], $tosystemwallet->keyword);
+            if (json_decode($result)->code != 0){
+                return redirect()->back()->with(array('error' => 'BTC client error: code = '. json_decode($result)->code . ' ' .json_decode($result)->message));
+            }
+
             $fromsystemwallet1->balance += $totalAmount;
             $fromsystemwallet1->update();
         }
