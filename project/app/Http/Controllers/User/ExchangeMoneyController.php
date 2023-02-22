@@ -14,7 +14,6 @@ use App\Models\PlanDetail;
 use App\Classes\GoogleAuthenticator;
 use GuzzleHttp\Client;
 use App\Http\Controllers\Controller;
-use App\Classes\EthereumRpcService;
 use Illuminate\Support\Facades\DB;
 
 

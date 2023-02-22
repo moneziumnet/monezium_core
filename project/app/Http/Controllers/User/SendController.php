@@ -18,7 +18,6 @@ use App\Classes\GeniusMailer;
 use App\Models\Generalsetting;
 use App\Models\BalanceTransfer;
 use App\Http\Controllers\Controller;
-use App\Classes\EthereumRpcService;
 
 class SendController extends Controller
 {

@@ -47,7 +47,6 @@ use Auth;
 use Illuminate\Contracts\Auth\Authenticatable as OtherAuth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
-use App\Classes\EthereumRpcService;
 use App\Classes\BoxApi;
 
 class UserController extends Controller

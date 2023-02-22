@@ -16,7 +16,6 @@ use App\Models\CryptoWithdraw;
 use App\Models\Generalsetting;
 use App\Classes\GoogleAuthenticator;
 use Illuminate\Support\Facades\DB;
-use App\Classes\EthereumRpcService;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 

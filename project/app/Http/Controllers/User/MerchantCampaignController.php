@@ -26,7 +26,6 @@ use App\Models\MerchantWallet;
 use App\Models\Order;
 use App\Models\Transaction as ModelsTransaction;
 use GuzzleHttp\Client;
-use App\Classes\EthereumRpcService;
 
 use PayPal\{
     Api\Item,
