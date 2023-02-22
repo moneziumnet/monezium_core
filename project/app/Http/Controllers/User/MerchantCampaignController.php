@@ -411,12 +411,8 @@ class MerchantCampaignController extends Controller
                 }
                 else {
                     RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                    $geth = new EthereumRpcService();
                     $tokenContract = $wallet->currency->address;
-                    $result = $geth->transferToken($tokenContract, $wallet->wallet_no, $trans_wallet->wallet_no, $request->amount, $wallet->currency->cryptodecimal );
-                    if (isset($result->error)){
-                        return redirect()->back()->with(array('error' => 'Ethereum client error: '.$result->error->message));
-                    }
+                    $result = erc20_token_transfer($tokenContract, $wallet->wallet_no, $trans_wallet->wallet_no, $request->amount, $wallet->keyword);
                 }
                 $trnx              = new ModelsTransaction();
                 $trnx->trnx        = str_rand();

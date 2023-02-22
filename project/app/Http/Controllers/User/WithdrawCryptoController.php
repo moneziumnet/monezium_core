@@ -123,12 +123,8 @@ class WithdrawCryptoController extends Controller
         }
         else{
             RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-            $geth = new EthereumRpcService();
             $tokenContract = $fromWallet->currency->address;
-            $result = $geth->transferToken($tokenContract, $fromWallet->wallet_no, $toWallet->wallet_no, $transaction_global_cost*$crypto_rate, $fromWallet->currency->cryptodecimal);
-            if (isset($result->error)){
-                return redirect()->back()->with(array('error' => 'Ethereum client error: '.$result->error->message));
-            }
+            $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $toWallet->wallet_no, $transaction_global_cost*$crypto_rate,  $fromWallet->keyword);
         }
 
         if($user->referral_id != 0) {
@@ -149,12 +145,9 @@ class WithdrawCryptoController extends Controller
             }
             else {
                 RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-                $geth = new EthereumRpcService();
                 $tokenContract = $fromWallet->currency->address;
-                $result = $geth->transferToken($tokenContract, $fromWallet->wallet_no, $torefWallet->wallet_no, $transaction_custom_cost*$crypto_rate, $fromWallet->currency->cryptodecimal);
-                if (isset($result->error)){
-                    return redirect()->back()->with(array('error' => 'Ethereum client error: '.$result->error->message));
-                }
+                $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $torefWallet->wallet_no, $transaction_custom_cost*$crypto_rate,  $fromWallet->keyword);
+
             }
             $trans = new Transaction();
             $trans->trnx = str_rand();
@@ -182,12 +175,8 @@ class WithdrawCryptoController extends Controller
         }
         else {
             RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-            $geth = new EthereumRpcService();
             $tokenContract = $fromWallet->currency->address;
-            $result = $geth->transferToken($tokenContract, $fromWallet->wallet_no, $request->sender_address, $messagefinal*$crypto_rate, $fromWallet->currency->cryptodecimal);
-            if (isset($result->error)){
-                return redirect()->back()->with(array('error' => 'Ethereum client error: '.$result->error->message));
-            }
+            $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $request->sender_address, $messagefinal*$crypto_rate,  $fromWallet->keyword);
         }
 
         $withdraw = new CryptoWithdraw();

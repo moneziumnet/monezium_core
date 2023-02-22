@@ -246,12 +246,8 @@ class ExchangeMoneyController extends Controller
                     RPC_BTC_Send('sendtoaddress', [$torefWallet->wallet_no, $transaction_custom_cost * $from_rate], $fromWallet->keyword);
                 } else {
                     RPC_ETH('personal_unlockAccount', [$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-                    $geth = new EthereumRpcService();
                     $tokenContract = $fromWallet->currency->address;
-                    $result = $geth->transferToken($tokenContract, $fromWallet->wallet_no, $trans_wallet->wallet_no, $transaction_custom_cost * $from_rate, $fromWallet->currency->cryptodecimal);
-                    if (isset($result->error)) {
-                        return redirect()->back()->with(array('error' => 'Ethereum client error: ' . $result->error->message));
-                    }
+                    $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $trans_wallet->wallet_no, $transaction_custom_cost * $from_rate, $fromWallet->keyword);
                 }
             }
             $trans = new Transaction();
@@ -270,12 +266,6 @@ class ExchangeMoneyController extends Controller
             $trans->data = '{"sender":"' . (auth()->user()->company_name ?? auth()->user()->name) . '", "receiver":"' . (User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name) . '"}';
             $trans->save();
         }
-
-
-
-
-
-
 
         if ($fromWallet->currency->code == 'ETH' && $toWallet->currency->type == 1) {
             RPC_ETH('personal_unlockAccount', [$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
@@ -384,12 +374,8 @@ class ExchangeMoneyController extends Controller
             RPC_ETH_Send('personal_sendTransaction', $tx, $fromWallet->keyword ?? '');
 
             RPC_ETH('personal_unlockAccount', [$fromsystemwallet->wallet_no, $fromsystemwallet->keyword ?? '', 30]);
-            $geth = new EthereumRpcService();
             $tokenContract = $toWallet->currency->address;
-            $result = $geth->transferToken($tokenContract, $fromsystemwallet->wallet_no, $toWallet->wallet_no, $finalAmount, $toWallet->currency->cryptodecimal);
-            if (isset($result->error)) {
-                return redirect()->back()->with(array('error' => 'Ethereum client error: ' . $result->error->message));
-            }
+            $result = erc20_token_transfer($tokenContract,  $fromsystemwallet->wallet_no, $toWallet->wallet_no, $finalAmount, $fromsystemwallet->keyword);
         }
         if ($fromWallet->currency->code == 'BTC' && $toWallet->currency->code != 'ETH' && $toWallet->currency->code != 'BTC' && $toWallet->currency->type == 2) {
             $tosystemwallet = get_wallet(0, $fromWallet->currency->id, 9);
@@ -403,12 +389,8 @@ class ExchangeMoneyController extends Controller
             RPC_BTC_Send('sendtoaddress', [$tosystemwallet->wallet_no, $totalAmount], $fromWallet->keyword);
 
             RPC_ETH('personal_unlockAccount', [$fromsystemwallet->wallet_no, $fromsystemwallet->keyword ?? '', 30]);
-            $geth = new EthereumRpcService();
             $tokenContract = $toWallet->currency->address;
-            $result = $geth->transferToken($tokenContract, $fromsystemwallet->wallet_no, $toWallet->wallet_no, $finalAmount, $toWallet->currency->cryptodecimal);
-            if (isset($result->error)) {
-                return redirect()->back()->with(array('error' => 'Ethereum client error: ' . $result->error->message));
-            }
+            $result = erc20_token_transfer($tokenContract,  $fromsystemwallet->wallet_no, $toWallet->wallet_no, $finalAmount, $fromsystemwallet->keyword);
         }
 
         if ($fromWallet->currency->type == 1 && $toWallet->currency->code != 'ETH' && $toWallet->currency->code != 'BTC' && $toWallet->currency->type == 2) {
@@ -424,14 +406,7 @@ class ExchangeMoneyController extends Controller
 
             $tokenContract = $toWallet->currency->address;
             $result = erc20_token_transfer($tokenContract, $tosystemwallet->wallet_no, $toWallet->wallet_no, $finalAmount, $tosystemwallet->keyword);
-            dd($result);
 
-            // $geth = new EthereumRpcService();
-            // $tokenContract = $toWallet->currency->address;
-            // $result = $geth->transferToken($tokenContract, $tosystemwallet->wallet_no, $toWallet->wallet_no, $finalAmount, $toWallet->currency->cryptodecimal);
-            // if (isset($result->error)){
-            //     return redirect()->back()->with(array('error' => 'Ethereum client error: '.$result->error->message));
-            // }
             $fromsystemwallet1->balance += $totalAmount;
             $fromsystemwallet1->update();
         }
@@ -446,12 +421,9 @@ class ExchangeMoneyController extends Controller
             if (!$fromsystemwallet) {
                 return back()->with('error', $toWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
-            $geth = new EthereumRpcService();
             $tokenContract = $fromWallet->currency->address;
-            $result = $geth->transferToken($tokenContract, $fromWallet->wallet_no, $tosystemwallet->wallet_no, $totalAmount, $fromWallet->currency->cryptodecimal);
-            if (isset($result->error)) {
-                return redirect()->back()->with(array('error' => 'Ethereum client error: ' . $result->error->message));
-            }
+            $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $tosystemwallet->wallet_no, $totalAmount, $fromWallet->keyword);
+            
             RPC_BTC_Send('sendtoaddress', [$toWallet->wallet_no, $finalAmount], $fromsystemwallet->keyword);
         }
         if ($fromWallet->currency->code != 'ETH' && $fromWallet->currency->code != 'BTC' && $fromWallet->currency->type == 2 && $toWallet->currency->code == 'ETH') {
@@ -464,12 +436,9 @@ class ExchangeMoneyController extends Controller
             if (!$fromsystemwallet) {
                 return back()->with('error', $toWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
-            $geth = new EthereumRpcService();
             $tokenContract = $fromWallet->currency->address;
-            $result = $geth->transferToken($tokenContract, $fromWallet->wallet_no, $tosystemwallet->wallet_no, $totalAmount, $fromWallet->currency->cryptodecimal);
-            if (isset($result->error)) {
-                return redirect()->back()->with(array('error' => 'Ethereum client error: ' . $result->error->message));
-            }
+            $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $tosystemwallet->wallet_no, $totalAmount, $fromWallet->keyword);
+
             RPC_ETH('personal_unlockAccount', [$fromsystemwallet->wallet_no, $fromsystemwallet->keyword ?? '', 30]);
             $tx = '{"from": "' . $fromsystemwallet->wallet_no . '", "to": "' . $toWallet->wallet_no . '", "value": "0x' . dechex($finalAmount * pow(10, 18)) . '"}';
             RPC_ETH_Send('personal_sendTransaction', $tx, $fromsystemwallet->keyword ?? '');
@@ -485,12 +454,9 @@ class ExchangeMoneyController extends Controller
             if (!$tosystemwallet1) {
                 return back()->with('error', $toWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
-            $geth = new EthereumRpcService();
             $tokenContract = $fromWallet->currency->address;
-            $result = $geth->transferToken($tokenContract, $fromWallet->wallet_no, $tosystemwallet->wallet_no, $totalAmount, $fromWallet->currency->cryptodecimal);
-            if (isset($result->error)) {
-                return redirect()->back()->with(array('error' => 'Ethereum client error: ' . $result->error->message));
-            }
+            $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $tosystemwallet->wallet_no, $totalAmount, $fromWallet->keyword);
+
             $tosystemwallet1->balance -= $finalAmount;
             $tosystemwallet1->update();
         }
@@ -505,20 +471,12 @@ class ExchangeMoneyController extends Controller
             if (!$fromsystemwallet) {
                 return back()->with('error', $toWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
             }
-            $geth = new EthereumRpcService();
             $tokenContract = $fromWallet->currency->address;
-            $result = $geth->transferToken($tokenContract, $fromWallet->wallet_no, $tosystemwallet->wallet_no, $totalAmount, $fromWallet->currency->cryptodecimal);
-            if (isset($result->error)) {
-                return redirect()->back()->with(array('error' => 'Ethereum client error: ' . $result->error->message));
-            }
+            $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $tosystemwallet->wallet_no, $totalAmount, $fromWallet->keyword);
 
             RPC_ETH('personal_unlockAccount', [$fromsystemwallet->wallet_no, $fromsystemwallet->keyword ?? '', 30]);
-            $geth = new EthereumRpcService();
             $tokenContract = $toWallet->currency->address;
-            $result = $geth->transferToken($tokenContract, $fromsystemwallet->wallet_no, $toWallet->wallet_no, $finalAmount, $toWallet->currency->cryptodecimal);
-            if (isset($result->error)) {
-                return redirect()->back()->with(array('error' => 'Ethereum client error: ' . $result->error->message));
-            }
+            $result = erc20_token_transfer($tokenContract,$fromsystemwallet->wallet_no, $toWallet->wallet_no, $finalAmount, $fromsystemwallet->keyword);
         }
 
         if ($fromWallet->currency->type == 1 && $toWallet->currency->type == 1) {
