@@ -48,26 +48,26 @@
                                 <div class="form-group mt-2 mb-3">
                                     <label class="form-label required">{{ __('Name') }}</label>
                                     <input name="name" id="name" class="form-control shadow-none"
-                                        placeholder="{{ __('Name') }}" type="text" pattern="[^()/><\][\\\-;&$@!|]+" value="{{ old('name') }}"
+                                        placeholder="{{ __('Name') }}" type="text" pattern="[^À-ž()/><\][\\\-;&$@!|]+" value="{{ old('name') }}"
                                         required>
                                 </div>
 
                                 <div class="form-group mb-3">
                                     <label class="form-label">{{ __('Code') }}</label>
                                     <input name="code" id="code" class="form-control shadow-none"
-                                        placeholder="{{ __('Code') }}" type="text" pattern="[^()/><\][\\;&$@!|]+" value="{{ old('code') }}" required>
+                                        placeholder="{{ __('Code') }}" type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" value="{{ old('code') }}" required>
                                 </div>
 
                                 <div class="form-group mb-3">
                                     <label class="form-label">{{ __('Symbol') }}</label>
                                     <input name="symbol" id="symbol" class="form-control shadow-none"
-                                        placeholder="{{ __('Symbol') }}" type="text" pattern="[^()/><\][\\;&$@!|]+" value="{{ old('symbol') }}" required>
+                                        placeholder="{{ __('Symbol') }}" type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" value="{{ old('symbol') }}" required>
                                 </div>
 
                                 <div class="form-group mb-3">
                                     <label class="form-label">{{ __('Address') }}</label>
                                     <input name="address" id="address" class="form-control shadow-none"
-                                        placeholder="{{ __('Address') }}" type="text" pattern="[^()/><\][\\;&$@!|]+" value="{{ old('address') }}" required>
+                                        placeholder="{{ __('Address') }}" type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" value="{{ old('address') }}" required>
                                 </div>
 
                                 <div class="form-group mb-3">

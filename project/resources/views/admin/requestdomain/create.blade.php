@@ -30,7 +30,7 @@
 
             <div class="form-group">
                 <label for="inp-name">{{ __('Name') }}</label>
-                <input type="text" pattern="[^()/><\][\\\-;&$@!|]+" class="form-control" id="inp-name" name="name"  placeholder="{{ __('Enter Name') }}" value="" required>
+                <input type="text" pattern="[^À-ž()/><\][\\\-;&$@!|]+" class="form-control" id="inp-name" name="name"  placeholder="{{ __('Enter Name') }}" value="" required>
             </div>
 
             <div class="form-group">
@@ -50,7 +50,7 @@
 
             <div class="form-group">
                 <label for="inp-domains">{{ __('Domain configration') }}</label>
-                <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="inp-domains" name="domains"  placeholder="{{ __('Enter domain name') }}" value="" required>
+                <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="inp-domains" name="domains"  placeholder="{{ __('Enter domain name') }}" value="" required>
                 <span>{{ __('how to add-on domain in your hosting panel.') }}<a
                                 href="{{ asset('assets/pdf/adddomain.pdf') }}" class="m-2"
                                 target="_blank">{{ __('Document') }}</a></span>

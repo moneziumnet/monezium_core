@@ -64,7 +64,7 @@
 
                         <div class="form-group mb-3 mt-3">
                             <label class="form-label required">{{__('Account Name')}}</label>
-                            <input name="account_name" id="account_name" class="form-control" autocomplete="off" placeholder="{{__('Jhon Doe')}}" type="text" pattern="[^()/><\][\\;&$@!|]+" value="{{ old('account_name') }}" min="1" required >
+                            <input name="account_name" id="account_name" class="form-control" autocomplete="off" placeholder="{{__('Jhon Doe')}}" type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" value="{{ old('account_name') }}" min="1" required >
                         </div>
 
                         <div class="form-group mb-3">
@@ -101,7 +101,7 @@
 
                                     <div class="form-group mt-3" id="otp_body">
                                         <label class="form-label required">{{__('OTP Code')}}</label>
-                                        <input name="otp_code" id="otp_code" class="form-control" placeholder="{{__('OTP Code')}}" type="text" pattern="[^()/><\][\\;&$@!|]+" value="{{ old('opt_code') }}" >
+                                        <input name="otp_code" id="otp_code" class="form-control" placeholder="{{__('OTP Code')}}" type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" value="{{ old('opt_code') }}" >
                                     </div>
                                 </div>
                                 <div class="modal-footer">

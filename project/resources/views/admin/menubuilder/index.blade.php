@@ -61,7 +61,7 @@
              </div>
             <div class="form-group">
                <label for="title">{{ __('Title') }} *</label>
-               <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="title"
+               <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="title"
                   placeholder="{{ __('Enter Title') }}" value="" required>
             </div>
             <div class="form-group">

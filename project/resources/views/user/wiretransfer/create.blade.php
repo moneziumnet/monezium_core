@@ -46,7 +46,7 @@
                             <div class="col-md-6">
                                 <div class="form-group mb-3 mt-3">
                                     <label class="form-label">{{__('Swift Code')}}</label>
-                                    <input type="text" pattern="[^()/><\][\\;&$@!|]+" id="swiftCode" name="swift_code" class="form-control" autocomplete="off" placeholder="{{__('Enter Swift Code')}}" value="">
+                                    <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" id="swiftCode" name="swift_code" class="form-control" autocomplete="off" placeholder="{{__('Enter Swift Code')}}" value="">
                                 </div>
                                 @error('swift_code')
                                     <span class="text-danger">{{ $message }}</span>
@@ -56,7 +56,7 @@
                             <div class="col-md-6">
                                 <div class="form-group mb-3 mt-3">
                                     <label class="form-label">{{__('Currency')}}</label>
-                                    <input type="text" pattern="[^()/><\][\\;&$@!|]+" id="currency" name="currency" class="form-control" autocomplete="off" placeholder="{{__('Enter Currency')}}" value="">
+                                    <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" id="currency" name="currency" class="form-control" autocomplete="off" placeholder="{{__('Enter Currency')}}" value="">
                                 </div>
                                 @error('currency')
                                     <span class="text-danger">{{ $message }}</span>
@@ -68,7 +68,7 @@
                             <div class="col-md-6">
                                 <div class="form-group mb-3 mt-3">
                                     <label class="form-label">{{__('Routing Number')}}</label>
-                                    <input type="text" pattern="[^()/><\][\\;&$@!|]+" id="routingNumber" name="routing_number" class="form-control" autocomplete="off" placeholder="{{__('Enter Routing Number')}}" value="">
+                                    <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" id="routingNumber" name="routing_number" class="form-control" autocomplete="off" placeholder="{{__('Enter Routing Number')}}" value="">
                                 </div>
                                 @error('routing_number')
                                     <span class="text-danger">{{ $message }}</span>
@@ -78,7 +78,7 @@
                             <div class="col-md-6">
                                 <div class="form-group mb-3 mt-3">
                                     <label class="form-label">{{__('Country')}}</label>
-                                    <input type="text" pattern="[^()/><\][\\;&$@!|]+" id="country" name="country" class="form-control" autocomplete="off" placeholder="{{__('Enter Country')}}" value="">
+                                    <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" id="country" name="country" class="form-control" autocomplete="off" placeholder="{{__('Enter Country')}}" value="">
                                 </div>
                                 @error('country')
                                     <span class="text-danger">{{ $message }}</span>
@@ -90,7 +90,7 @@
                             <div class="col-md-6">
                                 <div class="form-group mb-3 mt-3">
                                     <label class="form-label">{{__('Account Holder Name')}}</label>
-                                    <input type="text" pattern="[^()/><\][\\;&$@!|]+" name="account_holder_name" class="form-control" autocomplete="off" placeholder="{{__('Enter Account Holder Name')}}" value="{{ old('account_holder_name') }}">
+                                    <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" name="account_holder_name" class="form-control" autocomplete="off" placeholder="{{__('Enter Account Holder Name')}}" value="{{ old('account_holder_name') }}">
                                 </div>
                                 @error('account_holder_name')
                                     <span class="text-danger">{{ $message }}</span>

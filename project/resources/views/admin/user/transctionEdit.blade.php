@@ -39,7 +39,7 @@
 
               <div class="form-group">
                 <label for="trnx">{{ __('Transaction ID') }}</label>
-                <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="trnx" name="trnx" placeholder="{{ __('Transaction Date') }}" value="{{ $transaction->trnx}}" readonly required>
+                <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="trnx" name="trnx" placeholder="{{ __('Transaction Date') }}" value="{{ $transaction->trnx}}" readonly required>
               </div>
 
               <div class="form-group">
@@ -49,7 +49,7 @@
 
               <div class="form-group">
                 <label for="remark">{{ __('Remark') }}</label>
-                <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="remark" name="remark" placeholder="{{ __('Enter Remark') }}" value="{{ $transaction->remark}}" required>
+                <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="remark" name="remark" placeholder="{{ __('Enter Remark') }}" value="{{ $transaction->remark}}" required>
               </div>
 
               <div class="form-group">
@@ -64,12 +64,12 @@
 
               <div class="form-group">
                 <label for="sender">{{ __('Sender') }}</label>
-                <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="sender" name="sender" placeholder="{{ __('Enter sender name') }}" value="{{__(json_decode($transaction->data)->sender ?? "")}}">
+                <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="sender" name="sender" placeholder="{{ __('Enter sender name') }}" value="{{__(json_decode($transaction->data)->sender ?? "")}}">
               </div>
 
               <div class="form-group">
                 <label for="receiver">{{ __('Receiver') }}</label>
-                <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="receiver" name="receiver" placeholder="{{ __('Enter receiver name') }}" value="{{__(json_decode($transaction->data)->receiver ?? "")}}">
+                <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="receiver" name="receiver" placeholder="{{ __('Enter receiver name') }}" value="{{__(json_decode($transaction->data)->receiver ?? "")}}">
               </div>
 
               <button type="submit" id="submit-btn" class="btn btn-primary w-100 mt-2">{{ __('Update') }}</button>

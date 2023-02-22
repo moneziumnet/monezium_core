@@ -33,7 +33,7 @@
 
             <div class="form-group">
                 <label for="title">{{ __('Recent Theme Section Title') }} *</label>
-                <input type="text"  pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="title" name="checkout_theme_title"  placeholder="{{ __('Title') }}" value="{{ $ps->checkout_theme_title }}" required>
+                <input type="text"  pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="title" name="checkout_theme_title"  placeholder="{{ __('Title') }}" value="{{ $ps->checkout_theme_title }}" required>
             </div>
 
             <div class="form-group">

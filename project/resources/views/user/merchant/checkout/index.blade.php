@@ -156,7 +156,7 @@
                   @csrf
                   <div class="form-group mb-3 mt-3">
                       <label class="form-label required">{{__('Title')}}</label>
-                      <input name="name" id="name" class="form-control" placeholder="{{__('Title')}}" type="text" pattern="[^()/><\][\\;&$@!|]+"  required>
+                      <input name="name" id="name" class="form-control" placeholder="{{__('Title')}}" type="text" pattern="[^À-ž()/><\][\\;&$@!|]+"  required>
                   </div>
 
                   <div class="form-group mb-3">

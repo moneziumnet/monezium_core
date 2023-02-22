@@ -28,7 +28,7 @@
 
           <div class="form-group">
             <label for="inp-title">{{  __('Error Title')  }}</label>
-            <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="inp-title" name="error_title"  placeholder="{{ __('Enter Error Title') }}" value="{{ $gs->error_title }}" required>
+            <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="inp-title" name="error_title"  placeholder="{{ __('Enter Error Title') }}" value="{{ $gs->error_title }}" required>
           </div>
 
           <div class="form-group">

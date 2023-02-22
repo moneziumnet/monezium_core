@@ -29,7 +29,7 @@
             <div class="col-md-12">
                 <div class="form-group">
                     <label for="inp-sid">{{  __('Account Sid')  }}</label>
-                    <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="inp-sid" name="twilio_account_sid"  placeholder="{{ __('Account Sid') }}" value="{{ $gs->twilio_account_sid }}">
+                    <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="inp-sid" name="twilio_account_sid"  placeholder="{{ __('Account Sid') }}" value="{{ $gs->twilio_account_sid }}">
                 </div>
             </div>
 

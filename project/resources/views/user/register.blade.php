@@ -44,11 +44,11 @@
                 </div>
                 <div class="col-sm-6">
                     <label for="name" class="form-label">@lang('Your First Name')</label>
-                    <input type="text" pattern="[^()/><\][\\\-;&$@!|]+" id="name" name="firstname" class="form-control form--control" required>
+                    <input type="text" pattern="[^À-ž()/><\][\\\-;&$@!|]+" id="name" name="firstname" class="form-control form--control" required>
                 </div>
                 <div class="col-sm-6">
                     <label for="name" class="form-label">@lang('Your Last Name')</label>
-                    <input type="text" pattern="[^()/><\][\\\-;&$@!|]+" id="name" name="lastname" class="form-control form--control" required>
+                    <input type="text" pattern="[^À-ž()/><\][\\\-;&$@!|]+" id="name" name="lastname" class="form-control form--control" required>
                 </div>
                 <div class="col-sm-6">
                     <label for="customer_dob" class="form-label">@lang('Your Birthday')</label>
@@ -65,19 +65,19 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="inp-name" class="form-label">{{ __('Address') }}</label>
-                        <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control form--control" id="address" name="address" placeholder="{{ __('Enter Address') }}" value="" required>
+                        <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control form--control" id="address" name="address" placeholder="{{ __('Enter Address') }}" value="" required>
                     </div>
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="inp-name" class="form-label">{{ __('City') }}</label>
-                        <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control form--control" id="city" name="city" placeholder="{{ __('Enter City') }}" value="" required>
+                        <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control form--control" id="city" name="city" placeholder="{{ __('Enter City') }}" value="" required>
                     </div>
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="inp-name" class="form-label">{{ __('Zip Code') }}</label>
-                        <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control form--control" id="zip" name="zip" placeholder="{{ __('Enter Zip Code') }}" value="" required>
+                        <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control form--control" id="zip" name="zip" placeholder="{{ __('Enter Zip Code') }}" value="" required>
                     </div>
                 </div>
                 <div class="col-sm-6">
@@ -108,19 +108,19 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="personal-code" class="form-label">{{ __('Personal Code/Number') }}</label>
-                                <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="private-input form-control form--control" id="personal_code" name="personal_code" placeholder="{{ __('Enter Personal Code/Number') }}" value="" required>
+                                <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="private-input form-control form--control" id="personal_code" name="personal_code" placeholder="{{ __('Enter Personal Code/Number') }}" value="" required>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="your-id" class="form-label">{{ __('Your ID Number') }}</label>
-                                <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="private-input form-control form--control" id="your_id" name="your_id" placeholder="{{ __('Enter Your ID Number') }}" value="" required>
+                                <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="private-input form-control form--control" id="your_id" name="your_id" placeholder="{{ __('Enter Your ID Number') }}" value="" required>
                             </div>
                         </div>
                         <div class="col-sm-6 mt-3">
                             <div class="form-group">
                                 <label for="your-id" class="form-label" required>{{ __('Provider Authority Name') }}</label>
-                                <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="private-input form-control form--control" id="issued_authority" name="issued_authority" placeholder="{{ __('Enter Provider Authority Name') }}" value="" required>
+                                <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="private-input form-control form--control" id="issued_authority" name="issued_authority" placeholder="{{ __('Enter Provider Authority Name') }}" value="" required>
                             </div>
                         </div>
                         <div class="col-sm-6 mt-3">
@@ -142,7 +142,7 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="dob" class="form-label">{{ __('Company Name') }}</label>
-                                <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="company-input form-control form--control" id="company_name"name="company_name" placeholder="{{ __('Enter Company Name') }}" value="">
+                                <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="company-input form-control form--control" id="company_name"name="company_name" placeholder="{{ __('Enter Company Name') }}" value="">
                             </div>
                         </div>
                         <div class="col-sm-6">
@@ -162,19 +162,19 @@
                         <div class="col-sm-6 mt-3">
                             <div class="form-group">
                                 <label for="inp-name" class="form-label">{{ __('Company Address') }}</label>
-                                <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="company-input form-control form--control" id="company_address" name="company_address" placeholder="{{ __('Enter Company Address') }}" value="">
+                                <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="company-input form-control form--control" id="company_address" name="company_address" placeholder="{{ __('Enter Company Address') }}" value="">
                             </div>
                         </div>
                         <div class="col-sm-6 mt-3">
                             <div class="form-group">
                                 <label for="inp-name" class="form-label">{{ __('Company City') }}</label>
-                                <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="company-input form-control form--control" id="company_city" name="company_city" placeholder="{{ __('Enter Company City') }}" value="">
+                                <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="company-input form-control form--control" id="company_city" name="company_city" placeholder="{{ __('Enter Company City') }}" value="">
                             </div>
                         </div>
                         <div class="col-sm-6 mt-3">
                             <div class="form-group">
                                 <label for="inp-name" class="form-label">{{ __('Company ZipCode') }}</label>
-                                <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="company-input form-control form--control" id="company_zipcode" name="company_zipcode" placeholder="{{ __('Enter Company ZipCode') }}" value="">
+                                <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="company-input form-control form--control" id="company_zipcode" name="company_zipcode" placeholder="{{ __('Enter Company ZipCode') }}" value="">
                             </div>
                         </div>
                         <div class="col-sm-6 mt-3">
@@ -191,13 +191,13 @@
                         <div class="col-sm-6 mt-3">
                             <div class="form-group">
                                 <label for="dob" class="form-label">{{ __('Registration No') }}</label>
-                                <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="company-input form-control form--control" id="company_reg_no"name="company_reg_no" placeholder="{{ __('Enter Company Registration No') }}" value="">
+                                <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="company-input form-control form--control" id="company_reg_no"name="company_reg_no" placeholder="{{ __('Enter Company Registration No') }}" value="">
                             </div>
                         </div>
                         <div class="col-sm-6 mt-3">
                             <div class="form-group">
                                 <label for="dob" class="form-label">{{ __('VAT No') }}</label>
-                                <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="company-input form-control form--control" id="company_vat_no"name="company_vat_no" placeholder="{{ __('Enter Company VAT No') }}" value="">
+                                <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="company-input form-control form--control" id="company_vat_no"name="company_vat_no" placeholder="{{ __('Enter Company VAT No') }}" value="">
                             </div>
                         </div>
                         <div class="col-sm-6 mt-3">

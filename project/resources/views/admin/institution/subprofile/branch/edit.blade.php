@@ -31,7 +31,7 @@
           {{ csrf_field() }}
               <div class="form-group">
                 <label for="inp-name">{{ __('Branch Name') }}</label>
-                <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="inp-branch-name" name="branch_name" placeholder="{{ __('Enter Branch Name') }}" value="{{$data->name}}" required>
+                <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="inp-branch-name" name="branch_name" placeholder="{{ __('Enter Branch Name') }}" value="{{$data->name}}" required>
               </div>
           <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Update') }}</button>
         </form>

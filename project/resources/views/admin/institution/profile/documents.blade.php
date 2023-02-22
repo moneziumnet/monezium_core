@@ -47,7 +47,7 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="full-name">{{ __('Document Name') }}</label>
-                  <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="document_name" name="document_name" placeholder="{{ __('Document Name') }}" value="" required>
+                  <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="document_name" name="document_name" placeholder="{{ __('Document Name') }}" value="" required>
                 </div>
               </div>
 

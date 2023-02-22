@@ -27,13 +27,13 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="full-name">{{ __('Contact Type') }}</label>
-                                    <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="contact" name="contact" placeholder="{{ __('Contact Type') }}" value="" required>
+                                    <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="contact" name="contact" placeholder="{{ __('Contact Type') }}" value="" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="full-name">{{ __('Name') }}</label>
-                                    <input type="text" pattern="[^()/><\][\\\-;&$@!|]+" class="form-control" id="full_name" name="fullname" placeholder="{{ __('Enter Name') }}" value="" required>
+                                    <input type="text" pattern="[^À-ž()/><\][\\\-;&$@!|]+" class="form-control" id="full_name" name="fullname" placeholder="{{ __('Enter Name') }}" value="" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -45,7 +45,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="personal-code">{{ __('Personal Code/Number') }}</label>
-                                    <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="personal-code" name="personal_code" placeholder="{{ __('Enter Personal Code/Number') }}" value="">
+                                    <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="personal-code" name="personal_code" placeholder="{{ __('Enter Personal Code/Number') }}" value="">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -64,19 +64,19 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="your-address">{{ __('Address') }}</label>
-                                    <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="your-address" name="your_address" placeholder="{{ __('Enter Address') }}" value="">
+                                    <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="your-address" name="your_address" placeholder="{{ __('Enter Address') }}" value="">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="c_city">{{ __('Your City') }}</label>
-                                    <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="c_city" name="c_city" placeholder="{{ __('Enter City') }}" value="">
+                                    <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="c_city" name="c_city" placeholder="{{ __('Enter City') }}" value="">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="c_zipcode">{{ __('Zip Code') }}</label>
-                                    <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="c_zipcode" name="c_zipcode" placeholder="{{ __('Enter Zip Code') }}" value="">
+                                    <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="c_zipcode" name="c_zipcode" placeholder="{{ __('Enter Zip Code') }}" value="">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -93,14 +93,14 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="your-id">{{ __('Your ID Number') }}</label>
-                                    <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="your-id" name="your_id" placeholder="{{ __('Enter Your ID Number') }}" value="">
+                                    <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="your-id" name="your_id" placeholder="{{ __('Enter Your ID Number') }}" value="">
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="your-id" required>{{ __('Provider Authority Name') }}</label>
-                                    <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="issued_authority" name="issued_authority" placeholder="{{ __('Enter Provider Authority Name') }}" value="">
+                                    <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="issued_authority" name="issued_authority" placeholder="{{ __('Enter Provider Authority Name') }}" value="">
                                 </div>
                             </div>
                             <div class="col-md-6">

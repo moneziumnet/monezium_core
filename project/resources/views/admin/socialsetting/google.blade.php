@@ -32,7 +32,7 @@
               <div class="form-group">
                 <label for="inp-name">{{ __('Client ID') }} *</label>
                 <small>{{ __('(Get Your Client ID from console.cloud.google.com)') }}</small>
-                <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="input-field" placeholder="{{ __('Enter Client ID') }}" name="gclient_id" value="{{ $data->gclient_id }}" required="">
+                <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="input-field" placeholder="{{ __('Enter Client ID') }}" name="gclient_id" value="{{ $data->gclient_id }}" required="">
               </div>
 
               <div class="form-group">

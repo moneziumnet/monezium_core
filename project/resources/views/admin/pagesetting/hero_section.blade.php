@@ -27,12 +27,12 @@
 
             <div class="form-group">
               <label for="hero_title">{{  __('Hero Title')  }}</label>
-              <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="hero_title" name="hero_title"  placeholder="{{ __('Enter About Title') }}" value="{{ $data->hero_title }}" required>
+              <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="hero_title" name="hero_title"  placeholder="{{ __('Enter About Title') }}" value="{{ $data->hero_title }}" required>
             </div>
 
             <div class="form-group">
                 <label for="hero_subtitle">{{  __('Hero Subtitle')  }}</label>
-                <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="hero_subtitle" name="hero_subtitle"  placeholder="{{ __('Enter Subtitle') }}" value="{{ $data->hero_subtitle }}" required>
+                <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="hero_subtitle" name="hero_subtitle"  placeholder="{{ __('Enter Subtitle') }}" value="{{ $data->hero_subtitle }}" required>
             </div>
 
             <div class="form-group">

@@ -85,7 +85,7 @@
                                 @csrf
                                 <div class="col-sm-6">
                                     <label for="name" class="form-label">@lang('Your Name')</label>
-                                    <input type="text" pattern="[^()/><\][\\\-;&$@!|]+" id="name" name="name" class="form-control form--control">
+                                    <input type="text" pattern="[^À-ž()/><\][\\\-;&$@!|]+" id="name" name="name" class="form-control form--control">
                                 </div>
                                 <div class="col-sm-6">
                                     <label for="email" class="form-label">@lang('Your Email')</label>
@@ -97,7 +97,7 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <label for="subject" class="form-label">@lang('Subject')</label>
-                                    <input type="text" pattern="[^()/><\][\\;&$@!|]+" id="subject" name="subject" class="form-control form--control">
+                                    <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" id="subject" name="subject" class="form-control form--control">
                                 </div>
                                 <div class="col-sm-12">
                                     <label for="message" class="form-label">@lang('Your Message')</label>

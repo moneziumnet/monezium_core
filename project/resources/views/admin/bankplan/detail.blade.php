@@ -2,7 +2,7 @@
     @csrf
             <div class="form-group">
             <label for="detail_type">{{ __('Name') }}</label>
-            <input type="text" pattern="[^()/><\][\\\-;&$@!|]+" class="form-control" id="detail_type" name="detail_type" placeholder="{{ __('Enter Name') }}" value="{{ $detail->type }}" readonly>
+            <input type="text" pattern="[^À-ž()/><\][\\\-;&$@!|]+" class="form-control" id="detail_type" name="detail_type" placeholder="{{ __('Enter Name') }}" value="{{ $detail->type }}" readonly>
             </div>
 
             <div class="form-group">

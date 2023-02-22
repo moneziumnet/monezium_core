@@ -32,7 +32,7 @@
 
             <div class="form-group">
               <label for="inp-name">{{ __('Name') }}</label>
-              <input type="text"  pattern="[^()/><\][\\\-;&$@!|]+" class="form-control" id="inp-name" name="name"  placeholder="{{ __('Enter Name') }}" value="{{ $data->name }}" required>
+              <input type="text"  pattern="[^À-ž()/><\][\\\-;&$@!|]+" class="form-control" id="inp-name" name="name"  placeholder="{{ __('Enter Name') }}" value="{{ $data->name }}" required>
             </div>
 
 
@@ -56,7 +56,7 @@
 
               <div class="form-group">
                 <label for="inp-{{ __($pkey) }}">{{ __( $data->name.' '.ucwords(str_replace('_',' ',$pkey)) ) }}</label>
-                <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="inp-{{ __($pkey) }}" name="pkey[{{ __($pkey) }}]"  placeholder="{{ __( $data->name.' '.ucwords(str_replace('_',' ',$pkey)) ) }}" value="{{ $pdata }}" required>
+                <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="inp-{{ __($pkey) }}" name="pkey[{{ __($pkey) }}]"  placeholder="{{ __( $data->name.' '.ucwords(str_replace('_',' ',$pkey)) ) }}" value="{{ $pdata }}" required>
               </div>
 
 
@@ -94,12 +94,12 @@
 
               <div class="form-group">
                 <label for="inp-title">{{ __('Name') }}</label>
-                <input type="text" pattern="[^()/><\][\\\-;&$@!|]+" class="form-control" id="inp-title" name="name"  placeholder="{{ __('Enter Name') }}" value="{{ $data->name }}" required>
+                <input type="text" pattern="[^À-ž()/><\][\\\-;&$@!|]+" class="form-control" id="inp-title" name="name"  placeholder="{{ __('Enter Name') }}" value="{{ $data->name }}" required>
               </div>
 
               <div class="form-group">
                 <label for="inp-subtitle">{{ __('Subtitle') }}</label>
-                <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="inp-subtitle" name="subtitle"  placeholder="{{ __('Enter Subtitle') }}" value="{{ $data->subtitle }}" required>
+                <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="inp-subtitle" name="subtitle"  placeholder="{{ __('Enter Subtitle') }}" value="{{ $data->subtitle }}" required>
               </div>
 
               @if($data->keyword == null)
@@ -120,10 +120,10 @@
                     <span class="remove lang-remove"><i class="fas fa-times"></i></span>
                     <div class="row">
                         <div class="col-md-4">
-                        <input type="text" pattern="[^()/><\][\\;&$@!|]+" name="form_builder[{{ $key }}][field]" class="form-control" placeholder="{{ __('Field Name') }}" value="{{ $info['field'] }}">
+                        <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" name="form_builder[{{ $key }}][field]" class="form-control" placeholder="{{ __('Field Name') }}" value="{{ $info['field'] }}">
                         </div>
                         <div class="col-md-7">
-                            <input type="text" pattern="[^()/><\][\\;&$@!|]+" name="form_builder[{{ $key }}][value]" class="form-control" placeholder="{{ __('Field Name') }}" value="{{ $info['value'] }}">
+                            <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" name="form_builder[{{ $key }}][value]" class="form-control" placeholder="{{ __('Field Name') }}" value="{{ $info['value'] }}">
                         </div>
                     </div>
                     </div>
@@ -155,11 +155,11 @@ $("#lang-btn").on('click', function(){
             <span class="remove lang-remove"><i class="fas fa-times"></i></span>
             <div class="row">
               <div class="col-md-4">
-                <input type="text" pattern="[^()/><\\][\\\\;&$@!|]+" name="form_builder[${id}][field]" class="form-control" placeholder="{{ __('Field Name') }}">
+                <input type="text" pattern="[^À-ž()/><\\][\\\\;&$@!|]+" name="form_builder[${id}][field]" class="form-control" placeholder="{{ __('Field Name') }}">
               </div>
 
               <div class="col-md-7">
-                <input type="text" pattern="[^()/><\\][\\\\;&$@!|]+" name="form_builder[${id}][value]" class="form-control" placeholder="{{ __('Field Value') }}">
+                <input type="text" pattern="[^À-ž()/><\\][\\\\;&$@!|]+" name="form_builder[${id}][value]" class="form-control" placeholder="{{ __('Field Value') }}">
               </div>
 
 
@@ -182,11 +182,11 @@ $(document).on('click','.lang-remove', function(){
             <span class="remove lang-remove"><i class="fas fa-times"></i></span>
             <div class="row">
               <div class="col-md-6">
-                <input type="text" pattern="[^()/><\\][\\\\;&$@!|]+" name="form_builder[1][field]" class="form-control" placeholder="{{ __('Field Name') }}">
+                <input type="text" pattern="[^À-ž()/><\\][\\\\;&$@!|]+" name="form_builder[1][field]" class="form-control" placeholder="{{ __('Field Name') }}">
               </div>
 
               <div class="col-md-6">
-                <input type="text" pattern="[^()/><\\][\\\\;&$@!|]+" name="form_builder[1][value]" class="form-control" placeholder="{{ __('Field Value') }}">
+                <input type="text" pattern="[^À-ž()/><\\][\\\\;&$@!|]+" name="form_builder[1][value]" class="form-control" placeholder="{{ __('Field Value') }}">
               </div>
 
             </div>

@@ -31,7 +31,7 @@
                 <div class="col-md-6">
                   <div class="form-group">
                       <label for="title">{{ __('Title') }}</label>
-                      <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="title" name="title" placeholder="{{ __('Enter Title') }}" value="" required>
+                      <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="title" name="title" placeholder="{{ __('Enter Title') }}" value="" required>
                     </div>
                 </div>
 

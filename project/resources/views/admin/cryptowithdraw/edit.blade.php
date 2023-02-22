@@ -32,12 +32,12 @@
 
               <div class="form-group">
                 <label for="customer_name">{{ __('Customer Name') }}</label>
-                <input type="text" pattern="[^()/><\][\\\-;&$@!|]+" class="form-control" id="customer_name" name="customer_name" value="{{ $withdraw->user->company_name ?? $withdraw->user->name}}" readonly required>
+                <input type="text" pattern="[^À-ž()/><\][\\\-;&$@!|]+" class="form-control" id="customer_name" name="customer_name" value="{{ $withdraw->user->company_name ?? $withdraw->user->name}}" readonly required>
               </div>
 
               <div class="form-group">
                 <label for="sender_address">{{ __('Customer Crypto Address') }}</label>
-                <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="sender_address" name="sender_address" value="{{ $withdraw->sender_address}}" readonly required>
+                <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="sender_address" name="sender_address" value="{{ $withdraw->sender_address}}" readonly required>
               </div>
 
               <div class="form-group">
@@ -47,7 +47,7 @@
 
               <div class="form-group">
                 <label for="hash">{{ __('Hash') }}</label>
-                <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="hash" name="hash" placeholder="{{ __('Enter Hash Value') }}" value="{{$withdraw->hash}}" required>
+                <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="hash" name="hash" placeholder="{{ __('Enter Hash Value') }}" value="{{$withdraw->hash}}" required>
               </div>
 
               <button type="submit" id="submit-btn" class="btn btn-primary w-100 mt-2">{{ __('Save') }}</button>

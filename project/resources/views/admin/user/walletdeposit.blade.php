@@ -1,15 +1,15 @@
  <div class="form-group">
                             <label for="fullname">{{ __('Full Name') }}</label>
-                            <input type="text" pattern="[^()/><\][\\\-;&$@!|]+" class="form-control" id="fullname" name="fullname" placeholder="{{ __('Enter Name') }}" required>
+                            <input type="text" pattern="[^À-ž()/><\][\\\-;&$@!|]+" class="form-control" id="fullname" name="fullname" placeholder="{{ __('Enter Name') }}" required>
 
                             <label >{{ __('Address') }}</label>
-                            <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="address" name="address" placeholder="{{ __('Enter Your Address') }}"   required>
+                            <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="address" name="address" placeholder="{{ __('Enter Your Address') }}"   required>
 
                             <label >{{ __('Bank') }}</label>
-                            <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="bank" name="bank" placeholder="{{ __('Enter Bank') }}"   required>
+                            <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="bank" name="bank" placeholder="{{ __('Enter Bank') }}"   required>
 
                             <label >{{ __('SWIFT') }} </label>
-                            <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="swift" name="swift" placeholder="{{ __('Enter Swift') }}"  required>
+                            <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="swift" name="swift" placeholder="{{ __('Enter Swift') }}"  required>
 
                             <label >{{ __('Amount') }} </label>
                             <input type="number" class="form-control" id="amount" name="amount" placeholder="{{ __('Enter Amount') }}"  step="any" required>

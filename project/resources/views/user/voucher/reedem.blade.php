@@ -26,7 +26,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-label ">@lang('Voucher Code : ')</div>
-                            <input type="text" pattern="[^()/><\][\\;&$@!|]+" name="code" id="code" class="form-control shadow-none mb-2"  required>
+                            <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" name="code" id="code" class="form-control shadow-none mb-2"  required>
                         </div>
 
                         <div class="col-md-12 mb-3">

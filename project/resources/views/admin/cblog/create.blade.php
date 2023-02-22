@@ -32,12 +32,12 @@
 
             <div class="form-group">
                 <label for="inp-name">{{ __('Name') }}</label>
-                <input type="text" pattern="[^()/><\][\\\-;&$@!|]+" class="form-control" id="inp-name" name="name"  placeholder="{{ __('Enter Name') }}" value="" required>
+                <input type="text" pattern="[^À-ž()/><\][\\\-;&$@!|]+" class="form-control" id="inp-name" name="name"  placeholder="{{ __('Enter Name') }}" value="" required>
             </div>
 
             <div class="form-group">
                 <label for="inp-slug">{{ __('Slug') }}</label>
-                <input type="text" pattern="[^()/><\][\\;&$@!|]+" class="form-control" id="inp-slug" name="slug"  placeholder="{{ __('Enter Slug') }}" value="" required>
+                <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="inp-slug" name="slug"  placeholder="{{ __('Enter Slug') }}" value="" required>
             </div>
             <div class="form-group ">
                 <label for="exampleInputPassword1">{{__("category Color")}}</label>
