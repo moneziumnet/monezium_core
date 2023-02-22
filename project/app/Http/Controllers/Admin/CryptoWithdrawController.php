@@ -124,7 +124,10 @@ class CryptoWithdrawController extends Controller
                     $torefWallet = Wallet::where('user_id', $user->referral_id)->where('wallet_type', 8)->where('currency_id', $data->currency_id)->first();
                     RPC_ETH('personal_unlockAccount',[$torefWallet->wallet_no, $torefWallet->keyword ?? '', 30]);
                     $tokenContract = $torefWallet->currency->address;
-                    erc20_token_transfer($tokenContract, $torefWallet->wallet_no, $toWallet->wallet_no, $transaction_custom_cost * $crypto_rate, $torefWallet->keyword);
+                    $result = erc20_token_transfer($tokenContract, $torefWallet->wallet_no, $toWallet->wallet_no, $transaction_custom_cost * $crypto_rate, $torefWallet->keyword);
+                    if (json_decode($result)->code == 1){
+                        return redirect()->back()->with(array('error' => 'Ethereum client error: '.json_decode($result)->message));
+                    }
                 }
                 $trans = new Transaction();
                 $trans->trnx = str_rand();
@@ -153,7 +156,10 @@ class CryptoWithdrawController extends Controller
             else {
                 RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
                 $tokenContract = $fromWallet->currency->address;
-                erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $toWallet->wallet_no, $data->amount - $transaction_custom_cost * $crypto_rate, $fromWallet->keyword);
+                $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $toWallet->wallet_no, $data->amount - $transaction_custom_cost * $crypto_rate, $fromWallet->keyword);
+                if (json_decode($result)->code == 1){
+                    return redirect()->back()->with(array('error' => 'Ethereum client error: '.json_decode($result)->message));
+                }
             }
             $trnx              = new Transaction();
             $trnx->trnx        = str_rand();

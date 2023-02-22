@@ -936,7 +936,10 @@ class UserController extends Controller
                     else {
                         RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
                         $tokenContract = $wallet->currency->address;
-                        erc20_token_transfer($tokenContract, $wallet->wallet_no, $trans_wallet->wallet_no, $transaction_custom_cost * $rate, $wallet->keyword);
+                        $result = erc20_token_transfer($tokenContract, $wallet->wallet_no, $trans_wallet->wallet_no, $transaction_custom_cost * $rate, $wallet->keyword);
+                        if (json_decode($result)->code == 1){
+                            return redirect()->back()->with(array('error' => 'Ethereum client error: '.json_decode($result)->message));
+                        }
                     }
                 }
 
@@ -974,7 +977,10 @@ class UserController extends Controller
                 else {
                     RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
                     $tokenContract = $wallet->currency->address;
-                    erc20_token_transfer($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $transaction_global_cost*$rate, $wallet->keyword);
+                    $result = erc20_token_transfer($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $transaction_global_cost*$rate, $wallet->keyword);
+                    if (json_decode($result)->code == 1){
+                        return redirect()->back()->with(array('error' => 'Ethereum client error: '.json_decode($result)->message));
+                    }
                 }
             }
 
@@ -1041,7 +1047,10 @@ class UserController extends Controller
                         RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
                         $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
                         $tokenContract = $wallet->currency->address;
-                        erc20_token_transfer($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $finalamount, $wallet->keyword);
+                        $result = erc20_token_transfer($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $finalamount, $wallet->keyword);
+                        if (json_decode($result)->code == 1){
+                            return redirect()->back()->with(array('error' => 'Ethereum client error: '.json_decode($result)->message));
+                        }
                     }
                 }
                 $to = $receiver->email;

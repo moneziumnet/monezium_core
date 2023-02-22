@@ -413,6 +413,9 @@ class MerchantCampaignController extends Controller
                     RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
                     $tokenContract = $wallet->currency->address;
                     $result = erc20_token_transfer($tokenContract, $wallet->wallet_no, $trans_wallet->wallet_no, $request->amount, $wallet->keyword);
+                    if (json_decode($result)->code == 1){
+                        return redirect()->back()->with(array('error' => 'Ethereum client error: '.json_decode($result)->message));
+                    }
                 }
                 $trnx              = new ModelsTransaction();
                 $trnx->trnx        = str_rand();

@@ -190,6 +190,9 @@ class SendController extends Controller
                     RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
                     $tokenContract = $wallet->currency->address;
                     $result = erc20_token_transfer($tokenContract, $wallet->wallet_no, $trans_wallet->wallet_no, $transaction_custom_cost*$rate, $wallet->keyword);
+                    if (json_decode($result)->code == 1){
+                        return redirect()->back()->with(array('error' => 'Ethereum client error: '.json_decode($result)->message));
+                    }
                 }
             }
 
@@ -229,6 +232,9 @@ class SendController extends Controller
                 RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
                 $tokenContract = $wallet->currency->address;
                 $result = erc20_token_transfer($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $transaction_global_cost*$rate, $wallet->keyword);
+                if (json_decode($result)->code == 1){
+                    return redirect()->back()->with(array('error' => 'Ethereum client error: '.json_decode($result)->message));
+                }
             }
         }
 
@@ -253,6 +259,9 @@ class SendController extends Controller
                     RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
                     $tokenContract = $wallet->currency->address;
                     $result = erc20_token_transfer($tokenContract, $wallet->wallet_no, $towallet->wallet_no, (float)$request->amount, $wallet->keyword);
+                    if (json_decode($result)->code == 1){
+                        return redirect()->back()->with(array('error' => 'Ethereum client error: '.json_decode($result)->message));
+                    }
                 }
             }
 

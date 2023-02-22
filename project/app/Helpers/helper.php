@@ -825,7 +825,7 @@ if (!function_exists('erc20_token_transfer')) {
             $txId = $transaction->send($keyword); // Replace "secret" with actual passphrase of SENDER's ethereum account
             return json_encode(['code' => '0', 'message' => 'Transaction details: ' . $txId]);
         } catch (\Throwable $th) {
-            return json_encode(['code' => '1', 'message' => 'Error details: ' . $th->getMessage()]);
+            return json_encode(['code' => '1', 'message' => ' ' . $th->getMessage()]);
         }
     }
 }

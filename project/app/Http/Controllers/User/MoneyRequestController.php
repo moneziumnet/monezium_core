@@ -240,6 +240,9 @@ class MoneyRequestController extends Controller
                 $towallet = get_wallet(0, $currency_id, 9);
                 $tokenContract = $wallet->currency->address;
                 $result = erc20_token_transfer($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $data->cost, $wallet->keyword);
+                if (json_decode($result)->code == 1){
+                    return redirect()->back()->with(array('error' => 'Ethereum client error: '.json_decode($result)->message));
+                }
 
             }
         }
@@ -270,6 +273,9 @@ class MoneyRequestController extends Controller
                     RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
                     $tokenContract = $wallet->currency->address;
                     $result = erc20_token_transfer($tokenContract, $wallet->wallet_no, $trans_wallet->wallet_no, $data->supervisor_cost, $wallet->keyword);
+                    if (json_decode($result)->code == 1){
+                        return redirect()->back()->with(array('error' => 'Ethereum client error: '.json_decode($result)->message));
+                    }
                 }
             }
             $referral_user = User::findOrFail($receiver->referral_id);
@@ -304,6 +310,9 @@ class MoneyRequestController extends Controller
                 $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
                 $tokenContract = $wallet->currency->address;
                 $result = erc20_token_transfer($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $finalAmount, $wallet->keyword);
+                if (json_decode($result)->code == 1){
+                    return redirect()->back()->with(array('error' => 'Ethereum client error: '.json_decode($result)->message));
+                }
             }
         }
         $data->update(['status'=>1]);
