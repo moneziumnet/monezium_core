@@ -168,15 +168,5 @@ class UserBankTransactionController extends Controller
         return view('user.bank.summary',compact('user','transactions', 'search', 'remark_list', 's_time', 'e_time', 'balance' , 'flag'));
     }
 
-    public function trxDetails($id)
-    {
-        $user = Auth::user();
-        $transaction = Transaction::where('id',$id)->whereUserId(auth()->id())->first();
-        $transaction->currency = Currency::whereId($transaction->currency_id)->first();
-        if(!$transaction){
-            return response('empty');
-        }
-        return view('user.trx_details',compact('user','transaction'));
-    }
 
 }
