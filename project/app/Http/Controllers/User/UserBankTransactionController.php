@@ -127,7 +127,7 @@ class UserBankTransactionController extends Controller
 
         }
         usort($compare_list, function($a, $b) {
-            return strtotime($a['date']) - strtotime($b['date']);
+            return strtotime($b['date']) - strtotime($a['date']);
         });
         $data['transactions'] = $compare_list;
 
