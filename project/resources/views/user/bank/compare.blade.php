@@ -49,7 +49,7 @@
                             {{-- @php
                                 $i = ($transactions->currentpage() - 1) * $transactions->perpage() + 1;
                             @endphp --}}
-                                @foreach (json_decode(json_encode($transactions), true) as $key=>$data)
+                                @foreach (json_decode(json_encode($transactions, true)) as $key=>$data)
                                 <tr>
                                     <td data-label="@lang('Date')">{{dateFormat($data->date,'d-M-Y')}} </br> {{__(str_dis($data->trnx_no))}} </td>
 
