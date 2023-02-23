@@ -46,7 +46,7 @@ class ReportTransactionController extends Controller
             $temp['sender_name'] = $value->user->company_name ?? $value->user->name;
             $beneficiary = Beneficiary::findOrFail($value->beneficiary_id);
             $temp['receiver_name'] = $beneficiary->name;
-            $bank = SubInsBank::findOrFail($value->subbank);
+            $bank = SubInsBank::where('id', $value->subbank)->first();
             $temp['bank_name'] = $bank->name ?? null;
             $currency = Currency::findOrFail($value->currency_id);
             $temp['amount'] = amount($value->final_amount, $currency->type, 2);
@@ -78,7 +78,7 @@ class ReportTransactionController extends Controller
             $send_info = WebhookRequest::where('transaction_id', 'LIKE', '%'.$value->deposit_number)->orWhere('reference', 'LIKE', '%'.$value->deposit_number)->with('currency')->first();
             $temp['sender_name'] = $send_info->sender_name ?? null;
             $temp['receiver_name'] = $value->user->company_name ?? $value->user->name;
-            $bank = SubInsBank::findOrFail($value->sub_bank_id);
+            $bank = SubInsBank::where('id', $value->sub_bank_id)->first();
             $temp['bank_name'] = $bank->name ?? null;
             $currency = Currency::findOrFail($value->currency_id);
             $temp['amount'] = amount($value->amount, $currency->type, 2);
