@@ -34,19 +34,6 @@
                                 <th>{{ __('Action') }}</th>
 
                             </tr>
-                            <tfoot>
-                                <tr>
-                                    <th>{{ __('Date') }}</th>
-                                    <th>{{ __('Transaction ID') }}</th>
-                                    <th>{{ __('Bank Name') }}</th>
-                                    <th>{{ __('Sender') }}</th>
-                                    <th>{{ __('Receiver') }}</th>
-                                    <th>{{ __('Amount') }}</th>
-                                    <th>{{ __('Type') }}</th>
-                                    <th>{{ __('Status') }}</th>
-                                    <th>{{ __('Action') }}</th>
-                                </tr>
-                            </tfoot>
                         </thead>
                     </table>
                 </div>
@@ -120,29 +107,29 @@
         "use strict";
         $(document).ready(function () {
 
-            $('#geniustable tfoot th').each(function () {
-                var title = $(this).text();
-                $(this).html('<input type="text" placeholder="Search ' + title + '" />');
-            });
+            // $('#geniustable tfoot th').each(function () {
+            //     var title = $(this).text();
+            //     $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+            // });
         var table = $('#geniustable').DataTable({
             ordering: false,
             processing: true,
             serverSide: true,
             searching: true,
-            initComplete: function () {
-            // Apply the search
-            this.api()
-                .columns()
-                .every(function () {
-                    var that = this;
+            // initComplete: function () {
+            // // Apply the search
+            // this.api()
+            //     .columns()
+            //     .every(function () {
+            //         var that = this;
 
-                    $('input', this.footer()).on('keyup change clear', function () {
-                        if (that.search() !== this.value) {
-                            that.search(this.value).draw();
-                        }
-                    });
-                });
-            },
+            //         $('input', this.footer()).on('keyup change clear', function () {
+            //             if (that.search() !== this.value) {
+            //                 that.search(this.value).draw();
+            //             }
+            //         });
+            //     });
+            // },
             ajax: '{{ route('admin.report.transaction.datatables') }}',
             columns: [
                 { data: 'date', name: 'date' },
