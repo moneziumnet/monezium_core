@@ -393,9 +393,6 @@ Route::prefix('admin')->group(function () {
   Route::group(['middleware' => 'permissions:Report'], function () {
     Route::get('/bank/report/transaction', [ReportTransactionController::class,'index'])->name('admin.report.transaction.index');
     Route::get('/bank/report/transaction/datatables', [ReportTransactionController::class,'datatables'])->name('admin.report.transaction.datatables');
-    Route::get('/bank/report/transaction/account/{id}', [ReportTransactionController::class,'bank_transaction'])->name('admin.report.transaction.account.index');
-    Route::get('/bank/report/all/transaction', [ReportTransactionController::class,'compare_transaction'])->name('admin.report.transaction.all');
-    Route::get('/bank/report/summary/transaction', [ReportTransactionController::class,'summay_fee'])->name('admin.report.transaction.summary');
   });
 
 
