@@ -17,8 +17,8 @@ use App\Models\SubInsBank;
 use App\Models\BankAccount;
 use App\Models\BankGateway;
 use App\Models\Transaction;
-use App\Models\KycRequest;
-use App\Models\LoginActivity;
+use App\Models\Beneficiary;
+use App\Models\WebhookRequest;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
@@ -76,7 +76,63 @@ class UserBankTransactionController extends Controller
 
     public function compare_transaction()
     {
-        $data['transactions'] = Transaction::where('user_id',auth()->id())->whereIn('remark', ['External_Payment', 'Deposit_create' ])->latest()->paginate(20);
+        $balancetransfers = BalanceTransfer::whereUserId(auth()->id())->whereType('other')->orderBy('id','desc')->get();
+        $deposits = DepositBank::orderby('id','desc')->whereUserId(auth()->id())->with('user')->get(10);
+        $compare_list = [];
+        foreach ($balancetransfers as $key => $value) {
+            $temp['user_id'] = $value->user_id;
+            $temp['type'] = 'External Transfer';
+            $temp['trnx_no'] = $value->transaction_no;
+            $temp['sender_name'] = auth()->user()->company_name ?? auth()->user()->name;
+            $beneficiary = Beneficiary::findOrFail($balancetransfers->beneficiary_id);
+            $temp['receiver_name'] = $beneficiary->name;
+            $currency = Currency::findOrFail($value->currency_id);
+            $temp['amount'] = amount($value->final_amount, $currency->type, 2);
+            $temp['currency_code'] = $currency->code;
+            if ($value->status == 0 || $value->status == 3) {
+                $status = 'pending';
+            }
+            else if($value->status == 1) {
+                $status = 'complete';
+            }
+            else{
+                $status = 'reject';
+            }
+            $currency_code = Currency::findOrFail($value->currency_id)->code;
+            $temp['currency_code'] = $currency_code;
+            $temp['status'] = $status;
+            $transaction = Transaction::where('user_id',auth()->id())->whereIn('remark', ['External_Payment', 'Deposit_create' ])->where('reference', 'LIKE', '%'.$data->transaction_no.'%')->orWhere('trnx', $value->transaction_no)->first;
+
+            $temp['tran_id'] = $transaction->id;
+            $temp['data'] = $value->created_at;
+            array_push($compare_list, $temp);
+
+        }
+
+
+        foreach ($deposits as $key => $value) {
+            $temp['user_id'] = $value->user_id;
+            $temp['type'] = 'Bank Deposit';
+            $temp['trnx_no'] = $value->deposit_number;
+            $send_info = WebhookRequest::where('transaction_id', 'LIKE', '%'.$value->deposit_number)->orWhere('reference', 'LIKE', '%'.$value->deposit_number)->with('currency')->first();
+            $temp['sender_name'] = $send_info->sender_name;
+            $temp['receiver_name'] = auth()->user()->company_name ?? auth()->user()->name;
+            $currency = Currency::findOrFail($value->currency_id);
+            $temp['amount'] = amount($value->final_amount, $currency->type, 2);
+            $temp['currency_code'] = $currency->code;
+            $temp['status'] = $value->status;
+            $transaction = Transaction::where('user_id',auth()->id())->whereIn('remark', ['External_Payment', 'Deposit_create' ])->where('reference', 'LIKE', '%'.$data->transaction_no.'%')->orWhere('trnx', $value->transaction_no)->first;
+
+            $temp['tran_id'] = $transaction->id;
+            $temp['data'] = $value->created_at;
+            array_push($compare_list, $temp);
+
+        }
+        usort($compare_list, function($a, $b) {
+            return strtotime($a['date']) - strtotime($b['date']);
+        });
+        $data['transactions'] = $compare_list;
+
         return view('user.bank.compare', $data);
     }
 

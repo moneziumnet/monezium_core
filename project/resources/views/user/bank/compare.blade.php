@@ -39,9 +39,9 @@
                                     <th>@lang('Date') / @lang('Transaction ID')</th>
                                     <th>@lang('Sender')</th>
                                     <th>@lang('Receiver')</th>
-                                    <th >@lang('Description')</th>
                                     <th>@lang('Amount')</th>
-                                    <th>@lang('Fee')</th>
+                                    <th>@lang('Status')</th>
+                                    <th>@lang('Type')</th>
                                     <th class="text-end"  style="padding-right: 28px;">@lang('Details')</th>
                                 </tr>
                             </thead>
@@ -49,29 +49,30 @@
                             @php
                                 $i = ($transactions->currentpage() - 1) * $transactions->perpage() + 1;
                             @endphp
-                                @foreach ($transactions as $key=>$data)
+                                @foreach (json_decode($transactions, true) as $key=>$data)
                                 <tr>
-                                    <!--<td data-label="@lang('No')">
-                                    <div>
-                                        <span class="text-muted">{{ $i++ }}</span>
-                                    </div>
-                                    </td>-->
-                                    <td data-label="@lang('Date')">{{dateFormat($data->created_at,'d-M-Y')}} </br> {{__(str_dis($data->trnx))}} </td>
+                                    <td data-label="@lang('Date')">{{dateFormat($data->date,'d-M-Y')}} </br> {{__(str_dis($data->trnx_no))}} </td>
 
                                     <td data-label="@lang('Sender')">
-                                        {{__(json_decode($data->data)->sender ?? "")}}
+                                        {{__(ucfirst($data->sender_name))}}
                                     </td>
                                     <td data-label="@lang('Receiver')">
-                                        {{__(json_decode($data->data)->receiver ?? "")}}
-                                    </td>
-                                    <td   style="white-space: normal; max-width:400px;" data-label="@lang('Description')">
-                                        {{__(json_decode($data->data)->description ?? "")}} </br> <span class="badge badge-dark">{{ucwords(str_replace('_',' ',$data->remark))}}</span>
+                                        {{__(ucfirst($data->receiver_name))}}
                                     </td>
                                     <td data-label="@lang('Amount')">
-                                        <span class="{{$data->type == '+' ? 'text-success':'text-danger'}}">{{$data->type}} {{amount($data->amount,$data->currency->type,2)}} {{$data->currency->code}}</span>
+                                         {{$data->amount}} {{$data->currency_code}}
                                     </td>
-                                    <td data-label="@lang('Fee')" class="text-end">
-                                        <span class="{{$data->type == '+' ? 'text-danger':'text-danger'}}">{{'-'}} {{amount($data->charge,$data->currency->type,2)}} {{$data->currency->code}}</span>
+                                    <td data-label="@lang('Status')">
+                                        @if ($data->status == 'complete')
+                                        <span class="badge bg-success">{{ __('Completed')}}</span>
+                                      @elseif($data->status == 'reject')
+                                        <span class="badge bg-danger">{{ __('Rejected')}}</span>
+                                      @else
+                                        <span class="badge bg-warning">{{ __('Pending')}}</span>
+                                      @endif
+                                    </td>
+                                    <td data-label="@lang('Type')">
+                                        {{__(ucfirst($data->type))}}
                                     </td>
                                     <td data-label="@lang('Details')" class="text-end">
                                         <button class="btn btn-primary btn-sm details" data-data="{{$data}}">@lang('Details')</button>
@@ -121,11 +122,9 @@
       'use strict';
 
       $('.details').on('click',function () {
-        var url = "{{url('user/transaction/details/')}}"+'/'+$(this).data('data').id
-        var pdf_url = "{{url('user/transaction/details/pdf/')}}"+'/'+$(this).data('data').id
-        $('.trx_details').text($(this).data('data').details)
+        var url = "{{url('user/transaction/details/')}}"+'/'+$(this).data('data').tran_id
+        $('.trx_details').text($(this).data('data').type)
         $('#trx_id').val($(this).data('data').id)
-        $('.print_pdf').attr('href', pdf_url)
         $.get(url,function (res) {
           if(res == 'empty'){
             $('.list-group').html("<p>@lang('No details found!')</p>")
@@ -135,9 +134,6 @@
           $('#modal-success').modal('show')
         })
       })
-      $('.send_email').on('click',function() {
-            $('#modal-success-mail').modal('show');
-        })
     </script>
 
 @endpush
