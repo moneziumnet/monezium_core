@@ -42,7 +42,7 @@
                                     <th>@lang('Amount')</th>
                                     <th>@lang('Status')</th>
                                     <th>@lang('Type')</th>
-                                    <th class="text-end"  style="padding-right: 28px;">@lang('Details')</th>
+                                    <th class="text-end"  style="padding-right: 28px;">@lang('Compare')</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -74,9 +74,9 @@
                                     <td data-label="@lang('Type')">
                                         {{__(ucfirst($data->type))}}
                                     </td>
-                                    <td data-label="@lang('Details')" class="text-end">
+                                    <td data-label="@lang('Compare')" class="text-end">
                                         @if ($data->status == 'complete')
-                                        <button class="btn btn-primary btn-sm details" data-data="{{$data->tran_id}}" data-type="{{$data->type}}">@lang('Details')</button>
+                                        <button class="btn btn-primary btn-sm details" data-data="{{$data->tran_id}}" data-type="{{$data->type}}">@lang('Compare')</button>
                                         @endif
                                     </td>
                                 </tr>

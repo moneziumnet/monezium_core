@@ -23,7 +23,7 @@
                 <form action=""  class="d-flex justify-content-end">
                     <div class="form-group me-3">
                         <select  class="form-control me-2 shadow-none" onChange="window.location.href=this.value">
-                            <option value="{{filter('bankaccount','')}}">@lang('Select Bank Account')</option>
+                            <option value="{{filter('bankaccount','')}}">@lang('All Bank')</option>
                             @foreach ($bankaccounts as $value)
                                 <option value="{{filter('bankaccount',$value->iban)}}" {{request('bankaccount') == $value->iban ? 'selected':''}}>@lang(ucwords($value->iban))</option>
                             @endforeach
