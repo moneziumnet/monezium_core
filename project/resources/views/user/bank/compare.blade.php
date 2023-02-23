@@ -82,7 +82,7 @@
                             </tbody>
                             </table>
                         </div>
-                        {{ $transactions->links() }}
+                        {{-- {{ $transactions->links() }} --}}
                     @endif
                 </div>
             </div>
