@@ -94,7 +94,7 @@ class ReportTransactionController extends Controller
         usort($compare_list, function($a, $b) {
             return strtotime($b['date']) - strtotime($a['date']);
         });
-        $compare_list = json_decode(json_encode($compare_list, true));
+        $datas = json_decode(json_encode($compare_list, true));
 
 
 
