@@ -77,7 +77,7 @@ class UserBankTransactionController extends Controller
     public function compare_transaction()
     {
         $balancetransfers = BalanceTransfer::whereUserId(auth()->id())->whereType('other')->orderBy('id','desc')->get();
-        $deposits = DepositBank::orderby('id','desc')->whereUserId(auth()->id())->with('user')->get(10);
+        $deposits = DepositBank::orderby('id','desc')->whereUserId(auth()->id())->with('user')->get();
         $compare_list = [];
         foreach ($balancetransfers as $key => $value) {
             $temp['user_id'] = $value->user_id;
