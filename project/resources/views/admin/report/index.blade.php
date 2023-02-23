@@ -42,6 +42,9 @@
                                     <th>{{ __('Sender') }}</th>
                                     <th>{{ __('Receiver') }}</th>
                                     <th>{{ __('Amount') }}</th>
+                                    <th>{{ __('Type') }}</th>
+                                    <th>{{ __('Status') }}</th>
+                                    <th>{{ __('Action') }}</th>
                                 </tr>
                             </tfoot>
                         </thead>
