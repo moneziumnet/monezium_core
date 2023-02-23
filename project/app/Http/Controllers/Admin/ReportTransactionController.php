@@ -47,7 +47,7 @@ class ReportTransactionController extends Controller
             $beneficiary = Beneficiary::findOrFail($value->beneficiary_id);
             $temp['receiver_name'] = $beneficiary->name;
             $bank = SubInsBank::findOrFail($value->subbank);
-            $temp['bank_name'] = $bank->name;
+            $temp['bank_name'] = $bank->name ?? null;
             $currency = Currency::findOrFail($value->currency_id);
             $temp['amount'] = amount($value->final_amount, $currency->type, 2);
             $temp['currency_code'] = $currency->code;
@@ -79,7 +79,7 @@ class ReportTransactionController extends Controller
             $temp['sender_name'] = $send_info->sender_name ?? null;
             $temp['receiver_name'] = $value->user->company_name ?? $value->user->name;
             $bank = SubInsBank::findOrFail($value->sub_bank_id);
-            $temp['bank_name'] = $bank->name;
+            $temp['bank_name'] = $bank->name ?? null;
             $currency = Currency::findOrFail($value->currency_id);
             $temp['amount'] = amount($value->amount, $currency->type, 2);
             $temp['currency_code'] = $currency->code;
