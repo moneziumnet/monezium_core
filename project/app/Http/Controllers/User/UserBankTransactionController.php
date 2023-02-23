@@ -84,7 +84,7 @@ class UserBankTransactionController extends Controller
             $temp['type'] = 'External Transfer';
             $temp['trnx_no'] = $value->transaction_no;
             $temp['sender_name'] = auth()->user()->company_name ?? auth()->user()->name;
-            $beneficiary = Beneficiary::findOrFail($balancetransfers->beneficiary_id);
+            $beneficiary = Beneficiary::findOrFail($value->beneficiary_id);
             $temp['receiver_name'] = $beneficiary->name;
             $currency = Currency::findOrFail($value->currency_id);
             $temp['amount'] = amount($value->final_amount, $currency->type, 2);
