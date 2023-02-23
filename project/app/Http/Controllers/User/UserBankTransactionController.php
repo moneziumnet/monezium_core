@@ -54,7 +54,7 @@ class UserBankTransactionController extends Controller
             $bankdeposits = DepositBank::where('sub_bank_id', $bankaccount->subbank_id)->where('currency_id', $bankaccount->currency_id)->where('user_id', auth()->id())->where('status', 'complete')->pluck('deposit_number');
             $balancetransfer = BalanceTransfer::where('subbank', $bankaccount->subbank_id)->where('currency_id', $bankaccount->currency_id)->where('user_id', auth()->id())->where('status', 1)->where('type', 'other')->pluck('transaction_no');
 
-            $data['transactions'] = Transaction::where('user_id',auth()->id())->whereIn('remark', ['External_Payment', 'Deposit_create' ])->whereIn('trnx', $bankdeposits)->orwhereIn('trnx', $balancetransfer)->latest()->paginate(20);
+            $data['transactions'] = Transaction::where('user_id',auth()->id())->whereIn('remark', ['External_Payment', 'Deposit_create' ])->whereIn('trnx', $bankdeposits)->orwhereIn('trnx', $balancetransfer)->orwhere('data', 'LIKE', '%'.$bankaccount.'%')->orwhere('data', 'LIKE', '%'.$balancetransfer.'%')->latest()->paginate(20);
         }
 
         return view('user.bank.index',$data);
@@ -104,6 +104,12 @@ class UserBankTransactionController extends Controller
 
             $temp['tran_id'] = $transaction->id ?? null;
             $temp['date'] = $value->created_at;
+            // $webhook_request = App\Models\WebhookRequest::where('reference', 'LIKE', '%'.$data->trnx_no)->orwhere('transaction_id', 'LIKE', '%'.$data->trnx_no)->first();
+            // if($data->status == 'pending' && (!$webhook_request || $webhook_request->status == "processing")) {
+            //     return "background-color: #ffcaca;";
+            // } else {
+            //     return "background-color: #ffffff;";
+            // }
             array_push($compare_list, $temp);
 
         }
