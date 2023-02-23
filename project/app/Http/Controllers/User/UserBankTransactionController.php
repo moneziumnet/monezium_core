@@ -98,12 +98,10 @@ class UserBankTransactionController extends Controller
             else{
                 $status = 'reject';
             }
-            $currency_code = Currency::findOrFail($value->currency_id)->code;
-            $temp['currency_code'] = $currency_code;
             $temp['status'] = $status;
             $transaction = Transaction::where('user_id',auth()->id())->whereIn('remark', ['External_Payment', 'Deposit_create' ])->where('data', 'LIKE', '%'.$value->transaction_no.'%')->orWhere('trnx', $value->transaction_no)->first();
 
-            $temp['tran_id'] = $transaction->id;
+            $temp['tran_id'] = $transaction->id ?? null;
             $temp['data'] = $value->created_at;
             array_push($compare_list, $temp);
 
@@ -118,12 +116,12 @@ class UserBankTransactionController extends Controller
             $temp['sender_name'] = $send_info->sender_name;
             $temp['receiver_name'] = auth()->user()->company_name ?? auth()->user()->name;
             $currency = Currency::findOrFail($value->currency_id);
-            $temp['amount'] = amount($value->final_amount, $currency->type, 2);
+            $temp['amount'] = amount($value->amount, $currency->type, 2);
             $temp['currency_code'] = $currency->code;
             $temp['status'] = $value->status;
             $transaction = Transaction::where('user_id',auth()->id())->whereIn('remark', ['External_Payment', 'Deposit_create' ])->where('data', 'LIKE', '%'.$value->transaction_no.'%')->orWhere('trnx', $value->transaction_no)->first();
 
-            $temp['tran_id'] = $transaction->id;
+            $temp['tran_id'] = $transaction->id ?? null;
             $temp['data'] = $value->created_at;
             array_push($compare_list, $temp);
 
