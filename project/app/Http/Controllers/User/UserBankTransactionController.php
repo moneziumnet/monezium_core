@@ -121,7 +121,7 @@ class UserBankTransactionController extends Controller
             $temp['amount'] = amount($value->final_amount, $currency->type, 2);
             $temp['currency_code'] = $currency->code;
             $temp['status'] = $value->status;
-            $transaction = Transaction::where('user_id',auth()->id())->whereIn('remark', ['External_Payment', 'Deposit_create' ])->where('reference', 'LIKE', '%'.$data->transaction_no.'%')->orWhere('trnx', $value->transaction_no)->first;
+            $transaction = Transaction::where('user_id',auth()->id())->whereIn('remark', ['External_Payment', 'Deposit_create' ])->where('reference', 'LIKE', '%'.$value->transaction_no.'%')->orWhere('trnx', $value->transaction_no)->first;
 
             $temp['tran_id'] = $transaction->id;
             $temp['data'] = $value->created_at;
