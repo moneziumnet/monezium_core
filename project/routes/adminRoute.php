@@ -76,6 +76,7 @@ use App\Http\Controllers\Admin\CampaignController;
 use App\Http\Controllers\Deposit\SwanController;
 use App\Http\Controllers\Admin\ActionNotificationController;
 use App\Http\Controllers\Admin\AdminBeneficiaryController;
+use App\Http\Controllers\Admin\ReportTransactionController;
 
 
 Route::prefix('admin')->group(function () {
@@ -387,6 +388,14 @@ Route::prefix('admin')->group(function () {
     Route::get('/ico/details/{id}', [ICOController::class, 'details'])->name('admin.ico.details');
     Route::get('/ico/datatables', [ICOController::class, 'datatables'])->name('admin.ico.datatables');
     Route::get('/ico/status/{id}/{status}', [ICOController::class, 'status'])->name('admin.ico.status');
+  });
+
+  Route::group(['middleware' => 'permissions:Report'], function () {
+    Route::get('/bank/report/transaction', [ReportTransactionController::class,'index'])->name('admin.report.transaction.index');
+    Route::get('/bank/report/transaction/datatables', [ReportTransactionController::class,'datatables'])->name('admin.report.transaction.datatables');
+    Route::get('/bank/report/transaction/account/{id}', [ReportTransactionController::class,'bank_transaction'])->name('admin.report.transaction.account.index');
+    Route::get('/bank/report/all/transaction', [ReportTransactionController::class,'compare_transaction'])->name('admin.report.transaction.all');
+    Route::get('/bank/report/summary/transaction', [ReportTransactionController::class,'summay_fee'])->name('admin.report.transaction.summary');
   });
 
 

@@ -214,6 +214,21 @@
   </li>
 @endif
 
+@if(getModule('Report'))
+<li class="nav-item">
+  <a class="nav-link" href="{{ route('admin.report.transaction.index') }}" data-toggle="collapse" data-target="#bankreport" aria-expanded="true" aria-controls="collapseTable">
+    <i class="fas fa-flag"></i>
+    <span>{{ __('Report') }}</span>
+  </a>
+  <div id="bankreport" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
+    <div class="bg-white py-2 collapse-inner rounded">
+      <a class="collapse-item" href="{{ route('admin.report.transaction.index') }}">{{ __('Statistic') }}</a>
+      {{-- <a class="collapse-item" href="">{{ __('Summary Fee') }}</a> --}}
+    </div>
+  </div>
+</li>
+@endif
+
 @if(getModule('Crowdfunding'))
 <li class="nav-item">
   <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#crowdfunding" aria-expanded="true" aria-controls="collapseTable">
