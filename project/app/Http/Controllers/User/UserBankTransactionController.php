@@ -102,7 +102,7 @@ class UserBankTransactionController extends Controller
             $transaction = Transaction::where('user_id',auth()->id())->whereIn('remark', ['External_Payment', 'Deposit_create' ])->where('data', 'LIKE', '%'.$value->transaction_no.'%')->orWhere('trnx', $value->transaction_no)->first();
 
             $temp['tran_id'] = $transaction->id ?? null;
-            $temp['data'] = $value->created_at;
+            $temp['date'] = $value->created_at;
             array_push($compare_list, $temp);
 
         }
@@ -122,7 +122,7 @@ class UserBankTransactionController extends Controller
             $transaction = Transaction::where('user_id',auth()->id())->whereIn('remark', ['External_Payment', 'Deposit_create' ])->where('data', 'LIKE', '%'.$value->transaction_no.'%')->orWhere('trnx', $value->transaction_no)->first();
 
             $temp['tran_id'] = $transaction->id ?? null;
-            $temp['data'] = $value->created_at;
+            $temp['date'] = $value->created_at;
             array_push($compare_list, $temp);
 
         }
