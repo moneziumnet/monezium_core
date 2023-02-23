@@ -75,7 +75,7 @@
                                         {{__(ucfirst($data->type))}}
                                     </td>
                                     <td data-label="@lang('Details')" class="text-end">
-                                        <button class="btn btn-primary btn-sm details" data-data="{{$data}}">@lang('Details')</button>
+                                        <button class="btn btn-primary btn-sm details" data-data="{{$data->tran_id}}" data-type="{{$data->type}}">@lang('Details')</button>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -122,9 +122,9 @@
       'use strict';
 
       $('.details').on('click',function () {
-        var url = "{{url('user/transaction/details/')}}"+'/'+$(this).data('data').tran_id
-        $('.trx_details').text($(this).data('data').type)
-        $('#trx_id').val($(this).data('data').id)
+        var url = "{{url('user/transaction/details/')}}"+'/'+$(this).data('data')
+        $('.trx_details').text($(this).data('type').type)
+        $('#trx_id').val($(this).data('data'))
         $.get(url,function (res) {
           if(res == 'empty'){
             $('.list-group').html("<p>@lang('No details found!')</p>")
