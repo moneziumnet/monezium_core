@@ -80,6 +80,7 @@ class UserBankTransactionController extends Controller
         $deposits = DepositBank::orderby('id','desc')->whereUserId(auth()->id())->with('user')->get();
         $compare_list = [];
         foreach ($balancetransfers as $key => $value) {
+            $temp = array();
             $temp['user_id'] = $value->user_id;
             $temp['type'] = 'External Transfer';
             $temp['trnx_no'] = $value->transaction_no;
@@ -99,7 +100,6 @@ class UserBankTransactionController extends Controller
                 $status = 'reject';
             }
             $temp['status'] = $status;
-            $transaction = null;
             $transaction = Transaction::where('user_id',auth()->id())->whereIn('remark', ['External_Payment', 'Deposit_create' ])->where('data', 'LIKE', '%'.$value->transaction_no.'%')->orWhere('trnx', $value->transaction_no)->first();
 
             $temp['tran_id'] = $transaction->id ?? null;
@@ -110,6 +110,7 @@ class UserBankTransactionController extends Controller
 
 
         foreach ($deposits as $key => $value) {
+            $temp = array();
             $temp['user_id'] = $value->user_id;
             $temp['type'] = 'Bank Deposit';
             $temp['trnx_no'] = $value->deposit_number;
@@ -120,7 +121,6 @@ class UserBankTransactionController extends Controller
             $temp['amount'] = amount($value->amount, $currency->type, 2);
             $temp['currency_code'] = $currency->code;
             $temp['status'] = $value->status;
-            $transaction = null;
             $transaction = Transaction::where('user_id',auth()->id())->whereIn('remark', ['External_Payment', 'Deposit_create' ])->where('data', 'LIKE', '%'.$value->transaction_no.'%')->orWhere('trnx', $value->transaction_no)->first();
 
             $temp['tran_id'] = $transaction->id ?? null;
