@@ -50,6 +50,14 @@
                                 $i = ($transactions->currentpage() - 1) * $transactions->perpage() + 1;
                             @endphp --}}
                                 @foreach (json_decode(json_encode($transactions, true)) as $key=>$data)
+                                @php
+                                $webhook_request = App\Models\WebhookRequest::where('reference', 'LIKE', '%'.$data->trnx_no)->orwhere('transaction_id', 'LIKE', '%'.$data->trnx_no)->first();
+                                if($data->status == 'pending' && (!$webhook_request || $webhook_request->status == "processing")) {
+                                    return "background-color: #ffcaca;";
+                                } else {
+                                    return "background-color: #ffffff;";
+                                }
+                                @endphp
                                 <tr>
                                     <td data-label="@lang('Date')">{{dateFormat($data->date,'d-M-Y')}} </br> {{__(str_dis($data->trnx_no))}} </td>
 
@@ -75,7 +83,9 @@
                                         {{__(ucfirst($data->type))}}
                                     </td>
                                     <td data-label="@lang('Details')" class="text-end">
+                                        @if ($data->status == 'complete')
                                         <button class="btn btn-primary btn-sm details" data-data="{{$data->tran_id}}" data-type="{{$data->type}}">@lang('Details')</button>
+                                        @endif
                                     </td>
                                 </tr>
                                 @endforeach

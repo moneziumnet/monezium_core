@@ -28,8 +28,7 @@ class DepositBankController extends Controller
         return Datatables::of($datas)
             ->setRowAttr([
                 'style' => function(DepositBank $data) {
-                    $reference = $data->deposit_number;
-                    $webhook_request = WebhookRequest::where('reference', 'LIKE', '%'.$reference)->where('is_pay_in', true)->first();
+                    $webhook_request = WebhookRequest::where('reference', 'LIKE', '%'.$data->deposit_number)->orwhere('transaction_id', 'LIKE', '%'.$data->deposit_number)->where('is_pay_in', true)->first();
                     if($data->status == 'pending' && (!$webhook_request || $webhook_request->status == "processing")) {
                         return "background-color: #ffcaca;";
                     } else {
@@ -42,7 +41,7 @@ class DepositBankController extends Controller
                 return $date;
             })
             ->editColumn('deposit_number', function(DepositBank $data) {
-                $send_info = WebhookRequest::where('reference', 'LIKE', '%'.$data->deposit_number)->with('currency')->first();
+                $send_info = WebhookRequest::where('reference', 'LIKE', '%'.$data->deposit_number)->orwhere('transaction_id', 'LIKE', '%'.$data->deposit_number)->with('currency')->first();
                 $deposit_no = $data->deposit_number;
                 if ($send_info) {
                     $deposit_no = $send_info->transaction_id;
