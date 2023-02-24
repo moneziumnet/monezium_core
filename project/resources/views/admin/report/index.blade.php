@@ -97,7 +97,6 @@
     <div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-md modal-dialog-centered" role="document">
         <div class="modal-content">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="modal-status bg-primary"></div>
             <div class="modal-body text-center py-4">
             <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
@@ -189,24 +188,27 @@
             $('#status').on('change', function () {
                 table.draw();
             });
-            function getdetails(e){
-                console.log(e.target.getAttribute('data-id'))
 
-                var url = "{{url('admin/bank/report/transaction/details')}}"+'/'+e.target.getAttribute('data-id')
-                    $('.trx_details').text(e.target.getAttribute('data-type'))
-                    $.get(url,function (res) {
-                    if(res == 'empty'){
-                        $('.list-group').html("<p>@lang('No details found!')</p>")
-                    }else{
-                        $('.list-group').html(res)
-                    }
-                    $('#modal-success').modal('show')
-                    })
-            }
 
-            $('.closed').click(function() {
-                $('#modal-success').modal('hide');
-            });
+        });
+
+        function getdetails(e){
+            console.log(e.target.getAttribute('data-id'))
+
+            var url = "{{url('admin/bank/report/transaction/details')}}"+'/'+e.target.getAttribute('data-id')
+                $('.trx_details').text(e.target.getAttribute('data-type'))
+                $.get(url,function (res) {
+                if(res == 'empty'){
+                    $('.list-group').html("<p>@lang('No details found!')</p>")
+                }else{
+                    $('.list-group').html(res)
+                }
+                $('#modal-success').modal('show')
+                })
+        }
+
+        $('.closed').click(function() {
+            $('#modal-success').modal('hide');
         });
 
 
