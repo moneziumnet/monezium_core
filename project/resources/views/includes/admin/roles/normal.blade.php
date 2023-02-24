@@ -223,7 +223,7 @@
   <div id="bankreport" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
     <div class="bg-white py-2 collapse-inner rounded">
       <a class="collapse-item" href="{{ route('admin.report.transaction.index') }}">{{ __('Statistic') }}</a>
-      {{-- <a class="collapse-item" href="">{{ __('Summary Fee') }}</a> --}}
+      <a class="collapse-item" href="{{ route('admin.report.transaction.summary')}}">{{ __('Summary Fee') }}</a>
     </div>
   </div>
 </li>

@@ -19,6 +19,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Carbon as Carbontime;
+use GuzzleHttp\Client;
 use Datatables;
 
 
@@ -190,6 +191,104 @@ class ReportTransactionController extends Controller
             return response('empty');
         }
         return view('admin.report.detail',compact('transaction'));
+    }
+
+
+    public function summary_trxDetails($id)
+    {
+        $transaction = Transaction::where('id',$id)->with('currency')->first();
+        if(!$transaction){
+            return response('empty');
+        }
+        return view('admin.report.summary_detail',compact('transaction'));
+    }
+
+    public function summary() {
+        $remark_list = Transaction::pluck('remark');
+        return view('admin.report.summary', compact('remark_list'));
+    }
+
+    public function summary_fee(Request $request)
+    {
+        $search = request('search');
+        $remark = request('remark');
+        $s_time = request('s_time');
+        $e_time = request('e_time');
+        $s_time = $s_time ? $s_time : '';
+        $e_time = $e_time ? $e_time : Carbontime::now()->addDays(1)->format('Y-m-d');
+        $remark_list = Transaction::pluck('remark');
+        $remark_list = array_unique($remark_list->all());
+        if($remark != 'all_mark' && $remark != null) {
+            $transactions = Transaction::when($remark,function($q) use($remark){
+                return $q->where('remark',$remark);
+            })
+            ->when($search,function($q) use($search){
+                return $q->where('trnx','LIKE',"%{$search}%");
+            })
+            ->whereBetween('created_at', [$s_time, $e_time])
+            ->with('currency')->latest()->paginate(20);
+            $currency_id = defaultCurr();
+            $def_code = Currency::findOrFail($currency_id)->code;
+            $client = new Client();
+            $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency=' . $def_code);
+            $rate = json_decode($response->getBody());
+            $balance = 0;
+
+            foreach($transactions as $key => $value) {
+                    $code = $value->currency->code;
+                    if($value->type == '+') {
+                        $balance = $balance + $value->amount / ($rate->data->rates->$code ?? $value->currency->rate);
+
+                    }
+                    else {
+                        $balance = $balance - $value->amount / ($rate->data->rates->$code ?? $value->currency->rate);
+
+                    }
+            }
+            $balance = amount($balance, Currency::findOrFail($currency_id)->type, 2).$def_code;
+            $flag = false;
+
+        }
+        else {
+            $transactions = array();
+            $currency_id = defaultCurr();
+            $def_code = Currency::findOrFail($currency_id)->code;
+            $client = new Client();
+            $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency=' . $def_code);
+            $rate = json_decode($response->getBody());
+            foreach ($remark_list as $key => $fee) {
+                $fee_transactions = Transaction::when($fee,function($q) use($fee){
+                    return $q->where('remark',$fee);
+                })
+                ->whereBetween('created_at', [$s_time, $e_time])
+                ->with('currency')->latest()->paginate(20);
+                $fee_balance = 0;
+                foreach($fee_transactions as $key => $value) {
+                    $code = $value->currency->code;
+                    if($value->type == '+') {
+                        $fee_balance = $fee_balance + $value->amount / ($rate->data->rates->$code ?? $value->currency->rate);
+
+                    }
+                    else {
+                        $fee_balance = $fee_balance - $value->amount / ($rate->data->rates->$code ?? $value->currency->rate);
+
+                    }
+                }
+                $fee_balance = amount($fee_balance, Currency::findOrFail($currency_id)->type, 2).$def_code;
+                array_push($transactions, array(
+                    "fee"=> $fee,
+                    "balance"=> $fee_balance
+                ));
+
+            }
+            $currency_id = defaultCurr();
+            $def_code = Currency::findOrFail($currency_id);
+
+            $balance = amount(0, $def_code->type, 2).$def_code->code;
+            $flag = true;
+        }
+
+        return view('admin.report.summary',compact('transactions', 'search', 'remark_list', 's_time', 'e_time', 'balance' , 'flag'));
     }
 
 }

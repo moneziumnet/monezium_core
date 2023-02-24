@@ -103,7 +103,7 @@ class OpenpaydResponse implements RespondsToWebhook
 
             return response()->json("success");
         }
-        if($obj->type == 'PAYOUT'){
+        if($obj->type == 'PAYOUT' || $obj->type == 'TRANSFER'){
             $webrequest = WebhookRequest::where('transaction_id', $obj->transactionId)
                 ->where('gateway_type', 'openpayd')
                 ->where('is_pay_in', false)

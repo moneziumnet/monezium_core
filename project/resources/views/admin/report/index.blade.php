@@ -8,7 +8,7 @@
                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
 
                 <li class="breadcrumb-item"><a
-                        href="{{ route('admin.report.transaction.index') }}">{{ __('ICO Token') }}</a></li>
+                        href="{{ route('admin.report.transaction.index') }}">{{ __('Report') }}</a></li>
             </ol>
         </div>
     </div>
