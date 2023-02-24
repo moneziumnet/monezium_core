@@ -50,8 +50,6 @@
                                     <option value="reject">@lang('Reject')</option>
                                 </select>
                             </div>
-                        </div>
-                        <div class="d-flex justify-content-center">
                             <div class="form-group mr-3">
                                 <label for="s_time" class="form-label">{{ __('Start Time') }}</label>
                                 <input class="form-control shadow-none mr-2" type="date" placeholder="{{__('Start Time')}}" id="s_time" name="s_time" >
