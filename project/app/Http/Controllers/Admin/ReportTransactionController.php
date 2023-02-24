@@ -18,6 +18,7 @@ use App\Models\SubInsBank;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Carbon as Carbontime;
 use Datatables;
 
 
@@ -30,7 +31,8 @@ class ReportTransactionController extends Controller
 
     public function index()
     {
-        return view('admin.report.index');
+        $banklist = SubInsBank::where('status', 1)->pluck('name');
+        return view('admin.report.index', compact('banklist'));
     }
 
     public function datatables(Request $request){
@@ -41,7 +43,7 @@ class ReportTransactionController extends Controller
         foreach ($balancetransfers as $key => $value) {
             $temp = array();
             $temp['user_id'] = $value->user_id;
-            $temp['type'] = 'External Transfer';
+            $temp['type'] = 'External';
             $temp['trnx_no'] = $value->transaction_no;
             $temp['sender_name'] = $value->user->company_name ?? $value->user->name;
             $beneficiary = Beneficiary::findOrFail($value->beneficiary_id);
@@ -73,7 +75,7 @@ class ReportTransactionController extends Controller
         foreach ($deposits as $key => $value) {
             $temp = array();
             $temp['user_id'] = $value->user_id;
-            $temp['type'] = 'Bank Deposit';
+            $temp['type'] = 'Deposit';
             $temp['trnx_no'] = $value->deposit_number;
             $send_info = WebhookRequest::where('transaction_id', 'LIKE', '%'.$value->deposit_number)->orWhere('reference', 'LIKE', '%'.$value->deposit_number)->with('currency')->first();
             $temp['sender_name'] = $send_info->sender_name ?? null;
@@ -97,7 +99,6 @@ class ReportTransactionController extends Controller
         $datas = json_decode(json_encode($compare_list, true));
 
 
-
         return Datatables::of($datas)
             ->setRowAttr([
                 'style' => function( $data) {
@@ -110,9 +111,43 @@ class ReportTransactionController extends Controller
                 },
             ])
             ->filter(function ($instance) use ($request) {
+                $s_time = $request->get('s_time');
+                $e_time = $request->get('e_time');
+                $s_time = $s_time ? $s_time : '';
+                $e_time = $e_time ? $e_time : Carbontime::now()->addDays(1)->format('d-M-Y');
                 if (!empty($request->get('sender'))) {
                     $instance->collection = $instance->collection->filter(function ($row) use ($request) {
                         return Str::contains($row['sender_name'], $request->get('sender')) ? true : false;
+                    });
+                }
+                if (!empty($request->get('receiver'))) {
+                    $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                        return Str::contains(Str::lower($row['receiver_name']), low($request->get('receiver'))) ? true : false;
+                    });
+                }
+                if (!empty($request->get('trnx_no'))) {
+                    $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                        return Str::contains(Str::lower($row['trnx_no']), low($request->get('trnx_no'))) ? true : false;
+                    });
+                }
+                if (!empty($request->get('trnx_type'))) {
+                    $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                        return Str::contains(Str::lower($row['type']), low($request->get('trnx_type'))) ? true : false;
+                    });
+                }
+                if (!empty($request->get('bank_name'))) {
+                    $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                        return Str::contains(Str::lower($row['bank_name']), low($request->get('bank_name'))) ? true : false;
+                    });
+                }
+                if (!empty($s_time)) {
+                    $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                        if($row['date'] > $s_time && $row['date'] < $e_time) {
+                            return true;
+                        }
+                        else {
+                            return false;
+                        }
                     });
                 }
             })

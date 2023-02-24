@@ -26,18 +26,18 @@
                                 <label class="form-label">{{ __('Type') }}</label>
 
                                 <select name="type" class="form-control mr-2 shadow-none" >
-                                    <option value="{{filter('remark','')}}">@lang('All')</option>
-                                    <option value="{{filter('remark','')}}">@lang('External')</option>
-                                    <option value="{{filter('remark','')}}">@lang('Deposit')</option>
+                                    <option value="">@lang('All')</option>
+                                    <option value="">@lang('External')</option>
+                                    <option value="">@lang('Deposit')</option>
                                 </select>
                             </div>
                             <div class="form-group mr-3">
                                 <label  class="form-label">{{ __('Bank') }}</label>
                                 <select name="bank_name" class="form-control mr-2 shadow-none" >
-                                    <option value="{{filter('wallet_id','')}}">@lang('All Account')</option>
-                                    <option value="{{filter('wallet_id','')}}">@lang('Openpayd')</option>
-                                    <option value="{{filter('wallet_id','')}}">@lang('ClearJunction')</option>
-                                    <option value="{{filter('wallet_id','')}}">@lang('Swan')</option>
+                                    <option value="">@lang('All Account')</option>
+                                    @foreach ($banklist as $item)
+                                        <option value="{{$item}}">@lang({{$item}})</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -202,7 +202,13 @@
 
                 url : "{{  route('admin.report.transaction.datatables') }}",
                 data : function (d) {
-                    d.sender = $('#sender_name').val()
+                    d.sender = $('#sender_name').val(),
+                    d.receiver = $('#receiver_name').val(),
+                    d.s_time = $('#s_time').val(),
+                    d.e_time = $('#e_time').val(),
+                    d.trnx_no = $('#trnx_no').val(),
+                    d.trnx_type = $('#type').val(),
+                    d.bank_name = $('#bank_name').val()
                 }
 
             },
