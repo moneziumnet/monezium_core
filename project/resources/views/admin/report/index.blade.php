@@ -23,6 +23,26 @@
                     <div class="btn-list align-items-center">
                         <div class="d-flex justify-content-center">
                             <div class="form-group mr-3">
+                                <label for="s_time" class="form-label">{{ __('Start Time') }}</label>
+                                <input class="form-control shadow-none mr-2" type="date" placeholder="{{__('Start Time')}}" id="s_time" name="s_time" >
+                            </div>
+                            <div class="form-group mr-3">
+                                <label for="e_time" class="form-label">{{ __('Close time') }}</label>
+                                <input class="form-control shadow-none mr-2" type="date" placeholder="{{__('End Time')}}" id="e_time" name="e_time" >
+                            </div>
+                            <div class="form-group mr-3">
+                                <label for="sender_name" class="form-label">{{ __('Sender') }}</label>
+                                <input class="form-control shadow-none mr-2" type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" placeholder="{{__('Sender Name')}}" id="sender_name" name="sender_name" >
+                            </div>
+                            <div class="form-group mr-3">
+                                <label for="receiver_name" class="form-label">{{ __('Receiver') }}</label>
+                                <input class="form-control shadow-none mr-2" type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" placeholder="{{__('Rceiver Name')}}" id="receiver_name" name="receiver_name" >
+                            </div>
+                            <div class="form-group mr-3">
+                                <label for="trnx_no" class="form-label">{{ __('Transaction ID') }}</label>
+                                <input class="form-control shadow-none mr-2" type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" placeholder="{{__('Transaction ID')}}" id="trnx_no" name="trnx_no" >
+                            </div>
+                            <div class="form-group mr-3">
                                 <label class="form-label">{{ __('Type') }}</label>
 
                                 <select name="type" id="type" class="form-control mr-2 shadow-none" >
@@ -49,26 +69,6 @@
                                     <option value="complete">@lang('Complete')</option>
                                     <option value="reject">@lang('Reject')</option>
                                 </select>
-                            </div>
-                            <div class="form-group mr-3">
-                                <label for="s_time" class="form-label">{{ __('Start Time') }}</label>
-                                <input class="form-control shadow-none mr-2" type="date" placeholder="{{__('Start Time')}}" id="s_time" name="s_time" >
-                            </div>
-                            <div class="form-group mr-3">
-                                <label for="e_time" class="form-label">{{ __('Close time') }}</label>
-                                <input class="form-control shadow-none mr-2" type="date" placeholder="{{__('End Time')}}" id="e_time" name="e_time" >
-                            </div>
-                            <div class="form-group mr-3">
-                                <label for="sender_name" class="form-label">{{ __('Sender') }}</label>
-                                <input class="form-control shadow-none mr-2" type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" placeholder="{{__('Sender Name')}}" id="sender_name" name="sender_name" >
-                            </div>
-                            <div class="form-group mr-3">
-                                <label for="receiver_name" class="form-label">{{ __('Receiver') }}</label>
-                                <input class="form-control shadow-none mr-2" type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" placeholder="{{__('Rceiver Name')}}" id="receiver_name" name="receiver_name" >
-                            </div>
-                            <div class="form-group mr-3">
-                                <label for="trnx_no" class="form-label">{{ __('Transaction ID') }}</label>
-                                <input class="form-control shadow-none mr-2" type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" placeholder="{{__('Transaction ID')}}" id="trnx_no" name="trnx_no" >
                             </div>
                         </div>
                     </div>
@@ -159,53 +159,11 @@
         "use strict";
 
         $(document).ready(function () {
-            // var sender_name = $('#sender_name');
-
-            // minDate = new DateTime($('#s_time'), {
-            //     format: 'd-M-Y'
-            // });
-            // maxDate = new DateTime($('#e_time'), {
-            //     format: 'd-M-Y'
-            // });
-
-        //     $(function() {
-        // $(".btn-area").append('<div class="col-sm-12 col-md-4 pr-3 text-right">'+
-        //     '<button class="btn btn-primary"  data-id="'+''+'" onclick="createglobalplan(\''+''+'\')" ><i class="fas fa-plus"></i> {{__('Add New Charge')}} </button>'+
-        // '</a>'+
-        // '</div>');
-        //     });
-
-        //     $(function() {
-        //     $(".btn-area").append('<div class="col-sm-12 col-md-4 pr-3 text-right">'+
-        //         '<a class="btn btn-primary" href="{{route('admin.user.create')}}">'+
-        //     '<i class="fas fa-plus"></i> Add New Customer'+
-        //     '</a>'+
-        //     '</div>');
-        // });
-
-            // $('#geniustable tfoot th').each(function () {
-            //     var title = $(this).text();
-            //     $(this).html('<input type="text" placeholder="Search ' + title + '" />');
-            // });
         var table = $('#geniustable').DataTable({
             ordering: false,
             processing: true,
             serverSide: true,
             searching: false,
-            // initComplete: function () {
-            // // Apply the search
-            // this.api()
-            //     .columns()
-            //     .every(function () {
-            //         var that = this;
-
-            //         $('input', this.footer()).on('keyup change clear', function () {
-            //             if (that.search() !== this.value) {
-            //                 that.search(this.value).draw();
-            //             }
-            //         });
-            //     });
-            // },
             ajax: {
 
                 url : "{{  route('admin.report.transaction.datatables') }}",
