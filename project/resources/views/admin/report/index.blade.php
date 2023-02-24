@@ -149,32 +149,28 @@
 @section('scripts')
     <script type="text/javascript">
         "use strict";
-        var minDate, maxDate;
-        $.fn.dataTable.ext.search.push(
-            function( settings, data, dataIndex ) {
-                var min = minDate.val();
-                var max = maxDate.val();
-                var date = new Date( data[0] );
 
-                if (
-                    ( min === null && max === null ) ||
-                    ( min === null && date <= max ) ||
-                    ( min <= date   && max === null ) ||
-                    ( min <= date   && date <= max )
-                ) {
-                    return true;
-                }
-                return false;
-            }
-        );
         $(document).ready(function () {
+            var sender_name = $('#sender_name');
 
-            minDate = new DateTime($('#s_time'), {
-                format: 'd-M-Y'
-            });
-            maxDate = new DateTime($('#e_time'), {
-                format: 'd-M-Y'
-            });
+            // minDate = new DateTime($('#s_time'), {
+            //     format: 'd-M-Y'
+            // });
+            // maxDate = new DateTime($('#e_time'), {
+            //     format: 'd-M-Y'
+            // });
+
+            $.fn.dataTable.ext.search.push(
+                function( settings, data, dataIndex ) {
+                    var sendername = sender_name.val();
+                    var name = data[3];
+
+                    if ( name.includes(sendername) ) {
+                        return true;
+                    }
+                    return false;
+                }
+            );
         //     $(function() {
         // $(".btn-area").append('<div class="col-sm-12 col-md-4 pr-3 text-right">'+
         //     '<button class="btn btn-primary"  data-id="'+''+'" onclick="createglobalplan(\''+''+'\')" ><i class="fas fa-plus"></i> {{__('Add New Charge')}} </button>'+
@@ -230,7 +226,7 @@
             }
         });
 
-        $('#s_time, #e_time').on('change', function () {
+        $('#sender_name').on('change', function () {
             table.draw();
         });
 
