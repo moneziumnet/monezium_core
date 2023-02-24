@@ -149,6 +149,7 @@
 @section('scripts')
     <script type="text/javascript">
         "use strict";
+        var minDate, maxDate;
         $.fn.dataTable.ext.search.push(
             function( settings, data, dataIndex ) {
                 var min = minDate.val();
