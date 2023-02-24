@@ -111,10 +111,7 @@ class ReportTransactionController extends Controller
                 },
             ])
             ->filter(function ($instance) use ($request) {
-                $s_time = $request->get('s_time');
-                $e_time = $request->get('e_time');
-                $s_time = $s_time ? $s_time : '';
-                $e_time = $e_time ? $e_time : Carbontime::now()->addDays(1)->format('d-M-Y');
+
                 if (!empty($request->get('sender'))) {
                     $instance->collection = $instance->collection->filter(function ($row) use ($request) {
                         return Str::contains($row['sender_name'], $request->get('sender')) ? true : false;
@@ -140,7 +137,11 @@ class ReportTransactionController extends Controller
                         return Str::contains(Str::lower($row['bank_name']), low($request->get('bank_name'))) ? true : false;
                     });
                 }
-                if (!empty($s_time)) {
+                if (!empty($request->get('s_time'))) {
+                    $s_time = $request->get('s_time');
+                    $e_time = $request->get('e_time');
+                    $s_time = $s_time ? $s_time : '';
+                    $e_time = $e_time ? $e_time : Carbontime::now()->addDays(1)->format('d-M-Y');
                     $instance->collection = $instance->collection->filter(function ($row) use ($request) {
                         if($row['date'] > $s_time && $row['date'] < $e_time) {
                             return true;
