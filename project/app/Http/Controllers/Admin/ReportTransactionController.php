@@ -175,7 +175,7 @@ class ReportTransactionController extends Controller
                     '.'Actions' .'
                     </button>
                     <div class="dropdown-menu" x-placement="bottom-start">
-                    <a  href="javascript:;" class="dropdown-item details" data-toggle="modal" data-target="#modal-success" data-id="'.$data->tran_id.'" data-type="'.$data->type.'">'.__("Detail").'</a>
+                    <a  href="javascript:;" class="dropdown-item details" data-toggle="modal" data-target="#modal-success" data-id="'.$data->trnx_no.'" data-type="'.$data->type.'">'.__("Detail").'</a>
                     </div>
                 </div>';
             })
@@ -185,7 +185,7 @@ class ReportTransactionController extends Controller
 
     public function trxDetails($id)
     {
-        $transaction = Transaction::where('id',$id)->first();
+        $transaction = Transaction::whereIn('remark', ['External_Payment', 'Deposit_create' ])->where('data', 'LIKE', '%'.$id.'%')->orWhere('trnx', $id)->first();
         $transaction->currency = Currency::whereId($transaction->currency_id)->first();
         if(!$transaction){
             return response('empty');
