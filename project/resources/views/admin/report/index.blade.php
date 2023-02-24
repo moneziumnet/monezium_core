@@ -149,7 +149,31 @@
 @section('scripts')
     <script type="text/javascript">
         "use strict";
+        $.fn.dataTable.ext.search.push(
+            function( settings, data, dataIndex ) {
+                var min = minDate.val();
+                var max = maxDate.val();
+                var date = new Date( data[0] );
+
+                if (
+                    ( min === null && max === null ) ||
+                    ( min === null && date <= max ) ||
+                    ( min <= date   && max === null ) ||
+                    ( min <= date   && date <= max )
+                ) {
+                    return true;
+                }
+                return false;
+            }
+        );
         $(document).ready(function () {
+
+            minDate = new DateTime($('#s_time'), {
+                format: 'd-M-Y'
+            });
+            maxDate = new DateTime($('#e_time'), {
+                format: 'd-M-Y'
+            });
         //     $(function() {
         // $(".btn-area").append('<div class="col-sm-12 col-md-4 pr-3 text-right">'+
         //     '<button class="btn btn-primary"  data-id="'+''+'" onclick="createglobalplan(\''+''+'\')" ><i class="fas fa-plus"></i> {{__('Add New Charge')}} </button>'+
@@ -203,6 +227,10 @@
             language: {
                 processing: '<img src="{{ asset('assets/images/' . $gs->admin_loader) }}">'
             }
+        });
+
+        $('#s_time, #e_time').on('change', function () {
+            table.draw();
         });
 
         function getDetails(id) {
