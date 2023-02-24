@@ -28,7 +28,7 @@ class UserDepositBankController extends Controller
     public function depositsbank(Request $request)
     {
         try{
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $data['deposits'] = DepositBank::whereUserId($user_id)->orderby('id','desc')->paginate(10);
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data'=> $data]);
         }catch(\Throwable $th){
@@ -39,7 +39,7 @@ class UserDepositBankController extends Controller
     public function depositbankcreate(Request $request)
     {
         try{
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
 
             $rules = [
                 'subinstitude_id' => 'required',
@@ -90,7 +90,7 @@ class UserDepositBankController extends Controller
     public function depositgateways(Request $request)
     {
         try{
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $data['deposits'] = Deposit::whereUserId($user_id)->orderBy('id','desc')->paginate(10);
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data'=> $data]);
         }catch(\Throwable $th){

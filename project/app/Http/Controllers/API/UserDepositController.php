@@ -26,7 +26,7 @@ class UserDepositController extends Controller
     public function deposit(Request $request)
     {
         try{
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $data['deposits'] = Deposit::whereUserId($user_id)->orderby('id','desc')->paginate(10);
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data'=> $data]);
         }catch(\Throwable $th){
@@ -39,7 +39,7 @@ class UserDepositController extends Controller
     public function depositdetails(Request $request)
     {
         try{
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $rules = [
                 'user_deposit_id'       => 'required'
             ];

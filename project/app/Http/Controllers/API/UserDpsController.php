@@ -28,7 +28,7 @@ class UserDpsController extends Controller
     public function dpsdetails(Request $request, $id)
     {
         try {
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
 
             if($id)
             {
@@ -53,7 +53,7 @@ class UserDpsController extends Controller
     public function dps_index(Request $request)
     {
         try {
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $data['dps'] = UserDps::whereUserId($user_id)->orderby('id','desc')->paginate(10);
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
         } catch (\Throwable $th) {
@@ -65,7 +65,7 @@ class UserDpsController extends Controller
     public function runningdps(Request $request)
     {
         try {
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $data['dps'] = UserDps::whereStatus(1)->whereUserId($user_id)->orderby('id','desc')->paginate(10);
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
         } catch (\Throwable $th) {
@@ -76,7 +76,7 @@ class UserDpsController extends Controller
     public function matureddps(Request $request)
     {
         try {
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $data['dps'] = UserDps::whereStatus(2)->whereUserId($user_id)->orderby('id','desc')->paginate(10);
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
         } catch (\Throwable $th) {

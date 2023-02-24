@@ -43,7 +43,7 @@ class UserLoanController extends Controller
     public function loan_index(Request $request)
     {
         try {
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $data['loans'] = UserLoan::whereUserId($user_id)->orderby('id','desc')->paginate(10);
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
         } catch (\Throwable $th) {
@@ -55,7 +55,7 @@ class UserLoanController extends Controller
     public function loanplan(Request $request)
     {
         try {
-           // $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+           // $user_id = Auth::user()->id;
             //if ($user_id)
            // {
                 $data['plans'] = LoanPlan::orderBy('id','desc')->whereStatus(1)->paginate(12);
@@ -70,7 +70,7 @@ class UserLoanController extends Controller
     public function pendingloan(Request $request)
     {
         try {
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $data['loans'] = UserLoan::whereStatus(0)->whereUserId($user_id)->orderby('id','desc')->paginate(10);
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
         } catch (\Throwable $th) {
@@ -81,7 +81,7 @@ class UserLoanController extends Controller
     public function runningloan(Request $request)
     {
         try {
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $data['loans'] = UserLoan::whereStatus(1)->whereUserId($user_id)->orderby('id','desc')->paginate(10);
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
         } catch (\Throwable $th) {
@@ -92,7 +92,7 @@ class UserLoanController extends Controller
     public function paidloan(Request $request)
     {
         try {
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $data['loans'] = UserLoan::whereStatus(3)->whereUserId($user_id)->orderby('id','desc')->paginate(10);
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
         } catch (\Throwable $th) {
@@ -103,7 +103,7 @@ class UserLoanController extends Controller
     public function rejectedloan(Request $request)
     {
         try {
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $data['loans'] = UserLoan::whereStatus(2)->whereUserId($user_id)->orderby('id','desc')->paginate(10);
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
         } catch (\Throwable $th) {
@@ -114,7 +114,7 @@ class UserLoanController extends Controller
     public function loanamount(Request $request)
     {
         try {
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
 
             $rules = [
                 'planId'   => 'required',
@@ -150,7 +150,7 @@ class UserLoanController extends Controller
     public function loanrequest(Request $request)
     {
         try {
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $user = User::whereId($user_id)->first();
             if($user->bank_plan_id === null){
                 return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'You have to buy a plan to loan.']);
@@ -235,7 +235,7 @@ class UserLoanController extends Controller
     public function loanfinish(Request $request)
     {
         try {
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             if ($user_id)
             {
                 $loan = UserLoan::whereId($request->planId)->where('user_id', $user_id)->first();
@@ -260,7 +260,7 @@ class UserLoanController extends Controller
     public function loanlog(Request $request, $id)
     {
         try {
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             if ($user_id) {
                 $loan = UserLoan::findOrfail($id);
                 $logs = InstallmentLog::whereTransactionNo($loan->transaction_no)->whereUserId($user_id)->orderby('id','desc')->paginate(20);

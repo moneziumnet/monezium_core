@@ -29,7 +29,7 @@ class MerchantController extends Controller
     public function apikey(Request $request)
     {
         try {
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $user = User::whereId($user_id)->first();
             $explode = explode(',',$user->user_type);
 
@@ -57,7 +57,7 @@ class MerchantController extends Controller
     public function merchantmoneysend(Request $request)
     {
         try {
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $rules = [
                 'receiver'          => 'required|email',
                 'wallet_id'         => 'required|integer',
@@ -128,7 +128,7 @@ class MerchantController extends Controller
     public function escrowpending(Request $request)
     {
         try {
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $data['escrow']          = Escrow::with('currency')->where('recipient_id',$user_id)->orderby('id','desc')->paginate(10);
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
         } catch (\Throwable $th) {

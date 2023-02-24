@@ -27,7 +27,7 @@ class BeneficiaryController extends Controller
     public function beneficiaries(Request $request)
     {
         try{
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $data['beneficiaries'] = Beneficiary::with('bank')->whereUserId($user_id)->orderBy('id','desc')->paginate(10);
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
         }catch(\Throwable $th){
@@ -38,7 +38,7 @@ class BeneficiaryController extends Controller
     public function beneficiariescreate(Request $request)
     {
         try{
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
 
             $rules = [
                 'other_bank_id' => 'required',
@@ -73,7 +73,7 @@ class BeneficiaryController extends Controller
     public function beneficiariesdetails(Request $request)
     {
         try{
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $rules = [
                 'beneficiary_id'       => 'required'
             ];

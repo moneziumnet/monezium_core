@@ -26,7 +26,7 @@ class TransactionController extends Controller
     public function transactions(Request $request)
     {
         try{
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $transactions = Transaction::whereUserId($user_id)->orderBy('id','desc')->paginate(10);
             foreach ($transactions as $key => $transaction) {
                 $transaction->currency = Currency::whereId($transaction->currency_id)->first();
@@ -42,7 +42,7 @@ class TransactionController extends Controller
     public function transferlogs(Request $request)
     {
         try{
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $data['transfer'] = BalanceTransfer::whereUserId($user_id)->orderBy('id','desc')->paginate(10);
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
         }catch(\Throwable $th){

@@ -27,7 +27,7 @@ class UserWithdrawController extends Controller
     public function withdraw(Request $request)
     {
         try{
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $data['withdaw'] = Withdrawals::whereUserId($user_id)->orderBy('id','desc')->paginate(10);
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data'=> $data]);
         }catch(\Throwable $th){
@@ -39,7 +39,7 @@ class UserWithdrawController extends Controller
     public function withdrawcreate(Request $request)
     {
         try{
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
 
             $rules = [
                 'subinstitude_id'        => 'required',
@@ -186,7 +186,7 @@ class UserWithdrawController extends Controller
     public function withdrawdetails(Request $request)
     {
         try{
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
 
             $rules = [
                 'user_withdraw_id'        => 'required'

@@ -27,7 +27,7 @@ class InvoiceController extends Controller
      public function invoices(Request $request)
      {
          try{
-             $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+             $user_id = Auth::user()->id;
              $data['invoices'] = Invoice::with('currency')->whereUserId($user_id)->orderby('id','desc')->paginate(10);
              return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
          }catch(\Throwable $th)
@@ -39,7 +39,7 @@ class InvoiceController extends Controller
      public function invoiceview(Request $request)
      {
          try{
-             $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+             $user_id = Auth::user()->id;
              $rules = [
                 'invoice_number' => 'required'
             ];
@@ -62,7 +62,7 @@ class InvoiceController extends Controller
      public function createinvoice(Request $request)
      {
          try{
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $rules = [
                 'invoice_to' => 'required',
                 'email'      => 'required|email',
@@ -133,7 +133,7 @@ class InvoiceController extends Controller
      public function invoiceurl(Request $request)
      {
          try{
-             $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+             $user_id = Auth::user()->id;
  
              $rules = [
                 'invoice_number' => 'required'

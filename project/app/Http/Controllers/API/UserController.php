@@ -43,7 +43,8 @@ class UserController extends Controller
             abort(response()->json('The provided credentials are incorrect.', 401));
         }
 
-        return $user->createToken($request->device_name)->plainTextToken;
+        $accessToken=$user->createToken($request->device_name)->plainTextToken;
+        return response(['access_token'=>$accessToken, 'user'=>$user]);
     }
 
     public function register(Request $request)
@@ -194,7 +195,7 @@ class UserController extends Controller
     public function dashboard(Request $request)
     {
         try {
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $data['user'] = User::whereId($user_id)->first();
             $wallets = Wallet::where('user_id',$user_id)->where('user_type',1)->with('currency')->get();
             $data['wallets'] = $wallets;
@@ -212,7 +213,7 @@ class UserController extends Controller
     public function packages(Request $request)
     {
         try {
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $data['packages'] = BankPlan::orderby('id','desc')->paginate(10);
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
         } catch (\Throwable $th) {
@@ -223,7 +224,7 @@ class UserController extends Controller
     public function changepassword(Request $request)
     {
         try {
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
 
             $rules = [
                 'current_password'   => 'required',
@@ -265,7 +266,7 @@ class UserController extends Controller
     public function supportmessage(Request $request)
     {
         try{
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $data['tickets'] = AdminUserConversation::whereUserId($user_id)->orderby('id','desc')->paginate(10);
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data'=> $data]);
         }catch(\Throwable $th){

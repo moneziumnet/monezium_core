@@ -31,7 +31,7 @@ class SendController extends Controller
     public function sendmoney(Request $request)
     {
         try {
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
 
             $rules = [
                 'account_number'    => 'required',
@@ -154,7 +154,7 @@ class SendController extends Controller
     public function requestmoney(Request $request)
     {
         try {
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
 
             $rules = [
                 'account_name'      => 'required',
@@ -228,7 +228,7 @@ class SendController extends Controller
     public function approvemoney(Request $request, $id)
     {
         try {
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'You must be enable 2FA Security.']);
             $rules = [
                 'code' => 'required'
@@ -317,7 +317,7 @@ class SendController extends Controller
     public function requestcancel(Request $request, $id)
     {
         try {
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             if ($user_id) {
             $data = MoneyRequest::findOrFail($id);
             $data->update(['status'=>2]);
@@ -330,7 +330,7 @@ class SendController extends Controller
 
     public function receive(Request $request){
         try {
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $user = User::whereId($user_id)->first();
             if($user->twofa)
             {
@@ -347,7 +347,7 @@ class SendController extends Controller
 
     public function create(Request $request){
         try {
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             if($user_id)
             {
                 $wallets = Wallet::where('user_id',$user_id)->with('currency')->get();

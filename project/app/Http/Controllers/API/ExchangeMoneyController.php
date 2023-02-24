@@ -28,7 +28,7 @@ class ExchangeMoneyController extends Controller
     public function exchangemoneyhistory(Request $request)
     {
         try{
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $search = $request->transaction_no;
             $exchanges = ExchangeMoney::whereUserId($user_id)
                         ->when($search,function($q) use($search){
@@ -44,7 +44,7 @@ class ExchangeMoneyController extends Controller
     public function exchangerecents(Request $request)
     {
         try{
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $recentExchanges = ExchangeMoney::whereUserId($user_id)->with(['fromCurr','toCurr'])->orderBy('id','desc')->take(10)->get();
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $recentExchanges]);
 
@@ -56,7 +56,7 @@ class ExchangeMoneyController extends Controller
     public function exchangemoney(Request $request)
     {
         try{
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
 
             // $request->validate([
             //     'amount'            => 'required|gt:0',

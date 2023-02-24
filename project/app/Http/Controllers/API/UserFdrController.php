@@ -28,7 +28,7 @@ class UserFdrController extends Controller
     public function fdr_index(Request $request)
     {
         try {
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $data['fdr'] = UserFdr::whereUserId($user_id)->orderby('id','desc')->paginate(10);
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
         } catch (\Throwable $th) {
@@ -40,7 +40,7 @@ class UserFdrController extends Controller
     public function runningfdr(Request $request)
     {
         try {
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $data['fdr'] = UserFdr::whereStatus(1)->whereUserId($user_id)->orderby('id','desc')->paginate(10);
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
         } catch (\Throwable $th) {
@@ -51,7 +51,7 @@ class UserFdrController extends Controller
     public function closedfdr(Request $request)
     {
         try {
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $data['fdr'] = UserFdr::whereStatus(2)->whereUserId($user_id)->orderby('id','desc')->paginate(10);
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
         } catch (\Throwable $th) {
@@ -62,7 +62,7 @@ class UserFdrController extends Controller
     public function applyfdr(Request $request)
     {
         try {
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
 
             $rules = [
                 'plan_id'       => 'required',
@@ -151,7 +151,7 @@ class UserFdrController extends Controller
     public function finishfdr(Request $request)
     {
         try{
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
             $rules = [
                 'user_plan_id'       => 'required'
             ];
@@ -193,7 +193,7 @@ class UserFdrController extends Controller
     public function fdrdetails(Request $request, $id)
     {
         try {
-            $user_id = UserApiCred::where('access_key', $request->access_key)->first()->user_id;
+            $user_id = Auth::user()->id;
 
             if($id)
             {
