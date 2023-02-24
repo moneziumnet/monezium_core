@@ -137,6 +137,11 @@ class ReportTransactionController extends Controller
                         return Str::contains(Str::lower($row['bank_name']), Str::lower($request->get('bank_name'))) ? true : false;
                     });
                 }
+                if (!empty($request->get('status'))) {
+                    $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                        return Str::contains(Str::lower($row['status']), Str::lower($request->get('status'))) ? true : false;
+                    });
+                }
                 if (!empty($request->get('s_time'))) {
                     $s_time = $request->get('s_time');
                     $e_time = $request->get('e_time');
