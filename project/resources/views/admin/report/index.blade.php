@@ -190,7 +190,12 @@
             table.draw();
         });
 
-        $('.details').on('click',function () {
+
+        $('.closed').click(function() {
+            $('#modal-success').modal('hide');
+        });
+    });
+    $('.details').on('click',function () {
             var url = "{{url('admin/bank/report/transaction/details')}}"+'/'+$(this).data('id')
             $('.trx_details').text($(this).data('type').type)
             $('#trx_id').val($(this).data('id'))
@@ -204,9 +209,5 @@
             })
         });
 
-        $('.closed').click(function() {
-            $('#modal-success').modal('hide');
-        });
-    });
     </script>
 @endsection
