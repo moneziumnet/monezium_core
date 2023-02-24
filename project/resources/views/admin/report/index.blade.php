@@ -191,9 +191,9 @@
         });
 
         $('.details').on('click',function () {
-            var url = "{{url('admin/bank/report/transaction/details')}}"+'/'+$(this).data('data')
+            var url = "{{url('admin/bank/report/transaction/details')}}"+'/'+$(this).data('id')
             $('.trx_details').text($(this).data('type').type)
-            $('#trx_id').val($(this).data('data'))
+            $('#trx_id').val($(this).data('id'))
             $.get(url,function (res) {
             if(res == 'empty'){
                 $('.list-group').html("<p>@lang('No details found!')</p>")
