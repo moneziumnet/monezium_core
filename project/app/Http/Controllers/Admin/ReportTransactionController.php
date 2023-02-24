@@ -185,8 +185,7 @@ class ReportTransactionController extends Controller
 
     public function trxDetails($id)
     {
-        $transaction = Transaction::whereIn('remark', ['External_Payment', 'Deposit_create' ])->where('data', 'LIKE', '%'.$id.'%')->orWhere('trnx', $id)->first();
-        $transaction->currency = Currency::whereId($transaction->currency_id)->first();
+        $transaction = Transaction::whereIn('remark', ['External_Payment', 'Deposit_create' ])->where('data', 'LIKE', '%'.$id.'%')->orWhere('trnx', $id)->with('currency')->first();
         if(!$transaction){
             return response('empty');
         }
