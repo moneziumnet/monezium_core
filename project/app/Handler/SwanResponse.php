@@ -101,7 +101,7 @@ class SwanResponse implements RespondsToWebhook
 
                     $webrequest->save();
 
-                    $deposit = DepositBank::whereRaw("INSTR('".$details->reference."', deposit_number) > 0")->orwhereRaw("INSTR('".$obj->resourceId."', deposit_number) > 0")->first();
+                    $deposit = DepositBank::whereRaw("INSTR('".$details->reference."', deposit_number) > 0")->orWhereRaw("INSTR('".$obj->resourceId."', deposit_number) > 0")->first();
                     if(!$deposit) {
                         $new_deposit = new DepositBank();
                         $iban = BankAccount::where('iban', $details->account->IBAN)->first();

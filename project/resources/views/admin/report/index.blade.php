@@ -96,29 +96,81 @@
 
     <div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-md modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-status bg-primary"></div>
-            <div class="modal-body text-center py-4">
-            <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
-            <h3>@lang('Transaction Details')</h3>
-            <p class="trx_details"></p>
-            <ul class="list-group mt-2">
-            </ul>
-            </div>
-            <div class="modal-footer">
-            <div class="w-100">
-                <div class="row">
-                    <div class="col mt-2">
-                        <a href="#" class="btn w-100" data-bs-dismiss="modal">
-                        @lang('Close')
-                        </a>
+            <div class="modal-content">
+                <div class="modal-status bg-primary"></div>
+                <div class="modal-body text-center py-4">
+                <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+                <h3>@lang('Transaction Details')</h3>
+                <p class="trx_details"></p>
+                <ul class="list-group mt-2">
+                </ul>
+                </div>
+                <div class="modal-footer">
+                    <div class="w-100">
+                        <div class="row">
+                            <div class="col mt-2">
+                                <a href="#" class="btn w-100 closed" data-bs-dismiss="modal">
+                                @lang('Close')
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="modal modal-blur fade" id="modal-fee" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-status bg-primary"></div>
+                <div class="modal-body text-center py-4">
+                <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+                <h3>@lang('Fee Details')</h3>
+                <p class="trx_details"></p>
+                <ul class="list-group mt-2">
+                </ul>
+                </div>
+                <div class="modal-footer">
+                    <div class="w-100">
+                        <div class="row">
+                            <div class="col mt-2">
+                                <a href="#" class="btn w-100 feeclosed" data-bs-dismiss="modal">
+                                @lang('Close')
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+    <div class="modal modal-blur fade" id="modal-total-fee" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-status bg-primary"></div>
+                <div class="modal-body text-center py-4">
+                <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+                <h3>@lang('Fee Details')</h3>
+                <p class="trx_details"></p>
+                <ul class="list-group mt-2">
+                </ul>
+                </div>
+                <div class="modal-footer">
+                    <div class="w-100">
+                        <div class="row">
+                            <div class="col mt-2">
+                                <a href="#" class="btn w-100 totalclosed" data-bs-dismiss="modal">
+                                @lang('Close')
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 
@@ -164,6 +216,13 @@
                 }
             });
 
+            $(function() {
+                $(".btn-area").append('<div class="col-sm-12 col-md-4 pr-3 text-right">'+
+                    '<button class="btn btn-primary"  onclick="cal_fee()" > {{__('Fee Calculation')}} </button>'+
+                '</a>'+
+                '</div>');
+            });
+
             $('#sender_name').on('keyup', function () {
                 table.draw();
             });
@@ -193,24 +252,64 @@
         });
 
         function getdetails(e){
-            console.log(e.target.getAttribute('data-id'))
-
-            var url = "{{url('admin/bank/report/transaction/details')}}"+'/'+e.target.getAttribute('data-id')
-                $('.trx_details').text(e.target.getAttribute('data-type'))
-                $.get(url,function (res) {
-                if(res == 'empty'){
-                    $('.list-group').html("<p>@lang('No details found!')</p>")
-                }else{
-                    $('.list-group').html(res)
-                }
+            if(!e.target.getAttribute('data-id')) {
+                $('.list-group').html("<p>@lang('No details found!')</p>")
                 $('#modal-success').modal('show')
-                })
+                return
+            }
+            var url = "{{url('admin/bank/report/transaction/details')}}"+'/'+e.target.getAttribute('data-id')
+            $('.trx_details').text(e.target.getAttribute('data-type'))
+            $.get(url,function (res) {
+            if(res == 'empty'){
+                $('.list-group').html("<p>@lang('No details found!')</p>")
+            }else{
+                $('.list-group').html(res)
+            }
+            $('#modal-success').modal('show')
+            })
+        }
+
+        function cal_fee(){
+            var url = "{{url('admin/bank/report/transaction/total/fee')}}"
+            $.get(url,function (res) {
+            if(res == 'empty'){
+                $('.list-group').html("<p>@lang('No details found!')</p>")
+            }else{
+                $('.list-group').html(res)
+            }
+            $('#modal-total-fee').modal('show')
+            })
+        }
+
+        function getfee(e){
+            if(!e.target.getAttribute('data-id')) {
+                $('.list-group').html("<p>@lang('No details found!')</p>")
+                $('#modal-fee').modal('show')
+                return
+            }
+            var url = "{{url('admin/bank/report/transaction/fee')}}"+'/'+e.target.getAttribute('data-id')
+            $('.trx_details').text(e.target.getAttribute('data-type'))
+            $.get(url,function (res) {
+            if(res == 'empty'){
+                $('.list-group').html("<p>@lang('No details found!')</p>")
+            }else{
+                $('.list-group').html(res)
+            }
+            $('#modal-fee').modal('show')
+            })
         }
 
         $('.closed').click(function() {
             $('#modal-success').modal('hide');
         });
 
+        $('.feeclosed').click(function() {
+            $('#modal-fee').modal('hide');
+        });
+
+        $('.totalclosed').click(function() {
+            $('#modal-total-fee').modal('hide');
+        });
 
     </script>
 @endsection

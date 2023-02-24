@@ -103,7 +103,7 @@ class ReportTransactionController extends Controller
         return Datatables::of($datas)
             ->setRowAttr([
                 'style' => function( $data) {
-                    $webhook_request = WebhookRequest::where('reference', 'LIKE', '%'.$data->trnx_no)->orwhere('transaction_id',$data->trnx_no)->first();
+                    $webhook_request = WebhookRequest::where('reference', 'LIKE', '%'.$data->trnx_no.'%')->orWhere('transaction_id',$data->trnx_no)->first();
                     if($data->status == 'pending' && (!$webhook_request || $webhook_request->status == "processing")) {
                         return "background-color: #ffcaca;";
                     } else {
@@ -176,7 +176,8 @@ class ReportTransactionController extends Controller
                     '.'Actions' .'
                     </button>
                     <div class="dropdown-menu" x-placement="bottom-start">
-                    <a  href="javascript:;" class="dropdown-item details" data-id="'.$data->trnx_no.'" onclick = "getdetails(event)"  data-type="'.$data->type.'">'.__("Detail").'</a>
+                    <a  href="javascript:;" class="dropdown-item details" data-id="'.$data->tran_id.'" onclick = "getdetails(event)"  data-type="'.$data->type.'">'.__("Detail").'</a>
+                    <a  href="javascript:;" class="dropdown-item details" data-id="'.$data->tran_id.'" onclick = "getfee(event)"  data-type="'.$data->type.'">'.__("Fee").'</a>
                     </div>
                 </div>';
             })
@@ -186,13 +187,38 @@ class ReportTransactionController extends Controller
 
     public function trxDetails($id)
     {
-        $transaction = Transaction::whereIn('remark', ['External_Payment', 'Deposit_create' ])->where('data', 'LIKE', '%'.$id.'%')->orWhere('trnx', $id)->with('currency')->first();
+        $transaction = Transaction::where('id', $id)->with('currency')->first();
         if(!$transaction){
             return response('empty');
         }
         return view('admin.report.detail',compact('transaction'));
     }
 
+    public function feeDetails($id)
+    {
+        $transaction = Transaction::where('id', $id)->with('currency')->first();
+        if(!$transaction){
+            return response('empty');
+        }
+        $webhook_request = WebhookRequest::where('transaction_id', $transaction->trnx)->orWhere('reference', 'LIKE', $transaction->trnx)->first();
+        if(!$webhook_request){
+            return response('empty');
+        }
+        return view('admin.report.feedetail',compact('transaction', 'webhook_request'));
+    }
+
+    public function totalfeeDetails()
+    {
+        $transaction = Transaction::where('id', 1168)->with('currency')->first();
+        if(!$transaction){
+            return response('empty');
+        }
+        $webhook_request = WebhookRequest::where('transaction_id', $transaction->trnx)->orWhere('reference', 'LIKE', $transaction->trnx)->first();
+        if(!$webhook_request){
+            return response('empty');
+        }
+        return view('admin.report.totalfee',compact('transaction', 'webhook_request'));
+    }
 
     public function summary_trxDetails($id)
     {
