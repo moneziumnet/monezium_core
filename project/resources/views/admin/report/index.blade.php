@@ -93,63 +93,33 @@
         </div>
     </div>
 
-    <div class="modal fade confirm-modal" id="statusModal" tabindex="-1" role="dialog" aria-labelledby="statusModalTitle"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">{{ __('Update Status') }}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <div class="modal-body">
-                    <p class="text-center">{{ __('You are about to change the status.') }}</p>
-                    <p class="text-center">{{ __('Do you want to proceed?') }}</p>
-                </div>
-
-                <div class="modal-footer">
-                    <a href="javascript:;" class="btn btn-secondary" data-dismiss="modal">{{ __('Cancel') }}</a>
-                    <a href="javascript:;" class="btn btn-success btn-ok">{{ __('Update') }}</a>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-md modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-status bg-primary"></div>
-                <div class="modal-body text-center py-4">
-                    <i class="fas fa-info-circle fa-3x text-primary mb-2"></i>
-                    <h3>@lang('ICO Token Details')</h3>
-                    <ul class="list-group mt-2 ico-token-details">
-                        <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">
-                            @lang('Hash')<span id="hash" style="margin-left: 60px"></span></li>
-                        <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">
-                            @lang('Receiver Crypto Address')<span id="address" style="margin-left: 60px"></span></li>
-                        <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">
-                            @lang('Customer Crypto Address')<span id="sender_address" style="margin-left: 60px"></span></li>
-                        <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">
-                            @lang('Amount')<span id="amount" style="margin-left: 60px"></span></li>
-                        <li class="list-group-item d-flex justify-content-between" id="li_document">@lang('Proof')<span>
-                                <a id="proof" attributes-list download> {{ __('Download Proof') }} </a> </span></li>
-                    </ul>
-                </div>
-                <div class="modal-footer">
-                    <div class="w-100">
-                        <div class="row">
-                            <div class="col"><a href="javascript:;" class="btn w-100 closed" data-bs-dismiss="modal">
-                                    @lang('Close')
-                                </a>
-                            </div>
-                        </div>
+        <div class="modal-content">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-status bg-primary"></div>
+            <div class="modal-body text-center py-4">
+            <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+            <h3>@lang('Transaction Details')</h3>
+            <p class="trx_details"></p>
+            <ul class="list-group mt-2">
+            </ul>
+            </div>
+            <div class="modal-footer">
+            <div class="w-100">
+                <div class="row">
+                    <div class="col mt-2">
+                        <a href="#" class="btn w-100" data-bs-dismiss="modal">
+                        @lang('Close')
+                        </a>
                     </div>
                 </div>
             </div>
+            </div>
         </div>
     </div>
+</div>
 @endsection
 
 
@@ -220,13 +190,19 @@
             table.draw();
         });
 
-        function getDetails(id) {
-            var url = "{{url('admin/ico/details')}}"+'/'+id
+        $('.details').on('click',function () {
+            var url = "{{url('admin/bank/report/transaction/details')}}"+'/'+$(this).data('data')
+            $('.trx_details').text($(this).data('type').type)
+            $('#trx_id').val($(this).data('data'))
             $.get(url,function (res) {
-                $('.ico-token-details').html(res);
-                $('#modal-success').modal('show')
+            if(res == 'empty'){
+                $('.list-group').html("<p>@lang('No details found!')</p>")
+            }else{
+                $('.list-group').html(res)
+            }
+            $('#modal-success').modal('show')
             })
-        }
+        });
 
         $('.closed').click(function() {
             $('#modal-success').modal('hide');

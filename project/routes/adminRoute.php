@@ -393,6 +393,7 @@ Route::prefix('admin')->group(function () {
   Route::group(['middleware' => 'permissions:Report'], function () {
     Route::get('/bank/report/transaction', [ReportTransactionController::class,'index'])->name('admin.report.transaction.index');
     Route::get('/bank/report/transaction/datatables', [ReportTransactionController::class,'datatables'])->name('admin.report.transaction.datatables');
+    Route::get('/bank/report/transaction/details/{id}', [ReportTransactionController::class,'trxDetails'])->name('admin.report.transaction.detail');
   });
 
 

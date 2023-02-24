@@ -1,10 +1,12 @@
-<li class="list-group-item d-flex justify-content-between">@lang('Name')<span>{{$item->name}}</span></li>
-<li class="list-group-item d-flex justify-content-between">@lang('Price')<span>{{ amount($item->price, 1, 2) }} USD</span></li>
-<li class="list-group-item d-flex justify-content-between">@lang('Code')<span class="badge badge-primary">{{ $item->currency->code }}</span></li>
-<li class="list-group-item d-flex justify-content-between">@lang('Symbol')<span>{{ $item->currency->symbol }}</span></li>
-<li class="list-group-item d-flex justify-content-between">@lang('Total Supply')<span>{{ $item->total_supply }}</span></li>
-<li class="list-group-item d-flex justify-content-between">@lang('Balance')<span>{{ $item->balance }}</span></li>
-<li class="list-group-item d-flex justify-content-between">@lang('End Date')<span>{{ dateFormat($item->end_date) }}</span></li>
-<li class="list-group-item d-flex justify-content-between">@lang('White Paper')
-    <a href ="{{asset('assets/doc/'.$item->white_paper)}}" class="btn btn-primary btn-sm" attributes-list download >{{ __('Download White Paper')}} </a>
-</li>
+<li class="list-group-item d-flex justify-content-between">@lang('Transaction ID')<span>{{$transaction->trnx}}</span></li>
+<li class="list-group-item d-flex justify-content-between">@lang('Remark')<span class="badge badge-primary">{{ucwords(str_replace('_',' ',$transaction->remark))}}</span></li>
+<li class="list-group-item d-flex justify-content-between">@lang('Currency')<span class="font-weight-bold">{{$transaction->currency->code}}</span></li>
+<li class="list-group-item d-flex justify-content-between">@lang('Amount')<span class="badge {{$transaction->type == '+' ? 'badge-success':'badge-danger'}}">{{$transaction->type}}{{amount($transaction->amount,$transaction->currency->type,2)}} {{$transaction->currency->code}}</span></li>
+<li class="list-group-item d-flex justify-content-between">@lang('Charge')<span>{{amount($transaction->charge,$transaction->currency->type,2)}} {{$transaction->currency->code}}</span></li>
+<li class="list-group-item d-flex justify-content-between">@lang('Date')<span>{{dateFormat($transaction->created_at,'d M y')}}</span></li>
+@if (isset($transaction->data))
+    @foreach ( json_decode($transaction->data) as $key => $value)
+        <li class="list-group-item d-flex justify-content-between">@lang(ucwords($key))<span>{{($value)}}</span></li>
+    @endforeach
+
+@endif

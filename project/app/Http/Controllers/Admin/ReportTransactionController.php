@@ -170,10 +170,27 @@ class ReportTransactionController extends Controller
                 return $status;
             })
             ->editColumn('action', function( $data) {
-                return '<a href="javascript:;" onclick=getDetails('.$data->trnx_no.') class="detailsBtn">' . __("Details") . '</a>';
+                return '<div class="btn-group mb-1">
+                    <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    '.'Actions' .'
+                    </button>
+                    <div class="dropdown-menu" x-placement="bottom-start">
+                    <a  href="javascript:;" class="dropdown-item details" data-toggle="modal" data-target="#modal-success" data-data="{{$data->tran_id}}" data-type="{{$data->type}}">'.__("Detail").'</a>
+                    </div>
+                </div>';
             })
             ->rawColumns(['date','amount','status','action'])
             ->toJson();
+    }
+
+    public function trxDetails($id)
+    {
+        $transaction = Transaction::where('id',$id)->first();
+        $transaction->currency = Currency::whereId($transaction->currency_id)->first();
+        if(!$transaction){
+            return response('empty');
+        }
+        return view('admin.report.detail',compact('transaction'));
     }
 
 }
