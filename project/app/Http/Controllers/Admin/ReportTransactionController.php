@@ -137,13 +137,14 @@ class ReportTransactionController extends Controller
                         return Str::contains(Str::lower($row['bank_name']), Str::lower($request->get('bank_name'))) ? true : false;
                     });
                 }
-                if (!empty($request->get('s_time'))) {
-                    $s_time = $request->get('s_time');
-                    $e_time = $request->get('e_time');
-                    $s_time = $s_time ? $s_time : '';
-                    $e_time = $e_time ? $e_time : Carbontime::now()->addDays(1)->format('d-M-Y');
+                if (!empty($request->get('status'))) {
                     $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                        if($row['date'] > $s_time && $row['date'] < $e_time) {
+                        return Str::contains(Str::lower($row['status']), Str::lower($request->get('status'))) ? true : false;
+                    });
+                }
+                if (!empty($request->get('s_time'))) {
+                    $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                        if($row['date'] > $request->get('s_time') && $row['date'] < ($request->get('e_time') ?? Carbontime::now()->addDays(1)->format('mm/dd/yyyy')) ) {
                             return true;
                         }
                         else {
@@ -153,7 +154,7 @@ class ReportTransactionController extends Controller
                 }
             })
             ->editColumn('date',function( $data){
-                return dateFormat($data->date,'d-M-Y');
+                return dateFormat($data->date,'m/d/yyyy');
             })
             ->editColumn('amount', function( $data) {
                 return  $data->amount.$data->currency_code;

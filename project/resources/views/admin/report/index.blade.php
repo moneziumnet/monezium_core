@@ -25,7 +25,7 @@
                             <div class="form-group mr-3">
                                 <label class="form-label">{{ __('Type') }}</label>
 
-                                <select name="type" class="form-control mr-2 shadow-none" >
+                                <select name="type" id="type" class="form-control mr-2 shadow-none" >
                                     <option value="">@lang('All')</option>
                                     <option value="External">@lang('External')</option>
                                     <option value="Deposit">@lang('Deposit')</option>
@@ -33,7 +33,7 @@
                             </div>
                             <div class="form-group mr-3">
                                 <label  class="form-label">{{ __('Bank') }}</label>
-                                <select name="bank_name" class="form-control mr-2 shadow-none" >
+                                <select name="bank_name" id="bank_name" class="form-control mr-2 shadow-none" >
                                     <option value="">@lang('All Account')</option>
                                     @foreach ($banklist as $item)
                                         <option value="{{$item}}">{{$item}}</option>
@@ -43,7 +43,7 @@
                             <div class="form-group mr-3">
                                 <label class="form-label">{{ __('Status') }}</label>
 
-                                <select name="type" class="form-control mr-2 shadow-none" >
+                                <select name="status" id="status" class="form-control mr-2 shadow-none" >
                                     <option value="">@lang('All')</option>
                                     <option value="pending">@lang('Pending')</option>
                                     <option value="complete">@lang('Complete')</option>
@@ -218,6 +218,7 @@
                     d.e_time = $('#e_time').val(),
                     d.trnx_no = $('#trnx_no').val(),
                     d.trnx_type = $('#type').val(),
+                    d.status = $('#status').val(),
                     d.bank_name = $('#bank_name').val()
                 }
 
@@ -257,6 +258,9 @@
             table.draw();
         });
         $('#bank_name').on('change', function () {
+            table.draw();
+        });
+        $('#status').on('change', function () {
             table.draw();
         });
 
