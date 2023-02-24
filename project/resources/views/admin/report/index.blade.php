@@ -231,6 +231,24 @@
         $('#sender_name').on('keyup', function () {
             table.draw();
         });
+        $('#receiver_name').on('keyup', function () {
+            table.draw();
+        });
+        $('#trnx_no').on('keyup', function () {
+            table.draw();
+        });
+        $('#s_time').on('change', function () {
+            table.draw();
+        });
+        $('#e_time').on('change', function () {
+            table.draw();
+        });
+        $('#type').on('change', function () {
+            table.draw();
+        });
+        $('#bank_name').on('change', function () {
+            table.draw();
+        });
 
         function getDetails(id) {
             var url = "{{url('admin/ico/details')}}"+'/'+id
