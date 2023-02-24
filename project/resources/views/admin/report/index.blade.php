@@ -129,86 +129,86 @@
         "use strict";
 
         $(document).ready(function () {
-        var table = $('#geniustable').DataTable({
-            ordering: false,
-            processing: true,
-            serverSide: true,
-            searching: false,
-            ajax: {
+            var table = $('#geniustable').DataTable({
+                ordering: false,
+                processing: true,
+                serverSide: true,
+                searching: false,
+                ajax: {
 
-                url : "{{  route('admin.report.transaction.datatables') }}",
-                data : function (d) {
-                    d.sender = $('#sender_name').val(),
-                    d.receiver = $('#receiver_name').val(),
-                    d.s_time = $('#s_time').val(),
-                    d.e_time = $('#e_time').val(),
-                    d.trnx_no = $('#trnx_no').val(),
-                    d.trnx_type = $('#type').val(),
-                    d.status = $('#status').val(),
-                    d.bank_name = $('#bank_name').val()
+                    url : "{{  route('admin.report.transaction.datatables') }}",
+                    data : function (d) {
+                        d.sender = $('#sender_name').val(),
+                        d.receiver = $('#receiver_name').val(),
+                        d.s_time = $('#s_time').val(),
+                        d.e_time = $('#e_time').val(),
+                        d.trnx_no = $('#trnx_no').val(),
+                        d.trnx_type = $('#type').val(),
+                        d.status = $('#status').val(),
+                        d.bank_name = $('#bank_name').val()
+                    }
+
+                },
+                columns: [
+                    { data: 'date', name: 'date' },
+                    { data: 'trnx_no', name: 'trnx_no' },
+                    { data: 'bank_name', name: 'bank_name' },
+                    { data: 'sender_name', name: 'sender_name' },
+                    { data: 'receiver_name', name: 'receiver_name' },
+                    { data: 'amount', name: 'amount' },
+                    { data: 'type', name: 'type' },
+                    { data: 'status', name: 'status' },
+                    { data: 'action', name: 'action' },
+                ],
+                language: {
+                    processing: '<img src="{{ asset('assets/images/' . $gs->admin_loader) }}">'
                 }
+            });
 
-            },
-            columns: [
-                { data: 'date', name: 'date' },
-                { data: 'trnx_no', name: 'trnx_no' },
-                { data: 'bank_name', name: 'bank_name' },
-                { data: 'sender_name', name: 'sender_name' },
-                { data: 'receiver_name', name: 'receiver_name' },
-                { data: 'amount', name: 'amount' },
-                { data: 'type', name: 'type' },
-                { data: 'status', name: 'status' },
-                { data: 'action', name: 'action' },
-            ],
-            language: {
-                processing: '<img src="{{ asset('assets/images/' . $gs->admin_loader) }}">'
-            }
+            $('#sender_name').on('keyup', function () {
+                table.draw();
+            });
+            $('#receiver_name').on('keyup', function () {
+                table.draw();
+            });
+            $('#trnx_no').on('keyup', function () {
+                table.draw();
+            });
+            $('#s_time').on('change', function () {
+                table.draw();
+            });
+            $('#e_time').on('change', function () {
+                table.draw();
+            });
+            $('#type').on('change', function () {
+                table.draw();
+            });
+            $('#bank_name').on('change', function () {
+                table.draw();
+            });
+            $('#status').on('change', function () {
+                table.draw();
+            });
+            $('.details').on('click',function () {
+                console.log($(this).data('id'))
+                var url = "{{url('admin/bank/report/transaction/details')}}"+'/'+$(this).data('id')
+                $('.trx_details').text($(this).data('type').type)
+                $('#trx_id').val($(this).data('id'))
+                $.get(url,function (res) {
+                if(res == 'empty'){
+                    $('.list-group').html("<p>@lang('No details found!')</p>")
+                }else{
+                    $('.list-group').html(res)
+                }
+                $('#modal-success').modal('show')
+                })
+            });
+
+            $('.closed').click(function() {
+                $('#modal-success').modal('hide');
+            });
         });
 
-        $('#sender_name').on('keyup', function () {
-            table.draw();
-        });
-        $('#receiver_name').on('keyup', function () {
-            table.draw();
-        });
-        $('#trnx_no').on('keyup', function () {
-            table.draw();
-        });
-        $('#s_time').on('change', function () {
-            table.draw();
-        });
-        $('#e_time').on('change', function () {
-            table.draw();
-        });
-        $('#type').on('change', function () {
-            table.draw();
-        });
-        $('#bank_name').on('change', function () {
-            table.draw();
-        });
-        $('#status').on('change', function () {
-            table.draw();
-        });
-
-
-        $('.closed').click(function() {
-            $('#modal-success').modal('hide');
-        });
-    });
-    $('.details').on('click',function () {
-        console.log($(this).data('id'))
-            var url = "{{url('admin/bank/report/transaction/details')}}"+'/'+$(this).data('id')
-            $('.trx_details').text($(this).data('type').type)
-            $('#trx_id').val($(this).data('id'))
-            $.get(url,function (res) {
-            if(res == 'empty'){
-                $('.list-group').html("<p>@lang('No details found!')</p>")
-            }else{
-                $('.list-group').html(res)
-            }
-            $('#modal-success').modal('show')
-            })
-        });
 
     </script>
 @endsection
