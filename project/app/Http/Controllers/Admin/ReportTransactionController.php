@@ -144,7 +144,7 @@ class ReportTransactionController extends Controller
                 }
                 if (!empty($request->get('s_time'))) {
                     $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                        if($row['date'] > $request->get('s_time') && $row['date'] < ($request->get('e_time') ?? Carbontime::now()->addDays(1)->format('mm/dd/yyyy')) ) {
+                        if($row['date'] > $request->get('s_time') && $row['date'] < ($request->get('e_time') ?? Carbontime::now()->addDays(1)->format('m/d/Y')) ) {
                             return true;
                         }
                         else {
@@ -154,7 +154,7 @@ class ReportTransactionController extends Controller
                 }
             })
             ->editColumn('date',function( $data){
-                return dateFormat($data->date,'m/d/yyyy');
+                return dateFormat($data->date,'m/d/Y');
             })
             ->editColumn('amount', function( $data) {
                 return  $data->amount.$data->currency_code;
