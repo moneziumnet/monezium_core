@@ -189,20 +189,20 @@
             $('#status').on('change', function () {
                 table.draw();
             });
-            $('.details').on('click',function () {
-                console.log($(this).data('id'))
-                var url = "{{url('admin/bank/report/transaction/details')}}"+'/'+$(this).data('id')
-                $('.trx_details').text($(this).data('type').type)
-                $('#trx_id').val($(this).data('id'))
-                $.get(url,function (res) {
-                if(res == 'empty'){
-                    $('.list-group').html("<p>@lang('No details found!')</p>")
-                }else{
-                    $('.list-group').html(res)
-                }
-                $('#modal-success').modal('show')
-                })
-            });
+            function getdetails(e){
+                console.log(e.target.getAttribute('data-id'))
+
+                var url = "{{url('admin/bank/report/transaction/details')}}"+'/'+e.target.getAttribute('data-id')
+                    $('.trx_details').text(e.target.getAttribute('data-type'))
+                    $.get(url,function (res) {
+                    if(res == 'empty'){
+                        $('.list-group').html("<p>@lang('No details found!')</p>")
+                    }else{
+                        $('.list-group').html(res)
+                    }
+                    $('#modal-success').modal('show')
+                    })
+            }
 
             $('.closed').click(function() {
                 $('#modal-success').modal('hide');

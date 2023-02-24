@@ -175,7 +175,7 @@ class ReportTransactionController extends Controller
                     '.'Actions' .'
                     </button>
                     <div class="dropdown-menu" x-placement="bottom-start">
-                    <a  href="javascript:;" class="dropdown-item details" data-id="'.$data->trnx_no.'" data-type="'.$data->type.'">'.__("Detail").'</a>
+                    <a  href="javascript:;" class="dropdown-item details" data-id="'.$data->trnx_no.'" onclick = "getdetails(event)"  data-type="'.$data->type.'">'.__("Detail").'</a>
                     </div>
                 </div>';
             })
