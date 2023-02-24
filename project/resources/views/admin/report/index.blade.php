@@ -196,6 +196,7 @@
         });
     });
     $('.details').on('click',function () {
+        console.log($(this).data('id'))
             var url = "{{url('admin/bank/report/transaction/details')}}"+'/'+$(this).data('id')
             $('.trx_details').text($(this).data('type').type)
             $('#trx_id').val($(this).data('id'))
