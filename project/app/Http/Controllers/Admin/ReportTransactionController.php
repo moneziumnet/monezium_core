@@ -154,7 +154,7 @@ class ReportTransactionController extends Controller
                 }
             })
             ->editColumn('date',function( $data){
-                return dateFormat($data->date,'d-M-Y');
+                return dateFormat($data->date,'m/d/y');
             })
             ->editColumn('amount', function( $data) {
                 return  $data->amount.$data->currency_code;
