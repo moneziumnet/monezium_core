@@ -205,7 +205,7 @@
                     d.sender = $('#sender_name').val()
                 }
 
-            }
+            },
             columns: [
                 { data: 'date', name: 'date' },
                 { data: 'trnx_no', name: 'trnx_no' },
