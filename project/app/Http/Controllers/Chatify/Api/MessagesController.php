@@ -309,12 +309,12 @@ class MessagesController extends Controller
     {
         $input = trim(filter_var($request['input']));
         $records = User::where('id','!=',Auth::user()->id)
-                    ->where('name', 'LIKE', "%{$input}%")
-                    ->orWhere('company_name', 'LIKE', "%{$input}%")
+                    ->where('email', 'LIKE', "%{$input}%")
+                    // ->orWhere('company_name', 'LIKE', "%{$input}%")
                     ->paginate($request->per_page ?? $this->perPage);
 
         foreach ($records->items() as $index => $record) {
-            $records[$index] += Chatify::getUserWithAvatar($record);
+            $records[$index] = Chatify::getUserWithAvatar($record);
         }
 
         return Response::json([

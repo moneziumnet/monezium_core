@@ -118,21 +118,21 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('user/merchant-api-key', [MerchantController::class, 'apikey']);
 
         // chatify
-        Route::post('/chat/auth', [MessagesController::class, 'pusherAuth'])->name('api.pusher.auth');
-        Route::post('/idInfo', [MessagesController::class, 'idFetchData'])->name('api.idInfo');
-        Route::get('/alluser', [MessagesController::class, 'allUserData'])->name('api.alluser');
-        Route::post('/sendMessage', [MessagesController::class, 'send'])->name('api.send.message');
-        Route::post('/fetchMessages', [MessagesController::class, 'fetch'])->name('api.fetch.messages');
-        Route::get('/download/{fileName}', [MessagesController::class, 'download'])->name('api.' . config('chatify.attachments.download_route_name'));
-        Route::post('/makeSeen', [MessagesController::class, 'seen'])->name('api.messages.seen');
-        Route::get('/getContacts', [MessagesController::class, 'getContacts'])->name('api.contacts.get');
-        Route::post('/star', [MessagesController::class, 'favorite'])->name('api.star');
-        Route::post('/favorites', [MessagesController::class, 'getFavorites'])->name('api.favorites');
-        Route::get('/search', [MessagesController::class, 'search'])->name('api.search');
-        Route::post('/shared', [MessagesController::class, 'sharedPhotos'])->name('api.shared');
-        Route::post('/deleteConversation', [MessagesController::class, 'deleteConversation'])->name('api.conversation.delete');
-        Route::post('/updateSettings', [MessagesController::class, 'updateSettings'])->name('api.avatar.update');
-        Route::post('/setActiveStatus', [MessagesController::class, 'setActiveStatus'])->name('api.activeStatus.set');
+        Route::post('user/chat/auth', [MessagesController::class, 'pusherAuth'])->name('api.pusher.auth');
+        Route::post('user/idInfo', [MessagesController::class, 'idFetchData'])->name('api.idInfo');
+        Route::get('user/alluser', [MessagesController::class, 'allUserData'])->name('api.alluser');
+        Route::post('user/sendMessage', [MessagesController::class, 'send'])->name('api.send.message');
+        Route::post('user/fetchMessages', [MessagesController::class, 'fetch'])->name('api.fetch.messages');
+        Route::get('user/download/{fileName}', [MessagesController::class, 'download'])->name('api.' . config('chatify.attachments.download_route_name'));
+        Route::post('user/makeSeen', [MessagesController::class, 'seen'])->name('api.messages.seen');
+        Route::get('user/getContacts', [MessagesController::class, 'getContacts'])->name('api.contacts.get');
+        Route::post('user/star', [MessagesController::class, 'favorite'])->name('api.star');
+        Route::post('user/favorites', [MessagesController::class, 'getFavorites'])->name('api.favorites');
+        Route::get('user/search', [MessagesController::class, 'search'])->name('api.search');
+        Route::post('user/shared', [MessagesController::class, 'sharedPhotos'])->name('api.shared');
+        Route::post('user/deleteConversation', [MessagesController::class, 'deleteConversation'])->name('api.conversation.delete');
+        Route::post('user/updateSettings', [MessagesController::class, 'updateSettings'])->name('api.avatar.update');
+        Route::post('user/setActiveStatus', [MessagesController::class, 'setActiveStatus'])->name('api.activeStatus.set');
     });
 });
 
