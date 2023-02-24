@@ -33,7 +33,7 @@ class ReportTransactionController extends Controller
         return view('admin.report.index');
     }
 
-    public function datatables(){
+    public function datatables(Request $request){
 
         $balancetransfers = BalanceTransfer::whereType('other')->orderBy('id','desc')->with('user')->get();
         $deposits = DepositBank::orderby('id','desc')->with('user')->get();
