@@ -143,12 +143,8 @@ class ReportTransactionController extends Controller
                     });
                 }
                 if (!empty($request->get('s_time'))) {
-                    $s_time = $request->get('s_time');
-                    $e_time = $request->get('e_time');
-                    $s_time = $s_time ? $s_time : '';
-                    $e_time = $e_time ? $e_time : Carbontime::now()->addDays(1)->format('d-M-Y');
                     $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                        if($row['date'] > $s_time && $row['date'] < $e_time) {
+                        if($row['date'] > $request->get('s_time') && $row['date'] < ($request->get('e_time') ?? Carbontime::now()->addDays(1)->format('d-M-Y')) ) {
                             return true;
                         }
                         else {
