@@ -40,6 +40,16 @@
                                     @endforeach
                                 </select>
                             </div>
+                            <div class="form-group mr-3">
+                                <label class="form-label">{{ __('Status') }}</label>
+
+                                <select name="type" class="form-control mr-2 shadow-none" >
+                                    <option value="">@lang('All')</option>
+                                    <option value="pending">@lang('Pending')</option>
+                                    <option value="complete">@lang('Complete')</option>
+                                    <option value="reject">@lang('Reject')</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="d-flex justify-content-center">
                             <div class="form-group mr-3">
