@@ -109,6 +109,13 @@ class ReportTransactionController extends Controller
                     }
                 },
             ])
+            ->filter(function ($instance) use ($request) {
+                if (!empty($request->get('sender'))) {
+                    $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                        return Str::contains($row['sender_name'], $request->get('sender')) ? true : false;
+                    });
+                }
+            })
             ->editColumn('date',function( $data){
                 return dateFormat($data->date,'d-M-Y');
             })

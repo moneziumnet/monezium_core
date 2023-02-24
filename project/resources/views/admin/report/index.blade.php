@@ -198,7 +198,14 @@
             //         });
             //     });
             // },
-            ajax: '{{ route('admin.report.transaction.datatables') }}',
+            ajax: {
+
+                url : "{{  route('admin.report.transaction.datatables') }}",
+                data : function (d) {
+                    d.sender = $('#sender_name').val()
+                }
+
+            }
             columns: [
                 { data: 'date', name: 'date' },
                 { data: 'trnx_no', name: 'trnx_no' },
@@ -216,7 +223,7 @@
         });
 
         $('#sender_name').on('keyup', function () {
-            table.search(this.value).draw();
+            table.draw();
         });
 
         function getDetails(id) {
