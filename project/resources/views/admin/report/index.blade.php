@@ -27,8 +27,8 @@
 
                                 <select name="type" class="form-control mr-2 shadow-none" >
                                     <option value="">@lang('All')</option>
-                                    <option value="">@lang('External')</option>
-                                    <option value="">@lang('Deposit')</option>
+                                    <option value="External">@lang('External')</option>
+                                    <option value="Deposit">@lang('Deposit')</option>
                                 </select>
                             </div>
                             <div class="form-group mr-3">
@@ -36,7 +36,7 @@
                                 <select name="bank_name" class="form-control mr-2 shadow-none" >
                                     <option value="">@lang('All Account')</option>
                                     @foreach ($banklist as $item)
-                                        <option value="{{$item}}">@lang({{$item}})</option>
+                                        <option value="{{$item}}">{{$item}}</option>
                                     @endforeach
                                 </select>
                             </div>
