@@ -114,27 +114,27 @@ class ReportTransactionController extends Controller
 
                 if (!empty($request->get('sender'))) {
                     $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                        return Str::contains($row['sender_name'], $request->get('sender')) ? true : false;
+                        return Str::contains(Str::lower($row['sender_name']), Str::lower($request->get('sender'))) ? true : false;
                     });
                 }
                 if (!empty($request->get('receiver'))) {
                     $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                        return Str::contains(Str::lower($row['receiver_name']), Str::low($request->get('receiver'))) ? true : false;
+                        return Str::contains(Str::lower($row['receiver_name']), Str::lower($request->get('receiver'))) ? true : false;
                     });
                 }
                 if (!empty($request->get('trnx_no'))) {
                     $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                        return Str::contains(Str::lower($row['trnx_no']), Str::low($request->get('trnx_no'))) ? true : false;
+                        return Str::contains(Str::lower($row['trnx_no']), Str::lower($request->get('trnx_no'))) ? true : false;
                     });
                 }
                 if (!empty($request->get('trnx_type'))) {
                     $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                        return Str::contains(Str::lower($row['type']), Str::low($request->get('trnx_type'))) ? true : false;
+                        return Str::contains(Str::lower($row['type']), Str::lower($request->get('trnx_type'))) ? true : false;
                     });
                 }
                 if (!empty($request->get('bank_name'))) {
                     $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                        return Str::contains(Str::lower($row['bank_name']), Str::low($request->get('bank_name'))) ? true : false;
+                        return Str::contains(Str::lower($row['bank_name']), Str::lower($request->get('bank_name'))) ? true : false;
                     });
                 }
                 if (!empty($request->get('s_time'))) {
