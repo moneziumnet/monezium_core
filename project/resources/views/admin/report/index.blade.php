@@ -151,7 +151,7 @@
         "use strict";
 
         $(document).ready(function () {
-            var sender_name = $('#sender_name');
+            // var sender_name = $('#sender_name');
 
             // minDate = new DateTime($('#s_time'), {
             //     format: 'd-M-Y'
@@ -160,17 +160,6 @@
             //     format: 'd-M-Y'
             // });
 
-            $.fn.dataTable.ext.search.push(
-                function( settings, data, dataIndex ) {
-                    var sendername = sender_name.val();
-                    var name = data[3];
-
-                    if ( name.includes(sendername) ) {
-                        return true;
-                    }
-                    return false;
-                }
-            );
         //     $(function() {
         // $(".btn-area").append('<div class="col-sm-12 col-md-4 pr-3 text-right">'+
         //     '<button class="btn btn-primary"  data-id="'+''+'" onclick="createglobalplan(\''+''+'\')" ><i class="fas fa-plus"></i> {{__('Add New Charge')}} </button>'+
@@ -226,8 +215,8 @@
             }
         });
 
-        $('#sender_name').on('change', function () {
-            table.draw();
+        $('#sender_name').on('keyup', function () {
+            table.search(this.value).draw();
         });
 
         function getDetails(id) {
