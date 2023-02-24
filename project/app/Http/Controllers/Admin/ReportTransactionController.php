@@ -237,12 +237,15 @@ class ReportTransactionController extends Controller
             foreach($transactions as $key => $value) {
                     $code = $value->currency->code;
                     if($value->type == '+') {
-                        $balance = $balance + $value->amount / ($rate->data->rates->$code ?? $value->currency->rate);
+                        $balance = $balance - $value->charge / ($rate->data->rates->$code ?? $value->currency->rate);
 
                     }
-                    else {
+                    else if ($value->type == '-' && $value->charge == 0) {
                         $balance = $balance - $value->amount / ($rate->data->rates->$code ?? $value->currency->rate);
 
+                    }
+                    else if ($value->type == '-' && $value->charge > 0) {
+                        $balance = $balance - $value->charge / ($rate->data->rates->$code ?? $value->currency->rate);
                     }
             }
             $balance = amount($balance, Currency::findOrFail($currency_id)->type, 2).$def_code;
@@ -256,6 +259,7 @@ class ReportTransactionController extends Controller
             $client = new Client();
             $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency=' . $def_code);
             $rate = json_decode($response->getBody());
+            $balance = 0;
             foreach ($remark_list as $key => $fee) {
                 $fee_transactions = Transaction::when($fee,function($q) use($fee){
                     return $q->where('remark',$fee);
@@ -266,14 +270,19 @@ class ReportTransactionController extends Controller
                 foreach($fee_transactions as $key => $value) {
                     $code = $value->currency->code;
                     if($value->type == '+') {
-                        $fee_balance = $fee_balance + $value->amount / ($rate->data->rates->$code ?? $value->currency->rate);
+                        $fee_balance = $fee_balance - $value->charge / ($rate->data->rates->$code ?? $value->currency->rate);
 
                     }
-                    else {
+                    else if ($value->type == '-' && $value->charge == 0) {
                         $fee_balance = $fee_balance - $value->amount / ($rate->data->rates->$code ?? $value->currency->rate);
 
                     }
+                    else if ($value->type == '-' && $value->charge > 0) {
+                        $fee_balance = $fee_balance - $value->charge / ($rate->data->rates->$code ?? $value->currency->rate);
+
+                    }
                 }
+                $balance = $balance + $fee_balance;
                 $fee_balance = amount($fee_balance, Currency::findOrFail($currency_id)->type, 2).$def_code;
                 array_push($transactions, array(
                     "fee"=> $fee,
@@ -284,7 +293,7 @@ class ReportTransactionController extends Controller
             $currency_id = defaultCurr();
             $def_code = Currency::findOrFail($currency_id);
 
-            $balance = amount(0, $def_code->type, 2).$def_code->code;
+            $balance = amount($balance, $def_code->type, 2).$def_code->code;
             $flag = true;
         }
 
