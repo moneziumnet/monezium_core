@@ -13,34 +13,29 @@
         </div>
     </div>
     <div class="page-header d-print-none">
-      <div class="col-auto ms-auto d-print-none mt-3">
-
-        <div class="btn-list align-items-center">
-            <form action=""  class="d-flex justify-content-end">
-                <div class="form-group">
+            <form action=""  class=" mt-3 row d-flex justify-content-end">
+                <div class="form-group col-lg-2">
                     <div class="input-group">
                         <input class="form-control shadow-none mr-2" type="date" placeholder="{{__('Start Time')}}" name="s_time" value="{{$s_time ?? ''}}"  >
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group col-lg-2">
                     <div class="input-group">
                         <input class="form-control shadow-none mr-2" type="date" placeholder="{{__('End Time')}}" name="e_time" value="{{$e_time ?? ''}}"  >
                     </div>
                 </div>
-                <div class="form-group mr-3">
-                    <select  class="form-control mr-2 shadow-none" onChange="window.location.href=this.value">
+                <div class="form-group col-lg-3">
+                    <select  class="form-control shadow-none" onChange="window.location.href=this.value">
                         <option value="{{filter('remark','all_mark')}}">@lang('All Fee')</option>
                         @foreach ($remark_list as $value)
                             <option value="{{filter('remark',$value)}}" {{request('remark') == $value ? 'selected':''}}>@lang(ucwords(str_replace('_',' ',$value)))</option>
                         @endforeach
                     </select>
                 </div>
-                <div class="form-group mr-3">
+                <div class="form-group col-lg-1">
                 <button type="submit" class="btn bg-primary text-white"><i class="fas fa-search"></i></button>
                 </div>
             </form>
-        </div>
-      </div>
     </div>
 
 <div class="page-body">
