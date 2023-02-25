@@ -46,43 +46,37 @@
 <div class="page-body">
     <div class="container-xl">
         <div class="row row-cards justify-content-center">
-          <div class="col-sm-12 text-right" style="text-align: right">
+          <div class="col-sm-12 text-right mb-3" style="text-align: right">
             {{__('Total Fee Balance: '.$balance)}}
           </div>
           @if ($flag)
-            <div class="col-7">
                 <div class="card">
                         @if (count($transactions) == 0)
 
-                        <h3 class="text-center py-5">{{__('No Transaction Data Found')}}</h3>
+                            <h3 class="text-center py-5">{{__('No Transaction Data Found')}}</h3>
                         @else
-                                <div class="table-responsive" style="max-height: 500px;overflow-y: scroll;">
+                            <div class="row mb-3 p-3" style="max-height: 600px;overflow-y: scroll;">
+                                @foreach ($transactions as $key=>$data)
+                                <div class="col-xl-4 col-md-6 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                        <div class="row align-items-center">
+                                            <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-uppercase mb-3">{{__(ucwords(str_replace('_',' ',$data['fee'])))}}</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{__($data['balance'])}}</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="fas fa-dollar-sign fa-2x text-success"></i>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforeach
 
-                                    <table class="table card-table table-vcenter text-nowrap datatable">
-                                    <thead>
-                                        <tr>
-                                            <th >@lang('Fee')</th>
-                                            <th>@lang('Amount')</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($transactions as $key=>$data)
-                                        <tr>
-                                            <td data-label="@lang('Fee')" >
-                                                <span class="text-success h5">{{__(ucwords(str_replace('_',' ',$data['fee'])))}}</span>
-                                            </td>
-                                            <td data-label="@lang('Amount')">
-                                                <span class="text-danger">{{__($data['balance'])}}</span>
-                                            </td>
-                                        </tr>
-                                        @endforeach
-
-                                    </tbody>
-                                    </table>
-                        </div>
+                            </div>
                         @endif
                 </div>
-            </div>
 
             @else
             <div class="col-12">
