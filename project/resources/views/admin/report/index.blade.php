@@ -271,7 +271,17 @@
 
         function cal_fee(){
             var url = "{{url('admin/bank/report/transaction/total/fee')}}"
-            $.get(url,function (res) {
+            var data = {
+                sender_name : $('#sender_name').val(),
+                receiver_name : $('#receiver_name').val(),
+                trnx_no : $('#trnx_no').val(),
+                s_time : $('#s_time').val(),
+                e_time : $('#e_time').val(),
+                pay_type : $('#type').val(),
+                bank_name : $('#bank_name').val(),
+                pay_status : $('#status').val(),
+            }
+            $.get(url, data, function (res) {
             if(res == 'empty'){
                 $('.list-group').html("<p>@lang('No details found!')</p>")
             }else{

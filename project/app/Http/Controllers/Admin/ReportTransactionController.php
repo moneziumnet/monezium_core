@@ -153,6 +153,17 @@ class ReportTransactionController extends Controller
                         }
                     });
                 }
+
+                if (!empty($request->get('e_time'))) {
+                    $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                        if(dateFormat($row['date'], 'Y-m-d') <= dateFormat($request->get('e_time'), 'Y-m-d') ) {
+                            return true;
+                        }
+                        else {
+                            return false;
+                        }
+                    });
+                }
             })
             ->editColumn('date',function( $data){
                 return dateFormat($data->date,'m/d/Y');
@@ -207,17 +218,141 @@ class ReportTransactionController extends Controller
         return view('admin.report.feedetail',compact('transaction', 'webhook_request'));
     }
 
-    public function totalfeeDetails()
+    public function totalfeeDetails(Request $request)
     {
-        $transaction = Transaction::where('id', 1168)->with('currency')->first();
-        if(!$transaction){
-            return response('empty');
+        $s_time = $request->s_time ? $request->s_time : '';
+        $e_time = $request->e_time ? $request->e_time : Carbontime::now()->addDays(1)->format('Y-m-d');
+        $balancetransfers = BalanceTransfer::whereType('other')->orderBy('id','desc')->where('transaction_no', 'LIKE', '%'.$request->trnx_no.'%')->whereBetween('created_at', [$s_time, $e_time])->with('user')->get();
+        $deposits = DepositBank::orderby('id','desc')->where('deposit_number', 'LIKE', '%'.$request->trnx_no.'%')->whereBetween('created_at', [$s_time, $e_time])->with('user')->get();
+        $compare_list = [];
+        if ($request->pay_type != 'Deposit') {
+            foreach ($balancetransfers as $key => $value) {
+                $temp = array();
+                $temp['user_id'] = $value->user_id;
+                $temp['type'] = 'External';
+                $temp['trnx_no'] = $value->transaction_no;
+                $temp['sender_name'] = $value->user->company_name ?? $value->user->name;
+                if (!empty($request->sender_name)) {
+                    if (!Str::contains(Str::lower($temp['sender_name']), Str::lower($request->sender_name))) {
+                        continue;
+                    }
+                }
+                $beneficiary = Beneficiary::findOrFail($value->beneficiary_id);
+                $temp['receiver_name'] = $beneficiary->name;
+                if (!empty($request->receiver_name)) {
+                    if (!Str::contains(Str::lower($temp['receiver_name']), Str::lower($request->receiver_name))) {
+                        continue;
+                    }
+                }
+                $bank = SubInsBank::where('id', $value->subbank)->first();
+                $temp['bank_name'] = $bank->name ?? null;
+                if (!empty($request->bank_name)) {
+                    if (!Str::contains(Str::lower($temp['bank_name']), Str::lower($request->bank_name))) {
+                        continue;
+                    }
+                }
+                $currency = Currency::findOrFail($value->currency_id);
+                $temp['amount'] = amount($value->final_amount, $currency->type, 2);
+                $temp['currency_code'] = $currency->code;
+                if ($value->status == 0 || $value->status == 3) {
+                    $status = 'pending';
+                }
+                else if($value->status == 1) {
+                    $status = 'complete';
+                }
+                else{
+                    $status = 'reject';
+                }
+                if (!empty($request->pay_status)) {
+                    if($status != $request->pay_status) {
+                        continue;
+                    }
+                }
+                $temp['status'] = $status;
+                $transaction = Transaction::where('user_id',$value->user_id)->whereIn('remark', ['External_Payment', 'Deposit_create' ])->where('data', 'LIKE', '%'.$value->transaction_no.'%')->orWhere('trnx', $value->transaction_no)->first();
+
+                $temp['tran_id'] = $transaction->id ?? null;
+                $temp['date'] = $value->created_at;
+                array_push($compare_list, $temp);
+
+            }
         }
-        $webhook_request = WebhookRequest::where('transaction_id', $transaction->trnx)->orWhere('reference', 'LIKE', $transaction->trnx)->first();
-        if(!$webhook_request){
-            return response('empty');
+        if ($request->pay_type != 'External') {
+            foreach ($deposits as $key => $value) {
+                $temp = array();
+                $temp['user_id'] = $value->user_id;
+                $temp['type'] = 'Deposit';
+                $temp['trnx_no'] = $value->deposit_number;
+                $send_info = WebhookRequest::where('transaction_id', 'LIKE', '%'.$value->deposit_number)->orWhere('reference', 'LIKE', '%'.$value->deposit_number)->with('currency')->first();
+                $temp['sender_name'] = $send_info->sender_name ?? null;
+                if (!empty($request->sender_name)) {
+                    if (!Str::contains(Str::lower($temp['sender_name']), Str::lower($request->sender_name))) {
+                        continue;
+                    }
+                }
+                $temp['receiver_name'] = $value->user->company_name ?? $value->user->name;
+                if (!empty($request->receiver_name)) {
+                    if (!Str::contains(Str::lower($temp['receiver_name']), Str::lower($request->receiver_name))) {
+                        continue;
+                    }
+                }
+                $bank = SubInsBank::where('id', $value->sub_bank_id)->first();
+                $temp['bank_name'] = $bank->name ?? null;
+                if (!empty($request->bank_name)) {
+                    if (!Str::contains(Str::lower($temp['bank_name']), Str::lower($request->bank_name))) {
+                        continue;
+                    }
+                }
+                $currency = Currency::findOrFail($value->currency_id);
+                $temp['amount'] = amount($value->amount, $currency->type, 2);
+                $temp['currency_code'] = $currency->code;
+                $temp['status'] = $value->status;
+                if (!empty($request->pay_status)) {
+                    if($temp['status'] != $request->pay_status) {
+                        continue;
+                    }
+                }
+                $transaction = Transaction::where('user_id',$value->user_id)->whereIn('remark', ['External_Payment', 'Deposit_create' ])->where('data', 'LIKE', '%'.$value->deposit_number.'%')->orWhere('trnx', $value->deposit_number)->first();
+
+                $temp['tran_id'] = $transaction->id ?? null;
+                $temp['date'] = $value->created_at;
+                array_push($compare_list, $temp);
+
+            }
         }
-        return view('admin.report.totalfee',compact('transaction', 'webhook_request'));
+        usort($compare_list, function($a, $b) {
+            return strtotime($b['date']) - strtotime($a['date']);
+        });
+        $datas = json_decode(json_encode($compare_list, true));
+
+        $currency_id = defaultCurr();
+        $def_code = Currency::findOrFail($currency_id)->code;
+        $client = new Client();
+        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency=' . $def_code);
+        $rate = json_decode($response->getBody());
+
+        $tran_fee = 0;
+        $bank_fee = 0;
+        foreach ($datas as $key => $data) {
+            $transaction = Transaction::where('id', $data->tran_id)->with('currency')->first();
+            if($transaction){
+                $code = $transaction->currency->code;
+                $tran_fee = $tran_fee + $transaction->charge / ($rate->data->rates->$code ?? $transaction->currency->rate);
+            }
+            else {
+                continue;
+            }
+            $webhook_request = WebhookRequest::where('transaction_id', $transaction->trnx)->orWhere('reference', 'LIKE', $transaction->trnx)->first();
+            if($webhook_request){
+                $code = $transaction->currency->code;
+                $bank_fee = $bank_fee + $webhook_request->charge / ($rate->data->rates->$code ?? $transaction->currency->rate);
+            }
+            else {
+                continue;
+            }
+        }
+
+        return view('admin.report.totalfee',compact('tran_fee', 'bank_fee' , 'def_code'));
     }
 
     public function summary_trxDetails($id)

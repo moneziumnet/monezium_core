@@ -1,4 +1,4 @@
-<li class="list-group-item d-flex justify-content-between">@lang('Institution Fee')<span>{{amount($transaction->charge,$transaction->currency->type,2)}} {{$transaction->currency->code}}</span></li>
-<li class="list-group-item d-flex justify-content-between">@lang('Bank Fee')<span>{{amount($webhook_request->charge,$transaction->currency->type,2)}} {{$transaction->currency->code}}</span></li>
-<li class="list-group-item d-flex justify-content-between">@lang('Profit')<span >{{amount(($transaction->charge - $webhook_request->charge),$transaction->currency->type,2)}} {{$transaction->currency->code}}</span></li>
+<li class="list-group-item d-flex justify-content-between">@lang('Institution Fee')<span>{{amount($tran_fee,1,2)}} {{$def_code}}</span></li>
+<li class="list-group-item d-flex justify-content-between">@lang('Bank Fee')<span>{{amount($bank_fee,1,2)}} {{$def_code}}</span></li>
+<li class="list-group-item d-flex justify-content-between">@lang('Profit')<span >{{amount(($tran_fee - $bank_fee),1,2)}} {{$def_code}}</span></li>
 
