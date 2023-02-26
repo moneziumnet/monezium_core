@@ -92,13 +92,13 @@ class DepositController extends Controller
             if($transaction_custom_fee) {
                 $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($data->amount/100) * $transaction_custom_fee->data->percent_charge;
             }
-            $remark = 'Deposit_create_supervisor_fee';
+            $remark = 'Deposit_supervisor_fee';
             if (check_user_type_by_id(4, $user->referral_id)) {
                 user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost*$rate, 6);
                 $trans_wallet = get_wallet($user->referral_id, $data->currency_id, 6);
             }
             elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
-                $remark = 'Deposit_create_manager_fee';
+                $remark = 'Deposit_manager_fee';
                 user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost*$rate, 10);
                 $trans_wallet = get_wallet($user->referral_id, $data->currency_id, 10);
             }
@@ -139,7 +139,7 @@ class DepositController extends Controller
 
         $trans->charge      = $final_chargefee*$rate;
         $trans->type        = '+';
-        $trans->remark      = 'Deposit_create';
+        $trans->remark      = 'Deposit';
         $trans->details     = trans('Deposit complete');
 
         $trans->data        = '{"sender":"'.$gs->disqus.'", "receiver":"'.($user->company_name ?? $user->name).'"}, "description":"'.$data->deposit_number.'"}';

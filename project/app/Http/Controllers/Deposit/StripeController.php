@@ -143,7 +143,7 @@ class StripeController extends Controller
                     $trans->amount      = $amountToAdd;
                     $trans->charge      = 0;
                     $trans->type        = '+';
-                    $trans->remark      = 'Deposit_create';
+                    $trans->remark      = 'Deposit';
                     $trans->data        = '{"sender":"Stripe System", "receiver":"'.($user->company_name ?? $user->name).'"}';
                     $trans->details     = trans('Deposit Stripe complete');
 

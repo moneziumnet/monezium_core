@@ -188,12 +188,12 @@ class RegisterController extends Controller
         $trans->user_id     = $user->id;
         $trans->user_type   = 1;
         $trans->currency_id = $default_currency->id;
-        $trans->amount      = $chargefee->data->fixed_charge;
+        $trans->amount      = 0;
         $trans_wallet       = get_wallet($user->id, $default_currency->id, 1);
         $trans->wallet_id   = $user_wallet->id;
-        $trans->charge      = 0;
+        $trans->charge      = $chargefee->data->fixed_charge;
         $trans->type        = '-';
-        $trans->remark      = 'wallet_create';
+        $trans->remark      = 'account-open';
         $trans->details     = trans('Wallet Create');
         $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
         $trans->save();

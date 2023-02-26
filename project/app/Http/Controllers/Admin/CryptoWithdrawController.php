@@ -94,14 +94,14 @@ class CryptoWithdrawController extends Controller
                 if($transaction_custom_fee) {
                     $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($data->amount/(100*$crypto_rate)) * $transaction_custom_fee->data->percent_charge;
                 }
-                $remark = 'withdraw_reject_supervisor_fee';
+                $remark = 'withdraw_crypto_reject_supervisor_fee';
                 if (check_user_type_by_id(4, $user->referral_id)) {
                     user_wallet_decrement($user->referral_id, $data->currency_id, $transaction_custom_cost*$crypto_rate, 8);
 
                     $trans_wallet  = get_wallet($user->referral_id, $data->currency_id, 8);
                 }
                 elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
-                    $remark = 'withdraw_reject_manager_fee';
+                    $remark = 'withdraw_crypto_reject_manager_fee';
                     user_wallet_decrement($user->referral_id, $data->currency_id, $transaction_custom_cost*$crypto_rate, 8);
 
                     $trans_wallet  = get_wallet($user->referral_id, $data->currency_id, 8);
@@ -177,7 +177,7 @@ class CryptoWithdrawController extends Controller
             $trnx->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
 
             $trnx->charge      = 0;
-            $trnx->remark      = 'withdraw_reject';
+            $trnx->remark      = 'withdraw_crypto_reject';
             $trnx->type        = '+';
             $trnx->details     = trans('Withdraw request rejected');
             $trnx->data        = '{"sender":"'.$gs->disqus.'", "receiver":"'.($user->company_name ?? $user->name ).'"}';

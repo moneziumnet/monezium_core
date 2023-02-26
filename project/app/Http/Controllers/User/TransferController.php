@@ -90,12 +90,12 @@ class TransferController extends Controller
             $trans->user_id     = $receiver->id;
             $trans->user_type   = 1;
             $trans->currency_id = defaultCurr();
-            $trans->amount      = $chargefee->data->fixed_charge;
+            $trans->amount      = 0;
             $trans_wallet = get_wallet($receiver->id, defaultCurr());
             $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-            $trans->charge      = 0;
+            $trans->charge      = $chargefee->data->fixed_charge;
             $trans->type        = '-';
-            $trans->remark      = 'wallet_create';
+            $trans->remark      = 'account-open';
             $trans->details     = trans('Wallet Create');
             $trans->data        = '{"sender":"'.($receiver->company_name ?? $receiver->name).'", "receiver":"'.$gs->disqus.'"}';
             $trans->save();

@@ -102,13 +102,13 @@ class EscrowController extends Controller
         user_wallet_increment(0, $currency->id, $transaction_global_cost*$rate, 9);
         $senderWallet->update();
         if($user->referral_id != 0){
-            $remark = 'Make_Escrow_supervisor_fee';
+            $remark = 'Escrow_supervisor_fee';
             if (check_user_type_by_id(4, $user->referral_id)) {
                 user_wallet_increment($user->referral_id, $currency->id, $transaction_custom_cost*$rate, 6);
                 $trans_wallet = get_wallet($user->referral_id, $currency->id, 6);
             }
             elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
-                $remark = 'Make_Escrow_manager_fee';
+                $remark = 'Escrow_manager_fee';
                 user_wallet_increment($user->referral_id, $currency->id, $transaction_custom_cost*$rate, 10);
                 $trans_wallet = get_wallet($user->referral_id, $currency->id, 10);
             }
@@ -146,7 +146,7 @@ class EscrowController extends Controller
         $trnx->wallet_id   = $senderWallet->id;
         $trnx->amount      = $finalAmount;
         $trnx->charge      = $finalCharge*$rate;
-        $trnx->remark      = 'make_escrow';
+        $trnx->remark      = 'escrow';
         $trnx->type        = '-';
         $trnx->details     = trans('Made escrow to '). $receiver->email;
         $trnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name).'", "description": "'.$request->description.'"}';
@@ -270,12 +270,12 @@ class EscrowController extends Controller
             $trans->user_id     = $recipient->id;
             $trans->user_type   = 1;
             $trans->currency_id = defaultCurr();
-            $trans->amount      = $chargefee->data->fixed_charge;
+            $trans->amount      = 0;
             $trans_wallet = get_wallet($recipient->id, defaultCurr());
             $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-            $trans->charge      = 0;
+            $trans->charge      = $chargefee->data->fixed_charge;
             $trans->type        = '-';
-            $trans->remark      = 'wallet_create';
+            $trans->remark      = 'account-open';
             $trans->details     = trans('Wallet Create');
             $trans->data        = '{"sender":"'.($recipient->company_name ?? $recipient->name).'", "receiver":"'.$gs->disqus.'", "description": "'.$escrow->description.'"}';
             $trans->save();
@@ -297,7 +297,7 @@ class EscrowController extends Controller
         $trans->wallet_id   = $recipientWallet->id;
         $trnx->amount      = $amount;
         $trnx->charge      = $escrow->pay_charge == 0 ? $escrow->charge : 0;
-        $trnx->remark      = 'make_escrow';
+        $trnx->remark      = 'escrow';
         $trnx->type        = '+';
         $trnx->details     = trans('Received escrow money '). $recipient->email;
         $trnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($recipient->company_name ?? $recipient->name).'", "description": "'.$escrow->description.'"}';

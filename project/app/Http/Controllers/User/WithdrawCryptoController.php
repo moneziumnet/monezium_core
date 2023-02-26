@@ -84,7 +84,7 @@ class WithdrawCryptoController extends Controller
 
         $transaction_global_cost = 0;
 
-        $transaction_global_fee = check_global_transaction_fee($amountToAdd, $user, 'withdraw');
+        $transaction_global_fee = check_global_transaction_fee($amountToAdd, $user, 'withdraw_crypto');
         if($transaction_global_fee)
         {
             $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($amountToAdd/100) * $transaction_global_fee->data->percent_charge;
@@ -92,7 +92,7 @@ class WithdrawCryptoController extends Controller
         $transaction_custom_cost = 0;
         if($user->referral_id != 0)
         {
-            $transaction_custom_fee = check_custom_transaction_fee($amountToAdd, $user, 'withdraw');
+            $transaction_custom_fee = check_custom_transaction_fee($amountToAdd, $user, 'withdraw_crypto');
             if($transaction_custom_fee) {
                 $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($amountToAdd/100) * $transaction_custom_fee->data->percent_charge;
             }
@@ -133,12 +133,12 @@ class WithdrawCryptoController extends Controller
         }
 
         if($user->referral_id != 0) {
-            $remark = 'withdraw_money_supervisor_fee';
+            $remark = 'withdraw_crypto_supervisor_fee';
             user_wallet_increment($user->referral_id, $request->currency_id, $transaction_custom_cost*$crypto_rate, 8);
             $torefWallet = Wallet::where('user_id', $user->referral_id)->where('wallet_type', 8)->where('currency_id', $request->currency_id)->first();
             $trans_wallet = get_wallet($user->referral_id, $request->currency_id, 8);
             if (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
-                $remark = 'withdraw_money_manager_fee';
+                $remark = 'withdraw_crypto_manager_fee';
             }
             if($currency->code == 'ETH') {
                 @RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
@@ -217,7 +217,7 @@ class WithdrawCryptoController extends Controller
         $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
 
         $trans->type        = '-';
-        $trans->remark      = 'withdraw_money';
+        $trans->remark      = 'withdraw_crypto';
         $trans->details     = trans('Withdraw money');
         $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$request->sender_address.'"}';
         $trans->save();

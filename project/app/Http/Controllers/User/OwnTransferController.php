@@ -86,14 +86,14 @@ class OwnTransferController extends Controller
                 $trans->user_id     = $user->id;
                 $trans->user_type   = 1;
                 $trans->currency_id = defaultCurr();
-                $trans->amount      = $chargefee->data->fixed_charge;
+                $trans->amount      = 0;
 
                 $trans_wallet = get_wallet($user->id, defaultCurr(), 1);
                 $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
 
-                $trans->charge      = 0;
+                $trans->charge      = $chargefee->data->fixed_charge;
                 $trans->type        = '-';
-                $trans->remark      = 'card_issuance';
+                $trans->remark      = 'card-issuance';
                 $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.$gs->disqus.'"}';
                 $trans->details     = trans('Card Issuance');
                 $trans->save();
@@ -113,10 +113,10 @@ class OwnTransferController extends Controller
                 $trans_wallet = get_wallet($user->id, defaultCurr(), 1);
                 $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
 
-                $trans->amount      = $chargefee->data->fixed_charge;
-                $trans->charge      = 0;
+                $trans->amount      = 0;
+                $trans->charge      = $chargefee->data->fixed_charge;
                 $trans->type        = '-';
-                $trans->remark      = 'wallet_create';
+                $trans->remark      = 'account-open';
                 $trans->details     = trans('Wallet Create');
                 $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.$gs->disqus.'"}';
                 $trans->save();
@@ -144,13 +144,13 @@ class OwnTransferController extends Controller
             if($transaction_custom_fee) {
                 $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/($rate*100)) * $transaction_custom_fee->data->percent_charge;
             }
-            $remark = 'Own_transfer_supervisor_fee';
+            $remark = 'payment_between_accounts_supervisor_fee';
             if (check_user_type_by_id(4, $user->referral_id)) {
                 user_wallet_increment($user->referral_id, $fromWallet->currency->id, $transaction_custom_cost*$rate, 6);
                 $trans_wallet = get_wallet($user->referral_id, $fromWallet->currency->id, 6);
             }
             elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
-                $remark = 'Own_transfer_manager_fee';
+                $remark = 'payment_between_accounts_manager_fee';
                 user_wallet_increment($user->referral_id, $fromWallet->currency->id, $transaction_custom_cost*$rate, 10);
                 $trans_wallet = get_wallet($user->referral_id, $fromWallet->currency->id, 10);
             }
@@ -187,7 +187,7 @@ class OwnTransferController extends Controller
         $trnx->wallet_id   = $fromWallet->id;
         $trnx->amount      = $request->amount;
         $trnx->charge      = ($transaction_global_cost + $transaction_custom_cost)*$rate;
-        $trnx->remark      = 'Own_transfer';
+        $trnx->remark      = 'payment_between_accounts';
         $trnx->type        = '-';
         $trnx->details     = trans('Transfer  '.$fromWallet->currency->code.'money other wallet');
         $trnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(auth()->user()->company_name ?? auth()->user()->name).'"}';
@@ -201,7 +201,7 @@ class OwnTransferController extends Controller
         $toTrnx->wallet_id   = $toWallet->id;
         $toTrnx->amount      = $request->amount-($transaction_global_cost +  $transaction_custom_cost)*$rate;
         $toTrnx->charge      = 0;
-        $toTrnx->remark      = 'Own_transfer';
+        $toTrnx->remark      = 'payment_between_accounts';
         $toTrnx->type          = '+';
         $toTrnx->details     = trans('Transfer  '.$fromWallet->currency->code.'money other wallet');
         $toTrnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(auth()->user()->company_name ?? auth()->user()->name).'"}';

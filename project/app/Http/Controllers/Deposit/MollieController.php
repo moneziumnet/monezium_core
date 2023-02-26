@@ -146,7 +146,7 @@ class MollieController extends Controller
             $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
             $trans->charge      = 0;
             $trans->type        = '+';
-            $trans->remark      = 'Deposit_create';
+            $trans->remark      = 'Deposit';
             $trans->data        = '{"sender":"MobilePay System", "receiver":"'.(auth()->user()->company_name ?? auth()->user()->name).'"}';
             $trans->details     = trans('Deposit Mobile complete');
 

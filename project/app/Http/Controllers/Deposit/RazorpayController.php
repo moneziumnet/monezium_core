@@ -214,7 +214,7 @@ class RazorpayController extends Controller
             $trans->amount      = $amountToAdd;
             $trans->charge      = 0;
             $trans->type        = '+';
-            $trans->remark      = 'Deposit_create';
+            $trans->remark      = 'Deposit';
             $trans->data        = '{"sender":"Razorpay System", "receiver":"'.(auth()->user()->company_name ?? auth()->user()->name).'"}';
             $trans->details     = trans('Deposit Razorpay complete');
 

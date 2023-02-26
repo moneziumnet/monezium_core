@@ -163,14 +163,14 @@ class SendController extends Controller
             if($transaction_custom_fee) {
                 $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/(100*$rate)) * $transaction_custom_fee->data->percent_charge;
             }
-            $remark = 'Send_money_supervisor_fee';
+            $remark = 'Send_supervisor_fee';
             if ($wallet->currency->type == 1) {
                 if (check_user_type_by_id(4, $user->referral_id)) {
                     user_wallet_increment($user->referral_id, $currency_id, $transaction_custom_cost*$rate, 6);
                     $trans_wallet = get_wallet($user->referral_id, $currency_id, 6);
                 }
                 elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
-                    $remark = 'Send_money_manager_fee';
+                    $remark = 'Send_manager_fee';
                     user_wallet_increment($user->referral_id, $currency_id, $transaction_custom_cost*$rate, 10);
                     $trans_wallet = get_wallet($user->referral_id, $currency_id, 10);
                 }
@@ -300,7 +300,7 @@ class SendController extends Controller
             $trans->amount      = $request->amount;
             $trans->charge      = $finalCharge*$rate;
             $trans->type        = '-';
-            $trans->remark      = 'Internal Payment';
+            $trans->remark      = 'send';
             $trans->details     = trans('Send Money');
             $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name).'", "description": "'.$request->description.'"}';
             $trans->save();
@@ -316,7 +316,7 @@ class SendController extends Controller
             $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
             $trans->charge      = 0;
             $trans->type        = '+';
-            $trans->remark      = 'Internal Payment';
+            $trans->remark      = 'send';
             $trans->details     = trans('Send Money');
             $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name).'", "description": "'.$request->description.'"}';
             $trans->save();

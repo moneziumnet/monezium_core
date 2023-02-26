@@ -429,7 +429,7 @@ class PaytmController extends Controller
             $trans->amount      = $deposit->amount;
             $trans->charge      = 0;
             $trans->type        = '+';
-            $trans->remark      = 'Deposit_create';
+            $trans->remark      = 'Deposit';
             $trans->data        = '{"sender":"Paytm System", "receiver":"'.(auth()->user()->company_name ?? auth()->user()->name).'"}';
             $trans->details     = trans('Deposit Paytm complete');
 

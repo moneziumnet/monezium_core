@@ -60,14 +60,14 @@ class VirtualCardController extends Controller
                 $trans->user_id     = $user->id;
                 $trans->user_type   = 1;
                 $trans->currency_id = defaultCurr();
-                $trans->amount      = $chargefee->data->fixed_charge;
+                $trans->amount      = 0;
 
                 $trans_wallet = get_wallet($user->id, defaultCurr(), 1);
 
                 $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-                $trans->charge      = 0;
+                $trans->charge      = $chargefee->data->fixed_charge;
                 $trans->type        = '-';
-                $trans->remark      = 'card_issuance';
+                $trans->remark      = 'card-issuance';
                 $trans->details     = trans('Card Issuance');
                 $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
                 $trans->save();
@@ -229,14 +229,14 @@ class VirtualCardController extends Controller
                 $trans->user_id     = $user->id;
                 $trans->user_type   = 1;
                 $trans->currency_id = defaultCurr();
-                $trans->amount      = $chargefee->data->fixed_charge;
+                $trans->amount      = 0;
 
                 $trans_wallet = get_wallet($user->id, defaultCurr(), 1);
                 $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
 
-                $trans->charge      = 0;
+                $trans->charge      = $chargefee->data->fixed_charge;
                 $trans->type        = '-';
-                $trans->remark      = 'card_issuance';
+                $trans->remark      = 'card-issuance';
                 $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
                 $trans->details     = trans('Card Issuance');
                 $trans->save();
@@ -256,10 +256,10 @@ class VirtualCardController extends Controller
                 $trans_wallet = get_wallet($user->id, defaultCurr(), 1);
                 $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
 
-                $trans->amount      = $chargefee->data->fixed_charge;
-                $trans->charge      = 0;
+                $trans->amount      = 0;
+                $trans->charge      = $chargefee->data->fixed_charge;
                 $trans->type        = '-';
-                $trans->remark      = 'wallet_create';
+                $trans->remark      = 'account-open';
                 $trans->details     = trans('Wallet Create');
                 $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
                 $trans->save();
@@ -287,7 +287,7 @@ class VirtualCardController extends Controller
         $trnx->wallet_id   = $fromWallet->id;
         $trnx->amount      = $request->amount ;
         $trnx->charge      = 0;
-        $trnx->remark      = 'Own_transfer';
+        $trnx->remark      = 'payment_between_accounts';
         $trnx->type        = '-';
         $trnx->details     = trans('Transfer  '.$fromWallet->currency->code.'money other wallet');
         $trnx->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.($user->company_name ?? $user->name).'"}';
@@ -301,7 +301,7 @@ class VirtualCardController extends Controller
         $toTrnx->wallet_id   = $toWallet->id;
         $toTrnx->amount      = $request->amount;
         $toTrnx->charge      = 0;
-        $toTrnx->remark      = 'Own_transfer';
+        $toTrnx->remark      = 'payment_between_accounts';
         $toTrnx->type          = '+';
         $toTrnx->details     = trans('Transfer  '.$fromWallet->currency->code.'money other wallet');
         $toTrnx->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.($user->company_name ?? $user->name).'"}';

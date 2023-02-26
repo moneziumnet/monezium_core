@@ -233,12 +233,12 @@ class KycManageController extends Controller
                         $trans->user_id     = $id1;
                         $trans->user_type   = 1;
                         $trans->currency_id = defaultCurr();
-                        $trans->amount      = $manualfee->data->fixed_charge;
+                        $trans->amount      = 0;
                         $trans_wallet = get_wallet($id1, defaultCurr(), 1);
                         $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-                        $trans->charge      = 0;
+                        $trans->charge      = $manualfee->data->fixed_charge;
                         $trans->type        = '-';
-                        $trans->remark      = 'section_enable';
+                        $trans->remark      = 'module';
                         $trans->details     = $section.trans(' Section Create');
                         $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
                         $trans->save();

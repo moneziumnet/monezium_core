@@ -249,14 +249,14 @@ class MoneyRequestController extends Controller
             }
         }
         if ($receiver->referral_id != 0) {
-            $remark = 'Request_money_supervisor_fee';
+            $remark = 'Reieve_supervisor_fee';
             if($wallet->currency->type == 1) {
                 if (check_user_type_by_id(4, $receiver->referral_id)) {
                     user_wallet_increment($receiver->referral_id, $currency_id, $data->supervisor_cost,6);
                     $trans_wallet = get_wallet($receiver->referral_id, $currency_id,6);
                 }
                 elseif (DB::table('managers')->where('manager_id', $receiver->referral_id)->first()) {
-                    $remark = 'Request_money_manager_fee';
+                    $remark = 'Reieve_manager_fee';
                     user_wallet_increment($receiver->referral_id, $currency_id, $data->supervisor_cost,10);
                     $trans_wallet = get_wallet($receiver->referral_id, $currency_id,10);
                 }
@@ -337,7 +337,7 @@ class MoneyRequestController extends Controller
 
         $trans->charge      = 0;
         $trans->type        = '-';
-        $trans->remark      = 'Request_Money';
+        $trans->remark      = 'Recieve';
         $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name).'", "description": "'.$data->details.'"}';
         $trans->details     = trans('Request Money');
 
@@ -355,7 +355,7 @@ class MoneyRequestController extends Controller
         $trans->amount      = $data->amount;
         $trans->charge      = $data->cost + $data->supervisor_cost;
         $trans->type        = '+';
-        $trans->remark      = 'Request_Money';
+        $trans->remark      = 'Recieve';
         $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name).'", "description": "'.$data->details.'"}';
         $trans->details     = trans('Request Money');
 

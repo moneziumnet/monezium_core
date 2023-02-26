@@ -123,7 +123,7 @@ class MerchantOtherBankController extends Controller
             $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
             $trans->charge      = $transaction_global_cost;
             $trans->type        = '-';
-            $trans->remark      = 'Send_Money';
+            $trans->remark      = 'withdraw';
             $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"Other Bank", "description": "'.$data->description.'"}';
             $trans->details     = trans('Send Money');
 

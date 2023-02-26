@@ -86,7 +86,7 @@ class CryptoDepositController extends Controller
                 if($transaction_custom_fee) {
                     $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($amount/100) * $transaction_custom_fee->data->percent_charge;
                 }
-                $remark = 'Deposit_create_supervisor_fee';
+                $remark = 'Deposit_crypto_supervisor_fee';
                 if (check_user_type_by_id(4, $user->referral_id)) {
                     user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost*$crypto_rate, 8);
                     $torefWallet = Wallet::where('user_id', $user->referral_id)->where('wallet_type', 8)->where('currency_id', $data->currency_id)->first();
@@ -96,7 +96,7 @@ class CryptoDepositController extends Controller
                 elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
                     user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost*$crypto_rate, 8);
                     $torefWallet = Wallet::where('user_id', $user->referral_id)->where('wallet_type', 8)->where('currency_id', $data->currency_id)->first();
-                    $remark = 'Deposit_create_manager_fee';
+                    $remark = 'Deposit_crypto_manager_fee';
 
                     $trans_wallet = get_wallet($user->referral_id, $data->currency_id, 8);
                 }
@@ -159,7 +159,7 @@ class CryptoDepositController extends Controller
             $trans_wallet       = get_wallet($user->id, $data->currency_id, 8);
             $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
             $trans->type        = '+';
-            $trans->remark      = 'Deposit_create';
+            $trans->remark      = 'Deposit_crypto_create';
             $trans->details     = trans('Deposit complete');
             $trans->data        = '{"sender":"'.$gs->disqus.'", "receiver":"'.($user->company_name ?? $user->name).'"}';
             $trans->save();

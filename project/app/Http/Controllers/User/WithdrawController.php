@@ -145,13 +145,13 @@ class WithdrawController extends Controller
         user_wallet_decrement($user->id, $currency->id, $request->amount);
         user_wallet_increment(0, $currency->id, $transaction_global_cost*$rate, 9);
         if($user->referral_id != 0) {
-            $remark='withdraw_money_supervisor_fee';
+            $remark='withdraw_supervisor_fee';
             if (check_user_type_by_id(4, $user->referral_id)) {
                 user_wallet_increment($user->referral_id, $request->currency_id, $transaction_custom_cost*$rate, 6);
                 $trans_wallet = get_wallet($user->referral_id, $request->currency_id, 6);
             }
             elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
-                $remark='withdraw_money_manager_fee';
+                $remark='withdraw_manager_fee';
                 user_wallet_increment($user->referral_id, $request->currency_id, $transaction_custom_cost*$rate, 10);
                 $trans_wallet = get_wallet($user->referral_id, $request->currency_id, 10);
             }
@@ -197,7 +197,7 @@ class WithdrawController extends Controller
         $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
         $trans->charge      = $messagefee*$rate;
         $trans->type        = '-';
-        $trans->remark      = 'withdraw_money';
+        $trans->remark      = 'withdraw';
         $trans->details     = trans('Withdraw money');
         $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.Admin::findOrFail($request->subinstitude)->name.'", "details": "'.$request->details.'"}';
         $trans->save();

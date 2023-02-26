@@ -127,12 +127,12 @@ class RailsBankController extends Controller
         $trans->user_id     = $user->id;
         $trans->user_type   = 1;
         $trans->currency_id =  defaultCurr();
-        $trans->amount      = $chargefee->data->fixed_charge;
+        $trans->amount      = 0;
         $trans_wallet       = get_wallet($user->id, defaultCurr(), 1);
         $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-        $trans->charge      = 0;
+        $trans->charge      = $chargefee->data->fixed_charge;
         $trans->type        = '-';
-        $trans->remark      = 'bank_account_create';
+        $trans->remark      = 'account-open';
         $trans->details     = trans('Bank Account Create');
         $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
         $trans->save();

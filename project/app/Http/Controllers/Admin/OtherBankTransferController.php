@@ -556,7 +556,7 @@ class OtherBankTransferController extends Controller
 
       $trans->charge      = $data->cost;
       $trans->type        = '-';
-      $trans->remark      = 'External_Payment';
+      $trans->remark      = 'withdraw';
       $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$data->beneficiary->name.'", "transaction_id":"'.$data->transaction_no.'", "description":"'.$data->description.'"}';
       $trans->details     = trans('Send Money');
       $trans->save();

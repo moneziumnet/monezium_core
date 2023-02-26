@@ -272,12 +272,12 @@ class UserController extends Controller
                     $trans->user_id     = $user->id;
                     $trans->user_type   = 1;
                     $trans->currency_id = defaultCurr();
-                    $trans->amount      = $manualfee->data->fixed_charge;
+                    $trans->amount      = 0;
                     $trans_wallet = get_wallet($user->id, defaultCurr(), 1);
                     $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-                    $trans->charge      = 0;
+                    $trans->charge      = $manualfee->data->fixed_charge;
                     $trans->type        = '-';
-                    $trans->remark      = 'section_enable';
+                    $trans->remark      = 'module';
                     $trans->details     = $section.trans(' Section Create');
                     $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
                     $trans->save();
@@ -319,12 +319,12 @@ class UserController extends Controller
         $trans->user_id     = $user->id;
         $trans->user_type   = 1;
         $trans->currency_id = $default_currency->id;
-        $trans->amount      = $chargefee->data->fixed_charge;
+        $trans->amount      = 0;
         $trans_wallet       = get_wallet($user->id, $default_currency->id, 1);
         $trans->wallet_id   = $user_wallet->id;
-        $trans->charge      = 0;
+        $trans->charge      = $chargefee->data->fixed_charge;
         $trans->type        = '-';
-        $trans->remark      = 'wallet_create';
+        $trans->remark      = 'account-open';
         $trans->details     = trans('Wallet Create');
         $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
         $trans->save();
@@ -405,13 +405,13 @@ class UserController extends Controller
                 if($transaction_custom_fee) {
                     $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($amount/100) * $transaction_custom_fee->data->percent_charge;
                 }
-                $remark = 'Deposit_create_supervisor_fee';
+                $remark = 'Deposit_supervisor_fee';
                 if (check_user_type_by_id(4, $user->referral_id)) {
                     user_wallet_increment($user->referral_id, $wallet->currency_id, $transaction_custom_cost*$rate, 6);
                     $trans_wallet = get_wallet($user->referral_id, $wallet->currency_id, 6);
                 }
                 elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
-                    $remark = 'Deposit_create_manager_fee';
+                    $remark = 'Deposit_manager_fee';
                     user_wallet_increment($user->referral_id, $wallet->currency_id, $transaction_custom_cost*$rate, 10);
                     $trans_wallet = get_wallet($user->referral_id, $wallet->currency_id, 10);
                 }
@@ -448,7 +448,7 @@ class UserController extends Controller
             $trans->amount      = $request->amount;
             $trans->charge      = $fee*$rate;
             $trans->type        = '+';
-            $trans->remark      = 'Deposit_create';
+            $trans->remark      = 'Deposit';
             $trans->details     = trans('Deposit complete');
             $trans->data        = $request->wallet_type == 'crypto' ? '{"sender":"'.$request->fullname.'", "receiver":"'.$request->adddress.'"}':$trax_details;
             $trans->save();
@@ -576,12 +576,12 @@ class UserController extends Controller
                     $trans->user_id     = $id;
                     $trans->user_type   = 1;
                     $trans->currency_id = defaultCurr();
-                    $trans->amount      = $chargefee->data->fixed_charge;
+                    $trans->amount      = 0;
                     $trans_wallet = get_wallet($id, defaultCurr(), 1);
                     $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-                    $trans->charge      = 0;
+                    $trans->charge      = $chargefee->data->fixed_charge;
                     $trans->type        = '-';
-                    $trans->remark      = 'wallet_create';
+                    $trans->remark      = 'account-open';
                     $trans->details     = trans('Wallet Create');
                     $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
                     $trans->save();
@@ -908,14 +908,14 @@ class UserController extends Controller
                 if($transaction_custom_fee) {
                     $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/($rate*100)) * $transaction_custom_fee->data->percent_charge;
                 }
-                $remark = 'Send_money_supervisor_fee';
+                $remark = 'Send_supervisor_fee';
                 if ($wallet->currency->type == 1){
                     if (check_user_type_by_id(4, $user->referral_id)) {
                         user_wallet_increment($user->referral_id, $currency_id, $transaction_custom_cost*$rate, 6);
                         $trans_wallet = get_wallet($user->referral_id, $currency_id, 6);
                     }
                     elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
-                        $remark = 'Send_money_manager_fee';
+                        $remark = 'Send_manager_fee';
                         user_wallet_increment($user->referral_id, $currency_id, $transaction_custom_cost*$rate, 10);
                         $trans_wallet = get_wallet($user->referral_id, $currency_id, 10);
                     }
@@ -1017,7 +1017,7 @@ class UserController extends Controller
                 $trans->amount      = $request->amount;
                 $trans->charge      = $finalCharge;
                 $trans->type        = '-';
-                $trans->remark      = 'Internal Payment';
+                $trans->remark      = 'send';
                 $trans->details     = trans('Send Money');
                 $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name ).'", "description": "'.$request->description.'"}';
                 $trans->save();
@@ -1032,7 +1032,7 @@ class UserController extends Controller
                 $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
                 $trans->charge      = 0;
                 $trans->type        = '+';
-                $trans->remark      = 'Internal Payment';
+                $trans->remark      = 'send';
                 $trans->details     = trans('Send Money');
                 $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name ).'", "description": "'.$request->description.'"}';
                 $trans->save();
@@ -1255,14 +1255,14 @@ class UserController extends Controller
                     $trans->user_id     = $user->id;
                     $trans->user_type   = 1;
                     $trans->currency_id = defaultCurr();
-                    $trans->amount      = $chargefee->data->fixed_charge;
+                    $trans->amount      = 0;
 
                     $trans_wallet = get_wallet($user->id, defaultCurr(), 1);
                     $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
 
-                    $trans->charge      = 0;
+                    $trans->charge      = $chargefee->data->fixed_charge;
                     $trans->type        = '-';
-                    $trans->remark      = 'card_issuance';
+                    $trans->remark      = 'card-issuance';
                     $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
                     $trans->details     = trans('Card Issuance');
                     $trans->save();
@@ -1282,10 +1282,10 @@ class UserController extends Controller
                     $trans_wallet = get_wallet($user->id, defaultCurr(), 1);
                     $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
 
-                    $trans->amount      = $chargefee->data->fixed_charge;
-                    $trans->charge      = 0;
+                    $trans->amount      = 0;
+                    $trans->charge      = $chargefee->data->fixed_charge;
                     $trans->type        = '-';
-                    $trans->remark      = 'wallet_create';
+                    $trans->remark      = 'account-open';
                     $trans->details     = trans('Wallet Create');
                     $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
                     $trans->save();
@@ -1313,7 +1313,7 @@ class UserController extends Controller
             $trnx->wallet_id   = $fromWallet->id;
             $trnx->amount      = $request->amount ;
             $trnx->charge      = 0;
-            $trnx->remark      = 'Own_transfer';
+            $trnx->remark      = 'payment_between_accounts';
             $trnx->type        = '-';
             $trnx->details     = trans('Transfer  '.$fromWallet->currency->code.'money other wallet');
             $trnx->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.($user->company_name ?? $user->name).'"}';
@@ -1327,7 +1327,7 @@ class UserController extends Controller
             $toTrnx->wallet_id   = $toWallet->id;
             $toTrnx->amount      = $request->amount;
             $toTrnx->charge      = 0;
-            $toTrnx->remark      = 'Own_transfer';
+            $toTrnx->remark      = 'payment_between_accounts';
             $toTrnx->type          = '+';
             $toTrnx->details     = trans('Transfer  '.$fromWallet->currency->code.'money other wallet');
             $toTrnx->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.($user->company_name ?? $user->name).'"}';
@@ -1949,10 +1949,10 @@ class UserController extends Controller
             $trans->user_id     = $wallet->user_id;
             $trans->user_type   = 1;
             $trans->currency_id = $wallet->currency->id;
-            $trans->amount      = $manualfee->data->fixed_charge;
+            $trans->amount      = 0;
 
             $trans->wallet_id   = $wallet->id;
-            $trans->charge      = 0;
+            $trans->charge      = $manualfee->data->fixed_charge;
             $trans->type        = '-';
             $trans->remark      = 'manual_fee_'.str_replace(' ', '_', $manualfee->name);
             $trans->data        = '{"sender":"'.(User::findOrFail($wallet->user_id)->company_name ?? User::findOrFail($wallet->user_id)->name).'", "receiver":"'.$gs->disqus.'"}';
@@ -2049,12 +2049,12 @@ class UserController extends Controller
                         $trans->user_id     = $id;
                         $trans->user_type   = 1;
                         $trans->currency_id = defaultCurr();
-                        $trans->amount      = $manualfee->data->fixed_charge;
+                        $trans->amount      = 0;
                         $trans_wallet = get_wallet($id, defaultCurr(), 1);
                         $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-                        $trans->charge      = 0;
+                        $trans->charge      = $manualfee->data->fixed_charge;
                         $trans->type        = '-';
-                        $trans->remark      = 'section_enable';
+                        $trans->remark      = 'module';
                         $trans->details     = $section.trans(' Section Create');
                         $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
                         $trans->save();
