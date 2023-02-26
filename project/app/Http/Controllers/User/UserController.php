@@ -330,7 +330,8 @@ class UserController extends Controller
         $data = [
             'trans' => $transaction,
             'user'  => $user,
-            'image' => $image_encode
+            'image' => $image_encode,
+            'wallet' => Transaction::where('id',$id)->first()->wallet
         ];
 
         $pdf = PDF::loadView('frontend.myPDF', $data);
