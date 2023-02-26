@@ -297,7 +297,7 @@ class SendController extends Controller
             $trans->currency_id = $currency_id;
             $trans_wallet = get_wallet($user->id, $currency_id, $wallet->wallet_type);
             $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-            $trans->amount      = $request->amount;
+            $trans->amount      = $request->amount + $finalCharge*$rate;
             $trans->charge      = $finalCharge*$rate;
             $trans->type        = '-';
             $trans->remark      = 'send';
