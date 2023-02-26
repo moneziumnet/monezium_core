@@ -6,7 +6,7 @@
                 $accounttype = ['0' => 'All', '1' => 'Current', '2' => 'Card', '3' => 'Deposit', '4' => 'Loan', '5' => 'Escrow', '6' => 'Supervisor', '7' => 'Merchant', '8' => 'Crypto', '9' => 'System', '10' => 'Manager'];
                 $dcurr = App\Models\Currency::findOrFail($wallet->currency_id);
                 if($dcurr->type == 2) {
-                    $amount = Crypto_Balance($wallet->user_id, $wallet->currency_id);
+                    $amount = amount(Crypto_Balance($wallet->user_id, $wallet->currency_id), 2);
                 }
                 else {
                     $amount = amount($wallet->balance, $dcurr->type, 2);

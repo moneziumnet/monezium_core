@@ -216,7 +216,7 @@
 
 @if(getModule('Report'))
 <li class="nav-item">
-  <a class="nav-link" href="{{ route('admin.report.transaction.index') }}" data-toggle="collapse" data-target="#bankreport" aria-expanded="true" aria-controls="collapseTable">
+  <a class="nav-link collapsed" href="{{ route('admin.report.transaction.index') }}" data-toggle="collapse" data-target="#bankreport" aria-expanded="true" aria-controls="collapseTable">
     <i class="fas fa-flag"></i>
     <span>{{ __('Report') }}</span>
   </a>

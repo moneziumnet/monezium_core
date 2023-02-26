@@ -40,7 +40,7 @@
                                     </div>
                                     <div class="text-xs font-weight-bold text-uppercase mb-1"> {{$dcurr->curr_name}}</div>
                                     @if ($dcurr->type == 2)
-                                        <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ Crypto_Balance(0,$dcurr->id)}}  {{$dcurr->code}}</div>
+                                        <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ amount(Crypto_Balance(0,$dcurr->id), 2)}}  {{$dcurr->code}}</div>
                                     @else
                                         <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{amount($wallet->balance,$dcurr->type,2)}} {{$dcurr->code}} ({{$dcurr->symbol}}) </div>
                                     @endif

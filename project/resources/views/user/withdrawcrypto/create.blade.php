@@ -37,7 +37,7 @@
                                 <option value="">{{ __('Select Crypto Currency') }}</option>
                                 @foreach ($wallets as $key => $wallet)
                                 @php
-                                    $amount = Crypto_Balance($wallet->user_id, $wallet->currency_id);
+                                    $amount = amount(Crypto_Balance($wallet->user_id, $wallet->currency_id), 2);
                                 @endphp
                                         <option value="{{$wallet->currency->id}}">{{$wallet->currency->code}} -- ({{$amount}})</option>
                                 @endforeach

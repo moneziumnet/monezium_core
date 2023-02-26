@@ -103,7 +103,7 @@
                                         @if (isset($wallet_type_list[$wallet->wallet_type]))
                                             @php
                                                 if($wallet->currency->type == 2) {
-                                                    $amount = Crypto_Balance($wallet->user_id, $wallet->currency_id);
+                                                    $amount = amount(Crypto_Balance($wallet->user_id, $wallet->currency_id), 2);
                                                 }
                                                 else {
                                                     $amount = amount($wallet->balance,$wallet->currency->type,2);
