@@ -401,11 +401,7 @@ class ReportTransactionController extends Controller
                         $balance = $balance - $value->charge / ($rate->data->rates->$code ?? $value->currency->rate);
 
                     }
-                    else if ($value->type == '-' && $value->charge == 0) {
-                        $balance = $balance - $value->amount / ($rate->data->rates->$code ?? $value->currency->rate);
-
-                    }
-                    else if ($value->type == '-' && $value->charge > 0) {
+                    else if ($value->type == '-') {
                         $balance = $balance - $value->charge / ($rate->data->rates->$code ?? $value->currency->rate);
                     }
             }
@@ -434,14 +430,11 @@ class ReportTransactionController extends Controller
                         $fee_balance = $fee_balance - $value->charge / ($rate->data->rates->$code ?? $value->currency->rate);
 
                     }
-                    else if ($value->type == '-' && $value->charge == 0) {
-                        $fee_balance = $fee_balance - $value->amount / ($rate->data->rates->$code ?? $value->currency->rate);
-
-                    }
-                    else if ($value->type == '-' && $value->charge > 0) {
+                    else if ($value->type == '-') {
                         $fee_balance = $fee_balance - $value->charge / ($rate->data->rates->$code ?? $value->currency->rate);
 
                     }
+
                 }
                 $balance = $balance + $fee_balance;
                 $fee_balance = amount($fee_balance, Currency::findOrFail($currency_id)->type, 2).$def_code;
