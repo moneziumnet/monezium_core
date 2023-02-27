@@ -22,35 +22,34 @@ class MessageController extends Controller
     public function adminmessages()
     {
         $user = Auth::guard('web')->user();
-        $convs = AdminUserConversation::where('user_id','=',$user->id)->paginate();
-        return view('user.message.index',compact('convs'));
+        $convs = AdminUserConversation::where('user_id', '=', $user->id)->paginate();
+        return view('user.message.index', compact('convs'));
     }
 
     public function messageload($id)
     {
         $conv = AdminUserConversation::findOrfail($id);
-        return view('load.usermessage',compact('conv'));
+        return view('load.usermessage', compact('conv'));
     }
 
     public function adminmessage($id)
     {
         $conv = AdminUserConversation::findOrfail($id);
-        $admin = Admin::where('id',1)->first();
-        return view('user.message.create',compact('conv','admin'));
+        $admin = Admin::where('id', 1)->first();
+        return view('user.message.create', compact('conv', 'admin'));
     }
 
 
     public function adminmessagedelete($id)
     {
         $conv = AdminUserConversation::findOrfail($id);
-        if($conv->messages->count() > 0)
-        {
+        if ($conv->messages->count() > 0) {
             foreach ($conv->messages as $key) {
                 $key->delete();
             }
         }
         $conv->delete();
-        return redirect()->back()->with('success','Message Deleted Successfully');
+        return redirect()->back()->with('success', 'Message Deleted Successfully');
     }
 
     public function adminpostmessage(Request $request)
@@ -74,26 +73,25 @@ class MessageController extends Controller
         $user = Auth::guard('web')->user();
         $gs = Generalsetting::findOrFail(1);
         $subject = $request->subject;
-        $to = $gs->email;
+        $to = $gs->from_email;
         $from = $user->email;
-        $msg = "Email: ".$from."\nMessage: ".$request->message;
+        $msg = "Email: " . $from . "\nMessage: " . $request->message;
 
-            $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-            sendMail($to,$subject,$msg,$headers);
+        $headers = "From: " . $gs->from_name . "<" . $gs->from_email . ">";
+        sendMail($to, $subject, $msg, $headers);
 
-    $conv = AdminUserConversation::where('user_id','=',$user->id)->where('subject','=',$subject)->first();
-        if(isset($conv)){
+        $conv = AdminUserConversation::where('user_id', '=', $user->id)->where('subject', '=', $subject)->first();
+        if (isset($conv)) {
             $msg = new AdminUserMessage();
             $msg->conversation_id = $conv->id;
             $msg->message = $request->message;
             $msg->user_id = $user->id;
             $msg->save();
             return response()->json($data);
-        }
-        else{
+        } else {
             $message = new AdminUserConversation();
             $message->subject = $subject;
-            $message->user_id= $user->id;
+            $message->user_id = $user->id;
             $message->message = $request->message;
             $message->save();
 
@@ -107,7 +105,6 @@ class MessageController extends Controller
             $msg->user_id = $user->id;
             $msg->save();
             return response()->json($data);
-
         }
-}
+    }
 }

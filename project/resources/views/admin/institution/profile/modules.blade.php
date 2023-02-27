@@ -232,14 +232,14 @@
                     </div>
                   </div>
 
-                <!-- <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="section[]" value="Message" {{ $data->sectionCheck('Message') ? 'checked' : '' }} class="custom-control-input" id="Message">
-                  <label class="custom-control-label" for="Message">{{__('Message')}}</label>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" name="section[]" value="Message" {{ $data->sectionCheck('Message') ? 'checked' : '' }} class="custom-control-input" id="Message">
+                      <label class="custom-control-label" for="Message">{{__('Message')}}</label>
+                      </div>
                   </div>
-              </div>
-            </div> -->
+                </div>
 
                 <div class="col-md-6">
                   <div class="form-group">
