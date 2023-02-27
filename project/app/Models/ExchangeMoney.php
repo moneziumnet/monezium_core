@@ -24,6 +24,17 @@ class ExchangeMoney extends Model
         parent::boot();
         static::created(function($exchange)
         {
+            $from_currency = Currency::findOrFail($exchange->from_currency);
+            $to_currency = Currency::findOrFail($exchange->to_currency);
+            if ($from_currency->type == 1 && $to_currency->type == 1) {
+                $remark = 'exchange';
+            } else if ($fromtype == 2 && $totype == 1) {
+                $remark = 'exchange_crypto_to_fiat';
+            } else if ($fromtype == 1 && $totype == 2) {
+                $remark = 'exchange_fiat_to_crypto';
+            } else if ($fromtype == 2 && $totype == 2) {
+                $remark = 'exchange_crypto_to_crypto';
+            }
             $trnx              = new Transaction();
             $trnx->trnx        = $exchange->trnx;
             $trnx->user_id     = auth()->id();
@@ -31,7 +42,7 @@ class ExchangeMoney extends Model
             $trnx->currency_id = $exchange->from_currency;
             $trnx->amount      = $exchange->from_amount + $exchange->charge;
             $trnx->charge      = $exchange->charge;
-            $trnx->remark      = 'money_exchange';
+            $trnx->remark      = $remark;
             $trnx->type        = '-';
             $trnx->details     = trans('Exchanged money from '.$exchange->fromCurr->code.' to '.$exchange->toCurr->code);
             $trnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(auth()->user()->company_name ?? auth()->user()->name).'"}';
