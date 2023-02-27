@@ -18,6 +18,8 @@ class CreateAdminUserConversationsTable extends Migration
             $table->string('subject', 191);
             $table->integer('user_id');
             $table->text('message');
+            $table->string('department', 255);
+            $table->string('priority', 255);
             $table->timestamps();
         });
     }
