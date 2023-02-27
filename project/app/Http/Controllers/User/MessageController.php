@@ -11,6 +11,8 @@ use App\Models\AdminUserConversation;
 use App\Models\AdminUserMessage;
 use App\Models\Generalsetting;
 use App\Models\Notification;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class MessageController extends Controller
 {
@@ -22,8 +24,8 @@ class MessageController extends Controller
     public function adminmessages()
     {
         $user = Auth::guard('web')->user();
-        $convs = AdminUserConversation::where('user_id', '=', $user->id)->paginate();
-        return view('user.message.index', compact('convs'));
+        $convs = AdminUserConversation::where('user_id', '=', $user->id)->orderBy('id', 'desc')->paginate();
+        return view('user.message.index', compact('convs', 'user'));
     }
 
     public function messageload($id)
@@ -82,29 +84,38 @@ class MessageController extends Controller
 
         $conv = AdminUserConversation::where('user_id', '=', $user->id)->where('subject', '=', $subject)->first();
         if (isset($conv)) {
-            $msg = new AdminUserMessage();
-            $msg->conversation_id = $conv->id;
-            $msg->message = $request->message;
-            $msg->user_id = $user->id;
-            $msg->save();
-            return response()->json($data);
+            return redirect()->back()->with('error', 'This subject is already created.');
         } else {
             $message = new AdminUserConversation();
             $message->subject = $subject;
             $message->user_id = $user->id;
             $message->message = $request->message;
+            $message->department = $request->department;
+            $message->priority = $request->priority;
             $message->save();
 
             $notification = new Notification;
             $notification->conversation_id = $message->id;
             $notification->save();
 
+            $data = [];
+            if($request->hasfile('document'))
+            {
+               foreach($request->file('document') as $file)
+               {
+                   $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
+                   $file->move('assets/doc', $name);
+                   array_push($data, $name);
+               }
+            }
+
             $msg = new AdminUserMessage();
             $msg->conversation_id = $message->id;
             $msg->message = $request->message;
             $msg->user_id = $user->id;
+            $msg->document =  implode(",",$data);
             $msg->save();
-            return response()->json($data);
+            return redirect()->back()->with('message', 'This subject have been created successfully.');
         }
     }
 }

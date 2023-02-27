@@ -92,22 +92,64 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
-      <form id="emailreply1">
+      <form action="{{ route('user.send.message') }}" method="post" enctype="multipart/form-data">
           @csrf
           <div class="modal-body">
-            <div class="form-group mb-2">
-              <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" name="subject" placeholder="{{ __('Subject') }}" autocomplete="off" required="">
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <div class="form-label">{{__('Subject')}}</div>
+                    <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" name="subject" placeholder="{{ __('Subject') }}" autocomplete="off" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="form-label">{{__('Department')}}</div>
+                    <select class="form-select shadow-none" name="department" required>
+                        <option value="" selected>{{__('Select')}}</option>
+                        @foreach (explode(" , ", $user->section) as $section)
+                          <option value="{{$section}}">{{$section}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="form-label">{{__('Priority')}}</div>
+                    <select class="form-select shadow-none" name="priority" required>
+                        <option value="" selected>{{__('Select')}}</option>
+                        <option value="High">{{__('High')}}</option>
+                        <option value="Medium">{{__('Medium')}}</option>
+                        <option value="Low">{{__('Low')}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 mb-1">
+                    <div class="form-label">{{__('Message')}}</div>
+                    <textarea class="form-control summernote" name="message" placeholder="{{ __('Your Message') }}" required></textarea>
+                </div>
             </div>
 
-            <div class="form-group">
-              <textarea class="form-control" name="message" name="message" placeholder="{{ __('Your Message') }}" rows="10"></textarea>
+            <hr>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-label">{{__('Document')}}</div>
+                    <input class= "document" name="document[]" class="form-control" type="file" accept=".doc,.docx,.pdf,.png,.jpg">
+                </div>
+                <div class="col-md-1 mb-3">
+                    <div class="form-label">&nbsp;</div>
+                    <button type="button" class="btn btn-primary w-100 doc_add"><i class="fas fa-plus"></i></button>
+                </div>
             </div>
-          </div>
+            <div class="doc-extra-container">
+            </div>
+            <hr>
+
 
           <div class="modal-footer">
               <button type="submit" id="submit-btn" class="btn btn-primary">{{ __('Submit') }}</button>
           </div>
       </form>
+      </div>
     </div>
   </div>
 </div>
@@ -148,49 +190,31 @@
 @push('js')
 
 <script type="text/javascript">
-'use strict';
-
-          $(document).on("submit", "#emailreply1" , function(){
-          var token = $(this).find('input[name=_token]').val();
-          var subject = $(this).find('input[name=subject]').val();
-          var message =  $(this).find('textarea[name=message]').val();
-          $('#subj1').prop('disabled', true);
-          $('#msg1').prop('disabled', true);
-          $('#emlsub1').prop('disabled', true);
-     $.ajax({
-            type: 'post',
-            url: "{{URL::to('/user/admin/user/send/message')}}",
-            data: {
-                '_token': token,
-                'subject'   : subject,
-                'message'  : message,
-                  },
-            success: function( data) {
-                      $('#subj1').prop('disabled', false);
-                      $('#msg1').prop('disabled', false);
-                      $('#subj1').val('');
-                      $('#msg1').val('');
-                      $('#emlsub1').prop('disabled', false);
-                      if(data == 0)
-                      $.notify("Oops Something Goes Wrong !!","error");
-                      else
-                      $.notify("Message Sent!","success");
-                      $('.close').click();
-                      location.reload();
-            }
-
-        });
-          return false;
-        });
-
-</script>
-
-<script type="text/javascript">
     'use strict';
 
-      $('#confirm-delete').on('show.bs.modal', function(e) {
-          $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
-      });
+    $('#confirm-delete').on('show.bs.modal', function(e) {
+        $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+    });
+
+    $('.doc_add').on('click',function(){
+        $('.doc-extra-container').append(`
+
+        <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-label required">{{__('Document')}}</div>
+                        <input class= "document" name="document[]" class="form-control" type="file" accept=".doc,.docx,.pdf">
+                    </div>
+                    <div class="col-md-1 mb-3">
+                        <div class="form-label">&nbsp;</div>
+                        <button type="button" class="btn btn-danger w-100 doc_remove"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+
+        `);
+    })
+    $(document).on('click','.doc_remove',function () {
+        $(this).closest('.row').remove()
+    })
 
 </script>
 
