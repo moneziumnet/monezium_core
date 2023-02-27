@@ -40,10 +40,10 @@
                                             </div>
                                             <div class="right">
                                         @if($message->conversation->user)
-                                        <img class="img-circle" src="{{$message->conversation->user->photo != null ? asset('assets/images/'.$message->conversation->user->photo) : asset('assets/images/noimage.png')}}" alt="">
+                                        <img class="img-circle" src="{{$message->conversation->user->photo != null ? asset('assets/images/'.$message->conversation->user->photo) : asset('assets/user/img/user.jpg')}}" alt="">
                                         @else
 
-                                        <img class="img-circle" src="{{Auth::guard('admin')->user()->photo != null ? asset('assets/images/'.Auth::guard('admin')->user()->photo) : asset('assets/images/noimage.png')}}" alt="">
+                                        <img class="img-circle" src="{{Auth::guard('admin')->user()->photo != null ? asset('assets/images/'.Auth::guard('admin')->user()->photo) : asset('assets/user/img/user.jpg')}}" alt="">
 
                                         @endif
                                                 <a target="_blank" class="d-block profile-btn mt-1" href="{{ route('admin-user-profile',$message->conversation->user->id) }}" class="d-block">{{ __('View Profile') }}</a>
