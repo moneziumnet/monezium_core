@@ -10,6 +10,7 @@ use App\Models\Generalsetting;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Datatables;
 
 class MessageController extends Controller
@@ -24,30 +25,62 @@ class MessageController extends Controller
          $datas = AdminUserConversation::orderBy('id','desc');
          //--- Integrating This Collection Into Datatables
          return Datatables::of($datas)
+            ->setRowAttr([
+                'style' => function(AdminUserConversation $data) {
+                    if($data->status == 'open' ) {
+                        return "background-color: #ffcaca;";
+                    } else {
+                        return "background-color: #ffffff;";
+                    }
+                },
+            ])
 
-                            ->editColumn('created_at', function(AdminUserConversation $data) {
-                                $date = $data->created_at->diffForHumans();
-                                return  $date;
-                            })
+            ->editColumn('created_at', function(AdminUserConversation $data) {
+                return dateFormat($data->created_at, 'Y-m-d H:i');
+            })
 
-                            ->addColumn('name', function(AdminUserConversation $data) {
-                                $name = $data->user->company_name ?? $data->user->name;
-                                return  $name;
-                            })
-                            ->addColumn('action', function(AdminUserConversation $data) {
+            ->editColumn('priority', function(AdminUserConversation $data) {
+                switch ($data->priority) {
+                    case 'Low':
+                        $pr_color = "text-success";
+                        break;
+                    case 'Medium':
+                        $pr_color = 'text-warning';
+                        break;
+                    default:
+                        $pr_color = "text-danger";
+                        break;
+                }
+                return '<div class="'.$pr_color.'">
+                        '.$data->priority.'.
+                    </div>';
+            })
 
-                            return '<div class="btn-group mb-1">
-                                <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  '.'Actions' .'
-                                </button>
-                                <div class="dropdown-menu" x-placement="bottom-start">
-                                  <a href="' . route('admin.message.show',$data->id) . '"  class="dropdown-item">'.__("Details").'</a>
-                                  <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.  route('admin.message.delete',$data->id).'">'.__("Delete").'</a>
-                                </div>
-                              </div>';
-                            })
-                            ->rawColumns(['name','created_at','action'])
-                            ->toJson(); //--- Returning Json Data To Client Side
+            ->editColumn('message', function(AdminUserConversation $data) {
+                return str_dis($data->message);
+            })
+            ->editColumn('status', function(AdminUserConversation $data) {
+                return ucfirst($data->status);
+            })
+
+            ->addColumn('name', function(AdminUserConversation $data) {
+                $name = $data->user->company_name ?? $data->user->name;
+                return  $name;
+            })
+            ->addColumn('action', function(AdminUserConversation $data) {
+
+            return '<div class="btn-group mb-1">
+                <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    '.'Actions' .'
+                </button>
+                <div class="dropdown-menu" x-placement="bottom-start">
+                    <a href="' . route('admin.message.show',$data->id) . '"  class="dropdown-item">'.__("Reply").'</a>
+                    <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.  route('admin.message.delete',$data->id).'">'.__("Delete").'</a>
+                </div>
+                </div>';
+            })
+            ->rawColumns(['name','created_at','message','status','priority','action'])
+            ->toJson(); //--- Returning Json Data To Client Side
     }
 
     public function index()
@@ -114,11 +147,28 @@ class MessageController extends Controller
     public function postmessage(Request $request)
     {
         $msg = new AdminUserMessage();
+        $data = [];
+        if($request->hasfile('document'))
+        {
+           foreach($request->file('document') as $file)
+           {
+               $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
+               $file->move('assets/doc', $name);
+               array_push($data, $name);
+           }
+        }
+        $msg->document =  implode(",",$data);
+        $conv = AdminUserConversation::where('id', $request->conversation_id)->first();
+        if (!$conv) {
+            return response()->json(array('errors' => [0 => 'YOu can not reply this ticket, this ticket does not exist.']));
+        }
+        $conv->status = 'open';
+        $conv->save();
         $input = $request->all();
         $msg->fill($input)->save();
         //--- Redirect Section
         $msg = 'Message Sent!';
-        return response()->json($msg);
+        return response()->json('You reply successfully.');
         //--- Redirect Section Ends
     }
     public function messageshow($id)

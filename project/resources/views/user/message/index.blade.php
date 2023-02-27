@@ -88,7 +88,7 @@
                                         @php
                                             switch ($conv->priority) {
                                                 case 'Low':
-                                                    $pr_color = "text-blue";
+                                                    $pr_color = "text-green";
                                                     break;
                                                 case 'Medium':
                                                     $pr_color = 'text-yellow';

@@ -9,8 +9,7 @@
         <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Message History') }}</h5>
         <ol class="breadcrumb m-0 py-0">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
-            <li class="breadcrumb-item"><a href="javascript:;">{{ __('Manage Message') }}</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('admin.user.message') }}">{{ __('All Message') }}</a></li>
+            <li class="breadcrumb-item"><a href="{{route('admin.user.message')}}">{{ __('Manage Message') }}</a></li>
         </ol>
         </div>
     </div>
@@ -30,6 +29,10 @@
                 <tr>
                     <th>{{__('Name')}}</th>
                     <th>{{__('Subject')}}</th>
+                    <th>{{__('Department')}}</th>
+                    <th>{{__('Message')}}</th>
+                    <th>{{__('Priority')}}</th>
+                    <th>{{__('Status')}}</th>
                     <th>{{__('Date')}}</th>
                     <th>{{__('Options')}}</th>
                 </tr>
@@ -84,6 +87,10 @@
                columns: [
                   { data: 'name', name: 'name' },
                   { data: 'subject', name: 'subject' },
+                  { data: 'department', name: 'department' },
+                  { data: 'message', name: 'message' },
+                  { data: 'priority', name: 'priority' },
+                  { data: 'status', name: 'status'},
                   { data: 'created_at', name: 'created_at'},
                   { data: 'action', searchable: false, orderable: false }
 

@@ -9,7 +9,7 @@
         <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Conversation With') }} {{$conv->user->name}}</h5>
         <ol class="breadcrumb m-0 py-0">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
-            <li class="breadcrumb-item"><a href="javascript:;">{{ __('Manage Message') }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('admin.user.message')}}">{{ __('Manage Message') }}</a></li>
             <li class="breadcrumb-item"><a href="{{ route('admin.user.message') }}">{{ __('All Message') }}</a></li>
         </ol>
         </div>
@@ -26,7 +26,8 @@
         <div class="order-table-wrap support-ticket-wrapper ">
             <div class="panel panel-primary">
             <div class="gocover" style="background: url({{asset('assets/images/'.$gs->admin_loader)}}) no-repeat scroll center center rgba(45, 45, 45, 0.5);"></div>
-            @include('includes.admin.form-both')
+            @include('includes.admin.form-success')
+	        @include('includes.admin.form-error')
                 <div class="panel-body" id="messages">
                     @foreach($conv->messages as $message)
                         @if($message->user_id != 0)
@@ -41,9 +42,9 @@
                                         @if($message->conversation->user)
                                         <img class="img-circle" src="{{$message->conversation->user->photo != null ? asset('assets/images/'.$message->conversation->user->photo) : asset('assets/images/noimage.png')}}" alt="">
                                         @else
-        
+
                                         <img class="img-circle" src="{{Auth::guard('admin')->user()->photo != null ? asset('assets/images/'.Auth::guard('admin')->user()->photo) : asset('assets/images/noimage.png')}}" alt="">
-        
+
                                         @endif
                                                 <a target="_blank" class="d-block profile-btn mt-1" href="{{ route('admin-user-profile',$message->conversation->user->id) }}" class="d-block">{{ __('View Profile') }}</a>
                                                 <p class="ticket-date">{{ $message->created_at->diffForHumans() }}</p>
@@ -82,11 +83,27 @@
                 <div class="panel-footer">
                     <form id="messageform" action="{{route('admin.message.store')}}" data-href="{{ route('admin-message-load',$conv->id) }}" method="POST">
                         {{csrf_field()}}
-                        <div class="form-group">
-                            <input type="hidden" name="user_id" value="0">
-                            <input type="hidden" name="conversation_id" value="{{$conv->id}}">
-                            <textarea class="form-control" name="message" id="wrong-invoice" rows="5" required="" placeholder="{{ __('Message') }}"></textarea>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <textarea class="form-control summernote" name="message" style="resize: vertical;" placeholder="{{ __('Your Message') }}" required></textarea>
+                            </div>
                         </div>
+
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-label">{{__('Document')}}</div>
+                                <input class= "document" name="document[]" class="form-control" type="file" accept=".doc,.docx,.pdf,.png,.jpg">
+                            </div>
+                            <div class="col-md-1 mb-3">
+                                <div class="form-label">&nbsp;</div>
+                                <button type="button" class="btn btn-primary w-100 doc_add"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                        <div class="doc-extra-container">
+                        </div>
+                        <input type="hidden" name="user_id" value="0">
+                        <input type="hidden" name="conversation_id" value="{{$conv->id}}">
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary btn-rounded">
                                 {{ __('Add Reply') }}
@@ -129,6 +146,26 @@
 
 
 @section('scripts')
+<script type="text/javascript">
+    'use strict';
+    $('.doc_add').on('click',function(){
+        $('.doc-extra-container').append(`
 
+        <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-label required">{{__('Document')}}</div>
+                        <input class= "document" name="document[]" class="form-control" type="file" accept=".doc,.docx,.pdf,.png,.jpg">
+                    </div>
+                    <div class="col-md-1 mb-3">
+                        <div class="form-label">&nbsp;</div>
+                        <button type="button" class="btn btn-danger w-100 doc_remove"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
 
+        `);
+    })
+    $(document).on('click','.doc_remove',function () {
+        $(this).closest('.row').remove()
+    })
+</script>
 @endsection
