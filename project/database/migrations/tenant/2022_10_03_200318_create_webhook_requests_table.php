@@ -20,11 +20,12 @@ return new class extends Migration
             $table->string('sender_address')->nullable();
             $table->string('sender_name')->nullable();
             $table->double('amount')->nullable();
-            $table->double('charge')->nullable();
+            $table->double('charge')->default(0);
             $table->integer('currency_id')->nullable();
             $table->enum('status', ['processing', 'completed', 'failed'])->default('processing');
             $table->string('failure_reason')->nullable();
             $table->string('gateway_type');
+            $table->text('data')->nullable();
             $table->boolean('is_pay_in')->default(false);
             $table->timestamps();
         });

@@ -31,6 +31,7 @@ class OpenpaydResponse implements RespondsToWebhook
             $webrequest->sender_name = $obj->senderName;
             $webrequest->sender_address = $obj->senderAddress;
             $webrequest->amount = $obj->amount->value;
+            $webrequest->data = $obj;
             $webrequest->currency_id = $currency ? $currency->id : 0;
             $webrequest->status = strtolower($obj->status);
             $webrequest->reference = $obj->transactionReference ?? $obj->transactionId;
@@ -103,7 +104,7 @@ class OpenpaydResponse implements RespondsToWebhook
 
             return response()->json("success");
         }
-        if($obj->type == 'PAYOUT' || $obj->type == 'TRANSFER'){
+        if($obj->type == 'PAYOUT'){
             $webrequest = WebhookRequest::where('transaction_id', $obj->transactionId)
                 ->where('gateway_type', 'openpayd')
                 ->where('is_pay_in', false)
@@ -113,8 +114,22 @@ class OpenpaydResponse implements RespondsToWebhook
 
             $webrequest->transaction_id = $obj->transactionId;
             $webrequest->status = strtolower($obj->status);
+            $webrequest->data = $obj;
             $webrequest->gateway_type = "openpayd";
             $webrequest->is_pay_in = true;
+
+            $webrequest->save();
+            return response()->json("success");
+        }
+
+        if($obj->type == 'FEE'){
+            $webrequest = WebhookRequest::where('transaction_id', $obj->originalTransactionId)
+                ->where('gateway_type', 'openpayd')
+                ->first();
+            if($webrequest) {
+                $webrequest->charge = abs($obj->amount);
+            }
+
 
             $webrequest->save();
             return response()->json("success");
