@@ -20,6 +20,7 @@ class CreateAdminUserConversationsTable extends Migration
             $table->text('message');
             $table->string('department', 255);
             $table->string('priority', 255);
+            $table->enum('status', ['open', 'closed'])->default('open');
             $table->timestamps();
         });
     }

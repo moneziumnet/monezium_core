@@ -17,7 +17,7 @@ class CreateAdminUserMessagesTable extends Migration
             $table->integer('id', true);
             $table->integer('conversation_id');
             $table->text('message');
-            $table->text('message')->nullable();
+            $table->text('document')->nullable();
             $table->integer('user_id')->nullable();
             $table->timestamps();
         });
