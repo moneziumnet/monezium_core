@@ -105,9 +105,6 @@ class UserLoanController extends Controller
         $bank_plan = BankPlan::whereId($user->bank_plan_id)->first();
         $monthlyLoans = UserLoan::whereUserId(auth()->id())->whereMonth('created_at', '=', date('m'))->whereStatus('approve')->sum('loan_amount');
 
-        if($monthlyLoans > $bank_plan->loan_amount){
-            return redirect()->route('user.loans.plan')->with('warning','Monthly loan limit over.');
-        }
 
         $data = new UserLoan();
         $input = $request->all();

@@ -1117,14 +1117,6 @@ class UserController extends Controller
             $dailySend = BalanceTransfer::whereUserId($user->id)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus(1)->sum('amount');
             $monthlySend = BalanceTransfer::whereUserId($user->id)->whereMonth('created_at', '=', date('m'))->whereStatus(1)->sum('amount');
 
-            if($dailySend > $bank_plan->daily_send){
-                return redirect()->back()->with('error','Daily send limit over.');
-            }
-
-            if($monthlySend > $bank_plan->monthly_send){
-                return redirect()->back()->with('error','Monthly send limit over.');
-            }
-
             $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'withdraw')->first();
 
             $dailyTransactions = BalanceTransfer::whereType('other')->whereUserId($user->id)->whereDate('created_at', now())->get();
