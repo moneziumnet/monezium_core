@@ -36,8 +36,10 @@ class ClearJunctionCallBackController extends Controller
         $webrequest->transaction_id = $obj->orderReference;
         $webrequest->sender_name = $obj->paymentDetails->payerRequisite->name;
         $webrequest->sender_address = "";
+        $webrequest->data = $obj;
         $webrequest->reference = $obj->paymentDetails->description ?? $obj->orderReference;
         $webrequest->amount = $obj->amount;
+        $webrequest->charge = abs($obj->operationAmount - $obj->amount);
         $webrequest->currency_id = $currency ? $currency->id : 0;
 
         switch($obj->status) {
@@ -121,6 +123,8 @@ class ClearJunctionCallBackController extends Controller
             $webrequest = new WebhookRequest();
 
         $webrequest->transaction_id = $obj->orderReference;
+        $webrequest->charge = abs($obj->operationAmount - $obj->amount);
+        $webrequest->data = $obj;
         $webrequest->is_pay_in = false;
 
         switch($obj->status) {
