@@ -21,8 +21,4 @@ class AdminUserConversation extends Model
 	    return $this->hasMany('App\Models\AdminUserMessage','conversation_id');
 	}
 
-	public function notifications()
-	{
-	    return $this->hasMany('App\Models\UserNotification','conversation1_id');
-	}
 }

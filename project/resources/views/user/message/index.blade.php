@@ -174,7 +174,7 @@
                       if(data == 0)
                       $.notify("Oops Something Goes Wrong !!","error");
                       else
-                      $.notify("Message Sent !!","success");
+                      $.notify("Message Sent!","success");
                       $('.close').click();
                       location.reload();
             }
