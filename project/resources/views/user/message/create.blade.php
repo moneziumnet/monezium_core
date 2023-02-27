@@ -34,16 +34,34 @@
                           <div class="panel-footer">
                             <form id="messageform" data-href="{{ route('user.message.load',$conv->id) }}" action="{{route('user.message.store')}}" method="POST">
                                 {{csrf_field()}}
-                                <div class="form-group">
-                                    <input type="hidden" name="conversation_id" value="{{$conv->id}}">
-                                    <input type="hidden" name="user_id" value="{{$conv->user->id}}">
-                                    <textarea class="form-control" name="message" id="wrong-invoice" rows="5" style="resize: vertical;" required="" placeholder="{{ __('Your Message') }}"></textarea>
+                                <div class="row">
+                                    <div class="col-md-12 mb-3">
+                                        <textarea class="form-control summernote" name="message" style="resize: vertical;" placeholder="{{ __('Your Message') }}" required></textarea>
+                                    </div>
                                 </div>
+
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-label">{{__('Document')}}</div>
+                                        <input class= "document" name="document[]" class="form-control" type="file" accept=".doc,.docx,.pdf,.png,.jpg">
+                                    </div>
+                                    <div class="col-md-1 mb-3">
+                                        <div class="form-label">&nbsp;</div>
+                                        <button type="button" class="btn btn-primary w-100 doc_add"><i class="fas fa-plus"></i></button>
+                                    </div>
+                                </div>
+                                <div class="doc-extra-container">
+                                </div>
+
+                                <input type="hidden" name="conversation_id" value="{{$conv->id}}">
+                                <input type="hidden" name="user_id" value="{{$conv->user->id}}">
                                 <div class="form-group">
                                     <button class="mybtn1 btn btn-primary mt-2 mb-2">
                                         {{ __('Send') }}
                                     </button>
                                 </div>
+                                <hr>
                             </form>
                         </div>
                         <div class="panel-body" id="messages">
@@ -98,4 +116,34 @@
 
 
 @endsection
+
+@push('js')
+
+<script type="text/javascript">
+    'use strict';
+
+    $('.doc_add').on('click',function(){
+        $('.doc-extra-container').append(`
+
+        <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-label required">{{__('Document')}}</div>
+                        <input class= "document" name="document[]" class="form-control" type="file" accept=".doc,.docx,.pdf,.png,.jpg">
+                    </div>
+                    <div class="col-md-1 mb-3">
+                        <div class="form-label">&nbsp;</div>
+                        <button type="button" class="btn btn-danger w-100 doc_remove"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+
+        `);
+    })
+    $(document).on('click','.doc_remove',function () {
+        $(this).closest('.row').remove()
+    })
+
+
+</script>
+
+@endpush
 

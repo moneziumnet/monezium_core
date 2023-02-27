@@ -24,7 +24,7 @@ class MessageController extends Controller
     public function adminmessages()
     {
         $user = Auth::guard('web')->user();
-        $convs = AdminUserConversation::where('user_id', '=', $user->id)->orderBy('id', 'desc')->paginate();
+        $convs = AdminUserConversation::where('user_id', '=', $user->id)->orderBy('id', 'desc')->paginate(10);
         return view('user.message.index', compact('convs', 'user'));
     }
 
@@ -41,6 +41,14 @@ class MessageController extends Controller
         return view('user.message.create', compact('conv', 'admin'));
     }
 
+    public function ticket_status($id, $status)
+    {
+        $conv = AdminUserConversation::findOrfail($id);
+        $conv->status = $status;
+        $conv->save();
+        return redirect()->back()->with('message', 'Ticket has been closed Successfully');
+    }
+
 
     public function adminmessagedelete($id)
     {
@@ -51,12 +59,31 @@ class MessageController extends Controller
             }
         }
         $conv->delete();
-        return redirect()->back()->with('success', 'Message Deleted Successfully');
+        return redirect()->back()->with('message', 'Message Deleted Successfully');
     }
 
     public function adminpostmessage(Request $request)
     {
+        $conv = AdminUserConversation::where('user_id', '=', auth()->id())->where('id', $request->conversation_id)->first();
+
+        if (!$conv) {
+            return redirect()->back()->with('error', 'You can not reply this ticket because you are a owner of this ticket.');
+        }
+        $conv->status = 'open';
+        $conv->save();
+
         $msg = new AdminUserMessage();
+        $data = [];
+        if($request->hasfile('document'))
+        {
+           foreach($request->file('document') as $file)
+           {
+               $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
+               $file->move('assets/doc', $name);
+               array_push($data, $name);
+           }
+        }
+        $msg->document =  implode(",",$data);
         $input = $request->all();
         $msg->fill($input)->save();
 

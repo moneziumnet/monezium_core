@@ -38,8 +38,11 @@
                                 <thead>
                                 <tr>
                                     <th>{{ __('Subject') }}</th>
+                                    <th>{{ __('Department') }}</th>
                                     <th>{{ __('Message') }}</th>
                                     <th>{{ __('Time') }}</th>
+                                    <th>{{ __('Status') }}</th>
+                                    <th>{{ __('Priority') }}</th>
                                     <th>{{ __('Action') }}</th>
                                 </tr>
                                 </thead>
@@ -50,6 +53,11 @@
                                       <td data-label="{{ __('Subject') }}">
                                         <div>
                                           {{$conv->subject}}
+                                        </div>
+                                      </td>
+                                      <td data-label="{{ __('Department') }}">
+                                        <div>
+                                          {{$conv->department}}
                                         </div>
                                       </td>
                                       <td data-label="{{ __('Message') }}">
@@ -63,9 +71,43 @@
                                           {{$conv->created_at->diffForHumans()}}
                                         </div>
                                       </td>
+                                      <td data-label="{{ __('Status') }}">
+                                        @php
+                                            if($conv->status == 'open') {
+                                                $color = "text-primary";
+                                            }
+                                            else {
+                                                $color = "text-red";
+                                            }
+                                        @endphp
+                                        <div class="{{$color}}">
+                                          {{ucfirst($conv->status)}}
+                                        </div>
+                                      </td>
+                                      <td data-label="{{ __('Priority') }}">
+                                        @php
+                                            switch ($conv->priority) {
+                                                case 'Low':
+                                                    $pr_color = "text-blue";
+                                                    break;
+                                                case 'Medium':
+                                                    $pr_color = 'text-yellow';
+                                                    break;
+                                                default:
+                                                    $pr_color = "text-red";
+                                                    break;
+                                            }
+                                        @endphp
+                                        <div class="{{$pr_color}}">
+                                          {{$conv->priority}}
+                                        </div>
+                                      </td>
                                       <td data-label="{{ __('Action') }}">
                                         <div class="d-flex">
-                                          <a href="{{route('user.message.show',$conv->id)}}" class="link view me-1 btn d-block btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+                                          <a href="{{route('user.message.show',$conv->id)}}" class="link view me-1 btn d-block btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-original-title="{{__('Reply')}}"><i class="fa fa-reply"></i></a>
+                                          @if ($conv->status == 'open')
+                                              <a href="javascript:;" data-bs-toggle="tooltip" data-bs-original-title="{{__('Close')}}" data-route="{{route('user.message.status',[$conv->id ,'closed'])}}" class="link btn btn-primary d-block btn-sm me-1 closed"><i class="fa fa-check"></i></a>
+                                          @endif
                                           <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#confirm-delete" data-href="{{route('user.message.delete1',$conv->id)}}"class="link remove-btn btn d-block btn-sm btn-danger"><i class="fa fa-trash"></i></a>
                                         </div>
                                       </td>
@@ -154,6 +196,34 @@
   </div>
 </div>
 
+<div class="modal modal-blur fade" id="modal-closed" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-status bg-primary"></div>
+        <div class="modal-body text-center py-4">
+            <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+            <h3>{{__('Confirm Ticket Closed?')}}</h3>
+        </div>
+        <div class="modal-footer">
+            <div class="w-100">
+                <div class="row">
+                <div class="col"><a href="#" class="btn w-100" data-bs-dismiss="modal">
+                    {{__('Cancel')}}
+                    </a></div>
+                <div class="col">
+                    <form action="" method="get">
+                        <button type="submit" class="btn btn-primary w-100 confirm">
+                        {{__('Confirm')}}
+                        </button>
+                    </form>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
 
 <div class="modal modal-blur fade" id="confirm-delete" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
@@ -202,7 +272,7 @@
         <div class="row">
                     <div class="col-md-6 mb-3">
                         <div class="form-label required">{{__('Document')}}</div>
-                        <input class= "document" name="document[]" class="form-control" type="file" accept=".doc,.docx,.pdf">
+                        <input class= "document" name="document[]" class="form-control" type="file" accept=".doc,.docx,.pdf,.png,.jpg">
                     </div>
                     <div class="col-md-1 mb-3">
                         <div class="form-label">&nbsp;</div>
@@ -214,6 +284,11 @@
     })
     $(document).on('click','.doc_remove',function () {
         $(this).closest('.row').remove()
+    })
+
+    $('.closed').on('click',function() {
+        $('#modal-closed').find('form').attr('action',$(this).data('route'))
+        $('#modal-closed').modal('show')
     })
 
 </script>

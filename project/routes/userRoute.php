@@ -679,6 +679,7 @@ Route::prefix('user')->group(function() {
       Route::get('admin/message/{id}/delete', [MessageController::class,'adminmessagedelete'])->name('user.message.delete1');
       Route::post('admin/user/send/message', [MessageController::class,'adminusercontact'])->name('user.send.message');
       Route::get('admin/message/load/{id}', [MessageController::class,'messageload'])->name('user.message.load');
+      Route::get('admin/message/status/{id}/{status}', [MessageController::class,'ticket_status'])->name('user.message.status');
 
 
       Route::get('/change-password', [UserController::class,'changePasswordForm'])->name('user.change.password.form');
