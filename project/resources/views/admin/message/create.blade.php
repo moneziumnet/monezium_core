@@ -29,53 +29,86 @@
             @include('includes.admin.form-success')
 	        @include('includes.admin.form-error')
                 <div class="panel-body" id="messages">
-                    @foreach($conv->messages as $message)
-                        @if($message->user_id != 0)
-                            <div class="single-reply-area user">
+                    @foreach($message_list as $message)
+                    @if($message->user_id != 0)
+                    <div class="card card-sm shadow-sm">
+                        <div class="p-2">
+                            <div class="row">
+                                <div class="col-auto">
+                                    <img class="img-profile rounded-circle" src="{{$message->conversation->user->photo != null ? asset('assets/images/'.$message->conversation->user->photo) : asset('assets/user/img/user.jpg')}}">
+                                </div>
+                                <div class="col">
+                                    <div class="text-truncate">
+                                    {{$conv->user->company_name ?? $conv->user->name}}
+                                    <div class="badge bg-primary ml-2 text-white"> {{dateFormat($message->created_at, 'Y-m-d H:i:s')}}</div>
+                                    </div>
+                                    <div class="text-muted">{{$conv->user->email}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="p-3">
+                            <div class="user">
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <div class="reply-area">
                                             <div class="left">
-                                                <p>{{ $message->message }}</p>
+                                                 {{strip_tags($message->message)}}
                                             </div>
-                                            <div class="right">
-                                        @if($message->conversation->user)
-                                        <img class="img-circle" src="{{$message->conversation->user->photo != null ? asset('assets/images/'.$message->conversation->user->photo) : asset('assets/user/img/user.jpg')}}" alt="">
-                                        @else
-
-                                        <img class="img-circle" src="{{Auth::guard('admin')->user()->photo != null ? asset('assets/images/'.Auth::guard('admin')->user()->photo) : asset('assets/user/img/user.jpg')}}" alt="">
-
-                                        @endif
-                                                <a target="_blank" class="d-block profile-btn mt-1" href="{{ route('admin-user-profile',$message->conversation->user->id) }}" class="d-block">{{ __('View Profile') }}</a>
-                                                <p class="ticket-date">{{ $message->created_at->diffForHumans() }}</p>
+                                            <div class="mt-2">
+                                                @if($message->document)
+                                                 @foreach (explode(",", $message->document) as $docu)
+                                                    <a target="_blank" class="ml-2" href="{{ asset('assets/doc/' . $docu) }}">{{ $docu }}</a>
+                                                 @endforeach
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
+                        </div>
+                    </div>
                     <br>
-
                     @else
-
-                    <div class="single-reply-area admin">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="reply-area">
-                                    <div class="left">
-                                        <img class="img-circle" src="{{ Auth::guard('admin')->user()->photo ? asset('assets/images/'.Auth::guard('admin')->user()->photo ):asset('assets/images/noimage.png') }}" alt="">
-                                        <p class="ticket-date">{{ $message->created_at->diffForHumans() }}</p>
+                    <div class="border-0 shadow-sm">
+                        <div class="p-2">
+                            <div class="row">
+                                <div class="col-auto">
+                                    <img class="img-profile rounded-circle" src="{{ $admin->photo ? asset('assets/images/'.$admin->photo) : asset('assets/user/img/user.jpg')}}">
+                                </div>
+                                <div class="col">
+                                    <div class="text-truncate">
+                                    {{$admin->name}}
+                                    <div class="badge bg-primary text-white ml-2">{{dateFormat($message->created_at, 'Y-m-d H:i:s')}}</div>
                                     </div>
-                                    <div class="right">
-                                        <p>{{ $message->message }}</p>
+                                    <div class="text-muted">{{$admin->email}}</div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="p-3">
+                            <div class="user">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="reply-area">
+                                            <div class="left">
+                                                 {{strip_tags($message->message)}}
+                                            </div>
+                                            <div class="mt-2">
+                                                @if($message->document)
+                                                 @foreach (explode(",", $message->document) as $docu)
+                                                    <a target="_blank" class="ml-2" href="{{ asset('assets/doc/' . $docu) }}">{{ $docu }}</a>
+                                                 @endforeach
+                                                @endif
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     <br>
-
                     @endif
 
                     @endforeach

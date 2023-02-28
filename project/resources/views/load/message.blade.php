@@ -1,44 +1,86 @@
-                                @foreach($conv->messages as $message)
-                                    @if($message->user_id != null)
-                                <div class="single-reply-area user">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <div class="reply-area">
-                                                <div class="left">
-                                                    <p>{{ $message->message }}</p>
-                                                </div>
-                                                <div class="right">
-                                                    <img class="img-circle" src="{{$message->conversation->user->photo != null ? asset('assets/images/'.$message->conversation->user->photo) : asset('assets/images/noimage.png')}}" alt="">
-                                                    <a class="d-block profile-btn" href="{{ route('admin-user-profile',$message->conversation->user->id) }}" class="d-block">View Profile</a>
-                                                    <p class="ticket-date">{{ $message->created_at->diffForHumans() }}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+@foreach($message_list as $message)
+@if($message->user_id != 0)
+<div class="card card-sm shadow-sm">
+    <div class="p-2">
+        <div class="row">
+            <div class="col-auto">
+                <img class="img-profile rounded-circle" src="{{$message->conversation->user->photo != null ? asset('assets/images/'.$message->conversation->user->photo) : asset('assets/user/img/user.jpg')}}">
+            </div>
+            <div class="col">
+                <div class="text-truncate">
+                {{$conv->user->company_name ?? $conv->user->name}}
+                </div>
+                <div class="text-muted">{{$conv->user->email}}</div>
+            </div>
+            <div class="col-auto right text-white">
+                <div class="badge bg-primary"> {{dateFormat($message->created_at, 'Y-m-d H:i:s')}}</div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="p-3">
+        <div class="user">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="reply-area">
+                        <div class="left">
+                            <p> {{htmlentities($message->message)}}</p>
+                        </div>
+                        <div class="mt-2">
+                            @if($message->document)
+                             @foreach (explode(",", $message->document) as $docu)
+                                <a target="_blank" class="ml-2" href="{{ asset('assets/doc/' . $docu) }}">{{ $docu }}</a>
+                             @endforeach
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+@else
+<div class="border-0 shadow-sm">
+    <div class="p-2">
+        <div class="row">
+            <div class="col-auto">
+                <img class="img-profile rounded-circle" src="{{ $admin->photo ? asset('assets/images/'.$admin->photo) : asset('assets/user/img/user.jpg')}}">
+            </div>
+            <div class="col">
+                <div class="text-truncate">
+                {{$admin->name}}
+                </div>
+                <div class="text-muted">{{$admin->email}}</div>
+            </div>
+            <div class="col-auto right">
+                <div class="badge bg-primary text-white">{{dateFormat($message->created_at, 'Y-m-d H:i:s')}}</div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="p-3">
+        <div class="user">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="reply-area">
+                        <div class="left">
+                            <p> {{htmlentities($message->message)}}</p>
+                        </div>
+                        <div class="mt-2">
+                            @if($message->document)
+                             @foreach (explode(",", $message->document) as $docu)
+                                <a target="_blank" class="ml-2" href="{{ asset('assets/doc/' . $docu) }}">{{ $docu }}</a>
+                             @endforeach
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+@endif
 
-                                <br>
-
-                                @else
-
-                                <div class="single-reply-area admin">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <div class="reply-area">
-                                                <div class="left">
-                                                    <img class="img-circle" src="{{ Auth::guard('admin')->user()->photo ? asset('assets/images/admins/'.Auth::guard('admin')->user()->photo ):asset('assets/images/noimage.png') }}" alt="">
-                                                    <p class="ticket-date">{{ $message->created_at->diffForHumans() }}</p>
-                                                </div>
-                                                <div class="right">
-                                                    <p>{{ $message->message }}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <br>
-
-                                @endif
-
-                                @endforeach
+@endforeach
