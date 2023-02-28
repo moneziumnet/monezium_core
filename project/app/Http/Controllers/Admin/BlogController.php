@@ -230,7 +230,9 @@ class BlogController extends Controller
     public function destroy($id)
     {
         $data = Blog::findOrFail($id);
-        @unlink('assets/images/'.$data->photo);
+        foreach (explode(',', $data->photo) as $value) {
+            @unlink('assets/images/'.$value);
+        }
         $data->delete();
 
 

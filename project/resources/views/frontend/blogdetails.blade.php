@@ -1,7 +1,7 @@
 @extends('layouts.front')
 
 @push('css')
-    
+
 @endpush
 
 @section('content')
@@ -23,7 +23,7 @@
 				</div>
 			</section>
 			<!-- Hero -->
-		
+
 			<!-- Blog -->
 			<section class="blog-section pt-100 pb-100">
 				<div class="container">
@@ -31,7 +31,7 @@
 						<div class="col-lg-8">
 							<div class="blog__item blog__item-details">
 								<div class="blog__item-img">
-									<img src="{{asset('assets/images/'.$data->photo)}}" alt="blog">
+									<img src="{{asset('assets/images/'.explode(',',$data->photo)[0])}}" alt="blog">
 								</div>
 								<div class="blog__item-content">
 									<div class="d-flex flex-wrap justify-content-between meta-post">
@@ -82,7 +82,7 @@
 											<li>
 												<a href="{{route('blog.details',$data->slug)}}">
 													<div class="img">
-														<img src="{{asset('assets/images/'.$data->photo)}}" alt="blog">
+														<img src="{{asset('assets/images/'.explode(',',$data->photo)[0])}}" alt="blog">
 													</div>
 													<div class="cont">
 														<h5 class="subtitle">{{Str::limit($data->title,50)}}</h5>

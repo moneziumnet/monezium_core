@@ -38,7 +38,7 @@
 							<div class="blog__item">
 								<div class="blog__item-img">
 									<a href="{{route('blog.details',$data->slug)}}">
-										<img src="{{asset('assets/images/'.$data->photo)}}" alt="blog">
+										<img src="{{asset('assets/images/'.explode(',',$data->photo)[0])}}" alt="blog">
 									</a>
 								</div>
 								<div class="blog__item-content">
