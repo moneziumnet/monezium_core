@@ -65,18 +65,34 @@
                             </form>
                         </div>
                         <div class="panel-body" id="messages">
-                          @foreach($conv->messages as $message)
+                          @foreach($message_list as $message)
                             @if($message->user_id != 0)
-                            <div class="single-reply-area user">
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <div class="reply-area">
-                                            <div class="left">
-                                                <p>{{$message->message}}</p>
+                            <div class="card card-sm border-0 shadow-sm">
+                                <div class="card-header">
+                                    <div class="row">
+                                        <div class="col-auto">
+                                            <span class="avatar" style="background-image: url({{$message->conversation->user->photo != null ? asset('assets/images/'.$message->conversation->user->photo) : asset('assets/user/img/user.jpg')}})"></span>
+                                        </div>
+                                        <div class="col">
+                                            <div class="text-truncate">
+                                            {{$conv->user->company_name ?? $conv->user->name}}
                                             </div>
-                                            <div class="right">
-                                                <img class="img-circle" src="{{$message->conversation->user->photo != null ? asset('assets/images/'.$message->conversation->user->photo) : asset('assets/user/img/user.jpg')}}" alt="">
-                                                <p class="ticket-date">{{$message->conversation->user->name}}</p>
+                                            <div class="text-muted">{{$conv->user->email}}</div>
+                                        </div>
+                                        <div class="col-auto right">
+                                            <div class="badge bg-primary"> {{dateFormat($message->created_at, 'Y-m-d H:i:s')}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="user">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="reply-area">
+                                                    <div class="left">
+                                                        <p> {{$message->message}}</p>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -85,16 +101,32 @@
 
                             <br>
                             @else
-                            <div class="single-reply-area admin">
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <div class="reply-area">
-                                            <div class="left">
-                                                <img class="img-circle" src="{{ $admin->photo ? asset('assets/images/'.$admin->photo) : asset('assets/user/img/user.jpg')}}" alt="">
-                                                <p class="ticket-date">{{ __('Admin') }}</p>
+                            <div class="card card-sm border-0 shadow-sm">
+                                <div class="card-header">
+                                    <div class="row">
+                                        <div class="col-auto">
+                                            <span class="avatar" style="background-image: url({{ $admin->photo ? asset('assets/images/'.$admin->photo) : asset('assets/user/img/user.jpg')}})"></span>
+                                        </div>
+                                        <div class="col">
+                                            <div class="text-truncate">
+                                            {{$admin->name}}
                                             </div>
-                                            <div class="right">
-                                                <p>{{$message->message}}</p>
+                                            <div class="text-muted">{{$admin->email}}</div>
+                                        </div>
+                                        <div class="col-auto right">
+                                            <div class="badge bg-primary">{{dateFormat($message->created_at, 'Y-m-d H:i:s')}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="user">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="reply-area">
+                                                    <div class="left">
+                                                        <p> {{$message->message}}</p>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

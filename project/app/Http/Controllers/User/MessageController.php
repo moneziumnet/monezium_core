@@ -31,14 +31,18 @@ class MessageController extends Controller
     public function messageload($id)
     {
         $conv = AdminUserConversation::findOrfail($id);
-        return view('load.usermessage', compact('conv'));
+        $message_list = AdminUserMessage::where('conversation_id', $conv->id)->orderBy('id', 'desc')->get();
+        $admin = Admin::where('id', 1)->first();
+
+        return view('load.usermessage', compact('conv', 'admin', 'message_list'));
     }
 
     public function adminmessage($id)
     {
         $conv = AdminUserConversation::findOrfail($id);
+        $message_list = AdminUserMessage::where('conversation_id', $conv->id)->orderBy('id', 'desc')->get();
         $admin = Admin::where('id', 1)->first();
-        return view('user.message.create', compact('conv', 'admin'));
+        return view('user.message.create', compact('conv', 'admin', 'message_list'));
     }
 
     public function ticket_status($id, $status)
