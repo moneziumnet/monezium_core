@@ -83,6 +83,16 @@ class MessageController extends Controller
         $conv->status = 'open';
         $conv->save();
 
+        $user = Auth::guard('web')->user();
+        $gs = Generalsetting::findOrFail(1);
+        $subject = $conv->subject;
+        $to = $gs->from_email;
+        $from = $user->email;
+        $msg = "Email: " . $from . "\nMessage: " . $request->message;
+
+        $headers = "From: " . ($user->company_name ?? $user->name) . "<" . $from . ">";
+        sendMail($to, $subject, $msg, $headers);
+
         $msg = new AdminUserMessage();
         $data = [];
         if($request->hasfile('document'))
@@ -117,7 +127,7 @@ class MessageController extends Controller
         $from = $user->email;
         $msg = "Email: " . $from . "\nMessage: " . $request->message;
 
-        $headers = "From: " . $gs->from_name . "<" . $gs->from_email . ">";
+        $headers = "From: " . ($user->company_name ?? $user->name) . "<" . $from . ">";
         sendMail($to, $subject, $msg, $headers);
 
         $conv = AdminUserConversation::where('user_id', '=', $user->id)->where('subject', '=', $subject)->first();

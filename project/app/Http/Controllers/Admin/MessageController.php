@@ -199,6 +199,16 @@ class MessageController extends Controller
         $conv->save();
         $input = $request->all();
         $msg->fill($input)->save();
+
+        $gs = Generalsetting::findOrFail(1);
+        $subject = $conv->subject;
+        $from = $gs->from_email;
+        $to = $conv->user->email;
+        $msg = "Email: " . $from . "\nMessage: " . $request->message;
+
+        $headers = "From: " . $gs->from_name . "<" . $from . ">";
+        sendMail($to, $subject, $msg, $headers);
+
         //--- Redirect Section
         return response()->json('You reply successfully.');
         //--- Redirect Section Ends
