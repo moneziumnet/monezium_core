@@ -30,9 +30,14 @@
 					<div class="row gy-5">
 						<div class="col-lg-8">
 							<div class="blog__item blog__item-details">
-								<div class="blog__item-img">
-									<img src="{{asset('assets/images/'.explode(',',$data->photo)[0])}}" alt="blog">
-								</div>
+                                <div class="clients-slider bg--title client-slider-bg owl-theme owl-carousel">
+                                    @foreach ( explode(',' , $data->photo) as $photo)
+
+                                    <div class="blog__item-img">
+                                        <img src="{{asset('assets/images/'.$photo)}}" alt="blog">
+								    </div>
+                                @endforeach
+                                </div>
 								<div class="blog__item-content">
 									<div class="d-flex flex-wrap justify-content-between meta-post">
 										<span><i class="far fa-user"></i> @lang('Admin')</span>
