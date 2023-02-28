@@ -23,7 +23,7 @@
           <div class="card-body">
             <div class="gocover" style="background: url({{asset('assets/images/'.$gs->admin_loader)}}) no-repeat scroll center center rgba(45, 45, 45, 0.5);"></div>
             <form class="geniusform" action="{{route('admin.institution.moduleupdate',$data->id)}}" method="POST" enctype="multipart/form-data">
-            @include('includes.admin.form-both')
+              @include('includes.admin.form-both')
               {{ csrf_field() }}
               <div class="row">
                 <div class="col-md-6">
@@ -47,18 +47,18 @@
                     <div class="custom-control custom-switch">
                       <input type="checkbox" name="section[]" value="KYC Management" {{ $data->sectionCheck('KYC Management') ? 'checked' : '' }} class="custom-control-input" id="manage_kyc">
                       <label class="custom-control-label" for="manage_kyc">{{__('AML/KYC Management')}}</label>
-                      </div>
+                    </div>
                   </div>
                 </div>
 
                 <div class="col-md-6">
-                    <div class="form-group">
-                      <div class="custom-control custom-switch">
-                        <input type="checkbox" name="section[]" value="Crypto Management" {{ $data->sectionCheck('Crypto Management') ? 'checked' : '' }} class="custom-control-input" id="crypto_management">
-                        <label class="custom-control-label" for="crypto_management">{{__('Crypto Management')}}</label>
-                      </div>
+                  <div class="form-group">
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" name="section[]" value="Crypto Management" {{ $data->sectionCheck('Crypto Management') ? 'checked' : '' }} class="custom-control-input" id="crypto_management">
+                      <label class="custom-control-label" for="crypto_management">{{__('Crypto Management')}}</label>
                     </div>
                   </div>
+                </div>
 
                 <div class="col-md-6">
                   <div class="form-group">
@@ -96,25 +96,25 @@
               </div>
             </div> -->
 
-            <div class="col-md-6">
-                <div class="form-group">
-                  <div class="custom-control custom-switch">
-                    <input type="checkbox" name="section[]" value="ICO Management" {{ $data->sectionCheck('ICO Management') ? 'checked' : '' }} class="custom-control-input" id="manage_ico">
-                    <label class="custom-control-label" for="manage_ico">{{__('ICO Management')}}</label>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" name="section[]" value="ICO Management" {{ $data->sectionCheck('ICO Management') ? 'checked' : '' }} class="custom-control-input" id="manage_ico">
+                      <label class="custom-control-label" for="manage_ico">{{__('ICO Management')}}</label>
                     </div>
+                  </div>
                 </div>
-              </div>
 
-              <div class="col-md-6">
-                <div class="form-group">
-                  <div class="custom-control custom-switch">
-                    <input type="checkbox" name="section[]" value="Report" {{ $data->sectionCheck('Report') ? 'checked' : '' }} class="custom-control-input" id="manage_report">
-                    <label class="custom-control-label" for="manage_report">{{__('Report')}}</label>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" name="section[]" value="Report" {{ $data->sectionCheck('Report') ? 'checked' : '' }} class="custom-control-input" id="manage_report">
+                      <label class="custom-control-label" for="manage_report">{{__('Report')}}</label>
                     </div>
+                  </div>
                 </div>
-              </div>
 
-              <div class="col-md-6">
+                <div class="col-md-6">
                   <div class="form-group">
                     <div class="custom-control custom-switch">
                       <input type="checkbox" name="section[]" value="Deposits" {{ $data->sectionCheck('Deposits') ? 'checked' : '' }} class="custom-control-input" id="management_deposits">
@@ -170,13 +170,13 @@
                 </div>
 
                 <div class="col-md-6">
-                    <div class="form-group">
-                      <div class="custom-control custom-switch">
-                        <input type="checkbox" name="section[]" value="Notification" {{ $data->sectionCheck('Notification') ? 'checked' : '' }} class="custom-control-input" id="notification">
-                        <label class="custom-control-label" for="notification">{{__('Notification')}}</label>
-                      </div>
+                  <div class="form-group">
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" name="section[]" value="Notification" {{ $data->sectionCheck('Notification') ? 'checked' : '' }} class="custom-control-input" id="notification">
+                      <label class="custom-control-label" for="notification">{{__('Notification')}}</label>
                     </div>
                   </div>
+                </div>
 
                 <div class="col-md-6">
                   <div class="form-group">
@@ -187,14 +187,14 @@
                   </div>
                 </div>
 
-                <!-- <div class="col-md-6">
-              <div class="form-group">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" name="section[]" value="Manage Blog" {{ $data->sectionCheck('Manage Blog') ? 'checked' : '' }} class="custom-control-input" id="manage_blog">
-                  <label class="custom-control-label" for="manage_blog">{{__('Manage Blog')}}</label>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" name="section[]" value="Manage Blog" {{ $data->sectionCheck('Manage Blog') ? 'checked' : '' }} class="custom-control-input" id="manage_blog">
+                      <label class="custom-control-label" for="manage_blog">{{__('Manage Blog')}}</label>
+                    </div>
                   </div>
-              </div>
-            </div> -->
+                </div>
 
                 <div class="col-md-6">
                   <div class="form-group">
@@ -224,20 +224,20 @@
                 </div>
 
                 <div class="col-md-6">
-                    <div class="form-group">
-                      <div class="custom-control custom-switch">
-                        <input type="checkbox" name="section[]" value="Crowdfunding" {{ $data->sectionCheck('Crowdfunding') ? 'checked' : '' }} class="custom-control-input" id="crowdfunding">
-                        <label class="custom-control-label" for="crowdfunding">{{__('Crowdfunding')}}</label>
-                      </div>
+                  <div class="form-group">
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" name="section[]" value="Crowdfunding" {{ $data->sectionCheck('Crowdfunding') ? 'checked' : '' }} class="custom-control-input" id="crowdfunding">
+                      <label class="custom-control-label" for="crowdfunding">{{__('Crowdfunding')}}</label>
                     </div>
                   </div>
+                </div>
 
                 <div class="col-md-6">
                   <div class="form-group">
                     <div class="custom-control custom-switch">
                       <input type="checkbox" name="section[]" value="Message" {{ $data->sectionCheck('Message') ? 'checked' : '' }} class="custom-control-input" id="Message">
                       <label class="custom-control-label" for="Message">{{__('Message')}}</label>
-                      </div>
+                    </div>
                   </div>
                 </div>
 

@@ -68,7 +68,7 @@
 
           <div class="form-group">
               <label for="tags">{{ __('Tags') }}</label>
-              <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="mytags" name="tags" placeholder="{{ __('Tags') }}">
+              <input type="text" class="mytags" name="tags" placeholder="{{ __('Tags') }}">
           </div>
 
 
@@ -87,7 +87,7 @@
           <div class="showbox d-none">
             <div class="form-group">
               <label for="meta_tag">{{ __('Meta Tags') }}</label>
-              <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="mytags" name="meta_tag" placeholder="{{ __('Meta Tags') }}">
+              <input type="text" class="mytags" name="meta_tag" placeholder="{{ __('Meta Tags') }}">
             </div>
 
             <div class="form-group">

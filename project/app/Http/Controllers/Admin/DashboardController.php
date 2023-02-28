@@ -54,7 +54,7 @@ class DashboardController extends Controller
             $data['currency'] = Currency::whereIsDefault(1)->first();
             $data['transactions'] = Transaction::all();
             $data['acustomers'] = User::orderBy('id', 'desc')->whereIsBanned(0)->get();
-            $data['users'] = User::orderBy('id', 'desc')->get();
+            $data['users'] = User::orderBy('id', 'desc')->limit(5)->get();
             $data['bcustomers'] = User::orderBy('id', 'desc')->whereIsBanned(1)->get();
             $data['payouts'] = Withdrawals::where('status', 'completed')->sum('amount');
 
@@ -67,17 +67,17 @@ class DashboardController extends Controller
         //     }
         // }
         if (request('state')) {
-            $client = New Client();
+            $client = new Client();
             $access_token = Session::get('Swan_token');
             $subbank = Session::get('subbank');
             $currency_id = Session::get('currency');
             $user_id = Session::get('user_id');
             try {
-                $body = '{"query":"query MyQuery {\\n  onboarding(id: \\"'.request('state').'\\") {\\n    id\\n    account {\\n      BIC\\n      IBAN\\n      balances {\\n        available {\\n          currency\\n          value\\n        }\\n      }\\n      id\\n    }\\n  }\\n}","variables":{}}';
+                $body = '{"query":"query MyQuery {\\n  onboarding(id: \\"' . request('state') . '\\") {\\n    id\\n    account {\\n      BIC\\n      IBAN\\n      balances {\\n        available {\\n          currency\\n          value\\n        }\\n      }\\n      id\\n    }\\n  }\\n}","variables":{}}';
                 $headers = [
-                    'Authorization' => 'Bearer '.$access_token,
+                    'Authorization' => 'Bearer ' . $access_token,
                     'Content-Type' => 'application/json'
-                  ];
+                ];
                 $response = $client->request('POST', 'https://api.swan.io/sandbox-partner/graphql', [
                     'body' => $body,
                     'headers' => $headers
@@ -90,7 +90,7 @@ class DashboardController extends Controller
                 return redirect()->route('admin.dashboard')->with(array('warning' => json_encode($th->getMessage())));
             }
             $user = User::findOrFail($user_id);
-            $bank = New BankAccount();
+            $bank = new BankAccount();
             $bank->user_id = $user->id;
             $bank->subbank_id = $subbank;
             $bank->iban = $iban;
@@ -99,7 +99,7 @@ class DashboardController extends Controller
             $bank->save();
 
             $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
-            if(!$chargefee) {
+            if (!$chargefee) {
                 $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
             }
 
@@ -115,19 +115,19 @@ class DashboardController extends Controller
             $trans->type        = '-';
             $trans->remark      = 'account-open';
             $trans->details     = trans('Bank Account Create');
-            $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
+            $trans->data        = '{"sender":"' . ($user->company_name ?? $user->name) . '", "receiver":"' . $gs->disqus . '"}';
             $trans->save();
 
             user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
             user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
-            return redirect()->route('admin.dashboard')->with(array('message' => $user->name.'\'s Swan Bank Account has been created successfully.'));
+            return redirect()->route('admin.dashboard')->with(array('message' => $user->name . '\'s Swan Bank Account has been created successfully.'));
         }
-        if(request('consentId')){
+        if (request('consentId')) {
             $currency_id = Session::get('currency_id');
             $user_id = Session::get('user_id');
             $user = User::findOrFail($user_id);
             $chargefee = Charge::where('slug', 'card-issuance')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
-            if(!$chargefee){
+            if (!$chargefee) {
                 $chargefee = Charge::where('slug', 'card-issuance')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
             }
             $trans = new Transaction();
@@ -142,33 +142,33 @@ class DashboardController extends Controller
             $trans->type        = '-';
             $trans->remark      = 'card-issuance';
             $trans->details     = trans('Card Issuance');
-            $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
+            $trans->data        = '{"sender":"' . ($user->company_name ?? $user->name) . '", "receiver":"' . $gs->disqus . '"}';
             $trans->save();
 
-            $trx='VC-'.Str::random(6);
-            $sav['user_id']=$user->id;
-            $sav['first_name']=explode(" ", $user->name)[0];
-            $sav['last_name']=explode(" ", $user->name)[1];
-            $sav['account_id']=$user->id;
-            $sav['card_hash']=$user->id;
-            $sav['card_pan']=generate_card_number(16);
-            $sav['masked_card']='mc_'.rand(100, 999);
-            $sav['cvv']=rand(100, 999);
-            $sav['expiration']='10/24';
-            $sav['card_type']='normal';
-            $sav['name_on_card']='noc_US';
-            $sav['callback']=" ";
-            $sav['ref_id']=$trx;
-            $sav['secret']=$trx;
-            $sav['city']=$user->city;
-            $sav['zip_code']=$user->zip;
-            $sav['address']=$user->address;
-            $sav['wallet_id']=$user_wallet->id;
-            $sav['amount']=0;
-            $sav['currency_id']=$currency_id;
-            $sav['charge']=0;
+            $trx = 'VC-' . Str::random(6);
+            $sav['user_id'] = $user->id;
+            $sav['first_name'] = explode(" ", $user->name)[0];
+            $sav['last_name'] = explode(" ", $user->name)[1];
+            $sav['account_id'] = $user->id;
+            $sav['card_hash'] = $user->id;
+            $sav['card_pan'] = generate_card_number(16);
+            $sav['masked_card'] = 'mc_' . rand(100, 999);
+            $sav['cvv'] = rand(100, 999);
+            $sav['expiration'] = '10/24';
+            $sav['card_type'] = 'normal';
+            $sav['name_on_card'] = 'noc_US';
+            $sav['callback'] = " ";
+            $sav['ref_id'] = $trx;
+            $sav['secret'] = $trx;
+            $sav['city'] = $user->city;
+            $sav['zip_code'] = $user->zip;
+            $sav['address'] = $user->address;
+            $sav['wallet_id'] = $user_wallet->id;
+            $sav['amount'] = 0;
+            $sav['currency_id'] = $currency_id;
+            $sav['charge'] = 0;
             VirtualCard::create($sav);
-            $address = $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999);
+            $address = $gs->wallet_no_prefix . date('ydis') . random_int(100000, 999999);
 
             $user_wallet = new Wallet();
             $user_wallet->user_id = $user_id;
@@ -176,7 +176,7 @@ class DashboardController extends Controller
             $user_wallet->currency_id = $currency_id;
             $user_wallet->balance = 0;
             $user_wallet->wallet_type = 2;
-            $user_wallet->wallet_no =$address;
+            $user_wallet->wallet_no = $address;
             $user_wallet->created_at = date('Y-m-d H:i:s');
             $user_wallet->updated_at = date('Y-m-d H:i:s');
             $user_wallet->save();
@@ -184,7 +184,6 @@ class DashboardController extends Controller
             user_wallet_decrement($user->id, $currency_id, $chargefee->data->fixed_charge, 1);
             user_wallet_increment(0, $currency_id, $chargefee->data->fixed_charge, 9);
             return redirect()->route('admin.dashboard')->with(array('message' => 'Virtual card was successfully created.'));
-
         }
         return view('admin.dashboard', $data);
     }
@@ -215,7 +214,7 @@ class DashboardController extends Controller
 
     public function profile()
     {
-        $data = tenancy()->central(function ($tenant){
+        $data = tenancy()->central(function ($tenant) {
             return Admin::findOrFail($tenant->id);
         });
         $data = Auth::guard('admin')->user();
@@ -242,7 +241,7 @@ class DashboardController extends Controller
         //--- Validation Section Ends
         $input = $request->all();
 
-        $data = tenancy()->central(function ($tenant){
+        $data = tenancy()->central(function ($tenant) {
             return Admin::findOrFail($tenant->id);
         });
         // $data = Auth::guard('admin')->user();
@@ -429,22 +428,22 @@ class DashboardController extends Controller
 
     public function moduleupdate(Request $request)
     {
-            $input = $request->all();
+        $input = $request->all();
 
-            $data = tenancy()->central(function ($tenant){
-                return Admin::findOrFail($tenant->id);
-            });
+        $data = tenancy()->central(function ($tenant) {
+            return Admin::findOrFail($tenant->id);
+        });
 
-            if (!empty($request->section)) {
-                $input['section'] = implode(" , ", $request->section);
-            } else {
-                $input['section'] = '';
-            }
-            $data->section = $input['section'];
-            $data->update();
-            $msg = 'Data Updated Successfully.';
+        if (!empty($request->section)) {
+            $input['section'] = implode(" , ", $request->section);
+        } else {
+            $input['section'] = '';
+        }
+        $data->section = $input['section'];
+        $data->update();
+        $msg = 'Data Updated Successfully.';
 
-            return response()->json($msg);
+        return response()->json($msg);
     }
 
     public function profileupdatecontact(Request $request)
@@ -496,7 +495,7 @@ class DashboardController extends Controller
                 return response()->json($msg);
             }
         } else {
-            $contact = tenancy()->central(function ($tenant) use($request) {
+            $contact = tenancy()->central(function ($tenant) use ($request) {
                 $contact = new Contact();
 
                 $contact->full_name     =  $request->input('fullname');
