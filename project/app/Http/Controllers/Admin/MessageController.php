@@ -20,9 +20,9 @@ class MessageController extends Controller
         $this->middleware('auth:admin');
     }
 
-    public function datatables()
+    public function datatables(Request $request)
     {
-         $datas = AdminUserConversation::orderBy('id','desc');
+         $datas = AdminUserConversation::orderBy('id','desc')->get();
          //--- Integrating This Collection Into Datatables
          return Datatables::of($datas)
             ->setRowAttr([
@@ -34,6 +34,29 @@ class MessageController extends Controller
                     }
                 },
             ])
+            ->filter(function ($instance) use ($request) {
+
+                if (!empty($request->get('name'))) {
+                    $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                        return Str::contains(Str::lower($row['name']), Str::lower($request->get('name'))) ? true : false;
+                    });
+                }
+                if (!empty($request->get('department'))) {
+                    $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                        return Str::contains(Str::lower($row['department']), Str::lower($request->get('department'))) ? true : false;
+                    });
+                }
+                if (!empty($request->get('priority'))) {
+                    $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                        return Str::contains(Str::lower($row['priority']), Str::lower($request->get('priority'))) ? true : false;
+                    });
+                }
+                if (!empty($request->get('status'))) {
+                    $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                        return Str::contains(Str::lower($row['status']), Str::lower($request->get('status'))) ? true : false;
+                    });
+                }
+            })
 
             ->editColumn('created_at', function(AdminUserConversation $data) {
                 return dateFormat($data->created_at, 'Y-m-d H:i');
