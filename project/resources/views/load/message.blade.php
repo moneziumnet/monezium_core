@@ -1,7 +1,7 @@
 @foreach($message_list as $message)
 @if($message->user_id != 0)
 <div class="card card-sm shadow-sm">
-    <div class="p-2">
+    <div class="p-2 customer-message">
         <div class="row">
             <div class="col-auto">
                 <img class="img-profile rounded-circle" src="{{$message->conversation->user->photo != null ? asset('assets/images/'.$message->conversation->user->photo) : asset('assets/user/img/user.jpg')}}">
@@ -17,14 +17,15 @@
             </div>
         </div>
     </div>
-    <hr>
     <div class="p-3">
         <div class="user">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="reply-area">
                         <div class="left">
-                            <p> {{htmlentities($message->message)}}</p>
+                            @php
+                                echo $message->message
+                            @endphp
                         </div>
                         <div class="mt-2">
                             @if($message->document)
@@ -42,7 +43,7 @@
 <br>
 @else
 <div class="border-0 shadow-sm">
-    <div class="p-2">
+    <div class="p-2 customer-message">
         <div class="row">
             <div class="col-auto">
                 <img class="img-profile rounded-circle" src="{{ $admin->photo ? asset('assets/images/'.$admin->photo) : asset('assets/user/img/user.jpg')}}">
@@ -58,14 +59,15 @@
             </div>
         </div>
     </div>
-    <hr>
     <div class="p-3">
         <div class="user">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="reply-area">
                         <div class="left">
-                            <p> {{htmlentities($message->message)}}</p>
+                            @php
+                                echo $message->message
+                            @endphp
                         </div>
                         <div class="mt-2">
                             @if($message->document)

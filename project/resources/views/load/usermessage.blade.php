@@ -23,7 +23,9 @@
                                         <div class="col-lg-12">
                                             <div class="reply-area">
                                                 <div class="left">
-                                                    <p> {{$message->message}}</p>
+                                                    @php
+                                                        echo $message->message
+                                                    @endphp
                                                 </div>
                                                 <div class="mt-2">
                                                     @if($message->document)
@@ -64,7 +66,9 @@
                                         <div class="col-lg-12">
                                             <div class="reply-area">
                                                 <div class="left">
-                                                    <p> {{$message->message}}</p>
+                                                    @php
+                                                        echo $message->message
+                                                    @endphp
                                                 </div>
                                                 <div class="mt-2">
                                                     @if($message->document)
