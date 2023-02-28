@@ -28,11 +28,11 @@ class ExchangeMoney extends Model
             $to_currency = Currency::findOrFail($exchange->to_currency);
             if ($from_currency->type == 1 && $to_currency->type == 1) {
                 $remark = 'exchange';
-            } else if ($fromtype == 2 && $totype == 1) {
+            } else if ($from_currency->type == 2 && $to_currency->type == 1) {
                 $remark = 'exchange_crypto_to_fiat';
-            } else if ($fromtype == 1 && $totype == 2) {
+            } else if ($from_currency->type == 1 && $to_currency->type == 2) {
                 $remark = 'exchange_fiat_to_crypto';
-            } else if ($fromtype == 2 && $totype == 2) {
+            } else if ($from_currency->type == 2 && $to_currency->type == 2) {
                 $remark = 'exchange_crypto_to_crypto';
             }
             $trnx              = new Transaction();
