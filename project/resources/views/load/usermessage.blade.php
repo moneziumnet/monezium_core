@@ -25,6 +25,13 @@
                                                 <div class="left">
                                                     <p> {{$message->message}}</p>
                                                 </div>
+                                                <div class="mt-2">
+                                                    @if($message->document)
+                                                     @foreach (explode(",", $message->document) as $docu)
+                                                        <a target="_blank" class="ml-2" href="{{ asset('assets/doc/' . $docu) }}">{{ $docu }}</a>
+                                                     @endforeach
+                                                    @endif
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -58,6 +65,13 @@
                                             <div class="reply-area">
                                                 <div class="left">
                                                     <p> {{$message->message}}</p>
+                                                </div>
+                                                <div class="mt-2">
+                                                    @if($message->document)
+                                                     @foreach (explode(",", $message->document) as $docu)
+                                                        <a target="_blank" class="ml-2" href="{{ asset('assets/doc/' . $docu) }}">{{ $docu }}</a>
+                                                     @endforeach
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>

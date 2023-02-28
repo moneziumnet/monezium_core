@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use App\Models\Admin;
 use Datatables;
 
 class MessageController extends Controller
@@ -117,7 +118,10 @@ class MessageController extends Controller
             return redirect()->route('admin.dashboard')->with('unsuccess',__('Sorry the page does not exist.'));
         }
         $conv = AdminUserConversation::findOrfail($id);
-        return view('admin.message.create',compact('conv'));
+
+        $message_list = AdminUserMessage::where('conversation_id', $conv->id)->orderBy('id', 'asc')->get();
+        $admin = Admin::where('id', 1)->first();
+        return view('admin.message.create',compact('conv', 'admin', 'message_list'));
     }
 
 
@@ -197,7 +201,10 @@ class MessageController extends Controller
     public function messageshow($id)
     {
         $conv = AdminUserConversation::findOrfail($id);
-        return view('load.message',compact('conv'));
+
+        $message_list = AdminUserMessage::where('conversation_id', $conv->id)->orderBy('id', 'asc')->get();
+        $admin = Admin::where('id', 1)->first();
+        return view('load.message',compact('conv', 'message_list', 'admin'));
     }
     public function messagedelete($id)
     {

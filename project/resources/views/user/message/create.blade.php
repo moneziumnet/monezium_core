@@ -30,8 +30,8 @@
             <div class="col-12">
                 <div class="support-ticket-wrapper ">
                     <div class="panel panel-primary">
-                          <div class="gocover" style="background: url({{ asset('assets/images/'.$gs->loader) }}) no-repeat scroll center center rgba(45, 45, 45, 0.5);"></div>
-                          <div class="panel-footer">
+                        <div class="gocover" style="background: url({{ asset('assets/images/'.$gs->loader) }}) no-repeat scroll center center rgba(45, 45, 45, 0.5);"></div>
+                        <div class="panel-body">
                             <form id="messageform" data-href="{{ route('user.message.load',$conv->id) }}" action="{{route('user.message.store')}}" method="POST">
                                 {{csrf_field()}}
                                 <div class="row">
@@ -64,7 +64,7 @@
                                 <hr>
                             </form>
                         </div>
-                        <div class="panel-body" id="messages">
+                        <div class="panel-footer" id="messages">
                           @foreach($message_list as $message)
                             @if($message->user_id != 0)
                             <div class="card card-sm border-0 shadow-sm">
@@ -91,6 +91,13 @@
                                                 <div class="reply-area">
                                                     <div class="left">
                                                         <p> {{$message->message}}</p>
+                                                    </div>
+                                                    <div class="mt-2">
+                                                        @if($message->document)
+                                                         @foreach (explode(",", $message->document) as $docu)
+                                                            <a target="_blank" class="ml-2" href="{{ asset('assets/doc/' . $docu) }}">{{ $docu }}</a>
+                                                         @endforeach
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>
@@ -125,6 +132,13 @@
                                                 <div class="reply-area">
                                                     <div class="left">
                                                         <p> {{$message->message}}</p>
+                                                    </div>
+                                                    <div class="mt-2">
+                                                        @if($message->document)
+                                                         @foreach (explode(",", $message->document) as $docu)
+                                                            <a target="_blank" class="ml-2" href="{{ asset('assets/doc/' . $docu) }}">{{ $docu }}</a>
+                                                         @endforeach
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>
