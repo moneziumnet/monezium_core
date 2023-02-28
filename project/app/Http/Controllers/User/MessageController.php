@@ -68,6 +68,13 @@ class MessageController extends Controller
 
     public function adminpostmessage(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'message' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->with('error',$validator->getMessageBag()->toArray()['message'][0]);
+        }
         $conv = AdminUserConversation::where('user_id', '=', auth()->id())->where('id', $request->conversation_id)->first();
 
         if (!$conv) {
@@ -96,7 +103,7 @@ class MessageController extends Controller
         $notification->save();
         //--- Redirect Section
         $msg = 'Message Sent!';
-        return response()->json($msg);
+        return redirect()->back()->with('message',$msg);
         //--- Redirect Section Ends
     }
 

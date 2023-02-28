@@ -32,11 +32,11 @@
                     <div class="panel panel-primary">
                         <div class="gocover" style="background: url({{ asset('assets/images/'.$gs->loader) }}) no-repeat scroll center center rgba(45, 45, 45, 0.5);"></div>
                         <div class="panel-body">
-                            <form id="messageform" data-href="{{ route('user.message.load',$conv->id) }}" action="{{route('user.message.store')}}" method="POST">
+                            <form id="ticket_submit" data-href="{{ route('user.message.load',$conv->id) }}" action="{{route('user.message.store')}}" method="POST">
                                 {{csrf_field()}}
                                 <div class="row">
                                     <div class="col-md-12 mb-3">
-                                        <textarea class="form-control summernote" name="message" style="resize: vertical;" placeholder="{{ __('Your Message') }}" required></textarea>
+                                        <textarea class="form-control" id="message" name="message" style="resize: vertical;" placeholder="{{ __('Your Message') }}" ></textarea>
                                     </div>
                                 </div>
 
@@ -191,7 +191,6 @@
     $(document).on('click','.doc_remove',function () {
         $(this).closest('.row').remove()
     })
-
 
 </script>
 

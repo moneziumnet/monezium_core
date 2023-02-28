@@ -57,6 +57,7 @@
     <script src="{{asset('assets/front/js/custom.js')}}"></script>
     <script src="{{asset('assets/user/js/notify.min.js')}}"></script>
     <script src="{{asset('assets/user/js/webcam.min.js')}}"></script>
+    <script src="{{asset('assets/tinymce/tinymce.min.js')}}"></script>
     <script src="{{asset('assets/front/js/toastr.min.js')}}"></script>
     <script src="{{asset('assets/user/')}}/js/instascan.min.js"></script>
     <script>
@@ -144,7 +145,11 @@
             toastr.error('No cameras found.');
           });
       });
-
+      tinymce.init({
+        selector: '#message',
+        menubar: false,
+        statusbar: false
+    });
     </script>
     @stack('js')
 
