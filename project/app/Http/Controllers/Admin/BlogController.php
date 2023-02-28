@@ -168,7 +168,8 @@ class BlogController extends Controller
     public function update(Request $request, $id)
     {
         $rules = [
-               'photo'      => 'mimes:jpeg,jpg,png,svg',
+                'photo'      => 'required',
+                'photo.*'      => 'mimes:jpeg,jpg,png,svg',
                'title'=>'required',
                'slug' => 'required|unique:blogs,slug,'.$id,
                 ];
