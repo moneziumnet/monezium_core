@@ -19,7 +19,7 @@ class CreateBlogsTable extends Migration
             $table->string('title', 191);
             $table->string('slug')->nullable();
             $table->text('details');
-            $table->string('photo', 191)->nullable();
+            $table->text('photo')->nullable();
             $table->string('source', 191);
             $table->integer('views')->default(0);
             $table->tinyInteger('status')->default(1);

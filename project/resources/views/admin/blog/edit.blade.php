@@ -32,10 +32,7 @@
               <label for="title">{{ __('Title') }}</label>
               <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="title" name="title"  placeholder="{{ __('Enter Title') }}" value="{{$data->title}}" required>
           </div>
-          <!-- <div class="form-group">
-              <label for="title">{{ __('SLUG') }}</label>
-              <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="slug" name="slug"  placeholder="{{ __('Enter Slug') }}" value="{{$data->slug}}" required>
-          </div> -->
+              <input type="hidden" name="slug"  placeholder="{{ __('Enter Slug') }}" value="{{$data->slug}}" required>
 
           <div class="form-group">
               <label for="inp-name">{{ __('Category') }}</label>

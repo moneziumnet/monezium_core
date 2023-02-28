@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\BlogCategory;
 use Illuminate\Support\Str;
+
 use Validator;
 
 class BlogController extends Controller
@@ -19,36 +20,65 @@ class BlogController extends Controller
     }
 
     //*** JSON Request
-    public function datatables()
+    public function datatables(Request $request)
     {
          $datas = Blog::orderBy('id','desc');
          //--- Integrating This Collection Into Datatables
          return Datatables::of($datas)
-                            ->editColumn('photo', function(Blog $data) {
-                                $photo = $data->photo ? url('assets/images/'.$data->photo):url('assets/images/noimage.png');
-                                return '<img src="' . $photo . '" alt="Image">';
-                            })
+            ->editColumn('photo', function(Blog $data) {
+                $photo = $data->photo ? url('assets/images/'.$data->photo):url('assets/images/noimage.png');
+                return '<img src="' . $photo . '" alt="Image">';
+            })
+            ->editColumn('date', function(Blog $data) {
+                return dateFormat($data->created_at, 'm/d/Y H:i');
+            })
 
-                            ->addColumn('action', function(Blog $data) {
+            ->editColumn('category', function(Blog $data) {
+                return $data->category->name;
+            })
 
-                              return '<div class="btn-group mb-1">
-                                <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  '.'Actions' .'
-                                </button>
-                                <div class="dropdown-menu" x-placement="bottom-start">
-                                  <a href="' . route('admin.blog.edit',$data->id) . '"  class="dropdown-item">'.__("Edit").'</a>
-                                  <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.  route('admin.blog.delete',$data->id).'">'.__("Delete").'</a>
-                                </div>
-                              </div>';
+            ->editColumn('status', function(Blog $data) {
+                return $data->status == 1 ? 'Active' : 'Deactive' ;
+            })
+            ->filter(function ($instance) use ($request) {
+                if (!empty($request->get('global_search'))) {
+                    $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                        if (Str::contains(Str::lower($row['tags']), Str::lower($request->get('global_search')))) {
+                            return true;
+                        }
+                        else {
+                            return false;
+                        }
+                    });
+                }
+                if (!empty($request->get('category'))) {
+                    $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                        return Str::contains(Str::lower($row['category']), Str::lower($request->get('category'))) ? true : false;
+                    });
+                }
+            })
 
-                            })
-                            ->rawColumns(['photo','action'])
-                            ->toJson(); //--- Returning Json Data To Client Side
+            ->addColumn('action', function(Blog $data) {
+
+                return '<div class="btn-group mb-1">
+                <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    '.'Actions' .'
+                </button>
+                <div class="dropdown-menu" x-placement="bottom-start">
+                    <a href="' . route('admin.blog.edit',$data->id) . '"  class="dropdown-item">'.__("Edit").'</a>
+                    <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.  route('admin.blog.delete',$data->id).'">'.__("Delete").'</a>
+                </div>
+                </div>';
+
+            })
+            ->rawColumns(['photo','date', 'category', 'status','action'])
+            ->toJson(); //--- Returning Json Data To Client Side
     }
 
     public function index()
     {
-        return view('admin.blog.index');
+        $modules = explode(" , ", "Shop , Loan , Investments , Payments , Incoming , Cards , External Payments , Payment between accounts , Internal Payment , Crypto , Request Money , Exchange Money , Transactions , Voucher , Merchant Shop , Merchant Product , Merchant Checkout , Merchant Transaction , Merchant Campaign , Merchant own Account , Merchant Request Money , Invoice , Contracts , Escrow , ICO");
+        return view('admin.blog.index', compact('modules'));
     }
 
     public function create()

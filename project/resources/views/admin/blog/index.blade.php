@@ -19,13 +19,41 @@
 
 	<div class="card mb-4">
 	  <div class="table-responsive p-3">
+        <div class="btn-list align-items-center">
+            <div class="d-flex justify-content-around mt-3">
+                <div class="form-group mr-3  row">
+                    <label for="category" class="col-form-label">{{ __('Category') }}</label>
+                    <div class="col">
+
+                    <select name="category" id="category" class="form-control mr-2 shadow-none" >
+                        <option value="">@lang('All')</option>
+                        @foreach ($modules as $module)
+                          <option value="{{$module}}">@lang($module)</option>
+                        @endforeach
+
+                    </select>
+                    </div>
+                </div>
+                <div class="form-group mr-3 row">
+                    <label for="global_search" class="col-form-label">{{ __('Search') }}</label>
+                    <div class="col">
+                    <input class="form-control shadow-none mr-2" type="text"placeholder="{{__('Search')}}" id="global_search" name="global_search" >
+                    </div>
+                </div>
+
+            </div>
+        </div>
 		<table id="geniustable" class="table table-hover dt-responsive" cellspacing="0" width="100%">
 		  <thead class="thead-light">
 			<tr>
                 <th>{{ __('Featured Image') }}</th>
+                <th>{{ __('Category') }}</th>
                 <th>{{ __('Post Title') }}</th>
                 <th>{{ __('Views') }}</th>
-                <th>{{ __('Options') }}</th>
+                <th>{{ __('Post Date') }}</th>
+                <th>{{ __('Tags') }}</th>
+                <th>{{ __('Status') }}</th>
+                <th>{{ __('Action') }}</th>
 			</tr>
 		  </thead>
 		</table>
@@ -89,33 +117,48 @@
 
     <script type="text/javascript">
 	"use strict";
-
 		var table = $('#geniustable').DataTable({
 			   ordering: false,
                processing: true,
                serverSide: true,
-               searching: true,
-               ajax: '{{ route('admin.blog.datatables') }}',
+               searching: false,
+               ajax:
+               {
+                    url : '{{ route('admin.blog.datatables') }}',
+                    data : function (d) {
+                        d.global_search = $('#global_search').val(),
+                        d.category = $('#category').val()
+                    }
+                },
                columns: [
 
-                        { data: 'photo', name: 'photo' , searchable: false, orderable: false},
+                        { data: 'photo', name: 'photo' },
+                        { data: 'category', name: 'category' },
                         { data: 'title', name: 'title' },
                         { data: 'views', name: 'views' },
-            			{ data: 'action', searchable: false, orderable: false }
+                        { data: 'date', name: 'date' },
+                        { data: 'tags', name: 'tags' },
+                        { data: 'status', name: 'status' },
+            			{ data: 'action', name: 'action' }
 
                      ],
                 language : {
                 	processing: '<img src="{{asset('assets/images/'.$gs->admin_loader)}}">'
                 }
             });
-
 			$(function() {
             $(".btn-area").append('<div class="col-sm-12 col-md-4 pr-3 text-right">'+
                 '<a class="btn btn-primary" href="{{route('admin.blog.create')}}">'+
             '<i class="fas fa-plus"></i> {{__('Add New Post')}}'+
             '</a>'+
             '</div>');
-        });
+            })
+            $('#global_search').on('keyup', function () {
+                table.draw();
+            });
+            $('#category').on('change', function () {
+                table.draw();
+            });
 
 </script>
 
