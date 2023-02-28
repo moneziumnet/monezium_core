@@ -49,10 +49,10 @@
                 <label>{{ __('Set Picture') }}</label>
                 <div class="wrapper-image-preview">
                     <div class="box">
-                        <div class="back-preview-image" style="background-image: url({{$data->photo ? asset('assets/images/'.$data->photo) : asset('assets/images/placeholder.jpg') }});"></div>
+                        <div class="back-preview-image" style="background-image: url({{$data->photo ? asset('assets/images/'.explode(',',$data->photo)[0]) : asset('assets/images/placeholder.jpg') }});"></div>
                         <div class="upload-options">
                             <label class="img-upload-label" for="img-upload"> <i class="fas fa-camera"></i> {{ __('Upload Picture') }} </label>
-                            <input id="img-upload" type="file" class="image-upload" name="photo" accept="image/*">
+                            <input id="img-upload" type="file" class="image-upload" name="photo[]" accept="image/*" multiple>
                         </div>
                     </div>
                 </div>

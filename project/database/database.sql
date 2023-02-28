@@ -650,6 +650,30 @@ INSERT INTO `blog_categories` VALUES (4, 'Transactions', 'transactions');
 INSERT INTO `blog_categories` VALUES (5, 'Withdraw', 'withdraw');
 INSERT INTO `blog_categories` VALUES (6, 'Deposit', 'deposit');
 INSERT INTO `blog_categories` VALUES (7, 'Banking', 'banking');
+INSERT INTO `blog_categories` VALUES (8, 'Shop', 'shop');
+INSERT INTO `blog_categories` VALUES (9, 'Loan', 'loan');
+INSERT INTO `blog_categories` VALUES (10, 'Investments', 'investments');
+INSERT INTO `blog_categories` VALUES (11, 'Payments', 'payments');
+INSERT INTO `blog_categories` VALUES (12, 'Incoming', 'incoming');
+INSERT INTO `blog_categories` VALUES (13, 'Cards', 'cards');
+INSERT INTO `blog_categories` VALUES (14, 'External Payments', 'external_payments');
+INSERT INTO `blog_categories` VALUES (15, 'Payment between accounts', 'payment_between_accounts');
+INSERT INTO `blog_categories` VALUES (16, 'Internal Payment', 'internal_payment');
+INSERT INTO `blog_categories` VALUES (17, 'Crypto', 'crypto');
+INSERT INTO `blog_categories` VALUES (18, 'Request Money', 'request_money');
+INSERT INTO `blog_categories` VALUES (19, 'Exchange Money', 'exchange_money');
+INSERT INTO `blog_categories` VALUES (20, 'Voucher', 'voucher');
+INSERT INTO `blog_categories` VALUES (21, 'Merchant Shop', 'merchant_shop');
+INSERT INTO `blog_categories` VALUES (22, 'Merchant Product', 'merchant_product');
+INSERT INTO `blog_categories` VALUES (23, 'Merchant Checkout', 'merchant_checkout');
+INSERT INTO `blog_categories` VALUES (24, 'Merchant Campaign', 'merchant_campaign');
+INSERT INTO `blog_categories` VALUES (25, 'Merchant Transaction', 'merchant_transaction');
+INSERT INTO `blog_categories` VALUES (26, 'Merchant own Account', 'merchant_own_account');
+INSERT INTO `blog_categories` VALUES (27, 'Merchant Request Money', 'merchant_request_money');
+INSERT INTO `blog_categories` VALUES (28, 'Invoice', 'invoice');
+INSERT INTO `blog_categories` VALUES (29, 'Contracts', 'contracts');
+INSERT INTO `blog_categories` VALUES (30, 'Escrow', 'escrow');
+INSERT INTO `blog_categories` VALUES (31, 'ICO', 'ico');
 
 -- ----------------------------
 -- Table structure for blogs

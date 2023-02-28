@@ -48,18 +48,20 @@
             </select>
           </div>
 
-          <div class="form-group">
-              <label>{{ __('Set Picture') }}</label>
-              <div class="wrapper-image-preview">
-                  <div class="box">
-                      <div class="back-preview-image" style="background-image: url({{ asset('assets/images/placeholder.jpg') }});"></div>
-                      <div class="upload-options">
-                          <label class="img-upload-label" for="img-upload"> <i class="fas fa-camera"></i> {{ __('Upload Picture') }} </label>
-                          <input id="img-upload" type="file" class="image-upload" name="photo" accept="image/*">
-                      </div>
-                  </div>
-              </div>
-          </div>
+        <div class="form-group ml-3">
+            <label>{{ __('Set Picture') }}</label>
+            <div class="wrapper-image-preview">
+                <div class="box">
+                    <div class="back-preview-image" style="background-image: url({{ asset('assets/images/placeholder.jpg') }});"></div>
+                    <div class="upload-options">
+                        <label class="img-upload-label" for="img-upload"> <i class="fas fa-camera"></i> {{ __('Upload Picture') }} </label>
+                        <input id="img-upload" type="file" class="image-upload" name="photo[]" accept="image/*" multiple>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
 
           <div class="form-group">
               <label for="details">{{ __('Description ') }}</label>
@@ -106,6 +108,5 @@
 @endsection
 
 @section('scripts')
-
 
 @endsection

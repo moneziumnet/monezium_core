@@ -26,7 +26,7 @@ class BlogController extends Controller
          //--- Integrating This Collection Into Datatables
          return Datatables::of($datas)
             ->editColumn('photo', function(Blog $data) {
-                $photo = $data->photo ? url('assets/images/'.$data->photo):url('assets/images/noimage.png');
+                $photo = $data->photo ? url('assets/images/'.explode(',',$data->photo)[0]):url('assets/images/noimage.png');
                 return '<img src="' . $photo . '" alt="Image">';
             })
             ->editColumn('date', function(Blog $data) {
@@ -77,7 +77,7 @@ class BlogController extends Controller
 
     public function index()
     {
-        $modules = explode(" , ", "Shop , Loan , Investments , Payments , Incoming , Cards , External Payments , Payment between accounts , Internal Payment , Crypto , Request Money , Exchange Money , Transactions , Voucher , Merchant Shop , Merchant Product , Merchant Checkout , Merchant Transaction , Merchant Campaign , Merchant own Account , Merchant Request Money , Invoice , Contracts , Escrow , ICO");
+        $modules = BlogCategory::all();
         return view('admin.blog.index', compact('modules'));
     }
 
@@ -92,7 +92,8 @@ class BlogController extends Controller
     {
         //--- Validation Section
         $rules = [
-               'photo'      => 'required|mimes:jpeg,jpg,png,svg',
+               'photo'      => 'required',
+               'photo.*'      => 'mimes:jpeg,jpg,png,svg',
                'title'=>'required',
                'slug'=>'required|unique:blogs|max:255'
                 ];
@@ -107,12 +108,19 @@ class BlogController extends Controller
         //--- Logic Section
         $data = new Blog();
         $input = $request->all();
-        if ($file = $request->file('photo'))
+        $photo_list = [];
+
+        if ($request->hasfile('photo'))
          {
+            foreach($request->file('photo') as $file)
+           {
             $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
             $file->move('assets/images',$name);
-            $input['photo'] = $name;
+            array_push($photo_list, $name);
+           }
         }
+
+        $input['photo'] =  implode(",",$photo_list);
 
 
          // ------------------------TagFormat--------------------------//
@@ -173,14 +181,23 @@ class BlogController extends Controller
 
         $data = Blog::findOrFail($id);
         $input = $request->all();
+        $photo_list = [];
 
-            if ($file = $request->file('photo'))
+        if ($request->hasfile('photo'))
+        {
+            foreach (explode(',', $data->photo) as $value) {
+                @unlink('assets/images/'.$value);
+            }
+            foreach($request->file('photo') as $file)
             {
                 $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
                 $file->move('assets/images',$name);
-                @unlink('assets/images/'.$data->photo);
-            $input['photo'] = $name;
+                array_push($photo_list, $name);
             }
+        }
+
+        $input['photo'] =  implode(",",$photo_list);
+
             $common_rep   = ["value", "{", "}", "[","]",":","\""];
             $tag = str_replace($common_rep, '', $request->tags);
             $metatag = str_replace($common_rep, '', $request->meta_tag);

@@ -28,7 +28,7 @@
                     <select name="category" id="category" class="form-control mr-2 shadow-none" >
                         <option value="">@lang('All')</option>
                         @foreach ($modules as $module)
-                          <option value="{{$module}}">@lang($module)</option>
+                          <option value="{{$module->name}}">@lang($module->name)</option>
                         @endforeach
 
                     </select>
