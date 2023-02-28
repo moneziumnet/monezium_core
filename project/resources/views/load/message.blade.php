@@ -9,11 +9,9 @@
             <div class="col">
                 <div class="text-truncate">
                 {{$conv->user->company_name ?? $conv->user->name}}
+                <div class="badge bg-primary ml-2 text-white"> {{dateFormat($message->created_at, 'Y-m-d H:i:s')}}</div>
                 </div>
                 <div class="text-muted">{{$conv->user->email}}</div>
-            </div>
-            <div class="col-auto right text-white">
-                <div class="badge bg-primary"> {{dateFormat($message->created_at, 'Y-m-d H:i:s')}}</div>
             </div>
         </div>
     </div>
@@ -51,11 +49,9 @@
             <div class="col">
                 <div class="text-truncate">
                 {{$admin->name}}
+                <div class="badge bg-primary ml-2 text-white"> {{dateFormat($message->created_at, 'Y-m-d H:i:s')}}</div>
                 </div>
                 <div class="text-muted">{{$admin->email}}</div>
-            </div>
-            <div class="col-auto right">
-                <div class="badge bg-primary text-white">{{dateFormat($message->created_at, 'Y-m-d H:i:s')}}</div>
             </div>
         </div>
     </div>

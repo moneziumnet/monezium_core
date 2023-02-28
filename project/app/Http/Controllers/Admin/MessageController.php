@@ -92,15 +92,21 @@ class MessageController extends Controller
                 return  $name;
             })
             ->addColumn('action', function(AdminUserConversation $data) {
+                if ( $data->status == 'open') {
+                    $close_button = '<a href="javascript:;" data-toggle="modal" data-target="#closeModal" class="dropdown-item" data-href="'.  route('admin.message.status',[$data->id, 'closed']).'">'.__("Close").'</a>';
+                }
+                else {
+                    $close_button = '';
+                }
 
             return '<div class="btn-group mb-1">
                 <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     '.'Actions' .'
                 </button>
                 <div class="dropdown-menu" x-placement="bottom-start">
-                    <a href="' . route('admin.message.show',$data->id) . '"  class="dropdown-item">'.__("Reply").'</a>
-                    <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.  route('admin.message.delete',$data->id).'">'.__("Delete").'</a>
-                </div>
+                    <a href="' . route('admin.message.show',$data->id) . '"  class="dropdown-item">'.__("Reply").'</a>'
+                    .$close_button.
+                '</div>
                 </div>';
             })
             ->rawColumns(['name','created_at','message','status','priority','action'])
@@ -119,7 +125,7 @@ class MessageController extends Controller
         }
         $conv = AdminUserConversation::findOrfail($id);
 
-        $message_list = AdminUserMessage::where('conversation_id', $conv->id)->orderBy('id', 'asc')->get();
+        $message_list = AdminUserMessage::where('conversation_id', $conv->id)->orderBy('id', 'desc')->get();
         $admin = Admin::where('id', 1)->first();
         return view('admin.message.create',compact('conv', 'admin', 'message_list'));
     }
@@ -187,22 +193,30 @@ class MessageController extends Controller
         $msg->document =  implode(",",$data);
         $conv = AdminUserConversation::where('id', $request->conversation_id)->first();
         if (!$conv) {
-            return response()->json(array('errors' => [0 => 'YOu can not reply this ticket, this ticket does not exist.']));
+            return response()->json(array('errors' => [0 => 'You can not reply this ticket, this ticket does not exist.']));
         }
         $conv->status = 'open';
         $conv->save();
         $input = $request->all();
         $msg->fill($input)->save();
         //--- Redirect Section
-        $msg = 'Message Sent!';
         return response()->json('You reply successfully.');
         //--- Redirect Section Ends
     }
+
+    public function ticket_status($id, $status)
+    {
+        $conv = AdminUserConversation::findOrfail($id);
+        $conv->status = $status;
+        $conv->save();
+        return  response()->json('Ticket has been closed Successfully');
+    }
+
     public function messageshow($id)
     {
         $conv = AdminUserConversation::findOrfail($id);
 
-        $message_list = AdminUserMessage::where('conversation_id', $conv->id)->orderBy('id', 'asc')->get();
+        $message_list = AdminUserMessage::where('conversation_id', $conv->id)->orderBy('id', 'desc')->get();
         $admin = Admin::where('id', 1)->first();
         return view('load.message',compact('conv', 'message_list', 'admin'));
     }

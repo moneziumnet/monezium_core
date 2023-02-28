@@ -102,7 +102,7 @@ class MessageController extends Controller
         $notification->conversation_id = $msg->conversation->id;
         $notification->save();
         //--- Redirect Section
-        $msg = 'Message Sent!';
+        $msg = 'You reply successfully.';
         return redirect()->back()->with('message',$msg);
         //--- Redirect Section Ends
     }

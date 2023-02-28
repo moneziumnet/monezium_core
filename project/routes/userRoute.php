@@ -673,13 +673,12 @@ Route::prefix('user')->group(function() {
       Route::get('/notf/count','User\NotificationController@user_notf_count')->name('customer-notf-count');
       Route::get('/notf/clear','User\NotificationController@user_notf_clear')->name('customer-notf-clear');
 
-      Route::get('admin/messages', [MessageController::class,'adminmessages'])->name('user.message.index');
-      Route::get('admin/message/{id}', [MessageController::class,'adminmessage'])->name('user.message.show');
-      Route::post('admin/message/post', [MessageController::class,'adminpostmessage'])->name('user.message.store');
-      Route::get('admin/message/{id}/delete', [MessageController::class,'adminmessagedelete'])->name('user.message.delete1');
-      Route::post('admin/user/send/message', [MessageController::class,'adminusercontact'])->name('user.send.message');
-      Route::get('admin/message/load/{id}', [MessageController::class,'messageload'])->name('user.message.load');
-      Route::get('admin/message/status/{id}/{status}', [MessageController::class,'ticket_status'])->name('user.message.status');
+      Route::get('admin/tickets', [MessageController::class,'adminmessages'])->name('user.message.index');
+      Route::get('admin/ticket/{id}', [MessageController::class,'adminmessage'])->name('user.message.show');
+      Route::post('admin/ticket/post', [MessageController::class,'adminpostmessage'])->name('user.message.store');
+      Route::post('admin/user/send/ticket', [MessageController::class,'adminusercontact'])->name('user.send.message');
+      Route::get('admin/ticket/load/{id}', [MessageController::class,'messageload'])->name('user.message.load');
+      Route::get('admin/ticket/status/{id}/{status}', [MessageController::class,'ticket_status'])->name('user.message.status');
 
 
       Route::get('/change-password', [UserController::class,'changePasswordForm'])->name('user.change.password.form');

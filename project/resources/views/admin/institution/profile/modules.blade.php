@@ -235,8 +235,8 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <div class="custom-control custom-switch">
-                      <input type="checkbox" name="section[]" value="Message" {{ $data->sectionCheck('Message') ? 'checked' : '' }} class="custom-control-input" id="Message">
-                      <label class="custom-control-label" for="Message">{{__('Message')}}</label>
+                      <input type="checkbox" name="section[]" value="Support Ticket" {{ $data->sectionCheck('Support Ticket') ? 'checked' : '' }} class="custom-control-input" id="support_ticket">
+                      <label class="custom-control-label" for="support_ticket">{{__('Support Ticket')}}</label>
                     </div>
                   </div>
                 </div>

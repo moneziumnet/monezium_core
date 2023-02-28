@@ -108,7 +108,6 @@
                                           @if ($conv->status == 'open')
                                               <a href="javascript:;" data-bs-toggle="tooltip" data-bs-original-title="{{__('Close')}}" data-route="{{route('user.message.status',[$conv->id ,'closed'])}}" class="link btn btn-primary d-block btn-sm me-1 closed"><i class="fa fa-check"></i></a>
                                           @endif
-                                          <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#confirm-delete" data-href="{{route('user.message.delete1',$conv->id)}}"class="link remove-btn btn d-block btn-sm btn-danger"><i class="fa fa-trash"></i></a>
                                         </div>
                                       </td>
 

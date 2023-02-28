@@ -274,11 +274,11 @@
 </li>
 @endif
 
-@if(getModule('Message'))
+@if(getModule('Support Ticket'))
 <li class="nav-item">
   <a class="nav-link" href="{{ route('admin.user.message') }}">
     <i class="fas fa-comment-alt"></i>
-    <span>{{ __('Messages') }}</span></a>
+    <span>{{ __('Support Ticket') }}</span></a>
 </li>
 @endif
 

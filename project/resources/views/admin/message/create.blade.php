@@ -28,6 +28,35 @@
             <div class="gocover" style="background: url({{asset('assets/images/'.$gs->admin_loader)}}) no-repeat scroll center center rgba(45, 45, 45, 0.5);"></div>
             @include('includes.admin.form-success')
 	        @include('includes.admin.form-error')
+                <form id="messageform" action="{{route('admin.message.store')}}" data-href="{{ route('admin-message-load',$conv->id) }}" method="POST">
+                    {{csrf_field()}}
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <textarea class="form-control summernote" name="message" style="resize: vertical;" placeholder="{{ __('Your Message') }}" required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-label">{{__('Document')}}</div>
+                            <input class= "document" name="document[]" class="form-control" type="file" accept=".doc,.docx,.pdf,.png,.jpg">
+                        </div>
+                        <div class="col-md-1 mb-3">
+                            <div class="form-label">&nbsp;</div>
+                            <button type="button" class="btn btn-primary w-100 doc_add"><i class="fas fa-plus"></i></button>
+                        </div>
+                    </div>
+                    <div class="doc-extra-container">
+                    </div>
+                    <input type="hidden" name="user_id" value="0">
+                    <input type="hidden" name="conversation_id" value="{{$conv->id}}">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-rounded">
+                            {{ __('Add Reply') }}
+                        </button>
+                    </div>
+                </form>
+            <hr>
                 <div class="panel-body" id="messages">
                     @foreach($message_list as $message)
                     @if($message->user_id != 0)
@@ -116,37 +145,7 @@
 
                     @endforeach
                 </div>
-                <div class="panel-footer">
-                    <form id="messageform" action="{{route('admin.message.store')}}" data-href="{{ route('admin-message-load',$conv->id) }}" method="POST">
-                        {{csrf_field()}}
-                        <div class="row">
-                            <div class="col-md-12 mb-3">
-                                <textarea class="form-control summernote" name="message" style="resize: vertical;" placeholder="{{ __('Your Message') }}" required></textarea>
-                            </div>
-                        </div>
 
-                        <hr>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-label">{{__('Document')}}</div>
-                                <input class= "document" name="document[]" class="form-control" type="file" accept=".doc,.docx,.pdf,.png,.jpg">
-                            </div>
-                            <div class="col-md-1 mb-3">
-                                <div class="form-label">&nbsp;</div>
-                                <button type="button" class="btn btn-primary w-100 doc_add"><i class="fas fa-plus"></i></button>
-                            </div>
-                        </div>
-                        <div class="doc-extra-container">
-                        </div>
-                        <input type="hidden" name="user_id" value="0">
-                        <input type="hidden" name="conversation_id" value="{{$conv->id}}">
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary btn-rounded">
-                                {{ __('Add Reply') }}
-                            </button>
-                        </div>
-                    </form>
-                </div>
             </div>
         </div>
       </div>

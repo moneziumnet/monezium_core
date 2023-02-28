@@ -633,15 +633,15 @@ Route::prefix('admin')->group(function () {
     Route::post('/groupemailpost', [EmailController::class, 'groupemailpost'])->name('admin.group.submit');
   });
 
-  Route::group(['middleware' => 'permissions:Message'], function () {
-    Route::post('/send/message', [MessageController::class, 'usercontact'])->name('admin.send.message');
+  Route::group(['middleware' => 'permissions:Support Ticket'], function () {
+    Route::post('/send/ticket', [MessageController::class, 'usercontact'])->name('admin.send.message');
     Route::get('/user/ticket', [MessageController::class, 'index'])->name('admin.user.message');
-    Route::get('/messages/datatables/', [MessageController::class, 'datatables'])->name('admin.message.datatables');
-    Route::get('/message/{id}', [MessageController::class, 'message'])->name('admin.message.show');
-    Route::get('/message/{id}/delete', [MessageController::class, 'messagedelete'])->name('admin.message.delete');
-    Route::post('/message/post', [MessageController::class, 'postmessage'])->name('admin.message.store');
-    Route::get('/message/load/{id}', [MessageController::class, 'messageshow'])->name('admin-message-load');
-  });
+    Route::get('/tickets/datatables/', [MessageController::class, 'datatables'])->name('admin.message.datatables');
+    Route::get('/ticket/{id}', [MessageController::class, 'message'])->name('admin.message.show');
+    Route::post('/ticket/post', [MessageController::class, 'postmessage'])->name('admin.message.store');
+    Route::get('/ticket/load/{id}', [MessageController::class, 'messageshow'])->name('admin-message-load');
+    Route::get('/ticket/status/{id}/{status}', [MessageController::class,'ticket_status'])->name('admin.message.status');
+});
 
   Route::group(['middleware' => 'permissions:Currency Setting'], function () {
     Route::get('/general-settings/currency/{status}', [GeneralSettingController::class, 'currency'])->name('admin.gs.iscurrency');
