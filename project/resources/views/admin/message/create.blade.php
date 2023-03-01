@@ -38,7 +38,7 @@
 
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="form-label">{{__('Document')}}</div>
+                            <div class="form-label">{{__('Attachments')}}</div>
                             <input class= "document" name="document[]" class="form-control" type="file" accept=".doc,.docx,.pdf,.png,.jpg">
                         </div>
                         <div class="col-md-1 mb-3">
