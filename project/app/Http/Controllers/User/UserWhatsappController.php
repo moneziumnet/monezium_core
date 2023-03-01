@@ -589,7 +589,7 @@ class UserWhatsappController extends Controller
                                 }
                             }
                         }
-                        $to_message = $question['email']."\n".$bank_ids;
+                        $to_message = $question['email']."\n".$wallet_list;
                         $dump = $w_session->data;
                         $dump->email = $text;
                         $w_session->data = $dump;
