@@ -63,6 +63,7 @@
                                     @php
                                         if($wallet->currency->type == 2) {
                                             $amount = amount(Crypto_Balance($wallet->user_id, $wallet->currency_id), 2);
+                                            $amount_fiat = amount(Crypto_Balance_Fiat($wallet->user_id, $wallet->currency_id), 1);
                                         }
                                         else {
                                             $amount = amount($wallet->balance,$wallet->currency->type,2);
@@ -70,7 +71,7 @@
                                         $code = $wallet->currency->code;
                                     @endphp
                                     @if ($amount > 0)
-                                    <option value="{{$wallet->id}}" data-curr="{{$wallet->currency->id}}" data-rate="{{$rate->data->rates->$code ?? $wallet->currency->rate}}" data-code="{{$wallet->currency->code}}" data-type="{{$wallet->currency->type}}">{{$wallet->currency->code}} -- ({{ $amount}}) --  {{$wallet_type_list[$wallet->wallet_type]}}</option>
+                                    <option value="{{$wallet->id}}" data-curr="{{$wallet->currency->id}}" data-rate="{{$rate->data->rates->$code ?? $wallet->currency->rate}}" data-code="{{$wallet->currency->code}}" data-type="{{$wallet->currency->type}}">{{$wallet->currency->code}} -- ({{ $amount}}) --  {{$wallet_type_list[$wallet->wallet_type]}} ({{$amount_fiat}} {{$currency_code}})</option>
                                     @endif
                                     @endif
                                     @endforeach

@@ -176,7 +176,7 @@ if (!function_exists('numFormat')) {
 
 if (!function_exists('amount')) {
 
-    function amount($amount, $type = 1, $length = 0)
+    function amount($amount, $type = 1, $length = 2)
     {
         if ($type == 2) {
             return numFormat($amount, 8);

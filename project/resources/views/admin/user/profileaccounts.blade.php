@@ -18,9 +18,6 @@
       @include('admin.user.profiletab')
 
       <div class="tab-content" id="myTabContent">
-        @php
-        $currency = defaultCurr();
-        @endphp
         <div class="mt-3 mx-4">
             @include('includes.admin.form-success')
             @include('includes.admin.form-error')
@@ -161,7 +158,7 @@
                                 </div>
                                 <div class="text-xs font-weight-bold text-uppercase mb-1"> {{$dcurr->curr_name}}</div>
                                 @if ($dcurr->type == 2)
-                                    <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ amount(Crypto_Balance($wallet->user_id, $wallet->currency_id), 2)}}  {{$dcurr->code}}</div>
+                                    <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ amount(Crypto_Balance($wallet->user_id, $wallet->currency_id), 2)}}  {{$dcurr->code}} ({{ amount(Crypto_Balance_Fiat($wallet->user_id, $wallet->currency_id), 1)}}  {{$currency->code}})</div>
 
                                 @else
                                     <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{amount($wallet->balance,$dcurr->type,2)}} {{$dcurr->code}} ({{$dcurr->symbol}}) </div>
