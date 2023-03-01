@@ -598,13 +598,15 @@ class UserWhatsappController extends Controller
                 }
                 else {
                     $next_key = prefix_get_next_key_array($question, $final);
+                    $user = User::findOrFail($w_session->user_id);
                     if($next_key == "wallet_id") {
                         $wallets = Wallet::where('user_id',$w_session->user_id)->pluck('id')->toArray();
                         if (in_array($text, $wallets)) {
                             $wallet = Wallet::find($text);
+
                             $rate = getRate($wallet->currency);
-                            $dailySend = BalanceTransfer::whereType('own')->whereUserId($w_session->user_id)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus(1)->sum('amount');
-                            $monthlySend = BalanceTransfer::whereType('own')->whereUserId($w_session->user_id)->whereMonth('created_at', '=', date('m'))->whereStatus(1)->sum('amount');
+                            $dailySend = BalanceTransfer::whereType('own')->whereUserId($user->user_id)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus(1)->sum('amount');
+                            $monthlySend = BalanceTransfer::whereType('own')->whereUserId($user->user_id)->whereMonth('created_at', '=', date('m'))->whereStatus(1)->sum('amount');
                             $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'send')->first();
 
                             if($dailySend > $global_range->daily_limit){
