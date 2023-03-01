@@ -9,8 +9,8 @@
         <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Conversation With') }} {{$conv->user->name}}</h5>
         <ol class="breadcrumb m-0 py-0">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('admin.user.message')}}">{{ __('Manage Message') }}</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('admin.user.message') }}">{{ __('All Message') }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('admin.user.message')}}">{{ __('Manage Tickets') }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('admin.user.message') }}">{{ __('All Tickets') }}</a></li>
         </ol>
         </div>
     </div>
