@@ -39,8 +39,10 @@
                                 @php
                                     $amount = amount(Crypto_Balance($wallet->user_id, $wallet->currency_id), 2);
                                     $amount_fiat = amount(Crypto_Balance_Fiat($wallet->user_id, $wallet->currency_id), 1);
+                                    $amount = $amount.' ('.$amount_fiat.$currency->code.')';
+
                                 @endphp
-                                        <option value="{{$wallet->currency->id}}">{{$wallet->currency->code}} -- ({{$amount}}) ({{$amount_fiat}} {{$currency->code}})</option>
+                                        <option value="{{$wallet->currency->id}}">{{$wallet->currency->code}} -- ({{$amount}}) </option>
                                 @endforeach
                             </select>
                             <span class="ms-2 check"></span>
