@@ -145,10 +145,13 @@
             toastr.error('No cameras found.');
           });
       });
+      var theme = localStorage.getItem('tablerTheme');
       tinymce.init({
         selector: '#message',
         menubar: false,
-        statusbar: false
+        statusbar: false,
+        skin: theme == 'dark' ? 'oxide-dark' : 'oxide',
+        content_css: theme == 'dark' ? 'dark' : 'tinymce-5'
     });
     </script>
     @stack('js')
