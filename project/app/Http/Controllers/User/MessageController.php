@@ -119,6 +119,13 @@ class MessageController extends Controller
 
     public function adminusercontact(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'message' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->with('error',$validator->getMessageBag()->toArray()['message'][0]);
+        }
         $data = 1;
         $user = Auth::guard('web')->user();
         $gs = Generalsetting::findOrFail(1);

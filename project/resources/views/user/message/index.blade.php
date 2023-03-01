@@ -165,7 +165,7 @@
             <div class="row">
                 <div class="col-md-12 mb-1">
                     <div class="form-label">{{__('Message')}}</div>
-                    <textarea class="form-control summernote" name="message" placeholder="{{ __('Your Message') }}" required></textarea>
+                    <textarea class="form-control" id="message" name="message" placeholder="{{ __('Your Message') }}"></textarea>
                 </div>
             </div>
 
