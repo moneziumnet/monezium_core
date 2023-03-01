@@ -115,8 +115,8 @@ class SendController extends Controller
 
         $currency_id = $wallet->currency->id; //Currency::whereId($wallet_id)->first()->id;
         $rate = getRate($wallet->currency);
-        $dailySend = BalanceTransfer::whereUserId(auth()->id())->whereDate('created_at', '=', date('Y-m-d'))->whereStatus(1)->sum('amount');
-        $monthlySend = BalanceTransfer::whereUserId(auth()->id())->whereMonth('created_at', '=', date('m'))->whereStatus(1)->sum('amount');
+        $dailySend = BalanceTransfer::whereType('own')->whereUserId(auth()->id())->whereDate('created_at', '=', date('Y-m-d'))->whereStatus(1)->sum('amount');
+        $monthlySend = BalanceTransfer::whereType('own')->whereUserId(auth()->id())->whereMonth('created_at', '=', date('m'))->whereStatus(1)->sum('amount');
         $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'send')->first();
 
         if($dailySend > $global_range->daily_limit){

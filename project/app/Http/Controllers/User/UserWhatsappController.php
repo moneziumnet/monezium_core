@@ -20,6 +20,7 @@ use App\Models\Generalsetting;
 use App\Http\Controllers\Controller;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use Illuminate\Support\Facades\DB;
 use Log;
 
 
@@ -54,6 +55,12 @@ class UserWhatsappController extends Controller
         "currency_id"=>"Please input amount.",
         "amount"=>"Please select payment type.",
         "payment_type"=>"Please input description.",
+        "des"=>"You completed Bank Transfer successfully."
+        );
+    private $internal_json =array(
+        "email"=>"Please select Wallet.",
+        "wallet_id"=>"Please input amount.",
+        "amount"=>"Please input description.",
         "des"=>"You completed Bank Transfer successfully."
         );
 
@@ -527,6 +534,306 @@ class UserWhatsappController extends Controller
                 }
 
             }
+            elseif($w_session != null && $w_session->data != null && $w_session->type == "InternalTransfer") {
+                if($text == '#') {
+                    $w_session->data = null;
+                    $w_session->save();
+                    $to_message = "You exit from Internal Transfer successfully. ";
+                    send_message_whatsapp($to_message, $phone);
+                    return;
+                }
+                $final = (array_key_last(((array)$w_session->data)));
+                $question = $this->internal_json;
+                if($final == null) {
+                    if (!filter_var(trim($text), FILTER_VALIDATE_EMAIL)) {
+                        $to_message = "Please input correct email.";
+                        send_message_whatsapp($to_message, $phone);
+                        return;
+                    }
+                    else {
+                        $user = User::findOrFail($w_session->user_id);
+                        $userType = explode(',', $user->user_type);
+                        $supervisor = DB::table('customer_types')->where('type_name', 'Supervisors')->first()->id;
+                        $merchant = DB::table('customer_types')->where('type_name', 'Merchants')->first()->id;
+                        $wallet_type_list = array('0'=>'All', '1'=>'Current', '2'=>'Card', '3'=>'Deposit', '4'=>'Loan', '5'=>'Escrow');
+                        $modules = explode(" , ", $user->modules);
+                        if (in_array('Crypto',$modules)) {
+                          $wallet_type_list['8'] = 'Crypto';
+                        }
+                        if(in_array($supervisor, $userType)) {
+                            $wallet_type_list['6'] = 'Supervisor';
+                        }
+                        elseif (DB::table('managers')->where('manager_id', auth()->id())->first()) {
+                            $wallet_type_list['10'] = 'Manager';
+                        }
+                        if(in_array($merchant, $userType)) {
+                            $wallet_type_list['7'] = 'Merchant';
+                        }
+                        $wallets = Wallet::where('user_id',$w_session->user_id)->with('currency')->get();
+                        $wallet_list = '';
+                        foreach ($wallets as $key => $wallet) {
+                            if (isset($wallet_type_list[$wallet->wallet_type])){
+                                if($wallet->currency->type == 2) {
+                                    $amount = amount(Crypto_Balance($wallet->user_id, $wallet->currency_id), 2);
+                                    $amount_fiat = amount(Crypto_Balance_Fiat($wallet->user_id, $wallet->currency_id), 1);
+                                    $amount = $amount.' ('.$amount_fiat.$currency->code.')';
+
+                                }
+                                else {
+                                    $amount = amount($wallet->balance,$wallet->currency->type,2);
+                                }
+                                if ($amount > 0) {
+                                    $wallet_list = $wallet_list.$wallet->id.':'.$wallet->currency->code.' -- '.$amount.' -- '.$wallet_type_list[$wallet->wallet_type]."\n";
+                                }
+                            }
+                        }
+                        $to_message = $question['email']."\n".$bank_ids;
+                        $dump = $w_session->data;
+                        $dump->email = $text;
+                        $w_session->data = $dump;
+                        $w_session->save();
+                    }
+                }
+                else {
+                    $next_key = prefix_get_next_key_array($question, $final);
+                    if($next_key == "subbank") {
+                        $banks = SubInsBank::where('status', 1)->pluck('id')->toArray();
+                        if (in_array($text, $banks)) {
+                            $subbank = SubInsBank::find($text);
+                            if($subbank->hasGateway()){
+                                $currencies = BankAccount::whereUserId($whatsapp_user->user_id)->where('subbank_id', $text)->with('currency')->get();
+                            } else {
+                                $currencies = BankPoolAccount::where('bank_id', $text)->with('currency')->get();
+                            }
+                            $currency_list = '';
+                            foreach ($currencies as $key => $currency) {
+                                $currency_list = $currency_list.$currency->currency->id.':'.$currency->currency->code;
+                            }
+                            if(strlen($currency_list) == 0) {
+                                $to_message = "You have no registered Bank Account. Please create bank account in Web Dashboard. Or Please select other Bank Account.";
+                                send_message_whatsapp($to_message, $phone);
+                                return;
+                            }
+
+                            $to_message = $question['subbank']."\n".$currency_list;
+                            $dump = $w_session->data;
+                            $dump->subbank = $text;
+                            $w_session->data = $dump;
+                            $w_session->save();
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+                        else {
+                            $to_message = "Please input number to select Bank account correctly.";
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+                    }
+                    if($next_key == "currency_id") {
+                        $subbank = SubInsBank::find($w_session->data->subbank);
+                        if($subbank->hasGateway()){
+                            $currencies = BankAccount::whereUserId($whatsapp_user->user_id)->where('subbank_id', $w_session->data->subbank)->with('currency')->get();
+                        } else {
+                            $currencies = BankPoolAccount::where('bank_id', $w_session->data->subbank)->with('currency')->get();
+                        }
+                        $currency_list = [];
+                        foreach ($currencies as $key => $currency) {
+                            array_push($currency_list, $currency->currency->id);
+                        }
+                        if (in_array($text, $currency_list)) {
+
+                            $to_message = $question['currency_id'];
+                            $dump = $w_session->data;
+                            $dump->currency_id = $text;
+                            $w_session->data = $dump;
+                            $w_session->save();
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+                        else {
+                            $to_message = "Please input number to select currency correctly.";
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+                    }
+                    if($next_key == "amount") {
+                        if (!is_numeric($text)) {
+                            $to_message = "Please input number for amount correctly.";
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+                        if ($text >= $gs->other_bank_limit) {
+                            $to_message = "Please input less amount than ".$gs->other_bank_limit;
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+                        $user = User::findOrFail($whatsapp_user->user_id);
+
+                        $bank_plan = BankPlan::whereId($user->bank_plan_id)->first();
+                        $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'withdraw')->first();
+                        $dailySend = BalanceTransfer::whereUserId($user->id)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus(1)->sum('amount');
+                        $monthlySend = BalanceTransfer::whereUserId($user->id)->whereMonth('created_at', '=', date('m'))->whereStatus(1)->sum('amount');
+
+                        if($dailySend > $global_range->daily_limit){
+                            $to_message = "Daily send limit over.";
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+
+                        if($monthlySend > $global_range->monthly_limit){
+                            $to_message = "Monthly send limit over.";
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+
+
+
+                        $dailyTransactions = BalanceTransfer::whereType('other')->whereUserId($user->id)->whereDate('created_at', now())->get();
+                        $monthlyTransactions = BalanceTransfer::whereType('other')->whereUserId($user->id)->whereMonth('created_at', now()->month())->get();
+                        $transaction_global_cost = 0;
+                        $currency = Currency::findOrFail($w_session->data->currency_id);
+                        $rate = getRate($currency);
+                        $transaction_global_fee = check_global_transaction_fee($text/$rate, $user, 'withdraw');
+
+                        if($transaction_global_fee)
+                        {
+                            $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($text/($rate*100)) * $transaction_global_fee->data->percent_charge;
+                        }
+                        $finalAmount = $text + $transaction_global_cost*$rate;
+
+                        if($global_range->min > $text/$rate){
+                            $to_message = 'Request Amount should be greater than this '.$global_range->min;
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+
+                        if($global_range->max < $text/$rate){
+                            $to_message = 'Request Amount should be less than this '.$global_range->max;
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+
+                        $balance = user_wallet_balance($user->id, $w_session->data->currency_id);
+
+                        if($balance < 0 || $finalAmount > $balance){
+                            $to_message = 'Insufficient Balance!';
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+
+                        if($global_range->daily_limit <= $finalAmount){
+                            $to_message = 'Your daily limitation of transaction is over.';
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+
+                        if($global_range->daily_limit <= $dailyTransactions->sum('final_amount')){
+                            $to_message = 'Your daily limitation of transaction is over.';
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+
+
+                        if($global_range->monthly_limit < $monthlyTransactions->sum('final_amount')){
+                            $to_message = 'Your monthly limitation of transaction is over.';
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+
+
+                        $to_message = $question['amount'];
+                        $extra_string = "\nSWIFT\nSEPA\nSEPA_INSTANT";
+                        if ($currency->code == 'EUR') {
+                            $extra_string = "\nSWIFT\nSEPA\nSEPA_INSTANT";
+                        }
+                        else {
+                            $extra_string = "\nSWIFT\nCHAPS";
+                        }
+                        $dump = $w_session->data;
+                        $dump->cost = $transaction_global_cost*$rate;
+                        $dump->final_amount = (float)$text;
+                        $dump->amount = $text + $transaction_global_cost*$rate;
+                        $w_session->data = $dump;
+                        $w_session->save();
+                        send_message_whatsapp($to_message.$extra_string, $phone);
+                        return;
+                    }
+                    if($next_key == "payment_type") {
+                        $currency = Currency::findOrFail($w_session->data->currency_id);
+                        if ($currency->code == 'EUR'){
+                            $currency_list = ['SEPA', 'SWIFT', 'SEPA_INSTANT'];
+                        }
+                        else {
+                            $currency_list = ['SWIFT', 'CHAPS'];
+                        }
+
+                        if (in_array($text, $currency_list)) {
+                            $to_message = $question['payment_type'];
+                            $dump = $w_session->data;
+                            $dump->payment_type = $text;
+                            $w_session->data = $dump;
+                            $w_session->save();
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+                        else {
+                            $to_message = "Please select payment type correctly.";
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+                    }
+                    if($next_key == "des") {
+                        $dump = $w_session->data;
+                        $dump->des = $text;
+                        $w_session->data = $dump;
+                        $w_session->save();
+                        $beneficiary = Beneficiary::findOrFail($w_session->data->beneficiary_id);
+
+                        $balance_transfer = new BalanceTransfer();
+
+
+
+                        $txnid = Str::random(4).time();
+
+                        $balance_transfer->user_id = $whatsapp_user->user_id;
+                        $balance_transfer->transaction_no = $txnid;
+                        $balance_transfer->currency_id = $w_session->data->currency_id;
+                        $balance_transfer->subbank = $w_session->data->subbank;
+                        $balance_transfer->iban = $beneficiary->account_iban;
+                        $balance_transfer->swift_bic = $beneficiary->swift_bic;
+                        $balance_transfer->beneficiary_id = $w_session->data->beneficiary_id;
+                        $balance_transfer->type = 'other';
+                        $balance_transfer->cost = $w_session->data->cost;
+                        $balance_transfer->payment_type = $w_session->data->payment_type;
+                        $balance_transfer->amount = $w_session->data->amount;
+                        $balance_transfer->final_amount = $w_session->data->final_amount;
+                        $balance_transfer->description = $w_session->data->des;
+                        $balance_transfer->status = 0;
+                        $balance_transfer->save();
+
+                        $w_session->data = null;
+                        $w_session->save();
+
+                        user_wallet_decrement($whatsapp_user->user_id, $balance_transfer->currency_id, $balance_transfer->amount);
+                        user_wallet_increment(0, $balance_transfer->currency_id, $balance_transfer->cost, 9);
+
+                        send_message_whatsapp('You completed Bank Transfer successfully.', $phone);
+                        $user = User::findOrFail($whatsapp_user->user_id);
+                        send_notification($user->id, 'Bank transfer has been created by '.($user->company_name ?? $user->name).' via Whatsapp. Please check.', route('admin-user-banks', $user->id));
+                        send_staff_telegram('Bank transfer has been created by '.($user->company_name ?? $user->name)." via Whatsapp. Please check.".route('admin-user-banks', $user->id), 'Bank Transfer');
+
+                        return;
+
+                    }
+                    $dump = $w_session->data;
+                    $dump->$next_key = $text;
+                    $w_session->data = $dump;
+                    $w_session->save();
+                    $to_message = $question[$next_key];
+
+                }
+                send_message_whatsapp($to_message, $phone);
+            }
             else {
                 switch ($text) {
                     case 'Balance':
@@ -556,7 +863,7 @@ class UserWhatsappController extends Controller
                         send_message_whatsapp($to_message, $phone);
                         break;
                     case 'Beneficiary_Simple':
-                        $to_message = "When you input, all data have to be splite by ';'. Please Input to register beneficiary simple like this: \n{Individual\Corporate}; {FirstName LastName\CompanyName}; {Email}; {Phonenumber}; {Address}; {Registration NO}; {VAT NO}; {Contact Person}; {Bank IBAN}\n\n For example:\n Individual; John Doe; johndoe@gmail.com; +371 1111 1234; Riga Saulkaines bid 9; 11111111; 2222222; John Mark; MT08CFTE28000000000000000000000\n\n If you want to back, please type in # to go back to menu
+                        $to_message = "When you input, all data have to be splite by ;. Please Input to register beneficiary simple like this: \n{Individual\Corporate}; {FirstName LastName\CompanyName}; {Email}; {Phonenumber}; {Address}; {Registration NO}; {VAT NO}; {Contact Person}; {Bank IBAN}\n\n For example:\n Individual; John Doe; johndoe@gmail.com; +371 1111 1234; Riga Saulkaines bid 9; 11111111; 2222222; John Mark; MT08CFTE28000000000000000000000\n\n If you want to back, please type in # to go back to menu
                         ";
                         $new_session = WhatsappSession::where('user_id', $whatsapp_user->user_id)->first();
                         if(!$new_session) {
@@ -591,6 +898,19 @@ class UserWhatsappController extends Controller
                         $new_session->save();
                         send_message_whatsapp($to_message, $phone);
                         break;
+                    case 'InternalTransfer':
+                        $to_message = "Please input sender email.\n Please type in # to go back to menu
+                        ";
+                        $new_session = WhatsappSession::where('user_id', $whatsapp_user->user_id)->first();
+                        if(!$new_session) {
+                            $new_session = new WhatsappSession();
+                        }
+                        $new_session->user_id = $whatsapp_user->user_id;
+                        $new_session->data = json_decode('{}');
+                        $new_session->type = 'InternalTransfer';
+                        $new_session->save();
+                        send_message_whatsapp($to_message, $phone);
+                        break;
                     default:
                         # code...
                         $to_message = "Welcome to ".$gs->disqus."\nWhat could We help you?\nWe are here to help you with your problem.\nKindly choose an option to connect with our support team.\nCommand 1: Beneficiary\nCommand 2: BankTransfer\nCommand 3: Balance\nCommand 4: Beneficiary_Simple\nCommand 5: Logout";
@@ -622,7 +942,7 @@ class UserWhatsappController extends Controller
                     $whatsapp->phonenumber = $phone;
                     $whatsapp->status = 1;
                     $whatsapp->save();
-                    $to_message = "You login Successfully,\nPlease use follow command list:\nCommand 1: Beneficiary\nCommand 2: BankTransfer\nCommand 3: Balance\nCommand 4: Beneficiary_Simple\nCommand 5: Logout";
+                    $to_message = "You login Successfully,\nPlease use follow command list:\nCommand 1: Beneficiary\nCommand 2: BankTransfer\nCommand 3: Balance\nCommand 4: Beneficiary_Simple\nCommand 5: InternalTransfer\nCommand 6: Logout";
                     send_message_whatsapp($to_message, $phone);
                     break;
                 default:
