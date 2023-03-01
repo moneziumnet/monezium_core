@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Models\Admin;
+use Illuminate\Support\Facades\Validator;
 use Datatables;
 
 class MessageController extends Controller
@@ -179,6 +180,14 @@ class MessageController extends Controller
     }
     public function postmessage(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'message' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->with('error',$validator->getMessageBag()->toArray()['message'][0]);
+        }
+
         $msg = new AdminUserMessage();
         $data = [];
         if($request->hasfile('document'))
@@ -210,7 +219,8 @@ class MessageController extends Controller
         sendMail($to, $subject, $msg, $headers);
 
         //--- Redirect Section
-        return response()->json('You reply successfully.');
+        return redirect()->back()->with('message', 'You reply successfully.');
+        // return response()->json('You reply successfully.');
         //--- Redirect Section Ends
     }
 

@@ -27,12 +27,11 @@
             <div class="panel panel-primary">
             <div class="gocover" style="background: url({{asset('assets/images/'.$gs->admin_loader)}}) no-repeat scroll center center rgba(45, 45, 45, 0.5);"></div>
             @include('includes.admin.form-success')
-	        @include('includes.admin.form-error')
-                <form id="messageform" action="{{route('admin.message.store')}}" data-href="{{ route('admin-message-load',$conv->id) }}" method="POST">
+                <form id="ticket_submit" action="{{route('admin.message.store')}}" data-href="{{ route('admin-message-load',$conv->id) }}" method="POST">
                     {{csrf_field()}}
                     <div class="row">
                         <div class="col-md-12 mb-3">
-                            <textarea class="form-control summernote" name="message" style="resize: vertical;" placeholder="{{ __('Your Message') }}" required></textarea>
+                            <textarea class="form-control summernote" name="message" style="resize: vertical;" placeholder="{{ __('Your Message') }}" ></textarea>
                         </div>
                     </div>
 
