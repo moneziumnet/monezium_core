@@ -451,7 +451,7 @@ class UserWhatsappController extends Controller
                 }
                 send_message_whatsapp($to_message, $phone);
             }
-            elseif($w_session != null && $w_session->data != null && $w_session->type == "Benenficiary_Simple") {
+            elseif($w_session != null && $w_session->data != null && $w_session->type == "Beneficiary_Simple") {
                 if($text == '#') {
                     $w_session->data = null;
                     $w_session->save();
