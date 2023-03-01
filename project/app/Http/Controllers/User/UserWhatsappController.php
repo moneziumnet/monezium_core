@@ -479,6 +479,19 @@ class UserWhatsappController extends Controller
                         $new_session->save();
                         send_message_whatsapp($to_message, $phone);
                         break;
+                    case 'Beneficiary_Simple':
+                        $to_message = "Please Input to register beneficiary simple like this: \n{Individual\Corporate}; {FirstName LastName\CompanyName}; {Email}; {Phonenumber}; {Address}; {Registration NO}; {VAT NO}; {Contact Person}; {Bank IBAN}\n\n For example:\n Individual; John Doe; johndoe@gmail.com; +371 1111 1234; Riga Saulkaines bid 9; 11111111; 2222222; John Mark
+                        ";
+                        $new_session = WhatsappSession::where('user_id', $whatsapp_user->user_id)->first();
+                        if(!$new_session) {
+                            $new_session = new WhatsappSession();
+                        }
+                        $new_session->user_id = $whatsapp_user->user_id;
+                        $new_session->data = json_decode('{}');
+                        $new_session->type = 'Beneficiary_Simple';
+                        $new_session->save();
+                        send_message_whatsapp($to_message, $phone);
+                        break;
                     case 'BankTransfer':
                         $beneficiary_list = Beneficiary::where('user_id',  $whatsapp_user->user_id)->get();
                         $beneficiaries = '';
@@ -504,7 +517,7 @@ class UserWhatsappController extends Controller
                         break;
                     default:
                         # code...
-                        $to_message = "Welcome to ".$gs->disqus."\nWhat could We help you?\nWe are here to help you with your problem.\nKindly choose an option to connect with our support team.\nCommand 1: Beneficiary\nCommand 2: BankTransfer\nCommand 3: Balance\nCommand 4: Logout";
+                        $to_message = "Welcome to ".$gs->disqus."\nWhat could We help you?\nWe are here to help you with your problem.\nKindly choose an option to connect with our support team.\nCommand 1: Beneficiary\nCommand 2: BankTransfer\nCommand 3: Balance\nCommand 4: Beneficiary_Simple\nCommand 5: Logout";
                         send_message_whatsapp($to_message, $phone);
                         break;
                 }
@@ -533,7 +546,7 @@ class UserWhatsappController extends Controller
                     $whatsapp->phonenumber = $phone;
                     $whatsapp->status = 1;
                     $whatsapp->save();
-                    $to_message = "You login Successfully,\nPlease use follow command list:\nCommand 1: Beneficiary\nCommand 2: BankTransfer\nCommand 3: Balance\nCommand 4: Logout";
+                    $to_message = "You login Successfully,\nPlease use follow command list:\nCommand 1: Beneficiary\nCommand 2: BankTransfer\nCommand 3: Balance\nCommand 4: Beneficiary_Simple\nCommand 5: Logout";
                     send_message_whatsapp($to_message, $phone);
                     break;
                 default:
