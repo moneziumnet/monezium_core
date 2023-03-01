@@ -451,6 +451,77 @@ class UserWhatsappController extends Controller
                 }
                 send_message_whatsapp($to_message, $phone);
             }
+            elseif($w_session != null && $w_session->data != null && $w_session->type == "Benenficiary_Simple") {
+                if($text == '#') {
+                    $w_session->data = null;
+                    $w_session->save();
+                    $to_message = "You exit from beneficiary register. ";
+                    send_message_whatsapp($to_message, $phone);
+                    return;
+                }
+                $feed = explode(';', $text);
+                if (count($feed) != 9) {
+                    $to_message = "You missed some value , Please check and input again.";
+                    send_message_whatsapp($to_message, $phone);
+                    return;
+                }
+                $beneficiary = new Beneficiary();
+                if ($feed[0] == 'Individual' || $feed[0] == 'Corporate') {
+                    $beneficiary->type = $feed[0] == 'Individual' ? 'RETAIL' : 'CORPORATE';
+                }
+                else {
+                    $to_message = "Please input Beneficiary Type : Individaul \ Corporate.";
+                    send_message_whatsapp($to_message, $phone);
+                    return;
+                }
+                if ($feed[0] == 'Individual' && str_contains($feed[1], ' ')) {
+                    $beneficiary->name = $feed[1];
+                }
+                elseif ($feed[0] == 'Corporate') {
+                    $beneficiary->name = $feed[1];
+                }
+                else {
+                    $to_message = "Please input Individual Name : FirstName LastName.";
+                    send_message_whatsapp($to_message, $phone);
+                    return;
+                }
+                $client = new Client();
+                try {
+                    $url = 'https://api.ibanapi.com/v1/validate/'.$feed[8].'?api_key='.$gs->ibanapi;
+                    $response = $client->request('GET', $url);
+                    $bank = json_decode($response->getBody());
+                    //code...
+                } catch (RequestException  $e) {
+                    Log::info($e->getResponse()->getBody());
+                    send_message_whatsapp(json_decode($e->getResponse()->getBody())->message."\n Please input IBAN correctly.", $phone);
+                    return;
+                }
+                if (isset($bank->data->bank)) {
+                    $beneficiary->bank_address = $bank->data->bank->address;
+                    $beneficiary->bank_name = $bank->data->bank->bank_name;
+                    $beneficiary->swift_bic = $bank->data->bank->bic;
+                    $beneficiary->account_iban = $feed[8];
+                    $beneficiary->email = $feed[2];
+                    $beneficiary->user_id = $w_session->user_id;
+                    $beneficiary->address = $feed[4];
+                    $beneficiary->phone = $feed[3];
+                    $beneficiary->registration_no = $feed[5];
+                    $beneficiary->vat_no = $feed[6];
+                    $beneficiary->contact_person = $feed[7];
+
+                    $beneficiary->save();
+                    $w_session->data = null;
+                    $w_session->save();
+
+                    send_message_whatsapp('You completed beneficiary register successfully.', $phone);
+                    return;
+                }
+                else {
+                    send_message_whatsapp('Please input IBAN correctly', $phone);
+                    return;
+                }
+
+            }
             else {
                 switch ($text) {
                     case 'Balance':
@@ -480,7 +551,7 @@ class UserWhatsappController extends Controller
                         send_message_whatsapp($to_message, $phone);
                         break;
                     case 'Beneficiary_Simple':
-                        $to_message = "Please Input to register beneficiary simple like this: \n{Individual\Corporate}; {FirstName LastName\CompanyName}; {Email}; {Phonenumber}; {Address}; {Registration NO}; {VAT NO}; {Contact Person}; {Bank IBAN}\n\n For example:\n Individual; John Doe; johndoe@gmail.com; +371 1111 1234; Riga Saulkaines bid 9; 11111111; 2222222; John Mark
+                        $to_message = "Please Input to register beneficiary simple like this: \n{Individual\Corporate}; {FirstName LastName\CompanyName}; {Email}; {Phonenumber}; {Address}; {Registration NO}; {VAT NO}; {Contact Person}; {Bank IBAN}\n\n For example:\n Individual; John Doe; johndoe@gmail.com; +371 1111 1234; Riga Saulkaines bid 9; 11111111; 2222222; John Mark; MT08CFTE28000000000000000000000\n If you want to back, please type in # to go back to menu
                         ";
                         $new_session = WhatsappSession::where('user_id', $whatsapp_user->user_id)->first();
                         if(!$new_session) {
