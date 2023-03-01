@@ -72,7 +72,7 @@
 
             <div class="form-group">
               <label for="source">{{ __('Source') }}</label>
-              <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="source" name="source"  placeholder="{{ __('Source') }}" value="{{$data->source}}" required>
+              <input type="url" class="form-control" id="source" name="source"  placeholder="{{ __('Source') }}" value="{{$data->source}}" required>
             </div>
 
             <!-- <div class="form-group">
