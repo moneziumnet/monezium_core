@@ -59,7 +59,7 @@ class UserWhatsappController extends Controller
         "des"=>"You completed Bank Transfer successfully."
         );
     private $internal_json =array(
-        "email"=>"Please select Wallet.",
+        "email"=>"Please input number to select Wallet.",
         "wallet_id"=>"Please input amount.",
         "amount"=>"Please input description.",
         "des"=>"You completed Bank Transfer successfully."
@@ -564,7 +564,7 @@ class UserWhatsappController extends Controller
                         if(in_array($supervisor, $userType)) {
                             $wallet_type_list['6'] = 'Supervisor';
                         }
-                        elseif (DB::table('managers')->where('manager_id', auth()->id())->first()) {
+                        elseif (DB::table('managers')->where('manager_id', $w_session->user_id)->first()) {
                             $wallet_type_list['10'] = 'Manager';
                         }
                         if(in_array($merchant, $userType)) {
@@ -598,35 +598,36 @@ class UserWhatsappController extends Controller
                 }
                 else {
                     $next_key = prefix_get_next_key_array($question, $final);
-                    if($next_key == "subbank") {
-                        $banks = SubInsBank::where('status', 1)->pluck('id')->toArray();
-                        if (in_array($text, $banks)) {
-                            $subbank = SubInsBank::find($text);
-                            if($subbank->hasGateway()){
-                                $currencies = BankAccount::whereUserId($whatsapp_user->user_id)->where('subbank_id', $text)->with('currency')->get();
-                            } else {
-                                $currencies = BankPoolAccount::where('bank_id', $text)->with('currency')->get();
+                    if($next_key == "wallet_id") {
+                        $wallets = Wallet::where('user_id',$w_session->user_id)->pluck('id')->toArray();
+                        if (in_array($text, $wallets)) {
+                            $wallet = Wallet::find($text);
+                            $rate = getRate($wallet->currency);
+                            $dailySend = BalanceTransfer::whereType('own')->whereUserId($w_session->user_id)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus(1)->sum('amount');
+                            $monthlySend = BalanceTransfer::whereType('own')->whereUserId($w_session->user_id)->whereMonth('created_at', '=', date('m'))->whereStatus(1)->sum('amount');
+                            $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'send')->first();
+
+                            if($dailySend > $global_range->daily_limit){
+                                $to_message = "Daily send limit over.";
+                                send_message_whatsapp($to_message, $phone);
+                                return;
                             }
-                            $currency_list = '';
-                            foreach ($currencies as $key => $currency) {
-                                $currency_list = $currency_list.$currency->currency->id.':'.$currency->currency->code;
-                            }
-                            if(strlen($currency_list) == 0) {
-                                $to_message = "You have no registered Bank Account. Please create bank account in Web Dashboard. Or Please select other Bank Account.";
+                            if($monthlySend > $global_range->monthly_limit){
+                                $to_message = "Monthly send limit over.";
                                 send_message_whatsapp($to_message, $phone);
                                 return;
                             }
 
-                            $to_message = $question['subbank']."\n".$currency_list;
+                            $to_message = $question['wallet_id'];
                             $dump = $w_session->data;
-                            $dump->subbank = $text;
+                            $dump->wallet_id = $text;
                             $w_session->data = $dump;
                             $w_session->save();
                             send_message_whatsapp($to_message, $phone);
                             return;
                         }
                         else {
-                            $to_message = "Please input number to select Bank account correctly.";
+                            $to_message = "Please input number to select Wallet correctly.";
                             send_message_whatsapp($to_message, $phone);
                             return;
                         }
