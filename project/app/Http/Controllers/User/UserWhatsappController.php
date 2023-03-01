@@ -572,6 +572,7 @@ class UserWhatsappController extends Controller
                         }
                         $wallets = Wallet::where('user_id',$w_session->user_id)->with('currency')->get();
                         $wallet_list = '';
+                        $currency = Currency::findOrFail(defaultCurr());
                         foreach ($wallets as $key => $wallet) {
                             if (isset($wallet_type_list[$wallet->wallet_type])){
                                 if($wallet->currency->type == 2) {
