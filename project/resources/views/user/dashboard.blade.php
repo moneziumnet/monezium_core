@@ -268,7 +268,7 @@
                         <div class="card-body">
                             <div class="h3 m-0 text-uppercase"> {{__('Crypto')}}</div>
                             <div class="h4 m-0"> {{ $item->wallet_no }}</div>
-                            <div class="text-muted">{{ amount(Crypto_Balance($item->user_id, $item->currency_id), 2)}}  {{$item->currency->code}}</div>
+                            <div class="text-muted">{{ amount(Crypto_Balance($item->user_id, $item->currency_id), 2)}}  {{$item->currency->code}} ({{ amount(Crypto_Balance_Fiat($item->user_id, $item->currency_id), 2)}}  {{$currency->code}})</div>
 
                         </div>
                         </div>

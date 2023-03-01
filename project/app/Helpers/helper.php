@@ -1050,6 +1050,16 @@ if (!function_exists('Crypto_Balance')) {
     }
 }
 
+if (!function_exists('Crypto_Balance_Fiat')) {
+    function Crypto_Balance_Fiat($auth_id, $currency_id)
+    {
+        $amount = Crypto_Balance($auth_id, $currency_id);
+        $currency = Currency::findOrFail($currency_id);
+        $rate = getRate($currency);
+        return $amount/$rate;
+    }
+}
+
 if (!function_exists('Crypto_Net_Check')) {
     function Crypto_Net_Check($type)
     {
