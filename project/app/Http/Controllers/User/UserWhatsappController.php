@@ -466,19 +466,19 @@ class UserWhatsappController extends Controller
                     return;
                 }
                 $beneficiary = new Beneficiary();
-                if ($feed[0] == 'Individual' || $feed[0] == 'Corporate') {
-                    $beneficiary->type = $feed[0] == 'Individual' ? 'RETAIL' : 'CORPORATE';
+                if (trim($feed[0]) == 'Individual' || trim($feed[0]) == 'Corporate') {
+                    $beneficiary->type = trim($feed[0]) == 'Individual' ? 'RETAIL' : 'CORPORATE';
                 }
                 else {
                     $to_message = "Please input Beneficiary Type : Individaul \ Corporate.";
                     send_message_whatsapp($to_message, $phone);
                     return;
                 }
-                if ($feed[0] == 'Individual' && str_contains($feed[1], ' ')) {
-                    $beneficiary->name = $feed[1];
+                if (trim($feed[0]) == 'Individual' && str_contains(trim($feed[1]), ' ')) {
+                    $beneficiary->name = trim($feed[1]);
                 }
-                elseif ($feed[0] == 'Corporate') {
-                    $beneficiary->name = $feed[1];
+                elseif (trim($feed[0]) == 'Corporate') {
+                    $beneficiary->name = trim($feed[1]);
                 }
                 else {
                     $to_message = "Please input Individual Name : FirstName LastName.";
@@ -500,14 +500,19 @@ class UserWhatsappController extends Controller
                     $beneficiary->bank_address = $bank->data->bank->address;
                     $beneficiary->bank_name = $bank->data->bank->bank_name;
                     $beneficiary->swift_bic = $bank->data->bank->bic;
-                    $beneficiary->account_iban = $feed[8];
-                    $beneficiary->email = $feed[2];
+                    $beneficiary->account_iban = trim($feed[8]);
+                    if (!filter_var(trim($feed[2]), FILTER_VALIDATE_EMAIL)) {
+                        $to_message = "Please input correct email.";
+                        send_message_whatsapp($to_message, $phone);
+                        return;
+                    }
+                    $beneficiary->email = trim($feed[2]);
                     $beneficiary->user_id = $w_session->user_id;
-                    $beneficiary->address = $feed[4];
-                    $beneficiary->phone = $feed[3];
-                    $beneficiary->registration_no = $feed[5];
-                    $beneficiary->vat_no = $feed[6];
-                    $beneficiary->contact_person = $feed[7];
+                    $beneficiary->address = trim($feed[4]);
+                    $beneficiary->phone = trim($feed[3]);
+                    $beneficiary->registration_no = trim($feed[5]);
+                    $beneficiary->vat_no = trim($feed[6]);
+                    $beneficiary->contact_person = trim($feed[7]);
 
                     $beneficiary->save();
                     $w_session->data = null;
