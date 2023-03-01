@@ -62,7 +62,9 @@
                                       </td>
                                       <td data-label="{{ __('Message') }}">
                                         <div>
-                                          {{$conv->message}}
+                                            @php
+                                              echo  str_dis($conv->message)
+                                            @endphp
                                         </div>
                                       </td>
 

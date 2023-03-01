@@ -797,7 +797,7 @@ if (!function_exists('str_dis')) {
     function str_dis($dis_string)
     {
         if (strlen($dis_string) > 20) {
-            return substr($dis_string, 0, 15) . '  ...';
+            return substr($dis_string, 0, 20) . '  ...';
         } else {
             return $dis_string;
         }
