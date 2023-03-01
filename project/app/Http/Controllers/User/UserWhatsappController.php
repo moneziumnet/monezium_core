@@ -556,7 +556,7 @@ class UserWhatsappController extends Controller
                         send_message_whatsapp($to_message, $phone);
                         break;
                     case 'Beneficiary_Simple':
-                        $to_message = "Please Input to register beneficiary simple like this: \n{Individual\Corporate}; {FirstName LastName\CompanyName}; {Email}; {Phonenumber}; {Address}; {Registration NO}; {VAT NO}; {Contact Person}; {Bank IBAN}\n\n For example:\n Individual; John Doe; johndoe@gmail.com; +371 1111 1234; Riga Saulkaines bid 9; 11111111; 2222222; John Mark; MT08CFTE28000000000000000000000\n If you want to back, please type in # to go back to menu
+                        $to_message = "When you input, all data have to be splite by ';'. Please Input to register beneficiary simple like this: \n{Individual\Corporate}; {FirstName LastName\CompanyName}; {Email}; {Phonenumber}; {Address}; {Registration NO}; {VAT NO}; {Contact Person}; {Bank IBAN}\n\n For example:\n Individual; John Doe; johndoe@gmail.com; +371 1111 1234; Riga Saulkaines bid 9; 11111111; 2222222; John Mark; MT08CFTE28000000000000000000000\n\n If you want to back, please type in # to go back to menu
                         ";
                         $new_session = WhatsappSession::where('user_id', $whatsapp_user->user_id)->first();
                         if(!$new_session) {
