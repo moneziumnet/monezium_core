@@ -913,7 +913,7 @@ class UserWhatsappController extends Controller
                         break;
                     default:
                         # code...
-                        $to_message = "Welcome to ".$gs->disqus."\nWhat could We help you?\nWe are here to help you with your problem.\nKindly choose an option to connect with our support team.\nCommand 1: Beneficiary\nCommand 2: BankTransfer\nCommand 3: Balance\nCommand 4: Beneficiary_Simple\nCommand 5: Logout";
+                        $to_message = "Welcome to ".$gs->disqus."\nWhat could We help you?\nWe are here to help you with your problem.\nKindly choose an option to connect with our support team.\nCommand 1: Beneficiary\nCommand 2: BankTransfer\nCommand 3: Balance\nCommand 4: Beneficiary_Simple\nCommand 5: InternalTransfer\nCommand 6: Logout";
                         send_message_whatsapp($to_message, $phone);
                         break;
                 }
