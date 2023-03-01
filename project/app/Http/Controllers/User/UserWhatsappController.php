@@ -14,6 +14,7 @@ use App\Models\BankPoolAccount;
 use App\Models\BankPlan;
 use App\Models\PlanDetail;
 use App\Models\BalanceTransfer;
+use App\Models\Wallet;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
