@@ -560,12 +560,12 @@ class UserWhatsappController extends Controller
                         return;
                     }
                     else {
+                        $user = User::findOrFail($w_session->user_id);
                         if($text == $user->email){
                             $to_message = "This email is yours.You can not send money yourself!";
                             send_message_whatsapp($to_message, $phone);
                             return;
                         }
-                        $user = User::findOrFail($w_session->user_id);
                         $userType = explode(',', $user->user_type);
                         $supervisor = DB::table('customer_types')->where('type_name', 'Supervisors')->first()->id;
                         $merchant = DB::table('customer_types')->where('type_name', 'Merchants')->first()->id;
