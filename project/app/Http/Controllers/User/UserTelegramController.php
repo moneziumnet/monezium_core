@@ -57,6 +57,19 @@ class UserTelegramController extends Controller
             "payment_type"=>"Please input description.",
             "des"=>"You completed Bank Transfer successfully."
             );
+        private $internal_json =array(
+            "email"=>"Please input number to select Wallet.",
+            "wallet_id"=>"Please input amount.",
+            "amount"=>"Please input description.",
+            "description"=>"You completed Internal Transfer successfully."
+            );
+        private $request_json =array(
+            "account_email"=>"Please input number to select Currency.",
+            "currency_id"=>"Please input Account Name to request money.",
+            "account_name"=>"Please input amount to request money",
+            "amount" => "Please input description.",
+            "description"=>"You completed Request Money successfully."
+            );
     public function __construct()
     {
         $this->middleware('auth', ['except' => ['bot_login', 'bot_logout', 'inbound']]);
@@ -453,6 +466,19 @@ class UserTelegramController extends Controller
                         $to_message = $currency->symbol.amount(userBalance($user->id), $currency->type, 2);
                         send_message_telegram($to_message, $chat_id);
                         break;
+                    case 'CryptoBalance':
+                        $user = User::findOrFail($telegram_user->user_id);
+                        $currencies =Currency::where('type', 2)->where('status', 1)->get();
+                        $def_currency = Currency::findOrFail(defaultCurr());
+                        $to_message = '';
+                        foreach($currencies as $currency) {
+                            $amount = amount(Crypto_Balance($user->id, $currency->id), 2);
+                            $amount_fiat = amount(Crypto_Balance_Fiat($user->id, $currency->id), 1);
+                            $amount = $amount.' ('.$amount_fiat.$def_currency->code.')';
+                            $to_message = $to_message.$currency->code." : ".$amount."\n";
+                        }
+                        send_message_telegram($to_message, $chat_id);
+                        break;
                     case 'Logout':
                         $telegram = UserTelegram::where('chat_id', $chat_id)->first();
                         $telegram->status = 0;
@@ -470,6 +496,19 @@ class UserTelegramController extends Controller
                         $new_session->user_id = $telegram_user->user_id;
                         $new_session->data = json_decode('{}');
                         $new_session->type = 'Beneficiary';
+                        $new_session->save();
+                        send_message_telegram($to_message, $chat_id);
+                        break;
+                    case 'Beneficiary_Simple':
+                        $to_message = "When you input, all data have to be splite by ;. Please Input to register beneficiary simple like this: \n{Individual\Corporate}; {FirstName LastName\CompanyName}; {Email}; {Phonenumber}; {Address}; {Registration NO}; {VAT NO}; {Contact Person}; {Bank IBAN}\n\n For example:\n Individual; John Doe; johndoe@gmail.com; +371 1111 1234; Riga Saulkaines bid 9; 11111111; 2222222; John Mark; MT08CFTE28000000000000000000000\n\n If you want to back, please type in # to go back to menu
+                        ";
+                        $new_session = TelegramSession::where('user_id', $telegram_user->user_id)->first();
+                        if(!$new_session) {
+                            $new_session = new TelegramSession();
+                        }
+                        $new_session->user_id = $telegram_user->user_id;
+                        $new_session->data = json_decode('{}');
+                        $new_session->type = 'Beneficiary_Simple';
                         $new_session->save();
                         send_message_telegram($to_message, $chat_id);
                         break;
@@ -496,9 +535,34 @@ class UserTelegramController extends Controller
                         $new_session->save();
                         send_message_telegram($to_message, $chat_id);
                         break;
+                    case 'InternalTransfer':
+                        $to_message = "Please input sender email.\n Please type in # to go back to menu
+                        ";
+                        $new_session = TelegramSession::where('user_id', $telegram_user->user_id)->first();
+                        if(!$new_session) {
+                            $new_session = new TelegramSession();
+                        }
+                        $new_session->user_id = $telegram_user->user_id;
+                        $new_session->data = json_decode('{}');
+                        $new_session->type = 'InternalTransfer';
+                        $new_session->save();
+                        send_message_telegram($to_message, $chat_id);
+                        break;
+                    case 'RequestMoney':
+                        $to_message = "Please input email to request money";
+                        $new_session = TelegramSession::where('user_id', $telegram_user->user_id)->first();
+                        if(!$new_session) {
+                            $new_session = new TelegramSession();
+                        }
+                        $new_session->user_id = $telegram_user->user_id;
+                        $new_session->data = json_decode('{}');
+                        $new_session->type = 'RequestMoney';
+                        $new_session->save();
+                        send_message_telegram($to_message, $phone);
+                        break;
                     default:
                         # code...
-                        $to_message = "Welcome to ".$gs->disqus."\nWhat could We help you?\nWe are here to help you with your problem.\nKindly choose an option to connect with our support team.\nCommand 1: Beneficiary\nCommand 2: BankTransfer\nCommand 3: Balance\nCommand 4: Logout";
+                        $to_message = "Welcome to ".$gs->disqus."\nWhat could We help you?\nWe are here to help you with your problem.\nKindly choose an option to connect with our support team.\nCommand 1: Beneficiary\nCommand 2: BankTransfer\nCommand 3: Balance\nCommand 4: CryptoBalance\nCommand 5: Beneficiary_Simple\nCommand 6: InternalTransfer\nCommand 7: RequestMoney\nCommand 8: Logout";
                         send_message_telegram($to_message, $chat_id);
                         break;
                 }
@@ -527,7 +591,7 @@ class UserTelegramController extends Controller
                     $telegram->chat_id = $chat_id;
                     $telegram->status = 1;
                     $telegram->save();
-                    $to_message = "You login Successfully,\nPlease use follow command list:\nCommand 1: Beneficiary\nCommand 2: BankTransfer\nCommand 3: Balance\nCommand 4: Logout";
+                    $to_message = "You login Successfully,\nPlease use follow command list:\nCommand 1: Beneficiary\nCommand 2: BankTransfer\nCommand 3: Balance\nCommand 4: CryptoBalance\nCommand 5: Beneficiary_Simple\nCommand 6: InternalTransfer\nCommand 7: RequestMoney\nCommand 8: Logout";
                     send_message_telegram($to_message, $chat_id);
                     break;
                 default:
