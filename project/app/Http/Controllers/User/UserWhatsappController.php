@@ -68,7 +68,7 @@ class UserWhatsappController extends Controller
         );
     private $request_json =array(
         "account_email"=>"Please input number to select Currency.",
-        "currency_id"=>"Please input Name to request money.",
+        "currency_id"=>"Please input Account Name to request money.",
         "account_name"=>"Please input amount to request money",
         "amount" => "Please input description.",
         "description"=>"You completed Request Money successfully."
@@ -940,7 +940,7 @@ class UserWhatsappController extends Controller
                             return;
                         }
                     }
-                    if($nexk_key == "amount") {
+                    if($next_key == "amount") {
                         $bank_plan = BankPlan::whereId($user->bank_plan_id)->first();
                         $dailyRequests = MoneyRequest::whereUserId($user->id)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus('success')->sum('amount');
                         $monthlyRequests = MoneyRequest::whereUserId($user->id)->whereMonth('created_at', '=', date('m'))->whereStatus('success')->sum('amount');
