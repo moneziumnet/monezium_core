@@ -886,9 +886,13 @@ class UserWhatsappController extends Controller
                     case 'CryptoBalance':
                         $user = User::findOrFail($whatsapp_user->user_id);
                         $currencies =Currency::where('type', 2)->where('status', 1)->get();
+                        $def_currency = Currency::findOrFail(defaultCurr());
                         $to_message = '';
                         foreach($currencies as $currency) {
-                            $to_message = $to_message.$currency->sysmbol.amount(Crypto_Balance($user->id, $currency->id), 2)."\n";
+                            $amount = amount(Crypto_Balance($user->id, $currency->id), 2);
+                            $amount_fiat = amount(Crypto_Balance_Fiat($user->id, $currency->id), 1);
+                            $amount = $amount.' ('.$amount_fiat.$def_currency->code.')';
+                            $to_message = $to_message.$currency->code." : ".$amount."\n";
                         }
                         send_message_whatsapp($to_message, $phone);
                         break;
