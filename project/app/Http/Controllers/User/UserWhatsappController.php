@@ -883,6 +883,15 @@ class UserWhatsappController extends Controller
                         $to_message = $currency->symbol.amount(userBalance($user->id), $currency->type, 2);
                         send_message_whatsapp($to_message, $phone);
                         break;
+                    case 'CryptoBalance':
+                        $user = User::findOrFail($whatsapp_user->user_id);
+                        $currencies =Currency::where('type', 2)->where('status', 1)->get();
+                        $to_message = '';
+                        foreach($currencies as $currency) {
+                            $to_message = $to_message.$currency->sysmbol.amount(Crypto_Balance($user->id, $currency->id), 2)."\n";
+                        }
+                        send_message_whatsapp($to_message, $phone);
+                        break;
                     case 'Logout':
                         $whatsapp = UserWhatsapp::where('phonenumber', $phone)->first();
                         $whatsapp->status = 0;
@@ -954,7 +963,7 @@ class UserWhatsappController extends Controller
                         break;
                     default:
                         # code...
-                        $to_message = "Welcome to ".$gs->disqus."\nWhat could We help you?\nWe are here to help you with your problem.\nKindly choose an option to connect with our support team.\nCommand 1: Beneficiary\nCommand 2: BankTransfer\nCommand 3: Balance\nCommand 4: Beneficiary_Simple\nCommand 5: InternalTransfer\nCommand 6: Logout";
+                        $to_message = "Welcome to ".$gs->disqus."\nWhat could We help you?\nWe are here to help you with your problem.\nKindly choose an option to connect with our support team.\nCommand 1: Beneficiary\nCommand 2: BankTransfer\nCommand 3: Balance\nCommand 4: CryptoBalance\nCommand 5: Beneficiary_Simple\nCommand 6: InternalTransfer\nCommand 7: Logout";
                         send_message_whatsapp($to_message, $phone);
                         break;
                 }
@@ -983,7 +992,7 @@ class UserWhatsappController extends Controller
                     $whatsapp->phonenumber = $phone;
                     $whatsapp->status = 1;
                     $whatsapp->save();
-                    $to_message = "You login Successfully,\nPlease use follow command list:\nCommand 1: Beneficiary\nCommand 2: BankTransfer\nCommand 3: Balance\nCommand 4: Beneficiary_Simple\nCommand 5: InternalTransfer\nCommand 6: Logout";
+                    $to_message = "You login Successfully,\nPlease use follow command list:\nCommand 1: Beneficiary\nCommand 2: BankTransfer\nCommand 3: Balance\nCommand 4: CryptoBalance\nCommand 5: Beneficiary_Simple\nCommand 6: InternalTransfer\nCommand 7: Logout";
                     send_message_whatsapp($to_message, $phone);
                     break;
                 default:
