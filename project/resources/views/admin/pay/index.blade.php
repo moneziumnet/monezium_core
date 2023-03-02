@@ -18,24 +18,32 @@
             @include('includes.admin.form-success')
             <div class="card tab-card mb-4">
                 @include('admin.user.profiletab')
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="modules" role="tabpanel" aria-labelledby="modules-tab">
+                        <div class="card-body">
+                            <div class="card mb-4">
 
-                <div class="table-responsive p-3">
-                    <table id="geniustable" class="table table-hover dt-responsive" cellspacing="0" width="100%">
-                        <thead class="thead-light">
-                            <tr>
-                                <th>{{ __('Date') }}</th>
-                                <th>{{ __('Transaction ID') }}</th>
-                                <th>{{ __('Bank Name') }}</th>
-                                <th>{{ __('Sender') }}</th>
-                                <th>{{ __('Receiver') }}</th>
-                                <th>{{ __('Amount') }}</th>
-                                <th>{{ __('Type') }}</th>
-                                <th>{{ __('Status') }}</th>
-                                <th>{{ __('Action') }}</th>
+                                <div class="table-responsive p-3">
+                                    <table id="geniustable" class="table table-hover dt-responsive" cellspacing="0" width="100%">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th>{{ __('Date') }}</th>
+                                                <th>{{ __('Transaction ID') }}</th>
+                                                <th>{{ __('Bank Name') }}</th>
+                                                <th>{{ __('Sender') }}</th>
+                                                <th>{{ __('Receiver') }}</th>
+                                                <th>{{ __('Amount') }}</th>
+                                                <th>{{ __('Type') }}</th>
+                                                <th>{{ __('Status') }}</th>
+                                                <th>{{ __('Action') }}</th>
 
-                            </tr>
-                        </thead>
-                    </table>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
