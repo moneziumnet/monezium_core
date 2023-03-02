@@ -15,6 +15,7 @@ use App\Models\BankPlan;
 use App\Models\PlanDetail;
 use App\Models\BalanceTransfer;
 use App\Models\Wallet;
+use App\Models\Transaction;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
@@ -770,7 +771,7 @@ class UserWhatsappController extends Controller
                                 else if($wallet->currency->code == 'BTC') {
                                     $res = RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, amount(($w_session->data->amount - $w_session->data->cost), 2)],$wallet->keyword);
                                     if (isset($res->error->message)){
-                                        $to_message = "You can not send ether because have some issue: ".$res->error->message;
+                                        $to_message = "You can not send btc because have some issue: ".$res->error->message;
                                         $w_session->data = null;
                                         $w_session->save();
                                         send_message_whatsapp($to_message, $phone);
