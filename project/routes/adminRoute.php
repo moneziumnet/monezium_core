@@ -77,6 +77,7 @@ use App\Http\Controllers\Deposit\SwanController;
 use App\Http\Controllers\Admin\ActionNotificationController;
 use App\Http\Controllers\Admin\AdminBeneficiaryController;
 use App\Http\Controllers\Admin\ReportTransactionController;
+use App\Http\Controllers\Admin\PayTransactionController;
 
 
 Route::prefix('admin')->group(function () {
@@ -255,7 +256,9 @@ Route::prefix('admin')->group(function () {
     Route::post('/user/{id}/admin-user-upgrade-plan', [UserController::class, 'upgradePlan'])->name('admin-user-upgrade-plan');
     Route::get('/user/{id}/transactions', [UserController::class, 'profileTransctions'])->name('admin-user-transactions');
     Route::get('/user/{id}/login/history', [UserController::class, 'profileLoginHistory'])->name('admin-user-login-history');
-    Route::get('/user/{id}/banks', [UserController::class, 'profileBanks'])->name('admin-user-banks');
+    // Route::get('/user/{id}/banks', [UserController::class, 'profileBanks'])->name('admin-user-banks');
+    Route::get('/user/{id}/banks', [PayTransactionController::class, 'index'])->name('admin-user-banks');
+    Route::get('/user/pay/detail/{id}', [PayTransactionController::class, 'trxDetails'])->name('admin-user-banks-details');
     Route::get('/user/{id}/bankaccount', [UserController::class, 'profileBankAccount'])->name('admin-user-bank-account');
     Route::post('/user/bank/nogateway', [UserController::class, 'storeBankAccount'])->name('admin.user.bank.nogateway');
     Route::POST('/user/bank/railsbank',[RailsBankController::class,'store'])->name('admin.user.bank.railsbank');
@@ -445,7 +448,8 @@ Route::prefix('admin')->group(function () {
     Route::get('/own-banks/transfer', [OwnBankTransferController::class, 'index'])->name('admin.own.banks.transfer.index');
 
     Route::get('/other-banks/transfer/datatables', [OtherBankTransferController::class, 'datatables'])->name('admin.other.banks.transfer.datatables');
-    Route::get('/other-banks/transfer/subdatatables', [OtherBankTransferController::class, 'subdatatables'])->name('admin.other.banks.transfer.subdatatables');
+    // Route::get('/other-banks/transfer/subdatatables', [OtherBankTransferController::class, 'subdatatables'])->name('admin.other.banks.transfer.subdatatables');
+    Route::get('/pay/datatables', [PayTransactionController::class, 'datatables'])->name('admin.pay.transaction.datatables');
     Route::get('/other-banks/transfer', [OtherBankTransferController::class, 'index'])->name('admin.other.banks.transfer.index');
     Route::get('/other-banks/transfer/show/{id}', [OtherBankTransferController::class, 'show'])->name('admin.other.banks.transfer.show');
     Route::get('/other-banks/transfer/details/{id}', [OtherBankTransferController::class, 'details'])->name('admin.other.banks.transfer.details');
