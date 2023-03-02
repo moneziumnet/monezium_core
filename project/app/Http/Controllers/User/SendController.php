@@ -242,8 +242,10 @@ class SendController extends Controller
                 }
             }
         }
+        else {
+            user_wallet_increment(0, $currency_id, $transaction_global_cost*$rate, 9);
+        }
 
-        user_wallet_increment(0, $currency_id, $transaction_global_cost*$rate, 9);
 
         if($receiver = User::where('email',$request->email)->first()){
 

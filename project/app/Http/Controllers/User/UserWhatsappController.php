@@ -62,7 +62,7 @@ class UserWhatsappController extends Controller
         "email"=>"Please input number to select Wallet.",
         "wallet_id"=>"Please input amount.",
         "amount"=>"Please input description.",
-        "des"=>"You completed Bank Transfer successfully."
+        "description"=>"You completed Bank Transfer successfully."
         );
 
     public function __construct()
@@ -700,74 +700,169 @@ class UserWhatsappController extends Controller
                         $dump->amount = $text + $transaction_global_cost*$rate;
                         $w_session->data = $dump;
                         $w_session->save();
-                        send_message_whatsapp($to_message.$extra_string, $phone);
+                        send_message_whatsapp($to_message, $phone);
                         return;
                     }
-                    if($next_key == "payment_type") {
-                        $currency = Currency::findOrFail($w_session->data->currency_id);
-                        if ($currency->code == 'EUR'){
-                            $currency_list = ['SEPA', 'SWIFT', 'SEPA_INSTANT'];
+                    if($next_key == "description") {
+
+                        $wallet = Wallet::where('id', $w_session->data->wallet_id)->with('currency')->first();
+                        $currency = Currency::findOrFail($wallet->currency_id);
+                        $rate = getRate($currency);
+
+                        if ($wallet->currency->type == 2) {
+                            $towallet = get_wallet(0, $wallet->currency_id, 9);
+
+                            if($wallet->currency->code == 'ETH') {
+                                RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
+                                $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex($w_session->data->cost*$rate*pow(10,18)).'"}';
+                                $res = RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
+                                if($res == 'error') {
+                                    $to_message = "You can not send money because Ether has some issue.";
+                                    $w_session->data = null;
+                                    $w_session->save();
+                                    send_message_whatsapp($to_message, $phone);
+                                    return;
+                                }
+                            }
+                            else if($wallet->currency->code == 'BTC') {
+                                $res = RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, amount($w_session->data->cost*$rate, 2)],$wallet->keyword);
+                                if (isset($res->error->message)){
+                                    $to_message = "You can not send money because BTC has some issue. ". $res->error->message;
+                                    $w_session->data = null;
+                                    $w_session->save();
+                                    send_message_whatsapp($to_message, $phone);
+                                    return;
+                                }
+                            }
+                            else {
+                                RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
+                                $tokenContract = $wallet->currency->address;
+                                $result = erc20_token_transfer($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $w_session->data->cost*$rate, $wallet->keyword);
+                                if (json_decode($result)->code == 1){
+                                    $to_message = "You can not send money because Ether has some issue.".json_decode($result)->message;
+                                    $w_session->data = null;
+                                    $w_session->save();
+                                    send_message_whatsapp($to_message, $phone);
+                                    return;
+                                }
+                            }
                         }
                         else {
-                            $currency_list = ['SWIFT', 'CHAPS'];
+                            user_wallet_increment(0, $wallet->currency_id, $w_session->data->cost*$rate, 9);
                         }
 
-                        if (in_array($text, $currency_list)) {
-                            $to_message = $question['payment_type'];
-                            $dump = $w_session->data;
-                            $dump->payment_type = $text;
-                            $w_session->data = $dump;
+
+                        if($receiver = User::where('email',$w_session->data->email)->first()){
+                            if ($wallet->currency->type == 2) {
+                                $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
+                                if($wallet->currency->code == 'ETH') {
+                                    RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
+                                    $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex(($w_session->data->amount - $w_session->data->cost)*pow(10,18)).'"}';
+                                    $res = RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
+                                    if($res == 'error') {
+                                        $to_message = "You can not send money because Ether has some issue.";
+                                        $w_session->data = null;
+                                        $w_session->save();
+                                        send_message_whatsapp($to_message, $phone);
+                                        return;
+                                    }
+                                }
+                                else if($wallet->currency->code == 'BTC') {
+                                    $res = RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, amount(($w_session->data->amount - $w_session->data->cost), 2)],$wallet->keyword);
+                                    if (isset($res->error->message)){
+                                        $to_message = "You can not send ether because have some issue: ".$res->error->message;
+                                        $w_session->data = null;
+                                        $w_session->save();
+                                        send_message_whatsapp($to_message, $phone);
+                                        return;
+                                    }
+                                }
+                                else {
+                                    RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
+                                    $tokenContract = $wallet->currency->address;
+                                    $result = erc20_token_transfer($tokenContract, $wallet->wallet_no, $towallet->wallet_no, (float)($w_session->data->amount - $w_session->data->cost), $wallet->keyword);
+                                    if (json_decode($result)->code == 1){
+                                        $to_message =  'Ethereum client error: '.json_decode($result)->message;
+                                        $w_session->data = null;
+                                        $w_session->save();
+                                        send_message_whatsapp($to_message, $phone);
+                                        return;
+                                    }
+                                }
+                            }
+                            else{
+                                user_wallet_decrement($user->id, $wallet->currency_id, $w_session->data->amount, $wallet->wallet_type);
+                                user_wallet_increment($receiver->id, $wallet->currency_id, ($w_session->data->amount - $w_session->data->cost), $wallet->wallet_type);
+                            }
+
+                            $txnid = Str::random(4).time();
+                            $data = new BalanceTransfer();
+                            $data->user_id = $user->id;
+                            $data->receiver_id = $receiver->id;
+                            $data->transaction_no = $txnid;
+                            $data->currency_id = $wallet->currency_id;
+                            $data->type = 'own';
+                            $data->cost = $w_session->data->cost;
+                            $data->amount = $w_session->data->amount;
+                            $data->description = $text;
+                            $data->status = 1;
+                            $data->save();
+
+
+                            $trans = new Transaction();
+                            $trans->trnx = $txnid;
+                            $trans->user_id     = $user->id;
+                            $trans->user_type   = 1;
+                            $trans->currency_id = $wallet->currency_id;
+                            $trans_wallet = get_wallet($user->id,  $wallet->currency_id, $wallet->wallet_type);
+                            $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+                            $trans->amount      = $w_session->data->amount;
+                            $trans->charge      = $w_session->data->cost;
+                            $trans->type        = '-';
+                            $trans->remark      = 'send';
+                            $trans->details     = trans('Send Money');
+                            $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name).'", "description": "'.$text.'"}';
+                            $trans->save();
+
+
+                            $trans = new Transaction();
+                            $trans->trnx = $txnid;
+                            $trans->user_id     = $receiver->id;
+                            $trans->user_type   = 1;
+                            $trans->currency_id = $wallet->currency_id;
+                            $trans->amount      = ($w_session->data->amount - $w_session->data->cost);
+                            $trans_wallet = get_wallet($receiver->id, $wallet->currency_id, $wallet->wallet_type);
+                            $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+                            $trans->charge      = 0;
+                            $trans->type        = '+';
+                            $trans->remark      = 'send';
+                            $trans->details     = trans('Send Money');
+                            $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name).'", "description": "'.$text.'"}';
+                            $trans->save();
+
+                            $w_session->data = null;
+                            $w_session->save();
+
+
+
+
+
+                            $to = $receiver->email;
+                            $subject = " Money send successfully.";
+                            $msg = "Hello ".($receiver->company_name ?? $receiver->name)."!\nMoney send successfully.\nThank you.";
+                            $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
+                            @sendMail($to,$subject,$msg,$headers);
+                            $to_message = $question['description'];
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }else{
+                            $to_message = "Sender who is owner of this email: ". $w_session->data->email." not exist in our system.";
+                            $w_session->data = null;
                             $w_session->save();
                             send_message_whatsapp($to_message, $phone);
                             return;
                         }
-                        else {
-                            $to_message = "Please select payment type correctly.";
-                            send_message_whatsapp($to_message, $phone);
-                            return;
-                        }
-                    }
-                    if($next_key == "des") {
-                        $dump = $w_session->data;
-                        $dump->des = $text;
-                        $w_session->data = $dump;
-                        $w_session->save();
-                        $beneficiary = Beneficiary::findOrFail($w_session->data->beneficiary_id);
 
-                        $balance_transfer = new BalanceTransfer();
-
-
-
-                        $txnid = Str::random(4).time();
-
-                        $balance_transfer->user_id = $whatsapp_user->user_id;
-                        $balance_transfer->transaction_no = $txnid;
-                        $balance_transfer->currency_id = $w_session->data->currency_id;
-                        $balance_transfer->subbank = $w_session->data->subbank;
-                        $balance_transfer->iban = $beneficiary->account_iban;
-                        $balance_transfer->swift_bic = $beneficiary->swift_bic;
-                        $balance_transfer->beneficiary_id = $w_session->data->beneficiary_id;
-                        $balance_transfer->type = 'other';
-                        $balance_transfer->cost = $w_session->data->cost;
-                        $balance_transfer->payment_type = $w_session->data->payment_type;
-                        $balance_transfer->amount = $w_session->data->amount;
-                        $balance_transfer->final_amount = $w_session->data->final_amount;
-                        $balance_transfer->description = $w_session->data->des;
-                        $balance_transfer->status = 0;
-                        $balance_transfer->save();
-
-                        $w_session->data = null;
-                        $w_session->save();
-
-                        user_wallet_decrement($whatsapp_user->user_id, $balance_transfer->currency_id, $balance_transfer->amount);
-                        user_wallet_increment(0, $balance_transfer->currency_id, $balance_transfer->cost, 9);
-
-                        send_message_whatsapp('You completed Bank Transfer successfully.', $phone);
-                        $user = User::findOrFail($whatsapp_user->user_id);
-                        send_notification($user->id, 'Bank transfer has been created by '.($user->company_name ?? $user->name).' via Whatsapp. Please check.', route('admin-user-banks', $user->id));
-                        send_staff_telegram('Bank transfer has been created by '.($user->company_name ?? $user->name)." via Whatsapp. Please check.".route('admin-user-banks', $user->id), 'Bank Transfer');
-
-                        return;
 
                     }
                     $dump = $w_session->data;
