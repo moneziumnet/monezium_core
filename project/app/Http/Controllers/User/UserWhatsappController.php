@@ -1012,8 +1012,8 @@ class UserWhatsappController extends Controller
                         $w_session->data = null;
                         $w_session->save();
 
-                        $currency = Currency::findOrFail($w_session->data->currency_id);
-                        if($w_session->data->receiver_id == 0){
+                        $currency = Currency::findOrFail($data->currency_id);
+                        if($data->receiver_id == 0){
                             $to =  $w_session->data->account_email;
                             $subject = " Money Request";
                             $url =     "<button style='height: 50;width: 200px;' ><a href='".route('user.money.request.new', encrypt($txnid))."' target='_blank' type='button' style='color: #2C729E; font-weight: bold; text-decoration: none; '>Confirm</a></button>";
