@@ -73,8 +73,6 @@ class UserWhatsappController extends Controller
         "amount" => "Please input description.",
         "description"=>"You completed Request Money successfully."
         );
-    private
-
     public function __construct()
     {
         $this->middleware('auth', ['except' => ['inbound', 'status']]);
@@ -866,7 +864,7 @@ class UserWhatsappController extends Controller
                             $subject = " Money send successfully.";
                             $msg = "Hello ".($receiver->company_name ?? $receiver->name)."!\nMoney send successfully.\nThank you.";
                             $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-                            @sendMail($to,$subject,$msg,$headers);
+                            sendMail($to,$subject,$msg,$headers);
                             $to_message = $question['description'];
                             send_message_whatsapp($to_message, $phone);
                             return;
@@ -1043,7 +1041,7 @@ class UserWhatsappController extends Controller
 
                             // More headers
 
-                            @sendMail($to,$subject,$msg_body,$headers);
+                            sendMail($to,$subject,$msg_body,$headers);
                             $to_message = $question['description'];
                             send_message_whatsapp($to_message, $phone);
                             return;
