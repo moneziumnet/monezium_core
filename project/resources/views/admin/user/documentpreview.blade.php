@@ -31,7 +31,7 @@ href="https://cdn01.boxcdn.net/platform/elements/16.0.0/en-US/explorer.css"
 
                     <div class="card-body">
                         <div class="card mb-4">
-                            <div class="container" style="height:600px; display: contents"  id="box_container">
+                            <div class="container" style="height:800px; display: flex"  id="box_container">
                             </div>
                         </div>
                     </div>
@@ -54,7 +54,8 @@ href="https://cdn01.boxcdn.net/platform/elements/16.0.0/en-US/explorer.css"
     var accessToken = "{{$access_token}}";
     // Show the content explorer
     contentExplorer.show(folderId, accessToken, {
-        container: ".container"
+        container: ".container",
+        logoUrl:"{{ asset('assets/images/'.$gs->logo) }}"
     });
 
 
