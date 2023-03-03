@@ -60,7 +60,7 @@
                         <th>{{__('Name')}}</th>
                         <th>{{__('Subject')}}</th>
                         <th>{{__('Department')}}</th>
-                        <th>{{__('Message')}}</th>
+                        <!-- <th>{{__('Message')}}</th> -->
                         <th>{{__('Priority')}}</th>
                         <th>{{__('Status')}}</th>
                         <th>{{__('Date')}}</th>
@@ -128,7 +128,7 @@
             { data: 'name', name: 'name' },
             { data: 'subject', name: 'subject' },
             { data: 'department', name: 'department' },
-            { data: 'message', name: 'message' },
+            // { data: 'message', name: 'message' },
             { data: 'priority', name: 'priority' },
             { data: 'status', name: 'status'},
             { data: 'created_at', name: 'created_at'},
