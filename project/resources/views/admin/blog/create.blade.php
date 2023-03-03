@@ -79,7 +79,7 @@
               <input type="url" class="form-control" id="source" name="source"  placeholder="{{ __('Source') }}" value="" required>
           </div>
 
-          <div class="form-group">
+          <!-- <div class="form-group">
             <div class="custom-control custom-checkbox">
               <input type="checkbox" name="secheck" class="custom-control-input" id="seo">
               <label class="custom-control-label" for="seo"> {{__('Allow Blog SEO')}}</label>
@@ -96,7 +96,7 @@
               <label for="meta_description">{{ __('Meta Description') }}</label>
               <textarea class="form-control nic-edit"  id="meta_description" name="meta_description" rows="3"  placeholder="{{__('Meta Description')}}"></textarea>
             </div>
-          </div>
+          </div> -->
 
           <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Submit') }}</button>
         </form>
