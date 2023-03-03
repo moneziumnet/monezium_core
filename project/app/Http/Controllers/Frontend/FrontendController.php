@@ -81,7 +81,7 @@ class FrontendController extends Controller
         $data['faqs'] = Faq::orderBy('id', 'desc')->limit(5)->get();
         $data['counters'] = Counter::orderBy('id', 'desc')->limit(4)->get();
         $data['process'] = AccountProcess::orderBy('id', 'desc')->get();
-        $data['blogs'] = Blog::orderBy('id', 'desc')->orderBy('id', 'desc')->limit(3);
+        $data['blogs'] = Blog::where('status', 1)->orderBy('id', 'desc')->limit(3);
         $data['features'] = Feature::orderBy('id', 'desc')->orderBy('id', 'desc')->limit(4)->get();
         $data['services'] = Service::orderBy('id', 'desc')->orderBy('id', 'desc')->limit(6)->get();
         $data['ps'] = Pagesetting::first();
@@ -97,9 +97,6 @@ class FrontendController extends Controller
         $data['loanplans'] = LoanPlan::orderBy('id', 'desc')->whereStatus(1)->limit(3)->get();
         $data['depositsplans'] = DpsPlan::orderBy('id', 'desc')->whereStatus(1)->limit(3)->get();
         $data['fdrplans'] = FdrPlan::orderBy('id', 'desc')->whereStatus(1)->limit(3)->get();
-        $client = New Client();
-        $currency = Currency::findOrFail(defaultCurr());
-        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency='.$currency->code);
         return view('frontend.index', $data);
     }
 
@@ -132,10 +129,10 @@ class FrontendController extends Controller
         }
         $data['tags'] = array_unique(explode(',', $tagz));
 
-        $data['archives'] = Blog::orderBy('created_at', 'desc')->get()->groupBy(function ($item) {
+        $data['archives'] = Blog::where('status', 1)->orderBy('created_at', 'desc')->get()->groupBy(function ($item) {
             return $item->created_at->format('F Y');
         })->take(5)->toArray();
-        $data['blogs'] = Blog::orderBy('created_at', 'desc')->paginate(3);
+        $data['blogs'] = Blog::where('status', 1)->orderBy('created_at', 'desc')->paginate(3);
         $data['bcats'] = BlogCategory::all();
 
         return view('frontend.blog', $data);
@@ -151,7 +148,7 @@ class FrontendController extends Controller
         }
         $tags = array_unique(explode(',', $tagz));
 
-        $archives = Blog::orderBy('created_at', 'desc')->get()->groupBy(function ($item) {
+        $archives = Blog::where('status', 1)->orderBy('created_at', 'desc')->get()->groupBy(function ($item) {
             return $item->created_at->format('F Y');
         })->take(5)->toArray();
         $bcat = BlogCategory::where('slug', '=', str_replace(' ', '-', $slug))->first();
@@ -181,12 +178,12 @@ class FrontendController extends Controller
         }
         $data['tags'] = array_unique(explode(',', $tagz));
 
-        $data['archives'] = Blog::orderBy('created_at', 'desc')->get()->groupBy(function ($item) {
+        $data['archives'] = Blog::where('status', 1)->orderBy('created_at', 'desc')->get()->groupBy(function ($item) {
             return $item->created_at->format('F Y');
         })->take(5)->toArray();
 
         $data['data'] = $blog;
-        $data['rblogs'] = Blog::orderBy('id', 'desc')->orderBy('id', 'desc')->limit(3)->get();
+        $data['rblogs'] = Blog::where('status', 1)->orderBy('id', 'desc')->orderBy('id', 'desc')->limit(3)->get();
         $data['bcats'] = BlogCategory::all();
 
         return view('frontend.blogdetails', $data);
@@ -202,12 +199,12 @@ class FrontendController extends Controller
         }
         $tags = array_unique(explode(',', $tagz));
 
-        $archives = Blog::orderBy('created_at', 'desc')->get()->groupBy(function ($item) {
+        $archives = Blog::where('status', 1)->orderBy('created_at', 'desc')->get()->groupBy(function ($item) {
             return $item->created_at->format('F Y');
         })->take(5)->toArray();
         $bcats = BlogCategory::all();
         $date = \Carbon\Carbon::parse($slug)->format('Y-m');
-        $blogs = Blog::where('created_at', 'like', '%' . $date . '%')->paginate(3);
+        $blogs = Blog::where('status', 1)->where('created_at', 'like', '%' . $date . '%')->paginate(3);
 
         return view('frontend.blog', compact('blogs', 'date', 'bcats', 'tags', 'archives'));
     }
@@ -222,11 +219,11 @@ class FrontendController extends Controller
         }
         $tags = array_unique(explode(',', $tagz));
 
-        $archives = Blog::orderBy('created_at', 'desc')->get()->groupBy(function ($item) {
+        $archives = Blog::where('status', 1)->orderBy('created_at', 'desc')->get()->groupBy(function ($item) {
             return $item->created_at->format('F Y');
         })->take(5)->toArray();
         $bcats = BlogCategory::all();
-        $blogs = Blog::where('tags', 'like', '%' . $slug . '%')->paginate(3);
+        $blogs = Blog::where('status', 1)->where('tags', 'like', '%' . $slug . '%')->paginate(3);
 
         return view('frontend.blog', compact('blogs', 'slug', 'bcats', 'tags', 'archives'));
     }
@@ -242,7 +239,7 @@ class FrontendController extends Controller
     public function blogsearch(Request $request)
     {
         $data['search'] = $request->search;
-        $data['blogs'] = Blog::where('title', 'like', '%' . $data['search'] . '%')->orWhere('details', 'like', '%' . $data['search'] . '%')->paginate(9);
+        $data['blogs'] = Blog::where('status', 1)->where('title', 'like', '%' . $data['search'] . '%')->orWhere('details', 'like', '%' . $data['search'] . '%')->paginate(9);
         $data['homepage'] = HomepageSetting::first();
 
         return view('frontend.blog', $data);

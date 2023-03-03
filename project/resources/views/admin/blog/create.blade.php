@@ -33,10 +33,10 @@
             <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="title" name="title"  placeholder="{{ __('Enter Title') }}" value="" required>
           </div>
 
-          <div class="form-group">
+          {{-- <div class="form-group">
             <label for="title">{{ __('Slug') }}</label>
             <input type="text" pattern="[^À-ž()/><\][\\\-;&$@!|]+" class="form-control" id="slug" name="slug"  placeholder="{{ __('Enter Slug') }}" value="" required>
-          </div>
+          </div> --}}
 
           <div class="form-group">
             <label for="inp-name">{{ __('Category') }}</label>
@@ -73,6 +73,12 @@
               <input type="text" class="mytags" name="tags" placeholder="{{ __('Tags') }}">
           </div>
 
+          <div class="form-group">
+            <div class="custom-control custom-switch">
+                <input type="checkbox" name="status" value="status_checked" checked class="custom-control-input" id="status">
+                <label class="custom-control-label" for="status">{{__('Status')}}</label>
+              </div>
+          </div>
 
           <div class="form-group">
               <label for="source">{{ __('Source') }}</label>

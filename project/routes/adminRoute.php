@@ -516,6 +516,7 @@ Route::prefix('admin')->group(function () {
     Route::post('/blog/create', [BlogController::class, 'store'])->name('admin.blog.store');
     Route::get('/blog/edit/{id}', [BlogController::class, 'edit'])->name('admin.blog.edit');
     Route::post('/blog/edit/{id}', [BlogController::class, 'update'])->name('admin.blog.update');
+    Route::get('/blog/status/{id}/{status}', [BlogController::class, 'status'])->name('admin.blog.status');
     Route::get('/blog/delete/{id}', [BlogController::class, 'destroy'])->name('admin.blog.delete');
 
     Route::get('/blog/category/datatables', [BlogCategoryController::class, 'datatables'])->name('admin.cblog.datatables'); //JSON REQUEST

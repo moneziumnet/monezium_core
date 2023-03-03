@@ -59,6 +59,12 @@ class BlogController extends Controller
             })
 
             ->addColumn('action', function(Blog $data) {
+                $status = 1;
+                $status_str = 'Active';
+                if($data->status == 1) {
+                    $status = 0;
+                    $status_str = "Deactive";
+                }
 
                 return '<div class="btn-group mb-1">
                 <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -67,6 +73,7 @@ class BlogController extends Controller
                 <div class="dropdown-menu" x-placement="bottom-start">
                     <a href="' . route('admin.blog.edit',$data->id) . '"  class="dropdown-item">'.__("Edit").'</a>
                     <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.  route('admin.blog.delete',$data->id).'">'.__("Delete").'</a>
+                    <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="'.  route('admin.blog.status',[$data->id, $status]).'">'.__($status_str).'</a>
                 </div>
                 </div>';
 
@@ -94,8 +101,7 @@ class BlogController extends Controller
         $rules = [
                'photo'      => 'required',
                'photo.*'      => 'mimes:jpeg,jpg,png,svg',
-               'title'=>'required',
-               'slug'=>'required|unique:blogs|max:255'
+               'title'=>'required'
                 ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -124,7 +130,7 @@ class BlogController extends Controller
 
 
          // ------------------------TagFormat--------------------------//
-            $input['slug']=Str::slug($request->slug);
+            $input['slug']=Str::random(8).'-'.Str::slug(trim($request->title));
             $common_rep   = ["value", "{", "}", "[","]",":","\""];
             $tag = str_replace($common_rep, '', $request->tags);
             $metatag = str_replace($common_rep, '', $request->meta_tag);
@@ -135,6 +141,7 @@ class BlogController extends Controller
         {
             $input['meta_tag'] = $metatag;
         }
+        $input['status'] = $request->status == 'status_checked' ? 1 : 0;
 
 
         if (!empty($tag))
@@ -237,6 +244,17 @@ class BlogController extends Controller
 
 
         $msg = 'Data Deleted Successfully.';
+        return response()->json($msg);
+    }
+
+    public function status($id, $status)
+    {
+        $data = Blog::findOrFail($id);
+        $data->status = $status;
+        $data->update();
+
+
+        $msg = 'Data Updated Successfully.';
         return response()->json($msg);
     }
 }
