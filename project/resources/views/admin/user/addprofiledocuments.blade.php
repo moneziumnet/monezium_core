@@ -35,7 +35,7 @@ href="https://cdn01.boxcdn.net/platform/elements/16.0.0/en-US/picker.css"
               {{ csrf_field() }}
               <div class="form-group">
                 <label for="inp-name">{{ __('Name') }}</label>
-                <input name="document_name" class="form-control" autocomplete="off" placeholder="{{__('Name')}}" type="text" readonly required>
+                <input name="document_name" class="form-control" autocomplete="off" placeholder="{{__('Name')}}" type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" required>
               </div>
               <div class="document-select-options">
                 <div class="mb-2">
@@ -59,7 +59,7 @@ href="https://cdn01.boxcdn.net/platform/elements/16.0.0/en-US/picker.css"
               </div>
               <div class="form-group">
                 <label for="full-name">{{ __('Choose') }}</label>
-                <input type="text" class="form-control" id="document_file" placeholder="{{__('Please choose file or folder in Box.')}}" name="document_file" required>
+                <input type="text" class="form-control" id="document_file" placeholder="{{__('Please choose file or folder in Box.')}}" name="document_file" readonly required>
               </div>
               <input type="hidden" id="file_id" name="file_id" >
 
