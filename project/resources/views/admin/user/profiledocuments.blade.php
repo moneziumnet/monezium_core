@@ -22,68 +22,69 @@
         $currency = defaultCurr();
         @endphp
         @include('includes.admin.form-success')
-        <div class="tab-pane fade show p-1 active" id="modules" role="tabpanel" aria-labelledby="modules-tab">
-        <div class="card-body">
+        <div class="tab-pane fade show p-2 active" id="modules" role="tabpanel" aria-labelledby="modules-tab">
+            <div class="card mb-4 mt-3 p-2">
+            <div class="card-body">
+                <div class="row">
 
+                    <div class="table-responsive mb-3 mt-3">
+                    <div class="col-sm-12 text-right mb-3">
+                        <a class="btn btn-primary" href="{{route('admin-user.createfile', $data->id)}}">
+                        <i class="fas fa-plus"></i> {{__('Add Documents')}}
+                        </a>
+                    </div>
+                    <table id="geniustable" class="table table-hover dt-responsive" cellspacing="0" width="100%">
+                        <thead class="thead-light">
+                        <tr>
 
-          <div class="row">
+                            <th>{{__('Name')}}</th>
+                            <th>{{__('View Document')}}</th>
+                            <th>{{__('Type')}}</th>
+                            <th>{{__('Action')}}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @if(!empty($documents))
+                            @foreach($documents as $document)
+                            <tr>
+                                <td>
+                                    {{ucfirst($document->name)}}
+                                </td>
+                                <td>
+                                <a href="{{route('admin-user.view-document', $document->id)}}" target="_blank">
+                                    <button type="button" class="btn btn-primary btn-sm btn-rounded">{{__("View Document")}} </button></a>
+                                </td>
+                                <td>
+                                    {{ucfirst($document->type)}}
+                                </td>
+                                <td>
+                                <div class="btn-group mb-1">
+                                    <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Actions
+                                    </button>
+                                    <div class="dropdown-menu" x-placement="bottom-start">
+                                    <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="{{route('admin-user.document-delete', $document->id)}}">{{__("Delete")}}</a>
+                                    </div>
+                                </div>
+                                </td>
 
-            <div class="table-responsive mb-3 mt-3">
-              <div class="col-sm-12 text-right mb-3">
-                <a class="btn btn-primary" href="{{route('admin-user.createfile', $data->id)}}">
-                  <i class="fas fa-plus"></i> {{__('Add Documents')}}
-                </a>
-              </div>
-              <table id="geniustable" class="table table-hover dt-responsive" cellspacing="0" width="100%">
-                <thead class="thead-light">
-                  <tr>
+                            </tr>
+                            @endforeach
+                        @endif
+                        </tbody>
+                    </table>
+                    </div>
+                    @if($documents->hasPages())
+                        {{ $documents->links() }}
+                    @endif
+                </div>
+               </div>
 
-                    <th>{{__('Name')}}</th>
-                    <th>{{__('View Document')}}</th>
-                    <th>{{__('Action')}}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @if(!empty($documents))
-                    @foreach($documents as $document)
-                      <tr>
-                        <td>
-                            {{$document->name}}
-                        </td>
-                        <td>
-                          <a href="{{route('admin-user.view-document', $document->id)}}" target="_blank">
-                            <button type="button" class="btn btn-primary btn-sm btn-rounded">{{__("View Document")}} </button></a>
-                        </td>
-                        <td>
-                          <div class="btn-group mb-1">
-                            <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Actions
-                            </button>
-                            <div class="dropdown-menu" x-placement="bottom-start">
-                            <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="{{route('admin-user.document-delete', $document->id)}}">{{__("Delete")}}</a>
-                            </div>
-                        </div>
-                        </td>
-
-                      </tr>
-                    @endforeach
-                  @endif
-                </tbody>
-              </table>
             </div>
-            @if($documents->hasPages())
-                {{ $documents->links() }}
-            @endif
-          </div>
-
-
-
-      </div>
         </div>
-      </div>
+       </div>
     </div>
   </div>
-</div>
 </div>
 <!--Row-->
 
@@ -114,30 +115,5 @@
     $(this).find('.btn1-ok').attr('href', $(e.relatedTarget).data('href'));
   });
 
-//   $('.confirm1-modal .btn1-ok').on('click', function(e) {
-//     if(admin_loader == 1)
-//     {
-//       $('.Loader').show();
-//     }
-
-//       $.ajax({
-//       type:"GET",
-//       url:$(this).attr('href'),
-//       success:function(data)
-//       {
-//             $('.confirm1-modal').modal('hide');
-//             $('.alert-danger').hide();
-//             $('.alert-success').show();
-//             $('.alert-success p').html(data);
-
-//             if(admin_loader == 1)
-//             {
-//               $('.Loader').hide();
-//             }
-
-//       }
-//       });
-//       return false;
-//   });
 </script>
 @endsection

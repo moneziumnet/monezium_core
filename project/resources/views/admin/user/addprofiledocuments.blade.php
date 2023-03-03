@@ -35,7 +35,7 @@ href="https://cdn01.boxcdn.net/platform/elements/16.0.0/en-US/picker.css"
               {{ csrf_field() }}
               <div class="form-group">
                 <label for="inp-name">{{ __('Name') }}</label>
-                <input name="document_name" class="form-control" autocomplete="off" placeholder="{{__('Name')}}" type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" required>
+                <input name="document_name" class="form-control" autocomplete="off" placeholder="{{__('Name')}}" type="text" readonly required>
               </div>
               <div class="document-select-options">
                 <div class="mb-2">
@@ -95,11 +95,43 @@ href="https://cdn01.boxcdn.net/platform/elements/16.0.0/en-US/picker.css"
         document.getElementById('box_container').style.display = "flex";
 
     })
-$('.select_method').on('click', function () {
-    if ($(this).attr('id') == 'type_file') {
-        var folderId = "0";
+    $('.select_method').on('click', function () {
+        $('#document_file').val('')
+        $('#file_id').val('')
+        if ($(this).attr('id') == 'type_file') {
+            var folderId = "0";
+            var accessToken = "{{$access_token}}";
+            var filePicker = new Box.FilePicker();
+
+
+
+            // Attach event listener for when the choose button is pressed
+            filePicker.addListener('choose', function(items) {
+                // do something with the items array
+                console.log(JSON.stringify(items, null, 2));
+                $('#document_file').val(items[0]['name'])
+                $('#file_id').val(items[0]['id'])
+
+            });
+
+            // Attach event listener for when the cancel button is pressed
+            filePicker.addListener('cancel', function() {
+                // do something
+            });
+
+            filePicker.show(folderId, accessToken, {
+                container: ".container",
+                chooseButtonLabel: 'Select',
+                logoUrl:"{{ asset('assets/images/'.$gs->logo) }}",
+                maxSelectable:1,
+                canSetShareAccess:false
+            });
+
+        }
+        else if($(this).attr('id') == 'type_folder') {
+            var folderId = "0";
         var accessToken = "{{$access_token}}";
-        var filePicker = new Box.FilePicker();
+        var filePicker = new Box.FolderPicker();
 
 
 
@@ -125,38 +157,8 @@ $('.select_method').on('click', function () {
             canSetShareAccess:false
         });
 
-    }
-    else if($(this).attr('id') == 'type_folder') {
-        var folderId = "0";
-      var accessToken = "{{$access_token}}";
-      var filePicker = new Box.FolderPicker();
-
-
-
-      // Attach event listener for when the choose button is pressed
-      filePicker.addListener('choose', function(items) {
-          // do something with the items array
-          console.log(JSON.stringify(items, null, 2));
-          $('#document_file').val(items[0]['name'])
-          $('#file_id').val(items[0]['id'])
-
-      });
-
-      // Attach event listener for when the cancel button is pressed
-      filePicker.addListener('cancel', function() {
-          // do something
-      });
-
-      filePicker.show(folderId, accessToken, {
-          container: ".container",
-          chooseButtonLabel: 'Select',
-          logoUrl:"{{ asset('assets/images/'.$gs->logo) }}",
-          maxSelectable:1,
-          canSetShareAccess:false
-      });
-
-    }
-})
+        }
+    })
       var folderId = "0";
       var accessToken = "{{$access_token}}";
       var filePicker = new Box.FilePicker();

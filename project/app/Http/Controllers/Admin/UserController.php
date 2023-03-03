@@ -650,6 +650,12 @@ class UserController extends Controller
 
                         $save = new UserDocument();
                         $save->user_id = $id;
+                        if($request->docu_type == 'type_file') {
+                            $save->type = 'file';
+                        }
+                        else {
+                            $save->type = 'folder';
+                        }
                         $save->name = $request->document_name;
                         $save->file = $request->document_file;
                         $save->file_id = $request->file_id;
@@ -673,21 +679,26 @@ class UserController extends Controller
         {
             $document = UserDocument::findOrFail($id);
             $box = new BoxApi();
-            $res = $box->download($document->file_id);
-            $folderPath = 'assets/pdf/';
-            $file = $folderPath.$document->file;
-            file_put_contents($file, $res);
-            return   response()->file("assets/pdf/" . $document->file, [
-                'Content-Disposition' => 'inline; filename="'. $document->file .'"'
-              ]);
+            $check = $box->api_check();
+            if($check[0] == 'warning') {
+                return redirect()->back()->with($check[0], $check[1]);
+            }
+            if ($document->type == 'file') {
+                $res = $box->download($document->file_id);
+                $folderPath = 'assets/pdf/';
+                $file = $folderPath.$document->file;
+                file_put_contents($file, $res);
+                return   response()->file("assets/pdf/" . $document->file, [
+                    'Content-Disposition' => 'inline; filename="'. $document->file .'"'
+                  ]);
+            }
+            else {
+                $access_token = $box->basic_token()->access_token;
+                $folder_id = $document->file_id;
+                $data = User::findOrFail($document->user_id);
+                return view('admin.user.documentpreview', compact('access_token', 'folder_id', 'data'));
+            }
 
-            // $file = public_path("assets/user_documents/" . $document->file);
-            // return Response::download($file);
-
-
-            // return response()->file("assets/user_documents/" . $document->file, [
-            //     'Content-Disposition' => 'inline; filename="'. $document->file .'"'
-            //   ]);
         }
 
         public function fileDestroy($id)

@@ -17,6 +17,7 @@ class CreateUserDocumentsTable extends Migration
             $table->increments('id', 21);
             $table->bigInteger('user_id')->unsigned();
             $table->string('name')->nullable();
+            $table->enum('type', ['file', 'folder'])->default('file');
             $table->string('file')->nullable();
             $table->string('file_id')->nullable();
             $table->timestamps();
