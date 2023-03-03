@@ -68,7 +68,7 @@ class UserWhatsappController extends Controller
         );
     private $request_json =array(
         "account_email"=>"Please input number to select Currency.",
-        "currency_id"=>"Please input Name to request money.",
+        "currency_id"=>"Please input Account Name to request money.",
         "account_name"=>"Please input amount to request money",
         "amount" => "Please input description.",
         "description"=>"You completed Request Money successfully."
@@ -560,12 +560,12 @@ class UserWhatsappController extends Controller
                         return;
                     }
                     else {
+                        $user = User::findOrFail($w_session->user_id);
                         if($text == $user->email){
                             $to_message = "This email is yours.You can not send money yourself!";
                             send_message_whatsapp($to_message, $phone);
                             return;
                         }
-                        $user = User::findOrFail($w_session->user_id);
                         $userType = explode(',', $user->user_type);
                         $supervisor = DB::table('customer_types')->where('type_name', 'Supervisors')->first()->id;
                         $merchant = DB::table('customer_types')->where('type_name', 'Merchants')->first()->id;
@@ -940,7 +940,7 @@ class UserWhatsappController extends Controller
                             return;
                         }
                     }
-                    if($nexk_key == "amount") {
+                    if($next_key == "amount") {
                         $bank_plan = BankPlan::whereId($user->bank_plan_id)->first();
                         $dailyRequests = MoneyRequest::whereUserId($user->id)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus('success')->sum('amount');
                         $monthlyRequests = MoneyRequest::whereUserId($user->id)->whereMonth('created_at', '=', date('m'))->whereStatus('success')->sum('amount');
@@ -1012,9 +1012,9 @@ class UserWhatsappController extends Controller
                         $w_session->data = null;
                         $w_session->save();
 
-                        $currency = Currency::findOrFail($w_session->data->currency_id);
-                        if($w_session->data->receiver_id == 0){
-                            $to =  $w_session->data->account_email;
+                        $currency = Currency::findOrFail($data->currency_id);
+                        if($data->receiver_id == 0){
+                            $to =  $data->receiver_email;
                             $subject = " Money Request";
                             $url =     "<button style='height: 50;width: 200px;' ><a href='".route('user.money.request.new', encrypt($txnid))."' target='_blank' type='button' style='color: #2C729E; font-weight: bold; text-decoration: none; '>Confirm</a></button>";
 
@@ -1025,8 +1025,8 @@ class UserWhatsappController extends Controller
                                     <meta charset="utf-8"><title>Request Money</title>
                                 </head>
                                 <body>
-                                    <p> Hello '.$w_session->data->account_name.'.</p>
-                                    <p> You received request money ('.$w_session->data->amount.$currency->code.').</p>
+                                    <p> Hello '.$data->receiver_name.'.</p>
+                                    <p> You received request money ('.$data->amount.$currency->code.').</p>
                                     <p> Please confirm current.</p>
                                     '.$url.'
                                     <p> Thank you.</p>

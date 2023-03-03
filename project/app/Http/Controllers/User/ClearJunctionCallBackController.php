@@ -76,6 +76,7 @@ class ClearJunctionCallBackController extends Controller
                 $new_deposit->save();
                 send_notification($bankaccount->user_id, 'Bank has been deposited by '. $obj->paymentDetails->payerRequisite->name.'. Please check.', route('admin.deposits.bank.index'));
                 send_whatsapp($bankaccount->user_id, 'Bank has been deposited by '.$obj->paymentDetails->payerRequisite->name."\n Amount is ".$currency->symbol.$obj->amount."\n Payment Gateway : ClearJunction"."\n Transaction ID : ".$obj->orderReference."\nPlease check more details to click this url\n".route('user.depositbank.index'));
+                send_telegram($bankaccount->user_id, 'Bank has been deposited by '.$obj->paymentDetails->payerRequisite->name."\n Amount is ".$currency->symbol.$obj->amount."\n Payment Gateway : ClearJunction"."\n Transaction ID : ".$obj->orderReference."\nPlease check more details to click this url\n".route('user.depositbank.index'));
                 send_staff_telegram('Bank has been deposited by '.$obj->paymentDetails->payerRequisite->name."\n Amount is ".$currency->symbol.$obj->amount."\n Payment Gateway : ClearJunction"."\n Transaction ID : ".$obj->orderReference."\nPlease check more details to click this url\n".route('admin.deposits.bank.index'), 'Deposit Bank');
 
 
@@ -99,6 +100,7 @@ class ClearJunctionCallBackController extends Controller
                 $new_deposit->save();
                 send_notification($bankaccount->user_id, 'Bank has been deposited by '. $obj->paymentDetails->payerRequisite->name.'. Please check.', route('admin.deposits.bank.index'));
                 send_whatsapp($bankaccount->user_id, 'Bank has been deposited by '.$obj->paymentDetails->payerRequisite->name."\n Amount is ".$currency->symbol.$obj->amount."\n Payment Gateway : ClearJunction"."\n Transaction ID : ".$obj->orderReference."\nPlease check more details to click this url\n".route('user.depositbank.index'));
+                send_telegram($bankaccount->user_id, 'Bank has been deposited by '.$obj->paymentDetails->payerRequisite->name."\n Amount is ".$currency->symbol.$obj->amount."\n Payment Gateway : ClearJunction"."\n Transaction ID : ".$obj->orderReference."\nPlease check more details to click this url\n".route('user.depositbank.index'));
                 send_staff_telegram('Bank has been deposited by '.$obj->paymentDetails->payerRequisite->name."\n Amount is ".$currency->symbol.$obj->amount."\n Payment Gateway : ClearJunction"."\n Transaction ID : ".$obj->orderReference."\nPlease check more details to click this url\n".route('admin.deposits.bank.index'), 'Deposit Bank');
             }
 

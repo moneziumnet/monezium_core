@@ -1338,6 +1338,17 @@ if (!function_exists('send_staff_telegram')) {
     }
 }
 
+if (!function_exists('send_telegram')) {
+    function send_telegram($user_id, $message)
+    {
+        $telegram = UserTelegram::where('user_id', $user_id)->first();
+        if ($telegram && $telegram->chat_id != null) {
+            send_message_telegram($message, $telegram->chat_id);
+            return true;
+        }
+    }
+}
+
 if (!function_exists('send_message_telegram')) {
     function send_message_telegram($message, $chat_id)
     {
