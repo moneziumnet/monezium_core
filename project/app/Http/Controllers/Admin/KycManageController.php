@@ -95,9 +95,9 @@ class KycManageController extends Controller
                 '.'Actions' .'
             </button>
             <div class="dropdown-menu" x-placement="bottom-start">
-                <a href="' . route('admin.blog.edit',$data->id) . '"  class="dropdown-item">'.__("Edit").'</a>
-                <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.  route('admin.blog.delete',$data->id).'">'.__("Delete").'</a>
-                <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="'.  route('admin.blog.status',[$data->id, $status]).'">'.__($status_str).'</a>
+                <a href=""  class="dropdown-item">'.__("Edit").'</a>
+                <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="">'.__("Delete").'</a>
+                <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="">'.__($status_str).'</a>
             </div>
             </div>';
 
