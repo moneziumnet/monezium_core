@@ -15,11 +15,10 @@ class CreateKycFormsTable extends Migration
     {
         Schema::create('kyc_forms', function (Blueprint $table) {
             $table->integer('id', true);
+            $table->string('name', 255);
             $table->tinyInteger('user_type')->nullable();
-            $table->integer('type')->nullable();
-            $table->string('label');
-            $table->string('name');
-            $table->tinyInteger('required')->default(0);
+            $table->longText('data')->nullable();
+            $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });
     }

@@ -75,12 +75,49 @@ class KycManageController extends Controller
         return view('admin.kyc.kyc_info');
     }
 
+    public function kycdatatables() {
+        $datas = KycForm::orderBy('id', 'desc')->get();
+        return Datatables::of($datas)
+        ->addIndexColumn()
+        ->editColumn('status', function(KycForm $data) {
+            return $data->status == 1 ? 'Active' : 'Deactive' ;
+        })
+        ->addColumn('action', function(KycForm $data) {
+            $status = 1;
+            $status_str = 'Active';
+            if($data->status == 1) {
+                $status = 0;
+                $status_str = "Deactive";
+            }
+
+            return '<div class="btn-group mb-1">
+            <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                '.'Actions' .'
+            </button>
+            <div class="dropdown-menu" x-placement="bottom-start">
+                <a href="' . route('admin.blog.edit',$data->id) . '"  class="dropdown-item">'.__("Edit").'</a>
+                <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.  route('admin.blog.delete',$data->id).'">'.__("Delete").'</a>
+                <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="'.  route('admin.blog.status',[$data->id, $status]).'">'.__($status_str).'</a>
+            </div>
+            </div>';
+
+        })
+        ->rawColumns(['action'])
+        ->toJson(); //--- Returning Json Data To Client Side
+
+    }
+
     public function index()
     {
-        $userType = 'user';
-        $userForms = KycForm::where('user_type',$userType == 'user' ? 1 : 2)->get();
-        return view('admin.kyc.user_forms',compact('userType','userForms'));
+        return view('admin.kyc.index');
     }
+
+    // public function index()
+    // {
+    //     $userType = 'user';
+    //     $userForms = KycForm::where('user_type',$userType == 'user' ? 1 : 2)->get();
+    //     return view('admin.kyc.user_forms',compact('userType','userForms'));
+    // }
 
     public function module(){
         $data = Generalsetting::first();

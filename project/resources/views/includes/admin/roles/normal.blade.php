@@ -35,7 +35,8 @@
   </a>
   <div id="kyc_manage" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
     <div class="bg-white py-2 collapse-inner rounded">
-      <a class="collapse-item" href="{{route('admin.manage.kyc.user','user')}}">{{ __('KYC Form') }}</a>
+      {{-- <a class="collapse-item" href="{{route('admin.manage.kyc.user','user')}}">{{ __('KYC Form') }}</a> --}}
+      <a class="collapse-item" href="{{route('admin.manage.kyc.index')}}">{{ __('KYC Form') }}</a>
       <a class="collapse-item" href="{{ route('admin.manage.module') }}">{{ __('KYC Modules') }}</a>
     </div>
   </div>
