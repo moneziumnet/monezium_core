@@ -134,10 +134,6 @@ class GeneralSettingController extends Controller
             if (!empty($request->telegram_section)) {
                 $input['telegram_section'] = implode(" , ", $request->telegram_section);
             }
-            else {
-                $input['telegram_section'] = '';
-            }
-
             $this->emailConfig($input);
 
             $data->update($input);
