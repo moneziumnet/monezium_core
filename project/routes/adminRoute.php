@@ -682,13 +682,17 @@ Route::prefix('admin')->group(function () {
 
   Route::group(['middleware' => 'permissions:KYC Management'], function () {
     Route::get('/manage-kyc/datatables', [KycManageController::class, 'datatables'])->name('admin.manage.kyc.datatables');
+
     Route::get('/manage-kyc-form', [KycManageController::class, 'index'])->name('admin.manage.kyc.index');
+    Route::get('/kyc-form/create', [KycManageController::class, 'create_form'])->name('admin.manage.kyc.create');
+    Route::post('/kyc-form/store', [KycManageController::class, 'store_form'])->name('admin.manage.kyc.store');
     Route::get('/manage-kyc-form/datatables', [KycManageController::class, 'kycdatatables'])->name('admin.kyc.form.datatables');
+
     Route::get('/manage-kyc-module', [KycManageController::class, 'module'])->name('admin.manage.module');
     Route::get('/manage-kyc-form/{user}', [KycManageController::class, 'userKycForm'])->name('admin.manage.kyc.user');
     Route::post('/manage-kyc-form/{user}', [KycManageController::class, 'kycForm']);
     Route::post('/kyc-form/update', [KycManageController::class, 'kycFormUpdate'])->name('admin.kyc.form.update');
-    Route::post('/kyc-form/delete', [KycManageController::class, 'deletedField'])->name('admin.kyc.form.delete');
+    Route::get('/kyc-form/delete/{id}', [KycManageController::class, 'deletedField'])->name('admin.kyc.form.delete');
     Route::get('/kyc-info/{user}', [KycManageController::class, 'kycInfo'])->name('admin.kyc.info');
     Route::get('/kyc-info/user/{id}', [KycManageController::class, 'kycDetails'])->name('admin.kyc.details');
     Route::get('/users/kyc/{id1}/{id2}', [KycManageController::class, 'kyc'])->name('admin.user.kyc');

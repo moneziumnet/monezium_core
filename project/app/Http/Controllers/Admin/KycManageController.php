@@ -76,7 +76,7 @@ class KycManageController extends Controller
     }
 
     public function kycdatatables() {
-        $datas = KycForm::orderBy('id', 'desc')->get();
+        $datas = KycForm::orderBy('id', 'asc')->get();
         return Datatables::of($datas)
         ->addIndexColumn()
         ->editColumn('status', function(KycForm $data) {
@@ -96,7 +96,7 @@ class KycManageController extends Controller
             </button>
             <div class="dropdown-menu" x-placement="bottom-start">
                 <a href=""  class="dropdown-item">'.__("Edit").'</a>
-                <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="">'.__("Delete").'</a>
+                <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.route('admin.kyc.form.delete', $data->id).'">'.__("Delete").'</a>
                 <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="">'.__($status_str).'</a>
             </div>
             </div>';
@@ -110,6 +110,23 @@ class KycManageController extends Controller
     public function index()
     {
         return view('admin.kyc.index');
+    }
+
+    public function create_form()
+    {
+        return view('admin.kyc.create_forms');
+    }
+
+    public function store_form(Request $request)
+    {
+            $data = new KycForm();
+            $data->name = $request->title;
+            $data->user_type = 1;
+            $data->status = 1;
+            $data->data = json_encode(array_values($request->form_builder));
+            $data->save();
+
+            return redirect()->route('admin.manage.kyc.index')->with('message', 'KYC Form has been created successfully.');
     }
 
     // public function index()
@@ -185,14 +202,14 @@ class KycManageController extends Controller
         $kyc->required  = $request->required;
         $kyc->save();
 
-        return back()->with('success','Form field updated successfully');
+        return back()->with('message','Form field updated successfully');
 
     }
 
-    public function deletedField(Request $request)
+    public function deletedField($id)
     {
-        KycForm::findOrFail($request->id)->delete();
-        return back()->with('success','Form field has removed');
+        KycForm::findOrFail($id)->delete();
+        return response()->json('Form field has removed');
     }
 
 

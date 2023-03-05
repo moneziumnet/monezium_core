@@ -158,7 +158,7 @@
        <button type="button" class="close ml-auto m-3" data-dismiss="modal" aria-label="Close">
        <span aria-hidden="true">&times;</span>
        </button>
-            <form action="{{route('admin.kyc.form.delete')}}" method="POST">
+            <form action="{{route('admin.kyc.form.delete', 1)}}" method="GET">
                 @csrf
                 <input type="hidden" name="id">
                 <div class="modal-body text-center">
