@@ -97,7 +97,7 @@ class KycManageController extends Controller
             <div class="dropdown-menu" x-placement="bottom-start">
                 <a href=""  class="dropdown-item">'.__("Edit").'</a>
                 <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.route('admin.kyc.form.delete', $data->id).'">'.__("Delete").'</a>
-                <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="">'.__($status_str).'</a>
+                <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="'.route('admin.manage.kyc.status',[$data->id, $status] ).'">'.__($status_str).'</a>
             </div>
             </div>';
 
@@ -127,6 +127,13 @@ class KycManageController extends Controller
             $data->save();
 
             return redirect()->route('admin.manage.kyc.index')->with('message', 'KYC Form has been created successfully.');
+    }
+
+    public function form_status($id, $status) {
+        $data = KycForm::findOrFail($id);
+        $data->status = $status;
+        $data->save();
+        return response()->json('Data Updated Successfully.');
     }
 
     // public function index()
