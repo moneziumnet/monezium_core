@@ -95,7 +95,7 @@ class KycManageController extends Controller
                 '.'Actions' .'
             </button>
             <div class="dropdown-menu" x-placement="bottom-start">
-                <a href=""  class="dropdown-item">'.__("Edit").'</a>
+                <a href="'.route('admin.manage.kyc.edit', $data->id).'"  class="dropdown-item">'.__("Edit").'</a>
                 <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.route('admin.kyc.form.delete', $data->id).'">'.__("Delete").'</a>
                 <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="'.route('admin.manage.kyc.status',[$data->id, $status] ).'">'.__($status_str).'</a>
             </div>
@@ -134,6 +134,21 @@ class KycManageController extends Controller
         $data->status = $status;
         $data->save();
         return response()->json('Data Updated Successfully.');
+    }
+
+    public function edit_form($id) {
+        $data = KycForm::findOrFail($id);
+        return view('admin.kyc.edit_forms', compact('data'));
+    }
+
+    public function update_form(Request $request , $id ) {
+        $data = KycForm::findOrFail($id);
+        $data->name = $request->title;
+        $data->user_type = 1;
+        $data->status = $request->status;
+        $data->data = json_encode(array_values($request->form_builder));
+        $data->save();
+        return redirect()->route('admin.manage.kyc.index')->with('message', 'KYC Form has been update successfully.');
     }
 
     // public function index()

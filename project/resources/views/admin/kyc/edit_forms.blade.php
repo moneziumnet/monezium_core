@@ -20,48 +20,50 @@
     </div>
     <div class="card-body">
         <div class="gocover" style="background: url({{asset('assets/images/'.$gs->admin_loader)}}) no-repeat scroll center center rgba(45, 45, 45, 0.5);"></div>
-        <form action="{{route('admin.manage.kyc.store')}}" method="POST" enctype="multipart/form-data">
+        <form action="{{route('admin.manage.kyc.update', $data->id)}}" method="POST" enctype="multipart/form-data">
         @include('includes.admin.form-both')
         @csrf
         <div class="form-group col-md-4">
             <label for="title">{{ __('Title') }}</label>
-            <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="title" name="title" placeholder="{{ __('Enter Title') }}" value="" required>
+            <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="title" name="title" placeholder="{{ __('Enter Title') }}" value="{{$data->name}}" required>
         </div>
 
         <a href="javascript:;" id="lang-btn" class="add-fild-btn d-flex justify-content-center"><i class="icofont-plus"></i> {{__('Add More Field')}}</a>
 
         <div class="form-group">
             <div class="lang-tag-top-filds" id="lang-section">
-                <label for="instruction">{{ __("Required Information") }}</label>
+                @foreach ( json_decode($data->data, true) as $key => $value )
                 <div class="lang-area mb-3">
                     <span class="remove lang-remove"><i class="fas fa-times"></i></span>
                     <div class="row">
                         <div class="col-md-4">
                             <!-- <input type="text" name="form_builder[1][field]" class="form-control" placeholder="{{ __('Field Name') }}" required> -->
-                            <select class="form-control type" name="form_builder[1][type]" required>
+                            <select class="form-control type" name="form_builder[{{$key}}][type]" required>
                                 <option value="">{{ __('Select Input Type') }}</option>
-                                <option value="1">@lang('Input')</option>
-                                <option value="2">@lang('Image')</option>
-                                <option value="3">@lang('Textarea')</option>
+                                <option value="1"  {{ $value['type'] == 1 ? 'selected' : '' }} >@lang('Input')</option>
+                                <option value="2" {{ $value['type'] == 2 ? 'selected' : '' }}>@lang('Image')</option>
+                                <option value="3" {{ $value['type'] == 3 ? 'selected' : '' }}>@lang('Textarea')</option>
                             </select>
                         </div>
 
                         <div class="col-md-4">
-                            <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" name="form_builder[1][label]" class="form-control" placeholder="{{ __('Input Label value') }}" required>
+                            <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" name="form_builder[{{$key}}][label]" class="form-control" placeholder="{{ __('Input Label value') }}" value="{{$value['label']}}" required>
                         </div>
 
                         <div class="col-md-4">
                             <!-- <input type="text" name="form_builder[1][label]" class="form-control" placeholder="{{ __('Field value') }}" required> -->
-                            <select class="form-control" name="form_builder[1][required]" required>
+                            <select class="form-control" name="form_builder[{{$key}}][required]" required>
                                 <option value="">{{ __('Select Required Type') }}</option>
-                                <option value="1">@lang('Yes')</option>
-                                <option value="0">@lang('No')</option>
+                                <option value="1" {{ $value['required'] == 1 ? 'selected' : '' }}>@lang('Yes')</option>
+                                <option value="0" {{ $value['required'] == 0 ? 'selected' : '' }}>@lang('No')</option>
                             </select>
                         </div>
                     </div>
                 </div>
+                @endforeach
             </div>
         </div>
+        <input type="hidden" name="status" value="{{$data->status}}">
         <button type="submit" class="btn btn-primary w-100 mt-3">{{ __('Submit') }}</button>
 
     </form>
@@ -80,7 +82,7 @@ function isEmpty(el){
   return !$.trim(el.html())
 }
 
-let id = 2;
+let id = '{{count(json_decode($data->data)) == 0 ? 1 : count(json_decode($data->data)) + 1}}';
 
 $("#lang-btn").on('click', function(){
 

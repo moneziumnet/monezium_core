@@ -8,7 +8,7 @@
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
                 <li class="breadcrumb-item"><a href="javascript:;">{{ __('Users') }}</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('admin.manage.kyc.user','user') }}">{{ __('User KYC Form') }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('admin.manage.kyc.index') }}">{{ __('User KYC Form') }}</a></li>
 			</ol>
 		</div>
 	</div>

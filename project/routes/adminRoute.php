@@ -686,6 +686,8 @@ Route::prefix('admin')->group(function () {
     Route::get('/manage-kyc-form', [KycManageController::class, 'index'])->name('admin.manage.kyc.index');
     Route::get('/kyc-form/create', [KycManageController::class, 'create_form'])->name('admin.manage.kyc.create');
     Route::post('/kyc-form/store', [KycManageController::class, 'store_form'])->name('admin.manage.kyc.store');
+    Route::get('/kyc-form/edit/{id}', [KycManageController::class, 'edit_form'])->name('admin.manage.kyc.edit');
+    Route::post('/kyc-form/edit/{id}', [KycManageController::class, 'update_form'])->name('admin.manage.kyc.update');
     Route::get('/kyc-form/status/{id1}/{id2}', [KycManageController::class, 'form_status'])->name('admin.manage.kyc.status');
     Route::get('/manage-kyc-form/datatables', [KycManageController::class, 'kycdatatables'])->name('admin.kyc.form.datatables');
 
