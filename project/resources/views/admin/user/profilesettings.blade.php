@@ -60,12 +60,22 @@
               @php
               $userType = explode(',', $data->user_type);
               @endphp
-              <div class="form-group">
-                <label for="kyc_method">{{ __('KYC Method') }}</label>
-                <select class="form-control mb-3" name="kyc_method" >
-                    <option value="manual" @if('manual' == $data->kyc_method) selected @endif>Manual</option>
-                    <option value="auto" @if('auto' == $data->kyc_method) selected @endif>Auto</option>
-                </select>
+              <div class="row">
+                  <div class="form-group col-md-6">
+                    <label for="kyc_method">{{ __('KYC Method') }}</label>
+                    <select class="form-control" name="kyc_method" id="kyc_method" >
+                        <option value="manual" @if('manual' == $data->kyc_method) selected @endif>Manual</option>
+                        <option value="auto" @if('auto' == $data->kyc_method) selected @endif>Auto</option>
+                    </select>
+                  </div>
+                  <div class="form-group col-md-6" id="manual_type" style="display: none">
+                    <label for="manual_kyc">{{ __('Select Kyc Forms') }}</label>
+                    <select class="form-control" name="manual_kyc" >
+                        @foreach ($kycforms as $value )
+                            <option value="{{$value->id}}" @if($data->manual_kyc == $value->id) selected @endif>{{__($value->name)}}</option>
+                        @endforeach
+                    </select>
+                  </div>
               </div>
 
               <div class="form-group">
@@ -98,6 +108,22 @@
     columns: 1,
     placeholder: 'Select User Type'
   });
+    $(document).ready(function() {
+        if($('#kyc_method').val() == 'manual') {
+            document.getElementById('manual_type').style.display = "block";
+        }
+        else {
+            document.getElementById('manual_type').style.display = "none";
+        }
+    })
+  $('#kyc_method').on('change', function(){
+    if($('#kyc_method').val() == 'manual') {
+        document.getElementById('manual_type').style.display = "block";
+    }
+    else {
+        document.getElementById('manual_type').style.display = "none";
+    }
+  })
 </script>
 @endsection
 

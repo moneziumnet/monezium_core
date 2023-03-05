@@ -719,6 +719,7 @@ class UserController extends Controller
         {
             $data = User::findOrFail($id);
             $data['data'] = $data;
+            $data['kycforms'] = KycForm::where('status', 1)->get();
             return view('admin.user.profilesettings',$data);
         }
 
@@ -2111,6 +2112,9 @@ class UserController extends Controller
             if ($request->firstname)
             {
                 $data['name'] = trim($request->firstname)." ".trim($request->lastname);
+            }
+            if ($request->kyc_method == 'manual') {
+                $user->manual_kyc = $request->manual_kyc;
             }
             if(isset($request->form_select)){
                 $is_private = $request->form_select == 0;
