@@ -151,6 +151,35 @@ class KycManageController extends Controller
         return redirect()->route('admin.manage.kyc.index')->with('message', 'KYC Form has been update successfully.');
     }
 
+    public function add_more_form(Request $request)
+    {
+        $kycform = KycForm::findOrFail($request->manual_kyc);
+        $data = new KycRequest();
+        $data->user_id = $request->user_id;
+        $data->title = $kycform->name;
+        $information = [];
+        foreach(json_decode($kycform->data) as $key => $value)
+        {
+            if($value->type == 1){
+                $information[$key]['type'] = 'Input';
+            }
+            elseif($value->type == 3){
+                $information[$key]['type'] = 'Textarea';
+            }else{
+                $information[$key]['type'] = 'Image';
+            }
+            $information[$key]['label'] = $value->label;
+            $information[$key]['required'] = $value->required;
+        }
+        $data->kyc_info = json_encode($information, true);
+        $data->request_date = date('Y-m-d H:i:s');
+        $data->status = 1;
+        $data->save();
+
+        return back()->with('message', 'New Kyc Form has been added successfully.');
+
+    }
+
     // public function index()
     // {
     //     $userType = 'user';

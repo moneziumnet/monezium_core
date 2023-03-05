@@ -60,10 +60,35 @@
                                 <P class="h5 mt-2">{{__('KYC Method')}}</P>
                                 <p class="mt-2">{{__(strtoupper($data->kyc_method))}}</p>
 
-                            </div>                            
+                            </div>
                         </div>
                     </div>
                     <hr>
+                    <div class="col-md-8">
+                        <form action="{{route('admin.manage.kyc.add.more')}}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <input type="hidden" name="user_id" value="{{$data->id}}">
+
+                            <div class="row justify-content-between">
+                                <h5 class="p-3  d-flex align-items-center">{{__('Send AML/KYC Request')}}</h5>
+                                <div class="row ml-2">
+                                    <label for="manual_kyc" class="col-form-label d-flex align-items-center mb-2">{{ __('Select') }}</label>
+                                    <div class="col d-flex align-items-center mt-1">
+                                    <select class="form-control shadow-none" name="manual_kyc" id="manual_kyc" required>
+                                        <option value="" >{{__('Please select')}}</option>
+                                        @foreach ($kycforms as $value )
+                                            <option value="{{$value->id}}" >{{__($value->name)}}</option>
+                                        @endforeach
+                                    </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary h-auto ml-4 mb-3 mt-2"><i class="fas fa-plus mr-1"></i>{{ __('Send New Request') }}</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <hr>
+
                     <p class="h4 p-3">{{__('Additional Request History')}}</p>
                     <div class="table-responsive p-3 mt-3">
                       <table id="geniustable1" class="table table-hover dt-responsive" cellspacing="0" width="100%">
