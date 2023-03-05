@@ -29,8 +29,8 @@ class KYCController extends Controller
             if (auth()->user()->kyc_status != 3)
             {
                 $userType = 'user';
-                $userForms = KycForm::where('user_type',$userType == 'user' ? 1 : 2)->get();
                 $user = User::findOrFail(auth()->id());
+                $userForms = KycForm::where('id', $user->manual_kyc)->first();
                 $token = '';
                 if($user->kyc_method == 'auto') {
                     if($user->kyc_token) {
@@ -114,9 +114,9 @@ class KYCController extends Controller
 
     public function kyc(Request $request){
         $userType = 'user';
-        $userForms = KycForm::where('user_type',$userType == 'user' ? 1 : 2)->get();
 
         $user = auth()->user();
+        $userForms = KycForm::where('id', $user->manual_kyc)->get();
         $gs = Generalsetting::first();
         $route = route('user.kyc.selfie',encrypt($user->id));
         $to = $user->email;
@@ -127,7 +127,7 @@ class KYCController extends Controller
 
         $requireInformations = [];
         if($userForms){
-            foreach($userForms as $key=>$value){
+            foreach(json_decode($userForms->data) as $key=>$value){
                 if($value->type == 1){
                     $requireInformations['text'][$key] = strtolower(str_replace(' ', '_', $value->label));
                 }

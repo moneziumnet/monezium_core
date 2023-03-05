@@ -29,7 +29,7 @@
                         <form action="{{route('user.kyc.submit')}}" method="POST" enctype="multipart/form-data">
                             @csrf
 
-                            @foreach ($userForms as $field)
+                            @foreach (json_decode($userForms->data) as $field)
                                 @if ($field->type == 1 || $field->type == 3 )
                                 <div class="form-group mb-3 mt-3">
                                     <label class="form-label {{$field->required == 1 ? 'required':'Optional'}}">@lang($field->label)</label>

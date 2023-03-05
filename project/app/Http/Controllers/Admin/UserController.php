@@ -134,7 +134,7 @@ class UserController extends Controller
     public function create()
     {
         $userType = 'user';
-        $userForms = KycForm::where('user_type',$userType == 'user' ? 1 : 2)->get();
+        $userForms = KycForm::where('id',1)->first();
         return view('admin.user.create',compact('userForms'));
     }
 
@@ -171,11 +171,11 @@ class UserController extends Controller
         $input['kyc_method'] = 'manual';
         $input['phone'] = preg_replace("/[^0-9]/", "", $request->phone);
         $userType = 'user';
-        $userForms = KycForm::where('user_type',$userType == 'user' ? 1 : 2)->get();
+        $userForms = KycForm::where('id', 1)->first();
 
         $requireInformations = [];
         if($userForms){
-            foreach($userForms as $key=>$value){
+            foreach(json_decode($userForms->data) as $key=>$value){
                 if($value->type == 1){
                     $requireInformations['text'][$key] = strtolower(str_replace(' ', '_', $value->label));
                 }

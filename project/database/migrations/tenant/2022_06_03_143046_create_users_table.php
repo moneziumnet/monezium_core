@@ -50,6 +50,7 @@ class CreateUsersTable extends Migration
             $table->string('payment_fa')->nullable();
             $table->string('go')->nullable();
             $table->tinyInteger('verified')->default(0);
+            $table->integer('manual_kyc')->default(1);
             $table->text('details')->nullable();
             $table->tinyInteger('kyc_status')->default(0)->comment('0 == \'pending\'
 1 == \'approve\'

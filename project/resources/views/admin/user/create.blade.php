@@ -231,7 +231,7 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    @foreach ($userForms as $field)
+                    @foreach (json_decode($userForms->data) as $field)
                         @if ($field->type == 1 || $field->type == 3 )
                         <div class="form-group col-sm-12">
                             <label class="form-label {{$field->required == 1 ? 'required':'Optional'}}">@lang($field->label)</label>
