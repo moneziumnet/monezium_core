@@ -51,7 +51,7 @@
                                     {{ucfirst($document->name)}}
                                 </td>
                                 <td>
-                                <a href="{{route('admin-user.view-document', $document->id)}}" target="_blank">
+                                <a href="{{route('admin-user.view-document', $document->id)}}" target="{{$document->type == 'file' ? '_blank' : ''}}">
                                     <button type="button" class="btn btn-primary btn-sm btn-rounded">{{__("View Document")}} </button></a>
                                 </td>
                                 <td>
