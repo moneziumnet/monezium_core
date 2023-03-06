@@ -1315,7 +1315,7 @@ class UserWhatsappController extends Controller
                         if(in_array($supervisor, $userType)) {
                             $wallet_type_list['6'] = 'Supervisor';
                         }
-                        elseif (DB::table('managers')->where('manager_id', $w_session->user_id)->first()) {
+                        elseif (DB::table('managers')->where('manager_id', $whatsapp_user->user_id)->first()) {
                             $wallet_type_list['10'] = 'Manager';
                         }
                         if(in_array($merchant, $userType)) {
