@@ -1082,7 +1082,7 @@ class UserWhatsappController extends Controller
                     $user = User::findOrFail($w_session->user_id);
                     $wallet_list = Wallet::where('user_id',$user->id)->where('user_type',1)->where('wallet_type', 8)->pluck('id')->toArray();
                     if(in_array($text, $wallet_list)) {
-                        $wallet = Wallet::where('id', $text)->with('currency')->get();
+                        $wallet = Wallet::where('id', $text)->with('currency')->first();
                         $dump = $w_session->data;
                         $dump->currency_id = $wallet->currency->id;
                         $w_session->data = $dump;
