@@ -1182,8 +1182,8 @@ class UserWhatsappController extends Controller
                         $trans->user_id     = $user->id;
                         $trans->user_type   = 1;
                         $trans->currency_id = $cryptowithdraw->currency_id;
-                        $trans->amount      = $w_session->data->amount + $w_session->data->global_cost + $w_session->data->suprevisor_cost;
-                        $trans->charge      = $w_session->data->global_cost + $w_session->data->suprevisor_cost;
+                        $trans->amount      = $w_session->data->amount + $w_session->data->global_cost + $w_session->data->supervisor_cost;
+                        $trans->charge      = $w_session->data->global_cost + $w_session->data->supervisor_cost;
 
                         $trans_wallet = get_wallet($user->id, $cryptowithdraw->currency_id, 8);
                         $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
