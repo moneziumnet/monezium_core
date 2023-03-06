@@ -198,6 +198,7 @@ class WithdrawCryptoController extends Controller
 
         $withdraw = new CryptoWithdraw();
         $input = $request->all();
+        $withdraw->status = 1;
 
         $withdraw->fill($input)->save();
 

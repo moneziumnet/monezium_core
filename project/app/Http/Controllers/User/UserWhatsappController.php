@@ -73,6 +73,10 @@ class UserWhatsappController extends Controller
         "amount" => "Please input description.",
         "description"=>"You completed Request Money successfully."
         );
+    private $crypto_withdraw_json =array(
+        "amount" => "Please input description.",
+        "description"=>"You completed Request Money successfully."
+        );
     public function __construct()
     {
         $this->middleware('auth', ['except' => ['inbound', 'status']]);
@@ -1151,6 +1155,49 @@ class UserWhatsappController extends Controller
                         $new_session->save();
                         send_message_whatsapp($to_message, $phone);
                         break;
+                    case 'CryptoWithdraw':
+                        $wallet_list = Wallet::where('user_id',$whatsapp_user->user_id)->where('user_type',1)->where('wallet_type', 8)->with('currency')->get();
+                        $user = User::findOrFail($whatsapp_user->user_id);
+
+                        $currency = Currency::findOrFail(defaultCurr());
+                        $userType = explode(',', $user->user_type);
+                        $supervisor = DB::table('customer_types')->where('type_name', 'Supervisors')->first()->id;
+                        $merchant = DB::table('customer_types')->where('type_name', 'Merchants')->first()->id;
+                        $wallet_type_list = array('0'=>'All', '1'=>'Current', '2'=>'Card', '3'=>'Deposit', '4'=>'Loan', '5'=>'Escrow');
+                        $modules = explode(" , ", $user->modules);
+                        if (in_array('Crypto',$modules)) {
+                          $wallet_type_list['8'] = 'Crypto';
+                        }
+                        if(in_array($supervisor, $userType)) {
+                            $wallet_type_list['6'] = 'Supervisor';
+                        }
+                        elseif (DB::table('managers')->where('manager_id', $w_session->user_id)->first()) {
+                            $wallet_type_list['10'] = 'Manager';
+                        }
+                        if(in_array($merchant, $userType)) {
+                            $wallet_type_list['7'] = 'Merchant';
+                        }
+                        $message_list = '';
+                        foreach($wallet_list as $wallet) {
+                            $amount = amount(Crypto_Balance($wallet->user_id, $wallet->currency_id), 2);
+                            $amount_fiat = amount(Crypto_Balance_Fiat($wallet->user_id, $wallet->currency_id), 1);
+                            $amount = $amount.' ('.$amount_fiat.$currency->code.')';
+                            if ($amount > 0) {
+                                $message_list = $message_list.$wallet->id.':'.$wallet->currency->code.' -- '.$amount.' -- '.$wallet_type_list[$wallet->wallet_type]."\n";
+                            }
+                        }
+                        $to_message = "Please input sender email.\n".$message_list."\n Please type in # to go back to menu
+                        ";
+                        $new_session = WhatsappSession::where('user_id', $whatsapp_user->user_id)->first();
+                        if(!$new_session) {
+                            $new_session = new WhatsappSession();
+                        }
+                        $new_session->user_id = $whatsapp_user->user_id;
+                        $new_session->data = json_decode('{}');
+                        $new_session->type = 'CryptoWithdraw';
+                        $new_session->save();
+                        send_message_whatsapp($to_message, $phone);
+                        break;
                     case 'RequestMoney':
                         $to_message = "Please input email to request money";
                         $new_session = WhatsappSession::where('user_id', $whatsapp_user->user_id)->first();
@@ -1165,7 +1212,7 @@ class UserWhatsappController extends Controller
                         break;
                     default:
                         # code...
-                        $to_message = "Welcome to ".$gs->disqus."\nWhat could We help you?\nWe are here to help you with your problem.\nKindly choose an option to connect with our support team.\nCommand 1: Beneficiary\nCommand 2: BankTransfer\nCommand 3: Balance\nCommand 4: CryptoBalance\nCommand 5: Beneficiary_Simple\nCommand 6: InternalTransfer\nCommand 7: RequestMoney\nCommand 8: Logout";
+                        $to_message = "Welcome to ".$gs->disqus."\nWhat could We help you?\nWe are here to help you with your problem.\nKindly choose an option to connect with our support team.\nCommand 1: Beneficiary\nCommand 2: BankTransfer\nCommand 3: Balance\nCommand 4: CryptoBalance\nCommand 5: Beneficiary_Simple\nCommand 6: InternalTransfer\nCommand 7: RequestMoney\nCommand 8: CryptoWithdraw\nCommand 9: Logout";
                         send_message_whatsapp($to_message, $phone);
                         break;
                 }
@@ -1194,7 +1241,7 @@ class UserWhatsappController extends Controller
                     $whatsapp->phonenumber = $phone;
                     $whatsapp->status = 1;
                     $whatsapp->save();
-                    $to_message = "You login Successfully,\nPlease use follow command list:\nCommand 1: Beneficiary\nCommand 2: BankTransfer\nCommand 3: Balance\nCommand 4: CryptoBalance\nCommand 5: Beneficiary_Simple\nCommand 6: InternalTransfer\nCommand 7: RequestMoney\nCommand 8: Logout";
+                    $to_message = "You login Successfully,\nPlease use follow command list:\nCommand 1: Beneficiary\nCommand 2: BankTransfer\nCommand 3: Balance\nCommand 4: CryptoBalance\nCommand 5: Beneficiary_Simple\nCommand 6: InternalTransfer\nCommand 7: RequestMoney\nCommand 8: CryptoWithdraw\nCommand 9: Logout";
                     send_message_whatsapp($to_message, $phone);
                     break;
                 default:
