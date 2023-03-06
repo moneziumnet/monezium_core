@@ -22,7 +22,7 @@
                     $status_color = 'success';
                 } elseif ($webhook_request->status == "failed") {
                     $status_color = 'danger';
-                } 
+                }
             }
         @endphp
         <li class="list-group-item send-info">@lang('Status')<span><span class="badge badge-{{$status_color}}">{{$webhook_request ? $webhook_request->status : 'Pending'}}</span></span></li>
@@ -48,31 +48,7 @@
     <div class="w-100">
         <div class="row">
             <div class="col">
-            @if ($data->status == 3 && $status_color == 'success')
-                <div class="row action-button">
-                    <div class="col-md-12 mt-2">
-                        <button
-                            class="btn btn-success w-100"
-                            id="complete_transfer"
-                            data-toggle="modal"
-                            data-target="#statusModal"
-                            data-href="{{route('admin.other.banks.transfer.status', ['id1' => $data->id, 'status' => 1])}}"
-                        >{{__("Approve")}}</button>
-                    </div>
-                </div>
-            @elseif ($data->status == 3 && $status_color == 'danger')
-                <div class="row action-button">
-                    <div class="col-md-12 mt-2">
-                        <button
-                            class="btn btn-danger w-100"
-                            id="reject_transfer"
-                            data-toggle="modal"
-                            data-target="#statusModal"
-                            data-href="{{route('admin.other.banks.transfer.status', ['id1' => $data->id, 'status' => 2])}}"
-                        >{{__("Reject")}}</button>
-                    </div>
-                </div>
-            @elseif ($data->status == 3 && $nogateway)
+            @if ($data->status == 3)
                 <div class="row action-button">
                     <div class="col-md-6 mt-2">
                         <button
