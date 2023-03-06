@@ -19,6 +19,8 @@ use App\Models\BankGateway;
 use App\Models\Wallet;
 use App\Models\Transaction;
 use App\Models\MoneyRequest;
+use App\Models\CryptoWithdraw;
+use App\Models\Charge;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
@@ -73,6 +75,18 @@ class UserTelegramController extends Controller
             "account_name"=>"Please input amount to request money",
             "amount" => "Please input description.",
             "description"=>"You completed Request Money successfully."
+            );
+        private $crypto_withdraw_json =array(
+            "currency_id" => "Please input amount to withdraw.",
+            "amount" => "Please input sender address.",
+            "sender_address" => "Please input description.",
+            "description"=>"You completed Crypto Withdraw successfully."
+            );
+        private $exchange_json =array(
+            "from_wallet_id" => "Please input amount to withdraw.",
+            "amount" => "Please input number to convert wallet type.",
+            "wallet_type" => "Please input number to select convert currency.",
+            "to_wallet_id"=>"You completed exchange successfully."
             );
     public function __construct()
     {
@@ -1056,6 +1070,210 @@ class UserTelegramController extends Controller
                 }
                 send_message_telegram($to_message, $chat_id);
             }
+            elseif($w_session != null && $w_session->data != null && $w_session->type == "CryptoWithdraw"){
+                if($text == '#') {
+                    $w_session->data = null;
+                    $w_session->save();
+                    $to_message = "You exit from Crypto Withdraw. ";
+                    send_message_telegram($to_message, $chat_id);
+                    return;
+                }
+                $final = (array_key_last(((array)$w_session->data)));
+                $question = $this->crypto_withdraw_json;
+                if($final == null) {
+                    $user = User::findOrFail($w_session->user_id);
+                    $wallet_list = Wallet::where('user_id',$user->id)->where('user_type',1)->where('wallet_type', 8)->pluck('id')->toArray();
+                    if(in_array($text, $wallet_list)) {
+                        $wallet = Wallet::where('id', $text)->with('currency')->first();
+                        $dump = $w_session->data;
+                        $dump->currency_id = $wallet->currency->id;
+                        $w_session->data = $dump;
+                        $w_session->save();
+                        $to_message = $question['currency_id'];
+                    }
+                    else {
+                        $to_message = "Please input number to select wallet correctly.";
+                    }
+                }
+                else {
+                    $next_key = prefix_get_next_key_array($question, $final);
+                    $user = User::findOrFail($w_session->user_id);
+                    if($next_key == "amount") {
+                        $bank_plan = BankPlan::whereId($user->bank_plan_id)->first();
+                        $dailyRequests = MoneyRequest::whereUserId($user->id)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus('success')->sum('amount');
+                        $monthlyRequests = MoneyRequest::whereUserId($user->id)->whereMonth('created_at', '=', date('m'))->whereStatus('success')->sum('amount');
+                        $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'withdraw')->first();
+
+
+                        $currency = Currency::findOrFail($w_session->data->currency_id);
+                        $rate = getRate($currency);
+                        $userBalance = Crypto_Balance($user->user_id, $currency->id);
+
+                        if($dailyRequests > $global_range->daily_limit){
+                            $to_message = 'Daily request limit over.';
+                            send_message_telegram($to_message, $chat_id);
+                            return;
+                        }
+
+                        if($monthlyRequests > $global_range->monthly_limit){
+                            $to_message = 'Monthly request limit over.';
+                            send_message_telegram($to_message, $chat_id);
+                            return;
+                        }
+
+                        if ($text/$rate < $global_range->min || $text/$rate > $global_range->max) {
+                            $to_message = 'Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min ;
+                            send_message_telegram($to_message, $chat_id);
+                            return;
+                        }
+
+
+
+
+                        $transaction_global_fee = check_global_transaction_fee($text/$rate, $user, 'withdraw_crypto');
+                        $transaction_global_cost = 0;
+                        if($transaction_global_fee)
+                        {
+
+                            $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($text/($rate * 100)) * $transaction_global_fee->data->percent_charge;
+                        }
+
+                        if(($text + $transaction_global_cost*$rate) > Crypto_Balance($user->id, $currency->id)){
+                            $to_message = 'Insufficient Balance!';
+                            send_message_telegram($to_message, $chat_id);
+                            return;
+                        }
+                        $to_message = $question['amount'];
+                        $dump = $w_session->data;
+                        $dump->global_cost = $transaction_global_cost*$rate;
+                        $dump->amount = $text;
+                        $w_session->data = $dump;
+                        $w_session->save();
+                        send_message_telegram($to_message, $chat_id);
+                        return;
+
+
+                    }
+                    if($next_key == "description") {
+                        $currency = Currency::findOrFail($w_session->data->currency_id);
+                        $fromWallet = Wallet::where('user_id', $user->id)->where('wallet_type', 8)->where('currency_id', $currency->id)->first();
+                        $toWallet = get_wallet(0,$currency->id,9);
+                        if($currency->code == 'ETH') {
+                            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
+                            $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$toWallet->wallet_no.'", "value": "0x'.dechex( $w_session->data->global_cost*pow(10,18)).'"}';
+                            $res = RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
+                            if($res == 'error') {
+                                $to_message = "You can not withdraw money because Ether has some issue.";
+                                $w_session->data = null;
+                                $w_session->save();
+                                send_message_telegram($to_message, $chat_id);
+                                return;
+                            }
+                        }
+                        elseif($currency->code == 'BTC') {
+                            $res = RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, amount($w_session->data->global_cost, 2)],$fromWallet->keyword);
+                            if (isset($res->error->message)){
+                                $to_message = "You can not withdraw money because BTC has some issue.". $res->error->message;
+                                $w_session->data = null;
+                                $w_session->save();
+                                send_message_telegram($to_message, $chat_id);
+                                return;
+                            }
+                        }
+                        else{
+                            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
+                            $tokenContract = $fromWallet->currency->address;
+                            $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $toWallet->wallet_no, $w_session->data->global_cost,  $fromWallet->keyword);
+                            if (json_decode($result)->code == 1){
+                                $to_message = "You can not withdraw money because Ether has some issue.".json_decode($result)->message;
+                                $w_session->data = null;
+                                $w_session->save();
+                                send_message_telegram($to_message, $chat_id);
+                                return;
+                            }
+                        }
+
+                        if($currency->code == 'ETH') {
+                            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
+                            $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$w_session->data->sender_address.'", "value": "0x'.dechex($w_session->data->amount*pow(10,18)).'"}';
+                            $res = RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
+                            if($res == 'error') {
+                                $to_message = "You can not withdraw money because Ether has some issue.";
+                                $w_session->data = null;
+                                $w_session->save();
+                                send_message_telegram($to_message, $chat_id);
+                                return;
+                            }
+                        }
+                        else if($fromWallet->currency->code == 'BTC') {
+                            $res = RPC_BTC_Send('sendtoaddress',[$w_session->data->sender_address, amount($w_session->data->amount, 2)],$fromWallet->keyword);
+                            if (isset($res->error->message)){
+                                $to_message = "You can not withdraw money because BTC has some issue.". $res->error->message;
+                                $w_session->data = null;
+                                $w_session->save();
+                                send_message_telegram($to_message, $chat_id);
+                                return;
+                            }
+                        }
+                        else {
+                            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
+                            $tokenContract = $fromWallet->currency->address;
+                            $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $w_session->data->sender_address, $w_session->data->amount,  $fromWallet->keyword);
+                            if (json_decode($result)->code == 1){
+                                $to_message = "You can not withdraw money because Ether has some issue.".json_decode($result)->message;
+                                $w_session->data = null;
+                                $w_session->save();
+                                send_message_telegram($to_message, $chat_id);
+                                return;
+                            }
+                        }
+
+
+                        $cryptowithdraw = new CryptoWithdraw();
+                        $cryptowithdraw->currency_id = $w_session->data->currency_id;
+                        $cryptowithdraw->user_id = $w_session->user_id;
+                        $cryptowithdraw->amount = $w_session->data->amount ;
+                        $cryptowithdraw->sender_address = $w_session->data->sender_address;
+                        $cryptowithdraw->status = 1 ;
+                        $cryptowithdraw->save();
+
+
+
+                        $txnid = Str::random(12);
+
+
+                        $trans = new Transaction();
+                        $trans->trnx = $txnid;
+                        $trans->user_id     = $user->id;
+                        $trans->user_type   = 1;
+                        $trans->currency_id = $cryptowithdraw->currency_id;
+                        $trans->amount      = $w_session->data->amount + $w_session->data->global_cost ;
+                        $trans->charge      = $w_session->data->global_cost ;
+
+                        $trans_wallet = get_wallet($user->id, $cryptowithdraw->currency_id, 8);
+                        $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+
+                        $trans->type        = '-';
+                        $trans->remark      = 'withdraw_crypto';
+                        $trans->details     = trans('Withdraw money');
+                        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$w_session->data->sender_address.'"}';
+                        $trans->save();
+
+                        $w_session->data = null;
+                        $w_session->save();
+
+                        $to_message = $question['description'];
+                        send_message_telegram($to_message, $chat_id);
+                        return;
+                    }
+                    $dump = $w_session->data;
+                    $dump->$next_key = $text;
+                    $w_session->data = $dump;
+                    $w_session->save();
+                    $to_message = $question[$next_key];
+                }
+                send_message_telegram($to_message, $chat_id);
+            }
             else {
                 switch ($text) {
                     case 'Balance':
@@ -1146,6 +1364,49 @@ class UserTelegramController extends Controller
                         $new_session->save();
                         send_message_telegram($to_message, $chat_id);
                         break;
+                    case 'CryptoWithdraw':
+                        $wallet_list = Wallet::where('user_id',$telegram_user->user_id)->where('user_type',1)->where('wallet_type', 8)->with('currency')->get();
+                        $user = User::findOrFail($telegram_user->user_id);
+
+                        $currency = Currency::findOrFail(defaultCurr());
+                        $userType = explode(',', $user->user_type);
+                        $supervisor = DB::table('customer_types')->where('type_name', 'Supervisors')->first()->id;
+                        $merchant = DB::table('customer_types')->where('type_name', 'Merchants')->first()->id;
+                        $wallet_type_list = array( '1'=>'Current', '2'=>'Card', '3'=>'Deposit', '4'=>'Loan', '5'=>'Escrow');
+                        $modules = explode(" , ", $user->modules);
+                        if (in_array('Crypto',$modules)) {
+                            $wallet_type_list['8'] = 'Crypto';
+                        }
+                        if(in_array($supervisor, $userType)) {
+                            $wallet_type_list['6'] = 'Supervisor';
+                        }
+                        elseif (DB::table('managers')->where('manager_id', $telegram_user->user_id)->first()) {
+                            $wallet_type_list['10'] = 'Manager';
+                        }
+                        if(in_array($merchant, $userType)) {
+                            $wallet_type_list['7'] = 'Merchant';
+                        }
+                        $message_list = '';
+                        foreach($wallet_list as $wallet) {
+                            $amount = amount(Crypto_Balance($wallet->user_id, $wallet->currency_id), 2);
+                            $amount_fiat = amount(Crypto_Balance_Fiat($wallet->user_id, $wallet->currency_id), 1);
+                            $amount = $amount.' ('.$amount_fiat.$currency->code.')';
+                            if ($amount > 0) {
+                                $message_list = $message_list.$wallet->id.':'.$wallet->currency->code.' -- '.$amount.' -- '.$wallet_type_list[$wallet->wallet_type]."\n";
+                            }
+                        }
+                        $to_message = "Please input number to select wallet.\n".$message_list."\n Please type in # to go back to menu
+                        ";
+                        $new_session = TelegramSession::where('user_id', $telegram_user->user_id)->first();
+                        if(!$new_session) {
+                            $new_session = new TelegramSession();
+                        }
+                        $new_session->user_id = $telegram_user->user_id;
+                        $new_session->data = json_decode('{}');
+                        $new_session->type = 'CryptoWithdraw';
+                        $new_session->save();
+                        send_message_telegram($to_message, $chat_id);
+                        break;
                     case 'RequestMoney':
                         $to_message = "Please input email to request money";
                         $new_session = TelegramSession::where('user_id', $telegram_user->user_id)->first();
@@ -1160,7 +1421,7 @@ class UserTelegramController extends Controller
                         break;
                     default:
                         # code...
-                        $to_message = "Welcome to ".$gs->disqus."\nWhat could We help you?\nWe are here to help you with your problem.\nKindly choose an option to connect with our support team.\nCommand 1: Beneficiary\nCommand 2: BankTransfer\nCommand 3: Balance\nCommand 4: CryptoBalance\nCommand 5: Beneficiary_Simple\nCommand 6: InternalTransfer\nCommand 7: RequestMoney\nCommand 8: Logout";
+                        $to_message = "Welcome to ".$gs->disqus."\nWhat could We help you?\nWe are here to help you with your problem.\nKindly choose an option to connect with our support team.\nCommand 1: Beneficiary\nCommand 2: BankTransfer\nCommand 3: Balance\nCommand 4: CryptoBalance\nCommand 5: Beneficiary_Simple\nCommand 6: InternalTransfer\nCommand 7: RequestMoney\nCommand 8: CryptoWithdraw\nCommand 9: Exchange\nCommand 10: Logout";
                         send_message_telegram($to_message, $chat_id);
                         break;
                 }
@@ -1189,7 +1450,7 @@ class UserTelegramController extends Controller
                     $telegram->chat_id = $chat_id;
                     $telegram->status = 1;
                     $telegram->save();
-                    $to_message = "You login Successfully,\nPlease use follow command list:\nCommand 1: Beneficiary\nCommand 2: BankTransfer\nCommand 3: Balance\nCommand 4: CryptoBalance\nCommand 5: Beneficiary_Simple\nCommand 6: InternalTransfer\nCommand 7: RequestMoney\nCommand 8: Logout";
+                    $to_message = "You login Successfully,\nPlease use follow command list:\nCommand 1: Beneficiary\nCommand 2: BankTransfer\nCommand 3: Balance\nCommand 4: CryptoBalance\nCommand 5: Beneficiary_Simple\nCommand 6: InternalTransfer\nCommand 7: RequestMoney\nCommand 8: CryptoWithdraw\nCommand 9: Exchange\nCommand 10: Logout";
                     send_message_telegram($to_message, $chat_id);
                     break;
                 default:
