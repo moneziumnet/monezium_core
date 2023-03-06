@@ -1135,16 +1135,8 @@ class UserWhatsappController extends Controller
 
                             $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($text/($rate * 100)) * $transaction_global_fee->data->percent_charge;
                         }
-                        $transaction_custom_cost = 0;
-                        if($user->referral_id != 0)
-                        {
-                            $transaction_custom_fee = check_custom_transaction_fee($text/$rate, $user, 'withdraw_crypto');
-                            if($transaction_custom_fee) {
-                                $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($text/($rate*100)) * $transaction_custom_fee->data->percent_charge;
-                            }
-                        }
 
-                        if(($text + $transaction_global_cost*$rate + $transaction_custom_cost*$rate) > Crypto_Balance($user->id, $currency->id)){
+                        if(($text + $transaction_global_cost*$rate) > Crypto_Balance($user->id, $currency->id)){
                             $to_message = 'Insufficient Balance!';
                             send_message_whatsapp($to_message, $phone);
                             return;
@@ -1152,7 +1144,6 @@ class UserWhatsappController extends Controller
                         $to_message = $question['amount'];
                         $dump = $w_session->data;
                         $dump->global_cost = $transaction_global_cost*$rate;
-                        $dump->supervisor_cost = $transaction_custom_cost*$rate;
                         $dump->amount = $text;
                         $w_session->data = $dump;
                         $w_session->save();
@@ -1162,6 +1153,78 @@ class UserWhatsappController extends Controller
 
                     }
                     if($next_key == "description") {
+                        $currency = Currency::findOrFail($w_session->data->currency_id);
+                        $fromWallet = Wallet::where('user_id', $user->id)->where('wallet_type', 8)->where('currency_id', $currency->id)->first();
+                        $toWallet = get_wallet(0,$currency->id,9);
+                        if($currency->code == 'ETH') {
+                            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
+                            $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$toWallet->wallet_no.'", "value": "0x'.dechex( $w_session->data->global_cost*pow(10,18)).'"}';
+                            $res = RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
+                            if($res == 'error') {
+                                $to_message = "You can not withdraw money because Ether has some issue.";
+                                $w_session->data = null;
+                                $w_session->save();
+                                send_message_whatsapp($to_message, $phone);
+                                return;
+                            }
+                        }
+                        elseif($currency->code == 'BTC') {
+                            $res = RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, amount($w_session->data->global_cost, 2)],$fromWallet->keyword);
+                            if (isset($res->error->message)){
+                                $to_message = "You can not withdraw money because BTC has some issue.". $res->error->message;
+                                $w_session->data = null;
+                                $w_session->save();
+                                send_message_whatsapp($to_message, $phone);
+                                return;
+                            }
+                        }
+                        else{
+                            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
+                            $tokenContract = $fromWallet->currency->address;
+                            $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $toWallet->wallet_no, $w_session->data->global_cost,  $fromWallet->keyword);
+                            if (json_decode($result)->code == 1){
+                                $to_message = "You can not withdraw money because Ether has some issue.".json_decode($result)->message;
+                                $w_session->data = null;
+                                $w_session->save();
+                                send_message_whatsapp($to_message, $phone);
+                                return;
+                            }
+                        }
+
+                        if($currency->code == 'ETH') {
+                            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
+                            $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$w_session->data->sender_address.'", "value": "0x'.dechex($w_session->data->amount*pow(10,18)).'"}';
+                            $res = RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
+                            if($res == 'error') {
+                                $to_message = "You can not withdraw money because Ether has some issue.";
+                                $w_session->data = null;
+                                $w_session->save();
+                                send_message_whatsapp($to_message, $phone);
+                                return;
+                            }
+                        }
+                        else if($fromWallet->currency->code == 'BTC') {
+                            $res = RPC_BTC_Send('sendtoaddress',[$w_session->data->sender_address, amount($w_session->data->amount, 2)],$fromWallet->keyword);
+                            if (isset($res->error->message)){
+                                $to_message = "You can not withdraw money because BTC has some issue.". $res->error->message;
+                                $w_session->data = null;
+                                $w_session->save();
+                                send_message_whatsapp($to_message, $phone);
+                                return;
+                            }
+                        }
+                        else {
+                            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
+                            $tokenContract = $fromWallet->currency->address;
+                            $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $w_session->data->sender_address, $w_session->data->amount,  $fromWallet->keyword);
+                            if (json_decode($result)->code == 1){
+                                $to_message = "You can not withdraw money because Ether has some issue.".json_decode($result)->message;
+                                $w_session->data = null;
+                                $w_session->save();
+                                send_message_whatsapp($to_message, $phone);
+                                return;
+                            }
+                        }
 
 
                         $cryptowithdraw = new CryptoWithdraw();
@@ -1182,8 +1245,8 @@ class UserWhatsappController extends Controller
                         $trans->user_id     = $user->id;
                         $trans->user_type   = 1;
                         $trans->currency_id = $cryptowithdraw->currency_id;
-                        $trans->amount      = $w_session->data->amount + $w_session->data->global_cost + $w_session->data->supervisor_cost;
-                        $trans->charge      = $w_session->data->global_cost + $w_session->data->supervisor_cost;
+                        $trans->amount      = $w_session->data->amount + $w_session->data->global_cost ;
+                        $trans->charge      = $w_session->data->global_cost ;
 
                         $trans_wallet = get_wallet($user->id, $cryptowithdraw->currency_id, 8);
                         $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
