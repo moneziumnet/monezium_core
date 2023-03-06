@@ -78,7 +78,7 @@ class UserWhatsappController extends Controller
         "currency_id" => "Please input amount to withdraw.",
         "amount" => "Please input sender address.",
         "sender_address" => "Please input description.",
-        "description"=>"You completed Request Money successfully."
+        "description"=>"You completed Crypto Withdraw successfully."
         );
     public function __construct()
     {
