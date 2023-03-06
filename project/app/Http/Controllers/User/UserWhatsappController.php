@@ -582,7 +582,7 @@ class UserWhatsappController extends Controller
                         $userType = explode(',', $user->user_type);
                         $supervisor = DB::table('customer_types')->where('type_name', 'Supervisors')->first()->id;
                         $merchant = DB::table('customer_types')->where('type_name', 'Merchants')->first()->id;
-                        $wallet_type_list = array('0'=>'All', '1'=>'Current', '2'=>'Card', '3'=>'Deposit', '4'=>'Loan', '5'=>'Escrow');
+                        $wallet_type_list = array( '1'=>'Current', '2'=>'Card', '3'=>'Deposit', '4'=>'Loan', '5'=>'Escrow');
                         $modules = explode(" , ", $user->modules);
                         if (in_array('Crypto',$modules)) {
                           $wallet_type_list['8'] = 'Crypto';
@@ -1327,7 +1327,7 @@ class UserWhatsappController extends Controller
                         $userType = explode(',', $user->user_type);
                         $supervisor = DB::table('customer_types')->where('type_name', 'Supervisors')->first()->id;
                         $merchant = DB::table('customer_types')->where('type_name', 'Merchants')->first()->id;
-                        $wallet_type_list = array('0'=>'All', '1'=>'Current', '2'=>'Card', '3'=>'Deposit', '4'=>'Loan', '5'=>'Escrow');
+                        $wallet_type_list = array('1'=>'Current', '2'=>'Card', '3'=>'Deposit', '4'=>'Loan', '5'=>'Escrow');
                         $modules = explode(" , ", $user->modules);
                         if (in_array('Crypto',$modules)) {
                           $wallet_type_list['8'] = 'Crypto';
@@ -1359,7 +1359,7 @@ class UserWhatsappController extends Controller
                         $userType = explode(',', $user->user_type);
                         $supervisor = DB::table('customer_types')->where('type_name', 'Supervisors')->first()->id;
                         $merchant = DB::table('customer_types')->where('type_name', 'Merchants')->first()->id;
-                        $wallet_type_list = array('0'=>'All', '1'=>'Current', '2'=>'Card', '3'=>'Deposit', '4'=>'Loan', '5'=>'Escrow');
+                        $wallet_type_list = array('1'=>'Current', '2'=>'Card', '3'=>'Deposit', '4'=>'Loan', '5'=>'Escrow');
                         $modules = explode(" , ", $user->modules);
                         if (in_array('Crypto',$modules)) {
                           $wallet_type_list['8'] = 'Crypto';
@@ -1533,7 +1533,7 @@ class UserWhatsappController extends Controller
                         $userType = explode(',', $user->user_type);
                         $supervisor = DB::table('customer_types')->where('type_name', 'Supervisors')->first()->id;
                         $merchant = DB::table('customer_types')->where('type_name', 'Merchants')->first()->id;
-                        $wallet_type_list = array('0'=>'All', '1'=>'Current', '2'=>'Card', '3'=>'Deposit', '4'=>'Loan', '5'=>'Escrow');
+                        $wallet_type_list = array( '1'=>'Current', '2'=>'Card', '3'=>'Deposit', '4'=>'Loan', '5'=>'Escrow');
                         $modules = explode(" , ", $user->modules);
                         if (in_array('Crypto',$modules)) {
                           $wallet_type_list['8'] = 'Crypto';
@@ -1586,7 +1586,7 @@ class UserWhatsappController extends Controller
                         $userType = explode(',', $user->user_type);
                         $supervisor = DB::table('customer_types')->where('type_name', 'Supervisors')->first()->id;
                         $merchant = DB::table('customer_types')->where('type_name', 'Merchants')->first()->id;
-                        $wallet_type_list = array('0'=>'All', '1'=>'Current', '2'=>'Card', '3'=>'Deposit', '4'=>'Loan', '5'=>'Escrow');
+                        $wallet_type_list = array('1'=>'Current', '2'=>'Card', '3'=>'Deposit', '4'=>'Loan', '5'=>'Escrow');
                         $modules = explode(" , ", $user->modules);
                         if (in_array('Crypto',$modules)) {
                           $wallet_type_list['8'] = 'Crypto';
