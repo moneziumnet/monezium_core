@@ -116,7 +116,7 @@ class KYCController extends Controller
         $userType = 'user';
 
         $user = auth()->user();
-        $userForms = KycForm::where('id', $user->manual_kyc)->get();
+        $userForms = KycForm::where('id', $user->manual_kyc)->first();
         $gs = Generalsetting::first();
         $route = route('user.kyc.selfie',encrypt($user->id));
         $to = $user->email;

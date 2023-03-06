@@ -173,7 +173,7 @@ class KycManageController extends Controller
         }
         $data->kyc_info = json_encode($information, true);
         $data->request_date = date('Y-m-d H:i:s');
-        $data->status = 1;
+        $data->status = 0;
         $data->save();
 
         return back()->with('message', 'New Kyc Form has been added successfully.');

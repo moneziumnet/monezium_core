@@ -1520,7 +1520,6 @@ class UserController extends Controller
             $input = $request->all();
             $input['kyc_info'] = json_encode(array_values($request->form_builder));
             $input['request_date'] = date('Y-m-d H:i:s');
-            $input['status'] = 1;
             $data->fill($input)->save();
 
             $msg = __('New Data Added Successfully.').' '.'<a href="'.route("admin.user.kycinfo", $request->user_id).'">'.__('View Lists.').'</a>';
