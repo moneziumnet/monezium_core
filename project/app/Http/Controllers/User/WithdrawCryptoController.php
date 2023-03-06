@@ -99,7 +99,7 @@ class WithdrawCryptoController extends Controller
         }
 
         $messagefee = $transaction_global_cost + $transaction_custom_cost;
-        $messagefinal = $amountToAdd - $messagefee;
+        $messagefinal = $amountToAdd + $messagefee;
 
         if($messagefinal < 0){
             return redirect()->back()->with('unsuccess','Request Amount should be greater than this '.$request->amount.' ('.$currency->code.')');
@@ -178,11 +178,11 @@ class WithdrawCryptoController extends Controller
         }
         if($fromWallet->currency->code == 'ETH') {
             RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-            $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$request->sender_address.'", "value": "0x'.dechex($messagefinal*$crypto_rate*pow(10,18)).'"}';
+            $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$request->sender_address.'", "value": "0x'.dechex($amountToAdd*$crypto_rate*pow(10,18)).'"}';
             RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
         }
         else if($fromWallet->currency->code == 'BTC') {
-            $res = RPC_BTC_Send('sendtoaddress',[$request->sender_address, amount($messagefinal*$crypto_rate, 2)],$fromWallet->keyword);
+            $res = RPC_BTC_Send('sendtoaddress',[$request->sender_address, amount($amountToAdd*$crypto_rate, 2)],$fromWallet->keyword);
             if (isset($res->error->message)){
                 return redirect()->back()->with(array('error' => __('Error: ') . $res->error->message));
             }
@@ -190,7 +190,7 @@ class WithdrawCryptoController extends Controller
         else {
             RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
             $tokenContract = $fromWallet->currency->address;
-            $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $request->sender_address, $messagefinal*$crypto_rate,  $fromWallet->keyword);
+            $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $request->sender_address, $amountToAdd*$crypto_rate,  $fromWallet->keyword);
             if (json_decode($result)->code == 1){
                 return redirect()->back()->with(array('error' => 'Ethereum client error: '.json_decode($result)->message));
             }
@@ -211,7 +211,7 @@ class WithdrawCryptoController extends Controller
         $trans->user_id     = $user->id;
         $trans->user_type   = 1;
         $trans->currency_id = $request->currency_id;
-        $trans->amount      = $request->amount;
+        $trans->amount      = $messagefinal*$crypto_rate;
         $trans->charge      = $messagefee*$crypto_rate;
 
         $trans_wallet = get_wallet($user->id, $currency->id, 8);
