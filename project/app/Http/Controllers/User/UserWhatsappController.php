@@ -80,6 +80,12 @@ class UserWhatsappController extends Controller
         "sender_address" => "Please input description.",
         "description"=>"You completed Crypto Withdraw successfully."
         );
+    private $exchange_json =array(
+        "from_wallet_id" => "Please input amount to withdraw.",
+        "amount" => "Please input number to convert wallet type.",
+        "wallet_type" => "Please input number to select convert currency.",
+        "to_wallet_id"=>"You completed exchange successfully."
+        );
     public function __construct()
     {
         $this->middleware('auth', ['except' => ['inbound', 'status']]);
@@ -1264,6 +1270,163 @@ class UserWhatsappController extends Controller
                         send_message_whatsapp($to_message, $phone);
                         return;
                     }
+                    $dump = $w_session->data;
+                    $dump->$next_key = $text;
+                    $w_session->data = $dump;
+                    $w_session->save();
+                    $to_message = $question[$next_key];
+                }
+                send_message_whatsapp($to_message, $phone);
+            }
+            elseif($w_session != null && $w_session->data != null && $w_session->type == "Exchange"){
+                if($text == '#') {
+                    $w_session->data = null;
+                    $w_session->save();
+                    $to_message = "You exit from Exchange. ";
+                    send_message_whatsapp($to_message, $phone);
+                    return;
+                }
+                $final = (array_key_last(((array)$w_session->data)));
+                $question = $this->exchange_json;
+                if($final == null) {
+                    $user = User::findOrFail($w_session->user_id);
+                    $wallet_list = Wallet::where('user_id',$w_session->user_id)->with('currency')->pluck('id')->toArray();
+                    if(in_array($text, $wallet_list)) {
+                        $dump = $w_session->data;
+                        $dump->from_wallet_id = $text;
+                        $w_session->data = $dump;
+                        $w_session->save();
+                        $to_message = $question['from_wallet_id'];
+                    }
+                    else {
+                        $to_message = "Please input number to select wallet correctly.";
+                    }
+                }
+                else {
+                    $next_key = prefix_get_next_key_array($question, $final);
+                    $user = User::findOrFail($w_session->user_id);
+                    if($next_key == "amount") {
+                        $fromWallet = Wallet::where('id', $w_session->data->from_wallet_id)->where('user_id', $user->id)->where('user_type', 1)->firstOrFail();
+
+
+
+                        if ($fromWallet->currency->type == 2) {
+                            if ($text > Crypto_Balance($user->id, $fromWallet->currency->id)) {
+                                $to_message = 'Insufficient Balance!';
+                                send_message_whatsapp($to_message, $phone);
+                                return;
+                            }
+                        } else {
+                            if ($text > $fromWallet->balance) {
+                                $to_message = 'Insufficient Balance!';
+                                send_message_whatsapp($to_message, $phone);
+                                return;
+                            }
+                        }
+
+                        $userType = explode(',', $user->user_type);
+                        $supervisor = DB::table('customer_types')->where('type_name', 'Supervisors')->first()->id;
+                        $merchant = DB::table('customer_types')->where('type_name', 'Merchants')->first()->id;
+                        $wallet_type_list = array('0'=>'All', '1'=>'Current', '2'=>'Card', '3'=>'Deposit', '4'=>'Loan', '5'=>'Escrow');
+                        $modules = explode(" , ", $user->modules);
+                        if (in_array('Crypto',$modules)) {
+                          $wallet_type_list['8'] = 'Crypto';
+                        }
+                        if(in_array($supervisor, $userType)) {
+                            $wallet_type_list['6'] = 'Supervisor';
+                        }
+                        elseif (DB::table('managers')->where('manager_id', $w_session->user_id)->first()) {
+                            $wallet_type_list['10'] = 'Manager';
+                        }
+                        if(in_array($merchant, $userType)) {
+                            $wallet_type_list['7'] = 'Merchant';
+                        }
+                        $message_list = '';
+                        foreach($wallet_type_list as $key => $value) {
+                            $message_list = $message_list.$key.' : '.$value."\n";
+                        }
+
+
+                        $to_message = $question['amount']."\n".$message_list;
+                        $dump = $w_session->data;
+                        $dump->amount = $text;
+                        $w_session->data = $dump;
+                        $w_session->save();
+                        send_message_whatsapp($to_message, $phone);
+                        return;
+                    }
+                    if($next_key == "wallet_type"){
+                        $userType = explode(',', $user->user_type);
+                        $supervisor = DB::table('customer_types')->where('type_name', 'Supervisors')->first()->id;
+                        $merchant = DB::table('customer_types')->where('type_name', 'Merchants')->first()->id;
+                        $wallet_type_list = array('0'=>'All', '1'=>'Current', '2'=>'Card', '3'=>'Deposit', '4'=>'Loan', '5'=>'Escrow');
+                        $modules = explode(" , ", $user->modules);
+                        if (in_array('Crypto',$modules)) {
+                          $wallet_type_list['8'] = 'Crypto';
+                        }
+                        if(in_array($supervisor, $userType)) {
+                            $wallet_type_list['6'] = 'Supervisor';
+                        }
+                        elseif (DB::table('managers')->where('manager_id', $w_session->user_id)->first()) {
+                            $wallet_type_list['10'] = 'Manager';
+                        }
+                        if(in_array($merchant, $userType)) {
+                            $wallet_type_list['7'] = 'Merchant';
+                        }
+
+                        if(isset($wallet_type_list[$text])) {
+                            if($text == 8) {
+                                $currencies = Currency::where('status', 1)->whereType('2')->get();
+                                $message_list = '';
+                                foreach($currencies as $value) {
+                                    $message_list = $message_list.$value->id.' : '.$value->code."\n";
+                                }
+                            }
+                            else {
+                                $currencies = Currency::where('status', 1)->whereType('1')->get();
+                                $message_list = '';
+                                foreach($currencies as $value) {
+                                    $message_list = $message_list.$value->id.' : '.$value->code."\n";
+                                }
+                            }
+                            $to_message = $question['wallet_type']."\n".$message_list;
+                            $dump = $w_session->data;
+                            $dump->wallet_type = $text;
+                            $w_session->data = $dump;
+                            $w_session->save();
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+                        else {
+                            $to_message = 'Please input number to convert wallet type correctly';
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+
+                    }
+                    if($next_key == "to_wallet_id") {
+                        if($w_session->data->wallet_type == 8) {
+                            $currencies =  Currency::where('status', 1)->whereType('2')->pluck('id')->toArray();
+                        }
+                        else {
+                            $currencies =  Currency::where('status', 1)->whereType('1')->pluck('id')->toArray();
+                        }
+                        if(in_array($text, $currencies)) {
+                            $to_message = $question['to_wallet_id'];
+                            $dump = $w_session->data;
+                            $dump->to_wallet_id = $text;
+                            $w_session->data = $dump;
+                            $w_session->save();
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+                        else {
+                            $to_message = 'Please input number to select convert currency correctly.';
+                            send_message_whatsapp($to_message, $phone);
+                            return;
+                        }
+                    }
+
                     $dump = $w_session->data;
                     $dump->$next_key = $text;
                     $w_session->data = $dump;
