@@ -338,7 +338,7 @@ class ExchangeMoneyController extends Controller
         if ($fromWallet->currency->code == 'ETH' && $toWallet->currency->code == 'ETH') {
             RPC_ETH('personal_unlockAccount', [$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
             $tx = '{"from": "' . $fromWallet->wallet_no . '", "to": "' . $toWallet->wallet_no . '", "value": "0x' . dechex($totalAmount * pow(10, 18)) . '"}';
-            RPC_ETH('personal_sendTransaction', $tx, $fromWallet->keyword ?? '');
+            RPC_ETH_Send('personal_sendTransaction', $tx, $fromWallet->keyword ?? '');
         }
         if ($fromWallet->currency->code == 'BTC' && $toWallet->currency->code == 'BTC') {
             $res = RPC_BTC_Send('sendtoaddress', [$toWallet->wallet_no, amount($totalAmount, 2)], $fromWallet->keyword);
@@ -461,6 +461,9 @@ class ExchangeMoneyController extends Controller
             }
 
             $res = RPC_BTC_Send('sendtoaddress', [$toWallet->wallet_no, amount($finalAmount, 2)], $fromsystemwallet->keyword);
+            if (isset($res->error->message)){
+                return redirect()->back()->with(array('error' => __('Error: ') . $res->error->message));
+            }
         }
         if ($fromWallet->currency->code != 'ETH' && $fromWallet->currency->code != 'BTC' && $fromWallet->currency->type == 2 && $toWallet->currency->code == 'ETH') {
             RPC_ETH('personal_unlockAccount', [$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
