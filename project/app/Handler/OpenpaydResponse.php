@@ -129,7 +129,7 @@ class OpenpaydResponse implements RespondsToWebhook
                 ->where('gateway_type', 'openpayd')
                 ->first();
             if($webrequest) {
-                $webrequest->charge = abs((float)$obj->amount);
+                $webrequest->charge = abs($obj->amount->value);
             }
 
 
