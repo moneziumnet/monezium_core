@@ -202,5 +202,5 @@ Route::post('/telegram/inbound', [UserTelegramController::class, 'inbound'])->na
 
 Route::post('/whatsapp/inbound', [UserWhatsappController::class, 'inbound'])->name('user.whatsapp.inbound');
 Route::post('/whatsapp/status', [UserWhatsappController::class, 'status'])->name('user.whatsapp.status');
-Route::get('/user/test', [UserTelegramController::class,'test'])->name('user.telegram.test');
+Route::get('/user/crypto/deposit/sms', [UserTelegramController::class,'crypto_deposit_sms'])->name('user.telegram.crypto.deposit.sms');
 
