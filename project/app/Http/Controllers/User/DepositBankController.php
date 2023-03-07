@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use Illuminate\Support\Str;
-use App\Classes\GeniusMailer;
+
 use App\Models\Generalsetting;
 use App\Models\DepositBank;
 use App\Models\Currency;

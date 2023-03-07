@@ -11,7 +11,7 @@ use App\Models\User;
 use App\Models\Wallet;
 use App\Models\Manager;
 use App\Models\Generalsetting;
-use App\Classes\GeniusMailer;
+
 use Illuminate\Support\Facades\Validator;
 
 class ReferralController extends Controller

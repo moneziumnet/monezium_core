@@ -1,7 +1,7 @@
 <?php
 namespace App\Repositories;
 
-use App\Classes\GeniusMailer;
+
 use App\Models\Currency;
 use App\Models\Generalsetting;
 use App\Models\Notification;

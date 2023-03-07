@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Classes\GeniusMailer;
+
 use App\Models\Currency;
 use App\Classes\GoogleAuthenticator;
 use App\Models\PlanDetail;

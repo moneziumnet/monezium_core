@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Deposit;
 
 use App\Http\Controllers\Controller;
-use App\Classes\GeniusMailer;
+
 use App\Models\Currency;
 use App\Models\Deposit;
 use App\Models\Generalsetting;

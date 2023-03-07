@@ -9,7 +9,7 @@ use App\Models\PaymentGateway;
 use App\Models\PlanDetail;
 use App\Models\Generalsetting;
 use App\Classes\GoogleAuthenticator;
-use App\Classes\GeniusMailer;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Classes\Instamojo;

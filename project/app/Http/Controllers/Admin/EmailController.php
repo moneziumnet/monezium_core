@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use Datatables;
-use App\Classes\GeniusMailer;
+
 use App\Models\EmailTemplate;
 use App\Models\Generalsetting;
 use Illuminate\Http\Request;

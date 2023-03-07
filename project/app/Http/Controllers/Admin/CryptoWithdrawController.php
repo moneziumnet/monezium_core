@@ -9,7 +9,7 @@ use GuzzleHttp\Client;
 use App\Models\Currency;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
-use App\Classes\GeniusMailer;
+
 use App\Models\CryptoWithdraw;
 use App\Models\Generalsetting;
 use App\Http\Controllers\Controller;

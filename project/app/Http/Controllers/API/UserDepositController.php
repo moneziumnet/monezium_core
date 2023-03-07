@@ -12,7 +12,7 @@ use App\Models\Deposit;
 use App\Models\Charge;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use App\Classes\GeniusMailer;
+
 use App\Classes\GoogleAuthenticator;
 use PHPMailer\PHPMailer\PHPMailer;
 use App\Http\Controllers\Controller;

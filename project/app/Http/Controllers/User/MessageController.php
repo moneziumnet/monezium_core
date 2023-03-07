@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Classes\GeniusMailer;
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Admin;

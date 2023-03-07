@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Classes\GeniusMailer;
+
 use App\Models\Generalsetting;
 use App\Models\User;
 use App\Models\GlobalPassToken;

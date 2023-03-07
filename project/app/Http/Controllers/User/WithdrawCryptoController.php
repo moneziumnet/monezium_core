@@ -11,7 +11,7 @@ use App\Models\PlanDetail;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Classes\GeniusMailer;
+
 use App\Models\CryptoWithdraw;
 use App\Models\Generalsetting;
 use App\Classes\GoogleAuthenticator;

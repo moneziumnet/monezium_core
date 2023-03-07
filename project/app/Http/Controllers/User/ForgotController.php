@@ -5,7 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Models\Generalsetting;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Classes\GeniusMailer;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Str;

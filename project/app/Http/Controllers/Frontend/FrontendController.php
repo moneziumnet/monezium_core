@@ -34,7 +34,7 @@ use App\Models\Pagesetting;
 use Illuminate\Support\Str;
 use App\Models\BlogCategory;
 use Illuminate\Http\Request;
-use App\Classes\GeniusMailer;
+
 use App\Models\Blog_Category;
 use App\Models\Socialsetting;
 use InvalidArgumentException;

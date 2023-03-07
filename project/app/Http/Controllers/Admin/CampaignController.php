@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Classes\GeniusMailer;
+
 use App\Http\Controllers\Controller;
 use App\Models\Campaign;
 use App\Models\CampaignDonation;

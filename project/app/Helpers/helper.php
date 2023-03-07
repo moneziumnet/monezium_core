@@ -1,6 +1,6 @@
 <?php
 
-use App\Classes\GeniusMailer;
+use App\Classes\MoneziumMailer;
 use App\Models\Admin;
 use App\Models\Charge;
 use App\Models\Currency;
@@ -227,7 +227,7 @@ if (!function_exists('email')) {
                 'subject' => $data['subject'],
                 'body' => $data['message'],
             ];
-            $mailer = new GeniusMailer();
+            $mailer = new MoneziumMailer();
             $mailer->sendCustomMail($maildata);
         } else {
             $headers = "From: $gs->sitename <$gs->from_email> \r\n";
@@ -251,7 +251,7 @@ if (!function_exists('sendMail')) {
                 'body' => $msg,
                 'attach' => $attach,
             ];
-            $mailer = new GeniusMailer();
+            $mailer = new MoneziumMailer();
             $mailer->sendCustomMail($data);
         } else {
             mail($to, $subject, $msg, $headers);
@@ -293,7 +293,7 @@ if (!function_exists('mailSend')) {
                 'subject' => ucwords(str_replace('_', ' ', $key)),
                 'body' => $message,
             ];
-            $mailer = new GeniusMailer();
+            $mailer = new MoneziumMailer();
             $mailer->sendCustomMail($data);
         } else {
 

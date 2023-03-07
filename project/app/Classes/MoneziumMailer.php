@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use PDF;
 
-class GeniusMailer
+class MoneziumMailer
 {
     public function __construct()
     {
@@ -30,13 +30,13 @@ class GeniusMailer
     {
         $setup = Generalsetting::first();
 
-        $temp = EmailTemplate::where('email_type','=',$mailData['type'])->first();
+        $temp = EmailTemplate::where('email_type', '=', $mailData['type'])->first();
 
-        $body = preg_replace("/{customer_name}/", $mailData['cname'] ,$temp->email_body);
-        $body = preg_replace("/{order_number}/", $mailData['oamount'] ,$body);
-        $body = preg_replace("/{admin_name}/", $mailData['aname'] ,$body);
-        $body = preg_replace("/{admin_email}/", $mailData['aemail'] ,$body);
-        $body = preg_replace("/{website_title}/", $setup->title ,$body);
+        $body = preg_replace("/{customer_name}/", $mailData['cname'], $temp->email_body);
+        $body = preg_replace("/{order_number}/", $mailData['oamount'], $body);
+        $body = preg_replace("/{admin_name}/", $mailData['aname'], $body);
+        $body = preg_replace("/{admin_email}/", $mailData['aemail'], $body);
+        $body = preg_replace("/{website_title}/", $setup->title, $body);
 
         $data = [
             'email_body' => $body
@@ -48,14 +48,13 @@ class GeniusMailer
         $objDemo->title = $setup->from_name;
         $objDemo->subject = $temp->email_subject;
 
-        try{
-            Mail::send('admin.email.mailbody',$data, function ($message) use ($objDemo) {
-                $message->from($objDemo->from,$objDemo->title);
+        try {
+            Mail::send('admin.email.mailbody', $data, function ($message) use ($objDemo) {
+                $message->from($objDemo->from, $objDemo->title);
                 $message->to($objDemo->to);
                 $message->subject($objDemo->subject);
             });
-        }
-        catch (\Exception $e){
+        } catch (\Exception $e) {
             //die("Not Sent!");
         }
     }
@@ -73,24 +72,22 @@ class GeniusMailer
         $objDemo->title = $setup->from_name;
         $objDemo->subject = $mailData['subject'];
         $objDemo->attach = $mailData['attach'] ?? null;
-        try{
-            Mail::send('admin.email.mailbody',$data, function ($message) use ($objDemo) {
-                $message->from($objDemo->from,$objDemo->title);
+        try {
+            Mail::send('admin.email.mailbody', $data, function ($message) use ($objDemo) {
+                $message->from($objDemo->from, $objDemo->title);
                 $message->to($objDemo->to);
                 // $message->subject($objDemo->subject);
-                if($objDemo->attach){
+                if ($objDemo->attach) {
                     // $pdf = PDF::loadView('frontend.myPDF', $objDemo->attach);
                     $message->subject($objDemo->subject)
-                    ->attach($objDemo->attach);
-                }
-                else{
+                        ->attach($objDemo->attach);
+                } else {
                     $message->getHeaders()
-                    ->addTextHeader('Content-Type', 'text/html; charset=utf-8\r\n');
+                        ->addTextHeader('Content-Type', 'text/html; charset=utf-8\r\n');
                     $message->subject($objDemo->subject);
                 }
             });
-        }
-        catch (\Exception $e){
+        } catch (\Exception $e) {
             die($e);
         }
         return true;

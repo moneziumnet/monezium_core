@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
 use App\Models\PaymentGateway;
-use App\Classes\GeniusMailer;
+
 use App\Repositories\SubscriptionRepository;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;

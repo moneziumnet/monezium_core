@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Classes\GeniusMailer;
+
 use App\Http\Controllers\Controller;
 use App\Models\MerchantShop;
 use App\Models\Product;

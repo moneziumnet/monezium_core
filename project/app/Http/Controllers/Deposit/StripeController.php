@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Deposit;
 
-use App\Classes\GeniusMailer;
+
 use Cartalyst\Stripe\Laravel\Facades\Stripe;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Controller;

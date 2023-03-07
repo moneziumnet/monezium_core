@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Deposit;
 
 use Illuminate\Support\Str;
-use App\Classes\GeniusMailer;
+
 use App\Models\BankGateway;
 use App\Models\BankAccount;
 use App\Models\Charge;

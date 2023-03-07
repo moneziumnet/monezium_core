@@ -14,7 +14,7 @@ use App\Models\PlanDetail;
 use Illuminate\Support\Str;
 use App\Classes\GoogleAuthenticator;
 use Illuminate\Http\Request;
-use App\Classes\GeniusMailer;
+
 use App\Models\Generalsetting;
 use App\Models\BalanceTransfer;
 use App\Http\Controllers\Controller;

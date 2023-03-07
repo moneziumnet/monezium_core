@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 use App\Classes\GoogleAuthenticator;
 use App\Models\MoneyRequest;
 use Illuminate\Http\Request;
-use App\Classes\GeniusMailer;
+
 use App\Models\Generalsetting;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\URL;
