@@ -13,7 +13,7 @@ class TransactionController extends Controller
 
     public function datatables()
     {
-        $datas = Transaction::orderBy('id','desc')->get();
+        $datas = Transaction::orderBy('created_at','desc')->get();
 
         return Datatables::of($datas)
                         ->editColumn('amount', function(Transaction $data) {

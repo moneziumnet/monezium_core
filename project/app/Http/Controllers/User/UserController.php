@@ -284,6 +284,7 @@ class UserController extends Controller
             return $q->where('trnx','LIKE',"%{$search}%");
         })
         ->whereBetween('created_at', [$s_time, $e_time])
+        ->orderBy('created_at', 'desc')
         ->with('currency')->latest()->paginate(20);
         $remark_list = Transaction::where('user_id',auth()->id())->pluck('remark');
         $remark_list = array_unique($remark_list->all());
@@ -683,7 +684,7 @@ class UserController extends Controller
             return $q->where('trnx','LIKE',"%{$search}%");
         })
         ->whereBetween('created_at', [$s_time, $e_time])
-        ->orderBy('id','desc')->get();
+        ->orderBy('created_at','desc')->get();
 
         $s_transactions = Transaction::with('currency')->whereUserId(auth()->id())
         ->when($wallet_id,function($q) use($wallet_id){

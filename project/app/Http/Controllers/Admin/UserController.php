@@ -1671,7 +1671,7 @@ class UserController extends Controller
         public function transactionPDF($user_id)
         {
             $user = User::findOrFail($user_id);
-            $transaction = Transaction::whereUserId($user_id)->orderBy('id', 'desc')->get();
+            $transaction = Transaction::whereUserId($user_id)->orderBy('created_at', 'desc')->get();
             $gs = Generalsetting::first();
             $image = public_path('assets/images/'.$gs->logo);
             $image_encode = base64_encode(file_get_contents($image));
@@ -1698,7 +1698,7 @@ class UserController extends Controller
 
         public function trandatatables($id)
         {
-            $datas = Transaction::where('user_id',$id)->orderBy('id','desc')->get();
+            $datas = Transaction::where('user_id',$id)->orderBy('created_at','desc')->get();
 
             return Datatables::of($datas)
                             ->editColumn('amount', function(Transaction $data) {
@@ -1755,7 +1755,7 @@ class UserController extends Controller
 
         public function walletTrandatatables($id)
         {
-            $datas = Transaction::where('wallet_id',$id)->orderBy('id','desc')->get();
+            $datas = Transaction::where('wallet_id',$id)->orderBy('created_at','desc')->get();
 
             return Datatables::of($datas)
                             ->editColumn('amount', function(Transaction $data) {
