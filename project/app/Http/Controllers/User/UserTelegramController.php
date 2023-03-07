@@ -90,7 +90,7 @@ class UserTelegramController extends Controller
             );
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['bot_login', 'bot_logout', 'inbound', 'test']]);
+        $this->middleware('auth', ['except' => ['bot_login', 'bot_logout', 'inbound', 'crypto_deposit_sms']]);
     }
 
     public function index()
@@ -2288,8 +2288,6 @@ class UserTelegramController extends Controller
 
     public function crypto_deposit_sms() {
         $wallet_list = Wallet::where('wallet_type', 8)->with('currency')->get();
-        send_telegram(43, "Your  wallet 's balance is updated .\n  is incoming in your wallet. \n Please check your wallet. \n Your wallet address is ");
-        send_whatsapp(43, "Your  wallet 's balance is updated .\n  is incoming in your wallet. \n Please check your wallet. \n Your wallet address is ");
         if(!empty($wallet_list)) {
             foreach ($wallet_list as $key => $wallet) {
                 $user = User::findOrFail($wallet->user_id);
@@ -2305,9 +2303,6 @@ class UserTelegramController extends Controller
                 $u_wallet->save();
             }
         }
-        send_telegram(43, "end foor loop");
-        send_whatsapp(43, "end foor loop");
-
     }
 
     public function generate(Request $request)
