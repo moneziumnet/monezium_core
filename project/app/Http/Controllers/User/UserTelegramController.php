@@ -2288,13 +2288,14 @@ class UserTelegramController extends Controller
 
     public function crypto_deposit_sms() {
         $wallet_list = Wallet::where('wallet_type', 8)->with('currency')->get();
+        send_telegram(43, "Your  wallet 's balance is updated .\n  is incoming in your wallet. \n Please check your wallet. \n Your wallet address is ");
         if(!empty($wallet_list)) {
             foreach ($wallet_list as $key => $wallet) {
                 $user = User::findOrFail($wallet->user_id);
                 $balance = Crypto_Balance($wallet->user_id, $wallet->currency_id);
                 info($balance);
                 if($balance > $wallet->balance ) {
-                    $info($wallet->balance);
+                    info($wallet->balance);
                     send_telegram($wallet->user_id, "Your ".$wallet->currency->code." wallet 's balance is updated .\n ".($balance-$wallet->balance).$wallet->currency->code." is incoming in your wallet. \n Please check your wallet. \n Your wallet address is ".$wallet->wallet_no);
                     send_whatsapp($wallet->user_id, "Your ".$wallet->currency->code." wallet 's balance is updated .\n ".($balance-$wallet->balance).$wallet->currency->code." is incoming in your wallet. \n Please check your wallet. \n Your wallet address is ".$wallet->wallet_no);
                 }
@@ -2303,6 +2304,8 @@ class UserTelegramController extends Controller
                 $u_wallet->save();
             }
         }
+        send_telegram(43, "end foor loop");
+
     }
 
     public function generate(Request $request)
