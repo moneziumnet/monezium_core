@@ -695,7 +695,6 @@ Route::prefix('user')->group(function() {
     Route::get('/bank/report/transaction/account/{id}', [UserBankTransactionController::class,'bank_transaction'])->name('user.bank.transaction.account.index');
     Route::get('/bank/report/all/transaction', [UserBankTransactionController::class,'compare_transaction'])->name('user.bank.transaction.all');
     Route::get('/bank/report/summary/transaction', [UserBankTransactionController::class,'summay_fee'])->name('user.bank.transaction.summary');
-    Route::get('/test', [UserTelegramController::class,'test'])->name('user.telegram.test');
 
 
     Route::get('/logout', [UserLoginController::class,'logout'])->name('user.logout');

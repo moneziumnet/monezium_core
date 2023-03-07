@@ -90,7 +90,7 @@ class UserTelegramController extends Controller
             );
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['bot_login', 'bot_logout', 'inbound']]);
+        $this->middleware('auth', ['except' => ['bot_login', 'bot_logout', 'inbound', 'test']]);
     }
 
     public function index()
