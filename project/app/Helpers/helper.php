@@ -248,7 +248,7 @@ if (!function_exists('sendMail')) {
             $data = [
                 'to' => $to,
                 'subject' => $subject,
-                'body' => nl2br($msg),
+                'body' => $msg,
                 'attach' => $attach,
             ];
             $mailer = new MoneziumMailer();
