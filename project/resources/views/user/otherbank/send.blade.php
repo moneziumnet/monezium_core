@@ -108,7 +108,7 @@
 
                         <div class="form-group mt-3">
                             <label class="form-label required">{{__('Description')}}</label>
-                            <textarea name="des" id="des" class="form-control" autocomplete="off" placeholder="{{__('Please input description')}}" type="text" required></textarea>
+                            <input type="text" pattern="[^À-ž()><\][\\;&$@!|]+" name="des" id="des" class="form-control" autocomplete="off" placeholder="{{__('Please input description')}}" type="text" required>
                         </div>
                         <input name="otp" id="otp" type="hidden" value="">
 

@@ -130,10 +130,10 @@ class OpenpaydResponse implements RespondsToWebhook
                 ->first();
             if($webrequest) {
                 $webrequest->charge = abs($obj->amount->value);
+                $webrequest->save();
             }
 
 
-            $webrequest->save();
             return response()->json("success");
         }
         return response()->json("failure");
