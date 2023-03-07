@@ -50,7 +50,7 @@ class CryptoPooling extends Command
         --------------------------------------------
         --------------------------------------------*/
         $client = new Client();
-        $response = $client->request('GET', 'http://monezium.eu/user/crypto/deposit/sms', ['connect_timeout' => 2]);
+        $response = $client->request('GET', 'http://monezium.eu/user/crypto/deposit/sms');
         return 0;
     }
 }
