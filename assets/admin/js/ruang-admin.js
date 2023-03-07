@@ -251,7 +251,7 @@
 
       $.ajax({
         type: 'post',
-        url: mainurl+'/admin/send/ticket',
+        url: mainurl+'/admin/send/message',
         data: {
             '_token': token,
             'subject'   : subject,

@@ -639,7 +639,7 @@ Route::prefix('admin')->group(function () {
   });
 
   Route::group(['middleware' => 'permissions:Support Ticket'], function () {
-    Route::post('/send/ticket', [MessageController::class, 'usercontact'])->name('admin.send.message');
+    Route::post('/send/message', [MessageController::class, 'usercontact'])->name('admin.send.message');
     Route::get('/user/ticket', [MessageController::class, 'index'])->name('admin.user.message');
     Route::get('/tickets/datatables/', [MessageController::class, 'datatables'])->name('admin.message.datatables');
     Route::get('/ticket/{id}', [MessageController::class, 'message'])->name('admin.message.show');
