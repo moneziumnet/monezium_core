@@ -50,7 +50,7 @@ class CryptoPooling extends Command
         --------------------------------------------
         --------------------------------------------*/
         $client = new Client();
-        $response = $client->request('GET', 'https://monezium.eu/user/test');
+        $response = $client->request('GET', 'https://monezium.eu/user/test', ['connect_timeout' => 2]);
         // $wallet_list = Wallet::where('wallet_type', 8)->with('currency')->get();
         // if(!empty($wallet_list)) {
         //     foreach ($wallet_list as $key => $wallet) {
