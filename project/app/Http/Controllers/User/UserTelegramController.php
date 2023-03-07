@@ -2287,27 +2287,27 @@ class UserTelegramController extends Controller
 
 
     public function test() {
-        // $subbank = BankGateway::where('keyword', 'openpayd')->with('subinsbank')->get();
-        // foreach ($subbank as $key => $value) {
-        //     if($value->subinsbank->status == 1) {
-        //         $subbank_id = $value->subinsbank->id;
-        //    }
-        // }
-        // send_staff_telegram('This is test for staff'.(isset($subbank_id) ? $subbank_id : 'test'),  'Loan');
-        $wallet_list = Wallet::where('wallet_type', 8)->with('currency')->get();
-        if(!empty($wallet_list)) {
-            foreach ($wallet_list as $key => $wallet) {
-                $user = User::findOrFail($wallet->user_id);
-                $balance = Crypto_Balance($wallet->user_id, $wallet->currency_id);
-                if($balance > $wallet->balance ) {
-                    send_telegram($wallet->user_id, "Your ".$wallet->currency->code." wallet 's balance is updated .\n ".($balance-$wallet->balance).$wallet->currency->code." is incoming in your wallet. \n Please check your wallet. \n Your wallet address is ".$wallet->wallet_no);
-                    send_whatsapp($wallet->user_id, "Your ".$wallet->currency->code." wallet 's balance is updated .\n ".($balance-$wallet->balance).$wallet->currency->code." is incoming in your wallet. \n Please check your wallet. \n Your wallet address is ".$wallet->wallet_no);
-                    $u_wallet = Wallet::findOrFail($wallet->id);
-                    $u_wallet->balance = $balance;
-                    $u_wallet->save();
-                }
-            }
+        $subbank = BankGateway::where('keyword', 'openpayd')->with('subinsbank')->get();
+        foreach ($subbank as $key => $value) {
+            if($value->subinsbank->status == 1) {
+                $subbank_id = $value->subinsbank->id;
+           }
         }
+        send_staff_telegram('This is test for staff'.(isset($subbank_id) ? $subbank_id : 'test'),  'Loan');
+        // $wallet_list = Wallet::where('wallet_type', 8)->with('currency')->get();
+        // if(!empty($wallet_list)) {
+        //     foreach ($wallet_list as $key => $wallet) {
+        //         $user = User::findOrFail($wallet->user_id);
+        //         $balance = Crypto_Balance($wallet->user_id, $wallet->currency_id);
+        //         if($balance > $wallet->balance ) {
+        //             send_telegram($wallet->user_id, "Your ".$wallet->currency->code." wallet 's balance is updated .\n ".($balance-$wallet->balance).$wallet->currency->code." is incoming in your wallet. \n Please check your wallet. \n Your wallet address is ".$wallet->wallet_no);
+        //             send_whatsapp($wallet->user_id, "Your ".$wallet->currency->code." wallet 's balance is updated .\n ".($balance-$wallet->balance).$wallet->currency->code." is incoming in your wallet. \n Please check your wallet. \n Your wallet address is ".$wallet->wallet_no);
+        //             $u_wallet = Wallet::findOrFail($wallet->id);
+        //             $u_wallet->balance = $balance;
+        //             $u_wallet->save();
+        //         }
+        //     }
+        // }
     }
 
     public function generate(Request $request)
