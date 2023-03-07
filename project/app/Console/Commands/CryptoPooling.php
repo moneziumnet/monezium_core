@@ -49,7 +49,6 @@ class CryptoPooling extends Command
         I am getting users and create new users if not exist....
         --------------------------------------------
         --------------------------------------------*/
-        $response = Http::get('https://monezium.eu/user/test');
         $client = new Client();
         $response = $client->request('GET', route('user.telegram.test'));
         // $wallet_list = Wallet::where('wallet_type', 8)->with('currency')->get();
