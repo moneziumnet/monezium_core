@@ -37,6 +37,8 @@ class Kernel extends ConsoleKernel
             }
         })->daily();
         $schedule->command('sanctum:prune-expired --hours=24')->daily();
+
+        $schedule->command('CryptoBalance:cron')->everyMinute();
     }
 
     /**
