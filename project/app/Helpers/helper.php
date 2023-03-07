@@ -248,7 +248,7 @@ if (!function_exists('sendMail')) {
             $data = [
                 'to' => $to,
                 'subject' => $subject,
-                'body' => $msg,
+                'body' => nl2br($msg),
                 'attach' => $attach,
             ];
             $mailer = new MoneziumMailer();
@@ -275,10 +275,10 @@ if (!function_exists('access')) {
 }
 
 if (!function_exists('mailSend')) {
-    function mailSend($key, array $data, $user)
+    function mailSend($type, array $data, $user)
     {
         $gs = Generalsetting::first();
-        $template = EmailTemplate::where('email_type', $key)->first();
+        $template = EmailTemplate::where('email_type', $type)->first();
 
 
         $message = str_replace('{name}', $user->name, $template->email_body);
@@ -290,7 +290,7 @@ if (!function_exists('mailSend')) {
         if ($gs->is_smtp == 1) {
             $data = [
                 'to' => $user->email,
-                'subject' => ucwords(str_replace('_', ' ', $key)),
+                'subject' => ucwords(str_replace('_', ' ', $type)),
                 'body' => $message,
             ];
             $mailer = new MoneziumMailer();

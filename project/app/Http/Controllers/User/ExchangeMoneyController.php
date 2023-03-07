@@ -551,7 +551,7 @@ class ExchangeMoneyController extends Controller
         $exchange->to_amount = $finalAmount;
         $exchange->save();
 
-        @mailSend('exchange_money', ['from_curr' => $fromWallet->currency->code, 'to_curr' => $toWallet->currency->code, 'charge' => amount($charge + $transaction_custom_cost * $from_rate, $fromWallet->currency->type, 3), 'from_amount' => amount($request->amount, $fromWallet->currency->type, 3), 'to_amount' => amount($finalAmount, $toWallet->currency->type, 3), 'date_time' => dateFormat($exchange->created_at)], auth()->user());
+        mailSend('exchange_money', ['from_curr' => $fromWallet->currency->code, 'to_curr' => $toWallet->currency->code, 'charge' => amount($charge + $transaction_custom_cost * $from_rate, $fromWallet->currency->type, 3), 'from_amount' => amount($request->amount, $fromWallet->currency->type, 3), 'to_amount' => amount($finalAmount, $toWallet->currency->type, 3), 'date_time' => dateFormat($exchange->created_at)], auth()->user());
 
         return back()->with('message', 'Money exchanged successfully.');
     }
