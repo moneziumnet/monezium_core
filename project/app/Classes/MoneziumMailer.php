@@ -10,6 +10,7 @@ namespace App\Classes;
 
 use App\Models\EmailTemplate;
 use App\Models\Generalsetting;
+use App\Models\Pagesetting;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -62,10 +63,13 @@ class MoneziumMailer
     public function sendCustomMail(array $mailData)
     {
         $setup = Generalsetting::first();
-
+        $pageSetting = Pagesetting::first();
         $data = [
             'email_body' => $mailData['body'],
-            'logo' => $setup->logo
+            'logo' => $setup->logo,
+            'title' => $setup->title,
+            'street' => $pageSetting->street,
+            'copyright' => $setup->copyright
         ];
         $objDemo = new \stdClass();
         $objDemo->to = $mailData['to'];

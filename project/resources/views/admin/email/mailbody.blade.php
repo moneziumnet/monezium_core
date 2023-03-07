@@ -38,7 +38,7 @@
                     />
                   </td>
                   <td>
-                    <h2 style="margin: 0;">MT-Payment System</h2>
+                    <h2 style="margin: 0;">{{$title}}</h2>
                   </td>
                 </tr>
               </tbody>
@@ -64,16 +64,16 @@
               <div>
                 <a
                   style="color: inherit"
-                  href="http://violet.saas.test/mtsystem/privacy"
+                  href="{{url('/privacy')}}"
                   >Privacy &amp; Policy</a
                 >
                 |
-                <a style="color: inherit" href="mailto://support@monezium.net"
-                  >Contact US</a
+                <a style="color: inherit" href="{{url('/about')}}"
+                  >About Us</a
                 >
               </div>
-              <div>ul.Grzybowska 80/82 lok. 700, Warsaw, Poland</div>
-              <div>© 2018-2023 Monezium Group</div>
+              <div>{{$street}}</div>
+              <div>{!! $copyright !!}</div>
             </div>
           </div>
         </td>
