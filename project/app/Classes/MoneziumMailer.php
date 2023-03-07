@@ -64,7 +64,8 @@ class MoneziumMailer
         $setup = Generalsetting::first();
 
         $data = [
-            'email_body' => $mailData['body']
+            'email_body' => $mailData['body'],
+            'logo' => $setup->logo
         ];
         $objDemo = new \stdClass();
         $objDemo->to = $mailData['to'];

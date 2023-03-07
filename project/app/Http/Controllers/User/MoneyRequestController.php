@@ -139,20 +139,11 @@ class MoneyRequestController extends Controller
             // $msg = "Hello ".$request->account_name."!\nYou received request money (".$request->amount.$currency->symbol.").\nPlease confirm current.\n".$url."\n Thank you.";
 
             $msg_body = '
-            <!DOCTYPE html>
-            <html lang="en-US">
-                <head>
-                    <meta charset="utf-8"><title>Request Money</title>
-                </head>
-                <body>
-                    <p> Hello '.$request->account_name.'.</p>
-                    <p> You received request money ('.$request->amount.$currency->symbol.').</p>
-                    <p> Please confirm current.</p>
-                    '.$url.'
-                    <p> Thank you.</p>
-
-                </body>
-            </html>
+                <p> Hello ' . $request->account_name . '.</p>
+                <p> You received request money (' . $request->amount . $currency->symbol . ').</p>
+                <p> Please confirm current.</p>
+                ' . $url . '
+                <p> Thank you.</p>
             ';
 
             $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
