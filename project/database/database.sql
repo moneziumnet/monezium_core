@@ -1120,15 +1120,21 @@ CREATE TABLE `email_templates`  (
   `email_body` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
   `status` int(11) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of email_templates
 -- ----------------------------
-INSERT INTO `email_templates` VALUES (3, 'Withdraw', 'Your withdraw is completed successfully.', '<p>Hello {customer_name},<br>Your withdraw is completed successfully.</p><p>Thank You<br></p>', 1);
-INSERT INTO `email_templates` VALUES (4, 'Deposit', 'You have invested successfully.', '<p>Hello {customer_name},<br>You have deposited successfully.</p><p>Transaction ID:&nbsp;<span style=\"color: rgb(33, 37, 41);\">{order_number}.</span></p><p>Thank You.</p>', 1);
-INSERT INTO `email_templates` VALUES (5, 'send money', 'Your send money is completed successfully.', '<p>Hello {customer_name},<br>Your send money is completed successfully.</p><p>Thank You<br></p>', 1);
-INSERT INTO `email_templates` VALUES (6, 'request money', 'Your request money is completed successfully.', '<p>Hello {customer_name},<br>Your request money is completed successfully.</p><p>Thank You<br></p>', 1);
+INSERT INTO `email_templates` VALUES (1, 'Withdraw', 'Your withdraw is completed successfully.', '<p>Hello {customer_name},<br>Your withdraw is completed successfully.</p><p>Thank You<br></p>', 1);
+INSERT INTO `email_templates` VALUES (2, 'Deposit', 'You have invested successfully.', '<p>Hello {customer_name},<br>You have deposited successfully.</p><p>Transaction ID:&nbsp;<span style=\"color: rgb(33, 37, 41);\">{order_number}.</span></p><p>Thank You.</p>', 1);
+INSERT INTO `email_templates` VALUES (3, 'send money', 'Your send money is completed successfully.', '<p>Hello {customer_name},<br>Your send money is completed successfully.</p><p>Thank You<br></p>', 1);
+INSERT INTO `email_templates` VALUES (4, 'request money', 'Your request money is completed successfully.', '<p>Hello {customer_name},<br>Your request money is completed successfully.</p><p>Thank You<br></p>', 1);
+INSERT INTO `email_templates` VALUES (5, 'escrow_return', 'Your escrow money is refunded successfully.', '<p>Hello {name},<br></p><p>Your escrow money {curr} {amount} is refunded successfully.</p><p>Transaction id is {trnx}.</p><p>Refunded Time is {date_time}.</p><p>Thank You<br></p>', 1);
+INSERT INTO `email_templates` VALUES (6, 'exchange_money', 'Your money is exchanged successfully.', '<p>Hello {name},<br></p><p>Your money {<span style=\"font-size: 1rem;\">from_curr</span><span style=\"font-size: 1rem;\">} {from_amount} is exchanged to {to_curr} {to_amount} successfully.</span></p><p><span style=\"font-size: 1rem;\">Fee is {from_curr} {charge}.</span></p><p>Exchange Time is {date_time}.</p><p>Thank You<br></p>', 1);
+INSERT INTO `email_templates` VALUES (7, 'accept_withdraw', 'Your withdraw request is accepted successfully.', '<p>Hello {name},<br></p><p>Your {method} withdraw request <span style=\"font-size: 1rem;\">&nbsp;is accepted successfully. Withdraw amount is {curr} {amount}.</span></p><p><span style=\"font-size: 1rem;\">Fee is {curr} {charge}.</span></p><p><span style=\"font-size: 1rem;\">Transaction id is {trnx}.</span></p><p>Withdraw Accept Time is {date_time}.</p><p>Thank You<br></p>', 1);
+INSERT INTO `email_templates` VALUES (8, 'reject_withdraw', 'Your withdraw request is rejected .', '<p>Hello {name},<br></p><p>Your {method} withdraw request <span style=\"font-size: 1rem;\">&nbsp;is rejected. Withdraw amount is {curr} {amount}.</span></p><p><span style=\"font-size: 1rem;\">Transaction id is {trnx}.</span><br></p><p>Withdraw Reject Time is {date_time}.</p><p>Reason is {reason}.</p><p>Thank You<br></p>', 1);
+INSERT INTO `email_templates` VALUES (9, 'received_invoice_payment', 'You received invoice money.', '<p>Hello {name},<br></p><p><span style=\"font-size: 1rem;\">The money you request invoice is received from {from_user} successfully. Received amount is {curr} {amount}.</span></p><p><span style=\"font-size: 1rem;\">Current your received wallet balance is {curr} {after_balance}.</span></p><p><span style=\"font-size: 1rem;\">Fee is {curr} {charge}.</span></p><p><span style=\"font-size: 1rem;\">Invoice number is {inv_num}.</span></p><p><span style=\"font-size: 1rem;\">Transaction id is {trnx}.</span></p><p>Invoice Received Time is {date_time}.</p><p>Thank You<br></p>', 1);
+
 
 -- ----------------------------
 -- Table structure for faqs
@@ -1332,23 +1338,19 @@ INSERT INTO `generalsettings` VALUES (1, 'gdV5JbBZ1652956530.png', '163930074815
 DROP TABLE IF EXISTS `kyc_forms`;
 CREATE TABLE `kyc_forms`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_type` tinyint(4) NULL DEFAULT NULL,
-  `type` int(11) NULL DEFAULT NULL,
-  `label` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `required` tinyint(4) NOT NULL DEFAULT 0,
+  `user_type` tinyint(4) NULL DEFAULT NULL,
+  `data` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp(0) NULL DEFAULT NULL,
   `updated_at` timestamp(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of kyc_forms
 -- ----------------------------
-INSERT INTO `kyc_forms` VALUES (9, 1, 1, 'Full Name', 'full_name', 1, '2022-03-06 07:08:28', '2022-03-06 07:08:28');
-INSERT INTO `kyc_forms` VALUES (10, 1, 2, 'NID', 'nid', 1, '2022-03-06 07:08:38', '2022-03-06 07:08:38');
-INSERT INTO `kyc_forms` VALUES (11, 1, 3, 'Present Address', 'present_address', 1, '2022-03-06 07:08:51', '2022-03-06 07:08:51');
-INSERT INTO `kyc_forms` VALUES (12, 1, 3, 'Parmanent Address', 'parmanent_address', 1, '2022-03-06 07:09:04', '2022-03-06 07:09:04');
+INSERT INTO `kyc_forms` VALUES (1, 'Form 1', 1, '[{\"type\":\"1\",\"label\":\"First Name\",\"required\":\"1\"},{\"type\":\"1\",\"label\":\"Last Name\",\"required\":\"1\"},{\"type\":\"1\",\"label\":\"Date of Birth\",\"required\":\"1\"},{\"type\":\"1\",\"label\":\"Personal Code\",\"required\":\"0\"},{\"type\":\"1\",\"label\":\"Passport(National ID) No.\",\"required\":\"1\"},{\"type\":\"1\",\"label\":\"Passport(National ID) Authority\",\"required\":\"1\"},{\"type\":\"1\",\"label\":\"Passport(National ID) Issued date\",\"required\":\"1\"},{\"type\":\"1\",\"label\":\"Passport(National ID) Expired date\",\"required\":\"1\"},{\"type\":\"1\",\"label\":\"Full Address\",\"required\":\"1\"},{\"type\":\"2\",\"label\":\"Registration Certificate (Require for Corporate)\",\"required\":\"0\"},{\"type\":\"2\",\"label\":\"Passport or National ID (both sides in one page)\",\"required\":\"1\"},{\"type\":\"2\",\"label\":\"Selfie with Passport or National ID (must be readable)\",\"required\":\"1\"},{\"type\":\"2\",\"label\":\"Articles of Association (Require for Corporate)\",\"required\":\"0\"},{\"type\":\"2\",\"label\":\"Signatory Certificate (Require for Corporate if not in similar document)\",\"required\":\"0\"}]', 1, '2023-03-04 00:27:18', '2023-03-05 13:49:41');
 
 -- ----------------------------
 -- Table structure for languages
