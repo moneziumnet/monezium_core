@@ -145,7 +145,7 @@ class MessageController extends Controller
         $to = $request->to;
         $subject = $request->subject;
         $from = $admin->email;
-        $msg = "Email: ".$from."<br>Message: ".$request->message;
+        $msg = nl2br($request->message);
         $gs = Generalsetting::findOrFail(1);
 
         $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
