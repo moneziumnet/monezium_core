@@ -141,22 +141,14 @@ class ManageInvoiceController extends Controller
         }
 
         $route = route('invoice.view',encrypt($invoice->number));
-        @email([
 
-            'email'   => $invoice->email,
-            "subject" => trans('Invoice Payment'),
-            'message' => trans('Hello')." $invoice->invoice_to,<br/></br>".
-
-                trans('You have pending payment of invoice')." <b>$invoice->number</b>.".trans('Please click the below link to complete your payment') .".<br/></br>".
-
-                trans('Invoice details').": <br/></br>".
-
-                trans('Amount')  .":  $amount $currency->code <br/>".
-                trans('Payment Link')." :  <a href='$route' target='_blank'>".trans('Click To Payment')."</a><br/>".
-                trans('Time')." : $invoice->created_at,
-
-            "
-        ]);
+        $gs = Generalsetting::first();
+        $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
+        $headers .= "MIME-Version: 1.0" . "\r\n";
+        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+        $msg = "Hello"." $invoice->invoice_to,<br>".
+        "You have pending payment of invoice"." <b>$invoice->number</b>".'<br>Please click the below link to complete your payment<br>'."Invoice details".": <br>"."Amount:".  $amount . $currency->code."<br>Payment Link:"."<a href='$route' target='_blank'>".'Click To Payment'."</a><br>".'Time'." : ". $invoice->created_at;
+         sendMail($invoice->email, 'Invoice Payment', $msg, $headers);
 
         return redirect(route('user.invoice.index'))->with('message','Invoice has been created');
     }
@@ -412,23 +404,13 @@ class ManageInvoiceController extends Controller
         $amount = $invoice->final_amount;
         $route = route('invoice.view',encrypt($invoice->number));
 
-        email([
+        $msg = "Hello"." $invoice->invoice_to,<br>"."You have pending payment of invoice"." <b>$invoice->number</b>."."Please click the below link to complete your payment" .".<br>"."Invoice details".": <br>"."Amount"  .":  $amount $currency->code <br>"."Payment Link"." :  <a href='$route' target='_blank'>"."Click To Payment"."</a><br>"."QR Code"." :  <img src='".generateQR($route)."' class='' alt=''><br>"."Time"." : $invoice->created_at";
 
-            'email'   => $request->email,
-            "subject" => 'Invoice Payment',
-            'message' => "Hello"." $invoice->invoice_to,<br/></br>".
-
-                "You have pending payment of invoice"." <b>$invoice->number</b>."."Please click the below link to complete your payment" .".<br/></br>".
-
-                "Invoice details".": <br/></br>".
-
-                "Amount"  .":  $amount $currency->code <br/>".
-                "Payment Link"." :  <a href='$route' target='_blank'>"."Click To Payment"."</a><br/>".
-                "QR Code"." :  <img src='".generateQR($route)."' class='' alt=''><br/>".
-                "Time"." : $invoice->created_at,
-
-            "
-        ]);
+        $gs = Generalsetting::first();
+        $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
+        $headers .= "MIME-Version: 1.0" . "\r\n";
+        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+        sendMail($request->email, 'Invoice Payment', $msg, $headers);
 
         return back()->with('message','Invoice has been sent to the recipient');
     }

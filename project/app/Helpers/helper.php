@@ -216,29 +216,6 @@ if (!function_exists('str_rand')) {
     }
 }
 
-if (!function_exists('email')) {
-
-    function email($data)
-    {
-        $gs = Generalsetting::first();
-        if ($gs->is_smtp == 1) {
-            $maildata = [
-                'to' => $data['email'],
-                'subject' => $data['subject'],
-                'body' => $data['message'],
-            ];
-            $mailer = new MoneziumMailer();
-            $mailer->sendCustomMail($maildata);
-        } else {
-            $headers = "From: $gs->sitename <$gs->from_email> \r\n";
-            $headers .= "Reply-To: $gs->sitename <$gs->from_email> \r\n";
-            $headers .= "MIME-Version: 1.0\r\n";
-            $headers .= "Content-Type: text/html; charset=utf-8\r\n";
-
-            mail($data['email'], $data['subject'], $data['message'], $headers);
-        }
-    }
-}
 if (!function_exists('sendMail')) {
 
     function sendMail($to, $subject, $msg, $headers, $attach = null)
@@ -301,7 +278,7 @@ if (!function_exists('mailSend')) {
             $headers .= "Reply-To: $gs->sitename <$gs->from_email> \r\n";
             $headers .= "MIME-Version: 1.0\r\n";
             $headers .= "Content-Type: text/html; charset=utf-8\r\n";
-            @mail($user->email, $template->email_subject, $message, $headers);
+            mail($user->email, $template->email_subject, $message, $headers);
         }
 
         if ($gs->sms_notify) {
