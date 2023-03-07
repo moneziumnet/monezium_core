@@ -349,28 +349,7 @@ class UserController extends Controller
         $subject = "Transaction Detail";
 
         $msg_body = '
-        <!DOCTYPE html>
-        <html>
-        <head>
-        <style>
-        table {
-          font-family: arial, sans-serif;
-          border-collapse: collapse;
-          width: 100%;
-        }
 
-        td, th {
-          border: 1px solid #dddddd;
-          text-align: left;
-          padding: 8px;
-        }
-
-        tr:nth-child(even) {
-          background-color: #dddddd;
-        }
-        </style>
-        </head>
-        <body>
 
         <h2>Transaction Detail</h2>
         <p> Hello '.(auth()->user()->company_name ?? auth()->user()->name).'.</p>
@@ -397,8 +376,6 @@ class UserController extends Controller
 
         </table>
 
-        </body>
-        </html>
 
         ';
 
