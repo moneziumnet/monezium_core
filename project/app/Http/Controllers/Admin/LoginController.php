@@ -128,6 +128,8 @@ class LoginController extends Controller
       $subject = "Reset Password Request";
       $msg = "Please click this link : ".'<a href="'.route('admin.change.token',$token).'">'.route('admin.change.token',$token).'</a>'.' to change your password.';
           $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
+          $headers .= "MIME-Version: 1.0" . "\r\n";
+          $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
           sendMail($request->email,$subject,$msg,$headers);
       return response()->json('Verification Link Sent Successfully!. Please Check your email.');
       }

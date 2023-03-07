@@ -324,7 +324,7 @@ class FrontendController extends Controller
         $ps = DB::table('pagesettings')->where('id', '=', 1)->first();
         $subject = $request->subject;
         $gs = Generalsetting::findOrFail(1);
-        $to = $request->to;
+        $to = $gs->from_email;
         $fname = $request->firstname;
         $lname = $request->lastname;
         $from = $request->email;

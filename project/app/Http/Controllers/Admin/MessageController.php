@@ -213,7 +213,7 @@ class MessageController extends Controller
         $subject = $conv->subject;
         $from = $gs->from_email;
         $to = $conv->user->email;
-        $msg = "Email: " . $from . "\nMessage: " . $request->message;
+        $msg = nl2br($request->message);
 
         $headers = "From: " . $gs->from_name . "<" . $from . ">";
         sendMail($to, $subject, $msg, $headers);

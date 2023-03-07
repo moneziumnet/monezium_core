@@ -88,7 +88,7 @@ class MessageController extends Controller
         $subject = $conv->subject;
         $to = $gs->from_email;
         $from = $user->email;
-        $msg = "Email: " . $from . "\nMessage: " . $request->message;
+        $msg =  nl2br($request->message);
 
         $headers = "From: " . ($user->company_name ?? $user->name) . "<" . $from . ">";
         sendMail($to, $subject, $msg, $headers);
@@ -132,7 +132,7 @@ class MessageController extends Controller
         $subject = $request->subject;
         $to = $gs->from_email;
         $from = $user->email;
-        $msg = "Email: " . $from . "\nMessage: " . $request->message;
+        $msg = nl2br($request->message);
 
         $headers = "From: " . ($user->company_name ?? $user->name) . "<" . $from . ">";
         sendMail($to, $subject, $msg, $headers);

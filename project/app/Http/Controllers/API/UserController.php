@@ -81,10 +81,12 @@ class UserController extends Controller
                 $verificationLink = "<a href=" . url('user/register/verify/' . $token) . ">Simply click here to verify. </a>";
                 $to = $request->email;
                 $subject = 'Verify your email address.';
-                $msg = "Dear Customer,<br> We noticed that you need to verify your email address." . $verificationLink;
+                $msg = "Dear Customer,<br> We noticed that you need to verify your email address. <br>" . $verificationLink;
 
 
                     $headers = "From: " . $gs->from_name . "<" . $gs->from_email . ">";
+                    $headers .= "MIME-Version: 1.0" . "\r\n";
+                    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
                     sendMail($to, $subject, $msg, $headers);
                 return response()->json('We need to verify your email address. We have sent an email to ' . $to . ' to verify your email address. Please click link in that email to continue.');
             } else {
