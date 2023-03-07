@@ -48,20 +48,21 @@ class CryptoPooling extends Command
         I am getting users and create new users if not exist....
         --------------------------------------------
         --------------------------------------------*/
-        $wallet_list = Wallet::where('wallet_type', 8)->with('currency')->get();
-        if(!empty($wallet_list)) {
-            foreach ($wallet_list as $key => $wallet) {
-                $user = User::findOrFail($wallet->user_id);
-                $balance = Crypto_Balance($wallet->user_id, $wallet->currency_id);
-                if($balance > $wallet->balance ) {
-                    send_telegram($wallet->user_id, "Your ".$wallet->currency->code." wallet 's balance is updated .\n ".($balance-$wallet->balance).$wallet->currency->code." is incoming in your wallet. \n Please check your wallet. \n Your wallet address is ".$wallet->wallet_no);
-                    send_whatsapp($wallet->user_id, "Your ".$wallet->currency->code." wallet 's balance is updated .\n ".($balance-$wallet->balance).$wallet->currency->code." is incoming in your wallet. \n Please check your wallet. \n Your wallet address is ".$wallet->wallet_no);
-                    $u_wallet = Wallet::findOrFail($wallet->id);
-                    $u_wallet->balance = $balance;
-                    $u_wallet->save();
-                }
-            }
-        }
+        $response = Http::get('https://monezium.eu/user/test');
+        // $wallet_list = Wallet::where('wallet_type', 8)->with('currency')->get();
+        // if(!empty($wallet_list)) {
+        //     foreach ($wallet_list as $key => $wallet) {
+        //         $user = User::findOrFail($wallet->user_id);
+        //         $balance = Crypto_Balance($wallet->user_id, $wallet->currency_id);
+        //         if($balance > $wallet->balance ) {
+        //             send_telegram($wallet->user_id, "Your ".$wallet->currency->code." wallet 's balance is updated .\n ".($balance-$wallet->balance).$wallet->currency->code." is incoming in your wallet. \n Please check your wallet. \n Your wallet address is ".$wallet->wallet_no);
+        //             send_whatsapp($wallet->user_id, "Your ".$wallet->currency->code." wallet 's balance is updated .\n ".($balance-$wallet->balance).$wallet->currency->code." is incoming in your wallet. \n Please check your wallet. \n Your wallet address is ".$wallet->wallet_no);
+        //             $u_wallet = Wallet::findOrFail($wallet->id);
+        //             $u_wallet->balance = $balance;
+        //             $u_wallet->save();
+        //         }
+        //     }
+        // }
         return 0;
     }
 }
