@@ -152,7 +152,7 @@ class MoneyRequestController extends Controller
 
             // More headers
 
-            @sendMail($to,$subject,$msg_body,$headers);
+            sendMail($to,$subject,$msg_body,$headers);
             $data->save();
             return redirect(route('user.money.request.index'))->with('message','Request Money Send to unregisted user('.$request->account_email.') Successfully.');
 

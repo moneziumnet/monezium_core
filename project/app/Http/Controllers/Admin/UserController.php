@@ -1077,7 +1077,7 @@ class UserController extends Controller
                 $subject = " Money send successfully.";
                 $msg = "Hello ".$receiver->name."!\nMoney send successfully.\nThank you.";
                 $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-                @sendMail($to,$subject,$msg,$headers);
+                sendMail($to,$subject,$msg,$headers);
 
                 return redirect(route('admin-user-accounts',$user->id))->with('message', 'Send money successfully.');
             }else{
