@@ -36,7 +36,7 @@ class WithdrawalController extends Controller
         $withdraw->save();
 
 
-      @mailSend('accept_withdraw',['amount'=>amount($withdraw->amount,$withdraw->currency->type,2), 'method' => $withdraw->withdraw->name,'trnx'=> $withdraw->trx,'curr' => $withdraw->currency->code,'method'=>$withdraw->method->name,'charge'=> amount($withdraw->charge,$withdraw->currency->type,2),'data_time'=> dateFormat($withdraw->updated_at)], $withdraw->user);
+      mailSend('accept_withdraw',['amount'=>amount($withdraw->amount,$withdraw->currency->type,2), 'trnx'=> $withdraw->trx,'curr' => $withdraw->currency->code,'method'=>$withdraw->method->name,'charge'=> amount($withdraw->charge,$withdraw->currency->type,2),'date_time'=> dateFormat($withdraw->updated_at)], $withdraw->user);
 
         return back()->with('success','Withdraw Accepted Successfully');
     }
@@ -142,7 +142,7 @@ class WithdrawalController extends Controller
 
         }
 
-        @mailSend('reject_withdraw',['amount'=> amount($withdraw->amount,$withdraw->currency->type,2), 'method' => $withdraw->withdraw->name,'trnx'=> $trnx->trnx,'curr' => $withdraw->currency->code,'method'=>$withdraw->method->name,'reason'=>$withdraw->reject_reason,'data_time'=> dateFormat($trnx->created_at)],$user);
+        mailSend('reject_withdraw',['amount'=> amount($withdraw->amount,$withdraw->currency->type,2), 'trnx'=> $trnx->trnx,'curr' => $withdraw->currency->code,'method'=>$withdraw->method->name,'reason'=>$withdraw->reject_reason,'date_time'=> dateFormat($trnx->created_at)],$user);
 
         return back()->with('success','Withdraw Rejected Successfully');
     }

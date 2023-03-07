@@ -207,7 +207,7 @@ class OwnTransferController extends Controller
         $toTrnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(auth()->user()->company_name ?? auth()->user()->name).'"}';
         $toTrnx->save();
 
-        @mailSend('exchange_money',['from_curr'=>$fromWallet->currency->code,'to_curr'=>$toWallet->currency->code,'charge'=> amount(($transaction_global_cost +  $transaction_custom_cost)*$rate,$fromWallet->currency->type,3),'from_amount'=> amount($request->amount,$fromWallet->currency->type,3),'to_amount'=> amount($request->amount-($transaction_global_cost +  $transaction_custom_cost)*$rate,$toWallet->currency->type,3),'date_time'=> dateFormat($trnx->created_at)],auth()->user());
+        mailSend('exchange_money',['from_curr'=>$fromWallet->currency->code,'to_curr'=>$toWallet->currency->code,'charge'=> amount(($transaction_global_cost +  $transaction_custom_cost)*$rate,$fromWallet->currency->type,3),'from_amount'=> amount($request->amount,$fromWallet->currency->type,3),'to_amount'=> amount($request->amount-($transaction_global_cost +  $transaction_custom_cost)*$rate,$toWallet->currency->type,3),'date_time'=> dateFormat($trnx->created_at)],auth()->user());
 
         return back()->with('message','Money exchanged successfully.');
     }

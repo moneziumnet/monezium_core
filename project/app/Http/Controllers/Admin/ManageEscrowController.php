@@ -149,7 +149,7 @@ class ManageEscrowController extends Controller
         $escrow->status = 4;
         $escrow->update();
 
-        @mailSend('escrow_return',['amount'=>amount($escrow->amount,$escrow->currency->type,2), 'trnx'=> $trnx->trnx,'curr' => $escrow->currency->code,'data_time'=> dateFormat($trnx->created_at)], $wallet->user);
+        mailSend('escrow_return',['amount'=>amount($escrow->amount,$escrow->currency->type,2), 'trnx'=> $trnx->trnx,'curr' => $escrow->currency->code,'date_time'=> dateFormat($trnx->created_at)], $wallet->user);
 
         return back()->with('success','Payment has been returned to '.@$wallet->user->email);
 

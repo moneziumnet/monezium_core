@@ -144,10 +144,10 @@ class TransferController extends Controller
         $receiverTrnx->save();
 
         //to sender
-        @mailSend('transfer_money',['trnx'=>$trnx->trnx,'amount'=>amount($request->amount,$currency->type,3),'curr'=>$currency->code,'charge'=> numFormat($finalCharge),'after_balance'=> amount($senderWallet->balance,$currency->type,3),'trans_to'=> $receiver->email,'date_time'=> dateFormat($trnx->created_at)],auth()->user());
+        mailSend('transfer_money',['trnx'=>$trnx->trnx,'amount'=>amount($request->amount,$currency->type,3),'curr'=>$currency->code,'charge'=> numFormat($finalCharge),'after_balance'=> amount($senderWallet->balance,$currency->type,3),'trans_to'=> $receiver->email,'date_time'=> dateFormat($trnx->created_at)],auth()->user());
 
         //to receiver
-        @mailSend('received_money',['trnx'=>$trnx->trnx,'amount'=> amount($request->amount,$currency->type,3),'curr'=>$currency->code,'charge'=> 0,'after_balance'=> amount($recieverWallet->balance,$currency->type,3),'trans_from'=> auth()->user()->email,'date_time'=> dateFormat($trnx->created_at)],$receiver);
+        mailSend('received_money',['trnx'=>$trnx->trnx,'amount'=> amount($request->amount,$currency->type,3),'curr'=>$currency->code,'charge'=> 0,'after_balance'=> amount($recieverWallet->balance,$currency->type,3),'trans_from'=> auth()->user()->email,'date_time'=> dateFormat($trnx->created_at)],$receiver);
 
         return back()->with('success','Money has been transferred successfully');
 

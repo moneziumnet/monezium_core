@@ -668,7 +668,7 @@ class ManageInvoiceController extends Controller
             $invoice->update();
 
 
-            @mailSend('received_invoice_payment',[
+            mailSend('received_invoice_payment',[
                 'amount' => amount($invoice->get_amount,$invoice->currency->type,2),
                 'curr'   => $invoice->currency->code,
                 'trnx'   => $rcvTrnx->trnx,
@@ -897,7 +897,7 @@ class ManageInvoiceController extends Controller
             $invoice->update();
 
 
-            @mailSend('received_invoice_payment',[
+            mailSend('received_invoice_payment',[
                 'amount' => amount($invoice->get_amount,$invoice->currency->type,2),
                 'curr'   => $invoice->currency->code,
                 'trnx'   => $rcvTrnx->trnx,
