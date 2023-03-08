@@ -2189,7 +2189,7 @@ class UserTelegramController extends Controller
                         send_message_telegram($to_message, $chat_id);
                         break;
                     case 'Exchange':
-                        $user = User::findOrFail($w_session->user_id);
+                        $user = User::findOrFail($telegram_user->user_id);
 
                         $userType = explode(',', $user->user_type);
                         $supervisor = DB::table('customer_types')->where('type_name', 'Supervisors')->first()->id;
@@ -2202,13 +2202,13 @@ class UserTelegramController extends Controller
                         if(in_array($supervisor, $userType)) {
                             $wallet_type_list['6'] = 'Supervisor';
                         }
-                        elseif (DB::table('managers')->where('manager_id', $w_session->user_id)->first()) {
+                        elseif (DB::table('managers')->where('manager_id', $telegram_user->user_id)->first()) {
                             $wallet_type_list['10'] = 'Manager';
                         }
                         if(in_array($merchant, $userType)) {
                             $wallet_type_list['7'] = 'Merchant';
                         }
-                        $wallets = Wallet::where('user_id',$w_session->user_id)->with('currency')->get();
+                        $wallets = Wallet::where('user_id',$telegram_user->user_id)->with('currency')->get();
                         $wallet_list = '';
                         $currency = Currency::findOrFail(defaultCurr());
                         foreach ($wallets as $key => $wallet) {

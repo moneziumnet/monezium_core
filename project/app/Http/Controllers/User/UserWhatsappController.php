@@ -2194,7 +2194,7 @@ class UserWhatsappController extends Controller
                         send_message_whatsapp($to_message, $phone);
                         break;
                     case 'Exchange':
-                        $user = User::findOrFail($w_session->user_id);
+                        $user = User::findOrFail($whatsapp_user->user_id);
 
                         $userType = explode(',', $user->user_type);
                         $supervisor = DB::table('customer_types')->where('type_name', 'Supervisors')->first()->id;
@@ -2207,13 +2207,13 @@ class UserWhatsappController extends Controller
                         if(in_array($supervisor, $userType)) {
                             $wallet_type_list['6'] = 'Supervisor';
                         }
-                        elseif (DB::table('managers')->where('manager_id', $w_session->user_id)->first()) {
+                        elseif (DB::table('managers')->where('manager_id', $whatsapp_user->user_id)->first()) {
                             $wallet_type_list['10'] = 'Manager';
                         }
                         if(in_array($merchant, $userType)) {
                             $wallet_type_list['7'] = 'Merchant';
                         }
-                        $wallets = Wallet::where('user_id',$w_session->user_id)->with('currency')->get();
+                        $wallets = Wallet::where('user_id',$whatsapp_user->user_id)->with('currency')->get();
                         $wallet_list = '';
                         $currency = Currency::findOrFail(defaultCurr());
                         foreach ($wallets as $key => $wallet) {
