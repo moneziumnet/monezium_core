@@ -149,11 +149,7 @@ class DepositBankController extends Controller
         send_staff_telegram('Bank has been deposited by '.(auth()->user()->company_name ?? auth()->user()->name)."\n Amount is ".$currency->symbol.$request->amount."\n Payment Gateway : ".$request->method."\n Transaction ID : ".$request->deposit_no."\nPlease check more details to click this url\n".route('admin.deposits.bank.index'), 'Deposit Bank');
         $gs =  Generalsetting::findOrFail(1);
         $user = auth()->user();
-           $to = $user->email;
-           $subject = " You have deposited successfully.";
-           $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
-           $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-           sendMail($to,$subject,$msg,$headers);
+           mailSend('deposit_request',['amount'=>$request->amount, 'curr' => $currency->code, 'date_time'=>$deposit->created_at ,'type' => 'Bank', 'method'=>$request->method ], $user);
 
         return redirect()->route('user.depositbank.index')->with('success','Deposit amount '.$request->amount.' ('.$currency->code.') successfully!');
     }

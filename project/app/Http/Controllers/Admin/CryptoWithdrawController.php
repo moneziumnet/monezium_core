@@ -187,11 +187,6 @@ class CryptoWithdrawController extends Controller
         }
 
 
-            $to = $user->email;
-            $subject = " You have withdrawed successfully.";
-            $msg = "Hello ".$user->name."!\nYou have withdrawed successfully.\nThank you.";
-            $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-            sendMail($to,$subject,$msg,$headers);
 
         $msg = 'Data Updated Successfully.';
         return response()->json($msg);

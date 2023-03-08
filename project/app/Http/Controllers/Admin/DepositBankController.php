@@ -151,12 +151,13 @@ class DepositBankController extends Controller
         }
         $data->status = $id2;
         $data->save();
+        $user = User::findOrFail($data->user_id);
         if($id2 == 'reject') {
             $msg = 'Data Updated Successfully.';
+            mailSend('deposit_reject',['amount'=>$data->amount, 'curr' => $data->currency->code, 'trnx' => $data->deposit_number, 'type' => 'Bank' ], $user);
             return redirect()->back()->with("message", $msg);
         }
 
-        $user = User::findOrFail($data->user_id);
         $rate =  getRate($data->currency);
         $amount = $data->amount / $rate;
         $transaction_global_cost = 0;
@@ -238,11 +239,7 @@ class DepositBankController extends Controller
             $campaign->update();
         }
 
-            $to = $user->email;
-            $subject = " You have deposited successfully.";
-            $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
-            $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-            sendMail($to,$subject,$msg,$headers);
+            mailSend('deposit_approved',['amount'=>$data->amount, 'curr' => $data->currency->code, 'trnx' => $data->deposit_number ,'date_time'=>$trans->created_at ,'type' => 'Bank' ], $user);
 
         $msg = 'Data Updated Successfully.';
         return redirect()->back()->with("message", $msg);

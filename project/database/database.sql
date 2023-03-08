@@ -1120,7 +1120,7 @@ CREATE TABLE `email_templates`  (
   `email_body` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
   `status` int(11) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of email_templates
@@ -1134,6 +1134,8 @@ INSERT INTO `email_templates` VALUES (6, 'exchange_money', 'Your money is exchan
 INSERT INTO `email_templates` VALUES (7, 'accept_withdraw', 'Your withdraw request is accepted successfully.', '<p>Hello {name},<br></p><p>Your {method} withdraw request <span style=\"font-size: 1rem;\">&nbsp;is accepted successfully. Withdraw amount is {curr} {amount}.</span></p><p><span style=\"font-size: 1rem;\">Fee is {curr} {charge}.</span></p><p><span style=\"font-size: 1rem;\">Transaction id is {trnx}.</span></p><p>Withdraw Accept Time is {date_time}.</p><p>Thank You<br></p>', 1);
 INSERT INTO `email_templates` VALUES (8, 'reject_withdraw', 'Your withdraw request is rejected .', '<p>Hello {name},<br></p><p>Your {method} withdraw request <span style=\"font-size: 1rem;\">&nbsp;is rejected. Withdraw amount is {curr} {amount}.</span></p><p><span style=\"font-size: 1rem;\">Transaction id is {trnx}.</span><br></p><p>Withdraw Reject Time is {date_time}.</p><p>Reason is {reason}.</p><p>Thank You<br></p>', 1);
 INSERT INTO `email_templates` VALUES (9, 'received_invoice_payment', 'You received invoice money.', '<p>Hello {name},<br></p><p><span style=\"font-size: 1rem;\">The money you request invoice is received from {from_user} successfully. Received amount is {curr} {amount}.</span></p><p><span style=\"font-size: 1rem;\">Current your received wallet balance is {curr} {after_balance}.</span></p><p><span style=\"font-size: 1rem;\">Fee is {curr} {charge}.</span></p><p><span style=\"font-size: 1rem;\">Invoice number is {inv_num}.</span></p><p><span style=\"font-size: 1rem;\">Transaction id is {trnx}.</span></p><p>Invoice Received Time is {date_time}.</p><p>Thank You<br></p>', 1);
+INSERT INTO `email_templates` VALUES (10, 'deposit_request', 'You have sent deposit request.', '<p>Hello {name},<br></p><p><span style="font-size: 1rem;">You have sent {method} {type} deposit request successfully.</span></p><p>Request Deposit Amount is {curr} {amount}.</p><p><span style="font-size: 1rem;">Deposit Request Time is {date_time}.</span><br></p><p>Thank You<br></p>', 1);
+INSERT INTO `email_templates` VALUES (11, 'deposit_approved', 'You have deposited successfully.', '<p>Hello {name},<br></p><p><span style="font-size: 1rem;">{type} deposit have been approved successfully.</span></p><p>Deposit Amount is {curr} {amount}.&nbsp;</p><p>Transaction id is {trnx}.</p><p><span style="font-size: 1rem;">Deposit Approve Time is {date_time}.</span><br></p><p>Thank You<br></p>', 1);
 
 
 -- ----------------------------
