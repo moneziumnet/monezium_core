@@ -669,10 +669,6 @@ Route::prefix('user')->group(function() {
       Route::get('/affilate/code', [UserController::class,'affilate_code'])->name('user-affilate-code');
 
 
-      Route::get('/notf/show', 'User\NotificationController@user_notf_show')->name('customer-notf-show');
-      Route::get('/notf/count','User\NotificationController@user_notf_count')->name('customer-notf-count');
-      Route::get('/notf/clear','User\NotificationController@user_notf_clear')->name('customer-notf-clear');
-
       Route::get('admin/tickets', [MessageController::class,'adminmessages'])->name('user.message.index');
       Route::get('admin/ticket/{id}', [MessageController::class,'adminmessage'])->name('user.message.show');
       Route::post('admin/ticket/post', [MessageController::class,'adminpostmessage'])->name('user.message.store');
