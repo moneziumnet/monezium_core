@@ -1010,8 +1010,8 @@ class UserController extends Controller
                 $data->transaction_no = $txnid;
                 $data->currency_id = $request->wallet_id;
                 $data->type = 'own';
-                $data->cost = $finalCharge;
-                $data->amount = $finalamount;
+                $data->cost = $finalCharge*$rate;
+                $data->amount = $request->amount;
                 $data->description = $request->description;
                 $data->status = 1;
                 $data->save();
@@ -1027,7 +1027,7 @@ class UserController extends Controller
                 $trans_wallet = get_wallet($user->id, $currency_id, $wallet->wallet_type);
                 $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
                 $trans->amount      = $request->amount;
-                $trans->charge      = $finalCharge;
+                $trans->charge      = $finalCharge*$rate;
                 $trans->type        = '-';
                 $trans->remark      = 'send';
                 $trans->details     = trans('Send Money');
@@ -1073,11 +1073,10 @@ class UserController extends Controller
                         }
                     }
                 }
-                $to = $receiver->email;
-                $subject = " Money send successfully.";
-                $msg = "Hello ".$receiver->name."!\nMoney send successfully.\nThank you.";
-                $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-                sendMail($to,$subject,$msg,$headers);
+                $currency = Currency::findOrFail($currency_id);
+                mailSend('send_money',['amount'=>$finalamount, 'curr' => $currency->code, 'trnx' => $txnid, 'from' => ($user->company_name ?? $user->name), 'to' => ($receiver->company_name ?? $receiver->name ), 'charge'=> 0, 'date_time'=> $trans->created_at ], $receiver);
+                mailSend('send_money',['amount'=>$request->amount, 'curr' => $currency->code, 'trnx' => $txnid, 'from' => ($user->company_name ?? $user->name), 'to' => ($receiver->company_name ?? $receiver->name ), 'charge'=> $finalCharge*$rate, 'date_time'=> $trans->created_at ], $user);
+
 
                 return redirect(route('admin-user-accounts',$user->id))->with('message', 'Send money successfully.');
             }else{
