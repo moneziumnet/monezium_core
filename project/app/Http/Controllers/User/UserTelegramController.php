@@ -2237,7 +2237,7 @@ class UserTelegramController extends Controller
                         $new_session->data = json_decode('{}');
                         $new_session->type = 'Exchange';
                         $new_session->save();
-                        send_message_telegram($to_message, $phone);
+                        send_message_telegram($to_message, $chat_id);
                         break;
                     default:
                         # code...
