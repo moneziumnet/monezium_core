@@ -81,6 +81,7 @@ class VoucherController extends Controller
 
 
         $finalCharge = $custom_cost+$global_cost+$transaction_global_cost+$transaction_custom_cost;
+        $finalAmount = $request->amount + $finalCharge;
 
         // $commission  = ($request->amount * $global_charge->data->commission)/100;
         $userBalance = user_wallet_balance(auth()->id(), $wallet->currency_id);
@@ -116,9 +117,9 @@ class VoucherController extends Controller
         $trnx->save();
 
         // user_wallet_increment(auth()->id(),$wallet->currency_id,$commission);
-        if(check_user_type(4)){
-            user_wallet_increment($user->id, $wallet->currency_id, $custom_cost+$transaction_custom_cost, 6);
-        }
+        // if(check_user_type(4)){
+        //     user_wallet_increment($user->id, $wallet->currency_id, $custom_cost+$transaction_custom_cost, 6);
+        // }
         // $wallet->balance +=  $commission;
         // $wallet->save();
 
