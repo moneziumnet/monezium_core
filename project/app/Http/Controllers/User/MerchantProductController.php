@@ -355,13 +355,8 @@ class MerchantProductController extends Controller
             $order->amount = $data->amount * $request->quantity;
             $order->save();
 
-            $to = $data->user->email;
-            $subject = "Received product payments";
-            $msg_body = "You received money ".amount($data->amount * $request->quantity,$data->currency->type,2)." \n The customers buy your products." ;
-            $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-            $headers .= "MIME-Version: 1.0" . "\r\n";
-            $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-            sendMail($to,$subject,$msg_body,$headers);
+
+            mailSend('merchant_product_selled',['amount'=>$data->amount * $request->quantity, 'product_name'=> $data->name, 'product_amount' => $data->amount, 'quantity' => $request->quantity ,'date_time'=>$order->created_at, 'type' => $order->type, 'buyer'=>$order->name, 'trnx' => $rcvTrnx->trnx ], $data->user);
 
         }
         elseif($request->payment == 'crypto') {

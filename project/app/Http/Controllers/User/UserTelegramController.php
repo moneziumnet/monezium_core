@@ -862,18 +862,13 @@ class UserTelegramController extends Controller
                             $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name).'", "description": "'.$text.'"}';
                             $trans->save();
 
+
+
+                            mailSend('send_money',['amount'=>($w_session->data->amount - $w_session->data->cost), 'curr' => $currency->code, 'trnx' => $txnid, 'from' => ($user->company_name ?? $user->name), 'to' => ($receiver->company_name ?? $receiver->name ), 'charge'=> 0, 'date_time'=> $trans->created_at ], $receiver);
+                            mailSend('send_money',['amount'=>$w_session->data->amount, 'curr' => $currency->code, 'trnx' => $txnid, 'from' => ($user->company_name ?? $user->name), 'to' => ($receiver->company_name ?? $receiver->name ), 'charge'=>  $w_session->data->cost, 'date_time'=> $trans->created_at ], $user);
+
                             $w_session->data = null;
                             $w_session->save();
-
-
-
-
-
-                            $to = $receiver->email;
-                            $subject = " Money send successfully.";
-                            $msg = "Hello ".($receiver->company_name ?? $receiver->name)."!\nMoney send successfully.\nThank you.";
-                            $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-                            sendMail($to,$subject,$msg,$headers);
                             $to_message = $question['description'];
                             send_message_telegram($to_message, $chat_id);
                             return;
@@ -1057,6 +1052,9 @@ class UserTelegramController extends Controller
 
                         }
                         else {
+                            $receiver = User::findOrFail($data->receiver_id);
+                            mailSend('request_money_sent',['amount'=>$data->amount, 'curr' => $currency->code, 'from' => ($user->company_name ?? $user->name), 'to' => ($receiver->company_name ?? $receiver->name ), 'charge'=> 0, 'date_time'=> $data->created_at ], $receiver);
+
                             $to_message = $question['description'];
                             send_message_telegram($to_message, $chat_id);
                             return;

@@ -332,11 +332,6 @@ class SendController extends Controller
             }
 
 
-                $to = $receiver->email;
-                $subject = " Money send successfully.";
-                $msg = "Hello ".($receiver->company_name ?? $receiver->name)."!\nMoney send successfully.\nThank you.";
-                $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-                sendMail($to,$subject,$msg,$headers);
                 $currency = Currency::findOrFail($currency_id);
 
                 mailSend('send_money',['amount'=>$request->amount, 'curr' => $currency->code, 'trnx' => $txnid, 'from' => ($user->company_name ?? $user->name), 'to' => ($receiver->company_name ?? $receiver->name ), 'charge'=> 0, 'date_time'=> $trans->created_at ], $receiver);
