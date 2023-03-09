@@ -74,13 +74,13 @@ class DepositController extends Controller
 
         $user = User::findOrFail($data->user_id);
         $rate =  getRate($data->currency);
-        $amount = $data->amount*$rate;
+        $amount = $data->amount/$rate;
         $transaction_global_cost = 0;
 
-        $transaction_global_fee = check_global_transaction_fee($data->amount, $user, 'deposit');
+        $transaction_global_fee = check_global_transaction_fee($amount, $user, 'deposit');
         if($transaction_global_fee)
         {
-            $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($data->amount/100) * $transaction_global_fee->data->percent_charge;
+            $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($amount/100) * $transaction_global_fee->data->percent_charge;
         }
         $transaction_custom_cost = 0;
 
@@ -88,9 +88,9 @@ class DepositController extends Controller
 
         if($user->referral_id != 0)
         {
-            $transaction_custom_fee = check_custom_transaction_fee($data->amount, $user, 'deposit');
+            $transaction_custom_fee = check_custom_transaction_fee($amount, $user, 'deposit');
             if($transaction_custom_fee) {
-                $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($data->amount/100) * $transaction_custom_fee->data->percent_charge;
+                $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($amount/100) * $transaction_custom_fee->data->percent_charge;
             }
             $remark = 'Deposit_supervisor_fee';
             if (check_user_type_by_id(4, $user->referral_id)) {
@@ -121,7 +121,7 @@ class DepositController extends Controller
             $trans->save();
         }
         $final_chargefee = $transaction_global_cost + $transaction_custom_cost;
-        $final_amount = $amount - $final_chargefee*$rate;
+        $final_amount = $data->amount - $final_chargefee*$rate;
 
         user_wallet_increment(0, $data->currency_id, $transaction_global_cost*$rate, 9);
         user_wallet_increment($user->id, $data->currency_id, $final_amount, 1);
@@ -133,7 +133,7 @@ class DepositController extends Controller
         $trans->user_id     = $user->id;
         $trans->user_type   = 1;
         $trans->currency_id = $data->currency_id;
-        $trans->amount      = $amount;
+        $trans->amount      = $data->amount;
 
         $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
 
@@ -146,12 +146,8 @@ class DepositController extends Controller
         $trans->save();
 
         $data->update(['status' => 'complete']);
-
-            $to = $user->email;
-            $subject = " You have deposited successfully.";
-            $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
-            $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-            sendMail($to,$subject,$msg,$headers);
+        $currency = Currency::findOrFail($data->currency_id);
+        mailSend('deposit_approved',['amount'=>$data->amount, 'curr' => $currency->code, 'trnx' => $data->deposit_number ,'date_time'=>$trans->created_at ,'type' => $data->method ], $user);
 
         $msg = 'Data Updated Successfully.';
         return response()->json($msg);
