@@ -77,14 +77,8 @@ class OTPController extends Controller
         try {
             if($user->payment_fa == 'two_fa_email') {
                 $verification_code = rand(100000, 999999);
-                $gs = Generalsetting::first();
-                $to = $user->email;
-                $subject = "Verify your email address";
-                $msg_body = "To verify your email address use this security code: ".$verification_code;
-                $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-                $headers .= "MIME-Version: 1.0" . "\r\n";
-                $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-                sendMail($to,$subject,$msg_body,$headers);
+                mailSend('verify_code',['code'=>$verficiation_code], $user);
+
                 $user->two_fa_code = $verification_code;
                 $user->update();
                 return 'success';
