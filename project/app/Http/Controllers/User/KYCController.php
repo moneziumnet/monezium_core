@@ -102,15 +102,6 @@ class KYCController extends Controller
         return back()->with('success', 'KYC submitted successfully');
     }
 
-    public function sendSelfieLink(){
-        $user = auth()->user();
-        $gs = Generalsetting::first();
-        $to = $user->email;
-        $subject = " Online Selfie Link";
-        $msg = "Hello ".$user->name."!\nThis is the link of online Selfie for you.\nLink is \n".url('/user/kyc-take-selfie')." \n Thank you.";
-        $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-        sendMail($to,$subject,$msg,$headers);
-    }
 
     public function kyc(Request $request){
         $userType = 'user';
@@ -119,11 +110,8 @@ class KYCController extends Controller
         $userForms = KycForm::where('id', $user->manual_kyc)->first();
         $gs = Generalsetting::first();
         $route = route('user.kyc.selfie',encrypt($user->id));
-        $to = $user->email;
-        $subject = " Online Selfie Link";
-        $msg = "Hello ".$user->name."!\nThis is the link of online Selfie for you.\nLink is \n".$route." \n Thank you.";
-        $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-        sendMail($to,$subject,$msg,$headers);
+        mailSend('online_selfie_ling',['url'=>$route], $user);
+
 
         $requireInformations = [];
         if($userForms){

@@ -1140,6 +1140,7 @@ INSERT INTO `email_templates` VALUES (12, 'deposit_reject', 'Your deposit have b
 INSERT INTO `email_templates` VALUES (13, 'reset_password', 'Password Reset', '<p>Hello {name},<br></p><p><span style="font-size: 1rem;">Your password have been reset successfully.</span></p><p><span style="font-size: 1rem;">Please click this <a href="{url}" target="_blank">url</a>.</span></p><p><span style="font-size: 1rem;">Thank You</span><br></p>', 1);
 INSERT INTO `email_templates` VALUES (14, 'request_money_complete', 'Money request is complete.', '<p>Hello {name},<br>Request money is completed successfully.</p><p>Money {curr} {amount} is sent from {from} to {to} at {date_time}.</p><p><span style="font-size: 1rem;">Your charge Fee is {curr} {charge}.</span></p><p><span style="font-size: 1rem;">Transaction id is [trnx].</span></p><p><span style="font-size: 1rem;">Thank You</span><br></p>', 1);
 INSERT INTO `email_templates` VALUES (15, 'verify_code', 'You received verify code.', '<p>Hello {name},<br>You received verify code.</p><p>Verify Code is {code}.<br>Please check code.</p><p>Thank you.</p><p><br></p>', 1);
+INSERT INTO `email_templates` VALUES (16, 'online_selfie_ling', 'Online Selfie Link', '<p>Hello {name},<br><span style="font-size: 1rem;">This is the link of online Selfie for&nbsp; you.</span></p><p><span style="font-size: 1rem;">Please click this <a href="{url}" target="_blank">url</a>.</span></p><p><span style="font-size: 1rem;">Thank You</span><br></p>', 1);
 
 
 -- ----------------------------
