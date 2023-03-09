@@ -73,6 +73,11 @@ class QRAccessController extends Controller
             $deposit['sub_bank_id'] = $bankaccount->subbank_id;
             $deposit['status'] = "pending";
             $deposit->save();
+            $user = User::findOrFail($request->user_id);
+            $currency = Currency::findOrFail($request->currency_id);
+            $subbank = SubInsBank::findOrFail($bankaccount->subbank_id);
+
+            mailSend('deposit_request',['amount'=>$deposit->amount, 'curr' => ($currency ? $currency->code : ' '), 'date_time'=>$deposit->created_at ,'type' => 'Bank', 'method'=> $subbank->name ], $user);
             send_notification($request->user_id, 'Bank has been deposited. Please check.', route('admin.deposits.bank.index'));
             $currency = Currency::findOrFail($request->currency_id);
             send_whatsapp($request->user_id, 'Bank has been deposited '."\n Amount is ".$currency->symbol.$request->amount."\n Transaction ID : ".$request->deposit_no."\nPlease check more details to click this url\n".route('user.depositbank.index'));

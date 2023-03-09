@@ -380,7 +380,6 @@ class UserController extends Controller
         <table>
           <tr>
             <th style="width:15%;font-size:8px;">Date/Transaction No.</th>
-            <th style="width:15%;font-size:8px;">Date.</th>
             <th style="width:15%;font-size:8px;">Sender</th>
             <th style="width:15%;font-size:8px;">Receiver</th>
             <th style="width:30%;font-size:8px;">Description</th>
@@ -389,7 +388,6 @@ class UserController extends Controller
           </tr>
           <tr>
             <td style="font-size:8px;">'.date('d-m-Y', strtotime($tran->created_at)).' <br/> '.$tran->trnx.'</td>
-            <td style="font-size:8px;">'.$tran->created_at.'</td>
             <td style="font-size:8px;">'.(json_decode($tran->data)->sender ?? "").'</td>
             <td style="font-size:8px;">'.(json_decode($tran->data)->receiver ?? "").'</td>
             <td style="text-align: left; font-size:8px;">'.(json_decode($tran->data)->description ?? "").'<br/>'.ucwords(str_replace('_',' ',$tran->remark)).'</td>

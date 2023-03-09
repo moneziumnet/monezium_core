@@ -74,7 +74,6 @@ class RazorpayController extends Controller
         }
 
         $settings = Generalsetting::findOrFail(1);
-        $deposit = new Deposit();
 
         $input = $request->all();
         $item_name = $settings->title." Deposit";
