@@ -134,7 +134,7 @@ class MoneyRequestController extends Controller
         if($receiver === null){
             $gs = Generalsetting::first();
             $to = $request->account_email;
-            $subject = " Money Request";
+            $subject = " Money Request is receivd";
             $url =     "<button style='height: 50;width: 200px;' ><a href='".route('user.money.request.new', encrypt($txnid))."' target='_blank' type='button' style='color: #2C729E; font-weight: bold; text-decoration: none; '>Confirm</a></button>";
             // $msg = "Hello ".$request->account_name."!\nYou received request money (".$request->amount.$currency->symbol.").\nPlease confirm current.\n".$url."\n Thank you.";
 
@@ -153,12 +153,14 @@ class MoneyRequestController extends Controller
             // More headers
 
             sendMail($to,$subject,$msg_body,$headers);
+
             $data->save();
             return redirect(route('user.money.request.index'))->with('message','Request Money Send to unregisted user('.$request->account_email.') Successfully.');
 
         }
         else {
             $data->save();
+            mailSend('request_money_sent',['amount'=>$request->amount, 'curr' => $currency->code, 'from' => ($user->company_name ?? $user->name), 'to' => ($receiver->company_name ?? $receiver->name ), 'charge'=> 0, 'date_time'=> $data->created_at ], $receiver);
             return redirect(route('user.money.request.index'))->with('message','Request Money Send Successfully.');
         }
 
@@ -353,11 +355,9 @@ class MoneyRequestController extends Controller
         $trans->save();
 
 
-            $to = $receiver->email;
-            $subject = " Money send successfully.";
-            $msg = "Hello ".$receiver->name."!\nMoney send successfully.\nThank you.";
-            $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-            sendMail($to,$subject,$msg,$headers);
+        mailSend('request_money_complete',['amount'=>$data->amount, 'curr' => $currency->code, 'from' => ($user->company_name ?? $user->name), 'to' => ($receiver->company_name ?? $receiver->name ), 'charge'=> $data->cost + $data->supervisor_cost, 'date_time'=> $data->created_at, 'trnx' => $data->transaction_no ], $receiver);
+        mailSend('request_money_complete',['amount'=>$data->amount, 'curr' => $currency->code, 'from' => ($user->company_name ?? $user->name), 'to' => ($receiver->company_name ?? $receiver->name ), 'charge'=> 0, 'date_time'=> $data->created_at, 'trnx' => $data->transaction_no ], $user);
+
         return redirect()->route('user.money.request.index')->with('message','Successfully Money Send.');
         //return back()->with('message','Successfully Money Send.');
     }
