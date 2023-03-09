@@ -64,7 +64,7 @@ class ManualController extends Controller
         $deposit->save();
 
 
-            mailSend('deposit_approved',['amount'=>$deposit->amount, 'curr' => $currency->code, 'date_time'=>$deposit->created_at ,'type' => 'Manual', 'method'=>'Payment Gateway' ], $user);
+            mailSend('deposit_request',['amount'=>$deposit->amount, 'curr' => $currency->code, 'date_time'=>$deposit->created_at ,'type' => 'Manual', 'method'=>'Payment Gateway' ], $user);
 
         return redirect()->route('user.deposit.create')->with('success','Deposit amount '.$request->amount.' ('.$currency->code.') successfully!');
     }
