@@ -1142,6 +1142,7 @@ INSERT INTO `email_templates` VALUES (14, 'request_money_complete', 'Money reque
 INSERT INTO `email_templates` VALUES (15, 'verify_code', 'You received verify code.', '<p>Hello {name},<br>You received verify code.</p><p>Verify Code is {code}.<br>Please check code.</p><p>Thank you.</p><p><br></p>', 1);
 INSERT INTO `email_templates` VALUES (16, 'online_selfie_ling', 'Online Selfie Link', '<p>Hello {name},<br><span style="font-size: 1rem;">This is the link of online Selfie for&nbsp; you.</span></p><p><span style="font-size: 1rem;">Please click this <a href="{url}" target="_blank">url</a>.</span></p><p><span style="font-size: 1rem;">Thank You</span><br></p>', 1);
 INSERT INTO `email_templates` VALUES (17, 'merchant_product_selled', 'Your product is selled.', '<p>Hello {name},<br>{buyer} buy your product {product_name}.<br>Payment Type : {type}.</p><p>Total selling amount is {amount}.<br>Product price is {product_amount}, quantity is {quantity}.</p><p>Selling time is {date_time}.<br>Transaction is id {trnx}.</p><p>Thank you.</p>', 1);
+INSERT INTO `email_templates` VALUES (18, 'create_withdraw', 'Your withdraw request is created successfully.', '<p>Hello {name},<br></p><p>Your {method} withdraw request <span style="font-size: 1rem;">&nbsp;is created successfully. Withdraw amount is {curr} {amount}.</span></p><p><span style="font-size: 1rem;">Fee is {curr} {charge}.</span></p><p><span style="font-size: 1rem;">Transaction id is {trnx}.</span></p><p>Withdraw CreateTime is {date_time}.</p><p>Thank You<br></p>', 1);
 
 
 -- ----------------------------

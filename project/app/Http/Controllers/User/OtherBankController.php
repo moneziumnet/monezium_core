@@ -179,29 +179,10 @@ class OtherBankController extends Controller
 
 			user_wallet_decrement($user->id, $data->currency_id, $data->amount);
 			user_wallet_increment(0, $data->currency_id, $data->cost, 9);
-            // $trans = new Transaction();
-            // $trans->trnx = $txnid;
-            // $trans->user_id     = $user->id;
-            // $trans->user_type   = 1;
-            // $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
-            // $trans->amount      = $finalAmount;
-            // $trans->charge      = $cost;
-            // $trans->type        = '-';
-            // $trans->remark      = 'Send_Money';
-            // $trans->data        = '{"sender":"'.$user->name.'", "receiver":"Other Bank"}';
-            // $trans->details     = trans('Send Money');
 
-            // // $trans->email = $user->email;
-            // // $trans->amount = $finalAmount;
-            // // $trans->type = "Send Money";
-            // // $trans->profit = "minus";
-            // // $trans->txnid = $txnid;
-            // // $trans->user_id = $user->id;
-            // $trans->save();
+            $subbank = SubInsBank::findOrFail($request->subbank);
+            mailSend('create_withdraw',['amount'=>amount($data->final_amount,1,2), 'trnx'=> $data->transaction_no,'curr' => $currency->code,'method'=>$subbank->name,'charge'=> amount($data->cost,1,2),'date_time'=> dateFormat($data->created_at)], $user);
 
-            // $user->decrement('balance',$finalAmount);
-            // $currency = defaultCurr();
-            // user_wallet_decrement(auth()->id(),$currency->id,$finalAmount);
             send_notification($user->id, 'Bank transfer has been created by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin-user-banks', $user->id));
             send_staff_telegram('Bank transfer has been created by '.(auth()->user()->company_name ?? auth()->user()->name).". Please check.\n".route('admin-user-banks', $user->id), 'Bank Transfer');
 

@@ -222,6 +222,7 @@ class WithdrawCryptoController extends Controller
         $trans->details     = trans('Withdraw money');
         $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$request->sender_address.'"}';
         $trans->save();
+        mailSend('accept_withdraw',['amount'=>amount($trans->amount,2,8), 'trnx'=> $trans->trx,'curr' => $currency->code,'method'=>'Crypto','charge'=> amount($trans->charge,2,8),'date_time'=> dateFormat($trans->created_at)], $user);
 
 
 

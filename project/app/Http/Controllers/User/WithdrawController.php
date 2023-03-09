@@ -201,6 +201,9 @@ class WithdrawController extends Controller
         $trans->details     = trans('Withdraw money');
         $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.Admin::findOrFail($request->subinstitude)->name.'", "details": "'.$request->details.'"}';
         $trans->save();
+        $paymentgateway = PaymentGateway::findOrFail($request->methods);
+        mailSend('create_withdraw',['amount'=>amount($newwithdrawal->amount,1,2), 'trnx'=> $newwithdrawal->trx,'curr' => $currency->code,'method'=>$paymentgateway->name,'charge'=> amount($newwithdrawal->charge,1,2),'date_time'=> dateFormat($newwithdrawal->created_at)], $user);
+
 
         return redirect(route('user.withdraw.index'))->with('message','Withdraw Request Amount : '.$request->amount.' Fee : '.$messagefee*$rate.' = '.$messagefinal.' ('.$currency->code.') Sent Successfully.');
 

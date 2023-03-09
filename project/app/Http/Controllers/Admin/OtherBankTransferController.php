@@ -563,6 +563,11 @@ class OtherBankTransferController extends Controller
 
       $data->status = $id2;
       $data->update();
+
+      $currency =  Currency::findOrFail($data->currency_id);
+      $subbank = SubInsBank::findOrFail($data->subbank);
+      mailSend('accept_withdraw',['amount'=>amount($data->final_amount,1,2), 'trnx'=> $trans->trnx,'curr' => $currency->code,'method'=>$subbank->name,'charge'=> amount($data->cost,1,2),'date_time'=> dateFormat($data->updated_at)], $user);
+
       $msg = __('Status Updated Successfully.');
     }
 
@@ -571,6 +576,9 @@ class OtherBankTransferController extends Controller
       $data->update();
       user_wallet_increment($user->id, $data->currency_id, $data->amount);
       user_wallet_decrement(0, $data->currency_id, $data->cost, 9);
+      $currency =  Currency::findOrFail($data->currency_id);
+      $subbank = SubInsBank::findOrFail($data->subbank);
+      mailSend('reject_withdraw',['amount'=> amount($data->final_amount,1,2), 'trnx'=> $data->transaction_no,'curr' => $currency->code,'method'=>$subbank->name,'reason'=>'Admin reject your request.','date_time'=> dateFormat($data->updated_at)],$user);
 
       $msg = __('Status Updated Successfully.');
     }
