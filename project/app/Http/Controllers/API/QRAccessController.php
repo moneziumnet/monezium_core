@@ -124,15 +124,19 @@ class QRAccessController extends Controller
                 $trans->user_id     = $user->id;
                 $trans->user_type   = 1;
                 $trans->currency_id = defaultCurr();
-                $trans->amount      = $chargefee->data->fixed_charge;
+                $trans->amount      = 0;
                 $trans_wallet = get_wallet($user->id, defaultCurr(), 1);
                 $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-                $trans->charge      = 0;
+                $trans->charge      = $chargefee->data->fixed_charge;
                 $trans->type        = '-';
-                $trans->remark      = 'wallet_create';
+                $trans->remark      = 'account-open';
                 $trans->details     = trans('Wallet Create');
                 $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
                 $trans->save();
+
+                $currency = Currency::findOrFail(defaultCurr());
+
+                mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>'Current', 'date_time'=> dateFormat($trans->created_at)], $user);
 
                 user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
                 user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
@@ -185,13 +189,16 @@ class QRAccessController extends Controller
                 $trans->currency_id = defaultCurr();
                 $trans_wallet = get_wallet($request->user_id, defaultCurr(), 1);
                 $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-                $trans->amount      = $chargefee->data->fixed_charge;
-                $trans->charge      = 0;
+                $trans->amount      = 0;
+                $trans->charge      = $chargefee->data->fixed_charge;
                 $trans->type        = '-';
-                $trans->remark      = 'wallet_create';
+                $trans->remark      = 'account-open';
                 $trans->details     = trans('Wallet Create');
                 $trans->data        = '{"sender":"'.(User::findOrFail($request->user_id)->company_name ?? User::findOrFail($request->user_id)->name).'", "receiver":"'.$gs->disqus.'"}';
                 $trans->save();
+                $currency = Currency::findOrFail(defaultCurr());
+
+                mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>'current', 'date_time'=> dateFormat($trans->created_at)], $user);
 
                 user_wallet_decrement($request->user_id, defaultCurr(), $chargefee->data->fixed_charge, 1);
                 user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);

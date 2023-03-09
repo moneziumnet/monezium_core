@@ -125,6 +125,9 @@ class ManageEscrowController extends Controller
 
             $trans->data        = '{"sender":"'.(User::findOrFail($request->id)->company_name ?? User::findOrFail($request->id)->name ).'", "receiver":"'.$gs->disqus.'"}, "description":"'.$escrow->description.'"}';
             $trans->save();
+            $currency = Currency::findOrFail(defaultCurr());
+
+            mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>'Escrow', 'date_time'=> dateFormat($trans->created_at)], $user);
         }
 
         $wallet->balance += $escrow->amount;
