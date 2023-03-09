@@ -313,15 +313,19 @@ class MerchantCampaignController extends Controller
                 $trans->user_id     = $campaign_user->id;
                 $trans->user_type   = 1;
                 $trans->currency_id = defaultCurr();
-                $trans->amount      = $chargefee->data->fixed_charge;
+                $trans->amount      = 0;
                 $trans_wallet = get_wallet($campaign_user->id, defaultCurr());
                 $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-                $trans->charge      = 0;
+                $trans->charge      = $chargefee->data->fixed_charge;
                 $trans->type        = '-';
-                $trans->remark      = 'wallet_create';
+                $trans->remark      = 'account-open';
                 $trans->details     = trans('Wallet Create');
                 $trans->data        = '{"sender":"'.$campaign_user->name.'", "receiver":"'.$gs->disqus.'"}';
                 $trans->save();
+
+                $currency = Currency::findOrFail(defaultCurr());
+                mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type' => 'Current', 'date_time'=> dateFormat($trans->created_at)], auth()->user());
+
 
                 user_wallet_decrement($campaign_user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
                 user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);

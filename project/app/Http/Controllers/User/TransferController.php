@@ -100,6 +100,9 @@ class TransferController extends Controller
             $trans->data        = '{"sender":"'.($receiver->company_name ?? $receiver->name).'", "receiver":"'.$gs->disqus.'"}';
             $trans->save();
 
+            $def_currency = Currency::findOrFail(defaultCurr());
+            mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $def_currency->code, 'type' => 'Current', 'date_time'=> dateFormat($trans->created_at)], $user);
+
             user_wallet_decrement($receiver->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
             user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
         }

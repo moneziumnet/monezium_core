@@ -562,6 +562,11 @@ class ManageInvoiceController extends Controller
                 $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
                 $trans->save();
 
+                $currency = Currency::findOrFail(defaultCurr());
+
+                mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type' => 'Current', 'date_time'=> dateFormat($trans->created_at)], $user);
+
+
                 user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
                 user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
             }
@@ -644,6 +649,10 @@ class ManageInvoiceController extends Controller
                 $trans->details     = trans('Wallet Create');
                 $trans->data        = '{"sender":"'.(User::findOrFail($invoice->user_id)->company_name ?? User::findOrFail($invoice->user_id)->name).'", "receiver":"'.$gs->disqus.'"}';
                 $trans->save();
+
+                $currency = Currency::findOrFail(defaultCurr());
+
+                mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type' => 'Current', 'date_time'=> dateFormat($trans->created_at)], $user);
 
                 user_wallet_decrement($invoice->user_id, defaultCurr(), $chargefee->data->fixed_charge, 1);
                 user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
@@ -795,6 +804,8 @@ class ManageInvoiceController extends Controller
                 $trans->details     = trans('Wallet Create');
                 $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'", "description": "'.$invoice->description.'"}';
                 $trans->save();
+                $currency = Currency::findOrFail(defaultCurr());
+                mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type' => 'Current', 'date_time'=> dateFormat($trans->created_at)], $user);
 
                 user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
                 user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
@@ -878,6 +889,9 @@ class ManageInvoiceController extends Controller
                 $trans->details     = trans('Wallet Create');
                 $trans->data        = '{"sender":"'.(User::findOrFail($invoice->user_id)->company_name ?? User::findOrFail($invoice->user_id)->name).'", "receiver":"'.$gs->disqus.'"}';
                 $trans->save();
+
+                $currency = Currency::findOrFail(defaultCurr());
+                mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type' => 'Current', 'date_time'=> dateFormat($trans->created_at)], $user);
 
                 user_wallet_decrement($invoice->user_id, defaultCurr(), $chargefee->data->fixed_charge, 1);
                 user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);

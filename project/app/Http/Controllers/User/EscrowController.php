@@ -280,6 +280,10 @@ class EscrowController extends Controller
             $trans->data        = '{"sender":"'.($recipient->company_name ?? $recipient->name).'", "receiver":"'.$gs->disqus.'", "description": "'.$escrow->description.'"}';
             $trans->save();
 
+            $currency = Currency::findOrFail(defaultCurr());
+
+            mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>'Escrow', 'date_time'=> dateFormat($trans->created_at)], $user);
+
             user_wallet_decrement($recipient->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
             user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
         }
