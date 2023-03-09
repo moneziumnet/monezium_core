@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Currency;
 use App\Models\PlanDetail;
 use App\Models\Deposit;
+use App\Models\Transaction;
 use App\Classes\GoogleAuthenticator;
 use App\Models\Generalsetting;
 use Illuminate\Http\Request;
@@ -63,6 +64,8 @@ class PaystackController extends Controller
         $deposit['user_id'] = auth()->user()->id;
         $deposit['amount'] = $request->amount;
         $deposit['method'] = $request->method;
+        $deposit['currency_id'] = $request->currency_id;
+        $deposit['deposit_number'] = Str::random(12);
         $deposit['status'] = "complete";
 
         $deposit->save();
@@ -73,14 +76,25 @@ class PaystackController extends Controller
         $amountToAdd = $request->amount/getRate($currency);
 
         $user = auth()->user();
-        $user->income += $amountToAdd;
-        $user->save();
+        $currency = Currency::findOrFail($deposit->currency_id);
+        user_wallet_increment($user->id, $deposit->currency_id, $deposit->amount);
 
-           $to = $user->email;
-           $subject = " You have deposited successfully.";
-           $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
-           $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-           sendMail($to,$subject,$msg,$headers);
+
+        $trans = new AppTransaction();
+        $trans->trnx = $deposit->deposit_number;
+        $trans->user_id     = $user->id;
+        $trans->user_type   = 1;
+        $trans->currency_id = $deposit->currency_id;
+        $trans_wallet = get_wallet($user->id, $currency->id);
+        $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+        $trans->amount      = $deposit->amount;
+        $trans->charge      = 0;
+        $trans->type        = '+';
+        $trans->remark      = 'Deposit';
+        $trans->data        = '{"sender":"Paystack", "receiver":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "description": "Paystack / '.$deposit->deposit_number.'"}';
+        $trans->details     = trans('Deposit Paystack complete');
+
+        mailSend('deposit_approved',['amount'=>$deposit->amount, 'curr' => $currency->code, 'trnx' => $deposit->deposit_number ,'date_time'=>$trans->created_at ,'type' => 'Paystack' ], $user);
 
         return redirect()->route('user.deposit.create')->with('success','Deposit amount ('.$request->amount.') successfully!');
     }

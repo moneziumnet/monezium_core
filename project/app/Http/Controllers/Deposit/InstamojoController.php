@@ -129,7 +129,7 @@ class InstamojoController extends Controller
             $deposit['deposit_number'] = $order_data['item_number'];
             $deposit['user_id'] = auth()->user()->id;
             $deposit['currency_id'] = $input['currency_id'];
-            $deposit['amount'] = $amountToAdd;
+            $deposit['amount'] =  $input['amount'];
             $deposit['method'] = $input['method'];
             $deposit['txnid'] = $payment_id;
             $deposit['status'] = "complete";
@@ -140,31 +140,27 @@ class InstamojoController extends Controller
             $gs =  Generalsetting::findOrFail(1);
 
             $user = auth()->user();
-            user_wallet_increment($user->id, $input['currency_id'], $amountToAdd);
+            user_wallet_increment($user->id, $input['currency_id'],  $input['amount']);
 
 
             $trans = new Transaction();
             $trans->trnx = $order_data['item_number'];
             $trans->user_id     = $user->id;
             $trans->user_type   = 1;
-            $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
+            $trans->currency_id = $input['currency_id'];
             $trans_wallet = get_wallet($user->id, $input['currency_id']);
             $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-            $trans->amount      = $amountToAdd;
+            $trans->amount      = $input['amount'];
             $trans->charge      = 0;
             $trans->type        = '+';
             $trans->remark      = 'Deposit';
-            $trans->data        = '{"sender":"InstamojoPay System", "receiver":"'.(auth()->user()->company_name ?? auth()->user()->name).'"}';
+            $trans->data        = '{"sender":"InstamojoPay System", "receiver":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "description": "InstamojoPay System / '.$order_data['item_number'].'"}';
             $trans->details     = trans('Deposit Instamojo complete');
 
             $trans->save();
 
 
-               $to = $user->email;
-               $subject = " You have deposited successfully.";
-               $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
-               $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-               sendMail($to,$subject,$msg,$headers);
+            mailSend('deposit_approved',['amount'=>$input['amount'], 'curr' => $currency->code, 'trnx' => $order_data['item_number'] ,'date_time'=>$trans->created_at ,'type' => 'InstamojoPay System' ], $user);
 
             return redirect()->route('user.deposit.create')->with('success','Deposit amount '.$input['amount'].' ('.$input['currency_code'].') successfully!');
 

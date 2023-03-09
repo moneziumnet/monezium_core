@@ -126,29 +126,29 @@ class MollieController extends Controller
             $deposit['deposit_number'] = Str::random(12);
             $deposit['user_id'] = auth()->id();
             $deposit['currency_id'] = $input['currency_id'];
-            $deposit['amount'] = $amountToAdd;
+            $deposit['amount'] = $input['amount'];
             $deposit['method'] = $input['method'];
             $deposit['status'] = "complete";
             $deposit['txnid'] = $payment->id;
             $deposit->save();
 
             $user = auth()->user();
-            user_wallet_increment($user->id, $input['currency_id'], $amountToAdd);
+            user_wallet_increment($user->id, $input['currency_id'], $input['amount']);
 
 
             $trans = new Transaction();
             $trans->trnx = $deposit->deposit_number;
             $trans->user_id     = $user->id;
             $trans->user_type   = 1;
-            $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
-            $trans->amount      = $amountToAdd;
+            $trans->currency_id = $currency->id;
+            $trans->amount      = $input['amount'];
             $trans_wallet = get_wallet($user->id, $input['currency_id']);
             $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
             $trans->charge      = 0;
             $trans->type        = '+';
             $trans->remark      = 'Deposit';
-            $trans->data        = '{"sender":"MobilePay System", "receiver":"'.(auth()->user()->company_name ?? auth()->user()->name).'"}';
-            $trans->details     = trans('Deposit Mobile complete');
+            $trans->data        = '{"sender":"MobilePay System", "receiver":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "description": "MobilePay System / '.$deposit->deposit_number.'"}';
+            $trans->details     = trans('Deposit MobilePay complete');
 
             // $trans->email = $user->email;
             // $trans->amount = $amountToAdd;
@@ -161,12 +161,7 @@ class MollieController extends Controller
 
             $gs =  Generalsetting::findOrFail(1);
             $user = auth()->user();
-
-               $to = $user->email;
-               $subject = " You have deposited successfully.";
-               $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
-               $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-               sendMail($to,$subject,$msg,$headers);
+            mailSend('deposit_approved',['amount'=>$deposit->amount, 'curr' => $currency->code, 'trnx' => $deposit->deposit_number ,'date_time'=>$trans->created_at ,'type' => 'MobilePay System' ], $user);
 
             Session::forget('molly_data');
             return redirect()->route('user.deposit.create')->with('success','Deposit amount ('.$input['amount'].') successfully!');

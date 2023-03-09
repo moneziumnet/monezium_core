@@ -9,6 +9,7 @@ use App\Models\Deposit;
 use App\Models\Generalsetting;
 use App\Models\PlanDetail;
 use App\Models\PaymentGateway;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Classes\GoogleAuthenticator;
@@ -131,13 +132,28 @@ class AuthorizeController extends Controller
                         $gs =  Generalsetting::findOrFail(1);
                         $user = auth()->user();
                         user_wallet_increment($user->id, $request->currency_id, $request->amount);
+                        $trans_wallet = get_wallet($user->id, $request->currency_id, 1);
+
+                        $trans = new Transaction();
+                        $trans->trnx = $deposit->deposit_number;
+                        $trans->user_id     = $user->id;
+                        $trans->user_type   = 1;
+                        $trans->currency_id = $deposit->currency_id;
+                        $trans->amount      = $deposit->amount;
+                        $trans->charge      = 0;
+                        $trans->type        = '+';
+
+                        $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+
+                        $trans->remark      = 'deposit';
+                        $trans->details     = trans('Deposit complete');
+
+                        $trans->data        = '{"sender":"Authorize.Net", "receiver":"'.($user->company_name ?? $user->name).'", "description": "Authorize.Net / '.$deposit->deposit_number.'"}';
+                        $trans->save();
 
 
-                           $to = $user->email;
-                           $subject = " You have deposited successfully.";
-                           $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
-                           $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-                           sendMail($to,$subject,$msg,$headers);
+
+                        mailSend('deposit_approved',['amount'=>$deposit->amount, 'curr' => $currency_code, 'trnx' => $deposit->deposit_number ,'date_time'=>$trans->created_at ,'type' => 'Authorize.Net' ], $user);
 
                         return redirect()->route('user.deposit.create')->with('success','Deposit amount '.$request->amount.' ('.$currency_code.') successfully!');
 

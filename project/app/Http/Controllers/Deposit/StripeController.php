@@ -114,7 +114,7 @@ class StripeController extends Controller
 
                 if ($charge['status'] == 'succeeded') {
                     $currency = Currency::where('id',$request->currency_id)->first();
-                    $amountToAdd = $request->amount/getRate($currency);
+                    $amountToAdd = $request->amount;
 
                     $deposit['deposit_number'] = Str::random(12);
                     $deposit['user_id'] = auth()->id();
@@ -137,7 +137,7 @@ class StripeController extends Controller
                     $trans->trnx = $deposit->deposit_number;
                     $trans->user_id     = $user->id;
                     $trans->user_type   = 1;
-                    $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
+                    $trans->currency_id = $request->currency_id;
                     $trans_wallet = get_wallet($user->id, $currency_id);
                     $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
                     $trans->amount      = $amountToAdd;
@@ -156,13 +156,9 @@ class StripeController extends Controller
                     $trans->save();
 
 
-                       $to = $user->email;
-                       $subject = " You have deposited successfully.";
-                       $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
-                       $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-                       sendMail($to,$subject,$msg,$headers);
+                       mailSend('deposit_approved',['amount'=>$deposit->amount, 'curr' => $currency->code, 'trnx' => $deposit->deposit_number ,'date_time'=>$trans->created_at ,'type' => 'Razorpay' ], $user);
 
-                    return redirect()->route('user.deposit.create')->with('success','Deposit amount '.$request->amount.' (USD) successfully!');
+                    return redirect()->route('user.deposit.create')->with('success','Deposit amount '.$request->amount.' '.$currency->code.' successfully!');
                 }
 
             }catch (Exception $e){

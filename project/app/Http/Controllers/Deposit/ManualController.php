@@ -8,6 +8,7 @@ use App\Models\Currency;
 use App\Models\PlanDetail;
 use App\Models\Deposit;
 use App\Models\Generalsetting;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Classes\GoogleAuthenticator;
 use Illuminate\Support\Str;
@@ -39,7 +40,7 @@ class ManualController extends Controller
         $dailydeposit = Deposit::where('user_id', $user->id)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus('complete')->sum('amount');
         $monthlydeposit = Deposit::where('user_id', $user->id)->whereMonth('created_at', '=', date('m'))->whereStatus('complete')->sum('amount');
 
-        if ( $request->amount < $global_range->min ||  $request->amount > $global_range->max) {
+        if ( $amountToAdd < $global_range->min ||  $amountToAdd > $global_range->max) {
            return redirect()->back()->with('unsuccess','Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min );
 
         }
@@ -56,20 +57,14 @@ class ManualController extends Controller
         $deposit['deposit_number'] = Str::random(12);
         $deposit['user_id'] = auth()->id();
         $deposit['currency_id'] = $request->currency_id;
-        $deposit['amount'] = $amountToAdd;
+        $deposit['amount'] = $request->amount;
         $deposit['method'] = $request->method;
         $deposit['txnid'] = $request->txn_id4;
         $deposit['status'] = "pending";
         $deposit->save();
 
 
-        $gs =  Generalsetting::findOrFail(1);
-        $user = auth()->user();
-           $to = $user->email;
-           $subject = " You have deposited successfully.";
-           $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
-           $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-           sendMail($to,$subject,$msg,$headers);
+            mailSend('deposit_approved',['amount'=>$deposit->amount, 'curr' => $currency->code, 'date_time'=>$deposit->created_at ,'type' => 'Manual', 'method'=>'Payment Gateway' ], $user);
 
         return redirect()->route('user.deposit.create')->with('success','Deposit amount '.$request->amount.' ('.$currency->code.') successfully!');
     }

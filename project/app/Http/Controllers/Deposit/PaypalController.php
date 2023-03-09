@@ -106,7 +106,7 @@ class PaypalController extends Controller
 
         $deposit['user_id'] = auth()->user()->id;
         $deposit['currency_id'] = $request->currency_id;
-        $deposit['amount'] = $amountToAdd ;
+        $deposit['amount'] = $request->amount ;
         $deposit['method'] = $request->method;
         $deposit['deposit_number'] = $item_number;
         $deposit['status'] = "pending";
@@ -199,26 +199,25 @@ class PaypalController extends Controller
 
                 $gs =  Generalsetting::findOrFail(1);
 
-                    $to = $user->email;
-                    $subject = " You have deposited successfully.";
-                    $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
-                    $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-                    sendMail($to,$subject,$msg,$headers);
-                $currency_id = Currency::whereIsDefault(1)->first()->id;
-                user_wallet_increment($user->id, $currency_id, $deposit->amount);
+                $currency = Currency::findOrFail($deposit->currency_id);
+                user_wallet_increment($user->id, $deposit->currency_id, $deposit->amount);
 
 
                 $trans = new AppTransaction();
                 $trans->trnx = $deposit->deposit_number;
                 $trans->user_id     = $user->id;
                 $trans->user_type   = 1;
-                $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
+                $trans->currency_id = $deposit->currency_id;
                 $trans->amount      = $deposit->amount;
                 $trans->charge      = 0;
+                $trans_wallet = get_wallet($user->id, $deposit->currency_id);
+                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
                 $trans->type        = '+';
-                $trans->remark      = 'Deposit_create';
+                $trans->remark      = 'Deposit';
+                $trans->data        = '{"sender":"Paypal", "receiver":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "description": "Paypal / '.$deposit->deposit_number.'"}';
                 $trans->details     = trans('Deposit Paypal complete');
 
+                mailSend('deposit_approved',['amount'=>$deposit->amount, 'curr' => $currency->code, 'trnx' => $deposit->deposit_number ,'date_time'=>$trans->created_at ,'type' => 'Paypal' ], $user);
                 // $trans->email = $user->email;
                 // $trans->amount = $deposit->amount;
                 // $trans->type = "Deposit";

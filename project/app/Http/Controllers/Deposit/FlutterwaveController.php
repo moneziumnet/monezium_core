@@ -9,6 +9,7 @@ use App\Models\Deposit;
 use App\Models\Generalsetting;
 use App\Classes\GoogleAuthenticator;
 use App\Models\PlanDetail;
+use App\Models\Transaction;
 use App\Models\PaymentGateway;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -176,15 +177,27 @@ class FlutterwaveController extends Controller
                   $amountToAdd = $deposit_data['amount']/getRate($currency);
 
                   $user = auth()->user();
-                  user_wallet_increment($user->id, $currency->id, $amountToAdd);
+                  user_wallet_increment($user->id, $currency->id, $deposit_data['amount']);
+                  $trans_wallet = get_wallet($user->id, $currency->currency_id, 1);
 
+                  $trans = new Transaction();
+                  $trans->trnx = $deposit->deposit_number;
+                  $trans->user_id     = $user->id;
+                  $trans->user_type   = 1;
+                  $trans->currency_id = $deposit->currency_id;
+                  $trans->amount      = $deposit->amount;
+                  $trans->charge      = 0;
+                  $trans->type        = '+';
 
-                      $to = $user->email;
-                      $subject = " You have deposited successfully.";
-                      $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
-                      $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-                      sendMail($to,$subject,$msg,$headers);
+                  $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
 
+                  $trans->remark      = 'deposit';
+                  $trans->details     = trans('Deposit complete');
+
+                  $trans->data        = '{"sender":"Flutter Wave", "receiver":"'.($user->company_name ?? $user->name).'", "description": "Flutter Wave / '.$deposit->deposit_number.'"}';
+                  $trans->save();
+
+                  mailSend('deposit_approved',['amount'=>$deposit->amount, 'curr' => $currency->code, 'trnx' => $deposit->deposit_number ,'date_time'=>$trans->created_at ,'type' => 'Flutter Wave' ], $user);
 
                   return redirect()->route('user.deposit.create')->with('success','Deposit amount '.$deposit_data['amount'].' ('.$deposit_data['currency_code'].') successfully!');
 

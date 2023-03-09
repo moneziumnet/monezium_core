@@ -71,7 +71,7 @@ class PaytmController extends Controller
 
         $deposit['user_id'] = auth()->user()->id;
         $deposit['currency_id'] = $request->currency_id;
-        $deposit['amount'] = $amountToAdd;
+        $deposit['amount'] = $request->amount;
         $deposit['method'] = $request->method;
         $deposit['deposit_number'] = $item_number;
         $deposit['status'] = "pending";
@@ -414,7 +414,7 @@ class PaytmController extends Controller
 
 
             $user = auth()->user();
-            $currency_id = Currency::whereIsDefault(1)->first()->id;
+            $currency = Currency::findOrFail($deposit->currency_id);
             user_wallet_increment($user->id, $currency_id, $deposit->amount);
 
 
@@ -423,15 +423,15 @@ class PaytmController extends Controller
             $trans->trnx = $deposit_number;
             $trans->user_id     = $user->id;
             $trans->user_type   = 1;
-            $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
-            $trans_wallet = get_wallet($user->id, $currency_id);
+            $trans->currency_id = $currency->id;
+            $trans_wallet = get_wallet($user->id, $currency->id);
             $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
             $trans->amount      = $deposit->amount;
             $trans->charge      = 0;
             $trans->type        = '+';
             $trans->remark      = 'Deposit';
-            $trans->data        = '{"sender":"Paytm System", "receiver":"'.(auth()->user()->company_name ?? auth()->user()->name).'"}';
-            $trans->details     = trans('Deposit Paytm complete');
+            $trans->data        = '{"sender":"Paytm System", "receiver":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "description": "Paytm System / '.$deposit->deposit_number.'"}';
+            $trans->details     = trans('Deposit Paytm System complete');
 
             // $trans->email = $user->email;
             // $trans->amount = $deposit->amount;
@@ -440,11 +440,7 @@ class PaytmController extends Controller
             // $trans->txnid = $deposit_number;
             // $trans->user_id = $user->id;
             $trans->save();
-                $to = $user->email;
-                $subject = " You have deposited successfully.";
-                $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
-                $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-                sendMail($to,$subject,$msg,$headers);
+            mailSend('deposit_approved',['amount'=>$deposit->amount, 'curr' => $currency->code, 'trnx' => $deposit->deposit_number ,'date_time'=>$trans->created_at ,'type' => 'Paym' ], $user);
 
             Session::forget('deposit_number');
 

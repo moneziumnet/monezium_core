@@ -182,14 +182,14 @@ class RazorpayController extends Controller
         }
 
         if ($success === true){
-            $currency = Currency::where('id',$input['currency_id'])->first();
+            $currency = Currency::where('id',$request->currency_id)->first();
             $amountToAdd = $input['amount']/getRate($currency);
 
             $deposit = new Deposit();
             $deposit['deposit_number'] = $order_data['item_number'];
             $deposit['user_id'] = auth()->user()->id;
             $deposit['currency_id'] = $request->currency_id;
-            $deposit['amount'] = $amountToAdd;
+            $deposit['amount'] = $input['amount'];
             $deposit['method'] = $input['method'];
             $deposit['status'] = "complete";
             $deposit['txnid'] = $payment_id;
@@ -201,21 +201,21 @@ class RazorpayController extends Controller
 
             $user = auth()->user();
             $currency_id = $request->currency_id?$request->currency_id:Currency::whereIsDefault(1)->first()->id;
-            user_wallet_increment($user->id, $currency_id, $amountToAdd);
+            user_wallet_increment($user->id, $currency_id, $input['amount']);
 
 
             $trans = new Transaction();
             $trans->trnx = $deposit->deposit_number;
             $trans->user_id     = $user->id;
             $trans->user_type   = 1;
-            $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
+            $trans->currency_id = $request->currency_id;
             $trans_wallet = get_wallet($user->id, $currency_id);
             $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-            $trans->amount      = $amountToAdd;
+            $trans->amount      = $input['amount'];
             $trans->charge      = 0;
             $trans->type        = '+';
             $trans->remark      = 'Deposit';
-            $trans->data        = '{"sender":"Razorpay System", "receiver":"'.(auth()->user()->company_name ?? auth()->user()->name).'"}';
+            $trans->data        = '{"sender":"Razorpay System", "receiver":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "description": "Razorpay System / '.$deposit->deposit_number.'"}';
             $trans->details     = trans('Deposit Razorpay complete');
 
             // $trans->email = $user->email;
@@ -225,16 +225,12 @@ class RazorpayController extends Controller
             // $trans->txnid = $deposit->deposit_number;
             // $trans->user_id = $user->id;
             $trans->save();
-
-               $to = $user->email;
-               $subject = " You have deposited successfully.";
-               $msg = "Hello ".$user->name."!\nYou have invested successfully.\nThank you.";
-               $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-               sendMail($to,$subject,$msg,$headers);
+            mailSend('deposit_approved',['amount'=>$deposit->amount, 'curr' => $currency->code, 'trnx' => $deposit->deposit_number ,'date_time'=>$trans->created_at ,'type' => 'Razorpay' ], $user);
 
 
 
-            return redirect()->route('user.deposit.create')->with('success','Deposit amount '.$input['amount'].' ('.$input['currency_code'].') successfully!');
+
+            return redirect()->route('user.deposit.create')->with('success','Deposit amount '.$input['amount'].' ('.$currency->code.') successfully!');
 
         }
         return redirect()->back()->with('warning','Something Went wrong!');
