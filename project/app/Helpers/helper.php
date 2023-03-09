@@ -710,6 +710,9 @@ if (!function_exists('wallet_monthly_fee')) {
                 if (!$chargefee) {
                     $chargefee = Charge::where('slug', 'account-maintenance')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
                 }
+
+                $wallet_type_list = array('1'=>'Current', '2'=>'Card', '3'=>'Deposit', '4'=>'Loan', '5'=>'Escrow', '6'=>'Supervisor', '7'=>'Merchant', '8'=>'Crypto', '10'=>'Manager');
+
                 foreach ($wallets as $key => $value) {
                     user_wallet_decrement($user->id, $value->currency_id, $chargefee->data->fixed_charge, 1);
                     user_wallet_increment(0, $value->currency_id, $chargefee->data->fixed_charge, 9);
@@ -728,6 +731,8 @@ if (!function_exists('wallet_monthly_fee')) {
                     $trans->details = trans('Wallet Maintenance');
                     $trans->data = '{"sender":"' . ($user->company_name ?? $user->name) . '", "receiver":"' . $gs->disqus . '"}';
                     $trans->save();
+                    $currency = Currency::findOrFail($value->currency_id);
+                    mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>$wallet_type_list[$value->wallet_type], 'date_time'=> dateFormat($trans->created_at)], $user);
 
                     $user->update();
                 }
@@ -765,7 +770,9 @@ if (!function_exists('wallet_monthly_fee')) {
                     $trans->details = trans('Card Maintenance');
                     $trans->data = '{"sender":"' . ($user->company_name ?? $user->name) . '", "receiver":"' . $gs->disqus . '"}';
                     $trans->save();
+                    $currency = Currency::findOrFail($value->currency_id);
 
+                    mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>'Card', 'date_time'=> dateFormat($trans->created_at)], $user);
                     $user->update();
                 }
 
