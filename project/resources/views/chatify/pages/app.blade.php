@@ -5,11 +5,29 @@
 
     <div class="container-xl">
         <div class="page-header d-print-none">
-            <div class="row align-items-center">
+            <div class="row align-items-center mt-3">
                 <div class="col">
                     <h2 class="page-title">
                         {{__('Chat Room')}}
                     </h2>
+                </div>
+                <div class="col-auto ms-auto d-print-none">
+                    <div class="btn-list">
+                        <div class="d-flex justify-content-end">
+                            <div class="form-group me-3">
+                                <select  class="form-control me-2 shadow-none" onChange="window.location.href=this.value">
+                                    <option value="{{filter('layer','')}}">@lang('Default')</option>
+                                    @foreach ($layer_list as $value)
+                                        <option value="{{filter('layer',$value->layer_id)}}" {{request('layer') == $value->layer_id ? 'selected':''}}>@lang($value->layer_id)</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                          <a href="javascript:;" class="btn btn-primary d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#modal-apply">
+                            <i class="fas fa-plus mr-3"></i>{{__('Create Layer')}}
+                          </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -155,6 +173,38 @@
             </div>
         </div>
     </div>
+
+    <div class="modal modal-blur fade" id="modal-apply" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">{{('Create Layer')}}</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form action="{{ route('user.layer.store') }}" method="post">
+                @csrf
+                <div class="modal-body">
+                  <div class="form-group">
+                    <label class="form-label required">{{__('Layer Id')}}</label>
+                    <input name="layer_id" id="layer_id" class="form-control" autocomplete="off" placeholder="{{__('12345')}}" type="number" step="any" value="{{ old('layer_id') }}" required>
+                  </div>
+
+                  <div class="form-group mt-3">
+                    <label class="form-label required">{{__('PinCode')}}</label>
+                    <input name="pincode" id="pincode" class="form-control" autocomplete="off" placeholder="{{__('12345')}}" type="number" step="any" value="{{ old('pincode') }}" required>
+                  </div>
+
+                  <input type="hidden" name="user_id" id="user_id" value="{{auth()->id()}}">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" id="submit-btn" class="btn btn-primary">{{ __('Submit') }}</button>
+                </div>
+            </form>
+          </div>
+        </div>
+      </div>
 
     @include('chatify.layouts.modals')
     @include('chatify.layouts.footerLinks')

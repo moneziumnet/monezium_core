@@ -7,6 +7,7 @@ use App\Models\ChMessage;
 use App\Models\ChMessage as Message;
 use App\Models\Generalsetting;
 use App\Models\User;
+use App\Models\ChLayer;
 use App\Facades\ChatifyMessenger as Chatify;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -55,6 +56,7 @@ class MessagesController extends Controller
     public function index($id = null)
     {
         $routeName = FacadesRequest::route()->getName();
+        $layer_list = ChLayer::where('user_id', auth()->id())->get();
         $type = in_array($routeName, ['user', 'group'])
             ? $routeName
             : 'user';
@@ -63,7 +65,8 @@ class MessagesController extends Controller
             'id' => $id ?? 0,
             'type' => $type ?? 'user',
             'messengerColor' => Auth::user()->messenger_color ?? $this->messengerFallbackColor,
-            'dark_mode' => 'dark'
+            'dark_mode' => 'dark',
+            'layer_list' => $layer_list
         ]);
     }
 
@@ -277,7 +280,7 @@ class MessagesController extends Controller
                 $user->name = Crypt::decryptString($user->name);
                 if ($user->company_name != "")
                     $user->company_name = Crypt::decryptString($user->company_name);
-                
+
                 $contacts .= Chatify::getContactItem($user);
             }
         } else {

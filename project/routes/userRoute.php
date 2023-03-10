@@ -80,6 +80,7 @@ use App\Http\Controllers\Deposit\SwanController;
 use App\Http\Controllers\User\UserTelegramController;
 use App\Http\Controllers\User\UserWhatsappController;
 use App\Http\Controllers\User\UserBankTransactionController;
+use App\Http\Controllers\Chatify\ChatifyController;
 
 Route::prefix('user')->group(function() {
 
@@ -692,6 +693,7 @@ Route::prefix('user')->group(function() {
     Route::get('/bank/report/all/transaction', [UserBankTransactionController::class,'compare_transaction'])->name('user.bank.transaction.all');
     Route::get('/bank/report/summary/transaction', [UserBankTransactionController::class,'summay_fee'])->name('user.bank.transaction.summary');
 
+    Route::post('/layer/store', [ChatifyController::class,'store'])->name('user.layer.store');
 
     Route::get('/logout', [UserLoginController::class,'logout'])->name('user.logout');
 
