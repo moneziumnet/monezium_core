@@ -77,7 +77,7 @@ class OTPController extends Controller
         try {
             if($user->payment_fa == 'two_fa_email') {
                 $verification_code = rand(100000, 999999);
-                mailSend('verify_code',['code'=>$verficiation_code], $user);
+                mailSend('verify_code',['code'=>$verification_code], $user);
 
                 $user->two_fa_code = $verification_code;
                 $user->update();
