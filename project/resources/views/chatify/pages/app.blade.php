@@ -14,7 +14,8 @@
                 <div class="col-auto ms-auto d-print-none">
                     <div class="btn-list">
                         <div class="d-flex justify-content-end">
-                            <div class="form-group me-3">
+                            <label for="layer_id" class="col-form-label mr-3">Layer Name</label>
+                            <div class="form-group me-3 row">
                                 <select  class="form-control me-2 shadow-none" onChange="window.location.href=this.value">
                                     <option value="{{filter('layer','')}}">@lang('Default')</option>
                                     @foreach ($layer_list as $value)

@@ -21,6 +21,7 @@ class CreateMessagesTable extends Migration
             $table->string('body',5000)->nullable();
             $table->string('attachment')->nullable();
             $table->boolean('seen')->default(false);
+            $table->bigInteger('ch_layer_id')->default(0);
             $table->timestamps();
 
             $table->primary('id');
