@@ -55,6 +55,8 @@ class MessagesController extends Controller
      */
     public function index($id = null)
     {
+        $layer = request('layer');
+
         $routeName = FacadesRequest::route()->getName();
         $layer_list = ChLayer::where('user_id', auth()->id())->get();
         $type = in_array($routeName, ['user', 'group'])

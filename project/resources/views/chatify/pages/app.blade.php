@@ -187,12 +187,12 @@
                 <div class="modal-body">
                   <div class="form-group">
                     <label class="form-label required">{{__('Layer Id')}}</label>
-                    <input name="layer_id" id="layer_id" class="form-control" autocomplete="off" placeholder="{{__('12345')}}" type="number" step="any" value="{{ old('layer_id') }}" required>
+                    <input name="layer_id" id="layer_id" class="form-control" autocomplete="off" placeholder="{{__('12345')}}" type="text" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" step="any" value="{{ old('layer_id') }}" minlength="5" maxlength="5" required>
                   </div>
 
                   <div class="form-group mt-3">
                     <label class="form-label required">{{__('PinCode')}}</label>
-                    <input name="pincode" id="pincode" class="form-control" autocomplete="off" placeholder="{{__('12345')}}" type="number" step="any" value="{{ old('pincode') }}" required>
+                    <input name="pincode" id="pincode" class="form-control" autocomplete="off" placeholder="{{__('12345')}}" type="text" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" step="any" value="{{ old('layer_id') }}" minlength="5" maxlength="5" required>
                   </div>
 
                   <input type="hidden" name="user_id" id="user_id" value="{{auth()->id()}}">
