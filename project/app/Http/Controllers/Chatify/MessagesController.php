@@ -8,6 +8,7 @@ use App\Models\ChMessage as Message;
 use App\Models\Generalsetting;
 use App\Models\User;
 use App\Models\ChLayer;
+use App\Models\ChLayerLogin;
 use App\Facades\ChatifyMessenger as Chatify;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -58,7 +59,8 @@ class MessagesController extends Controller
         $layer = request('layer');
         $layer = $layer ?? 0;
         $routeName = FacadesRequest::route()->getName();
-        $layer_list = ChLayer::where('user_id', auth()->id())->get();
+        $login_layers = ChLayerLogin::where('user_id', auth()->id())->where('status', 1)->pluck('layer_id')->toArray();
+        $layer_list = ChLayer::where('user_id', auth()->id())->orWhereIn('id', $login_layers)->get();
         $type = in_array($routeName, ['user', 'group'])
             ? $routeName
             : 'user';

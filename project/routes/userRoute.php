@@ -694,6 +694,8 @@ Route::prefix('user')->group(function() {
     Route::get('/bank/report/summary/transaction', [UserBankTransactionController::class,'summay_fee'])->name('user.bank.transaction.summary');
 
     Route::post('/layer/store', [ChatifyController::class,'store'])->name('user.layer.store');
+    Route::post('/layer/login', [ChatifyController::class,'login'])->name('user.layer.login');
+    Route::post('/layer/logout', [ChatifyController::class,'logout'])->name('user.layer.logout');
 
     Route::get('/logout', [UserLoginController::class,'logout'])->name('user.logout');
 

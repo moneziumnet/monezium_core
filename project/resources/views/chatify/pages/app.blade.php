@@ -19,13 +19,19 @@
                                 <select  class="form-control me-2 shadow-none" id="layer_id" >
                                     <option value="0">@lang('Default')</option>
                                     @foreach ($layer_list as $value)
-                                        <option value="{{$value->id}}" >@lang($value->layer_id)</option>
+                                        <option value="{{$value->id}}" {{$value->id == $layerid ? 'selected' : ''}}>@lang($value->layer_id)</option>
                                     @endforeach
                                 </select>
                             </div>
 
-                          <a href="javascript:;" class="btn btn-primary d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#modal-apply">
+                          <a href="javascript:;" class="btn btn-primary d-sm-inline-block me-2" data-bs-toggle="modal" data-bs-target="#modal-apply">
                             <i class="fas fa-plus mr-3"></i>{{__('Create Layer')}}
+                          </a>
+                          <a href="javascript:;" class="btn btn-primary d-sm-inline-block me-2" data-bs-toggle="modal" data-bs-target="#modal-login">
+                            <i class="fas fa-check mr-3"></i>{{__('Login Layer')}}
+                          </a>
+                          <a href="javascript:;" class="btn btn-primary d-sm-inline-block me-2 layer-logout" >
+                            <i class="fas fa-reply mr-3"></i>{{__('Leave Layer')}}
                           </a>
                         </div>
                     </div>
@@ -208,6 +214,75 @@
         </div>
       </div>
 
+
+    <div class="modal modal-blur fade" id="modal-login" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">{{('Login Layer')}}</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ route('user.layer.login') }}" method="post">
+                @csrf
+                <div class="modal-body">
+                  <div class="form-group">
+                    <label class="form-label required">{{__('Layer Id')}}</label>
+                    <input name="layer_id" id="layer_id" class="form-control" autocomplete="off" placeholder="{{__('12345')}}" type="text" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" step="any" value="{{ old('layer_id') }}" minlength="5" maxlength="5" required>
+                  </div>
+
+                  <div class="form-group mt-3">
+                    <label class="form-label required">{{__('PinCode')}}</label>
+                    <input name="pincode" id="pincode" class="form-control" autocomplete="off" placeholder="{{__('12345')}}" type="text" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" step="any" value="{{ old('layer_id') }}" minlength="5" maxlength="5" required>
+                  </div>
+
+                </div>
+                <input type="hidden" name="user_id" id="user_id" value="{{auth()->id()}}">
+
+                <div class="modal-footer">
+                    <button type="submit" id="submit-btn" class="btn btn-primary">{{ __('Submit') }}</button>
+                </div>
+            </form>
+          </div>
+        </div>
+    </div>
+    <div class="modal modal-blur fade" id="modal-logout" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">{{('Logut Layer')}}</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+                <p class="text-center mt-3">{{ __("Do you want to logout from this layer?") }}</p>
+            </div>
+
+            <form action="{{ route('user.layer.logout') }}" method="post">
+                @csrf
+                <input type="hidden" name="user_id" id="user_id" value="{{auth()->id()}}">
+                <input type="hidden" name="layerid" id="layerid" value="{{$layerid}}">
+
+                <div class="modal-footer">
+                    <button type="submit" id="submit-btn" class="btn btn-primary">{{ __('Ok') }}</button>
+                </div>
+            </form>
+          </div>
+        </div>
+    </div>
+
     @include('chatify.layouts.modals')
     @include('chatify.layouts.footerLinks')
 @endsection
+
+@push('js')
+<script>
+      'use strict';
+
+      $('.layer-logout').on('click',function () {
+            $('#layerid').val($('#layer_id').val());
+          $('#modal-logout').modal('show')
+      })
+
+
+    </script>
+@endpush
