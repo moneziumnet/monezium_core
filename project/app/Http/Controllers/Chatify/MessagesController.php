@@ -56,7 +56,7 @@ class MessagesController extends Controller
     public function index($id = null)
     {
         $layer = request('layer');
-
+        $layer = $layer ?? 0;
         $routeName = FacadesRequest::route()->getName();
         $layer_list = ChLayer::where('user_id', auth()->id())->get();
         $type = in_array($routeName, ['user', 'group'])
@@ -68,7 +68,8 @@ class MessagesController extends Controller
             'type' => $type ?? 'user',
             'messengerColor' => Auth::user()->messenger_color ?? $this->messengerFallbackColor,
             'dark_mode' => 'dark',
-            'layer_list' => $layer_list
+            'layer_list' => $layer_list,
+            'layerid' => $layer
         ]);
     }
 
@@ -171,6 +172,7 @@ class MessagesController extends Controller
                 'type' => $request['type'],
                 'from_id' => Auth::user()->id,
                 'to_id' => $request['id'],
+                'ch_layer_id' => $request['layer_id'],
                 'body' => htmlentities(trim($request['message']), ENT_QUOTES, 'UTF-8'),
                 'attachment' => ($attachment) ? json_encode((object)[
                     'new_name' => $attachment,
@@ -206,7 +208,7 @@ class MessagesController extends Controller
      */
     public function fetch(Request $request)
     {
-        $query = Chatify::fetchMessagesQuery($request['id'])->latest();
+        $query = Chatify::fetchMessagesQuery($request['id'], $request['layer_id'])->latest();
         $messages = $query->paginate($request->per_page ?? $this->perPage);
         $totalMessages = $messages->total();
         $lastPage = $messages->lastPage();
@@ -245,7 +247,7 @@ class MessagesController extends Controller
     public function seen(Request $request)
     {
         // make as seen
-        $seen = Chatify::makeSeen($request['id']);
+        $seen = Chatify::makeSeen($request['id'], $request['layer_id']);
         // send the response
         return Response::json([
             'status' => $seen,
@@ -268,6 +270,7 @@ class MessagesController extends Controller
                 $q->where('ch_messages.from_id', Auth::user()->id)
                     ->orWhere('ch_messages.to_id', Auth::user()->id);
             })
+            ->where('ch_layer_id', $request->layer_id)
             ->where('users.id','!=',Auth::user()->id)
             ->select('users.*',DB::raw('MAX(ch_messages.created_at) max_created_at'))
             ->orderBy('max_created_at', 'desc')
@@ -283,7 +286,7 @@ class MessagesController extends Controller
                 if ($user->company_name != "")
                     $user->company_name = Crypt::decryptString($user->company_name);
 
-                $contacts .= Chatify::getContactItem($user);
+                $contacts .= Chatify::getContactItem($user,  $request->layer_id);
             }
         } else {
             $contacts = '<p class="message-hint center-el"><span>Your contact list is empty</span></p>';
@@ -311,7 +314,7 @@ class MessagesController extends Controller
                 'message' => 'User not found!',
             ], 401);
         }
-        $contactItem = Chatify::getContactItem($user);
+        $contactItem = Chatify::getContactItem($user, $request->layer_id);
 
         // send the response
         return Response::json([
@@ -405,7 +408,7 @@ class MessagesController extends Controller
      */
     public function sharedPhotos(Request $request)
     {
-        $shared = Chatify::getSharedPhotos($request['user_id']);
+        $shared = Chatify::getSharedPhotos($request['user_id'], $request['layer_id']);
         $sharedPhotos = null;
 
         // shared with its template
@@ -430,7 +433,7 @@ class MessagesController extends Controller
     public function deleteConversation(Request $request)
     {
         // delete
-        $delete = Chatify::deleteConversation($request['id']);
+        $delete = Chatify::deleteConversation($request['id'], $request['layer_id']);
 
         // send the response
         return Response::json([

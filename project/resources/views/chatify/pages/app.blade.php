@@ -16,10 +16,10 @@
                         <div class="d-flex justify-content-end">
                             <label for="layer_id" class="col-form-label mr-3">Layer Name</label>
                             <div class="form-group me-3 row">
-                                <select  class="form-control me-2 shadow-none" onChange="window.location.href=this.value">
-                                    <option value="{{filter('layer','')}}">@lang('Default')</option>
+                                <select  class="form-control me-2 shadow-none" id="layer_id" >
+                                    <option value="0">@lang('Default')</option>
                                     @foreach ($layer_list as $value)
-                                        <option value="{{filter('layer',$value->layer_id)}}" {{request('layer') == $value->layer_id ? 'selected':''}}>@lang($value->layer_id)</option>
+                                        <option value="{{$value->id}}" >@lang($value->layer_id)</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -60,9 +60,9 @@
                                             <a href="#" @if($type == 'user') class="active-tab"
                                                @endif data-view="users">
                                                 <span class="far fa-user"></span> People</a>
-                                            <a href="#" @if($type == 'group') class="active-tab"
+                                            {{-- <a href="#" @if($type == 'group') class="active-tab"
                                                @endif data-view="groups">
-                                                <span class="fas fa-users"></span> Groups</a>
+                                                <span class="fas fa-users"></span> Groups</a> --}}
                                         </div>
                                     </div>
                                     {{-- tabs and lists --}}
@@ -83,7 +83,8 @@
 
                                             {{-- Contact --}}
                                             <div class="listOfContacts"
-                                                 style="width: 100%;height: calc(100% - 200px);position: relative;"></div>
+                                                 style="width: 100%;height: calc(100% - 200px);position: relative;">
+                                            </div>
 
                                         </div>
 
@@ -146,11 +147,11 @@
                                         <div class="typing-indicator">
                                             <div class="message-card typing">
                                                 <p>
-                        <span class="typing-dots">
-                            <span class="dot dot-1"></span>
-                            <span class="dot dot-2"></span>
-                            <span class="dot dot-3"></span>
-                        </span>
+                                                    <span class="typing-dots">
+                                                        <span class="dot dot-1"></span>
+                                                        <span class="dot dot-2"></span>
+                                                        <span class="dot dot-3"></span>
+                                                    </span>
                                                 </p>
                                             </div>
                                         </div>

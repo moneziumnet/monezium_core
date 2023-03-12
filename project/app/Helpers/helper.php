@@ -751,7 +751,7 @@ if (!function_exists('wallet_monthly_fee')) {
                 if (!$chargefee) {
                     $chargefee = Charge::where('slug', 'card-maintenance')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
                 }
-                foreach ($wallets as $key => $value) {
+                foreach ($cards as $key => $value) {
 
                     user_wallet_decrement($user->id, $value->currency_id, $chargefee->data->fixed_charge, 1);
                     user_wallet_increment(0, $value->currency_id, $chargefee->data->fixed_charge, 9);

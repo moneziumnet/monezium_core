@@ -176,9 +176,9 @@ class ChatifyMessenger
      * @param int $user_id
      * @return Message|\Illuminate\Database\Eloquent\Builder
      */
-    public function fetchMessagesQuery($user_id)
+    public function fetchMessagesQuery($user_id, $layer_id = 0)
     {
-        return Message::where('from_id', Auth::user()->id)->where('to_id', $user_id)
+        return Message::where('ch_layer_id', $layer_id)->where('from_id', Auth::user()->id)->where('to_id', $user_id)
             ->orWhere('from_id', $user_id)->where('to_id', Auth::user()->id);
     }
 
@@ -196,6 +196,7 @@ class ChatifyMessenger
         $message->from_id = $data['from_id'];
         $message->to_id = $data['to_id'];
         $message->body = $data['body'];
+        $message->ch_layer_id = $data['ch_layer_id'];
         $message->attachment = $data['attachment'];
         $message->save();
     }
@@ -207,10 +208,11 @@ class ChatifyMessenger
      * @param int $user_id
      * @return bool
      */
-    public function makeSeen($user_id)
+    public function makeSeen($user_id, $layer_id)
     {
         Message::Where('from_id', $user_id)
             ->where('to_id', Auth::user()->id)
+            ->where('ch_layer_id', $layer_id)
             ->where('seen', 0)
             ->update(['seen' => 1]);
         return 1;
@@ -222,9 +224,9 @@ class ChatifyMessenger
      * @param int $user_id
      * @return Message|Collection|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
      */
-    public function getLastMessageQuery($user_id)
+    public function getLastMessageQuery($user_id, $layer_id)
     {
-        return $this->fetchMessagesQuery($user_id)->latest()->first();
+        return $this->fetchMessagesQuery($user_id, $layer_id)->latest()->first();
     }
 
     /**
@@ -233,9 +235,9 @@ class ChatifyMessenger
      * @param int $user_id
      * @return Collection
      */
-    public function countUnseenMessages($user_id)
+    public function countUnseenMessages($user_id, $layer_id)
     {
-        return Message::where('from_id', $user_id)->where('to_id', Auth::user()->id)->where('seen', 0)->count();
+        return Message::where('from_id', $user_id)->where('ch_layer_id', $layer_id)->where('to_id', Auth::user()->id)->where('seen', 0)->count();
     }
 
     /**
@@ -246,13 +248,13 @@ class ChatifyMessenger
      * @param Collection $user
      * @return string
      */
-    public function getContactItem($user)
+    public function getContactItem($user, $layer_id)
     {
         // get last message
-        $lastMessage = $this->getLastMessageQuery($user->id);
+        $lastMessage = $this->getLastMessageQuery($user->id, $layer_id);
 
         // Get Unseen messages counter
-        $unseenCounter = $this->countUnseenMessages($user->id);
+        $unseenCounter = $this->countUnseenMessages($user->id, $layer_id);
 
         return view('chatify.layouts.listItem', [
             'get' => 'users',
@@ -323,11 +325,11 @@ class ChatifyMessenger
      * @param int $user_id
      * @return array
      */
-    public function getSharedPhotos($user_id)
+    public function getSharedPhotos($user_id, $layer_id)
     {
         $images = array(); // Default
         // Get messages
-        $msgs = $this->fetchMessagesQuery($user_id)->orderBy('created_at', 'DESC');
+        $msgs = $this->fetchMessagesQuery($user_id, $layer_id)->orderBy('created_at', 'DESC');
         if ($msgs->count() > 0) {
             foreach ($msgs->get() as $msg) {
                 // If message has attachment
@@ -348,10 +350,10 @@ class ChatifyMessenger
      * @param int $user_id
      * @return boolean
      */
-    public function deleteConversation($user_id)
+    public function deleteConversation($user_id, $layer_id)
     {
         try {
-            foreach ($this->fetchMessagesQuery($user_id)->get() as $msg) {
+            foreach ($this->fetchMessagesQuery($user_id, $layer_id)->get() as $msg) {
                 // delete file attached if exist
                 if (isset($msg->attachment)) {
                     $path = config('chatify.attachments.folder') . '/' . json_decode($msg->attachment)->new_name;
@@ -387,7 +389,7 @@ class ChatifyMessenger
                 // delete from database
                 $msg->delete();
             } else {
-                return 0;
+                $msg->delete();
             }
             return 1;
         } catch (Exception $e) {

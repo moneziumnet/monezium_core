@@ -22,8 +22,12 @@ const messagesContainer = $(".messenger-messagingView .m-body"),
 
 const getMessengerId = () => $("meta[name=id]").attr("content");
 const getMessengerType = () => $("meta[name=type]").attr("content");
+const getLayerId = () => $("meta[name=layerid]").attr("content");
+const getFormLayerId = () => $("input[name=layer_id]").attr("value");
 const setMessengerId = (id) => $("meta[name=id]").attr("content", id);
 const setMessengerType = (type) => $("meta[name=type]").attr("content", type);
+const setLayerId = (layerid) => $("meta[name=layerid]").attr("content", layerid);
+const setFormLayerId = (layerid) => $("input[name=layer_id]").attr("value", layerid);
 /**
  *-------------------------------------------------------------
  * Re-usable methods
@@ -380,7 +384,8 @@ function IDinfo(id, type) {
         $(".messenger-infoView-btns .delete-conversation").show();
         $(".messenger-infoView-shared").show();
         // fetch messages
-        fetchMessages(id, type, true);
+        var layer_id = getLayerId();
+        fetchMessages(id, type, true, layer_id);
         // focus on messaging input
         messageInput.focus();
         // update info in view
@@ -513,7 +518,7 @@ function setMessagesLoading(loading = false) {
   }
   messagesLoading = loading;
 }
-function fetchMessages(id, type, newFetch = false) {
+function fetchMessages(id, type, newFetch = false, layer_id) {
   if (newFetch) {
     messagesPage = 1;
     noMoreMessages = false;
@@ -529,6 +534,8 @@ function fetchMessages(id, type, newFetch = false) {
         id: id,
         type: type,
         page: messagesPage,
+        layer_id: layer_id
+
       },
       dataType: "JSON",
       success: (data) => {
@@ -717,7 +724,7 @@ function makeSeen(status) {
   $.ajax({
     url: url + "/makeSeen",
     method: "POST",
-    data: { _token: access_token, id: getMessengerId() },
+    data: { _token: access_token, id: getMessengerId(), layer_id: getLayerId() },
     dataType: "JSON",
   });
   return clientSendChannel.trigger("client-seen", {
@@ -813,13 +820,22 @@ function setContactsLoading(loading = false) {
   }
   contactsLoading = loading;
 }
-function getContacts() {
-  if (!contactsLoading && !noMoreContacts) {
+function getContacts(layerid = 0) {
+
+  var l_id = parseInt(getLayerId());
+  if(l_id != parseInt(layerid)) {
+    console.log('this is different part')
+    contactsPage = 1;
+    setContactsLoading(false);
+    noMoreContacts = false;
+  }
+  if ((!contactsLoading && !noMoreContacts)) {
+
     setContactsLoading(true);
     $.ajax({
       url: url + "/getContacts",
       method: "GET",
-      data: { _token: access_token, page: contactsPage },
+      data: { _token: access_token, page: contactsPage, layer_id:layerid },
       dataType: "JSON",
       success: (data) => {
         setContactsLoading(false);
@@ -859,6 +875,7 @@ function updateContactItem(user_id) {
       data: {
         _token: access_token,
         user_id,
+        layer_id: getLayerId()
       },
       dataType: "JSON",
       success: (data) => {
@@ -941,7 +958,7 @@ function getSharedPhotos(user_id) {
   $.ajax({
     url: url + "/shared",
     method: "POST",
-    data: { _token: access_token, user_id: user_id },
+    data: { _token: access_token, user_id: user_id , layer_id:getLayerId()},
     dataType: "JSON",
     success: (data) => {
       $(".shared-photos-list").html(data.shared);
@@ -1018,7 +1035,7 @@ function deleteConversation(id) {
   $.ajax({
     url: url + "/deleteConversation",
     method: "POST",
-    data: { _token: access_token, id: id },
+    data: { _token: access_token, id: id , layer_id:getLayerId()},
     dataType: "JSON",
     beforeSend: () => {
       // hide delete modal
@@ -1194,7 +1211,14 @@ function setActiveStatus(status, user_id) {
  */
 $(document).ready(function () {
   // get contacts list
-  getContacts();
+  $('#layer_id').on('change', function(){
+    var layer_id = $('#layer_id').val();
+    getContacts(layer_id);
+    setLayerId(layer_id);
+    setFormLayerId(layer_id);
+
+  })
+  getContacts(getLayerId());
 
   // get contacts list
   getFavoritesList();
@@ -1534,13 +1558,13 @@ $(document).ready(function () {
   actionOnScroll(
     ".m-body.messages-container",
     function () {
-      fetchMessages(getMessengerId(), getMessengerType());
+      fetchMessages(getMessengerId(), getMessengerType(), getLayerId());
     },
     true
   );
   //Contacts (users) pagination
   actionOnScroll(".messenger-tab.users-tab", function () {
-    getContacts();
+    getContacts(getLayerId());
   });
   //Search pagination
   actionOnScroll(".messenger-tab.search-tab", function () {
