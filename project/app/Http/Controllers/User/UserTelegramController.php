@@ -2262,13 +2262,16 @@ class UserTelegramController extends Controller
                     $user = User::where('email', $email)->first();
                     if(!$user) {
                         send_message_telegram('This user dose not exist in our system', $chat_id);
+                        break;
                     }
                     $telegram = UserTelegram::where('user_id', $user->id)->where('pincode', $pincode)->first();
                     if(!$telegram) {
                         send_message_telegram('Pincode is not matched with email. Please input again', $chat_id);
+                        break;
                     }
                     if($telegram->status == 1) {
                         send_message_telegram('You are already login.', $chat_id);
+                        break;
                     }
                     $telegram->chat_id = $chat_id;
                     $telegram->status = 1;

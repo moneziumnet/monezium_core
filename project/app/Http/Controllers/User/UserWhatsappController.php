@@ -2268,13 +2268,16 @@ class UserWhatsappController extends Controller
                     $user = User::where('email', $email)->first();
                     if(!$user) {
                         send_message_whatsapp('This user dose not exist in our system', $phone);
+                        break;
                     }
                     $whatsapp = UserWhatsapp::where('user_id', $user->id)->where('pincode', $pincode)->first();
                     if(!$whatsapp) {
                         send_message_whatsapp('Pincode is not matched with email. Please input again', $phone);
+                        break;
                     }
                     if($whatsapp->status == 1) {
                         send_message_whatsapp('You are already login.', $phone);
+                        break;
                     }
                     $whatsapp->phonenumber = $phone;
                     $whatsapp->status = 1;
