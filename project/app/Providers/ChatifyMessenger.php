@@ -179,7 +179,7 @@ class ChatifyMessenger
     public function fetchMessagesQuery($user_id, $layer_id = 0)
     {
         return Message::where('ch_layer_id', $layer_id)->where('from_id', Auth::user()->id)->where('to_id', $user_id)
-            ->orWhere('from_id', $user_id)->where('to_id', Auth::user()->id);
+            ->orWhere('from_id', $user_id)->where('to_id', Auth::user()->id)->where('ch_layer_id', $layer_id);
     }
 
     /**

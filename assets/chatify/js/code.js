@@ -824,7 +824,6 @@ function getContacts(layerid = 0) {
 
   var l_id = parseInt(getLayerId());
   if(l_id != parseInt(layerid)) {
-    console.log('this is different part')
     contactsPage = 1;
     setContactsLoading(false);
     noMoreContacts = false;
@@ -1216,6 +1215,8 @@ $(document).ready(function () {
     getContacts(layer_id);
     setLayerId(layer_id);
     setFormLayerId(layer_id);
+    IDinfo(getMessengerId(), getMessengerType());
+
 
   })
   getContacts(getLayerId());
@@ -1558,7 +1559,7 @@ $(document).ready(function () {
   actionOnScroll(
     ".m-body.messages-container",
     function () {
-      fetchMessages(getMessengerId(), getMessengerType(), getLayerId());
+      fetchMessages(getMessengerId(), getMessengerType(), false, getLayerId());
     },
     true
   );
