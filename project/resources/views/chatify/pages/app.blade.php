@@ -138,7 +138,7 @@
                                     </div>
 
                                     {{-- Messaging area --}}
-                                    <div class="m-body messages-container app-scroll">
+                                    <div class="m-body messages-container app-scroll" style="max-height: 600px;overflow-y: scroll;">
                                         {{-- Internet connection --}}
                                         <div class="internet-connection">
                                             <span class="ic-connected">Connected</span>
