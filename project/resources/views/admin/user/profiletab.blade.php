@@ -47,6 +47,9 @@
             <a class="nav-link {{menu('admin-user-beneficiary')}} {{menu('admin-user-beneficiary-create')}} {{menu('admin-user-beneficiary-edit')}}" id="modules" href="{{route('admin-user-beneficiary',$data->id) }}" role="button" >Beneficiaries</a>
         </li>
         <li class="nav-item">
+            <a class="nav-link {{menu('admin-user-layer')}} " id="modules" href="{{route('admin-user-layer',$data->id) }}" role="button" >Layer</a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link {{menu('admin-user-login-history')}} " id="modules" href="{{route('admin-user-login-history',$data->id) }}" role="button" >Login History</a>
         </li>
     </ul>

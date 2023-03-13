@@ -18,27 +18,29 @@
       @include('admin.user.profiletab')
 
       <div class="tab-content" id="myTabContent">
-        @include('includes.admin.form-success')
+        <div class="m-3">
+            @include('includes.admin.form-success')
+        </div>
         <div class="tab-pane fade show active" id="modules" role="tabpanel" aria-labelledby="modules-tab">
-        <div class="card-body">
-          <div class="table-responsive">
-            <table id="geniustable" class="table table-hover dt-responsive text-wrap " cellspacing="0" width="100%">
-              <thead class="thead-light">
-               <tr>
-                <th>@lang('Date')</th>
-                <th>@lang('Description')</th>
-                <th>@lang('URL')</th>
-                <th >@lang('IP')</th>
-                <th>@lang('User Agent')</th>
-               </tr>
-              </thead>
-            </table>
+            <div class="card-body">
+                <div class="card mb-4">
+                    <div class="table-responsive p-3 mt-2">
+                    <table id="geniustable" class="table table-hover dt-responsive text-wrap " cellspacing="0" width="100%">
+                        <thead class="thead-light">
+                        <tr>
+                        <th>@lang('Date')</th>
+                        <th>@lang('Layer ID')</th>
+                        <th>@lang('Pin Code')</th>
+                        </tr>
+                        </thead>
+                    </table>
+                    </div>
+                </div>
             </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 </div>
 @endsection
 @section('scripts')
@@ -51,13 +53,11 @@
            processing: true,
            serverSide: true,
            searching: true,
-           ajax: '{{ route('admin-user.login-history-datatables',$data->id) }}',
+           ajax: '{{ route('admin-user-layer-datatables',$data->id) }}',
            columns: [
                 { data: 'created_at', name: 'created_at' },
-                { data: 'subject', name: 'subject' },
-                { data: 'url', name: 'url' },
-                { data: 'ip', name: 'ip' },
-                { data: 'agent', name: 'agent' },
+                { data: 'layer_id', name: 'layer_id' },
+                { data: 'pincode', name: 'pincode' },
             ],
             language : {
                 processing: '<img src="{{asset('assets/images/'.$gs->admin_loader)}}">'

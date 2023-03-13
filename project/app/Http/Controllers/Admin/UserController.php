@@ -41,6 +41,7 @@ use App\Models\Beneficiary;
 use App\Models\PlanDetail;
 use App\Models\VirtualCard;
 use App\Models\KycRequest;
+use App\Models\ChLayer;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use Auth;
@@ -1758,6 +1759,24 @@ class UserController extends Controller
 
             return Datatables::of($datas)
                             ->editColumn('created_at', function(LoginActivity $data) {
+                                return dateFormat($data->created_at,'d-M-Y h:i:s');
+                            })
+                            ->toJson();
+        }
+
+        public function profileLayer($id)
+        {
+            $user = User::findOrFail($id);
+            $data['data'] = $user;
+            return view('admin.user.profilelayer',$data);
+        }
+
+        public function layerdatatables($id)
+        {
+            $datas = ChLayer::where('user_id',$id)->orderBy('created_at','desc')->get();
+
+            return Datatables::of($datas)
+                            ->editColumn('created_at', function(ChLayer $data) {
                                 return dateFormat($data->created_at,'d-M-Y h:i:s');
                             })
                             ->toJson();

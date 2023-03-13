@@ -232,6 +232,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/user/document/delete/{id}', [UserController::class,'fileDestroy'])->name('admin-user.document-delete');
     Route::get('/user/transactions/datatables/{id}', [UserController::class, 'trandatatables'])->name('admin-user.transactions-datatables');
     Route::get('/user/login/history/datatables/{id}', [UserController::class, 'loginhistorydatatables'])->name('admin-user.login-history-datatables');
+    Route::get('/user/layer/datatables/{id}', [UserController::class, 'layerdatatables'])->name('admin-user-layer-datatables');
     Route::get('/user/transaction/details/{id}', [UserController::class,'trxDetails'])->name('admin-user.trxDetails');
     Route::get('/user/transactions/edit/{tid}', [UserController::class, 'transctionEdit'])->name('admin-user.transaction-edit');
     Route::get('/user/transactions/delete/{tid}', [UserController::class, 'transctionDelete'])->name('admin-user.transaction-delete');
@@ -256,6 +257,7 @@ Route::prefix('admin')->group(function () {
     Route::post('/user/{id}/admin-user-upgrade-plan', [UserController::class, 'upgradePlan'])->name('admin-user-upgrade-plan');
     Route::get('/user/{id}/transactions', [UserController::class, 'profileTransctions'])->name('admin-user-transactions');
     Route::get('/user/{id}/login/history', [UserController::class, 'profileLoginHistory'])->name('admin-user-login-history');
+    Route::get('/user/{id}/layer', [UserController::class, 'profileLayer'])->name('admin-user-layer');
     // Route::get('/user/{id}/banks', [UserController::class, 'profileBanks'])->name('admin-user-banks');
     Route::get('/user/{id}/banks', [PayTransactionController::class, 'index'])->name('admin-user-banks');
     Route::get('/user/pay/detail/{id}', [PayTransactionController::class, 'trxDetails'])->name('admin-user-banks-details');
