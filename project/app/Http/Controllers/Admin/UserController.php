@@ -1776,8 +1776,9 @@ class UserController extends Controller
             $datas = ChLayer::where('user_id',$id)->orderBy('created_at','desc')->get();
 
             return Datatables::of($datas)
+                            ->addIndexColumn()
                             ->editColumn('created_at', function(ChLayer $data) {
-                                return dateFormat($data->created_at,'d-M-Y h:i:s');
+                                return dateFormat($data->created_at,'d-M-Y');
                             })
                             ->toJson();
         }

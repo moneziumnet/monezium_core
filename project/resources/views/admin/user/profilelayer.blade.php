@@ -28,9 +28,10 @@
                     <table id="geniustable" class="table table-hover dt-responsive text-wrap " cellspacing="0" width="100%">
                         <thead class="thead-light">
                         <tr>
-                        <th>@lang('Date')</th>
-                        <th>@lang('Layer ID')</th>
-                        <th>@lang('Pin Code')</th>
+                            <th>@lang('NO.')</th>
+                            <th>@lang('Date')</th>
+                            <th>@lang('Layer ID')</th>
+                            <th>@lang('Pin Code')</th>
                         </tr>
                         </thead>
                     </table>
@@ -55,6 +56,7 @@
            searching: true,
            ajax: '{{ route('admin-user-layer-datatables',$data->id) }}',
            columns: [
+                { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
                 { data: 'created_at', name: 'created_at' },
                 { data: 'layer_id', name: 'layer_id' },
                 { data: 'pincode', name: 'pincode' },
