@@ -69,13 +69,19 @@ class OpenpaydResponse implements RespondsToWebhook
                     send_whatsapp($user->id, 'Bank has been deposited by '.$obj->senderName."\n Amount is ".$currency->symbol.$obj->amount->value."\n Payment Gateway : Openpayd"."\n Transaction ID : ".$obj->transactionId."\nPlease check more details to click this url\n".route('user.depositbank.index'));
                     send_telegram($user->id, 'Bank has been deposited by '.$obj->senderName."\n Amount is ".$currency->symbol.$obj->amount->value."\n Payment Gateway : Openpayd"."\n Transaction ID : ".$obj->transactionId."\nPlease check more details to click this url\n".route('user.depositbank.index'));
                     send_staff_telegram('Bank has been deposited by '.$obj->senderName."\n Amount is ".$currency->symbol.$obj->amount->value."\n Payment Gateway : Openpayd"."\n Transaction ID : ".$obj->transactionId."\nPlease check more details to click this url\n".route('admin.deposits.bank.index'), 'Deposit Bank');
-                    mailSend('deposit_request',['amount'=>$new_deposit->amount, 'curr' => ($currency ? $currency->code : ' '), 'date_time'=>$new_deposit->created_at ,'type' => 'Bank', 'method'=> $subbank->name ], $user);
+                    if(isset($subbank_id)){
+                        $method =  SubInsBank::findOrFail($subbank_id)->name;
+                    }
+                    else {
+                        $method = 'OpenPayd';
+                    }
+                    mailSend('deposit_request',['amount'=>$new_deposit->amount, 'curr' => ($currency ? $currency->code : ' '), 'date_time'=>$new_deposit->created_at ,'type' => 'Bank', 'method'=> $method], $user);
 
 
                 }
             }
             else {
-                $deposit = DepositBank::whereRaw("INSTR('".$obj->transactionReference."', deposit_number) > 0")->first();
+                $deposit = DepositBank::whereRaw("INSTR('".$obj->transactionReference."', deposit_number) > 0")->orWhereRaw("INSTR('".$obj->transactionId."', deposit_number) > 0")->first();
                 if(!$deposit) {
                     $new_deposit = new DepositBank();
                     $user = User::where('holder_id', $obj->accountHolderId)->first();
@@ -97,7 +103,13 @@ class OpenpaydResponse implements RespondsToWebhook
                     $new_deposit['details'] = $obj->transactionReference;
                     $new_deposit['sub_bank_id'] = isset($subbank_id) ? $subbank_id : null;
                     $new_deposit->save();
-                    mailSend('deposit_request',['amount'=>$new_deposit->amount, 'curr' => ($currency ? $currency->code : ' '), 'date_time'=>$new_deposit->created_at ,'type' => 'Bank', 'method'=> $subbank->name ], $user);
+                    if(isset($subbank_id)){
+                        $method =  SubInsBank::findOrFail($subbank_id)->name;
+                    }
+                    else {
+                        $method = 'OpenPayd';
+                    }
+                    mailSend('deposit_request',['amount'=>$new_deposit->amount, 'curr' => ($currency ? $currency->code : ' '), 'date_time'=>$new_deposit->created_at ,'type' => 'Bank', 'method'=> $method ], $user);
                     send_notification($user->id, 'Bank has been deposited by '.$obj->senderName.'. Please check.', route('admin.deposits.bank.index'));
                     send_whatsapp($user->id, 'Bank has been deposited by '.$obj->senderName."\n Amount is ".$currency->symbol.$obj->amount->value."\n Payment Gateway : Openpayd"."\n Transaction ID : ".$obj->transactionId."\nPlease check more details to click this url\n".route('user.depositbank.index'));
                     send_telegram($user->id, 'Bank has been deposited by '.$obj->senderName."\n Amount is ".$currency->symbol.$obj->amount->value."\n Payment Gateway : Openpayd"."\n Transaction ID : ".$obj->transactionId."\nPlease check more details to click this url\n".route('user.depositbank.index'));

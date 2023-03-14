@@ -60,7 +60,7 @@ class ClearJunctionCallBackController extends Controller
         $webrequest->gateway_type = "clearjunction";
         $webrequest->is_pay_in = true;
         $webrequest->save();
-        if ($obj->label == null) {
+        if ($obj->paymentDetails->description == null) {
             $deposit = DepositBank::Where('deposit_number', $obj->orderReference)->first();
             if(!$deposit) {
                 $new_deposit = new DepositBank();
@@ -73,6 +73,7 @@ class ClearJunctionCallBackController extends Controller
                 $new_deposit['user_id'] = $bankaccount->user_id;
                 $new_deposit['currency_id'] = $webrequest->currency_id;
                 $new_deposit['amount'] = $obj->amount;
+                $new_deposit['details'] = $obj->paymentDetails->description;
                 $new_deposit['status'] = "pending";
                 $new_deposit['sub_bank_id'] = $bankaccount->subbank_id;
                 $new_deposit->save();
@@ -88,7 +89,7 @@ class ClearJunctionCallBackController extends Controller
             }
         }
         else {
-            $deposit = DepositBank::whereRaw("INSTR('".$obj->label."', deposit_number) > 0")->first();
+            $deposit = DepositBank::whereRaw("INSTR('".$obj->paymentDetails->description."', deposit_number) > 0")->orWhereRaw("INSTR('".$obj->orderReference."', deposit_number) > 0")->first();
             if(!$deposit) {
                 $new_deposit = new DepositBank();
                 $bankaccount = BankAccount::where('iban', $obj->paymentDetails->payeeRequisite->iban)->first();
@@ -100,6 +101,7 @@ class ClearJunctionCallBackController extends Controller
                 $new_deposit['user_id'] = $bankaccount->user_id;
                 $new_deposit['currency_id'] = $webrequest->currency_id;
                 $new_deposit['amount'] = $obj->amount;
+                $new_deposit['details'] = $obj->paymentDetails->description;
                 $new_deposit['status'] = "pending";
                 $new_deposit['sub_bank_id'] = $bankaccount->subbank_id;
                 $new_deposit->save();
