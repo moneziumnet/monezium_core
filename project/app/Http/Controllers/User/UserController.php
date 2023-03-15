@@ -19,6 +19,8 @@ use App\Models\BankGateway;
 use App\Models\Transaction;
 use App\Models\KycRequest;
 use App\Models\LoginActivity;
+use App\Models\BalanceTransfer;
+use App\Models\DepositBank;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
@@ -133,6 +135,57 @@ class UserController extends Controller
             user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
             return redirect()->route('user.dashboard')->with(array('message' => 'Bank Account has been created successfully.'));
         }
+        $def_currency = Currency::findOrFail(defaultCurr());
+        $client = new Client();
+        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency='.$def_currency->code);
+        $rate = json_decode($response->getBody());
+
+        $deposits = DepositBank::select('id', 'updated_at', 'amount', 'currency_id' )->whereStatus('complete')->where('user_id', auth()->id())
+            ->get()
+            ->groupBy(function($date) {
+                return Carbon::parse($date->updated_at)->format('Y-m'); // grouping by months
+            });
+        $withdraws = BalanceTransfer::select('id', 'updated_at', 'amount', 'currency_id' )->whereStatus(1)->where('user_id', auth()->id())->where('type', 'other')
+        ->get()
+        ->groupBy(function($date) {
+            return Carbon::parse($date->updated_at)->format('Y-m'); // grouping by months
+        });
+            // dd($deposits);
+
+            $amount = [];
+            $amount_w = [];
+            $array_months = [];
+            $array_deposits = [];
+            $array_withdraws = [];
+            foreach ($deposits as $key => $value) {
+                $amount[$key] = 0;
+                foreach($value as $deposit) {
+                    $currency = Currency::findOrFail($deposit->currency_id)->code;
+                    $amount[$key] = $amount[$key] + $deposit->amount / $rate->data->rates->$currency;
+                }
+                array_push($array_months, $key.'-01');
+                array_push($array_deposits, $amount[$key]);
+            }
+            foreach ($withdraws as $key => $value) {
+                $amount_w[$key] = 0;
+                foreach($value as $withdraw) {
+                    $currency = Currency::findOrFail($withdraw->currency_id)->code;
+                    $amount_w[$key] = $amount_w[$key] + $withdraw->amount / $rate->data->rates->$currency;
+                }
+                array_push($array_months, $key.'-01');
+                array_push($array_withdraws, $amount_w[$key]);
+            }
+
+            // for($i = 1; $i <= 12; $i++){
+            //     if(!empty($amount[$i])){
+            //         $months[$i] = $amount[$i];
+            //     }else{
+            //         $months[$i] = 0;
+            //     }
+            // }
+        $data['array_months'] = implode(",",array_unique($array_months));
+        $data['array_deposits'] = implode(",",$array_deposits);
+        $data['array_withdraws'] = implode(",",$array_withdraws);
         return view('user.dashboard',$data);
     }
 

@@ -86,6 +86,14 @@
       </div>
     </div>
     @endif
+    <div class="card mt-3 mb-3">
+        <div class="card-body">
+          <div class="d-flex justify-content-center">
+            <h3 class="card-title">{{ __('Incoming and Withdraw') }}</h3>
+          </div>
+          <div id="chart-social-referrals" class="chart-lg"></div>
+        </div>
+    </div>
 
     <div class="row row-deck row-cards mb-2">
 
@@ -604,4 +612,91 @@
              });
         })
     </script>
+<script>
+    var array_months = '{{$array_months}}';
+    array_months = array_months.split(',');
+    var array_deposits = '{{$array_deposits}}';
+    array_deposits = array_deposits.split(',');
+    var array_withdraws = '{{$array_withdraws}}';
+    array_withdraws = array_withdraws.split(',');
+    document.addEventListener("DOMContentLoaded", function () {
+        window.tabler_chart = window.tabler_chart || {};
+        window.ApexCharts && (window.tabler_chart["chart-social-referrals"] = new ApexCharts(document.getElementById('chart-social-referrals'), {
+            chart: {
+                type: "line",
+                fontFamily: 'inherit',
+                height: 240,
+                parentHeightOffset: 0,
+                toolbar: {
+                    show: false,
+                },
+                animations: {
+                    enabled: false
+                },
+            },
+            fill: {
+                opacity: 1,
+            },
+            stroke: {
+                width: 2,
+                lineCap: "round",
+                curve: "smooth",
+            },
+            series: [{
+                name: "Incoming",
+                data: array_deposits
+            },{
+                name: "Withdraw",
+                data: array_withdraws
+            }],
+            tooltip: {
+                theme: 'dark'
+            },
+            grid: {
+                padding: {
+                    top: -20,
+                    right: 0,
+                    left: -4,
+                    bottom: -4
+                },
+                strokeDashArray: 4,
+                xaxis: {
+                    lines: {
+                        show: true
+                    }
+                },
+            },
+            xaxis: {
+                labels: {
+                    padding: 0,
+                },
+                tooltip: {
+                    enabled: false
+                },
+                type: 'datetime',
+            },
+            yaxis: {
+                labels: {
+                    padding: 4
+                },
+            },
+            labels: array_months,
+            colors: [ "#1877f2", "#ea4c89"],
+            legend: {
+                show: true,
+                position: 'bottom',
+                offsetY: 12,
+                markers: {
+                    width: 10,
+                    height: 10,
+                    radius: 100,
+                },
+                itemMargin: {
+                    horizontal: 8,
+                    vertical: 8
+                },
+            },
+        })).render();
+    });
+  </script>
 @endpush

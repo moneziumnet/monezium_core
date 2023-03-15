@@ -60,6 +60,8 @@
     <script src="{{asset('assets/tinymce/tinymce.min.js')}}"></script>
     <script src="{{asset('assets/front/js/toastr.min.js')}}"></script>
     <script src="{{asset('assets/user/')}}/js/instascan.min.js"></script>
+    <script src="{{asset('assets/user/js/apexcharts.min.js')}}"></script>
+
     <script>
       'use strict';
       var submit_flag = false;
