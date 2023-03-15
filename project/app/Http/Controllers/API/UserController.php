@@ -427,6 +427,429 @@ class UserController extends Controller
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
     }
 
+    public function trxDetails($id)
+    {
+        $data['user'] = Auth::user();
+        $data['transaction'] = Transaction::where('id',$id)->whereUserId(auth()->id())->with('currency')->first();
+        return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
+    }
+
+
+    public function sendToMail(Request $request)
+    {
+        $gs = Generalsetting::first();
+        $tran = Transaction::where('id',$request->trx_id)->whereUserId(auth()->id())->first();
+
+
+        $to = $request->email;
+        $subject = "Transaction Detail";
+
+        $msg_body = '
+        <!DOCTYPE html>
+        <html>
+        <head>
+        <style>
+        table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+        }
+
+        td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+        }
+
+        tr:nth-child(even) {
+          background-color: #dddddd;
+        }
+        </style>
+        </head>
+        <body>
+
+        <h2>Transaction Detail</h2>
+        <p> Hello '.(auth()->user()->company_name ?? auth()->user()->name).'.</p>
+        <p> This is Transacton Detail.</p>
+        <p> Please confirm current.</p>
+
+        <table>
+          <tr>
+            <th style="width:15%;font-size:8px;">Date/Transaction No.</th>
+            <th style="width:15%;font-size:8px;">Sender</th>
+            <th style="width:15%;font-size:8px;">Receiver</th>
+            <th style="width:30%;font-size:8px;">Description</th>
+            <th style="width:15%;font-size:8px;">Amount</th>
+            <th style="width:10%;font-size:8px;">Fee</th>
+          </tr>
+          <tr>
+            <td style="font-size:8px;">'.date('d-m-Y', strtotime($tran->created_at)).' <br/> '.$tran->trnx.'</td>
+            <td style="font-size:8px;">'.(json_decode($tran->data)->sender ?? "").'</td>
+            <td style="font-size:8px;">'.(json_decode($tran->data)->receiver ?? "").'</td>
+            <td style="text-align: left; font-size:8px;">'.(json_decode($tran->data)->description ?? "").'<br/>'.ucwords(str_replace('_',' ',$tran->remark)).'</td>
+            <td style="text-align: left;font-size:8px;">'.$tran->type.' '.amount($tran->amount,$tran->currency->type,2).' '.$tran->currency->code.' </td>
+            <td style="text-align: left;font-size:8px;">- '.amount($tran->charge,$tran->currency->type,2).' '.$tran->currency->code.' </td>
+          </tr>
+
+        </table>
+
+        </body>
+        </html>
+
+        ';
+
+
+        $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
+        $headers .= "MIME-Version: 1.0" . "\r\n";
+        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+
+        $user = Auth::user();
+        $transaction = Transaction::where('id',$request->trx_id)->whereUserId(auth()->id())->get();
+        $image = public_path('assets/images/'.$gs->logo);
+        $image_encode = base64_encode(file_get_contents($image));
+        $data = [
+            'trans' => $transaction,
+            'user'  => $user,
+            'image' => $image_encode
+        ];
+
+        $pdf = PDF::loadView('frontend.myPDF', $data);
+        $folderPath = 'assets/pdf/';
+        $file = $folderPath.Str::random(8).time().'.pdf';
+        file_put_contents($file, $pdf->output());
+
+        sendMail($to,$subject,$msg_body,$headers,$file);
+        return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'This transaction\'s detail has been sent to your email.']);
+
+    }
+
+    public function profile()
+    {
+        $data['user'] = Auth::user();
+        return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data'=>$data]);
+    }
+
+    public function profileupdate(Request $request)
+    {
+        $rules = [
+            'photo' => 'mimes:jpeg,jpg,png,svg',
+            'email' => 'unique:users,email,'.Auth::user()->id
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $validator->getMessageBag()->toArray()]);
+        }
+
+        $input = $request->all();
+
+        $input['phone'] = preg_replace("/[^0-9]/", "", $request->phone);
+
+        if(!isset(auth()->user()->company_name)) {
+            $input['personal_code'] = $request->personal_code;
+            $input['your_id'] = $request->your_id;
+            $input['issued_authority'] = $request->issued_authority;
+            $input['date_of_issue'] = $request->date_of_issue;
+            $input['date_of_expire'] = $request->date_of_expire;
+            $input['company_address'] = null;
+            $input['company_name'] = null;
+            $input['company_reg_no'] = null;
+            $input['company_vat_no'] = null;
+            $input['company_dob'] = null;
+            $input['company_type'] = null;
+            $input['company_city'] = null;
+            $input['company_country'] = null;
+            $input['company_zipcode'] = null;
+        } else {
+            $input['company_name'] = $request->company_name;
+            $input['company_reg_no'] = $request->company_reg_no;
+            $input['company_vat_no'] = $request->company_vat_no;
+            $input['company_dob'] = $request->company_dob;
+            $input['company_type'] = $request->company_type;
+            $input['company_city'] = $request->company_city;
+            $input['company_zipcode'] = $request->company_zipcode;
+            $input['personal_code'] = null;
+            $input['your_id'] = null;
+            $input['issued_authority'] = null;
+            $input['date_of_issue'] = null;
+            $input['date_of_expire'] = null;
+        }
+
+        $input['name'] = trim($request->firstname)." ".trim($request->lastname);
+        $data = Auth::user();
+        if ($file = $request->file('photo'))
+        {
+            $name = Str::random(8).time().$file->getClientOriginalExtension();
+            $file->move('assets/images/',$name);
+            @unlink('assets/images/'.$data->photo);
+
+            $input['photo'] = $name;
+
+            $input['is_provider'] = 0;
+        }
+
+        if ($file = $request->file('signature'))
+        {
+            $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
+            $file->move('assets/images',$name);
+            @unlink('assets/images/'.$data->signature);
+            $data['signature'] = $name;
+        }
+
+        if ($file = $request->file('stamp'))
+        {
+            $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
+            $file->move('assets/images',$name);
+            @unlink('assets/images/'.$data->stamp);
+            $data['stamp'] = $name;
+        }
+
+        $data->update($input);
+        $msg = 'Successfully updated your profile';
+        return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Successfully updated your profile']);
+    }
+
+
+    public function createTwoFactor(Request $request)
+    {
+        $user = auth()->user();
+
+        $rules = [
+            'key' => 'required',
+            'code' => 'required',
+        ];
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $validator->getMessageBag()->toArray()]);
+        }
+
+        $ga = new GoogleAuthenticator();
+        $secret = $request->key;
+        $oneCode = $ga->getCode($secret);
+
+        if ($oneCode == $request->code) {
+            $user->go = $request->key;
+            $user->twofa = 1;
+            $user->save();
+
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Google Two factor authentication activated']);
+        } else {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Your code is not matched, please input again.']);
+        }
+    }
+
+    public function username_by_email(Request $request){
+        if($data = User::where('email',$request->email)->first()){
+
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => ["name" => $data->company_name ?? $data->name, "phone" => $data->phone]]);
+        }else{
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'User dose not exist']);
+            return false;
+        }
+    }
+
+    public function username_by_phone(Request $request){
+        if($data = User::where('phone',preg_replace("/[^0-9]/", "", $request->phone))->first()){
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => ["name" => $data->company_name ?? $data->name, "email" => $data->email]]);
+        }else{
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'User dose not exist']);
+        }
+    }
+
+    public function userlist_by_phone(Request $request){
+        $phone_number = preg_replace("/[^0-9]/", "", $request->input('query'));
+        $data = User::where('phone', 'like', '%'.$phone_number.'%')->get();
+        if(count($data) > 0){
+            $suggestions = array();
+            foreach($data as $item) {
+                array_push($suggestions, [
+                    "value" => $item->phone,
+                    "data" => [
+                        "name" => $item->company_name ?? $item->name,
+                        "email" => $item->email,
+                    ],
+                ]);
+            }
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => [
+                "query" => $request->input('query'),
+                "suggestions" => $suggestions
+            ]]);
+
+        }else{
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => [
+                "query" => $request->input('query'),
+                "suggestions" => []
+            ]]);
+
+        }
+    }
+
+    public function security()
+    {
+        $user = auth()->user();
+        $gnl = Generalsetting::first();
+        $ga = new GoogleAuthenticator();
+        $secret = $ga->createSecret();
+        $qrCodeUrl = $ga->getQRCodeGoogleUrl($user->name . '@' . $gnl->title, $secret);
+        $data['user'] = $user;
+        $data['qrCodeUrl'] = $qrCodeUrl;
+        $data['secret'] = $secret;
+        return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
+    }
+
+    public function securitystore(Request $request)
+    {
+        $user = auth()->user();
+
+        $login_fa_yn = $payment_fa_yn = 'N';
+        $login_fa = $payment_fa = $otp_payment = '';
+        if($request->input('login_fa_yn') == 'Y')
+        {
+            $rules = [
+                'login_fa'   => 'required'
+            ];
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Select 2FA Option for Login']);
+
+            }
+            $login_fa_yn = 'Y';
+            $login_fa = $request->input('login_fa');
+            if($login_fa == 'two_fa_google' && $user->twofa != 1){
+                return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Please enable Google Two factor authentication.']);
+            }
+        }
+
+        if($request->input('payment_fa_yn') == 'Y')
+        {
+            $rules = [
+                'payment_fa'   => 'required'
+            ];
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Select 2FA Option for Payments']);
+            }
+            $payment_fa_yn = 'Y';
+            $payment_fa = $request->input('payment_fa');
+            if (!empty($request->otp_payment)) {
+                $otp_payment = implode(" , ", $request->otp_payment);
+            } else {
+                $otp_payment = '';
+            }
+            if($payment_fa == 'two_fa_google' && $user->twofa != 1){
+                return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Please enable Google Two factor authentication.']);
+            }
+        }
+
+        $update = User::where('id', $user->id)->update([
+            'login_fa_yn'  => $login_fa_yn,
+            'login_fa'     => $login_fa,
+            'payment_fa_yn'=> $payment_fa_yn,
+            'otp_payments'=> $otp_payment,
+            'payment_fa'=> $payment_fa
+        ]);
+
+        if($update)
+        {
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => '2FA Features Successfully Updated']);
+        }else{
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => '2FA Features Not Updated']);
+        }
+
+    }
+
+    public function moduleupdate(Request $request) {
+        $user = auth()->user();
+        if (!empty($request->section)) {
+            $input['modules'] = implode(" , ", $request->section);
+        } else {
+            $input['modules'] = '';
+        }
+
+        $status = $user->update($input);
+        if($status) {
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'User Modules Updated Successfully.']);
+        }else{
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'User Modules not Updated.']);
+        }
+
+    }
+
+    public function aml_kyc() {
+        $KycForms = KycRequest::where('user_id',auth()->id())->whereIn('status', [0, 2])->first();
+        $informations = [];
+        if ($KycForms) {
+            $informations = json_decode($KycForms->kyc_info,true);
+        }
+        $data['KycForms'] = $KycForms;
+        $data['informations'] = $informations;
+        return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
+
+    }
+
+    public function aml_kyc_store(Request $request) {
+        $KycForms = KycRequest::where('id',$request->id)->first();
+        $informations = json_decode($KycForms->kyc_info,true);
+
+
+        $requireInformations = [];
+        foreach($informations as $key=>$value){
+            if($value['type'] == 'Input'){
+                $requireInformations['text'][$value['label']] = strtolower(str_replace(' ', '_', $value['label']));
+            }
+            elseif($value['type'] == 'Textarea'){
+                $requireInformations['textarea'][$value['label']] = strtolower(str_replace(' ', '_', $value['label']));
+            }else{
+                $requireInformations['file'][$value['label']] = strtolower(str_replace(' ', '_', $value['label']));
+            }
+        }
+
+
+        $details = [];
+        foreach($requireInformations as $key=>$infos){
+            foreach($infos as $index=>$info){
+
+                if($request->has($info)){
+                    if($request->hasFile($info)){
+                        if ($file = $request->file($info))
+                        {
+                           $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
+                           $file->move('assets/images',$name);
+                           $details[$info] = [$name,$key];
+                        }
+                    }else{
+                        $details[$info] = [$request->$info,$key];
+                    }
+                }
+            }
+        }
+        // $details['type'] = $request->type;
+        if(!empty($details)){
+            $KycForms->submit_info = json_encode($details,true);
+            $KycForms->submitted_date = date('Y-m-d H:i:s');
+            $KycForms->status = 3;
+        }
+        $KycForms->save();
+        send_notification(auth()->id(), 'KYC/AML has been submitted to Admin by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.user.kycinfo', auth()->id()));
+        send_staff_telegram('KYC/AML has been submitted to Admin by '.(auth()->user()->company_name ?? auth()->user()->name).". Please check.\n".route('admin.user.kycinfo', auth()->id()), 'AML/KYC');
+        return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'KYC submitted successfully']);
+    }
+
+
+    public function aml_kyc_history(){
+        $data['history'] = KycRequest::where('user_id', auth()->id())->latest()->paginate(15);
+        return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
+    }
+
+    public function history()
+    {
+        $data['history'] = LoginActivity::where('user_id', auth()->id())->orderBy('created_at', 'desc')->paginate(20);
+        return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
+    }
+
     public function changepassword(Request $request)
     {
         try {
@@ -439,7 +862,7 @@ class UserController extends Controller
             ];
             $validator = Validator::make($request->all(), $rules);
             if ($validator->fails()) {
-                return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
+                return response()->json(['status' => '401', 'error_code' => '0', 'message' => $validator->getMessageBag()->toArray()]);
             }
 
             $input =  $request->all();
@@ -466,7 +889,6 @@ class UserController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
         }
-
     }
 
     public function supportmessage(Request $request)

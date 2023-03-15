@@ -44,7 +44,21 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/user/bankaccount/gateway',[UserController::class,'gateway']);
         Route::post('/user/qr-code-scan',   [UserController::class,'scanQR']);
         Route::get('/user/transactions', [UserController::class,'transaction']);
-
+        Route::get('/user/transaction/details/{id}', [UserController::class,'trxDetails']);
+        Route::post('/user/transactions/details/mail', [UserController::class,'sendToMail']);
+        Route::get('/user/profile', [UserController::class,'profile']);
+        Route::post('/user/profile', [UserController::class,'profileupdate']);
+        Route::post('/user/createTwoFactor', [UserController::class,'createTwoFactor']);
+        Route::post('/user/username-by-email', [UserController::class,'username_by_email']);
+        Route::post('/user/username-by-phone', [UserController::class,'username_by_phone']);
+        Route::get('/user/userlist-by-phone', [UserController::class,'userlist_by_phone']);
+        Route::get('/user/security', [UserController::class,'security']);
+        Route::post('/user/security/store', [UserController::class,'securitystore']);
+        Route::post('/user/module/update', [UserController::class,'moduleupdate']);
+        Route::get('/user/aml_kyc', [UserController::class,'aml_kyc']);
+        Route::post('/user/aml_kyc/update', [UserController::class,'aml_kyc_store']);
+        Route::get('/user/aml_kyc/history', [UserController::class,'aml_kyc_history']);
+        Route::get('/user/login/activity', [UserController::class,'history']);
 
         Route::post('/user/loan', [UserLoanController::class, 'loan_index']);
         Route::get('/user/loan-plan', [UserLoanController::class, 'loanplan']);
