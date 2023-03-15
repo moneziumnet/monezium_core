@@ -42,6 +42,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/user/wallet', [UserController::class, 'wallet_create']);
         Route::post('/user/crypto/wallet', [UserController::class, 'crypto_wallet_create']);
         Route::post('/user/bankaccount/gateway',[UserController::class,'gateway']);
+        Route::post('/user/qr-code-scan',   [UserController::class,'scanQR']);
+        Route::get('/user/transactions', [UserController::class,'transaction']);
+
 
         Route::post('/user/loan', [UserLoanController::class, 'loan_index']);
         Route::get('/user/loan-plan', [UserLoanController::class, 'loanplan']);

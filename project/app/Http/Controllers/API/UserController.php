@@ -245,13 +245,13 @@ class UserController extends Controller
     }
 
     public function wallet_create (Request $request) {
-        $check =  Wallet::where('user_id', $request->user_id)->where('wallet_type', 1)->where('currency_id', $request->currency_id)->first();
+        $check =  Wallet::where('user_id', auth()->id())->where('wallet_type', 1)->where('currency_id', $request->currency_id)->first();
         if($check){
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'This wallet already exist.']);
         }
         $gs = Generalsetting::first();
         $user_wallet = new Wallet();
-        $user_wallet->user_id = $request->user_id;
+        $user_wallet->user_id = auth()->id();
         $user_wallet->user_type = 1;
         $user_wallet->currency_id = $request->currency_id;
         $user_wallet->balance = 0;
@@ -261,7 +261,7 @@ class UserController extends Controller
         $user_wallet->updated_at = date('Y-m-d H:i:s');
         $user_wallet->save();
 
-        $user =  User::findOrFail($request->user_id);
+        $user =  User::findOrFail(auth()->id());
         $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
         if(!$chargefee) {
             $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
@@ -269,12 +269,12 @@ class UserController extends Controller
 
         $trans = new Transaction();
         $trans->trnx = str_rand();
-        $trans->user_id     = $request->user_id;
+        $trans->user_id     = auth()->id();
         $trans->user_type   = 1;
         $trans->currency_id = defaultCurr();
         $trans->amount      = 0;
 
-        $trans_wallet = get_wallet($request->user_id, defaultCurr(), 1);
+        $trans_wallet = get_wallet(auth()->id(), defaultCurr(), 1);
 
         $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
         $trans->charge      = $chargefee->data->fixed_charge;
@@ -295,7 +295,7 @@ class UserController extends Controller
 
 
     public function crypto_wallet_create(Request $request) {
-        $check =  Wallet::where('user_id', $request->user_id)->where('wallet_type', 8)->where('currency_id', $request->crypto_currency_id)->first();
+        $check =  Wallet::where('user_id', auth()->id())->where('wallet_type', 8)->where('currency_id', $request->crypto_currency_id)->first();
         if($check){
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'This wallet already exist.']);
         }
@@ -309,7 +309,7 @@ class UserController extends Controller
             $address = RPC_ETH('personal_newAccount',[$keyword]);
         } else {
             $eth_currency = Currency::where('code', 'ETH')->first();
-            $eth_wallet = Wallet::where('user_id', $request->user_id)->where('wallet_type', 8)->where('currency_id', $eth_currency->id)->first();
+            $eth_wallet = Wallet::where('user_id', auth()->id())->where('wallet_type', 8)->where('currency_id', $eth_currency->id)->first();
             if (!$eth_wallet) {
                 return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'You have to create Eth Crypto wallet firstly before create ERC20 token wallet.']);
             }
@@ -322,7 +322,7 @@ class UserController extends Controller
 
         $gs = Generalsetting::first();
         $user_wallet = new Wallet();
-        $user_wallet->user_id = $request->user_id;
+        $user_wallet->user_id = auth()->id();
         $user_wallet->user_type = 1;
         $user_wallet->currency_id = $request->crypto_currency_id;
         $user_wallet->balance = 0;
@@ -334,19 +334,19 @@ class UserController extends Controller
         $user_wallet->save();
 
 
-        $user =  User::findOrFail($request->user_id);
+        $user =  User::findOrFail(auth()->id());
         $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
         if(!$chargefee) {
             $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
         }
         $trans = new Transaction();
         $trans->trnx = str_rand();
-        $trans->user_id     = $request->user_id;
+        $trans->user_id     = auth()->id();
         $trans->user_type   = 1;
         $trans->currency_id = defaultCurr();
         $trans->amount      = 0;
 
-        $trans_wallet = get_wallet($request->user_id, defaultCurr(), 1);
+        $trans_wallet = get_wallet(auth()->id(), defaultCurr(), 1);
 
         $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
         $trans->charge      = $chargefee->data->fixed_charge;
@@ -379,6 +379,52 @@ class UserController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
         }
+    }
+
+    public function scanQR(Request $request)
+    {
+        $user = User::where('email',$request->email)->first();
+        if(!$user){
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => NULL]);
+        }
+        else {
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $user->email]);
+        }
+    }
+
+    public function transaction()
+    {
+        $data['user'] = Auth::user();
+        $search = request('search');
+        $remark = request('remark');
+        $wallet_id = request('wallet_id');
+        $s_time = request('s_time');
+        $e_time = request('e_time');
+        $s_time = $s_time ? $s_time : '';
+        $e_time = $e_time ? $e_time : Carbontime::now()->addDays(1)->format('Y-m-d');
+        $data['transactions'] = Transaction::where('user_id',auth()->id())
+        ->when($wallet_id,function($q) use($wallet_id){
+            return $q->where('wallet_id',$wallet_id);
+        })
+        ->when($remark,function($q) use($remark){
+            return $q->where('remark',$remark);
+        })
+        ->when($search,function($q) use($search){
+            return $q->where('trnx','LIKE',"%{$search}%");
+        })
+        ->whereBetween('created_at', [$s_time, $e_time])
+        ->orderBy('created_at', 'desc')
+        ->with('currency')->latest()->paginate(20);
+        $remark_list = Transaction::where('user_id',auth()->id())->pluck('remark');
+        $data['remark_list'] = array_unique($remark_list->all());
+
+        $wallet_list = Transaction::where('user_id',auth()->id())->pluck('wallet_id');
+        $data['wallet_list'] = array_unique($wallet_list->all());
+        $data['search'] = $search;
+        $data['e_time'] = $e_time;
+        $data['s_time'] = $s_time;
+
+        return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
     }
 
     public function changepassword(Request $request)
