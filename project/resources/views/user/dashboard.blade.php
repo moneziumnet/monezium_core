@@ -91,7 +91,7 @@
           <div class="d-flex justify-content-center">
             <h3 class="card-title">{{ __('Incoming and Withdraw') }}</h3>
           </div>
-          <div id="chart-social-referrals" class="chart-lg"></div>
+          <div id="chart_finance_monthly" class="chart-lg"></div>
         </div>
     </div>
 
@@ -621,7 +621,7 @@
     array_withdraws = array_withdraws.split(',');
     document.addEventListener("DOMContentLoaded", function () {
         window.tabler_chart = window.tabler_chart || {};
-        window.ApexCharts && (window.tabler_chart["chart-social-referrals"] = new ApexCharts(document.getElementById('chart-social-referrals'), {
+        window.ApexCharts && (window.tabler_chart["chart_finance_monthly"] = new ApexCharts(document.getElementById('chart_finance_monthly'), {
             chart: {
                 type: "line",
                 fontFamily: 'inherit',
@@ -668,12 +668,17 @@
             },
             xaxis: {
                 labels: {
-                    padding: 0,
-                },
+                    datetimeFormatter: {
+                        year: 'yyyy',
+                        month: 'MMM \'yy',
+                        day: 'dd MMM',
+                        hour: 'HH:mm'
+                    }
+                    },
                 tooltip: {
                     enabled: false
                 },
-                type: 'datetime',
+                type: 'categroy',
             },
             yaxis: {
                 labels: {

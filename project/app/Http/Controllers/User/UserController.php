@@ -150,42 +150,60 @@ class UserController extends Controller
         ->groupBy(function($date) {
             return Carbon::parse($date->updated_at)->format('Y-m'); // grouping by months
         });
-            // dd($deposits);
-
-            $amount = [];
-            $amount_w = [];
-            $array_months = [];
-            $array_deposits = [];
-            $array_withdraws = [];
-            foreach ($deposits as $key => $value) {
-                $amount[$key] = 0;
-                foreach($value as $deposit) {
-                    $currency = Currency::findOrFail($deposit->currency_id)->code;
-                    $amount[$key] = $amount[$key] + $deposit->amount / $rate->data->rates->$currency;
-                }
-                array_push($array_months, $key.'-01');
-                array_push($array_deposits, $amount[$key]);
+        $yms = array();
+        $now = date('Y-m');
+        for($x = 12; $x >= 0; $x--) {
+            $ym = date('Y-m', strtotime($now . " -$x month"));
+            array_push($yms, $ym);
+        }
+        $amount = [];
+        $amount_w = [];
+        $array_months = [];
+        $array_deposits = [];
+        $array_withdraws = [];
+        foreach ($deposits as $key => $value) {
+            $amount[$key] = 0;
+            foreach($value as $deposit) {
+                $currency = Currency::findOrFail($deposit->currency_id)->code;
+                $amount[$key] = $amount[$key] + $deposit->amount / $rate->data->rates->$currency;
             }
-            foreach ($withdraws as $key => $value) {
-                $amount_w[$key] = 0;
-                foreach($value as $withdraw) {
-                    $currency = Currency::findOrFail($withdraw->currency_id)->code;
-                    $amount_w[$key] = $amount_w[$key] + $withdraw->amount / $rate->data->rates->$currency;
-                }
-                array_push($array_months, $key.'-01');
-                array_push($array_withdraws, $amount_w[$key]);
+            array_push($array_months, $key);
+            // array_push($array_deposits, $amount[$key]);
+            $array_deposits[$key] = $amount[$key];
+        }
+        foreach ($withdraws as $key => $value) {
+            $amount_w[$key] = 0;
+            foreach($value as $withdraw) {
+                $currency = Currency::findOrFail($withdraw->currency_id)->code;
+                $amount_w[$key] = $amount_w[$key] + $withdraw->amount / $rate->data->rates->$currency;
             }
+            array_push($array_months, $key);
+            array_push($array_withdraws, $amount_w[$key]);
+            $array_withdraws[$key] = $amount_w[$key];
+        }
+        $deposit_list = [];
+        $withdraw_list = [];
 
-            // for($i = 1; $i <= 12; $i++){
-            //     if(!empty($amount[$i])){
-            //         $months[$i] = $amount[$i];
-            //     }else{
-            //         $months[$i] = 0;
-            //     }
-            // }
-        $data['array_months'] = implode(",",array_unique($array_months));
-        $data['array_deposits'] = implode(",",$array_deposits);
-        $data['array_withdraws'] = implode(",",$array_withdraws);
+        foreach($yms as $month) {
+            if(!array_key_exists($month, $array_deposits)) {
+                $deposit_list[$month] = 0;
+            }
+            else {
+                $deposit_list[$month] = $array_deposits[$month];
+            }
+            if(!array_key_exists($month, $array_withdraws)) {
+                $withdraw_list[$month] = 0;
+            }
+            else {
+                $withdraw_list[$month] = $array_withdraws[$month];
+            }
+        }
+        ksort($deposit_list);
+        ksort($withdraw_list);
+        $data['array_months'] = implode(",",array_unique($yms));
+        $data['array_deposits'] = implode(",",array_values($deposit_list));
+        $data['array_withdraws'] = implode(",",array_values($withdraw_list));
+
         return view('user.dashboard',$data);
     }
 
