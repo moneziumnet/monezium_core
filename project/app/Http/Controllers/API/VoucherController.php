@@ -219,7 +219,7 @@ class VoucherController extends Controller
             $data['vouchers'] = Voucher::with('currency')->where('status',1)->where('reedemed_by',$user_id)->orderby('id','desc')->paginate(10);
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
         }catch(\Throwable $th){
-            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
         }
     }
 

@@ -83,6 +83,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/user/reedem-voucher',  [VoucherController::class,'reedemSubmit']);
         Route::get('/user/reedemed-history',  [VoucherController::class,'reedemHistory']);
 
+        Route::get('/user/make-escrow',   [EscrowController::class,'create']);
+        Route::post('/user/make-escrow',   [EscrowController::class,'store']);
+        Route::get('/user/escrow/calcharge/{amount}',   [EscrowController::class,'calcharge']);
+        Route::get('/user/my-escrow',   [EscrowController::class,'index']);
+        Route::get('/user/escrow-pending',   [EscrowController::class,'pending']);
+        Route::get('/user/escrow-dispute/{id}',   [EscrowController::class,'disputeForm']);
+        Route::post('/user/escrow-dispute/{id}',   [EscrowController::class,'disputeStore']);
+        Route::get('/user/release-escrow/{id}',   [EscrowController::class,'release']);
+
         Route::post('/user/send-money', [SendController::class, 'sendmoney']);
         Route::post('/user/request-money', [SendController::class, 'requestmoney']);
         Route::post('/user/approve-request-money/{$id}', [SendController::class, 'approvemoney']);
@@ -116,10 +125,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/user/create-invoice', [InvoiceController::class, 'createinvoice']);
         Route::post('/user/invoice-view', [InvoiceController::class, 'invoiceview']);
         Route::post('/user/invoice-url', [InvoiceController::class, 'invoiceurl']);
-
-        Route::post('/user/make-escrow', [EscrowController::class, 'makeescrow']);
-        Route::post('/user/my-escrow', [EscrowController::class, 'myescrow']);
-        Route::post('/user/fetch-escrow-pending', [EscrowController::class, 'escrowpending']);
 
         Route::post('user/exchange-money-history', [ExchangeMoneyController::class, 'exchangemoneyhistory']);
         Route::post('user/exchange-recents', [ExchangeMoneyController::class, 'exchangerecents']);
