@@ -21,6 +21,7 @@ use App\Http\Controllers\API\TransactionController;
 use App\Http\Controllers\API\SendController;
 use App\Http\Controllers\API\MerchantController;
 use App\Http\Controllers\API\UserInvestmentController;
+use App\Http\Controllers\API\ChatifyController;
 
 
 /*
@@ -59,6 +60,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/user/aml_kyc/update', [UserController::class,'aml_kyc_store']);
         Route::get('/user/aml_kyc/history', [UserController::class,'aml_kyc_history']);
         Route::get('/user/login/activity', [UserController::class,'history']);
+        Route::post('/user/register/{id}', [UserController::class,'register']);
 
         Route::get('/user/loan', [UserLoanController::class, 'loan_index']);
         Route::get('/user/loan-plan', [UserLoanController::class, 'loanplan']);
@@ -91,6 +93,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user/escrow-dispute/{id}',   [EscrowController::class,'disputeForm']);
         Route::post('/user/escrow-dispute/{id}',   [EscrowController::class,'disputeStore']);
         Route::get('/user/release-escrow/{id}',   [EscrowController::class,'release']);
+
+        Route::post('/user/layer/store', [ChatifyController::class,'store']);
+        Route::post('/user/layer/login', [ChatifyController::class,'login']);
+        Route::post('/user/layer/logout', [ChatifyController::class,'logout']);
 
         Route::post('/user/send-money', [SendController::class, 'sendmoney']);
         Route::post('/user/request-money', [SendController::class, 'requestmoney']);
