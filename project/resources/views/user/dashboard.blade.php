@@ -625,7 +625,7 @@
             chart: {
                 type: "line",
                 fontFamily: 'inherit',
-                height: 240,
+                height: 300,
                 parentHeightOffset: 0,
                 toolbar: {
                     show: false,
