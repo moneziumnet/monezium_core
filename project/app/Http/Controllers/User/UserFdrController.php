@@ -38,7 +38,7 @@ class UserFdrController extends Controller
     }
 
     public function finish(Request $request){
-        $fdr = UserFdr::whereId($request->plan_Id)->first();
+        $fdr = UserFdr::whereId($request->plan_Id)->where('user_id', auth()->id())->first();
         if($fdr){
             // user_wallet_decrement($fdr->user_id, $fdr->currency_id, $fdr->fdr_amount, 4);
             $currency = $fdr->currency->id;
@@ -110,7 +110,7 @@ class UserFdrController extends Controller
             send_notification(auth()->id(), 'FDR has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.fdr.running'));
             send_staff_telegram('FDR has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).". Please check.\n".route('admin.fdr.running'), 'Fdr');
 
-            return redirect()->route('user.invest.index')->with('success','FDR Requesting Successfully');
+            return redirect()->route('user.invest.index')->with('message','FDR Requesting Successfully');
         }else{
             // return redirect()->back()->with('warning','You Don,t have sufficient balance');
             return redirect()->route('user.invest.index')->with('warning','You Don,t have sufficient balance');

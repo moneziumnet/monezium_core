@@ -29,7 +29,7 @@ class UserDpsController extends Controller
     }
 
     public function finish(Request $request) {
-        $dps = UserDps::whereId($request->plan_Id)->first();
+        $dps = UserDps::whereId($request->plan_Id)->where('user_id', auth()->id())->first();
         if($dps){
 
             $dps->status = 2;
@@ -106,7 +106,7 @@ class UserDpsController extends Controller
             send_notification(auth()->id(), 'Dps has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.dps.running'));
             send_staff_telegram('Dps has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).". Please check.\n".route('admin.dps.running'), 'Dps');
 
-            return redirect()->route('user.invest.index')->with('success','DPS application submitted');
+            return redirect()->route('user.invest.index')->with('message','DPS application submitted');
         }else{
             return redirect()->route('user.invest.index')->with('warning','You Don\'t have sufficient balance');
         }

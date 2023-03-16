@@ -20,6 +20,7 @@ use App\Http\Controllers\API\ExchangeMoneyController;
 use App\Http\Controllers\API\TransactionController;
 use App\Http\Controllers\API\SendController;
 use App\Http\Controllers\API\MerchantController;
+use App\Http\Controllers\API\UserInvestmentController;
 
 
 /*
@@ -74,11 +75,16 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/user/receive', [SendController::class, 'receive']);
 
         // Route::post('register', 'API\UserController@register');
-        Route::post('/user/dps', [UserDpsController::class, 'dps_index']);
-        Route::get('/user/dps-plan', [UserDpsController::class, 'dpsplan']);
-        Route::post('/user/running-dps', [UserDpsController::class, 'runningdps']);
-        Route::post('/user/matured-dps', [UserDpsController::class, 'matureddps']);
-        Route::get('/user/dps-details/{id}', [UserDpsController::class, 'dpsdetails']);
+        Route::get('/user/invest', [UserInvestmentController::class,'index']);
+        Route::post('/user/dps-plan', [UserDpsController::class,'planDetails']);
+        Route::post('/user/dps-submit', [UserDpsController::class,'dpsSubmit']);
+        Route::post('/user/dps/finish', [UserDpsController::class,'finish']);
+        Route::get('/user/dps-logs/{id}', [UserDpsController::class,'log']);
+
+        Route::post('/user/fdr-amount', [UserFdrController::class,'fdrAmount']);
+        Route::post('/user/fdr-request', [UserFdrController::class,'fdrRequest']);
+        Route::post('/user/fdr/finish', [UserFdrController::class,'finish']);
+
 
         Route::post('/user/fdr', [UserFdrController::class, 'fdr_index']);
         Route::get('/user/fdr-plan', [UserFdrController::class, 'fdrplan']);

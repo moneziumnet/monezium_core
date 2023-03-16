@@ -73,7 +73,7 @@
                                 <td>
                                     <p class="strong mb-1 text-success">{{__('Amount To Get')}}</p>
                                 </td>
-                                <td class="text-end text-success">{{ showprice((($fdrAmount * $data->interest_rate)/100),$currency) }}</td>
+                                <td class="text-end text-success">{{$currencyinfo->symbol}}{{amount(($fdrAmount * $data->interest_rate)/100, 1, 2)}}</td>
                             </tr>
 
                         </tbody>
@@ -82,7 +82,6 @@
                     <form action="{{ route('user.fdr.request') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="plan_id" value="{{ $data->id }}">
-                        <input type="hidden" name="currency_id" value="{{ $currency->id }}">
                         <input type="hidden" name="fdr_amount" value="{{ $fdrAmount }}">
                         <input type="hidden" name="profit_amount" value="{{ ($fdrAmount * $data->interest_rate)/100 }}">
                         <input type="hidden" name="currency_id" value="{{$currencyinfo->id }}">
