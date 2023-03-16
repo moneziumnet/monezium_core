@@ -22,7 +22,7 @@ use App\Http\Controllers\API\SendController;
 use App\Http\Controllers\API\MerchantController;
 use App\Http\Controllers\API\UserInvestmentController;
 use App\Http\Controllers\API\ChatifyController;
-
+use App\Http\Controllers\API\UserICOController;
 
 /*
 |--------------------------------------------------------------------------
@@ -97,6 +97,16 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/user/layer/store', [ChatifyController::class,'store']);
         Route::post('/user/layer/login', [ChatifyController::class,'login']);
         Route::post('/user/layer/logout', [ChatifyController::class,'logout']);
+
+        Route::get('/user/ico', [UserICOController::class, 'index']);
+        Route::get('/user/ico/mytoken', [UserICOController::class, 'mytoken']);
+        Route::get('/user/ico/edit/{id}', [UserICOController::class, 'edit']);
+        Route::get('/user/ico/details/{id}', [UserICOController::class, 'details']);
+        Route::get('/user/ico/buy/{id}', [UserICOController::class, 'show_buy']);
+        Route::post('/user/ico/buy/{id}', [UserICOController::class, 'buy']);
+        Route::get('/user/ico/delete/{id}', [UserICOController::class, 'delete']);
+        Route::post('/user/ico/store', [UserICOController::class, 'store']);
+        Route::post('/user/ico/update/{id}', [UserICOController::class, 'update']);
 
         Route::post('/user/send-money', [SendController::class, 'sendmoney']);
         Route::post('/user/request-money', [SendController::class, 'requestmoney']);
