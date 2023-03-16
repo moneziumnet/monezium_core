@@ -67,6 +67,22 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/user/loan-finish', [UserLoanController::class, 'loanfinish']);
         Route::get('/user/loan-logs/{id}', [UserLoanController::class, 'loanlog']);
 
+        Route::get('/user/invest', [UserInvestmentController::class,'index']);
+        Route::post('/user/dps-plan', [UserDpsController::class,'planDetails']);
+        Route::post('/user/dps-submit', [UserDpsController::class,'dpsSubmit']);
+        Route::post('/user/dps/finish', [UserDpsController::class,'finish']);
+        Route::get('/user/dps-logs/{id}', [UserDpsController::class,'log']);
+        Route::post('/user/fdr-amount', [UserFdrController::class,'fdrAmount']);
+        Route::post('/user/fdr-request', [UserFdrController::class,'fdrRequest']);
+        Route::post('/user/fdr/finish', [UserFdrController::class,'finish']);
+
+        Route::get('/user/vouchers', [VoucherController::class, 'vouchers']);
+        Route::get('/user/create-voucher',   [VoucherController::class,'create']);
+        Route::post('/user/create-voucher',   [VoucherController::class,'submit']);
+        Route::get('/user/reedem-voucher',  [VoucherController::class,'reedemForm']);
+        Route::post('/user/reedem-voucher',  [VoucherController::class,'reedemSubmit']);
+        Route::get('/user/reedemed-history',  [VoucherController::class,'reedemHistory']);
+
         Route::post('/user/send-money', [SendController::class, 'sendmoney']);
         Route::post('/user/request-money', [SendController::class, 'requestmoney']);
         Route::post('/user/approve-request-money/{$id}', [SendController::class, 'approvemoney']);
@@ -74,25 +90,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/user/create-request', [SendController::class, 'create']);
         Route::post('/user/receive', [SendController::class, 'receive']);
 
-        // Route::post('register', 'API\UserController@register');
-        Route::get('/user/invest', [UserInvestmentController::class,'index']);
-        Route::post('/user/dps-plan', [UserDpsController::class,'planDetails']);
-        Route::post('/user/dps-submit', [UserDpsController::class,'dpsSubmit']);
-        Route::post('/user/dps/finish', [UserDpsController::class,'finish']);
-        Route::get('/user/dps-logs/{id}', [UserDpsController::class,'log']);
-
-        Route::post('/user/fdr-amount', [UserFdrController::class,'fdrAmount']);
-        Route::post('/user/fdr-request', [UserFdrController::class,'fdrRequest']);
-        Route::post('/user/fdr/finish', [UserFdrController::class,'finish']);
-
-
-        Route::post('/user/fdr', [UserFdrController::class, 'fdr_index']);
-        Route::get('/user/fdr-plan', [UserFdrController::class, 'fdrplan']);
-        Route::get('/user/fdr-details/{id}', [UserFdrController::class, 'fdrdetails']);
-        Route::post('/user/running-fdr', [UserFdrController::class, 'runningfdr']);
-        Route::post('/user/closed-fdr', [UserFdrController::class, 'closedfdr']);
-        Route::post('/user/apply-fdr', [UserFdrController::class, 'applyfdr']);
-        Route::post('/user/finish-fdr', [UserFdrController::class, 'finishfdr']);
 
         Route::post('user/fetch-withdraw-list', [UserWithdrawController::class, 'withdraw']);
         Route::post('user/withdraw-create', [UserWithdrawController::class, 'withdrawcreate']);
@@ -114,11 +111,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('user/beneficiaries', [BeneficiaryController::class, 'beneficiaries']);
         Route::post('user/beneficiaries-details', [BeneficiaryController::class, 'beneficiariesdetails']);
         Route::post('user/beneficiaries-create', [BeneficiaryController::class, 'beneficiariescreate']);
-
-        Route::post('/user/vouchers', [VoucherController::class, 'vouchers']);
-        Route::post('/user/create-voucher', [VoucherController::class, 'createvoucher']);
-        Route::post('/user/reedem-voucher', [VoucherController::class, 'reedemvoucher']);
-        Route::post('/user/reedemed-history', [VoucherController::class, 'reedemedhistory']);
 
         Route::post('/user/invoices', [InvoiceController::class, 'invoices']);
         Route::post('/user/create-invoice', [InvoiceController::class, 'createinvoice']);
