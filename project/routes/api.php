@@ -38,7 +38,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/user/dashboard', [UserController::class, 'dashboard']);
         Route::get('/user/packages', [UserController::class, 'packages']);
         Route::post('/user/change-password', [UserController::class, 'changepassword']);
-        Route::post('/user/support-tickets', [UserController::class, 'supportmessage']);
         Route::post('/user/wallet', [UserController::class, 'wallet_create']);
         Route::post('/user/crypto/wallet', [UserController::class, 'crypto_wallet_create']);
         Route::post('/user/bankaccount/gateway',[UserController::class,'gateway']);
@@ -60,12 +59,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user/aml_kyc/history', [UserController::class,'aml_kyc_history']);
         Route::get('/user/login/activity', [UserController::class,'history']);
 
-        Route::post('/user/loan', [UserLoanController::class, 'loan_index']);
+        Route::get('/user/loan', [UserLoanController::class, 'loan_index']);
         Route::get('/user/loan-plan', [UserLoanController::class, 'loanplan']);
-        Route::post('/user/pending-loans', [UserLoanController::class, 'pendingloan']);
-        Route::post('/user/running-loans', [UserLoanController::class, 'runningloan']);
-        Route::post('/user/paid-loans', [UserLoanController::class, 'paidloan']);
-        Route::post('/user/rejected-loans', [UserLoanController::class, 'rejectedloan']);
         Route::post('/user/loan-amount', [UserLoanController::class, 'loanamount']);
         Route::post('/user/loan-request', [UserLoanController::class, 'loanrequest']);
         Route::post('/user/loan-finish', [UserLoanController::class, 'loanfinish']);
@@ -161,6 +156,4 @@ Route::middleware('auth:sanctum')->group(function () {
 //});
 Route::prefix('api')->group(function () {
     Route::post('/user/login', [UserController::class, 'login']);
-    Route::post('/user/register', [UserController::class, 'register']);
-    Route::post('/user/forgot', [UserController::class, 'forgot']);
 });

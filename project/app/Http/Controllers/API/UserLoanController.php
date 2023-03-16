@@ -5,34 +5,20 @@ namespace App\Http\Controllers\API;
 use Session;
 use Validator;
 use App\Models\User;
-use App\Models\UserApiCred;
 use App\Models\Wallet;
 use App\Models\Transaction;
 use App\Models\BankPlan;
 use App\Models\Generalsetting;
-use App\Models\BalanceTransfer;
-use App\Models\SaveAccount;
-use App\Models\Notification;
-use App\Models\Withdrawals;
 use App\Models\Currency;
-use App\Models\Beneficiary;
 use App\Models\UserLoan;
-
 use App\Models\LoanPlan;
-
-use App\Models\MoneyRequest;
 use App\Models\InstallmentLog;
 
-use App\Models\Charge;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
-
-use App\Classes\GoogleAuthenticator;
-use PHPMailer\PHPMailer\PHPMailer;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Hash;
+use Auth;
 
 class UserLoanController extends Controller
 {
@@ -40,76 +26,32 @@ class UserLoanController extends Controller
 
 
 //////////////////////////////////////////////// Loan api ////////////////////////////////////////////////////
-    public function loan_index(Request $request)
+    public function loan_index()
     {
         try {
             $user_id = Auth::user()->id;
             $data['loans'] = UserLoan::whereUserId($user_id)->orderby('id','desc')->paginate(10);
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
         } catch (\Throwable $th) {
-            //throw $th;
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
         }
     }
 
-    public function loanplan(Request $request)
+    public function loanplan()
     {
         try {
-           // $user_id = Auth::user()->id;
-            //if ($user_id)
-           // {
-                $data['plans'] = LoanPlan::orderBy('id','desc')->whereStatus(1)->paginate(12);
-                $data['currencylist'] = Currency::whereStatus(1)->where('type', 1)->get();
-                return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
-            //}
-        } catch (\Throwable $th) {
-            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
-        }
-    }
+            $data['plans'] = LoanPlan::orderBy('id','desc')->whereStatus(1)->paginate(12);
+            $data['currencylist'] = Currency::whereStatus(1)->where('type', 1)->get();
+            $data['loans'] = UserLoan::whereUserId(auth()->id())->orderby('id','desc')->paginate(10);
 
-    public function pendingloan(Request $request)
-    {
-        try {
-            $user_id = Auth::user()->id;
-            $data['loans'] = UserLoan::whereStatus(0)->whereUserId($user_id)->orderby('id','desc')->paginate(10);
+            $wallets = Wallet::where('user_id',auth()->id())->where('wallet_type',4)->with('currency')->get();
+            $data['wallets'] = $wallets;
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
         } catch (\Throwable $th) {
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
         }
     }
 
-    public function runningloan(Request $request)
-    {
-        try {
-            $user_id = Auth::user()->id;
-            $data['loans'] = UserLoan::whereStatus(1)->whereUserId($user_id)->orderby('id','desc')->paginate(10);
-            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
-        } catch (\Throwable $th) {
-            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
-        }
-    }
-
-    public function paidloan(Request $request)
-    {
-        try {
-            $user_id = Auth::user()->id;
-            $data['loans'] = UserLoan::whereStatus(3)->whereUserId($user_id)->orderby('id','desc')->paginate(10);
-            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
-        } catch (\Throwable $th) {
-            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
-        }
-    }
-
-    public function rejectedloan(Request $request)
-    {
-        try {
-            $user_id = Auth::user()->id;
-            $data['loans'] = UserLoan::whereStatus(2)->whereUserId($user_id)->orderby('id','desc')->paginate(10);
-            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
-        } catch (\Throwable $th) {
-            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
-        }
-    }
 
     public function loanamount(Request $request)
     {
@@ -123,7 +65,7 @@ class UserLoanController extends Controller
             ];
             $validator = Validator::make($request->all(), $rules);
             if ($validator->fails()) {
-                return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
+                return response()->json(['status' => '401', 'error_code' => '0', 'message' => $validator->getMessageBag()->toArray()]);
             }
 
 
@@ -142,7 +84,7 @@ class UserLoanController extends Controller
                 }
             }
         } catch (\Throwable $th) {
-            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
         }
 
     }
@@ -212,23 +154,13 @@ class UserLoanController extends Controller
             $input['total_amount'] = $request->loan_amount;
             $input['currency_id'] = $request->currency_id;
             $data->fill($input)->save();
-
-            $trans = new Transaction();
-            $trans->trnx = $txnid;
-            $trans->user_id     = $user->id;
-            $trans->user_type   = 1;
-            $trans->currency_id = $request->currency_id;
-            $trans->amount      = $request->loan_amount;
-            $trans->charge      = 0;
-            $trans->type        = '+';
-            $trans->remark      = 'loan_create';
-            $trans->details     = trans('loan requesting');
-            $trans->save();
+            send_notification(auth()->id(), 'Loan has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.loan.show', $data->id));
+            send_staff_telegram('Loan has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).". Please check.\n".route('admin.loan.show', $data->id), 'Loan');
 
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Loan Requesting Successfully']);
 
         } catch (\Throwable $th) {
-            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
         }
     }
 
@@ -246,6 +178,8 @@ class UserLoanController extends Controller
                     $loan->status = 3;
                     $loan->next_installment = NULL;
                     $loan->update();
+                    send_notification(auth()->id(), 'Loan finsih has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.loan.show', $loan->id));
+                    send_staff_telegram('Loan finsih has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).". Please check.\n".route('admin.loan.show', $loan->id), 'Loan');
                     return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Finish Requesting Successfully']);
                 }else {
                     return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'There is not your loan plan.']);
@@ -253,11 +187,11 @@ class UserLoanController extends Controller
                 }
             }
         } catch (\Throwable $th) {
-            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
         }
     }
 
-    public function loanlog(Request $request, $id)
+    public function loanlog($id)
     {
         try {
             $user_id = Auth::user()->id;
@@ -268,7 +202,7 @@ class UserLoanController extends Controller
             }
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => compact('logs','currency')]);
         } catch (\Throwable $th) {
-            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
         }
     }
 
