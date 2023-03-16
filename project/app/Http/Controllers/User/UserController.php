@@ -168,8 +168,7 @@ class UserController extends Controller
                 $amount[$key] = $amount[$key] + $deposit->amount / $rate->data->rates->$currency;
             }
             array_push($array_months, $key);
-            // array_push($array_deposits, $amount[$key]);
-            $array_deposits[$key] = $amount[$key];
+            $array_deposits[$key] = round($amount[$key], 2);
         }
         foreach ($withdraws as $key => $value) {
             $amount_w[$key] = 0;
@@ -178,8 +177,7 @@ class UserController extends Controller
                 $amount_w[$key] = $amount_w[$key] + $withdraw->amount / $rate->data->rates->$currency;
             }
             array_push($array_months, $key);
-            array_push($array_withdraws, $amount_w[$key]);
-            $array_withdraws[$key] = $amount_w[$key];
+            $array_withdraws[$key] = round($amount_w[$key], 2);
         }
         $deposit_list = [];
         $withdraw_list = [];
