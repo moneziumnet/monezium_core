@@ -119,13 +119,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/user/manager/create', [SupervisorController::class, 'storemanager']);
         Route::get('/user/manager/delete/{id}', [SupervisorController::class, 'deletemanager']);
 
-        Route::post('/user/send-money', [SendController::class, 'sendmoney']);
-        Route::post('/user/request-money', [SendController::class, 'requestmoney']);
-        Route::post('/user/approve-request-money/{$id}', [SendController::class, 'approvemoney']);
-        Route::post('/user/cancel-request-money/{$id}', [SendController::class, 'requestcancel']);
-        Route::post('/user/create-request', [SendController::class, 'create']);
-        Route::post('/user/receive', [SendController::class, 'receive']);
-
+        Route::get('/user/send-money',[SendController::class,'create']);
+        Route::post('/user/send-money',[SendController::class,'store']);
 
         Route::post('user/fetch-withdraw-list', [UserWithdrawController::class, 'withdraw']);
         Route::post('user/withdraw-create', [UserWithdrawController::class, 'withdrawcreate']);

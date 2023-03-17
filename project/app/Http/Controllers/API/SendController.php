@@ -6,54 +6,72 @@ use Session;
 use Validator;
 use App\Models\User;
 use App\Models\Wallet;
-use App\Models\UserApiCred;
 use App\Models\Transaction;
 use App\Models\BalanceTransfer;
-use App\Models\MoneyRequest;
 use App\Models\BankPlan;
 use App\Models\SaveAccount;
 use App\Models\Currency;
 use App\Models\Charge;
+use App\Models\PlanDetail;
+use App\Models\Generalsetting;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 
 use App\Classes\GoogleAuthenticator;
-use PHPMailer\PHPMailer\PHPMailer;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Hash;
+use Auth;
 
 class SendController extends Controller
 {
     public $successStatus = 200;
 
     ////////////////////////////////////Send Money//////////////////////////////////////////
-    public function sendmoney(Request $request)
-    {
+    public function create(){
         try {
-            $user_id = Auth::user()->id;
+            $ga = new GoogleAuthenticator();
+            $data['secret'] = $ga->createSecret();
+            $wallets = Wallet::where('user_id',auth()->id())->with('currency')->get();
+            $data['wallets'] = $wallets;
+            $data['saveAccounts'] = SaveAccount::whereUserId(auth()->id())->orderBy('id','desc')->get();
+            $data['savedUser'] = NULL;
+            $data['user'] = auth()->user();
+
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
+        }
+
+    }
+
+    public function store(Request $request){
+        try {
+            $user = auth()->user();
+            if($user->paymentCheck('Internal Payment')) {
+                if ($user->payment_fa != 'two_fa_google') {
+                    if ($user->two_fa_code != $request->otp_code) {
+                        return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Verification code is not matched.']);
+                    }
+                }
+                else{
+                    $googleAuth = new GoogleAuthenticator();
+                    $secret = $user->go;
+                    $oneCode = $googleAuth->getCode($secret);
+                    if ($oneCode != $request->otp_code) {
+                        return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Verification code is not matched.']);
+                    }
+                }
+            }
 
             $rules = [
-                'account_number'    => 'required',
+                'email'    => 'required',
                 'wallet_id'         => 'required',
                 'account_name'      => 'required',
                 'amount'            => 'required|numeric|min:0',
                 'description'       => 'required',
-                'code'              => 'required'
             ];
             $validator = Validator::make($request->all(), $rules);
-
             if ($validator->fails()) {
-                return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
-            }
-
-            $user = User::whereId($user_id)->first();
-            $ga = new GoogleAuthenticator();
-            $secret = $user->go;
-            $oneCode = $ga->getCode($secret);
-
-            if ($oneCode != $request->code) {
-                return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Two factor authentication code is wrong.']);
+                return response()->json(['status' => '401', 'error_code' => '0', 'message' => $validator->getMessageBag()->toArray()]);
             }
 
             if($user->bank_plan_id === null){
@@ -66,51 +84,194 @@ class SendController extends Controller
             $wallet = Wallet::where('id',$request->wallet_id)->with('currency')->first();
 
             $currency_id = $wallet->currency->id; //Currency::whereId($wallet_id)->first()->id;
+            $rate = getRate($wallet->currency);
+            $dailySend = BalanceTransfer::whereType('own')->whereUserId(auth()->id())->whereDate('created_at', '=', date('Y-m-d'))->whereStatus(1)->sum('amount');
+            $monthlySend = BalanceTransfer::whereType('own')->whereUserId(auth()->id())->whereMonth('created_at', '=', date('m'))->whereStatus(1)->sum('amount');
+            $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'send')->first();
 
-            $bank_plan = BankPlan::whereId($user->bank_plan_id)->first();
-            $dailySend = BalanceTransfer::whereUserId($user_id)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus(1)->sum('amount');
-            $monthlySend = BalanceTransfer::whereUserId($user_id)->whereMonth('created_at', '=', date('m'))->whereStatus(1)->sum('amount');
-
-            if($dailySend > $bank_plan->daily_send){
+            if($dailySend > $global_range->daily_limit){
                 return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Daily send limit over.']);
             }
 
-            if($monthlySend > $bank_plan->monthly_send){
+            if($monthlySend > $global_range->monthly_limit){
                 return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Monthly send limit over.']);
             }
 
             $gs = Generalsetting::first();
 
-            if($request->account_number == $user->account_number){
+            if($request->email == $user->email){
                 return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'You can not send money yourself!!']);
             }
 
             if($request->amount < 0){
-                return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Request Amount should be greater than this!']);
+                    return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Request Amount should be greater than 0!']);
+            }
+            if ($wallet->currency->type == 2) {
+                if($request->amount > Crypto_Balance($user->id, $currency_id)){
+                    return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Insufficient Balance.' ]);
+                }
+            }
+            else {
+                if($request->amount > user_wallet_balance($user->id, $currency_id, $wallet->wallet_type)){
+                    return redirect()->back()->with('unsuccess','Insufficient Balance.');
+                    return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Insufficient Balance.' ]);
+                }
             }
 
-            if($request->amount > user_wallet_balance($user_id, $currency_id, $wallet->wallet_type)){
-                return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Insufficient Balance.']);
+            $transaction_global_cost = 0;
+            if ($request->amount/$rate < $global_range->min || $request->amount/$rate > $global_range->max) {
+                return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min ]);
+            }
+            $transaction_global_fee = check_global_transaction_fee($request->amount/$rate, $user, 'send');
+            if($transaction_global_fee)
+            {
+                $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/(100*$rate)) * $transaction_global_fee->data->percent_charge;
+            }
+            $transaction_custom_cost = 0;
+            if($user->referral_id != 0)
+            {
+                $transaction_custom_fee = check_custom_transaction_fee($request->amount/$rate, $user, 'send');
+                if($transaction_custom_fee) {
+                    $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($request->amount/(100*$rate)) * $transaction_custom_fee->data->percent_charge;
+                }
+                $remark = 'Send_supervisor_fee';
+                if ($wallet->currency->type == 1) {
+                    if (check_user_type_by_id(4, $user->referral_id)) {
+                        user_wallet_increment($user->referral_id, $currency_id, $transaction_custom_cost*$rate, 6);
+                        $trans_wallet = get_wallet($user->referral_id, $currency_id, 6);
+                    }
+                    elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
+                        $remark = 'Send_manager_fee';
+                        user_wallet_increment($user->referral_id, $currency_id, $transaction_custom_cost*$rate, 10);
+                        $trans_wallet = get_wallet($user->referral_id, $currency_id, 10);
+                    }
+                }
+                else if ($wallet->currency->type == 2) {
+                    $trans_wallet = get_wallet($user->referral_id, $currency_id, 8);
+                    if($wallet->currency->code == 'ETH') {
+                        RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
+                        $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$trans_wallet->wallet_no.'", "value": "0x'.dechex($transaction_custom_cost*$rate*pow(10,18)).'"}';
+                        RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
+                    }
+                    else if($wallet->currency->code == 'BTC') {
+                        $res = RPC_BTC_Send('sendtoaddress',[$trans_wallet->wallet_no, amount($transaction_custom_cost*$rate, 2)],$wallet->keyword);
+                        if (isset($res->error->message)){
+                            return response()->json(['status' => '401', 'error_code' => '0', 'message' => __('Error: ') . $res->error->message]);
+                        }
+                    }
+                    else {
+                        RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
+                        $tokenContract = $wallet->currency->address;
+                        $result = erc20_token_transfer($tokenContract, $wallet->wallet_no, $trans_wallet->wallet_no, $transaction_custom_cost*$rate, $wallet->keyword);
+                        if (json_decode($result)->code == 1){
+                            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Ethereum client error: '.json_decode($result)->message]);
+                        }
+                    }
+                }
+
+                $trans = new Transaction();
+                $trans->trnx = str_rand();
+                $trans->user_id     = $user->referral_id;
+                $trans->user_type   = 1;
+
+                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+
+                $trans->currency_id = $currency_id;
+                $trans->amount      = $transaction_custom_cost*$rate;
+                $trans->charge      = 0;
+                $trans->type        = '+';
+                $trans->remark      = $remark;
+                $trans->details     = trans('Send Money');
+                $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'", "description": "'.$request->description.'"}';
+                $trans->save();
+
             }
 
-            if($receiver = User::where('account_number',$request->account_number)->first()){
-                $txnid = Str::random(4).time();
+            $finalCharge = $transaction_global_cost+$transaction_custom_cost;
+            $finalamount = $request->amount + $finalCharge*$rate;
 
-                user_wallet_decrement($user->id, $currency_id, $request->amount, $wallet->wallet_type);
+            if ($wallet->currency->type == 2) {
+                $towallet = get_wallet(0, $currency_id, 9);
+
+                if($wallet->currency->code == 'ETH') {
+                    RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
+                    $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex($transaction_global_cost*$rate*pow(10,18)).'"}';
+                    RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
+                }
+                else if($wallet->currency->code == 'BTC') {
+                    $res = RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, amount($transaction_global_cost*$rate, 2)],$wallet->keyword);
+                    if (isset($res->error->message)){
+                        return response()->json(['status' => '401', 'error_code' => '0', 'message' => __('Error: ') . $res->error->message]);
+                    }
+                }
+                else {
+                    RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
+                    $tokenContract = $wallet->currency->address;
+                    $result = erc20_token_transfer($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $transaction_global_cost*$rate, $wallet->keyword);
+                    if (json_decode($result)->code == 1){
+                        return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Ethereum client error: '.json_decode($result)->message]);
+                    }
+                }
+            }
+            else {
+                user_wallet_increment(0, $currency_id, $transaction_global_cost*$rate, 9);
+            }
+
+
+            if($receiver = User::where('email',$request->email)->first()){
+
+                user_wallet_decrement($user->id, $currency_id, $finalamount, $wallet->wallet_type);
                 user_wallet_increment($receiver->id, $currency_id, $request->amount, $wallet->wallet_type);
+
+                if ($wallet->currency->type == 2) {
+                    $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
+                    if($wallet->currency->code == 'ETH') {
+                        RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
+                        $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex($request->amount*pow(10,18)).'"}';
+                        RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
+                    }
+                    else if($wallet->currency->code == 'BTC') {
+                        $res = RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, amount($request->amount, 2)],$wallet->keyword);
+                        if (isset($res->error->message)){
+                            return response()->json(['status' => '401', 'error_code' => '0', 'message' => __('Error: ') . $res->error->message]);
+                        }
+                    }
+                    else {
+                        RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
+                        $tokenContract = $wallet->currency->address;
+                        $result = erc20_token_transfer($tokenContract, $wallet->wallet_no, $towallet->wallet_no, (float)$request->amount, $wallet->keyword);
+                        if (json_decode($result)->code == 1){
+                            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Ethereum client error: '.json_decode($result)->message]);
+                        }
+                    }
+                }
+
+                $txnid = Str::random(4).time();
+                $data = new BalanceTransfer();
+                $data->user_id = auth()->user()->id;
+                $data->receiver_id = $receiver->id;
+                $data->transaction_no = $txnid;
+                $data->currency_id = $request->wallet_id;
+                $data->type = 'own';
+                $data->cost = $finalCharge*$rate;
+                $data->amount = $finalamount;
+                $data->description = $request->description;
+                $data->status = 1;
+                $data->save();
 
                 $trans = new Transaction();
                 $trans->trnx = $txnid;
                 $trans->user_id     = $user->id;
                 $trans->user_type   = 1;
                 $trans->currency_id = $currency_id;
-                $trans->amount      = $request->amount;
-                $trans_wallet       = get_wallet($user->id, $currency_id, $wallet->wallet_type);
+                $trans_wallet = get_wallet($user->id, $currency_id, $wallet->wallet_type);
                 $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-                $trans->charge      = 0;
+                $trans->amount      = $request->amount + $finalCharge*$rate;
+                $trans->charge      = $finalCharge*$rate;
                 $trans->type        = '-';
-                $trans->remark      = 'Send_Money';
+                $trans->remark      = 'send';
                 $trans->details     = trans('Send Money');
+                $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name).'", "description": "'.$request->description.'"}';
                 $trans->save();
 
 
@@ -120,242 +281,28 @@ class SendController extends Controller
                 $trans->user_type   = 1;
                 $trans->currency_id = $currency_id;
                 $trans->amount      = $request->amount;
-                $trans_wallet       = get_wallet($receiver->id, $currency_id, $wallet->wallet_type);
+                $trans_wallet = get_wallet($receiver->id, $currency_id, $wallet->wallet_type);
                 $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
                 $trans->charge      = 0;
                 $trans->type        = '+';
-                $trans->remark      = 'Recieve_Money';
+                $trans->remark      = 'send';
                 $trans->details     = trans('Send Money');
+                $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name).'", "description": "'.$request->description.'"}';
                 $trans->save();
 
-                session(['sendstatus'=>1, 'saveData'=>$trans]);
-                // user_wallet_decrement($user->id, $currency_id, $request->amount);
-                // user_wallet_increment($receiver->id, $currency_id, $request->amount);
-                
-                if(SaveAccount::whereUserId($user_id)->where('receiver_id',$receiver->id)->exists()){
-                    return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Money Send Successfully.']);
-                }
+                $currency = Currency::findOrFail($currency_id);
 
-                    $to = $receiver->email;
-                    $subject = " Money send successfully.";
-                    $msg = "Hello ".$receiver->name."!\nMoney send successfully.\nThank you.";
-                    $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-                    sendMail($to,$subject,$msg,$headers);
-                return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Money Send Successfully.']);
+                mailSend('send_money',['amount'=>$request->amount, 'curr' => $currency->code, 'trnx' => $txnid, 'from' => ($user->company_name ?? $user->name), 'to' => ($receiver->company_name ?? $receiver->name ), 'charge'=> 0, 'date_time'=> $trans->created_at ], $receiver);
+                mailSend('send_money',['amount'=>$request->amount + $finalCharge*$rate, 'curr' => $currency->code, 'trnx' => $txnid, 'from' => ($user->company_name ?? $user->name), 'to' => ($receiver->company_name ?? $receiver->name ), 'charge'=> $finalCharge*$rate, 'date_time'=> $trans->created_at ], $user);
+
+                return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'You send money successfully.']);
             }else{
-                return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Sender not found!.']);
-
+                return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Sender not found!']);
             }
         } catch (\Throwable $th) {
-            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
         }
+
     }
 
-    public function requestmoney(Request $request)
-    {
-        try {
-            $user_id = Auth::user()->id;
-
-            $rules = [
-                'account_name'      => 'required',
-                'wallet_id'         => 'required',
-                'amount'            => 'required|gt:0'
-            ];
-            $validator = Validator::make($request->all(), $rules);
-
-            if ($validator->fails()) {
-                return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
-            }
-
-            $user = User::whereId($user_id)->first();
-
-            if($user->bank_plan_id === null){
-            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'You have to buy a plan to withdraw.']);
-            }
-
-            if(now()->gt($user->plan_end_date)){
-            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Plan Date Expired.']);
-            }
-
-            $bank_plan = BankPlan::whereId($user->bank_plan_id)->first();
-            $dailyRequests = MoneyRequest::whereUserId($user_id)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus('success')->sum('amount');
-            $monthlyRequests = MoneyRequest::whereUserId($user_id)->whereMonth('created_at', '=', date('m'))->whereStatus('success')->sum('amount');
-
-            $gs = Generalsetting::first();
-
-            if($request->account_number == $user->account_number){
-                return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'You can not send money yourself!']);
-
-            }
-
-            $receiver = User::where('account_number',$request->account_number)->first();
-            if($receiver === null){
-            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'No register user with this email!']);
-            }
-
-            if($dailyRequests > $bank_plan->daily_receive){
-               return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Daily request limit over.']);
-            }
-
-            if($monthlyRequests > $bank_plan->monthly_receive){
-               return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Monthly request limit over.']);
-            }
-
-            $cost = $gs->fixed_request_charge + ($request->amount/100) * $gs->percentage_request_charge;
-            $finalAmount = $request->amount + $cost;
-
-            $txnid = Str::random(4).time();
-
-            $data = new MoneyRequest();
-            $data->user_id =$user_id;
-            $data->receiver_id = $receiver->id;
-            $data->receiver_name = $receiver->name;
-            $data->transaction_no = $txnid;
-            $data->currency_id = $request->wallet_id;
-            $data->cost = $cost;
-            $data->amount = $request->amount;
-            $data->status = 0;
-            $data->details = $request->details;
-            $data->user_type = 1;
-            $data->save();
-
-            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Request Money Send Successfully.']);
-        } catch (\Throwable $th) {
-            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
-        }
-    }
-
-    public function approvemoney(Request $request, $id)
-    {
-        try {
-            $user_id = Auth::user()->id;
-            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'You must be enable 2FA Security.']);
-            $rules = [
-                'code' => 'required'
-            ];
-            $validator = Validator::make($request->all(), $rules);
-
-            if ($validator->fails()) {
-                return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
-            }
-            $user = User::whereId($user_id)->first();
-
-            if($uesr->twofa != 1)
-            {
-                return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'You must be enable 2FA Security.']);
-            }
-
-
-            $ga = new GoogleAuthenticator();
-            $secret = $user->go;
-            $oneCode = $ga->getCode($secret);
-
-            if ($oneCode != $request->code) {
-                return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Two factor authentication code is wrong.']);
-            }
-
-            $data = MoneyRequest::findOrFail($id);
-            $gs = Generalsetting::first();
-
-            $currency_id = Currency::whereIsDefault(1)->first()->id;
-            $sender = User::whereId($data->receiver_id)->first();
-            $receiver = User::whereId($data->user_id)->first();
-
-            if($data->amount > user_wallet_balance($sender->id, $currency_id)){
-                return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'You don,t have sufficient balance!']);
-            }
-
-            $finalAmount = $data->amount - $data->cost;
-
-            user_wallet_decrement($sender->id, $currency_id, $data->amount);
-            user_wallet_increment($receiver->id, $currency_id, $finalAmount);
-
-            $data->update(['status'=>1]);
-
-            $trans = new Transaction();
-            $trans->trnx = $data->transaction_no;
-            $trans->user_id     = $user_id;
-            $trans->user_type   = $data->user_type;
-            $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
-            $trans_wallet = get_wallet($sender->id, $currency_id);
-            $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-            $trans->amount      = $data->amount;
-            $trans->charge      = 0;
-            $trans->type        = '-';
-            $trans->remark      = 'Request_Money';
-            $trans->details     = trans('Request Money');
-
-            $trans->save();
-
-            $trans = new Transaction();
-            $trans->trnx = $data->transaction_no;
-            $trans->user_id     = $receiver->id;
-            $trans->user_type   = $data->user_type;
-            $trans->currency_id = Currency::whereIsDefault(1)->first()->id;
-            $trans->amount      = $data->amount;
-            $trans_wallet = get_wallet($receiver->id, $currency_id);
-            $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-            $trans->charge      = 0;
-            $trans->type        = '+';
-            $trans->remark      = 'Request_Money';
-            $trans->details     = trans('Request Money');
-
-            $trans->save();
-
-                $to = $receiver->email;
-                $subject = " Money send successfully.";
-                $msg = "Hello ".$receiver->name."!\nMoney send successfully.\nThank you.";
-                $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-                sendMail($to,$subject,$msg,$headers);
-            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Successfully Money Send.']);
-
-        } catch (\Throwable $th) {
-            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
-        }
-    }
-
-    public function requestcancel(Request $request, $id)
-    {
-        try {
-            $user_id = Auth::user()->id;
-            if ($user_id) {
-            $data = MoneyRequest::findOrFail($id);
-            $data->update(['status'=>2]);
-            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Successfully Money Request Cancelled.']);
-            }
-        } catch (\Throwable $th) {
-            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
-        }
-    }
-
-    public function receive(Request $request){
-        try {
-            $user_id = Auth::user()->id;
-            $user = User::whereId($user_id)->first();
-            if($user->twofa)
-            {
-                $data['requests'] = MoneyRequest::orderby('id','desc')->whereReceiverId($user_id)->paginate(10);
-            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Success.', 'data' => $data]);
-            }else{
-
-            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'You must be enable 2FA Security.']);
-            }
-        } catch (\Throwable $th) {
-            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
-        }
-    }
-
-    public function create(Request $request){
-        try {
-            $user_id = Auth::user()->id;
-            if($user_id)
-            {
-                $wallets = Wallet::where('user_id',$user_id)->with('currency')->get();
-                $data['wallets'] = $wallets;
-                return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Success.', 'data' => $data]);
-            }
-        } catch (\Throwable $th) {
-            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
-        }
-    }
 }
