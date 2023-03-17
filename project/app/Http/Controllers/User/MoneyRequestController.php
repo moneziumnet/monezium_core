@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use App\Classes\GoogleAuthenticator;
 use App\Models\MoneyRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\Generalsetting;
 use App\Http\Controllers\Controller;
