@@ -24,6 +24,7 @@ use App\Http\Controllers\API\UserInvestmentController;
 use App\Http\Controllers\API\ChatifyController;
 use App\Http\Controllers\API\UserICOController;
 use App\Http\Controllers\API\SupervisorController;
+use App\Http\Controllers\API\MoneyRequestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -121,6 +122,14 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::get('/user/send-money',[SendController::class,'create']);
         Route::post('/user/send-money',[SendController::class,'store']);
+
+        Route::get('/user/money-request', [MoneyRequestController::class,'index']);
+        Route::get('/user/money-request/create', [MoneyRequestController::class,'create']);
+        Route::post('/user/money-request/store', [MoneyRequestController::class,'store']);
+        Route::post('/user/request/money/send/{id}', [MoneyRequestController::class,'send']);
+        Route::post('/user/request/money/cancel/{id}', [MoneyRequestController::class,'cancel']);
+        Route::get('/user/request/money/delete/{id}', [MoneyRequestController::class,'delete']);
+        Route::get('/user/money-request/details/{id}', [MoneyRequestController::class,'details']);
 
         Route::post('user/fetch-withdraw-list', [UserWithdrawController::class, 'withdraw']);
         Route::post('user/withdraw-create', [UserWithdrawController::class, 'withdrawcreate']);

@@ -206,8 +206,8 @@ class MoneyRequestController extends Controller
         $finalAmount = $data->amount - $data->cost -$data->supervisor_cost;
         $wallet_type = $currency->type == 2 ? 8 : 1;
 
-        // user_wallet_decrement($sender->id, $currency_id, $data->amount, $wallet_type);
-        // user_wallet_increment(0, $currency_id, $data->cost, 9);
+        user_wallet_decrement($sender->id, $currency_id, $data->amount, $wallet_type);
+        user_wallet_increment(0, $currency_id, $data->cost, 9);
         if (isset($data->shop_id)) {
             merchant_shop_wallet_increment($receiver->id, $currency_id, $finalAmount, $data->shop_id);
             $wallet = MerchantWallet::where('merchant_id', $sender->id)->where('currency_id', $currency_id)->where('shop_id', $data->shop_id )->with('currency')->first();

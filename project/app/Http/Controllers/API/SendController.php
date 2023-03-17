@@ -113,7 +113,6 @@ class SendController extends Controller
             }
             else {
                 if($request->amount > user_wallet_balance($user->id, $currency_id, $wallet->wallet_type)){
-                    return redirect()->back()->with('unsuccess','Insufficient Balance.');
                     return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Insufficient Balance.' ]);
                 }
             }
