@@ -27,7 +27,7 @@ use App\Http\Controllers\API\MoneyRequestController;
 use App\Http\Controllers\API\DepositBankController;
 use App\Http\Controllers\API\OtherBankController;
 use App\Http\Controllers\API\WithdrawCryptoController;
-
+use App\Http\Controllers\API\OwnTransferController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -143,7 +143,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::get('/user/crypto/withdraws',[WithdrawCryptoController::class,'index']);
         Route::get('/user/crypto/withdraw/create',[WithdrawCryptoController::class,'create']);
-        Route::POST('/user/crypto/withdraw/store',[WithdrawCryptoController::class,'store']);
+        Route::post('/user/crypto/withdraw/store',[WithdrawCryptoController::class,'store']);
+
+        Route::get('/user/own', [OwnTransferController::class, 'index']);
+        Route::post('/user/own',[OwnTransferController::class, 'transfer']);
 
         Route::post('user/fetch-withdraw-list', [UserWithdrawController::class, 'withdraw']);
         Route::post('user/withdraw-create', [UserWithdrawController::class, 'withdrawcreate']);
