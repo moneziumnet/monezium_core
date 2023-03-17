@@ -15,8 +15,15 @@
   <h3 class="text-center">{{ Session::get("cache") }}</h3>
 </div>
 
-
 @endif
+<div class="card mt-3 mb-3">
+    <div class="card-body">
+      <div class="d-flex justify-content-center">
+        <h3 class="card-title">{{ __('Incoming and Withdraw') }}</h3>
+      </div>
+      <div id="chart_finance_monthly" class="chart-lg"></div>
+    </div>
+</div>
 @if(Auth::guard('admin')->user()->IsSuper())
 <div class="row mb-3">
   <div class="col-xl-4 col-md-6 mb-4">
@@ -458,5 +465,97 @@
 
 
 @section('scripts')
+<script>
+    var array_months = '{{$array_months}}';
+    array_months = array_months.split(',');
+    var array_deposits = '{{$array_deposits}}';
+    array_deposits = array_deposits.split(',');
+    var array_withdraws = '{{$array_withdraws}}';
+    array_withdraws = array_withdraws.split(',');
+    document.addEventListener("DOMContentLoaded", function () {
+        window.tabler_chart = window.tabler_chart || {};
+        window.ApexCharts && (window.tabler_chart["chart_finance_monthly"] = new ApexCharts(document.getElementById('chart_finance_monthly'), {
+            chart: {
+                type: "line",
+                fontFamily: 'inherit',
+                height: 300,
+                parentHeightOffset: 0,
+                toolbar: {
+                    show: false,
+                },
+                animations: {
+                    enabled: false
+                },
+            },
+            fill: {
+                opacity: 1,
+            },
+            stroke: {
+                width: 2,
+                lineCap: "round",
+                curve: "smooth",
+            },
+            series: [{
+                name: "Incoming",
+                data: array_deposits
+            },{
+                name: "Withdraw",
+                data: array_withdraws
+            }],
+            tooltip: {
+                theme: 'dark'
+            },
+            grid: {
+                padding: {
+                    top: -20,
+                    right: 0,
+                    left: -4,
+                    bottom: -4
+                },
+                strokeDashArray: 4,
+                xaxis: {
+                    lines: {
+                        show: true
+                    }
+                },
+            },
+            xaxis: {
+                labels: {
+                    datetimeFormatter: {
+                        year: 'yyyy',
+                        month: 'MMM \'yy',
+                        day: 'dd MMM',
+                        hour: 'HH:mm'
+                    }
+                    },
+                tooltip: {
+                    enabled: false
+                },
+                type: 'categroy',
+            },
+            yaxis: {
+                labels: {
+                    padding: 4
+                },
+            },
+            labels: array_months,
+            colors: [ "#1877f2", "#ea4c89"],
+            legend: {
+                show: true,
+                position: 'bottom',
+                offsetY: 12,
+                markers: {
+                    width: 10,
+                    height: 10,
+                    radius: 100,
+                },
+                itemMargin: {
+                    horizontal: 8,
+                    vertical: 8
+                },
+            },
+        })).render();
+    });
+  </script>
 
 @endsection

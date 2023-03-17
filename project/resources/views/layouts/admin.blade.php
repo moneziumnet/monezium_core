@@ -289,7 +289,7 @@
   <script src="{{ asset('assets/admin/js/bootstrap-datepicker.min.js') }}"></script>
   <script src="{{asset('assets/front/js/toastr.min.js')}}"></script>
   <script src="{{ asset('assets/admin/js/ruang-admin.js') }}"></script>
-
+  <script src="{{asset('assets/admin/js/apexcharts.min.js')}}"></script>
   <script>
     'use strict';
     var submit_flag = false;
