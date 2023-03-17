@@ -356,7 +356,7 @@
     <div class="row justify-content mt-3" style="max-height: 368px;overflow-y: scroll;">
         @if (count($bankaccountlist) != 0)
             @foreach ($bankaccountlist as $item)
-                <div class="col-sm-6 col-md-6 mb-6">
+                <div class="col-sm-6 col-md-6 mb-3">
                     <div class="card h-100 card--info-item">
                     <div class="text-end icon">
                         <i class="fas ">
