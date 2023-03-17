@@ -23,6 +23,7 @@ use App\Http\Controllers\API\MerchantController;
 use App\Http\Controllers\API\UserInvestmentController;
 use App\Http\Controllers\API\ChatifyController;
 use App\Http\Controllers\API\UserICOController;
+use App\Http\Controllers\API\SupervisorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -107,6 +108,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user/ico/delete/{id}', [UserICOController::class, 'delete']);
         Route::post('/user/ico/store', [UserICOController::class, 'store']);
         Route::post('/user/ico/update/{id}', [UserICOController::class, 'update']);
+
+        Route::get('/user/supervisor',[SupervisorController::class,'referred']);
+        Route::post('/user/invite-user',[SupervisorController::class,'invite_send']);
 
         Route::post('/user/send-money', [SendController::class, 'sendmoney']);
         Route::post('/user/request-money', [SendController::class, 'requestmoney']);
