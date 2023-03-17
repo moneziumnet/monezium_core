@@ -11,7 +11,6 @@ use App\Http\Controllers\API\UserWithdrawController;
 use App\Http\Controllers\API\UserWithdrawBankController;
 use App\Http\Controllers\API\UserDepositController;
 use App\Http\Controllers\API\UserDepositBankController;
-use App\Http\Controllers\API\UserOtherBankController;
 use App\Http\Controllers\API\BeneficiaryController;
 use App\Http\Controllers\API\VoucherController;
 use App\Http\Controllers\API\InvoiceController;
@@ -26,6 +25,7 @@ use App\Http\Controllers\API\UserICOController;
 use App\Http\Controllers\API\SupervisorController;
 use App\Http\Controllers\API\MoneyRequestController;
 use App\Http\Controllers\API\DepositBankController;
+use App\Http\Controllers\API\OtherBankController;
 
 /*
 |--------------------------------------------------------------------------
@@ -137,6 +137,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/user/bank/deposit/store',[DepositBankController::class,'store']);
         Route::get('/user/bank/deposit/bankcurrency/{id}',[DepositBankController::class,'bankcurrency']);
 
+        Route::get('/user/other-bank/{id}',[OtherBankController::class,'othersend']);
+        Route::post('/user/other-bank/store', [OtherBankController::class,'store']);
+
         Route::post('user/fetch-withdraw-list', [UserWithdrawController::class, 'withdraw']);
         Route::post('user/withdraw-create', [UserWithdrawController::class, 'withdrawcreate']);
         Route::post('user/withdraw-details', [UserWithdrawController::class, 'withdrawdetails']);
@@ -145,10 +148,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::post('user/deposit', [UserDepositController::class, 'deposit']);
         Route::post('user/deposit-details', [UserDepositController::class, 'depositdetails']);
-
-        Route::post('user/other-bank-transfer', [UserOtherBankController::class, 'otherbanktransfer']);
-        Route::get('user/other-bank', [UserOtherBankController::class, 'otherbank']);
-        Route::post('user/other-bank-send', [UserOtherBankController::class, 'otherbanksend']);
 
         Route::post('user/depositsbank', [UserDepositBankController::class, 'depositsbank']);
         Route::post('user/deposit-bank-create', [UserDepositBankController::class, 'depositbankcreate']);
