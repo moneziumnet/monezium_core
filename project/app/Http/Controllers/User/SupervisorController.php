@@ -111,7 +111,7 @@ class SupervisorController extends Controller
         if($request->fixed_charge < $request->percent_charge){
             return back()->with('error','Percent charge amount can not be greater than fixed charge amount.');
         }
-        if($request->minimum && $request->minimum <= $request->fixed_charge){
+        if($request->from && $request->from <= $request->fixed_charge){
             return back()->with('error','Fixed charge should be less than minimum amount.');
         }
         $rules  = [];
@@ -174,7 +174,7 @@ class SupervisorController extends Controller
     public function deletemanager($id) {
         $manager = Manager::where('id', $id)->first();
         if (!$manager) {
-            return back()->with('error','You already add this user as manager.');
+            return back()->with('error','This user is not manager account.');
         }
         $manager->delete();
         return back()->with('message','Manager has been deleted successfully.');

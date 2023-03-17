@@ -111,6 +111,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::get('/user/supervisor',[SupervisorController::class,'referred']);
         Route::post('/user/invite-user',[SupervisorController::class,'invite_send']);
+        Route::get('/user/pricingplan/edit/{id}', [SupervisorController::class, 'edit']);
+        Route::get('/user/pricingplan/create/{id}/{charge_id}', [SupervisorController::class, 'create']);
+        Route::get('/user/pricingplan/datatables/{id}', [SupervisorController::class, 'datatables']);
+        Route::post('/user/pricingplan/updatecharge/{id}', [SupervisorController::class, 'updateCharge']);
+        Route::post('/user/pricingplan/createcharge', [SupervisorController::class, 'createCharge']);
+        Route::post('/user/manager/create', [SupervisorController::class, 'storemanager']);
+        Route::get('/user/manager/delete/{id}', [SupervisorController::class, 'deletemanager']);
 
         Route::post('/user/send-money', [SendController::class, 'sendmoney']);
         Route::post('/user/request-money', [SendController::class, 'requestmoney']);
