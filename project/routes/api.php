@@ -164,6 +164,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user/invoice/setting',   [ManageInvoiceController::class,'invoic_setting']);
         Route::post('/user/create-invoice',   [ManageInvoiceController::class,'store']);
         Route::post('/user/invoice/setting',   [ManageInvoiceController::class,'invoice_setting_save']);
+        Route::get('/user/invoices',   [ManageInvoiceController::class,'index']);
+        Route::post('/user/invoice/pay-status',   [ManageInvoiceController::class,'payStatus']);
+        Route::post('/user/invoice/publish-status',   [ManageInvoiceController::class,'publishStatus']);
 
 
         Route::post('user/fetch-withdraw-list', [UserWithdrawController::class, 'withdraw']);

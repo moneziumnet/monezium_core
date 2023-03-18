@@ -31,8 +31,12 @@ class ManageInvoiceController extends Controller
 {
     public function index()
     {
-        $data['invoices'] = Invoice::where('user_id',auth()->id())->latest()->paginate(15);
-        return view('user.invoice.index',$data);
+        try {
+            $data['invoices'] = Invoice::where('user_id',auth()->id())->latest()->paginate(15);
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
+        }
     }
 
     public function incoming_index()
@@ -320,34 +324,43 @@ class ManageInvoiceController extends Controller
 
     public function payStatus(Request $request)
     {
-        $invoice = Invoice::findOrFail($request->id);
-        if(!$invoice) return response(['error'=>'Invalid request']);
+        try {
+            $invoice = Invoice::findOrFail($request->id);
+            if(!$invoice) return response(['error'=>'Invalid request']);
 
-        if($invoice->payment_status == 1){
-            $invoice->payment_status = 0;
-            $invoice->update();
-            return response(['unpaid'=>'Payment status changed to un-paid']);
-        }else{
-            $invoice->payment_status = 1;
-            $invoice->update();
-            return response(['paid'=>'Payment status changed to paid']);
+            if($invoice->payment_status == 1){
+                $invoice->payment_status = 0;
+                $invoice->update();
+                return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => ['status' => 'unpaid']]);
+            }else{
+                $invoice->payment_status = 1;
+                $invoice->update();
+                return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => ['status' => 'paid']]);
+            }
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
         }
 
 
     }
+
     public function publishStatus(Request $request)
     {
-        $invoice = Invoice::findOrFail($request->id);
-        if(!$invoice) return response(['error'=>'Invalid request']);
+        try {
+            $invoice = Invoice::findOrFail($request->id);
+            if(!$invoice) return response(['error'=>'Invalid request']);
 
-        if($invoice->status == 1){
-            $invoice->status = 0;
-            $invoice->update();
-            return response(['unpublish'=>trans('Status changed to un-published')]);
-        }else{
-            $invoice->status = 1;
-            $invoice->update();
-            return response(['publish'=>trans('Status changed to published')]);
+            if($invoice->status == 1){
+                $invoice->status = 0;
+                $invoice->update();
+                return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => ['status' => 'unpublish']]);
+            }else{
+                $invoice->status = 1;
+                $invoice->update();
+                return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => ['status' => 'publish']]);
+            }
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
         }
 
     }

@@ -323,8 +323,8 @@ Route::prefix('user')->group(function() {
       Route::get('invoice/incoming/view/{number}',   [ManageInvoiceController::class,'incoming_view'])->name('user.invoice.incoming.view');
 
       Route::get('invoices-payment/{number}',   [ManageInvoiceController::class,'invoicePayment'])->name('user.invoice.payment');
-      Route::post('invoices-payment/submit',   [ManageInvoiceController::class,'invoicePaymentSubmit'])->name('user.invoice.payment.submit');;
-      Route::get('invoices-payment/submit/crypto/{id}',   [ManageInvoiceController::class,'invoicePaymentCrypto'])->name('user.invoice.payment.crypto');;
+      Route::post('invoices-payment/submit',   [ManageInvoiceController::class,'invoicePaymentSubmit'])->name('user.invoice.payment.submit');
+      Route::get('invoices-payment/submit/crypto/{id}',   [ManageInvoiceController::class,'invoicePaymentCrypto'])->name('user.invoice.payment.crypto');
       Route::post('invoices-payment/link/pay',   [ManageInvoiceController::class,'invoice_link_pay'])->name('user.invoice.link.pay');
       Route::get('invoices-payment/link/crypto/{id}',   [ManageInvoiceController::class,'invoice_link_crypto'])->name('user.invoice.link.crypto');
 
