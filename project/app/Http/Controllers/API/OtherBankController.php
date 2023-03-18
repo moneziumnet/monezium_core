@@ -179,4 +179,14 @@ class OtherBankController extends Controller
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
         }
     }
+
+    public function details($id) {
+        try {
+            $data['item'] = BalanceTransfer::findOrFail($id);
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
+        }
+    }
+
 }

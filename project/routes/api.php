@@ -140,6 +140,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::get('/user/other-bank/{id}',[OtherBankController::class,'othersend']);
         Route::post('/user/other-bank/store', [OtherBankController::class,'store']);
+        Route::get('/user/other-bank/details/{id}', [OtherBankController::class, 'details']);
 
         Route::get('/user/crypto/withdraws',[WithdrawCryptoController::class,'index']);
         Route::get('/user/crypto/withdraw/create',[WithdrawCryptoController::class,'create']);
@@ -147,6 +148,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::get('/user/own', [OwnTransferController::class, 'index']);
         Route::post('/user/own',[OwnTransferController::class, 'transfer']);
+
+        Route::get('/user/beneficiaries', [BeneficiaryController::class, 'index']);
+        Route::post('/user/beneficiaries/store', [BeneficiaryController::class,'store']);
+        Route::get('/user/beneficiaries/show/{id}', [BeneficiaryController::class,'show']);
+        Route::post('/user/beneficiaries/update/{id}', [BeneficiaryController::class,'update']);
 
         Route::post('user/fetch-withdraw-list', [UserWithdrawController::class, 'withdraw']);
         Route::post('user/withdraw-create', [UserWithdrawController::class, 'withdrawcreate']);
@@ -160,10 +166,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('user/depositsbank', [UserDepositBankController::class, 'depositsbank']);
         Route::post('user/deposit-bank-create', [UserDepositBankController::class, 'depositbankcreate']);
         Route::post('user/deposit-gateways', [UserDepositBankController::class, 'depositgateways']);
-
-        Route::post('user/beneficiaries', [BeneficiaryController::class, 'beneficiaries']);
-        Route::post('user/beneficiaries-details', [BeneficiaryController::class, 'beneficiariesdetails']);
-        Route::post('user/beneficiaries-create', [BeneficiaryController::class, 'beneficiariescreate']);
 
         Route::post('/user/invoices', [InvoiceController::class, 'invoices']);
         Route::post('/user/create-invoice', [InvoiceController::class, 'createinvoice']);
