@@ -176,8 +176,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user/invoices-payment/{number}',   [ManageInvoiceController::class,'invoicePayment']);
         Route::post('/user/invoices-payment/submit',   [ManageInvoiceController::class,'invoicePaymentSubmit']);
         Route::get('/user/invoices-payment/submit/crypto/{id}',   [ManageInvoiceController::class,'invoicePaymentCrypto']);
-
-
+        Route::get('/user/invoices/incoming',   [ManageInvoiceController::class,'incoming_index']);
+        Route::get('/user/invoices/incoming/edit/{id}',   [ManageInvoiceController::class,'incoming_edit']);
+        Route::post('/user/invoices/incoming/update/{id}',   [ManageInvoiceController::class,'incoming_update']);
+        Route::post('/user/invoice/tax/create',   [ManageInvoiceController::class,'tax_create']);
 
         Route::post('user/fetch-withdraw-list', [UserWithdrawController::class, 'withdraw']);
         Route::post('user/withdraw-create', [UserWithdrawController::class, 'withdrawcreate']);
