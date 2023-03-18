@@ -478,7 +478,7 @@ class ManageInvoiceController extends Controller
         $invoice = Invoice::findOrFail($request->invoice_id);
         $gs = Generalsetting::first();
         if (auth()->user() && auth()->id() == $invoice->user_id) {
-            redirect(route('user.dashboard'))->with('error','You can not pay yourself.');
+            return redirect(route('user.dashboard'))->with('error','You can not pay yourself.');
         }
         if($request->payment == 'gateway'){
             return redirect(route('user.invoice.incoming.index'))->with('message','Gateway Payment completed');

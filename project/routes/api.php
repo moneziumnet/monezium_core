@@ -173,6 +173,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/user/invoice/send-mail',   [ManageInvoiceController::class,'sendToMail']);
         Route::get('/user/invoice/view/{number}',   [ManageInvoiceController::class,'view']);
         Route::get('/user/invoice/incoming/view/{number}',   [ManageInvoiceController::class,'incoming_view']);
+        Route::get('/user/invoices-payment/{number}',   [ManageInvoiceController::class,'invoicePayment']);
+        Route::post('/user/invoices-payment/submit',   [ManageInvoiceController::class,'invoicePaymentSubmit']);
+        Route::get('/user/invoices-payment/submit/crypto/{id}',   [ManageInvoiceController::class,'invoicePaymentCrypto']);
 
 
 
