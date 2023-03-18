@@ -154,6 +154,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user/beneficiaries/show/{id}', [BeneficiaryController::class,'show']);
         Route::post('/user/beneficiaries/update/{id}', [BeneficiaryController::class,'update']);
 
+        Route::get('/user/exchange-money',   [ExchangeMoneyController::class,'exchangeForm']);
+        Route::post('/user/exchange-money',  [ExchangeMoneyController::class,'submitExchange']);
+        Route::get('/user/exchange-money/history',  [ExchangeMoneyController::class,'exchangeHistory']);
+        Route::post('/user/exchange-money/calcharge',  [ExchangeMoneyController::class,'calcharge']);
+
+
         Route::post('user/fetch-withdraw-list', [UserWithdrawController::class, 'withdraw']);
         Route::post('user/withdraw-create', [UserWithdrawController::class, 'withdrawcreate']);
         Route::post('user/withdraw-details', [UserWithdrawController::class, 'withdrawdetails']);
@@ -167,10 +173,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/user/create-invoice', [InvoiceController::class, 'createinvoice']);
         Route::post('/user/invoice-view', [InvoiceController::class, 'invoiceview']);
         Route::post('/user/invoice-url', [InvoiceController::class, 'invoiceurl']);
-
-        Route::post('user/exchange-money-history', [ExchangeMoneyController::class, 'exchangemoneyhistory']);
-        Route::post('user/exchange-recents', [ExchangeMoneyController::class, 'exchangerecents']);
-        Route::post('user/exchange-money', [ExchangeMoneyController::class, 'exchangemoney']);
 
         Route::post('user/transactions', [TransactionController::class, 'transactions']);
         Route::post('user/transfer-logs', [TransactionController::class, 'transferlogs']);
