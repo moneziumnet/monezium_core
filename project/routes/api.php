@@ -163,10 +163,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('user/deposit', [UserDepositController::class, 'deposit']);
         Route::post('user/deposit-details', [UserDepositController::class, 'depositdetails']);
 
-        Route::post('user/depositsbank', [UserDepositBankController::class, 'depositsbank']);
-        Route::post('user/deposit-bank-create', [UserDepositBankController::class, 'depositbankcreate']);
-        Route::post('user/deposit-gateways', [UserDepositBankController::class, 'depositgateways']);
-
         Route::post('/user/invoices', [InvoiceController::class, 'invoices']);
         Route::post('/user/create-invoice', [InvoiceController::class, 'createinvoice']);
         Route::post('/user/invoice-view', [InvoiceController::class, 'invoiceview']);
