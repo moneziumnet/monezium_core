@@ -170,19 +170,20 @@ class ManageInvoiceController extends Controller
      */
     public function edit($id)
     {
-        $invoice = Invoice::findOrFail($id);
-        $data['invoice'] = $invoice;
+        try {
+            $invoice = Invoice::findOrFail($id);
+            $data['invoice'] = $invoice;
 
-        // if($invoice->status == 1){
-        //     return back()->with('error','Sorry! can\'t edit published invoice.');
-        // }
-        $data['currencies'] = Currency::whereStatus(1)->get();
-        if (!isEnabledUserModule('Crypto'))
-            $data['currencies'] = Currency::whereStatus(1)->where('type', 1)->get();
-        $data['beneficiaries'] = Beneficiary::where('user_id', auth()->id())->get();
-        $data['contracts'] = Contract::where('user_id', auth()->id())->where('status', 1)->get();
-        $data['products'] = Product::where('user_id', auth()->id())->where('status', 1)->get();
-        return view('user.invoice.edit',$data);
+            $data['currencies'] = Currency::whereStatus(1)->get();
+            if (!isEnabledUserModule('Crypto'))
+                $data['currencies'] = Currency::whereStatus(1)->where('type', 1)->get();
+            $data['beneficiaries'] = Beneficiary::where('user_id', auth()->id())->get();
+            $data['contracts'] = Contract::where('user_id', auth()->id())->where('status', 1)->get();
+            $data['products'] = Product::where('user_id', auth()->id())->where('status', 1)->get();
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
+        }
     }
 
     public function incoming_edit($id)
@@ -255,71 +256,81 @@ class ManageInvoiceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'currency'   => 'required',
-            'item'       => 'required',
-            'item.*'     => 'required',
-            'amount'     => 'required',
-            'amount.*'   => 'required|numeric|gt:0',
-            'description' => 'required',
-            'beneficiary_id' => 'required'
-        ],['amount.*.gt'=>'Amount must be greater than 0']);
+        try {
 
-        $currency = Currency::findOrFail($request->currency);
+            $rules = [
+                'currency'   => 'required',
+                'item'       => 'required',
+                'item.*'     => 'required',
+                'amount'     => 'required',
+                'amount.*'   => 'required|numeric|gt:0',
+                'description' => 'required',
+                'beneficiary_id' => 'required'
+            ];
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                return response()->json(['status' => '401', 'error_code' => '0', 'message' => $validator->getMessageBag()->toArray()]);
+            }
 
-        $beneficiary = Beneficiary::whereId($request->beneficiary_id)->first();
-        $setting = InvoiceSetting::where('user_id', auth()->id())->first();
-        $type = 'prefix_'.$request->type;
-        $length = 'length_'.$request->type;
 
-        $invoice = Invoice::findOrFail($id);
-        $invoice->user_id      = auth()->id();
-        $invoice->invoice_to   = $beneficiary->name;
-        $invoice->email        = $beneficiary->email;
-        $invoice->number       = $setting->number_generator->$type.randNum($setting->number_generator->$length);
-        $invoice->address      = $beneficiary->registration_no ?? $beneficiary->address;
-        $invoice->currency_id  = $currency->id;
-        $invoice->type         = $request->type;
-        $invoice->template     = $request->template;
-        $invoice->charge       = 0;
-        $invoice->final_amount = array_sum($request->amount);
-        $invoice->get_amount   = array_sum($request->amount);
-        $invoice->beneficiary_id = $request->beneficiary_id;
-        $invoice->description  = $request->description;
-        $invoice->product_id   = $request->product_id;
-        $invoice->contract_id  = $request->contract_id;
-        $invoice->contract_aoa_id = $request->aoa_id;
+            $currency = Currency::findOrFail($request->currency);
 
-        $data = [];
-        if($request->file('document'))
-        {
-           foreach($request->file('document') as $file)
-           {
-               $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
-               $file->move('assets/doc', $name);
-               array_push($data, $name);
-           }
+            $beneficiary = Beneficiary::whereId($request->beneficiary_id)->first();
+            $setting = InvoiceSetting::where('user_id', auth()->id())->first();
+            $type = 'prefix_'.$request->type;
+            $length = 'length_'.$request->type;
+
+            $invoice = Invoice::findOrFail($id);
+            $invoice->user_id      = auth()->id();
+            $invoice->invoice_to   = $beneficiary->name;
+            $invoice->email        = $beneficiary->email;
+            $invoice->number       = $setting->number_generator->$type.randNum($setting->number_generator->$length);
+            $invoice->address      = $beneficiary->registration_no ?? $beneficiary->address;
+            $invoice->currency_id  = $currency->id;
+            $invoice->type         = $request->type;
+            $invoice->template     = $request->template;
+            $invoice->charge       = 0;
+            $invoice->final_amount = array_sum($request->amount);
+            $invoice->get_amount   = array_sum($request->amount);
+            $invoice->beneficiary_id = $request->beneficiary_id;
+            $invoice->description  = $request->description;
+            $invoice->product_id   = $request->product_id;
+            $invoice->contract_id  = $request->contract_id;
+            $invoice->contract_aoa_id = $request->aoa_id;
+
+            $data = [];
+            if($request->file('document'))
+            {
+               foreach($request->file('document') as $file)
+               {
+                   $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
+                   $file->move('assets/doc', $name);
+                   array_push($data, $name);
+               }
+            }
+
+
+
+            $invoice->documents = implode(",",$data);
+            $invoice->update();
+
+            $invoice->items()->delete();
+            $items = array_combine($request->item,$request->amount);
+            $i=0;
+
+            foreach($items as $item => $amount){
+                $invItem             = new InvItem();
+                $invItem->invoice_id = $invoice->id;
+                $invItem->name       = $item;
+                $invItem->amount	 = $amount;
+                $invItem->tax_id    = $request->tax_id[$i] ?? 0;
+                $invItem->save();
+                $i++;
+            }
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Invoice has been updated']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
         }
-
-
-
-        $invoice->documents = implode(",",$data);
-        $invoice->update();
-
-        $invoice->items()->delete();
-        $items = array_combine($request->item,$request->amount);
-        $i=0;
-
-        foreach($items as $item => $amount){
-            $invItem             = new InvItem();
-            $invItem->invoice_id = $invoice->id;
-            $invItem->name       = $item;
-            $invItem->amount	 = $amount;
-            $invItem->tax_id    = $request->tax_id[$i] ?? 0;
-            $invItem->save();
-            $i++;
-        }
-        return redirect(route('user.invoice.index'))->with('message','Invoice has been updated');
     }
 
     public function payStatus(Request $request)
@@ -367,10 +378,14 @@ class ManageInvoiceController extends Controller
 
     public function cancel($id)
     {
-        $invoice = Invoice::findOrFail($id);
-        $invoice->status = 2;
-        $invoice->save();
-        return redirect(route('user.invoice.index'))->with('success','Invoice has been cancelled');
+        try {
+            $invoice = Invoice::findOrFail($id);
+            $invoice->status = 2;
+            $invoice->save();
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Invoice has been cancelled']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
+        }
     }
 
     public function invoiceView($number)
@@ -390,36 +405,49 @@ class ManageInvoiceController extends Controller
     }
     public function view($number)
     {
-        $data['invoice'] = Invoice::where('number',$number)->firstOrFail();
-        $data['user'] = User::where('id',$data['invoice']->user_id)->first();
-        $data['back_url'] = route('user.invoice.index');
-        return view('user.invoice.invoice',$data);
+        try {
+            $data['invoice'] = Invoice::where('number',$number)->firstOrFail();
+            $data['user'] = User::where('id',$data['invoice']->user_id)->first();
+            $data['back_url'] = route('user.invoice.index');
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
+        }
     }
 
     public function incoming_view($number)
     {
-        $data['invoice'] = Invoice::where('number',$number)->firstOrFail();
-        $data['user'] = User::where('id',$data['invoice']->user_id)->first();
-        $data['back_url'] = route('user.invoice.incoming.index');
-        return view('user.invoice.invoice',$data);
+        try {
+            $data['invoice'] = Invoice::where('number',$number)->firstOrFail();
+            $data['user'] = User::where('id',$data['invoice']->user_id)->first();
+            $data['back_url'] = route('user.invoice.incoming.index');
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
+        }
+
     }
 
     public function sendToMail(Request $request)
     {
-        $invoice = Invoice::findOrFail($request->invoice_id);
-        $currency = $invoice->currency;
-        $amount = $invoice->final_amount;
-        $route = route('invoice.view',encrypt($invoice->number));
+        try {
+            $invoice = Invoice::findOrFail($request->invoice_id);
+            $currency = $invoice->currency;
+            $amount = $invoice->final_amount;
+            $route = route('invoice.view',encrypt($invoice->number));
 
-        $msg = "Hello"." $invoice->invoice_to,<br>"."You have pending payment of invoice"." <b>$invoice->number</b>."."Please click the below link to complete your payment" .".<br>"."Invoice details".": <br>"."Amount"  .":  $amount $currency->code <br>"."Payment Link"." :  <a href='$route' target='_blank'>"."Click To Payment"."</a><br>"."QR Code"." :  <img src='".generateQR($route)."' class='' alt=''><br>"."Time"." : $invoice->created_at";
+            $msg = "Hello"." $invoice->invoice_to,<br>"."You have pending payment of invoice"." <b>$invoice->number</b>."."Please click the below link to complete your payment" .".<br>"."Invoice details".": <br>"."Amount"  .":  $amount $currency->code <br>"."Payment Link"." :  <a href='$route' target='_blank'>"."Click To Payment"."</a><br>"."QR Code"." :  <img src='".generateQR($route)."' class='' alt=''><br>"."Time"." : $invoice->created_at";
 
-        $gs = Generalsetting::first();
-        $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-        $headers .= "MIME-Version: 1.0" . "\r\n";
-        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-        sendMail($request->email, 'Invoice Payment', $msg, $headers);
+            $gs = Generalsetting::first();
+            $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
+            $headers .= "MIME-Version: 1.0" . "\r\n";
+            $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+            sendMail($request->email, 'Invoice Payment', $msg, $headers);
 
-        return back()->with('message','Invoice has been sent to the recipient');
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Invoice has been sent to the recipient']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
+        }
     }
 
     public function invoicePayment($number)
