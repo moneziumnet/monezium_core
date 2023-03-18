@@ -13,7 +13,6 @@ use App\Http\Controllers\API\UserDepositController;
 use App\Http\Controllers\API\UserDepositBankController;
 use App\Http\Controllers\API\BeneficiaryController;
 use App\Http\Controllers\API\VoucherController;
-use App\Http\Controllers\API\InvoiceController;
 use App\Http\Controllers\API\EscrowController;
 use App\Http\Controllers\API\ExchangeMoneyController;
 use App\Http\Controllers\API\TransactionController;
@@ -28,6 +27,8 @@ use App\Http\Controllers\API\DepositBankController;
 use App\Http\Controllers\API\OtherBankController;
 use App\Http\Controllers\API\WithdrawCryptoController;
 use App\Http\Controllers\API\OwnTransferController;
+use App\Http\Controllers\API\ManageInvoiceController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -159,6 +160,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user/exchange-money/history',  [ExchangeMoneyController::class,'exchangeHistory']);
         Route::post('/user/exchange-money/calcharge',  [ExchangeMoneyController::class,'calcharge']);
 
+        Route::get('/user/create-invoice',   [ManageInvoiceController::class,'create']);
+        Route::get('/user/invoice/setting',   [ManageInvoiceController::class,'invoic_setting']);
+        Route::post('/user/create-invoice',   [ManageInvoiceController::class,'store']);
+        Route::post('/user/invoice/setting',   [ManageInvoiceController::class,'invoice_setting_save']);
+
 
         Route::post('user/fetch-withdraw-list', [UserWithdrawController::class, 'withdraw']);
         Route::post('user/withdraw-create', [UserWithdrawController::class, 'withdrawcreate']);
@@ -168,11 +174,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::post('user/deposit', [UserDepositController::class, 'deposit']);
         Route::post('user/deposit-details', [UserDepositController::class, 'depositdetails']);
-
-        Route::post('/user/invoices', [InvoiceController::class, 'invoices']);
-        Route::post('/user/create-invoice', [InvoiceController::class, 'createinvoice']);
-        Route::post('/user/invoice-view', [InvoiceController::class, 'invoiceview']);
-        Route::post('/user/invoice-url', [InvoiceController::class, 'invoiceurl']);
 
         Route::post('user/transactions', [TransactionController::class, 'transactions']);
         Route::post('user/transfer-logs', [TransactionController::class, 'transferlogs']);
