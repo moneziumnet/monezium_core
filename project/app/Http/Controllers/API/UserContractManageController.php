@@ -110,39 +110,6 @@ class UserContractManageController extends Controller
 
     }
 
-    public function contract_view($id, $role) {
-        $data = Contract::findOrFail(decrypt($id));
-        $role = decrypt($role);
-        if(auth()->user()) {
-            if ($role == 'contractor' && $data->contractor->email != auth()->user()->email) {
-                return redirect(route('user.dashboard'))->with('error', 'You are not contractor of this contract.');
-            }
-
-            if ($role == 'client' && $data->beneficiary->email != auth()->user()->email) {
-                return redirect(url('/'))->with('error', 'You are not client(beneficiary) of this contract.');
-            }
-        }
-        elseif($role == 'contractor') {
-            return redirect(url('/'))->with('error', 'You must login to sign this contract as a contractor');
-        }
-        $information = $data->information ? json_decode($data->information) : array("" => null);
-        foreach ($information as $title => $text) {
-            $information->$title = str_replace("{Amount}", $data->amount, $information->$title);
-            if(isset($data->default_pattern)){
-                foreach (json_decode($data->default_pattern, True) as $key => $value) {
-                    if(strpos($text, "{".$key."}" ) !== false) {
-                        $information->$title = str_replace("{".$key."}", $value ,$information->$title);
-                    }
-                }
-            }
-            foreach (json_decode($data->pattern, True) as $key => $value) {
-                if(strpos($text, "{".$key."}" ) !== false) {
-                    $information->$title = str_replace("{".$key."}", $value ,$information->$title);
-                }
-            }
-        }
-        return view('user.contract.contract', compact('data', 'information', 'role'));
-    }
 
     public function contract_sign(Request $request, $id) {
         try {
@@ -257,106 +224,43 @@ class UserContractManageController extends Controller
         }
     }
 
-    public function export_pdf($id) {
-        $contract = Contract::where('id', $id)->first();
-
-        $information = $contract->information ? json_decode($contract->information) : array("" => null);
-        foreach ($information as $title => $text) {
-            $information->$title = str_replace("{Amount}", $contract->amount, $information->$title);
-            foreach (json_decode($contract->default_pattern, True) as $key => $value) {
-                if(strpos($text, "{".$key."}" ) !== false) {
-                    $information->$title = str_replace("{".$key."}", $value ,$information->$title);
-                }
-            }
-            foreach (json_decode($contract->pattern, True) as $key => $value) {
-                if(strpos($text, "{".$key."}" ) !== false) {
-                    $information->$title = str_replace("{".$key."}", $value ,$information->$title);
-                }
-            }
-        }
-
-        $pdf = Pdf::loadView('user.export.contract', [
-            'data' => $contract,
-            'information' => $information
-        ]);
-        return $pdf->download('contract.pdf');
-    }
-
-    public function export_aoa_pdf($id) {
-        $contract = ContractAoa::where('id', $id)->first();
-        $information = $contract->information ? json_decode($contract->information) : array("" => null);
-        foreach ($information as $title => $text) {
-            $information->$title = str_replace("{Amount}", $contract->amount, $information->$title);
-            foreach (json_decode($contract->default_pattern, True) as $key => $value) {
-                if(strpos($text, "{".$key."}" ) !== false) {
-                    $information->$title = str_replace("{".$key."}", $value ,$information->$title);
-                }
-            }
-            foreach (json_decode($contract->pattern, True) as $key => $value) {
-                if(strpos($text, "{".$key."}" ) !== false) {
-                    $information->$title = str_replace("{".$key."}", $value ,$information->$title);
-                }
-            }
-        }
-
-        $pdf = Pdf::loadView('user.export.aoa', [
-            'data' => $contract,
-            'information' => $information
-        ]);
-        return $pdf->download('aoa.pdf');
-    }
-
-    public function beneficiary_create(Request $request)
-    {
-        $data = new Beneficiary();
-        if($request->email == auth()->user()->email) {
-            return back()->with('error', 'You can\'t create the beneficiary with your email');
-        }
-        $input = $request->all();
-        if($request->type == 'RETAIL') {
-            $input['name'] =  trim($request->firstname)." ".trim($request->lastname);
-        }
-        else {
-            $input['name'] =  $request->company_name;
-        }
-        $data->fill($input)->save();
-        return back()->with('message', 'You have created new beneficiary successfully, please choose beneficiary list.');
-    }
 
     public function sendToMail(Request $request)
     {
-        $contract = Contract::findOrFail($request->contract_id);
-        $gs = Generalsetting::first();
-        if ($request->role == 'contractor') {
-            $msg = "Hello". $contract->contractor->name.",<br>"."You have received new contract as contractor. <br>"." The Contract Title is <b>$contract->title</b>."."<br>Please sign the contract." .".<br>"."New Contract Url"  .": ".route('contract.view',['id' => encrypt($contract->id), 'role' => encrypt('contractor')]) ."<br>";
+        try {
+            $contract = Contract::findOrFail($request->contract_id);
             $gs = Generalsetting::first();
-            $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-            $headers .= "MIME-Version: 1.0" . "\r\n";
-            $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-            sendMail($request->email, 'New Contract from '.$contract->beneficiary->name, $msg, $headers);
+            if ($request->role == 'contractor') {
+                $msg = "Hello". $contract->contractor->name.",<br>"."You have received new contract as contractor. <br>"." The Contract Title is <b>$contract->title</b>."."<br>Please sign the contract." .".<br>"."New Contract Url"  .": ".route('contract.view',['id' => encrypt($contract->id), 'role' => encrypt('contractor')]) ."<br>";
+                $gs = Generalsetting::first();
+                $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
+                $headers .= "MIME-Version: 1.0" . "\r\n";
+                $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+                sendMail($request->email, 'New Contract from '.$contract->beneficiary->name, $msg, $headers);
+            }
+            elseif($request->role == 'client') {
+                $gs = Generalsetting::first();
+                $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
+                $headers .= "MIME-Version: 1.0" . "\r\n";
+                $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+                $msg = "Hello". $contract->beneficiary->name.",<br>"."You have received new contract as client.  <br>"." The Contract Title is <b>$contract->title</b>."."<br>Please sign the contract." .".<br>"."New Contract Url"  .": ".route('contract.view',['id' => encrypt($contract->id), 'role' => encrypt('client')]) ."<br>";
+                sendMail($request->email, 'New Contract from '.$contract->contractor->name, $msg, $headers);
+
+            }
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'The Contract has been sent to the contractor and client.']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
         }
-        elseif($request->role == 'client') {
-
-            $gs = Generalsetting::first();
-            $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-            $headers .= "MIME-Version: 1.0" . "\r\n";
-            $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-            $msg = "Hello". $contract->beneficiary->name.",<br>"."You have received new contract as client.  <br>"." The Contract Title is <b>$contract->title</b>."."<br>Please sign the contract." .".<br>"."New Contract Url"  .": ".route('contract.view',['id' => encrypt($contract->id), 'role' => encrypt('client')]) ."<br>";
-            sendMail($request->email, 'New Contract from '.$contract->contractor->name, $msg, $headers);
-
-        }
-
-
-
-        return back()->with('message','The Contract has been sent to the contractor and client.');
     }
 
-
-
     public function aoa_index($id){
-        $data['aoa_list'] = ContractAoa::where('contract_id',$id)->latest()->paginate(15);
-        $data['id'] = $id;
-        return view('user.aoa.index', $data);
+        try {
+            $data['aoa_list'] = ContractAoa::where('contract_id',$id)->latest()->paginate(15);
+            $data['id'] = $id;
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
+        }
     }
 
     public function aoa_create($id){
@@ -400,97 +304,72 @@ class UserContractManageController extends Controller
     }
 
     public function aoa_view($id) {
-        $data = ContractAoa::findOrFail($id);
-        $information = $data->information ? json_decode($data->information) : array("" => null);
-        foreach ($information as $title => $text) {
-            $information->$title = str_replace("{Amount}", $data->amount, $information->$title);
-            if(isset($data->default_pattern)){
-                foreach (json_decode($data->default_pattern, True) as $key => $value) {
+        try {
+            $data = ContractAoa::findOrFail($id);
+            $information = $data->information ? json_decode($data->information) : array("" => null);
+            foreach ($information as $title => $text) {
+                $information->$title = str_replace("{Amount}", $data->amount, $information->$title);
+                if(isset($data->default_pattern)){
+                    foreach (json_decode($data->default_pattern, True) as $key => $value) {
+                        if(strpos($text, "{".$key."}" ) !== false) {
+                            $information->$title = str_replace("{".$key."}", $value ,$information->$title);
+                        }
+                    }
+                }
+                foreach (json_decode($data->pattern, True) as $key => $value) {
                     if(strpos($text, "{".$key."}" ) !== false) {
                         $information->$title = str_replace("{".$key."}", $value ,$information->$title);
                     }
                 }
             }
-            foreach (json_decode($data->pattern, True) as $key => $value) {
-                if(strpos($text, "{".$key."}" ) !== false) {
-                    $information->$title = str_replace("{".$key."}", $value ,$information->$title);
-                }
-            }
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'success', 'data' => compact('data', 'information')]);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
         }
-        return view('user.aoa.view', compact('data', 'information'));
     }
 
-    public function aoa_sign_view($id,$role) {
-        $data = ContractAoa::findOrFail(decrypt($id));
-        $role = decrypt($role);
-        if(auth()->user()) {
-            if ($role == 'contractor' && $data->contractor->email != auth()->user()->email) {
-                return redirect(route('user.dashboard'))->with('error', 'You are not contractor of this contract.');
-            }
-
-            if ($role == 'client' && $data->beneficiary->email != auth()->user()->email) {
-                return redirect(url('/'))->with('error', 'You are not client(beneficiary) of this contract.');
-            }
-        }
-        elseif($role == 'contractor') {
-            return redirect(url('/'))->with('error', 'You must login to sign this contract as a contractor');
-        }
-        $information = $data->information ? json_decode($data->information) : array("" => null);
-        foreach ($information as $title => $text) {
-            $information->$title = str_replace("{Amount}", $data->amount, $information->$title);
-            if(isset($data->default_pattern)){
-                foreach (json_decode($data->default_pattern, True) as $key => $value) {
-                    if(strpos($text, "{".$key."}" ) !== false) {
-                        $information->$title = str_replace("{".$key."}", $value ,$information->$title);
-                    }
-                }
-            }
-            foreach (json_decode($data->pattern, True) as $key => $value) {
-                if(strpos($text, "{".$key."}" ) !==  false) {
-                    $information->$title = str_replace("{".$key."}", $value ,$information->$title);
-                }
-            }
-        }
-        return view('user.aoa.aoa', compact('data', 'information', 'role'));
-    }
 
     public function aoa_sign(Request $request, $id) {
-        $data = ContractAoa::findOrFail($id);
-        if( $request->sign_path) {
-            if($request->role == 'client') {
-                @unlink('assets/images/'.$data->customer_image_path);
-                $data->customer_image_path = $request->sign_path;
+        try {
+            $data = ContractAoa::findOrFail($id);
+            if( $request->sign_path) {
+                if($request->role == 'client') {
+                    @unlink('assets/images/'.$data->customer_image_path);
+                    $data->customer_image_path = $request->sign_path;
 
+                }
+                elseif ($request->role == 'contractor') {
+                    @unlink('assets/images/'.$data->contracter_image_path);
+                    $data->contracter_image_path = $request->sign_path;
+                }
             }
-            elseif ($request->role == 'contractor') {
-                @unlink('assets/images/'.$data->contracter_image_path);
-                $data->contracter_image_path = $request->sign_path;
-            }
-        }
-        else {
-            $folderPath ='assets/images/';
-            $image_parts = explode(";base64,", $request->signed);
-            $image_type_aux = explode("image/", $image_parts[0]);
-            $image_type = $image_type_aux[1];
-            $image_base64 = base64_decode($image_parts[1]);
-            $filename = uniqid() . '.'.$image_type;
-            $file = $folderPath . $filename;
-            file_put_contents($file, $image_base64);
-            if($request->role == 'client') {
-                @unlink('assets/images/'.$data->customer_image_path);
-                $data->customer_image_path = $filename;
+            else {
+                $folderPath ='assets/images/';
+                $image_parts = explode(";base64,", $request->signed);
+                $image_type_aux = explode("image/", $image_parts[0]);
+                $image_type = $image_type_aux[1];
+                $image_base64 = base64_decode($image_parts[1]);
+                $filename = uniqid() . '.'.$image_type;
+                $file = $folderPath . $filename;
+                file_put_contents($file, $image_base64);
+                if($request->role == 'client') {
+                    @unlink('assets/images/'.$data->customer_image_path);
+                    $data->customer_image_path = $filename;
 
+                }
+                elseif ($request->role == 'contractor') {
+                    @unlink('assets/images/'.$data->contracter_image_path);
+                    $data->contracter_image_path = $filename;
+                }
             }
-            elseif ($request->role == 'contractor') {
-                @unlink('assets/images/'.$data->contracter_image_path);
-                $data->contracter_image_path = $filename;
+            if ($data->contracter_image_path && $data->customer_image_path) {
+                $data->status = 1;
             }
+            $data->update();
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'You have signed successfully']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
         }
-        if ($data->contracter_image_path && $data->customer_image_path) {
-            $data->status = 1;
-        }
-        $data->update();
-        return back()->with('success', 'You have signed successfully');
     }
 
     public function aoa_edit($id) {
