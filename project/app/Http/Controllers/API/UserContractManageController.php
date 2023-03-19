@@ -264,43 +264,51 @@ class UserContractManageController extends Controller
     }
 
     public function aoa_create($id){
-        $data['userlist'] = User::get();
-        $data['clientlist'] = Beneficiary::where('user_id', auth()->id())->get();
-        $data['id'] = $id;
-        return view('user.aoa.create',$data);
+        try {
+            $data['userlist'] = User::get();
+            $data['clientlist'] = Beneficiary::where('user_id', auth()->id())->get();
+            $data['id'] = $id;
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
+        }
     }
 
     public function aoa_store(Request $request, $id){
-        $rules = ['title' => 'required'];
-        $request->validate($rules);
+        try {
+            $rules = ['title' => 'required'];
+            $request->validate($rules);
 
-        $data = new ContractAoa();
-        $contractor_info = explode(' ', $request->contractor);
-        if(count($contractor_info) == 2) {
-            $data->contractor_type = 'App\\Models\\'.$contractor_info[0];
-            $data->contractor_id = $contractor_info[1];
-        }
-        $client_info = explode(' ', $request->client);
-        if(count($client_info) == 2) {
-            $data->client_type = 'App\\Models\\'.$client_info[0];
-            $data->client_id = $client_info[1];
-        }
+            $data = new ContractAoa();
+            $contractor_info = explode(' ', $request->contractor);
+            if(count($contractor_info) == 2) {
+                $data->contractor_type = 'App\\Models\\'.$contractor_info[0];
+                $data->contractor_id = $contractor_info[1];
+            }
+            $client_info = explode(' ', $request->client);
+            if(count($client_info) == 2) {
+                $data->client_type = 'App\\Models\\'.$client_info[0];
+                $data->client_id = $client_info[1];
+            }
 
-        $data->title = $request->title;
-        $data->amount = $request->amount;
-        $data->information = json_encode(array_combine($request->desc_title,$request->desc_text));
-        $data->contract_id = $request->contract_id;
-        if(isset($request->item)){
-            $items = array_combine($request->item,$request->value);
-            $data->pattern = json_encode($items);
-        }
-        if(isset($request->default_item)){
-            $default_items = array_combine($request->default_item,$request->default_value);
-            $data->default_pattern = json_encode($default_items);
-        }
-        $data->save();
+            $data->title = $request->title;
+            $data->amount = $request->amount;
+            $data->information = json_encode(array_combine($request->desc_title,$request->desc_text));
+            $data->contract_id = $request->contract_id;
+            if(isset($request->item)){
+                $items = array_combine($request->item,$request->value);
+                $data->pattern = json_encode($items);
+            }
+            if(isset($request->default_item)){
+                $default_items = array_combine($request->default_item,$request->default_value);
+                $data->default_pattern = json_encode($default_items);
+            }
+            $data->save();
 
-        return redirect(route('user.contract.aoa', $id))->with('message','AoA has been created successfully');
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'AoA has been created successfully']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
+        }
     }
 
     public function aoa_view($id) {
@@ -373,79 +381,95 @@ class UserContractManageController extends Controller
     }
 
     public function aoa_edit($id) {
-        $data['data'] = ContractAoa::findOrFail($id);
-        $data['userlist'] = User::get();
-        $data['clientlist'] = Beneficiary::where('user_id', auth()->id())->get();
-        return view('user.aoa.edit', $data);
+        try {
+            $data['data'] = ContractAoa::findOrFail($id);
+            $data['userlist'] = User::get();
+            $data['clientlist'] = Beneficiary::where('user_id', auth()->id())->get();
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
+        }
     }
 
     public function aoa_update(Request $request, $id) {
-        $rules = ['title' => 'required'];
-        $request->validate($rules);
+        try {
+            $rules = ['title' => 'required'];
+            $request->validate($rules);
 
-        $data = ContractAoa::findOrFail($id);
-        $contractor_info = explode(' ', $request->contractor);
-        if(count($contractor_info) == 2) {
-            $data->contractor_type = 'App\\Models\\'.$contractor_info[0];
-            $data->contractor_id = $contractor_info[1];
-        }
-        $client_info = explode(' ', $request->client);
-        if(count($client_info) == 2) {
-            $data->client_type = 'App\\Models\\'.$client_info[0];
-            $data->client_id = $client_info[1];
-        }
-        $data->title = $request->title;
-        $data->amount = $request->amount;
-        $data->information = json_encode(array_combine($request->desc_title,$request->desc_text));
-        $data->contract_id = $request->contract_id;
-        if(isset($request->item)){
-            $items = array_combine($request->item,$request->value);
-            $data->pattern = json_encode($items);
-        }
-        if(isset($request->default_item)){
-            $default_items = array_combine($request->default_item,$request->default_value);
-            $data->default_pattern = json_encode($default_items);
-        }
-        $data->update();
+            $data = ContractAoa::findOrFail($id);
+            $contractor_info = explode(' ', $request->contractor);
+            if(count($contractor_info) == 2) {
+                $data->contractor_type = 'App\\Models\\'.$contractor_info[0];
+                $data->contractor_id = $contractor_info[1];
+            }
+            $client_info = explode(' ', $request->client);
+            if(count($client_info) == 2) {
+                $data->client_type = 'App\\Models\\'.$client_info[0];
+                $data->client_id = $client_info[1];
+            }
+            $data->title = $request->title;
+            $data->amount = $request->amount;
+            $data->information = json_encode(array_combine($request->desc_title,$request->desc_text));
+            $data->contract_id = $request->contract_id;
+            if(isset($request->item)){
+                $items = array_combine($request->item,$request->value);
+                $data->pattern = json_encode($items);
+            }
+            if(isset($request->default_item)){
+                $default_items = array_combine($request->default_item,$request->default_value);
+                $data->default_pattern = json_encode($default_items);
+            }
+            $data->update();
 
-        return redirect(route('user.contract.aoa', $request->contract_id))->with('message','AoA has been updated successfully');
+            return response()->json(['status' => '200', 'error_code' => '0', 'AoA has been updated successfully']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
+        }
     }
 
     public function aoa_delete($id) {
-        $data = ContractAoa::findOrFail($id);
-        $data->delete();
-        File::delete('assets/images/'.$data->contracter_image_path);
-        File::delete('assets/images/'.$data->customer_image_path);
+        try {
+            $data = ContractAoa::findOrFail($id);
+            $data->delete();
+            File::delete('assets/images/'.$data->contracter_image_path);
+            File::delete('assets/images/'.$data->customer_image_path);
 
-        return  redirect()->back()->with('success','AoA has been deleted successfully');
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'AoA has been deleted successfully']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
+        }
     }
 
     public function aoa_sendToMail(Request $request)
     {
-        $contract = ContractAoa::findOrFail($request->contract_id);
-        $gs = Generalsetting::first();
-        if ($request->role == 'contractor') {
-
+        try {
+            $contract = ContractAoa::findOrFail($request->contract_id);
             $gs = Generalsetting::first();
-            $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-            $headers .= "MIME-Version: 1.0" . "\r\n";
-            $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-            $msg = "Hello". $contract->contractor->name.",<br>"."You have received new AoA as contractor. <br>"." The AoA Title is <b>$contract->title</b>."."<br/>Please sign the AoA." .".<br>"."New AoA Url"  .": ".route('aoa.view',['id' => encrypt($contract->id), 'role' => encrypt('contractor')]) ."<br>";
-            sendMail($request->email, 'New Contract from '.$contract->beneficiary->name, $msg, $headers);
+            if ($request->role == 'contractor') {
 
+                $gs = Generalsetting::first();
+                $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
+                $headers .= "MIME-Version: 1.0" . "\r\n";
+                $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+                $msg = "Hello". $contract->contractor->name.",<br>"."You have received new AoA as contractor. <br>"." The AoA Title is <b>$contract->title</b>."."<br/>Please sign the AoA." .".<br>"."New AoA Url"  .": ".route('aoa.view',['id' => encrypt($contract->id), 'role' => encrypt('contractor')]) ."<br>";
+                sendMail($request->email, 'New Contract from '.$contract->beneficiary->name, $msg, $headers);
+
+            }
+            elseif($request->role == 'client') {
+
+                $gs = Generalsetting::first();
+                $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
+                $headers .= "MIME-Version: 1.0" . "\r\n";
+                $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+                $msg = "Hello". $contract->beneficiary->name.",<br>"."You have received new AoA as client.  <br>"." The AoA Title is <b>$contract->title</b>."."<br>Please sign the AoA." .".<br>"."New AoA Url"  .": ".route('aoa.view',['id' => encrypt($contract->id), 'role' => encrypt('client')]) ."<br>";
+                sendMail($request->email, 'New Contract from '.$contract->contractor->name, $msg, $headers);
+
+            }
+
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'The AoA has been sent to the contractor and client.']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
         }
-        elseif($request->role == 'client') {
-
-            $gs = Generalsetting::first();
-            $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
-            $headers .= "MIME-Version: 1.0" . "\r\n";
-            $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-            $msg = "Hello". $contract->beneficiary->name.",<br>"."You have received new AoA as client.  <br>"." The AoA Title is <b>$contract->title</b>."."<br>Please sign the AoA." .".<br>"."New AoA Url"  .": ".route('aoa.view',['id' => encrypt($contract->id), 'role' => encrypt('client')]) ."<br>";
-            sendMail($request->email, 'New Contract from '.$contract->contractor->name, $msg, $headers);
-
-        }
-
-        return back()->with('message','The AoA has been sent to the contractor and client.');
     }
 }
 

@@ -173,7 +173,7 @@
           <h3>{{__('Send E-mail')}}</h3>
           <div class="row text-start">
               <div class="col">
-                  <form action="{{ route('user.contract.send.mail') }}" method="post">
+                  <form action="{{ route('user.contract.aoa.send.mail') }}" method="post">
                       @csrf
                       <div class="row">
                           <div class="form-group mt-2">
