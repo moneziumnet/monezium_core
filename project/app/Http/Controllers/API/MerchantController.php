@@ -11,32 +11,30 @@ use App\Models\Transaction;
 use App\Models\Currency;
 use App\Models\Escrow;
 use App\Models\Charge;
-use Illuminate\Http\Request;
+use App\Models\MerchantSetting;
+use App\Models\MerchantWallet;
 use Illuminate\Support\Carbon;
 
-use App\Classes\GoogleAuthenticator;
-use PHPMailer\PHPMailer\PHPMailer;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Str;
+use Auth;
 use Illuminate\Support\Facades\Hash;
+use Image;
 
 class MerchantController extends Controller
 {
     public $successStatus = 200;
     /*********************START Merchant API******************************/
 
-
-    public function apikey(Request $request)
+    public function index()
     {
         try {
-            $user_id = Auth::user()->id;
-            $user = User::whereId($user_id)->first();
-            $explode = explode(',',$user->user_type);
-
-            if(!in_array(3,$explode))
+            if(!check_user_type(3))
             {
-                return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Your have not merchant access']);
+                return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'You do not have merchant role.']);
             }
+            $user = Auth::user();
 
             $cred = UserApiCred::where('user_id',$user->id)->first();
             if(!$cred){
@@ -48,93 +46,56 @@ class MerchantController extends Controller
                 $userapicred->save();
                 $cred = UserApiCred::where('user_id',$user->id)->first();
             }
-            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'access_key' => $cred->access_key]);
+
+            $wallets = MerchantWallet::where('merchant_id', auth()->id())->with('currency')->with('shop')->get();
+
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => compact('cred', 'user', 'wallets')]);
         } catch (\Throwable $th) {
-            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
         }
     }
 
-    public function merchantmoneysend(Request $request)
-    {
+    public function setting($tab = "paypal") {
         try {
-            $user_id = Auth::user()->id;
-            $rules = [
-                'receiver'          => 'required|email',
-                'wallet_id'         => 'required|integer',
-                'amount'            => 'required|numeric|gt:0',
-                'description'       => 'required',
-                'charge_pay'        => 'numeric'
-            ];
-            $validator = Validator::make($request->all(), $rules);
-
-            if ($validator->fails()) {
-                return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
-            }
-
-
-            $user = User::whereId($user_id)->first();
-
-            $receiver = User::where('email',$request->receiver)->first();
-            if(!$receiver) return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Recipient not found']);
-
-            $senderWallet = Wallet::where('id',$request->wallet_id)->where('user_type',1)->whereUserId($user_id)->first();
-
-            if(!$senderWallet) return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Your wallet not found']);
-
-            $currency = Currency::findOrFail($senderWallet->currency->id);
-            $charge = charge('make-escrow');
-
-            $finalCharge = chargeCalc($charge,$request->amount,getRate($currency));
-
-            if($request->pay_charge) $finalAmount =  $request->amount + $finalCharge;
-            else  $finalAmount = $request->amount;
-
-            if($senderWallet->balance < $finalAmount) return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Insufficient balance']);
-
-            $senderWallet->balance -= $finalAmount;
-            $senderWallet->update();
-
-            $escrow               = new Escrow();
-            $escrow->trnx         = str_rand();
-            $escrow->user_id      = $user_id;
-            $escrow->recipient_id = $receiver->id;
-            $escrow->description  = $request->description;
-            $escrow->amount       = $request->amount;
-            $escrow->pay_charge   = $request->pay_charge ? 1 : 0;
-            $escrow->charge       = $finalCharge;
-            $escrow->currency_id  = $currency->id;
-            $escrow->save();
-
-            $trnx              = new Transaction();
-            $trnx->trnx        = $escrow->trnx;
-            $trnx->user_id     = $user_id;
-            $trnx->user_type   = 1;
-            $trnx->currency_id = $currency->id;
-            $trnx->wallet_id   = $senderWallet->id;
-            $trnx->amount      = $finalAmount;
-            $trnx->charge      = $finalCharge;
-            $trnx->remark      = 'make_escrow';
-            $trnx->type        = '-';
-            $trnx->details     = trans('Made escrow to '). $receiver->email;
-            $trnx->data        = '{"description":"'.$request->description.'"}';
-            $trnx->save();
-            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Escrow has been created successfully', 'data' => $escrow]);
-
-        } catch (\Throwable $th) {
-             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
-        }
-    }
-
-    public function escrowpending(Request $request)
-    {
-        try {
-            $user_id = Auth::user()->id;
-            $data['escrow']          = Escrow::with('currency')->where('recipient_id',$user_id)->orderby('id','desc')->paginate(10);
+            $data['setting'] = MerchantSetting::where('user_id',auth()->id())
+                ->where('keyword', $tab)
+                ->first();
+            $data['tab'] = $tab;
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
         } catch (\Throwable $th) {
-            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
         }
     }
-/*********************END Merchant API******************************/
+
+    public function setting_update($tab = "paypal", Request $request) {
+        try {
+            $data = MerchantSetting::where('user_id', auth()->id())
+                ->where('keyword', $tab)
+                ->first();
+            if (!$data) {
+                $data = new MerchantSetting();
+            }
+            $data->user_id = auth()->id();
+            if($tab == 'paypal') {
+                $data->information = array(
+                    'client_id' => $request->client_id,
+                    'client_secret' => $request->client_secret,
+                    'sandbox_check' => $request->sandbox_check == 'on'
+                );
+            } else {
+                $data->information = array(
+                    'key' => $request->key,
+                    'secret' => $request->secret,
+                );
+            }
+            $data->keyword = $tab;
+            $data->save();
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Merchant Setting has been updated successfully.']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
+        }
+    }
+
+    /*********************END Merchant API******************************/
 
 }

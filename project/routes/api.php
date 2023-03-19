@@ -200,6 +200,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user/contract/aoa/delete/{id}',   [UserContractManageController::class,'aoa_delete']);
         Route::post('/user/contract/aoa/send-mail/',   [UserContractManageController::class,'aoa_sendToMail']);
 
+        Route::get('/user/merchant/index', [MerchantController::class,'index']);
+        Route::get('/user/merchant/setting/{tab?}', [MerchantController::class,'setting']);
+        Route::post('/user/merchant/setting/{tab?}', [MerchantController::class,'setting_update']);
+
         Route::post('user/fetch-withdraw-list', [UserWithdrawController::class, 'withdraw']);
         Route::post('user/withdraw-create', [UserWithdrawController::class, 'withdrawcreate']);
         Route::post('user/withdraw-details', [UserWithdrawController::class, 'withdrawdetails']);
