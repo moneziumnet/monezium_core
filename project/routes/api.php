@@ -32,6 +32,8 @@ use App\Http\Controllers\API\UserContractManageController;
 use App\Http\Controllers\API\MerchantMoneyRequestController;
 use App\Http\Controllers\API\MerchantShopController;
 use App\Http\Controllers\API\MerchantProductController;
+use App\Http\Controllers\API\UserPincodeController;
+use App\Http\Controllers\API\MessageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -232,6 +234,16 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user/merchant/product/order', [MerchantProductController::class,'order']);
         Route::post('/user/merchant/product/send_email', [MerchantProductController::class,'send_email']);
         Route::get('/user/merchant/product/order/{id}', [MerchantProductController::class,'order_by_product']);
+
+        Route::get('/user/pincode', [UserPincodeController::class,'index']);
+        Route::post('/user/telegram/generate', [UserPincodeController::class,'tele_generate']);
+        Route::post('/user/whatsapp/generate', [UserPincodeController::class,'whs_generate']);
+
+        Route::get('/user/admin/tickets', [MessageController::class,'adminmessages']);
+        Route::get('/user/admin/ticket/{id}', [MessageController::class,'adminmessage']);
+        Route::post('/user/admin/ticket/post', [MessageController::class,'adminpostmessage']);
+        Route::post('/user/admin/user/send/ticket', [MessageController::class,'adminusercontact']);
+        Route::get('/user/admin/ticket/status/{id}/{status}', [MessageController::class,'ticket_status']);
 
         Route::post('user/fetch-withdraw-list', [UserWithdrawController::class, 'withdraw']);
         Route::post('user/withdraw-create', [UserWithdrawController::class, 'withdrawcreate']);
