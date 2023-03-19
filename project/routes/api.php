@@ -185,6 +185,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user/contract/view/{id}',   [UserContractManageController::class,'view']);
         Route::get('/user/contract/create',   [UserContractManageController::class,'create']);
         Route::post('/user/contract/store',   [UserContractManageController::class,'store']);
+        Route::post('/user/contract/sign/{id}',   [UserContractManageController::class,'contract_sign']);
+        Route::get('/user/contract/edit/{id}',   [UserContractManageController::class,'edit']);
+        Route::post('/user/contract/update/{id}',   [UserContractManageController::class,'update']);
+        Route::get('/user/contract/delete/{id}',   [UserContractManageController::class,'delete']);
 
         Route::post('user/fetch-withdraw-list', [UserWithdrawController::class, 'withdraw']);
         Route::post('user/withdraw-create', [UserWithdrawController::class, 'withdrawcreate']);

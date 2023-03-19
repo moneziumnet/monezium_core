@@ -41,8 +41,12 @@ class UserContractManageController extends Controller
 
     public function store(Request $request){
         try {
+
             $rules = ['title' => 'required'];
-            $request->validate($rules);
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                return response()->json(['status' => '401', 'error_code' => '0', 'message' => $validator->getMessageBag()->toArray()]);
+            }
 
             $data = new Contract();
             $data->title = $request->title;
@@ -141,95 +145,116 @@ class UserContractManageController extends Controller
     }
 
     public function contract_sign(Request $request, $id) {
-        $data = Contract::findOrFail($id);
-        if( $request->sign_path) {
-            if($request->role == 'client') {
-                @unlink('assets/images/'.$data->customer_image_path);
-                $data->customer_image_path = $request->sign_path;
+        try {
+            $data = Contract::findOrFail($id);
+            if( $request->sign_path) {
+                if($request->role == 'client') {
+                    @unlink('assets/images/'.$data->customer_image_path);
+                    $data->customer_image_path = $request->sign_path;
 
+                }
+                elseif ($request->role == 'contractor') {
+                    @unlink('assets/images/'.$data->contracter_image_path);
+                    $data->contracter_image_path = $request->sign_path;
+                }
             }
-            elseif ($request->role == 'contractor') {
-                @unlink('assets/images/'.$data->contracter_image_path);
-                $data->contracter_image_path = $request->sign_path;
-            }
-        }
-        else {
-            $folderPath ='assets/images/';
-            $image_parts = explode(";base64,", $request->signed);
-            $image_type_aux = explode("image/", $image_parts[0]);
-            $image_type = $image_type_aux[1];
-            $image_base64 = base64_decode($image_parts[1]);
-            $filename = uniqid() . '.'.$image_type;
-            $file = $folderPath . $filename;
-            file_put_contents($file, $image_base64);
-            if($request->role == 'client') {
-                @unlink('assets/images/'.$data->customer_image_path);
-                $data->customer_image_path = $filename;
+            else {
+                $folderPath ='assets/images/';
+                $image_parts = explode(";base64,", $request->signed);
+                $image_type_aux = explode("image/", $image_parts[0]);
+                $image_type = $image_type_aux[1];
+                $image_base64 = base64_decode($image_parts[1]);
+                $filename = uniqid() . '.'.$image_type;
+                $file = $folderPath . $filename;
+                file_put_contents($file, $image_base64);
+                if($request->role == 'client') {
+                    @unlink('assets/images/'.$data->customer_image_path);
+                    $data->customer_image_path = $filename;
 
+                }
+                elseif ($request->role == 'contractor') {
+                    @unlink('assets/images/'.$data->contracter_image_path);
+                    $data->contracter_image_path = $filename;
+                }
             }
-            elseif ($request->role == 'contractor') {
-                @unlink('assets/images/'.$data->contracter_image_path);
-                $data->contracter_image_path = $filename;
+            if ($data->contracter_image_path && $data->customer_image_path) {
+                $data->status = 1;
             }
+            $data->update();
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'You have signed successfully']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
         }
-        if ($data->contracter_image_path && $data->customer_image_path) {
-            $data->status = 1;
-        }
-        $data->update();
-        return back()->with('success', 'You have signed successfully');
+
     }
 
     public function edit($id) {
-        $data['data'] = Contract::findOrFail($id);
-        $data['userlist'] = User::get();
-        $data['clientlist'] = Beneficiary::where('user_id', auth()->id())->get();
-        return view('user.contract.edit', $data);
+
+        try {
+            $data['data'] = Contract::findOrFail($id);
+            $data['userlist'] = User::get();
+            $data['clientlist'] = Beneficiary::where('user_id', auth()->id())->get();
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
+        }
     }
 
     public function update(Request $request, $id) {
-        $rules = ['title' => 'required'];
-        $request->validate($rules);
+        try {
+            $rules = ['title' => 'required'];
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                return response()->json(['status' => '401', 'error_code' => '0', 'message' => $validator->getMessageBag()->toArray()]);
+            }
 
-        $data = Contract::findOrFail($id);
-        $data->title = $request->title;
-        $data->amount = $request->amount;
-        $data->information = json_encode(array_combine($request->desc_title,$request->desc_text));
-        $data->user_id = $request->user_id;
-        $contractor_info = explode(' ', $request->contractor);
-        if(count($contractor_info) == 2) {
-            $data->contractor_type = 'App\\Models\\'.$contractor_info[0];
-            $data->contractor_id = $contractor_info[1];
-        }
-        $client_info = explode(' ', $request->client);
-        if(count($client_info) == 2) {
-            $data->client_type = 'App\\Models\\'.$client_info[0];
-            $data->client_id = $client_info[1];
-        }
-        if(isset($request->item)){
-            $items = array_combine($request->item,$request->value);
-            $data->pattern = json_encode($items);
-        }
-        if(isset($request->default_item)){
-            $default_items = array_combine($request->default_item,$request->default_value);
-            $data->default_pattern = json_encode($default_items);
-        }
-        $data->update();
+            $data = Contract::findOrFail($id);
+            $data->title = $request->title;
+            $data->amount = $request->amount;
+            $data->information = json_encode(array_combine($request->desc_title,$request->desc_text));
+            $data->user_id = $request->user_id;
+            $contractor_info = explode(' ', $request->contractor);
+            if(count($contractor_info) == 2) {
+                $data->contractor_type = 'App\\Models\\'.$contractor_info[0];
+                $data->contractor_id = $contractor_info[1];
+            }
+            $client_info = explode(' ', $request->client);
+            if(count($client_info) == 2) {
+                $data->client_type = 'App\\Models\\'.$client_info[0];
+                $data->client_id = $client_info[1];
+            }
+            if(isset($request->item)){
+                $items = array_combine($request->item,$request->value);
+                $data->pattern = json_encode($items);
+            }
+            if(isset($request->default_item)){
+                $default_items = array_combine($request->default_item,$request->default_value);
+                $data->default_pattern = json_encode($default_items);
+            }
+            $data->update();
 
-        return redirect(route('user.contract.index'))->with('success','Contract has been updated successfully');
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Contract has been updated successfully']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
+        }
     }
     public function delete($id) {
-        $data = Contract::findOrFail($id);
-        $data->delete();
-        File::delete('assets/images/'.$data->contracter_image_path);
-        File::delete('assets/images/'.$data->customer_image_path);
-        $aoa =  ContractAoa::where('contract_id', $id)->get();
-        foreach ($aoa as $key => $value) {
-            $aoa_data = ContractAoa::findOrFail($value->id);
-            $aoa_data->delete();
-            File::delete('assets/images/'.$aoa_data->contracter_image_path);
-            File::delete('assets/images/'.$aoa_data->customer_image_path);
+        try {
+            $data = Contract::findOrFail($id);
+            $data->delete();
+            File::delete('assets/images/'.$data->contracter_image_path);
+            File::delete('assets/images/'.$data->customer_image_path);
+            $aoa =  ContractAoa::where('contract_id', $id)->get();
+            foreach ($aoa as $key => $value) {
+                $aoa_data = ContractAoa::findOrFail($value->id);
+                $aoa_data->delete();
+                File::delete('assets/images/'.$aoa_data->contracter_image_path);
+                File::delete('assets/images/'.$aoa_data->customer_image_path);
+            }
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Contract has been deleted successfully']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
         }
-        return  redirect()->back()->with('success','Contract has been deleted successfully');
     }
 
     public function export_pdf($id) {
