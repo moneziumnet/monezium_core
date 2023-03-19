@@ -198,7 +198,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user/contract/aoa/edit/{id}',   [UserContractManageController::class,'aoa_edit']);
         Route::post('/user/contract/aoa/update/{id}',   [UserContractManageController::class,'aoa_update']);
         Route::get('/user/contract/aoa/delete/{id}',   [UserContractManageController::class,'aoa_delete']);
-        Route::post('/user/contract/aoa/send-mail/{id}',   [UserContractManageController::class,'aoa_sendToMail']);
+        Route::post('/user/contract/aoa/send-mail/',   [UserContractManageController::class,'aoa_sendToMail']);
 
         Route::post('user/fetch-withdraw-list', [UserWithdrawController::class, 'withdraw']);
         Route::post('user/withdraw-create', [UserWithdrawController::class, 'withdrawcreate']);
