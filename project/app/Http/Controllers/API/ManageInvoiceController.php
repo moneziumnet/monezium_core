@@ -407,25 +407,12 @@ class ManageInvoiceController extends Controller
         try {
             $data['invoice'] = Invoice::where('number',$number)->firstOrFail();
             $data['user'] = User::where('id',$data['invoice']->user_id)->first();
-            $data['back_url'] = route('user.invoice.index');
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
         } catch (\Throwable $th) {
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
         }
     }
 
-    public function incoming_view($number)
-    {
-        try {
-            $data['invoice'] = Invoice::where('number',$number)->firstOrFail();
-            $data['user'] = User::where('id',$data['invoice']->user_id)->first();
-            $data['back_url'] = route('user.invoice.incoming.index');
-            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
-        } catch (\Throwable $th) {
-            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
-        }
-
-    }
 
     public function sendToMail(Request $request)
     {
@@ -519,7 +506,7 @@ class ManageInvoiceController extends Controller
                 $data = new CryptoDeposit();
                 $data->currency_id = $request->currency_id;
                 $data->amount = $request->amount;
-                $invoice = Invoice::findOrFail($request->id);
+                $invoice = Invoice::findOrFail($request->invoice_id);
                 $data->user_id = $invoice->user_id;
                 $data->address = $request->address;
                 $data->save();

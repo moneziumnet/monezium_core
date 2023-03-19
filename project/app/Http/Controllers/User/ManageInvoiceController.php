@@ -513,7 +513,7 @@ class ManageInvoiceController extends Controller
             $data = new CryptoDeposit();
             $data->currency_id = $request->currency_id;
             $data->amount = $request->amount;
-            $invoice = Invoice::findOrFail($request->id);
+            $invoice = Invoice::findOrFail($request->invoice_id);
             $data->user_id = $invoice->user_id;
             $data->address = $request->address;
             $data->save();
@@ -757,7 +757,7 @@ class ManageInvoiceController extends Controller
             $data = new CryptoDeposit();
             $data->currency_id = $request->currency_id;
             $data->amount = $request->amount;
-            $invoice = Invoice::findOrFail($request->id);
+            $invoice = Invoice::findOrFail($request->invoice_id);
             $data->user_id = $invoice->user_id;
             $data->save();
 
