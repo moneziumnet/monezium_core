@@ -30,6 +30,7 @@ use App\Http\Controllers\API\OwnTransferController;
 use App\Http\Controllers\API\ManageInvoiceController;
 use App\Http\Controllers\API\UserContractManageController;
 use App\Http\Controllers\API\MerchantMoneyRequestController;
+use App\Http\Controllers\API\MerchantShopController;
 
 /*
 |--------------------------------------------------------------------------
@@ -209,6 +210,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user/merchant/money-request/create', [MerchantMoneyRequestController::class,'create']);
         Route::post('/user/merchant/money-request/store', [MerchantMoneyRequestController::class,'store']);
         Route::get('/user/merchant/money-request/details/{id}', [MerchantMoneyRequestController::class,'details']);
+
+        Route::get('/user/merchant/shop', [MerchantShopController::class,'index']);
+        Route::post('/user/merchant/shop/store', [MerchantShopController::class,'store']);
+        Route::get('/user/merchant/shop/edit/{id}', [MerchantShopController::class,'edit']);
+        Route::post('/user/merchant/shop/update/{id}', [MerchantShopController::class,'update']);
+        Route::get('/user/merchant/shop/delete/{id}', [MerchantShopController::class,'delete']);
+        Route::get('/user/merchant/shop/{id}/view/product', [MerchantShopController::class,'view_products']);
 
         Route::post('user/fetch-withdraw-list', [UserWithdrawController::class, 'withdraw']);
         Route::post('user/withdraw-create', [UserWithdrawController::class, 'withdrawcreate']);
