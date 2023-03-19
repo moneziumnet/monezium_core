@@ -28,6 +28,7 @@ use App\Http\Controllers\API\OtherBankController;
 use App\Http\Controllers\API\WithdrawCryptoController;
 use App\Http\Controllers\API\OwnTransferController;
 use App\Http\Controllers\API\ManageInvoiceController;
+use App\Http\Controllers\API\UserContractManageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -179,6 +180,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user/invoices/incoming/edit/{id}',   [ManageInvoiceController::class,'incoming_edit']);
         Route::post('/user/invoices/incoming/update/{id}',   [ManageInvoiceController::class,'incoming_update']);
         Route::post('/user/invoice/tax/create',   [ManageInvoiceController::class,'tax_create']);
+
+        Route::get('/user/contract',   [UserContractManageController::class,'index']);
+        Route::get('/user/contract/view/{id}',   [UserContractManageController::class,'view']);
+        Route::get('/user/contract/create',   [UserContractManageController::class,'create']);
+        Route::post('/user/contract/store',   [UserContractManageController::class,'store']);
 
         Route::post('user/fetch-withdraw-list', [UserWithdrawController::class, 'withdraw']);
         Route::post('user/withdraw-create', [UserWithdrawController::class, 'withdrawcreate']);
