@@ -29,6 +29,7 @@ use App\Http\Controllers\API\WithdrawCryptoController;
 use App\Http\Controllers\API\OwnTransferController;
 use App\Http\Controllers\API\ManageInvoiceController;
 use App\Http\Controllers\API\UserContractManageController;
+use App\Http\Controllers\API\MerchantMoneyRequestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -204,6 +205,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user/merchant/setting/{tab?}', [MerchantController::class,'setting']);
         Route::post('/user/merchant/setting/{tab?}', [MerchantController::class,'setting_update']);
 
+        Route::get('/user/merchant/money-request', [MerchantMoneyRequestController::class,'index']);
+        Route::get('/user/merchant/money-request/create', [MerchantMoneyRequestController::class,'create']);
+        Route::post('/user/merchant/money-request/store', [MerchantMoneyRequestController::class,'store']);
+        Route::get('/user/merchant/money-request/details/{id}', [MerchantMoneyRequestController::class,'details']);
+
         Route::post('user/fetch-withdraw-list', [UserWithdrawController::class, 'withdraw']);
         Route::post('user/withdraw-create', [UserWithdrawController::class, 'withdrawcreate']);
         Route::post('user/withdraw-details', [UserWithdrawController::class, 'withdrawdetails']);
@@ -216,7 +222,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('user/transactions', [TransactionController::class, 'transactions']);
         Route::post('user/transfer-logs', [TransactionController::class, 'transferlogs']);
 
-        Route::post('user/merchant-api-key', [MerchantController::class, 'apikey']);
 
         // chatify
         Route::post('user/chat/auth', [MessagesController::class, 'pusherAuth'])->name('api.pusher.auth');
