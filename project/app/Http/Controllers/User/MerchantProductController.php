@@ -364,6 +364,7 @@ class MerchantProductController extends Controller
 
 
             mailSend('merchant_product_selled',['amount'=>$data->amount * $request->quantity, 'product_name'=> $data->name, 'product_amount' => $data->amount, 'quantity' => $request->quantity ,'date_time'=>$order->created_at, 'type' => $order->type, 'buyer'=>$order->name, 'trnx' => $rcvTrnx->trnx ], $data->user);
+            return redirect(route('user.shop.index'))->with('message','You have paid for buy project successfully ');
 
         }
         elseif($request->payment == 'crypto') {

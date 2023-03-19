@@ -31,6 +31,7 @@ use App\Http\Controllers\API\ManageInvoiceController;
 use App\Http\Controllers\API\UserContractManageController;
 use App\Http\Controllers\API\MerchantMoneyRequestController;
 use App\Http\Controllers\API\MerchantShopController;
+use App\Http\Controllers\API\MerchantProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -217,6 +218,20 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/user/merchant/shop/update/{id}', [MerchantShopController::class,'update']);
         Route::get('/user/merchant/shop/delete/{id}', [MerchantShopController::class,'delete']);
         Route::get('/user/merchant/shop/{id}/view/product', [MerchantShopController::class,'view_products']);
+
+        Route::get('/user/merchant/product', [MerchantProductController::class,'index']);
+        Route::post('/user/merchant/product/store', [MerchantProductController::class,'store']);
+        Route::post('/user/merchant/product/category/create', [MerchantProductController::class,'category_create']);
+        Route::get('/user/merchant/product/edit/{id}', [MerchantProductController::class,'edit']);
+        Route::post('/user/merchant/product/update/{id}', [MerchantProductController::class,'update']);
+        Route::get('/user/merchant/product/delete/{id}', [MerchantProductController::class,'delete']);
+        Route::get('/user/merchant/product/status/{id}', [MerchantProductController::class,'status']);
+        Route::post('/user/merchant/product/pay', [MerchantProductController::class,'pay']);
+        Route::get('/user/merchant/product/crypto/{id}', [MerchantProductController::class,'crypto']);
+        Route::get('/user/merchant/product/crypto/pay/{id}', [MerchantProductController::class,'crypto_pay']);
+        Route::get('/user/merchant/product/order', [MerchantProductController::class,'order']);
+        Route::post('/user/merchant/product/send_email', [MerchantProductController::class,'send_email']);
+        Route::get('/user/merchant/product/order/{id}', [MerchantProductController::class,'order_by_product']);
 
         Route::post('user/fetch-withdraw-list', [UserWithdrawController::class, 'withdraw']);
         Route::post('user/withdraw-create', [UserWithdrawController::class, 'withdrawcreate']);
