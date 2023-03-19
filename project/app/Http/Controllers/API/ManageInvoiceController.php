@@ -351,7 +351,7 @@ class ManageInvoiceController extends Controller
     {
         try {
             $invoice = Invoice::findOrFail($request->id);
-            if(!$invoice) return response(['error'=>'Invalid request']);
+            if(!$invoice) return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Invoice does not exist']);
 
             if($invoice->payment_status == 1){
                 $invoice->payment_status = 0;
@@ -373,7 +373,7 @@ class ManageInvoiceController extends Controller
     {
         try {
             $invoice = Invoice::findOrFail($request->id);
-            if(!$invoice) return response(['error'=>'Invalid request']);
+            if(!$invoice) return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Invoice does not exist']);
 
             if($invoice->status == 1){
                 $invoice->status = 0;
