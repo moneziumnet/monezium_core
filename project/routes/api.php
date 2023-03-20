@@ -36,6 +36,9 @@ use App\Http\Controllers\API\UserPincodeController;
 use App\Http\Controllers\API\MessageController;
 use App\Http\Controllers\API\MerchantCampaignController;
 use App\Http\Controllers\API\MerchantCheckoutController;
+use App\Http\Controllers\API\OpenPaydController;
+use App\Http\Controllers\API\RailsBankController;
+use App\Http\Controllers\API\ClearJunctionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -261,7 +264,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/user/merchant/checkout/send_email',[MerchantCheckoutController::class,'send_email']);
         Route::post('/user/merchant/checkout/transaction', [MerchantCheckoutController::class,'transaction']);
 
-
         Route::get('/user/pincode', [UserPincodeController::class,'index']);
         Route::post('/user/telegram/generate', [UserPincodeController::class,'tele_generate']);
         Route::post('/user/whatsapp/generate', [UserPincodeController::class,'whs_generate']);
@@ -271,6 +273,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/user/admin/ticket/post', [MessageController::class,'adminpostmessage']);
         Route::post('/user/admin/user/send/ticket', [MessageController::class,'adminusercontact']);
         Route::get('/user/admin/ticket/status/{id}/{status}', [MessageController::class,'ticket_status']);
+
+        Route::post('/user/bankaccount/openpayd',[OpenPaydController::class,'store']);
+        Route::post('/user/bankaccount/railsbank',[RailsBankController::class,'store']);
+        Route::post('/user/bankaccount/clearjunction', [ClearJunctionController::class, 'store']);
 
         Route::post('user/fetch-withdraw-list', [UserWithdrawController::class, 'withdraw']);
         Route::post('user/withdraw-create', [UserWithdrawController::class, 'withdrawcreate']);
