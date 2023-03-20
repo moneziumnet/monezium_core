@@ -133,7 +133,7 @@ class MerchantCampaignController extends Controller
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
-                return redirect()->back()->with('error',$validator->getMessageBag()->toArray()['logo'][0]);
+                return response()->json(['status' => '401', 'error_code' => '0', 'message' => $validator->getMessageBag()->toArray()]);
             }
 
             $data = Campaign::findOrFail($id);
@@ -382,7 +382,6 @@ class MerchantCampaignController extends Controller
                 send_staff_telegram('Campaign has been donated by '.$request->user_name.". Please check.\n".route('admin.donation.index'), 'Donation');
                 return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'You have donated for Campaign successfully (Deposit Bank).']);
 
-                // return 'bank';
             }
             elseif($request->payment == 'crypto') {
                 if(auth()->user()) {

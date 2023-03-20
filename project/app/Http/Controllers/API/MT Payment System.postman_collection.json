@@ -8959,6 +8959,192 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Fetch Product Payment Transaction",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/merchant/checkout/transaction/history",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"merchant",
+										"checkout",
+										"transaction",
+										"history"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Product Payment Transaction",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/merchant/checkout/transaction/status/{id}/{status}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"merchant",
+										"checkout",
+										"transaction",
+										"status",
+										"{id}",
+										"{status}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Send Email (Merchant Checkout)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\" : \"\",\r\n    \"link\" : \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/merchant/checkout/send_email",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"merchant",
+										"checkout",
+										"send_email"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Pay Merchant Checkout",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"check_id\" : \"\",\r\n    \"payment\" : \"\",\r\n    \"amount\" : \"\",\r\n    \"user_name\" : \"\",\r\n    \"bank_account\" : \"\",\r\n    \"deposit_no\" : \"\",\r\n    \"currency_id\" : \"\",\r\n    \"description\" : \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/merchant/checkout/transaction",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"merchant",
+										"checkout",
+										"transaction"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},

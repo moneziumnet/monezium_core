@@ -256,6 +256,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/user/merchant/checkout/update/{id}', [MerchantCheckoutController::class,'update']);
         Route::get('/user/merchant/checkout/status/{id}', [MerchantCheckoutController::class,'status']);
         Route::get('/user/merchant/checkout/delete/{id}', [MerchantCheckoutController::class,'delete']);
+        Route::get('/user/merchant/checkout/transaction/history', [MerchantCheckoutController::class,'transactionhistory']);
+        Route::get('/user/merchant/checkout/transaction/status/{id}/{status}', [MerchantCheckoutController::class,'transaction_status']);
+        Route::post('/user/merchant/checkout/send_email',[MerchantCheckoutController::class,'send_email']);
+        Route::post('/user/merchant/checkout/transaction', [MerchantCheckoutController::class,'transaction']);
 
 
         Route::get('/user/pincode', [UserPincodeController::class,'index']);
