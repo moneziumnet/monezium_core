@@ -39,6 +39,7 @@ use App\Http\Controllers\API\MerchantCheckoutController;
 use App\Http\Controllers\API\OpenPaydController;
 use App\Http\Controllers\API\RailsBankController;
 use App\Http\Controllers\API\ClearJunctionController;
+use App\Http\Controllers\API\KYCController;
 
 /*
 |--------------------------------------------------------------------------
@@ -277,6 +278,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/user/bankaccount/openpayd',[OpenPaydController::class,'store']);
         Route::post('/user/bankaccount/railsbank',[RailsBankController::class,'store']);
         Route::post('/user/bankaccount/clearjunction', [ClearJunctionController::class, 'store']);
+
+        Route::get('/user/kyc-form', [KYCController::class,'kycform']);
+        Route::post('/user/kyc-form', [KYCController::class,'kyc']);
+        Route::post('/user/kyc/status', [KYCController::class,'kyc_status']);
+        Route::post('/user/kyc-take-selfie/save', [KYCController::class,'takeOnlineSelfie']);
 
         Route::post('user/fetch-withdraw-list', [UserWithdrawController::class, 'withdraw']);
         Route::post('user/withdraw-create', [UserWithdrawController::class, 'withdrawcreate']);
