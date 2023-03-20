@@ -10397,6 +10397,115 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Shop",
+			"item": [
+				{
+					"name": "Fetch All Product and Campaign in Shop",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/shop",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"shop"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Order for Product.",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/shop/order/{id}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"shop",
+								"order",
+								"{id}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Donate for Campaign",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/shop/campaign/donate/{id}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"shop",
+								"campaign",
+								"donate",
+								"{id}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"auth": {
