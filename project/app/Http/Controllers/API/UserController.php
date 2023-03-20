@@ -296,8 +296,8 @@ class UserController extends Controller
     public function packages(Request $request)
     {
         try {
-            $user_id = Auth::user()->id;
-            $data['packages'] = BankPlan::orderby('id','desc')->paginate(10);
+            $type = auth()->user()->company_name ? 'corporate' : 'private';
+            $data['packages'] = BankPlan::where('type', $type)->orderBy('amount', 'asc')->get();
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
         } catch (\Throwable $th) {
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Something invalid.']);
