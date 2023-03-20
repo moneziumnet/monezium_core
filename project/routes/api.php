@@ -41,6 +41,7 @@ use App\Http\Controllers\API\RailsBankController;
 use App\Http\Controllers\API\ClearJunctionController;
 use App\Http\Controllers\API\KYCController;
 use App\Http\Controllers\API\UserShopController;
+use App\Http\Controllers\API\OTPController;
 
 /*
 |--------------------------------------------------------------------------
@@ -290,6 +291,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user/shop', [UserShopController::class,'index']);
         Route::get('/user/shop/order/{id}', [UserShopController::class,'order']);
         Route::get('/user/shop/campaign/donate/{id}', [UserShopController::class,'donate']);
+
+        Route::post('/user/otp', [OTPController::class,'otp']);
+        Route::post('/user/googleotp', [OTPController::class,'googleotp']);
+        Route::get('/user/sendotp',   [OTPController::class,'sendotp']);
 
         Route::post('user/fetch-withdraw-list', [UserWithdrawController::class, 'withdraw']);
         Route::post('user/withdraw-create', [UserWithdrawController::class, 'withdrawcreate']);

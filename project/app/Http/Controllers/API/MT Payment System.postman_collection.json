@@ -10590,6 +10590,140 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "OTP",
+			"item": [
+				{
+					"name": "Verity OTP code",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"otp\" : \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/otp",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"otp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verity Google OTP code",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"otp\" : \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/googleotp",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"googleotp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send OTP code",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/sendotp",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"sendotp"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"auth": {
