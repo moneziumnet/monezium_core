@@ -51,7 +51,6 @@ class MerchantCampaignController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['link', 'crypto_link', 'crypto_link_pay', 'pay']]);
         $data = PaymentGateway::whereKeyword('paypal')->first();
         $paydata = $data->convertAutoData();
 
@@ -67,82 +66,102 @@ class MerchantCampaignController extends Controller
     }
 
     public function index(){
-        $data['campaigns'] = Campaign::where('user_id',auth()->id())->get();
-        $data['categories'] = CampaignCategory::where('user_id', auth()->id())->get();
-        if (isEnabledUserModule('Crypto'))
-            $data['currencies'] = Currency::whereStatus(1)->get();
-        else
-        $data['currencies'] = Currency::whereStatus(1)->where('type', 1)->get();
+        try {
+            $data['campaigns'] = Campaign::where('user_id',auth()->id())->get();
+            $data['categories'] = CampaignCategory::where('user_id', auth()->id())->get();
+            if (isEnabledUserModule('Crypto'))
+                $data['currencies'] = Currency::whereStatus(1)->get();
+            else
+            $data['currencies'] = Currency::whereStatus(1)->where('type', 1)->get();
 
-        return view('user.merchant.campaign.index', $data);
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
+        }
     }
 
     public function store(Request $request){
-        $rules = [
-            'logo' => 'required|mimes:jpg,git,png'
-        ];
-        $validator = Validator::make($request->all(), $rules);
+        try {
+            $rules = [
+                'logo' => 'required|mimes:jpg,git,png'
+            ];
+            $validator = Validator::make($request->all(), $rules);
 
-        if ($validator->fails()) {
-            return redirect()->back()->with('error',$validator->getMessageBag()->toArray()['logo'][0]);
+            if ($validator->fails()) {
+                return response()->json(['status' => '401', 'error_code' => '0', 'message' => $validator->getMessageBag()->toArray()]);
+            }
+
+
+            $data = new Campaign();
+            if ($file = $request->file('logo'))
+            {
+                $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
+                $file->move('assets/images',$name);
+            }
+            $input = $request->all();
+            $input['ref_id'] ='CP-'.Str::random(6);
+            $input['logo'] = $name;
+            $data->fill($input)->save();
+            send_notification(auth()->id(), 'New Campaign has been created by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.campaign.index'));
+            send_staff_telegram('New Campaign has been created by '.(auth()->user()->company_name ?? auth()->user()->name).". Please check.\n".route('admin.campaign.index'), 'Campaign');
+
+             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'New Campaign has been created successfully']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
         }
-
-
-        $data = new Campaign();
-        if ($file = $request->file('logo'))
-        {
-            $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
-            $file->move('assets/images',$name);
-        }
-        $input = $request->all();
-        $input['ref_id'] ='CP-'.Str::random(6);
-        $input['logo'] = $name;
-        $data->fill($input)->save();
-        send_notification(auth()->id(), 'New Campaign has been created by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.campaign.index'));
-        send_staff_telegram('New Campaign has been created by '.(auth()->user()->company_name ?? auth()->user()->name).". Please check.\n".route('admin.campaign.index'), 'Campaign');
-
-         return redirect()->back()->with('message','New Campaign has been created successfully');
     }
 
     public function edit($id) {
-        $data['data'] = Campaign::findOrFail($id);
-        $data['categories'] = CampaignCategory::where('user_id', auth()->id())->get();
-        if (isEnabledUserModule('Crypto'))
-            $data['currencies'] = Currency::whereStatus(1)->get();
-        else
-        $data['currencies'] = Currency::whereStatus(1)->where('type', 1)->get();
-        return view('user.merchant.campaign.edit', $data);
+        try {
+            $data['data'] = Campaign::findOrFail($id);
+            $data['categories'] = CampaignCategory::where('user_id', auth()->id())->get();
+            if (isEnabledUserModule('Crypto'))
+                $data['currencies'] = Currency::whereStatus(1)->get();
+            else
+            $data['currencies'] = Currency::whereStatus(1)->where('type', 1)->get();
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
+        }
     }
 
     public function update(Request $request, $id) {
-        $rules = [
-            'logo' => 'mimes:jpg,git,png'
-        ];
-        $validator = Validator::make($request->all(), $rules);
+        try {
+            $rules = [
+                'logo' => 'mimes:jpg,git,png'
+            ];
+            $validator = Validator::make($request->all(), $rules);
 
-        if ($validator->fails()) {
-            return redirect()->back()->with('error',$validator->getMessageBag()->toArray()['logo'][0]);
+            if ($validator->fails()) {
+                return redirect()->back()->with('error',$validator->getMessageBag()->toArray()['logo'][0]);
+            }
+
+            $data = Campaign::findOrFail($id);
+            $input = $request->all();
+            if ($file = $request->file('logo'))
+            {
+                File::delete('assets/images/'.$data->logo);
+                $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
+                $file->move('assets/images',$name);
+                $input['logo'] = $name;
+            }
+            $data->fill($input)->update();
+
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Campaign has been updated successfully']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
         }
-
-        $data = Campaign::findOrFail($id);
-        $input = $request->all();
-        if ($file = $request->file('logo'))
-        {
-            File::delete('assets/images/'.$data->logo);
-            $name = Str::random(8).time().'.'.$file->getClientOriginalExtension();
-            $file->move('assets/images',$name);
-            $input['logo'] = $name;
-        }
-        $data->fill($input)->update();
-
-        return redirect()->route('user.merchant.campaign.index')->with('message','Campaign has been updated successfully');
     }
 
     public function delete($id) {
-        $data = Campaign::findOrFail($id);
-        File::delete('assets/images/'.$data->logo);
-        $data->delete();
-        return  redirect()->back()->with('message','Campaign has been deleted successfully');
+        try {
+            $data = Campaign::findOrFail($id);
+            File::delete('assets/images/'.$data->logo);
+            $data->delete();
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Campaign has been deleted successfully']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
+        }
     }
 
     public function status($id) {
@@ -153,25 +172,15 @@ class MerchantCampaignController extends Controller
     }
 
     public function category_create(Request $request){
-        $data = New CampaignCategory();
-        $data->user_id = $request->user_id;
-        $data->name = $request->name;
-        $data->save();
-        return back()->with('message', 'You have created new category successfully.');
-    }
-
-    public function link($ref_id) {
-        $data = Campaign::where('ref_id', $ref_id)->first();
-        $bankaccounts = BankAccount::where('user_id', $data->user_id)->where('currency_id', $data->currency_id)->get();
-        $crypto_ids =  Wallet::where('user_id', $data->user_id)->where('user_type',1)->where('wallet_type', 8)->pluck('currency_id')->toArray();
-        $cryptolist= Currency::whereStatus(1)->where('type', 2)->whereIn('id', $crypto_ids)->get();
-        if(!$data) {
-            return back()->with('error', 'This Campaign does not exist.');
+        try {
+            $data = New CampaignCategory();
+            $data->user_id = $request->user_id;
+            $data->name = $request->name;
+            $data->save();
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'You have created new category successfully.']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
         }
-        if($data->status == 0) {
-            return back()->with('error', 'This Campaign\'s status is deactive');
-        }
-        return view('user.merchant.campaign.pay', compact('data', 'bankaccounts', 'cryptolist'));
     }
 
     public function pay(Request $request)
@@ -518,29 +527,6 @@ class MerchantCampaignController extends Controller
             return back()->with('error', $select_currency->code .' crypto wallet is not existed in Campaign Owner.');
         }
         return view('user.merchant.campaign.crypto_pay', $data);
-    }
-
-    public function crypto_link($id)
-    {
-        $data['campaign'] = Campaign::where('id', $id)->first();
-        $data['cryptolist'] = Currency::whereStatus(1)->where('type', 2)->get();
-        return view('user.merchant.campaign.crypto_link', $data);
-    }
-
-    public function crypto_link_pay(Request $request, $id) {
-        $data['campaign'] = Campaign::where('id', $id)->first();
-        $data['total_amount'] = $request->amount ;
-        $data['description'] = $request->description;
-        $data['user_name'] = $request->user_name;
-        $pre_currency = Currency::findOrFail($data['campaign']->currency_id);
-        $select_currency = Currency::findOrFail($request->link_pay_submit);
-        $code = $select_currency->code;
-        $data['cal_amount'] = floatval(getRate($pre_currency, $code));
-        $data['wallet'] =  Wallet::where('user_id', $data['campaign']->user_id)->where('user_type',1)->where('wallet_type', 8)->where('currency_id', $select_currency->id)->first();
-        if(!$data['wallet']) {
-            return back()->with('error', $select_currency->code .' crypto wallet is not existed in Campaign Owner.');
-        }
-        return view('user.merchant.campaign.crypto_link_pay', $data);
     }
 
     public function donation_by_campaign($id)

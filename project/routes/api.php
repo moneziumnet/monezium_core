@@ -34,6 +34,7 @@ use App\Http\Controllers\API\MerchantShopController;
 use App\Http\Controllers\API\MerchantProductController;
 use App\Http\Controllers\API\UserPincodeController;
 use App\Http\Controllers\API\MessageController;
+use App\Http\Controllers\API\MerchantCampaignController;
 
 /*
 |--------------------------------------------------------------------------
@@ -234,6 +235,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user/merchant/product/order', [MerchantProductController::class,'order']);
         Route::post('/user/merchant/product/send_email', [MerchantProductController::class,'send_email']);
         Route::get('/user/merchant/product/order/{id}', [MerchantProductController::class,'order_by_product']);
+
+        Route::get('/user/merchant/campaign', [MerchantCampaignController::class,'index']);
+        Route::post('/user/merchant/campaign/store', [MerchantCampaignController::class,'store']);
+        Route::post('/user/merchant/campaign/category/create', [MerchantCampaignController::class,'category_create']);
+        Route::get('/user/merchant/campaign/edit/{id}', [MerchantCampaignController::class,'edit']);
+        Route::post('/user/merchant/campaign/update/{id}', [MerchantCampaignController::class,'update']);
+        Route::get('/user/merchant/campaign/delete/{id}', [MerchantCampaignController::class,'delete']);
+
 
         Route::get('/user/pincode', [UserPincodeController::class,'index']);
         Route::post('/user/telegram/generate', [UserPincodeController::class,'tele_generate']);
