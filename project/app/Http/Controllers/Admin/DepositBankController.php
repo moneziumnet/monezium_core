@@ -112,7 +112,7 @@ class DepositBankController extends Controller
                     <a href="javascript:;"
                         data-detail = \''.json_encode($detail).'\'
                         data-sendinfo = \''.json_encode($send_info).'\'
-                        data-bank= \''.json_encode($bankaccount).'\'
+                        data-bank= \''.htmlentities(json_encode($bankaccount)).'\'
                         data-docu="'.$doc_url.'"
                         data-number="'.$data->deposit_number.'"
                         data-description="'.$data->details.'"
