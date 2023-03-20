@@ -49,7 +49,7 @@ class ClearJunctionController extends Controller
         return $res_body;
     }
 
-    public function AllocateIbanCreate(Request $request) {
+    public function store(Request $request) {
         try {
             $currency = Currency::whereId($request->currency)->first();
             $gs = Generalsetting::first();

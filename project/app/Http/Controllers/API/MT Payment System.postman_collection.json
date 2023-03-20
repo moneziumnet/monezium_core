@@ -10074,6 +10074,140 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Bank Account",
+			"item": [
+				{
+					"name": "Create OpenPayd Bank Account",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\" : \"\",\r\n    \"subbank\" : \"\",\r\n    \"currency\" : \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/bankaccount/openpayd",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bankaccount",
+								"openpayd"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Railsbank Bank Account",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\" : \"\",\r\n    \"subbank\" : \"\",\r\n    \"currency\" : \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/bankaccount/railsbank",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bankaccount",
+								"railsbank"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create ClearJunction Bank Account",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\" : \"\",\r\n    \"subbank\" : \"\",\r\n    \"currency\" : \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/bankaccount/clearjunction",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bankaccount",
+								"clearjunction"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"auth": {
