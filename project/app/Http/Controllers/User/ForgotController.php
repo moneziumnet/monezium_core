@@ -34,8 +34,11 @@ class ForgotController extends Controller
         $autopass = Str::random(8);
         $input['password'] = bcrypt($autopass);
         $admin->update($input);
-        mailSend('reset_password',['url'=>route('admin.change.token',$token)], $admin);
+        $subject = "Reset Password Request";
+        $msg = "Your New Password is : ".$autopass;
 
+          $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
+          sendMail($request->email,$subject,$msg,$headers);
         return back()->with('message','Your Password Reseted Successfully. Please Check your email for new Password.');
       }
       else{
