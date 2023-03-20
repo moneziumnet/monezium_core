@@ -64,7 +64,7 @@ class BranchController extends Controller
 
         $data->fill($input)->save();
 
-        $msg = __('New Data Added Successfully.') . '<a href="' . route('admin.subinstitution.branches',$data->subins_id) . '">' . __('View Lists.') . '</a>';;
+        $msg = __('New Data Added Successfully.') . '<a href="' . route('admin.subinstitution.branches',$data->subins_id) . '">' . __('View Lists.') . '</a>';
         return response()->json($msg);
     }
 

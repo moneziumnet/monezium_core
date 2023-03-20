@@ -351,7 +351,7 @@ class UserController extends Controller
 
         $user->email_verified = 'Yes';
         $user->update();
-        $msg = __('New Data Added Successfully.').'<a href="'.route('admin.user.index').'">'.__('View Lists.').'</a>';;
+        $msg = __('New Data Added Successfully.').'<a href="'.route('admin.user.index').'">'.__('View Lists.').'</a>';
 
         return response()->json($msg);
         //--- Redirect Section Ends

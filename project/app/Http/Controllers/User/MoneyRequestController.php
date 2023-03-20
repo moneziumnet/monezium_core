@@ -256,7 +256,7 @@ class MoneyRequestController extends Controller
                 }
             }
             else if ($wallet->currency->type == 2) {
-                $trans_wallet = Wallet::where('user_id', $receiver->referral_id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();;
+                $trans_wallet = Wallet::where('user_id', $receiver->referral_id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
                 if($wallet->currency->code == 'ETH') {
                     RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
                     $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$trans_wallet->wallet_no.'", "value": "0x'.dechex($data->supervisor_cost*pow(10,18)).'"}';

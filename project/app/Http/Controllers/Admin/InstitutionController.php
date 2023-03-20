@@ -259,7 +259,7 @@ class InstitutionController extends Controller
         //--- Logic Section Ends
 
         //--- Redirect Section
-        $msg = __('New Data Added Successfully.') . '</a>';;
+        $msg = __('New Data Added Successfully.') . '</a>';
 
         return response()->json($msg);
         //--- Redirect Section Ends

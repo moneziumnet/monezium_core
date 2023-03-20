@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Datatables;
 use App\Models\RequestDomain;
 use App\Models\Admin;
-use App\Models\Tenant; 
+use App\Models\Tenant;
 use Auth;
 use App\Http\Controllers\Controller;
 
@@ -97,7 +97,7 @@ class RequestDomainController extends Controller
         $domain->save();
 
 
-        $msg = __('New Data Added Successfully.').'<a href="'.route('admin.requestdomain.index').'">'.__('View Lists.').'</a>';;
+        $msg = __('New Data Added Successfully.').'<a href="'.route('admin.requestdomain.index').'">'.__('View Lists.').'</a>';
         return response()->json($msg);
     }
 
@@ -131,7 +131,7 @@ class RequestDomainController extends Controller
     //         ]
     //     );
     //     if ($validator->fails()) {
-            // return response()->json(array('errors' => $validator->getMessageBag()->toArray()));    
+            // return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
     //     }
 
     //     $requestdomain = RequestDomain::find($id);
@@ -216,7 +216,7 @@ class RequestDomainController extends Controller
         $input['password'] = $request->password;
 
         $admin = Admin::where('email', $request->email)->first();
-        
+
         if ($admin){
             $admin->update($input);
         }
@@ -244,7 +244,7 @@ class RequestDomainController extends Controller
                 return response()->json(array('errors' => $e->getMessage()));
             }
         }
-        
+
         $req->is_approved = 1;
         $req->save();
         $msg = 'Domain created successfully'.'<a href="'.route("admin.requestdomain.index").'">View Domain Lists</a>';
