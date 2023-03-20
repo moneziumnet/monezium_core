@@ -242,6 +242,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user/merchant/campaign/edit/{id}', [MerchantCampaignController::class,'edit']);
         Route::post('/user/merchant/campaign/update/{id}', [MerchantCampaignController::class,'update']);
         Route::get('/user/merchant/campaign/delete/{id}', [MerchantCampaignController::class,'delete']);
+        Route::get('/user/merchant/campaign/status/{id}', [MerchantCampaignController::class,'status']);
+        Route::post('/user/merchant/campaign/pay', [MerchantCampaignController::class,'pay']);
+        Route::get('/user/merchant/campaign/crypto/{id}', [MerchantCampaignController::class,'crypto']);
+        Route::get('/user/merchant/campaign/crypto/pay/{id}', [MerchantCampaignController::class,'crypto_pay']);
+        Route::get('/user/merchant/campaign/donation/{id}', [MerchantCampaignController::class,'donation_by_campaign']);
+        Route::post('/user/merchant/campaign/send_email',[MerchantCampaignController::class,'send_email']);
 
 
         Route::get('/user/pincode', [UserPincodeController::class,'index']);
