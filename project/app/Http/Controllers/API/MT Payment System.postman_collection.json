@@ -1177,6 +1177,48 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Forgot Password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\" : \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/forgot",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"forgot"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

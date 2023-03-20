@@ -965,4 +965,30 @@ class UserController extends Controller
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
         }
     }
+
+    public function forgot(Request $request) {
+        try {
+            $gs = Generalsetting::findOrFail(1);
+            $input =  $request->all();
+
+            if (User::where('email', '=', $request->email)->count() > 0) {
+
+                $admin = User::where('email', '=', $request->email)->firstOrFail();
+                $autopass = Str::random(8);
+                $input['password'] = bcrypt($autopass);
+                $admin->update($input);
+                $subject = "Reset Password Request";
+                $msg = "Your New Password is : ".$autopass;
+
+                $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
+                sendMail($request->email,$subject,$msg,$headers);
+                return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Your Password Reseted Successfully. Please Check your email for new Password.']);
+            }
+            else{
+                return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'No Account Found With This Email.']);
+            }
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
+        }
+    }
 }
