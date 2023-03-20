@@ -991,4 +991,9 @@ class UserController extends Controller
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
         }
     }
+
+    public function logout() {
+        auth()->user()->tokens()->delete();
+        return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'You logged out successfully.']);
+    }
 }
