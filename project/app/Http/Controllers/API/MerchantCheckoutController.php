@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\API;
 
 
-use App\Http\Controllers\Controller;
 use App\Models\MerchantShop;
 use App\Models\MerchantCheckout;
 use App\Models\MerchantWallet;
@@ -14,69 +13,46 @@ use App\Models\User;
 use App\Models\BankAccount;
 use App\Models\DepositBank;
 use App\Models\Wallet;
+
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Carbon as Carbontime;
 use GuzzleHttp\Client;
-use Datatables;
 
 class MerchantCheckoutController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth', ['except' => ['link', 'link_pay', 'transaction']]);
-    }
 
     public function index(){
-        $data['checkouts'] = MerchantCheckout::where('user_id',auth()->id())->get();
-        $data['shops'] = MerchantShop::where('merchant_id', auth()->id())->whereStatus(1)->get();
-        if (isEnabledUserModule('Crypto'))
-            $data['currencylist'] = Currency::whereStatus(1)->get();
-        else
-        $data['currencylist'] = Currency::whereStatus(1)->where('type', 1)->get();
-        return view('user.merchant.checkout.index', $data);
+        try {
+            $data['checkouts'] = MerchantCheckout::where('user_id',auth()->id())->get();
+            $data['shops'] = MerchantShop::where('merchant_id', auth()->id())->whereStatus(1)->get();
+            if (isEnabledUserModule('Crypto'))
+                $data['currencylist'] = Currency::whereStatus(1)->get();
+            else
+            $data['currencylist'] = Currency::whereStatus(1)->where('type', 1)->get();
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
+        }
     }
 
 
     public function store(Request $request){
-        $data = new MerchantCheckout();
-        $input = $request->all();
-        $input['ref_id'] = 'MC-'.Str::random(6);
-        // $input['currency_id'] = MerchantWallet::where('merchant_id', $request->user_id)->where('shop_id', $request->shop_id)->where('currency_id', $request->currency_id)->first()->id;
-        $data->fill($input)->save();
-        return back()->with('message','Merchant Checkout has been created successfully');
-    }
-
-    Public function link($id) {
-        $data['checkout'] = MerchantCheckout::where('ref_id', $id)->first();
-        $data['bankaccounts'] = BankAccount::where('user_id', $data['checkout']->user_id)->where('currency_id', $data['checkout']->currency_id)->get();
-        $crypto_ids =  MerchantWallet::where('merchant_id', $data['checkout']->user_id)->where('shop_id', $data['checkout']->shop_id)->pluck('currency_id')->toArray();
-        $data['cryptolist'] = Currency::whereStatus(1)->where('type', 2)->whereIn('id', $crypto_ids)->get();
-
-        if(!$data['checkout']) {
-            return back()->with('error', 'This checkout does not exist.');
+        try {
+            $data = new MerchantCheckout();
+            $input = $request->all();
+            $input['ref_id'] = 'MC-'.Str::random(6);
+            $data->fill($input)->save();
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Merchant Checkout has been created successfully']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
         }
-        if($data['checkout']->status == 0) {
-            return back()->with('error', 'This product\'s sell status is deactive');
-        }
-
-        return view('user.merchant.checkout.link', $data);
     }
 
-    public function link_pay(Request $request, $id) {
-        $data['checkout'] = MerchantCheckout::where('ref_id', $id)->first();
-        $data['amount'] = $request->amount;
-        $data['user_name'] = $request->user_name;
-        $data['description'] = $request->description;
-        $pre_currency = Currency::findOrFail($data['checkout']->currency_id);
-        $select_currency = Currency::findOrFail($request->link_pay_submit);
-        $code = $select_currency->code;
-        $data['cal_amount'] = floatval(getRate($pre_currency, $code));
-        $data['merchantwallet'] =  MerchantWallet::where('merchant_id', $data['checkout']->user_id)->where('shop_id', $data['checkout']->shop_id)->where('currency_id', $select_currency->id)->first();
-        return view('user.merchant.checkout.link_pay', $data);
-    }
+
 
     public function transaction(Request $request) {
         $data = MerchantCheckout::whereId($request->check_id)->first();
@@ -228,38 +204,48 @@ class MerchantCheckoutController extends Controller
     }
 
     public function edit($id) {
-        $data['data'] = MerchantCheckout::findOrFail($id);
-        $data['shops'] = MerchantShop::where('merchant_id', auth()->id())->get();
-        if (isEnabledUserModule('Crypto'))
-            $data['currencylist'] = Currency::whereStatus(1)->get();
-        else
-            $data['currencylist'] = Currency::whereStatus(1)->where('type', 1)->get();
-        return view('user.merchant.checkout.edit', $data);
+        try {
+            $data['data'] = MerchantCheckout::findOrFail($id);
+            $data['shops'] = MerchantShop::where('merchant_id', auth()->id())->get();
+            if (isEnabledUserModule('Crypto'))
+                $data['currencylist'] = Currency::whereStatus(1)->get();
+            else
+                $data['currencylist'] = Currency::whereStatus(1)->where('type', 1)->get();
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
+        }
     }
 
     public function update(Request $request, $id) {
+        try {
+            $data = MerchantCheckout::findOrFail($id);
 
-        $data = MerchantCheckout::findOrFail($id);
+            $input = $request->all();
+            $data->fill($input)->update();
 
-        $input = $request->all();
-        // $input['currency_id'] = MerchantWallet::where('merchant_id', $request->user_id)->where('shop_id', $request->shop_id)->where('currency_id', $request->currency_id)->first()->id;
-        $data->fill($input)->update();
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Merchant Checkout has been updated successfully']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
+        }
 
-        return redirect()->route('user.merchant.checkout.index')->with('message','Merchant Checkout has been updated successfully');
     }
 
     public function status($id) {
+        try {
+            $data = MerchantCheckout::findOrFail($id);
+            if($data->status == 1) {
+                $data->status = 0;
+            }
+            else {
+                $data->status = 1;
+            }
+            $data->update();
 
-        $data = MerchantCheckout::findOrFail($id);
-        if($data->status == 1) {
-            $data->status = 0;
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Merchant Checkout status has been changed successfully']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
         }
-        else {
-            $data->status = 1;
-        }
-        $data->update();
-
-        return redirect()->route('user.merchant.checkout.index')->with('message','Merchant Checkout status has been changed successfully');
     }
 
     public function transaction_status($id, $status) {
@@ -290,11 +276,15 @@ class MerchantCheckoutController extends Controller
     }
 
     public function delete($id) {
+        try {
+            $data = MerchantCheckout::findOrFail($id);
+            $data->delete();
 
-        $data = MerchantCheckout::findOrFail($id);
-        $data->delete();
+            return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Merchant Checkout status has been deleted successfully']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
+        }
 
-        return redirect()->route('user.merchant.checkout.index')->with('message','Merchant Checkout status has been deleted successfully');
     }
 
     public function send_email(Request $request)

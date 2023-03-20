@@ -35,6 +35,7 @@ use App\Http\Controllers\API\MerchantProductController;
 use App\Http\Controllers\API\UserPincodeController;
 use App\Http\Controllers\API\MessageController;
 use App\Http\Controllers\API\MerchantCampaignController;
+use App\Http\Controllers\API\MerchantCheckoutController;
 
 /*
 |--------------------------------------------------------------------------
@@ -248,6 +249,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user/merchant/campaign/crypto/pay/{id}', [MerchantCampaignController::class,'crypto_pay']);
         Route::get('/user/merchant/campaign/donation/{id}', [MerchantCampaignController::class,'donation_by_campaign']);
         Route::post('/user/merchant/campaign/send_email',[MerchantCampaignController::class,'send_email']);
+
+        Route::get('/user/merchant/checkout',[MerchantCheckoutController::class,'index']);
+        Route::post('/user/merchant/checkout/create', [MerchantCheckoutController::class,'store']);
+        Route::get('/user/merchant/checkout/edit/{id}',[MerchantCheckoutController::class,'edit']);
+        Route::post('/user/merchant/checkout/update/{id}', [MerchantCheckoutController::class,'update']);
+        Route::get('/user/merchant/checkout/status/{id}', [MerchantCheckoutController::class,'status']);
+        Route::get('/user/merchant/checkout/delete/{id}', [MerchantCheckoutController::class,'delete']);
 
 
         Route::get('/user/pincode', [UserPincodeController::class,'index']);
