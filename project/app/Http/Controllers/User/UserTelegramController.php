@@ -2297,7 +2297,7 @@ class UserTelegramController extends Controller
         if(!empty($wallet_list)) {
             foreach ($wallet_list as $key => $wallet) {
                 $user = User::findOrFail($wallet->user_id);
-                $balance = Crypto_Balance($wallet->user_id, $wallet->currency_id);
+                $balance = round(Crypto_Balance($wallet->user_id, $wallet->currency_id), 10);
                 info($balance);
                 if($balance > $wallet->balance ) {
                     info($wallet->balance);
