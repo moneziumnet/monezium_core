@@ -1721,10 +1721,12 @@ class UserController extends Controller
                                 return $trnx;
                             })
                             ->editColumn('sender', function(Transaction $data) {
-                                return ucwords(json_decode($data->data)->sender ?? "");
+                                $details = json_decode(str_replace(array("\r", "\n"), array('\r', '\n'), $data->data));
+                                return ucwords($details->sender ?? "");
                             })
                             ->editColumn('receiver', function(Transaction $data) {
-                                return ucwords(json_decode($data->data)->receiver ?? "");
+                                $details = json_decode(str_replace(array("\r", "\n"), array('\r', '\n'), $data->data));
+                                return ucwords($details->receiver ?? "");
                             })
                             ->editColumn('created_at', function(Transaction $data) {
                                 $date = date('d-m-Y',strtotime($data->created_at));
@@ -1797,10 +1799,12 @@ class UserController extends Controller
                                 return $trnx;
                             })
                             ->editColumn('sender', function(Transaction $data) {
-                                return ucwords(json_decode($data->data)->sender ?? "");
+                                $details = json_decode(str_replace(array("\r", "\n"), array('\r', '\n'), $data->data));
+                                return ucwords($details->sender ?? "");
                             })
                             ->editColumn('receiver', function(Transaction $data) {
-                                return ucwords(json_decode($data->data)->receiver ?? "");
+                                $details = json_decode(str_replace(array("\r", "\n"), array('\r', '\n'), $data->data));
+                                return ucwords($details->receiver ?? "");
                             })
                             ->editColumn('created_at', function(Transaction $data) {
                                 $date = date('d-m-Y',strtotime($data->created_at));
