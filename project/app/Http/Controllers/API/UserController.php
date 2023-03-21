@@ -78,6 +78,28 @@ class UserController extends Controller
             $data['subbank'] = SubInsBank::wherestatus(1)->get();
             $data['kyc_request_id'] = 0;
             $data['kyc_request_status'] = 4;
+            $def_currency = Currency::findOrFail(defaultCurr());
+            $client = new Client();
+            $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency='.$def_currency->code);
+            $rate = json_decode($response->getBody());
+
+            $deposits = DepositBank::where('status', 'complete')->where('user_id', auth()->id())->get();
+            $deposit_balance = 0;
+            foreach ($deposits as $value) {
+                $currency = Currency::findOrFail($value->currency_id)->code;
+                $deposit_balance = $deposit_balance + $value->amount / $rate->data->rates->$currency;
+            }
+
+
+            $withdraws = BalanceTransfer::where('status', 1)->where('user_id', auth()->id())->where('type', 'other')->get();
+            $withdraw_balance = 0;
+            foreach ($withdraws as $value) {
+                $currency = Currency::findOrFail($value->currency_id)->code;
+                $withdraw_balance = $withdraw_balance + $value->amount / $rate->data->rates->$currency;
+            }
+
+            $data['depositAmount'] = $deposit_balance;
+            $data['withdrawAmount'] = $withdraw_balance;
             $kycrequest = KycRequest::where('user_id', auth()->id())->whereIn('status', [0, 2])->first();
             if($kycrequest){
                 $data['kyc_request_status'] = $kycrequest->status;
@@ -95,10 +117,7 @@ class UserController extends Controller
                 $transaction->currency = Currency::whereId($transaction->currency_id)->first();
             }
             $data['userBalance'] = userBalance(auth()->id());
-            $def_currency = Currency::findOrFail(defaultCurr());
-            $client = new Client();
-            $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency='.$def_currency->code);
-            $rate = json_decode($response->getBody());
+
 
             $deposits = DepositBank::select('id', 'updated_at', 'amount', 'currency_id' )->whereStatus('complete')->where('user_id', auth()->id())
                 ->get()
