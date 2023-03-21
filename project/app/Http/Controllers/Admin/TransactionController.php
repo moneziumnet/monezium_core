@@ -25,10 +25,12 @@ class TransactionController extends Controller
                             return $date;
                         })
                         ->editColumn('sender', function(Transaction $data) {
-                            return ucwords(json_decode($data->data)->sender ?? "");
+                            $details = json_decode(str_replace(array("\r", "\n"), array('\r', '\n'), $data->data));
+                            return ucwords($details->sender ?? "");
                         })
                         ->editColumn('receiver', function(Transaction $data) {
-                            return ucwords(json_decode($data->data)->receiver ?? "");
+                            $details = json_decode(str_replace(array("\r", "\n"), array('\r', '\n'), $data->data));
+                            return ucwords($details->receiver ?? "");
                         })
                         ->editColumn('remark', function(Transaction $data) {
                             return ucwords(str_replace('_',' ',$data->remark));
