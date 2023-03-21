@@ -381,42 +381,46 @@
     </div>
     <hr>
 
-    <div class="row justify-content-center">
-      <div class="col-sm-6 col-md-4 mb-3">
-        <div class="card h-100 card--info-item">
-          <div class="text-end icon">
-            <i class="fas fa-money-check"></i>
-          </div>
-          <div class="card-body">
-            <div class="h1 m-0">{{ count($user->deposits) }}</div>
-            <div class="text-muted">@lang('Deposits')</div>
+    <div class="row justify-content-start">
+        @if (isEnabledUserModule('Incoming'))
+        <div class="col-sm-6 col-md-4 mb-3">
+          <div class="card h-100 card--info-item">
+            <div class="text-end icon">
+              <i class="fas fa-dollar-sign"></i>
+            </div>
+            <div class="card-body">
+              <div class="h2 m-0">{{ round($depositAmount, 2) }} {{$currency->code}}</div>
+              <div class="text-muted">@lang('Deposits')</div>
+            </div>
           </div>
         </div>
-      </div>
 
+        @endif
+      @if (isEnabledUserModule('External Payments'))
       <div class="col-sm-6 col-md-4 mb-3">
         <div class="card h-100 card--info-item">
           <div class="text-end icon">
             <i class="fas fa-dollar-sign"></i>
           </div>
           <div class="card-body p-3 p-md-4">
-            <div class="h1 m-0">{{ count($user->withdraws) }}</div>
+            <div class="h2 m-0">{{ round($withdrawAmount, 2) }} {{$currency->code}}</div>
             <div class="text-muted">@lang('Withdraws')</div>
           </div>
         </div>
       </div>
-
+      @endif
       <div class="col-sm-6 col-md-4 mb-3">
         <div class="card h-100 card--info-item">
           <div class="text-end icon">
             <i class="fas fa-exchange-alt"></i>
           </div>
           <div class="card-body">
-            <div class="h1 m-0">{{ count($user->transactions) }}</div>
+            <div class="h2 m-0">{{ count($user->transactions) }}</div>
             <div class="text-muted">@lang('Transactions')</div>
           </div>
         </div>
       </div>
+      @if (isEnabledUserModule('Loan'))
       <div class="col-sm-6 col-md-4 mb-3">
         <div class="card h-100 card--info-item">
           <div class="text-end icon">
@@ -428,7 +432,9 @@
           </div>
         </div>
       </div>
+      @endif
 
+      @if (isEnabledUserModule('Investments'))
       <div class="col-sm-6 col-md-4 mb-3">
         <div class="card h-100 card--info-item">
           <div class="text-end icon">
@@ -452,6 +458,7 @@
           </div>
         </div>
       </div>
+      @endif
     </div>
 
     <div class="row mb-3">
