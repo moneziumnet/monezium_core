@@ -2,20 +2,20 @@
 @section('content')
 
 <div class="card">
-  <div class="d-sm-flex align-items-center justify-content-between py-3">
-    <h5 class=" mb-0 text-gray-800 pl-3">{{ $data->name }}</h5>
-    <ol class="breadcrumb py-0 m-0">
-      <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
-      <li class="breadcrumb-item"><a href="{{ route('admin.user.index') }}">{{ __('User List') }}</a></li>
-    </ol>
+    <div class="d-sm-flex align-items-center justify-content-between py-3">
+      <ol class="breadcrumb py-0 m-0">
+        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.system.accounts') }}">{{ __('System Account List') }}</a></li>
+      </ol>
+    </div>
   </div>
-</div>
+
 
 
 <div class="row mt-3">
   <div class="col-lg-12">
     <div class="card tab-card">
-      @include('admin.user.profiletab')
+        @include('admin.system.systemcryptotab')
 
       <div class="tab-content" id="myTabContent">
         @php
@@ -24,32 +24,27 @@
         @include('includes.admin.form-success')
         <div class="tab-pane fade show active" id="modules" role="tabpanel" aria-labelledby="modules-tab">
         <div class="card-body">
-          <div class="table-responsive">
-            <div class="col-sm-12 text-right" style="text-align: right">
-              <a href="{{route('admin-user.transaction-pdf', $data->id)}}" style="text-decoration: none;">
-                <i class="fas fa-file-pdf" aria-hidden="true"></i> {{__('PDF')}}
-              </a> &nbsp;
-              <a href="{{route('admin-user.transaction-export', $data->id)}}" style="text-decoration: none;">
-                <i class="fas fa-file-excel" aria-hidden="true"></i> {{__('Export')}}
-              </a>
+            <div class="card mb-4">
+
+                <div class="table-responsive p-3">
+                    <table id="geniustable" class="table table-hover dt-responsive" cellspacing="0" width="100%">
+                    <thead class="thead-light">
+                    <tr>
+                        <th>{{__('Date')}}</th>
+                        <th>{{__('Transaction ID')}}</th>
+                        <th>{{__('Sender')}}</th>
+                        <th>{{__('Receiver')}}</th>
+                        <th>{{__('Description')}}</th>
+                        <th>{{__('Remark')}}</th>
+                        <th>{{__('Amount')}}</th>
+                        <th>{{__('Charge')}}</th>
+                        <th>{{__('Action')}}</th>
+                    </tr>
+                    </thead>
+                    </table>
+                </div>
             </div>
-            <table id="geniustable" class="table table-hover dt-responsive" cellspacing="0" width="100%">
-              <thead class="thead-light">
-               <tr>
-                <th>{{__('Date')}}</th>
-                <th>{{__('Transaction ID')}}</th>
-                <th>{{__('Sender')}}</th>
-                <th>{{__('Receiver')}}</th>
-                <th>{{__('Description')}}</th>
-                <th>{{__('Remark')}}</th>
-                <th>{{__('Amount')}}</th>
-                <th>{{__('Charge')}}</th>
-                <th>{{__('Action')}}</th>
-               </tr>
-              </thead>
-            </table>
-            </div>
-      </div>
+        </div>
         </div>
       </div>
     </div>
@@ -94,7 +89,7 @@
            processing: true,
            serverSide: true,
            searching: true,
-           ajax: '{{ route('admin-user.transactions-datatables',$data->id) }}',
+           ajax: '{{ route('admin.system.account.transactions.datatables',$data->id) }}',
            columns: [
                 { data: 'created_at', name: 'created_at' },
                 { data: 'trnx', name: 'trnx' },

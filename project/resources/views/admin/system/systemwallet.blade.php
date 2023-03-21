@@ -39,11 +39,14 @@
                                         <div class='col font-weight-bold text-gray-900'>{{$wallet->wallet_no}}</div>
                                     </div>
                                     <div class="text-xs font-weight-bold text-uppercase mb-1"> {{$dcurr->curr_name}}</div>
+                                    <div class="row mb-1 mr-1">
                                     @if ($dcurr->type == 2)
-                                        <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ amount(Crypto_Balance(0,$dcurr->id), 2)}}  {{$dcurr->code}} ({{amount(Crypto_Balance_Fiat(0,$dcurr->id), 1)}}  {{$currency->code}})</div>
+                                        <div class="col h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ amount(Crypto_Balance(0,$dcurr->id), 2)}}  {{$dcurr->code}} ({{amount(Crypto_Balance_Fiat(0,$dcurr->id), 1)}}  {{$currency->code}})</div>
                                     @else
-                                        <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{amount($wallet->balance,$dcurr->type,2)}} {{$dcurr->code}} ({{$dcurr->symbol}}) </div>
+                                        <div class="col h6 mb-0 mt-2 font-weight-bold text-gray-800">{{amount($wallet->balance,$dcurr->type,2)}} {{$dcurr->code}} ({{$dcurr->symbol}}) </div>
                                     @endif
+                                        <div class="col text-right h6 mb-0 mt-2 font-weight-bold text-gray-800"><a href="{{route('admin.system.account.transactions', $dcurr->id)}}"><i class="fas fa-chart-line"></i></a></div>
+                                    </div>
                                 </div>
                                 </div>
                             </div>

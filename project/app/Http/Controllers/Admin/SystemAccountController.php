@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
 use App\Models\CryptoApi;
+use App\Models\Transaction;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
@@ -30,6 +31,53 @@ class SystemAccountController extends Controller
         $wallets = Wallet::where('user_id',0)->where('wallet_type', 9)->with('currency')->get();
         $data['wallets'] = $wallets;
         return view('admin.system.systemwallet',$data);
+    }
+
+    public function transactions($id) {
+        $wallet = Currency::findOrFail($id);
+        $data['data'] = $wallet;
+        return view('admin.system.transactions',$data);
+
+    }
+
+    public function trn_datables($id) {
+        $datas = Transaction::where('currency_id', $id)->where('charge','>', 0)->orderBy('created_at','desc')->get();
+
+        return Datatables::of($datas)
+        ->editColumn('amount', function(Transaction $data) {
+            $currency = Currency::whereId($data->currency_id)->first();
+            return $data->type.amount($data->amount,$currency->type,2).$currency->code;
+        })
+        ->editColumn('trnx', function(Transaction $data) {
+            $trnx = $data->trnx;
+            return $trnx;
+        })
+        ->editColumn('sender', function(Transaction $data) {
+            $details = json_decode(str_replace(array("\r", "\n"), array('\r', '\n'), $data->data));
+            return ucwords($details->sender ?? "");
+        })
+        ->editColumn('receiver', function(Transaction $data) {
+            $details = json_decode(str_replace(array("\r", "\n"), array('\r', '\n'), $data->data));
+            return ucwords($details->receiver ?? "");
+        })
+        ->editColumn('created_at', function(Transaction $data) {
+            $date = date('d-m-Y',strtotime($data->created_at));
+            return $date;
+        })
+        ->editColumn('remark', function(Transaction $data) {
+            return ucwords(str_replace('_',' ',$data->remark));
+        })
+        ->editColumn('charge', function(Transaction $data) {
+            $currency = Currency::whereId($data->currency_id)->first();
+            return '-'.amount($data->charge,$currency->type,2).$currency->code;
+        })
+        ->addColumn('action', function (Transaction $data) {
+            return ' <a href="javascript:;"  data-href="" onclick="getDetails('.$data->id.')" class="detailsBtn" >
+            ' . __("Details") . '</a>';
+        })
+
+        ->rawColumns(['action'])
+        ->toJson();
     }
 
     public function create($currency_id)

@@ -542,6 +542,10 @@ Route::prefix('admin')->group(function () {
   Route::post('/system-settings/withdraw', [SystemAccountController::class, 'withdraw'])->name('admin.system.crypto.withdraw');
   Route::post('/system-settings/binance/withdraw', [SystemAccountController::class, 'binance_withdraw'])->name('admin.system.crypto.binance.withdraw');
 
+  Route::get('/system-settings/transaction/{id}', [SystemAccountController::class, 'transactions'])->name('admin.system.account.transactions');
+  Route::get('/system-settings/transaction/datatables/{id}', [SystemAccountController::class, 'trn_datables'])->name('admin.system.account.transactions.datatables');
+
+
   Route::group(['middleware' => 'permissions:General Setting'], function () {
     Route::get('/general-settings/logo', [GeneralSettingController::class, 'logo'])->name('admin.gs.logo');
     Route::get('/general-settings/favicon', [GeneralSettingController::class, 'fav'])->name('admin.gs.fav');
