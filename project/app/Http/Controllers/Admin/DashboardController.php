@@ -43,6 +43,11 @@ class DashboardController extends Controller
     public function index()
     {
         $gs = Generalsetting::first();
+        $def_currency = Currency::findOrFail(defaultCurr());
+        $client = new Client();
+        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency='.$def_currency->code);
+        $rate = json_decode($response->getBody());
+
         if (Auth::guard('admin')->user()->IsSuper()) {
             $data['ainstitutions'] = Admin::orderBy('id', 'desc')->where('tenant_id', '!=', '')->get();
             $data['languages'] = Language::all();
@@ -51,9 +56,31 @@ class DashboardController extends Controller
 
             $data['blogs'] = Blog::all();
             $data['deposits'] = Deposit::all();
-            $data['depositAmount'] = Deposit::sum('amount');
-            $data['withdrawAmount'] = Withdrawals::sum('amount');
-            $data['withdrawChargeAmount'] = Withdrawals::sum('charge');
+            $deposits = DepositBank::where('status', 'complete')->get();
+            $deposit_transaction = Transaction::where('remark', 'deposit')->orWhere('remark', 'Deposit')->get();
+            $deposit_balance = 0;
+            $charge_balance = 0;
+            foreach ($deposits as $value) {
+                $currency = Currency::findOrFail($value->currency_id)->code;
+                $deposit_balance = $deposit_balance + $value->amount / $rate->data->rates->$currency;
+            }
+
+            foreach ($deposit_transaction as $value) {
+                $currency = Currency::findOrFail($value->currency_id)->code;
+                $charge_balance = $charge_balance + $value->charge / $rate->data->rates->$currency;
+            }
+
+            $withdraws = BalanceTransfer::where('status', 1)->where('type', 'other')->get();
+            $withdraw_balance = 0;
+            foreach ($withdraws as $value) {
+                $currency = Currency::findOrFail($value->currency_id)->code;
+                $withdraw_balance = $withdraw_balance + $value->amount / $rate->data->rates->$currency;
+                $charge_balance = $charge_balance + $value->cost / $rate->data->rates->$currency;
+            }
+
+            $data['depositAmount'] = $deposit_balance;
+            $data['withdrawAmount'] = $withdraw_balance;
+            $data['ChargeAmount'] = $charge_balance;
             $data['currency'] = Currency::whereIsDefault(1)->first();
             $data['transactions'] = Transaction::all();
             $data['acustomers'] = User::orderBy('id', 'desc')->whereIsBanned(0)->get();
@@ -197,10 +224,7 @@ class DashboardController extends Controller
         }
 
 
-        $def_currency = Currency::findOrFail(defaultCurr());
-        $client = new Client();
-        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency='.$def_currency->code);
-        $rate = json_decode($response->getBody());
+
 
         $deposits = DepositBank::select('id', 'updated_at', 'amount', 'currency_id' )->whereStatus('complete')
             ->get()

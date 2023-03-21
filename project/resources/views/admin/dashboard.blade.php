@@ -166,8 +166,8 @@
       <div class="card-body">
         <div class="row align-items-center">
           <div class="col mr-2">
-            <div class="text-xs font-weight-bold text-uppercase mb-1">{{ __('Total Deposits') }}</div>
-            <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ count($deposits) }} </div>
+            <div class="text-xs font-weight-bold text-uppercase mb-1">{{ __('Total Transactions') }}</div>
+            <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ count($transactions) }} </div>
           </div>
           <div class="col-auto">
             <i class="fas fa-dollar-sign fa-2x text-success"></i>
@@ -198,104 +198,8 @@
       <div class="card-body">
         <div class="row align-items-center">
           <div class="col mr-2">
-            <div class="text-xs font-weight-bold text-uppercase mb-1">{{ __('Total Pending Loan') }}</div>
-            <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ count(\App\Models\UserLoan::whereStatus(0)->get()) }} </div>
-          </div>
-          <div class="col-auto">
-            <i class="fas fa-cash-register fa-2x text-success"></i>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-xl-3 col-md-6 mb-4">
-    <div class="card h-100">
-      <div class="card-body">
-        <div class="row align-items-center">
-          <div class="col mr-2">
-            <div class="text-xs font-weight-bold text-uppercase mb-1">{{ __('Total Running Loan') }}</div>
-            <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ count(\App\Models\UserLoan::whereStatus(1)->get()) }} </div>
-          </div>
-          <div class="col-auto">
-            <i class="fas fa-cash-register fa-2x text-success"></i>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-xl-3 col-md-6 mb-4">
-    <div class="card h-100">
-      <div class="card-body">
-        <div class="row align-items-center">
-          <div class="col mr-2">
-            <div class="text-xs font-weight-bold text-uppercase mb-1">{{ __('Total Paid Loan') }}</div>
-            <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ count(\App\Models\UserLoan::whereStatus(3)->get()) }} </div>
-          </div>
-          <div class="col-auto">
-            <i class="fas fa-cash-register fa-2x text-success"></i>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-xl-3 col-md-6 mb-4">
-    <div class="card h-100">
-      <div class="card-body">
-        <div class="row align-items-center">
-          <div class="col mr-2">
-            <div class="text-xs font-weight-bold text-uppercase mb-1">{{ __('Total Rejected Loan') }}</div>
-            <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ count(\App\Models\UserLoan::whereStatus(2)->get()) }} </div>
-          </div>
-          <div class="col-auto">
-            <i class="fas fa-cash-register fa-2x text-danger"></i>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-xl-3 col-md-6 mb-4">
-    <div class="card h-100">
-      <div class="card-body">
-        <div class="row align-items-center">
-          <div class="col mr-2">
             <div class="text-xs font-weight-bold text-uppercase mb-1">{{ __('Total DPS') }}</div>
             <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ count(\App\Models\UserDps::get()) }} </div>
-          </div>
-          <div class="col-auto">
-            <i class="fas fa-warehouse fa-2x text-success"></i>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-xl-3 col-md-6 mb-4">
-    <div class="card h-100">
-      <div class="card-body">
-        <div class="row align-items-center">
-          <div class="col mr-2">
-            <div class="text-xs font-weight-bold text-uppercase mb-1">{{ __('Total Running DPS') }}</div>
-            <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ count(\App\Models\UserDps::whereStatus(1)->get()) }} </div>
-          </div>
-          <div class="col-auto">
-            <i class="fas fa-warehouse fa-2x text-success"></i>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-xl-3 col-md-6 mb-4">
-    <div class="card h-100">
-      <div class="card-body">
-        <div class="row align-items-center">
-          <div class="col mr-2">
-            <div class="text-xs font-weight-bold text-uppercase mb-1">{{ __('Total Matured DPS') }}</div>
-            <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ count(\App\Models\UserDps::whereStatus(2)->get()) }} </div>
           </div>
           <div class="col-auto">
             <i class="fas fa-warehouse fa-2x text-success"></i>
@@ -326,11 +230,11 @@
       <div class="card-body">
         <div class="row align-items-center">
           <div class="col mr-2">
-            <div class="text-xs font-weight-bold text-uppercase mb-1">{{ __('Total Running FDR') }}</div>
-            <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ count(\App\Models\UserFdr::whereStatus(1)->get()) }} </div>
+            <div class="text-xs font-weight-bold text-uppercase mb-1">{{ __('Total Tickets') }}</div>
+            <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ count(\App\Models\AdminUserConversation::get()) }} </div>
           </div>
           <div class="col-auto">
-            <i class="fas fa-user-shield fa-2x text-success"></i>
+            <i class="fas fa-ticket-alt fa-2x text-success"></i>
           </div>
         </div>
       </div>
@@ -342,11 +246,11 @@
       <div class="card-body">
         <div class="row align-items-center">
           <div class="col mr-2">
-            <div class="text-xs font-weight-bold text-uppercase mb-1">{{ __('Total Closed FDR') }}</div>
-            <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ count(\App\Models\UserFdr::whereStatus(2)->get()) }} </div>
+            <div class="text-xs font-weight-bold text-uppercase mb-1">{{ __('Telegram Users') }}</div>
+            <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ count(\App\Models\UserTelegram::where('chat_id', '!=', null)->get()) }} </div>
           </div>
           <div class="col-auto">
-            <i class="fas fa-user-shield fa-2x text-danger"></i>
+            <i class="fab fa-telegram fa-2x text-success"></i>
           </div>
         </div>
       </div>
@@ -358,11 +262,59 @@
       <div class="card-body">
         <div class="row align-items-center">
           <div class="col mr-2">
-            <div class="text-xs font-weight-bold text-uppercase mb-1">{{ __('Total Transactions') }}</div>
-            <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ count($transactions) }} </div>
+            <div class="text-xs font-weight-bold text-uppercase mb-1">{{ __('Whatsapp Users') }}</div>
+            <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ count(\App\Models\UserWhatsapp::where('phonenumber', '!=', null)->get()) }} </div>
           </div>
           <div class="col-auto">
-            <i class="fas fa-dollar-sign fa-2x text-success"></i>
+            <i class="fab fa-whatsapp fa-2x text-success"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xl-3 col-md-6 mb-4">
+    <div class="card h-100">
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col mr-2">
+            <div class="text-xs font-weight-bold text-uppercase mb-1">{{ __('Shops') }}</div>
+            <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ count(\App\Models\MerchantShop::where('status', 1)->get()) }} </div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-shopping-cart fa-2x text-success"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xl-3 col-md-6 mb-4">
+    <div class="card h-100">
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col mr-2">
+            <div class="text-xs font-weight-bold text-uppercase mb-1">{{ __('Product') }}</div>
+            <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ count(\App\Models\Product::where('status', 1)->get()) }} </div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-shopping-bag fa-2x text-success"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xl-3 col-md-6 mb-4">
+    <div class="card h-100">
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col mr-2">
+            <div class="text-xs font-weight-bold text-uppercase mb-1">{{ __('Campaign') }}</div>
+            <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ count(\App\Models\Campaign::where('status', 1)->get()) }} </div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-donate fa-2x text-success"></i>
           </div>
         </div>
       </div>
@@ -409,8 +361,8 @@
       <div class="card-body">
         <div class="row align-items-center">
           <div class="col mr-2">
-            <div class="text-xs font-weight-bold text-uppercase mb-1">{{ __('Total Withdraw Charge Amount') }}</div>
-            <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ round($withdrawChargeAmount,2) }} {{ $currency->code}}</div>
+            <div class="text-xs font-weight-bold text-uppercase mb-1">{{ __('Total Charge Amount') }}</div>
+            <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ round($ChargeAmount,2) }} {{ $currency->code}}</div>
           </div>
           <div class="col-auto">
             <i class="fas fa-dollar-sign fa-2x text-success"></i>
