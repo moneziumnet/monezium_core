@@ -41,6 +41,7 @@ class ExchangeMoney extends Model
             $trnx->user_type   = 1;
             $trnx->currency_id = $exchange->from_currency;
             $trnx->amount      = $exchange->from_amount + $exchange->charge;
+            $trnx->wallet_id = $exchange->from_wallet_id;
             $trnx->charge      = $exchange->charge;
             $trnx->remark      = $remark;
             $trnx->type        = '-';
@@ -53,6 +54,7 @@ class ExchangeMoney extends Model
             $toTrnx->user_id     = auth()->id();
             $toTrnx->user_type   = 1;
             $toTrnx->currency_id = $exchange->to_currency;
+            $toTrnx->wallet_id = $exchange->to_wallet_id;
             $toTrnx->amount      = $exchange->to_amount;
             $toTrnx->charge      = 0;
             $toTrnx->remark      = $remark;

@@ -556,6 +556,8 @@ class ExchangeMoneyController extends Controller
             $exchange->trnx = str_rand();
             $exchange->from_currency = $fromWallet->currency->id;
             $exchange->to_currency = $toWallet->currency->id;
+            $exchange->from_wallet_id = $fromWallet->id;
+            $exchange->to_wallet_id = $toWallet->id;
             $exchange->user_id = auth()->id();
             $exchange->charge = $charge + $transaction_custom_cost * $from_rate;
             $exchange->from_amount = $request->amount;

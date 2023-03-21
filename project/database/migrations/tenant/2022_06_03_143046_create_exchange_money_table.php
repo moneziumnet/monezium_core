@@ -17,7 +17,9 @@ class CreateExchangeMoneyTable extends Migration
             $table->bigIncrements('id');
             $table->string('trnx');
             $table->integer('from_currency');
+            $table->integer('from_wallet_id')->nullable();
             $table->integer('to_currency');
+            $table->integer('to_wallet_id')->nullable();
             $table->integer('user_id');
             $table->decimal('charge', 20, 10);
             $table->decimal('from_amount', 20, 10);

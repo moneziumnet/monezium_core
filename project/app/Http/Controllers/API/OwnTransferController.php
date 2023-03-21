@@ -5,7 +5,6 @@ namespace App\Http\Controllers\API;
 use App\Models\Wallet;
 use App\Models\User;
 use App\Models\Currency;
-use App\Models\ExchangeMoney;
 use App\Models\Charge;
 use App\Models\Generalsetting;
 use App\Classes\GoogleAuthenticator;
