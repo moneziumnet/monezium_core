@@ -10759,7 +10759,7 @@
 	"variable": [
 		{
 			"key": "baseUrl",
-			"value": "http://wh.saas.test/geniusBankWallet/api/user"
+			"value": "https://monezium.eu/api/user"
 		},
 		{
 			"key": "access_key",
