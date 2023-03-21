@@ -12,16 +12,6 @@
 				{
 					"name": "Dashboard of user",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -48,16 +38,6 @@
 				{
 					"name": "Wallet Create",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -84,16 +64,6 @@
 				{
 					"name": "Crypto Wallet Create",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -121,16 +91,6 @@
 				{
 					"name": "Get Bank gateway",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -158,16 +118,6 @@
 				{
 					"name": "Qr Scan Code",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -198,16 +148,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"body": {
@@ -259,16 +199,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"body": {
@@ -297,16 +227,6 @@
 				{
 					"name": "Send Transaction Details By Mail",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -338,16 +258,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"body": {
@@ -374,16 +284,6 @@
 				{
 					"name": "Update User profile",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -526,16 +426,6 @@
 				{
 					"name": "Save Google Auth",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -562,16 +452,6 @@
 				{
 					"name": "Get Username by Email",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -598,16 +478,6 @@
 				{
 					"name": "Get Username by phone",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -637,16 +507,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"body": {
@@ -676,16 +536,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"body": {
@@ -712,16 +562,6 @@
 				{
 					"name": "Security Save",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -749,16 +589,6 @@
 				{
 					"name": "User Module Update",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -789,16 +619,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"body": {
@@ -825,16 +645,6 @@
 				{
 					"name": "AML KYC Submit",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -860,16 +670,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"body": {
@@ -900,16 +700,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"body": {
@@ -973,16 +763,6 @@
 				{
 					"name": "Register User",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -1145,16 +925,6 @@
 				{
 					"name": "Change Password",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -1181,16 +951,6 @@
 				{
 					"name": "Forgot Password",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -1223,16 +983,6 @@
 				{
 					"name": "Logout",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -1273,16 +1023,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -1325,16 +1065,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -1374,16 +1104,6 @@
 				{
 					"name": "Loan amount",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -1423,16 +1143,6 @@
 				{
 					"name": "Loan request",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -1472,16 +1182,6 @@
 				{
 					"name": "Finish Loan",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -1524,16 +1224,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -1582,16 +1272,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -1631,16 +1311,6 @@
 				{
 					"name": "Select Dps plan",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -1680,16 +1350,6 @@
 				{
 					"name": "DPS Request",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -1729,16 +1389,6 @@
 				{
 					"name": "DPS Finish",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -1782,16 +1432,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -1832,16 +1472,6 @@
 				{
 					"name": "Select FDR plan",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -1881,16 +1511,6 @@
 				{
 					"name": "FDR request",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -1930,16 +1550,6 @@
 				{
 					"name": "FDR finish",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -1988,16 +1598,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -2033,16 +1633,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -2075,16 +1665,6 @@
 				{
 					"name": "Store Voucher",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -2120,16 +1700,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -2162,16 +1732,6 @@
 				{
 					"name": "Reedem Voucher",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -2207,16 +1767,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -2257,16 +1807,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -2302,16 +1842,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -2347,16 +1877,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -2389,16 +1909,6 @@
 				{
 					"name": "Make Escrow",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -2434,16 +1944,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -2481,16 +1981,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -2524,16 +2014,6 @@
 				{
 					"name": "Dispute",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -2576,16 +2056,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -2627,16 +2097,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"body": {
@@ -2663,16 +2123,6 @@
 				{
 					"name": "My Ico Token",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -2691,16 +2141,6 @@
 				{
 					"name": "Edit Ico Token",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -2720,16 +2160,6 @@
 				{
 					"name": "Ico Token Details",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -2749,16 +2179,6 @@
 				{
 					"name": "Buy Ico Token",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -2778,16 +2198,6 @@
 				{
 					"name": "Buy Ico Token",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -2825,16 +2235,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -2869,16 +2269,6 @@
 				{
 					"name": "New ICO",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -2948,16 +2338,6 @@
 				{
 					"name": "Update Ico Token",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -3033,16 +2413,6 @@
 				{
 					"name": "New Chatify Layer",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -3076,16 +2446,6 @@
 				{
 					"name": "Login Chatify Layer",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -3119,16 +2479,6 @@
 				{
 					"name": "Logut Chatify Layer",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -3170,16 +2520,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -3212,16 +2552,6 @@
 				{
 					"name": "Invite User",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -3257,16 +2587,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -3304,16 +2624,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -3352,16 +2662,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -3396,16 +2696,6 @@
 				{
 					"name": "Update User Charge",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -3440,16 +2730,6 @@
 				{
 					"name": "Create User Charge",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -3483,16 +2763,6 @@
 				{
 					"name": "Create Manager",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -3529,16 +2799,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -3581,16 +2841,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -3663,16 +2913,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -3708,16 +2948,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -3751,16 +2981,6 @@
 				{
 					"name": "Send Request Money",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -3794,16 +3014,6 @@
 				{
 					"name": "Approve Request Money",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -3839,16 +3049,6 @@
 				{
 					"name": "Cancel Request Money",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -3887,16 +3087,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -3935,16 +3125,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -3975,38 +3155,6 @@
 						}
 					},
 					"response": []
-				},
-				{
-					"name": "Send Money",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"access_key\": \"1abfd348-4034-466e-83b9-1f40e3e13501\",\r\n    \"account_number\": \"\",\r\n    \"wallet_id\":\"\",\r\n    \"account_name\": \"\",\r\n    \"amount\": \"500\",\r\n    \"description\": \"\",\r\n    \"code\": \"\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/send-money",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"send-money"
-							]
-						}
-					},
-					"response": []
 				}
 			]
 		},
@@ -4022,16 +3170,6 @@
 								"disableBodyPruning": true
 							},
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -4068,16 +3206,6 @@
 								"disableBodyPruning": true
 							},
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -4112,16 +3240,6 @@
 						{
 							"name": "Store Bank Deposit",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [
 									{
@@ -4195,16 +3313,6 @@
 								"disableBodyPruning": true
 							},
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -4253,16 +3361,6 @@
 								"disableBodyPruning": true
 							},
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -4296,16 +3394,6 @@
 						{
 							"name": "Store Bank Transfer",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [
 									{
@@ -4388,16 +3476,6 @@
 								"disableBodyPruning": true
 							},
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -4440,16 +3518,6 @@
 								"disableBodyPruning": true
 							},
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -4486,16 +3554,6 @@
 								"disableBodyPruning": true
 							},
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -4530,16 +3588,6 @@
 						{
 							"name": "Create Crypto Withdraw Copy",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [
 									{
@@ -4584,16 +3632,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -4626,16 +3664,6 @@
 				{
 					"name": "Store Payment between accounts",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -4676,16 +3704,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -4718,16 +3736,6 @@
 				{
 					"name": "Store beneficiary",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -4764,16 +3772,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -4808,16 +3806,6 @@
 				{
 					"name": "Update beneficiary",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -4860,16 +3848,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -4902,16 +3880,6 @@
 				{
 					"name": "Store Exchange",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -4944,16 +3912,6 @@
 				{
 					"name": "Calculate Charge Fee",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -4990,16 +3948,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -5041,16 +3989,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -5083,16 +4021,6 @@
 				{
 					"name": "Store Invoice",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -5184,16 +4112,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -5227,16 +4145,6 @@
 				{
 					"name": "Store Invoice Setting",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -5273,16 +4181,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -5315,16 +4213,6 @@
 				{
 					"name": "Update invoice pay status",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -5358,16 +4246,6 @@
 				{
 					"name": "Update invoice publish status",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -5404,16 +4282,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -5447,16 +4315,6 @@
 				{
 					"name": "Update Invoice",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -5549,16 +4407,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -5587,16 +4435,6 @@
 				{
 					"name": "Send Mail",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -5633,16 +4471,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -5680,16 +4508,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -5723,16 +4541,6 @@
 				{
 					"name": "Pay invoice",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -5770,16 +4578,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -5818,16 +4616,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -5864,16 +4652,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -5909,16 +4687,6 @@
 				{
 					"name": "Update Incoming Invoice",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -5985,16 +4753,6 @@
 				{
 					"name": "Create Invoice Tax",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -6035,16 +4793,6 @@
 				{
 					"name": "Fetch All Contract",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -6069,16 +4817,6 @@
 				{
 					"name": "Get Contract",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -6104,16 +4842,6 @@
 				{
 					"name": "Create Contract",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -6138,16 +4866,6 @@
 				{
 					"name": "Store Contract",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -6237,16 +4955,6 @@
 				{
 					"name": "Contract Sign",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -6284,16 +4992,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -6328,16 +5026,6 @@
 				{
 					"name": "Update Contract",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -6426,16 +5114,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -6470,16 +5148,6 @@
 				{
 					"name": "Send Mail",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -6516,16 +5184,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -6563,16 +5221,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -6608,16 +5256,6 @@
 				{
 					"name": "Contract AOA Sign",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -6656,16 +5294,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -6701,16 +5329,6 @@
 				{
 					"name": "Store Contract AOA",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -6800,16 +5418,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -6845,16 +5453,6 @@
 				{
 					"name": "Update Contract AOA",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -6944,16 +5542,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -6989,16 +5577,6 @@
 				{
 					"name": "Send Mail (AOA)",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -7041,16 +5619,6 @@
 						{
 							"name": "Fetch All Request Money List",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -7075,16 +5643,6 @@
 						{
 							"name": "Create Request Money",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -7110,16 +5668,6 @@
 						{
 							"name": "Send Request Money",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [
 									{
@@ -7157,16 +5705,6 @@
 								"disableBodyPruning": true
 							},
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -7207,16 +5745,6 @@
 						{
 							"name": "Fetch All Merchant Shop",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -7241,16 +5769,6 @@
 						{
 							"name": "Store New Merchant Shop",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [
 									{
@@ -7310,16 +5828,6 @@
 								"disableBodyPruning": true
 							},
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -7351,16 +5859,6 @@
 						{
 							"name": "Update Merchant Shop",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [
 									{
@@ -7421,16 +5919,6 @@
 								"disableBodyPruning": true
 							},
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -7465,16 +5953,6 @@
 								"disableBodyPruning": true
 							},
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -7512,16 +5990,6 @@
 						{
 							"name": "Fetch All Product",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -7546,16 +6014,6 @@
 						{
 							"name": "Store New Product",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [
 									{
@@ -7631,16 +6089,6 @@
 						{
 							"name": "Create New Product Category",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [
 									{
@@ -7676,16 +6124,6 @@
 						{
 							"name": "Edit Product",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -7712,16 +6150,6 @@
 						{
 							"name": "Update Product",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [
 									{
@@ -7798,16 +6226,6 @@
 						{
 							"name": "Delete Product",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -7834,16 +6252,6 @@
 						{
 							"name": "Updata Product Status",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -7870,16 +6278,6 @@
 						{
 							"name": "Pay Product",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [
 									{
@@ -7917,16 +6315,6 @@
 								"disableBodyPruning": true
 							},
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -7965,16 +6353,6 @@
 								"disableBodyPruning": true
 							},
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -8014,16 +6392,6 @@
 								"disableBodyPruning": true
 							},
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -8061,16 +6429,6 @@
 								"disableBodyPruning": true
 							},
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -8106,16 +6464,6 @@
 						{
 							"name": "Send Mail (Merchat Product)",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [
 									{
@@ -8155,16 +6503,6 @@
 						{
 							"name": "Fetch All Campaign",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -8189,16 +6527,6 @@
 						{
 							"name": "Store New Campaign",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [
 									{
@@ -8272,16 +6600,6 @@
 								"disableBodyPruning": true
 							},
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -8317,16 +6635,6 @@
 						{
 							"name": "Update Campaign",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [
 									{
@@ -8401,16 +6709,6 @@
 								"disableBodyPruning": true
 							},
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -8446,16 +6744,6 @@
 						{
 							"name": "Create Campaign Category",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [
 									{
@@ -8495,16 +6783,6 @@
 								"disableBodyPruning": true
 							},
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -8543,16 +6821,6 @@
 								"disableBodyPruning": true
 							},
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -8591,16 +6859,6 @@
 								"disableBodyPruning": true
 							},
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -8640,16 +6898,6 @@
 								"disableBodyPruning": true
 							},
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -8685,16 +6933,6 @@
 						{
 							"name": "Send Mail (Campaign)",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [
 									{
@@ -8730,16 +6968,6 @@
 						{
 							"name": "Donate Campaign",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [
 									{
@@ -8780,16 +7008,6 @@
 						{
 							"name": "Fetch All Checkout",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -8814,16 +7032,6 @@
 						{
 							"name": "Store New Checkout",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [
 									{
@@ -8861,16 +7069,6 @@
 								"disableBodyPruning": true
 							},
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -8906,16 +7104,6 @@
 						{
 							"name": "Update Checkout",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [
 									{
@@ -8954,16 +7142,6 @@
 								"disableBodyPruning": true
 							},
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -9002,16 +7180,6 @@
 								"disableBodyPruning": true
 							},
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -9050,16 +7218,6 @@
 								"disableBodyPruning": true
 							},
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -9098,16 +7256,6 @@
 								"disableBodyPruning": true
 							},
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -9145,16 +7293,6 @@
 						{
 							"name": "Send Email (Merchant Checkout)",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [
 									{
@@ -9189,16 +7327,6 @@
 						{
 							"name": "Pay Merchant Checkout",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [
 									{
@@ -9238,16 +7366,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -9284,16 +7402,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -9328,16 +7436,6 @@
 				{
 					"name": "Update Merchant Payment Setting",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -9380,16 +7478,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -9422,16 +7510,6 @@
 				{
 					"name": "Telegram pincode generate",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -9465,16 +7543,6 @@
 				{
 					"name": "Whatsapp pincode generate",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -9516,16 +7584,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -9562,16 +7620,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -9609,16 +7657,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -9655,16 +7693,6 @@
 				{
 					"name": "Store new reply Ticket",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -9715,16 +7743,6 @@
 				{
 					"name": "Store new Ticket Copy",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -10165,16 +8183,6 @@
 				{
 					"name": "Create OpenPayd Bank Account",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -10208,16 +8216,6 @@
 				{
 					"name": "Create Railsbank Bank Account",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -10251,16 +8249,6 @@
 				{
 					"name": "Create ClearJunction Bank Account",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -10302,16 +8290,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -10344,16 +8322,6 @@
 				{
 					"name": "Submit KYC",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -10381,16 +8349,6 @@
 				{
 					"name": "Update KYC Status",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -10424,16 +8382,6 @@
 				{
 					"name": "Save KYC Selfie",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -10488,16 +8436,6 @@
 				{
 					"name": "Fetch All Product and Campaign in Shop",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -10521,16 +8459,6 @@
 				{
 					"name": "Create Order for Product.",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -10556,16 +8484,6 @@
 				{
 					"name": "Create Donate for Campaign",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -10597,16 +8515,6 @@
 				{
 					"name": "Verity OTP code",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -10639,16 +8547,6 @@
 				{
 					"name": "Verity Google OTP code",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -10684,16 +8582,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "16|u2coVV2yFCYnbE49IXYo96dudAE8ztrZezArOCGu",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -10731,7 +8619,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "16|GqeDjZbnotIGCveAJoBq8OwLg5gjt3Pn1sMlIj8b",
+				"value": "19|yLMGTFbZCtljFFY3j3FgTmrSp8nMLecWruTXLvxK",
 				"type": "string"
 			}
 		]
@@ -10760,11 +8648,6 @@
 		{
 			"key": "baseUrl",
 			"value": "https://monezium.eu/api/user"
-		},
-		{
-			"key": "access_key",
-			"value": "f5abe73c-c4b3-48c2-b412-96dff57ff9ad",
-			"disabled": true
 		}
 	]
 }
