@@ -41,7 +41,7 @@ class SystemAccountController extends Controller
     }
 
     public function trn_datables($id) {
-        $datas = Transaction::where('currency_id', $id)->where('charge','>', 0)->orderBy('created_at','desc')->get();
+        $datas = Transaction::where('currency_id', $id)->where('charge','>', 0)->orWhere('user_id', 0)->where('currency_id', $id)->orderBy('created_at','desc')->get();
 
         return Datatables::of($datas)
         ->editColumn('amount', function(Transaction $data) {
@@ -78,6 +78,69 @@ class SystemAccountController extends Controller
 
         ->rawColumns(['action'])
         ->toJson();
+    }
+
+    public function crypto_withdraw_form($id) {
+        $data['user_id'] = 0;
+        $data['currency_id'] = $id;
+        return view('admin.system.cryptowithdraw', $data);
+    }
+
+    public function crypto_withdraw_store(Request $request) {
+
+
+        $currency = Currency::where('id',$request->currency_id)->first();
+
+        $fromWallet = Wallet::where('user_id',$request->user_id)->where('wallet_type', 9)->where('currency_id', $request->currency_id)->first();
+
+        $userBalance = Crypto_Balance($request->user_id, $request->currency_id);
+        if($request->amount > $userBalance){
+            return redirect()->back()->with('error','Insufficient Account Balance.');
+        }
+
+        if($fromWallet->currency->code == 'ETH') {
+            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
+            $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$request->receiver_address.'", "value": "0x'.dechex($request->amount*pow(10,18)).'"}';
+            RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
+        }
+        else if($fromWallet->currency->code == 'BTC') {
+            $res = RPC_BTC_Send('sendtoaddress',[$request->receiver_address, amount($request->amount, 2)],$fromWallet->keyword);
+            if (isset($res->error->message)){
+                return redirect()->back()->with(array('error' => __('Error: ') . $res->error->message));
+            }
+        }
+        else {
+            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
+            $tokenContract = $fromWallet->currency->address;
+            $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $request->receiver_address, $request->amount,  $fromWallet->keyword);
+            if (json_decode($result)->code == 1){
+                return redirect()->back()->with(array('error' => 'Ethereum client error: '.json_decode($result)->message));
+            }
+        }
+
+        $txnid = Str::random(12);
+        $gs = Generalsetting::first();
+
+
+        $trans = new Transaction();
+        $trans->trnx = $txnid;
+        $trans->user_id     = 0;
+        $trans->user_type   = 1;
+        $trans->currency_id = $request->currency_id;
+        $trans->amount      = $request->amount;
+        $trans->charge      = 0;
+
+        $trans_wallet = get_wallet($request->user_id, $currency->id, 9);
+        $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+
+        $trans->type        = '-';
+        $trans->remark      = 'withdraw_crypto';
+        $trans->details     = trans('Withdraw money');
+        $trans->data        = '{"sender":"'.($gs->disqus).'", "receiver":"'.$request->receiver_address.'"}';
+        $trans->save();
+
+        return redirect()->back()->with('message','Cryto Withdraw successfully.');
+
     }
 
     public function create($currency_id)

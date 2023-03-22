@@ -52,7 +52,7 @@
                                                 </button>
                                                 <div class="dropdown-menu dropdown-menu-right">
                                                     @if ($dcurr->type == 2)
-                                                        <a class="dropdown-item" href="#" >{{ __('Withdraw Crypto') }}</a>
+                                                        <a class="dropdown-item" href="javascript:;" onclick="Crypto_withdraw({{$dcurr->id}})" >{{ __('Withdraw Crypto') }}</a>
                                                     @endif
                                                     <a class="dropdown-item" href="{{route('admin.system.account.transactions', $dcurr->id)}}">{{ __('Transaction View') }}</a>
                                                 </div>
@@ -117,6 +117,24 @@
 </div>
 
 
+<div class="modal modal-blur fade" id="modal-success-2" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-status bg-primary"></div>
+        <div class="modal-body py-4">
+        <div class="text-center"><i  class="fas fa-info-circle fa-3x text-primary mb-2"></i></div>
+        <h3 class="text-center">@lang('Withdraw Details')</h3>
+        <form action="{{route('admin.system.account.crypto.withdraw.store')}}" method="post" class="m-3">
+            @csrf
+
+            <ul class="list-group mt-2"></ul>
+            </form>
+        </div>
+    </div>
+    </div>
+  </div>
+
+
 <!--Row-->
 @endsection
 @section('scripts')
@@ -125,6 +143,20 @@
 $('#addpayment').on('click', function() {
     window.location.reload();
 });
+
+
+function Crypto_withdraw(id) {
+        var url = "{{url('admin/system-settings/crypto/withdraw/')}}" + '/' + id
+        console.log(url)
+            $.get(url,function (res) {
+                if(res == 'empty'){
+                $('.list-group').html("<p>@lang('No details found!')</p>")
+                }else{
+                $('.list-group').html(res)
+                }
+            });
+        $('#modal-success-2').modal('show')
+    }
 
 </script>
 @endsection

@@ -1160,7 +1160,7 @@ class UserWhatsappController extends Controller
                     }
                     if($next_key == "description") {
                         $currency = Currency::findOrFail($w_session->data->currency_id);
-                        $fromWallet = Wallet::where('user_id', $user->id)->where('wallet_type', 8)->where('currency_id', $currency->id)->first();
+                        $fromWallet = Wallet::where('user_id', $user->id)->where('wallet_type', 8)->where('currency_id', $currency->id)->with('currency')->first();
                         $toWallet = get_wallet(0,$currency->id,9);
                         if($currency->code == 'ETH') {
                             RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
