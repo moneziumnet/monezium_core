@@ -390,7 +390,7 @@
             </div>
             <div class="card-body">
               <div class="h2 m-0">{{ round($depositAmount, 2) }} {{$currency->code}}</div>
-              <div class="text-muted">@lang('Deposits')</div>
+              <div class="text-muted">@lang('Total Deposit Amount')</div>
             </div>
           </div>
         </div>
@@ -404,7 +404,7 @@
           </div>
           <div class="card-body p-3 p-md-4">
             <div class="h2 m-0">{{ round($withdrawAmount, 2) }} {{$currency->code}}</div>
-            <div class="text-muted">@lang('Withdraws')</div>
+            <div class="text-muted">@lang('Totoal Withdraw Amount')</div>
           </div>
         </div>
       </div>
