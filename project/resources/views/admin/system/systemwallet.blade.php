@@ -45,7 +45,19 @@
                                     @else
                                         <div class="col h6 mb-0 mt-2 font-weight-bold text-gray-800">{{amount($wallet->balance,$dcurr->type,2)}} {{$dcurr->code}} ({{$dcurr->symbol}}) </div>
                                     @endif
-                                        <div class="col text-right h6 mb-0 mt-2 font-weight-bold text-gray-800"><a href="{{route('admin.system.account.transactions', $dcurr->id)}}"><i class="fas fa-chart-line"></i></a></div>
+                                        <div class='font-weight-bold text-gray-900 w-25 text-right'>
+                                            <div class="dropdown">
+                                                <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" style="padding: 6px 11px 1px 7px; border-radius: 50%;">
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    @if ($dcurr->type == 2)
+                                                        <a class="dropdown-item" href="#" >{{ __('Withdraw Crypto') }}</a>
+                                                    @endif
+                                                    <a class="dropdown-item" href="{{route('admin.system.account.transactions', $dcurr->id)}}">{{ __('Transaction View') }}</a>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 </div>

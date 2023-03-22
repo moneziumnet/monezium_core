@@ -1127,18 +1127,21 @@ class UserController extends Controller
                 return redirect()->back()->with('error','This user has to buy a plan to withdraw.');
             }
 
-            if(now()->gt($user->plan_end_date)){
-                return redirect()->back()->with('error','Plan Date Expired.');
-            }
 
             $bank_plan = BankPlan::whereId($user->bank_plan_id)->first();
-            $dailySend = BalanceTransfer::whereUserId($user->id)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus(1)->sum('amount');
-            $monthlySend = BalanceTransfer::whereUserId($user->id)->whereMonth('created_at', '=', date('m'))->whereStatus(1)->sum('amount');
+            $dailySend = BalanceTransfer::whereUserId($user->id)->whereType('other')->whereDate('created_at', '=', date('Y-m-d'))->whereStatus(1)->sum('amount');
+            $monthlySend = BalanceTransfer::whereUserId($user->id)->whereType('other')->whereMonth('created_at', '=', date('m'))->whereStatus(1)->sum('amount');
 
             $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'withdraw')->first();
 
-            $dailyTransactions = BalanceTransfer::whereType('other')->whereUserId($user->id)->whereDate('created_at', now())->get();
-            $monthlyTransactions = BalanceTransfer::whereType('other')->whereUserId($user->id)->whereMonth('created_at', now()->month())->get();
+            if($dailySend > $global_range->daily_limit){
+                return redirect()->back()->with('error','Daily send limit over.');
+            }
+
+            if($monthlySend > $global_range->monthly_limit){
+                return redirect()->back()->with('error','Monthly send limit over.');
+            }
+
             $transaction_global_cost = 0;
             $currency =  Currency::findOrFail($wallet->currency_id);
             $rate = getRate($currency);
@@ -1149,7 +1152,7 @@ class UserController extends Controller
                 {
                     $transaction_global_cost = $transaction_global_fee->data->fixed_charge + ($request->amount/($rate * 100)) * $transaction_global_fee->data->percent_charge;
                 }
-                $finalAmount = $request->amount - $transaction_global_cost*$rate;
+                $finalAmount = $request->amount + $transaction_global_cost*$rate;
 
                 if($global_range->min > $request->amount/$rate){
                     return redirect()->back()->with('error','Request Amount should be greater than this '.$global_range->min);
@@ -1167,15 +1170,6 @@ class UserController extends Controller
 
                 if($global_range->daily_limit <= $finalAmount){
                     return redirect()->back()->with('error','Your daily limitation of transaction is over.');
-                }
-
-                if($global_range->daily_limit <= $dailyTransactions->sum('final_amount')){
-                    return redirect()->back()->with('error','Your daily limitation of transaction is over.');
-                }
-
-
-                if($global_range->monthly_limit < $monthlyTransactions->sum('final_amount')){
-                    return redirect()->back()->with('error','Your monthly limitation of transaction is over.');
                 }
 
                 $data = new BalanceTransfer();
@@ -1198,13 +1192,26 @@ class UserController extends Controller
                 $data->type = 'other';
                 $data->cost = $transaction_global_cost*$rate;
                 $data->payment_type = $request->payment_type;
-                $data->amount = $request->amount;
-                $data->final_amount = $finalAmount;
+                $data->amount = $finalAmount;
+                $data->final_amount = $request->amount;
                 $data->description = $request->des;
                 $data->status = 0;
                 $data->save();
 
-                return redirect()->back()->with('message','Money Send successfully.');
+                $gs = Generalsetting::first();
+
+                user_wallet_decrement($user->id, $data->currency_id, $data->amount);
+                user_wallet_increment(0, $data->currency_id, $data->cost, 9);
+
+
+                $subbank = SubInsBank::findOrFail($request->subbank);
+                mailSend('create_withdraw',['amount'=>amount($data->final_amount,1,2), 'trnx'=> $data->transaction_no,'curr' => $currency->code,'method'=>$subbank->name,'charge'=> amount($data->cost,1,2),'date_time'=> dateFormat($data->created_at)], $user);
+
+                send_notification($user->id, 'Bank transfer has been created by '.$gs->disqus.'. Please check.', route('admin-user-banks', $user->id));
+                send_staff_telegram('Bank transfer has been created by '.$gs->disqus.". Please check.\n".route('admin-user-banks', $user->id), 'Bank Transfer');
+
+
+                return redirect()->back()->with('message','Bank Transfer created successfully.');
 
             }
         }
