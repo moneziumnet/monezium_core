@@ -732,7 +732,7 @@ if (!function_exists('wallet_monthly_fee')) {
                     $trans->data = '{"sender":"' . ($user->company_name ?? $user->name) . '", "receiver":"' . $gs->disqus . '"}';
                     $trans->save();
                     $currency = Currency::findOrFail($value->currency_id);
-                    mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>$wallet_type_list[$value->wallet_type], 'date_time'=> dateFormat($trans->created_at)], $user);
+                    mailSend('account_maintenance',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>$wallet_type_list[$value->wallet_type], 'date_time'=> dateFormat($trans->created_at)], $user);
 
                     $user->update();
                 }
@@ -772,7 +772,7 @@ if (!function_exists('wallet_monthly_fee')) {
                     $trans->save();
                     $currency = Currency::findOrFail($value->currency_id);
 
-                    mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>'Card', 'date_time'=> dateFormat($trans->created_at)], $user);
+                    mailSend('account_maintenance',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>'Card', 'date_time'=> dateFormat($trans->created_at)], $user);
                     $user->update();
                 }
 
