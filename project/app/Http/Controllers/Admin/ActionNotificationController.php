@@ -48,6 +48,7 @@ class ActionNotificationController extends Controller
     }
 
     public function index(){
+        $data = ActionNotification::where('status', '0')->update(['status' => '1']);
         return view('admin.actionnotification.index');
     }
 
@@ -57,11 +58,6 @@ class ActionNotificationController extends Controller
         if($data->status == 0 && $request->notify_status == 0 ){
           $msg = 'Please read this notification';
           return redirect()->back()->with('warning', $msg);
-        }
-
-        if($data->status == 1){
-            $msg = 'You already read this notification';
-            return redirect()->back()->with('warning', $msg);
         }
 
         $data->status = $request->notify_status;
