@@ -136,7 +136,7 @@ class SubInsBankController extends Controller
             }
             return response()->json($msg);
         } catch (\Exception $e){
-            return response()->json(array('errors'=>[0 =>$e->errorInfo[2]]));
+            return response()->json(array('errors'=>[0 =>$e->getMessage()]));
         }
     }
 
