@@ -492,7 +492,7 @@ class ManageInvoiceController extends Controller
                 $subbank = SubInsBank::findOrFail($bankaccount->subbank_id);
                 $user = User::findOrFail($bankaccount->user_id);
                 mailSend('deposit_request',['amount'=>$deposit->amount, 'curr' => ($currency ? $currency->code : ' '), 'date_time'=>$deposit->created_at ,'type' => 'Bank', 'method'=> $subbank->name ], $user);
-                send_notification($invoice->user_id, 'Bank has been deposited by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.deposits.bank.index'));
+                send_notification($invoice->user_id, 'Bank has been deposited by '.(auth()->user()->company_name ?? auth()->user()->name)."\n Amount is ".$currency->symbol.$invoice->final_amount."\n Transaction ID : ".$request->deposit_no, route('admin.deposits.bank.index'));
 
                 send_whatsapp($invoice->user_id, 'Bank has been deposited by '.(auth()->user()->company_name ?? auth()->user()->name)."\n Amount is ".$currency->symbol.$invoice->final_amount."\n Transaction ID : ".$request->deposit_no."\nPlease check more details to click this url\n".route('user.depositbank.index'));
                 send_telegram($invoice->user_id, 'Bank has been deposited by '.(auth()->user()->company_name ?? auth()->user()->name)."\n Amount is ".$currency->symbol.$invoice->final_amount."\n Transaction ID : ".$request->deposit_no."\nPlease check more details to click this url\n".route('user.depositbank.index'));

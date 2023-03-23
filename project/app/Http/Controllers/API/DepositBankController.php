@@ -153,7 +153,7 @@ class DepositBankController extends Controller
             $deposit['details'] = $request->details;
             $deposit['status'] = "pending";
             $deposit->save();
-            send_notification(auth()->id(), 'Bank has been deposited by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.deposits.bank.index'));
+            send_notification(auth()->id(), 'Bank has been deposited by '.(auth()->user()->company_name ?? auth()->user()->name)."\n Amount is ".$currency->symbol.$request->amount."\n Payment Gateway : ".$request->method."\n Transaction ID : ".$request->deposit_no, route('admin.deposits.bank.index'));
             send_whatsapp(auth()->id(), 'Bank has been deposited by '.(auth()->user()->company_name ?? auth()->user()->name)."\n Amount is ".$currency->symbol.$request->amount."\n Payment Gateway : ".$request->method."\n Transaction ID : ".$request->deposit_no."\nPlease check more details to click this url\n".route('user.depositbank.index'));
             send_telegram(auth()->id(), 'Bank has been deposited by '.(auth()->user()->company_name ?? auth()->user()->name)."\n Amount is ".$currency->symbol.$request->amount."\n Payment Gateway : ".$request->method."\n Transaction ID : ".$request->deposit_no."\nPlease check more details to click this url\n".route('user.depositbank.index'));
             send_staff_telegram('Bank has been deposited by '.(auth()->user()->company_name ?? auth()->user()->name)."\n Amount is ".$currency->symbol.$request->amount."\n Payment Gateway : ".$request->method."\n Transaction ID : ".$request->deposit_no."\nPlease check more details to click this url\n".route('admin.deposits.bank.index'), 'Deposit Bank');

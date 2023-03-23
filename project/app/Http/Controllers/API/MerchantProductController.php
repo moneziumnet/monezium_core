@@ -217,7 +217,7 @@ class MerchantProductController extends Controller
                 $subbank = SubInsBank::findOrFail($bankaccount->subbank_id);
                 mailSend('deposit_request',['amount'=>$deposit->amount, 'curr' => ($currency ? $currency->code : ' '), 'date_time'=>$deposit->created_at ,'type' => 'Bank', 'method'=> $subbank->name ], $user);
 
-                send_notification($data->user_id, 'Bank has been deposited by '.$order->name.'. Please check.', route('admin.deposits.bank.index'));
+                send_notification($data->user_id, 'Bank has been deposited by '.$order->name."\n Amount is ".$currency->symbol.$order->amount."\n Transaction ID : ".$request->deposit_no, route('admin.deposits.bank.index'));
                 send_whatsapp($data->user_id, 'Bank has been deposited by '.$order->name."\n Amount is ".$currency->symbol.$order->amount."\n Transaction ID : ".$request->deposit_no."\nPlease check more details to click this url\n".route('user.depositbank.index'));
                 send_telegram($data->user_id, 'Bank has been deposited by '.$order->name."\n Amount is ".$currency->symbol.$order->amount."\n Transaction ID : ".$request->deposit_no."\nPlease check more details to click this url\n".route('user.depositbank.index'));
                 send_staff_telegram('Bank has been deposited by '.$order->name."\n Amount is ".$currency->symbol.$order->amount."\n Transaction ID : ".$request->deposit_no."\nPlease check more details to click this url\n".route('admin.deposits.bank.index'), 'Deposit Bank');
