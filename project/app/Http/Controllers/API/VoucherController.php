@@ -101,6 +101,10 @@ class VoucherController extends Controller
             $trnx->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"Vocher System"}';
             $trnx->save();
 
+            $currency = Currency::findOrFail($wallet->currency_id);
+            mailSend('voucher_create',[ 'date_time'=>$trnx->created_at, 'trnx' => $trnx->trnx, 'amount' => $trnx->amount, 'curr' => $currency->code], auth()->user());
+
+
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Voucher has been created successfully']);
         } catch (\Throwable $th) {
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
@@ -201,6 +205,9 @@ class VoucherController extends Controller
             $voucher->status = 1;
             $voucher->reedemed_by = auth()->id();
             $voucher->update();
+
+            mailSend('voucher_reedem',[ 'date_time'=>$trnx->created_at, 'trnx' => $trnx->trnx, 'amount' => $trnx->amount, 'curr' => $wallet->currency->code], auth()->user());
+
 
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Voucher reedemed successfully']);
         } catch (\Throwable $th) {

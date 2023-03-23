@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\BankPlan;
 use App\Models\Generalsetting;
 use App\Models\User;
+use App\Models\Currency;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 
@@ -43,6 +44,9 @@ class SubscriptionController extends Controller
             $user->plan_end_date = now()->addDays($plan->days);
             $user->update();
         }
+        $currency = Currency::findOrFail($request->currency_id);
+        mailSend('plan_upgrade',['amount' => $plan->amount, 'curr' => $currency->code, 'date_time' => $trnx->created_at], auth()->user());
+
         return redirect()->route('user.dashboard')->with('message','Bank Plan Updated');
     }
 }

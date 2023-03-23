@@ -549,6 +549,7 @@ class UserController extends Controller
 
         $data->update($input);
         $msg = 'Successfully updated your profile';
+        mailSend('profile_udpate',[], auth()->user());
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Successfully updated your profile']);
     }
 

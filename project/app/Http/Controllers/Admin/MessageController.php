@@ -219,6 +219,7 @@ class MessageController extends Controller
         sendMail($to, $subject, $msg, $headers);
 
         //--- Redirect Section
+        mailSend('ticket_reply',['title' => $conv->subject, 'date_time' => $msg->created_at], $conv->user);
         return redirect()->back()->with('message', 'You reply successfully.');
         // return response()->json('You reply successfully.');
         //--- Redirect Section Ends

@@ -607,6 +607,8 @@ class UserController extends Controller
 
         $data->update($input);
         $msg = 'Successfully updated your profile';
+        mailSend('profile_udpate',[], auth()->user());
+
         return redirect()->back()->with('success',$msg);
     }
 

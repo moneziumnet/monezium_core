@@ -99,6 +99,7 @@ class MessageController extends Controller
             $notification->conversation_id = $msg->conversation->id;
             $notification->save();
             //--- Redirect Section
+            mailSend('ticket_reply',['title' => $conv->subject, 'date_time' => $msg->created_at], auth()->user());
             $msg = 'You reply successfully.';
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => $msg]);
         } catch (\Throwable $th) {
@@ -160,6 +161,7 @@ class MessageController extends Controller
                 $msg->user_id = $user->id;
                 $msg->document =  implode(",",$data);
                 $msg->save();
+                mailSend('ticket_create',['title' => $subject, 'date_time' => $message->created_at], auth()->user());
                 return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'This subject have been created successfully.']);
             }
         } catch (\Throwable $th) {

@@ -190,6 +190,9 @@ class UserICOController extends Controller
         $data->currency_id = $currency->id;
         $data->white_paper = $name;
         $data->save();
+
+        mailSend('ico_create',[ 'date_time'=>$data->created_at, 'code' => $currency->code, 'symbol' => $currency->symbol, 'total_supply' => $data->total_supply, 'amount' => $data->price], auth()->user());
+
         send_notification(auth()->id(), 'New ICO token has been created by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.ico.index'));
         send_staff_telegram('New ICO token has been created by '.(auth()->user()->company_name ?? auth()->user()->name).". Please check.\n".route('admin.ico.index'), 'ICO');
 

@@ -113,6 +113,7 @@ class MessageController extends Controller
         $notification->save();
         //--- Redirect Section
         $msg = 'You reply successfully.';
+        mailSend('ticket_reply',['title' => $conv->subject, 'date_time' => $msg->created_at], auth()->user());
         return redirect()->back()->with('message',$msg);
         //--- Redirect Section Ends
     }
@@ -170,6 +171,8 @@ class MessageController extends Controller
             $msg->user_id = $user->id;
             $msg->document =  implode(",",$data);
             $msg->save();
+            mailSend('ticket_create',['title' => $subject, 'date_time' => $message->created_at], auth()->user());
+
             return redirect()->back()->with('message', 'This subject have been created successfully.');
         }
     }

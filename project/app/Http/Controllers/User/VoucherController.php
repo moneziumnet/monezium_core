@@ -7,6 +7,7 @@ use App\Models\Voucher;
 use App\Models\Transaction;
 use App\Models\Charge;
 use App\Models\User;
+use App\Models\Currency;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
@@ -85,6 +86,10 @@ class VoucherController extends Controller
         $trnx->details     = trans('Voucher created');
         $trnx->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"Vocher System"}';
         $trnx->save();
+
+        $currency = Currency::findOrFail($wallet->currency_id);
+        mailSend('voucher_create',[ 'date_time'=>$trnx->created_at, 'trnx' => $trnx->trnx, 'amount' => $trnx->amount, 'curr' => $currency->code], auth()->user());
+
 
         return redirect(route('user.vouchers'))->with('message','Voucher has been created successfully');
 
@@ -171,6 +176,7 @@ class VoucherController extends Controller
        $voucher->status = 1;
        $voucher->reedemed_by = auth()->id();
        $voucher->update();
+       mailSend('voucher_reedem',[ 'date_time'=>$trnx->created_at, 'trnx' => $trnx->trnx, 'amount' => $trnx->amount, 'curr' => $wallet->currency->code], auth()->user());
 
        return back()->with('success','Voucher reedemed successfully');
 

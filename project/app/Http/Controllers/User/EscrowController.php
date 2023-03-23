@@ -151,6 +151,7 @@ class EscrowController extends Controller
         $trnx->details     = trans('Made escrow to '). $receiver->email;
         $trnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name).'", "description": "'.$request->description.'"}';
         $trnx->save();
+
         send_notification(auth()->id(), 'New Escrow has been requested by '.(auth()->user()->company_name ?? auth()->user()->name)."\n Amount is ".$currency->symbol.$request->amount."\n Escrow ID : ".$escrow->trnx, route('admin.escrow.onHold'));
         send_staff_telegram('New Escrow has been requested by '.(auth()->user()->company_name ?? auth()->user()->name)."\n Amount is ".$currency->symbol.$request->amount."\n Escrow ID : ".$escrow->trnx."\n Please check.\n".route('admin.escrow.onHold'), 'Escrow');
 
@@ -215,6 +216,12 @@ class EscrowController extends Controller
         $dispute->message = $request->message;
         if($request->file) $dispute->file = MediaHelper::handleMakeImage($request->file);
         $dispute->save();
+
+        $recipient = User::findOrFail($escrow->recipient_id);
+        $owner = User::findOrFail($escrow->user_id);
+
+        mailSend('escrow_dispute',[ 'date_time'=>$dispute->created_at, 'user_name' => (auth()->user()->company_name ?? auth()->user()->name), 'trnx' => $escrow->trnx, 'reason' => $dispute->message], $recipient);
+        mailSend('escrow_dispute',[ 'date_time'=>$dispute->created_at, 'user_name' => (auth()->user()->company_name ?? auth()->user()->name), 'trnx' => $escrow->trnx, 'reason' => $dispute->message], $owner);
 
         send_notification(auth()->id(), 'Dispute about Escrow has been created by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.'."\nEscrow ID:".$escrow->trnx, route('admin.escrow.disputed'));
         send_staff_telegram('Dispute about Escrow has been created by '.(auth()->user()->company_name ?? auth()->user()->name)."\nEscrow ID:".$escrow->trnx."\n Please check.\n".route('admin.escrow.disputed'), 'Escrow');
@@ -310,6 +317,9 @@ class EscrowController extends Controller
 
         $escrow->status = 1;
         $escrow->save();
+        $currency = Currency::findOrFail($escrow->currency_id);
+
+        mailSend('escrow_release',[ 'amount' =>$amount, 'curr' => $currency->code, 'date_time'=>$trnx->created_at, 'user_name' => (auth()->user()->company_name ?? auth()->user()->name), 'trnx' => $escrow->trnx,'charge'=>  $trnx->charge], $recipient);
 
         send_notification($recipient->id, 'Holding Escrow has been released by '.(auth()->user()->company_name ?? auth()->user()->name)."\nEscrow ID:".$escrow->trnx, route('admin.escrow.manage'));
         send_staff_telegram('Holding Escrow has been released by '.(auth()->user()->company_name ?? auth()->user()->name)."\nEscrow ID:".$escrow->trnx."\n Please check.\n".route('admin.escrow.manage'), 'Escrow');
