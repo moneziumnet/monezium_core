@@ -58,7 +58,7 @@ class SystemAccountController extends Controller
         })
         ->editColumn('receiver', function(Transaction $data) {
             $details = json_decode(str_replace(array("\r", "\n"), array('\r', '\n'), $data->data));
-            return ucwords($details->receiver ?? "");
+            return str_dis(ucwords($details->receiver ?? ""));
         })
         ->editColumn('created_at', function(Transaction $data) {
             $date = date('d-m-Y',strtotime($data->created_at));
@@ -141,6 +141,33 @@ class SystemAccountController extends Controller
 
         return redirect()->back()->with('message','Cryto Withdraw successfully.');
 
+    }
+
+    public function withdraw_store(Request $request) {
+        $wallet = Wallet::where('user_id',0)->where('wallet_type', 9)->where('currency_id', $request->currency_id)->first();
+        user_wallet_decrement(0, $request->currency_id, $request->amount, 9);
+
+        $txnid = Str::random(12);
+        $gs = Generalsetting::first();
+
+
+        $trans = new Transaction();
+        $trans->trnx = $txnid;
+        $trans->user_id     = 0;
+        $trans->user_type   = 1;
+        $trans->currency_id = $request->currency_id;
+        $trans->amount      = $request->amount;
+        $trans->charge      = 0;
+
+        $trans->wallet_id   = $wallet->id;
+
+        $trans->type        = '-';
+        $trans->remark      = 'withdraw';
+        $trans->details     = trans('Withdraw money from System Wallet');
+        $trans->data        = '{"sender":"'.($gs->disqus).'", "receiver":"'.($gs->disqus).'"}';
+        $trans->save();
+
+        return redirect()->back()->with('message','Cryto Withdraw successfully.');
     }
 
     public function create($currency_id)

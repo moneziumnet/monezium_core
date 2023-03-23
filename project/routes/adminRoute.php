@@ -546,6 +546,7 @@ Route::prefix('admin')->group(function () {
   Route::get('/system-settings/transaction/datatables/{id}', [SystemAccountController::class, 'trn_datables'])->name('admin.system.account.transactions.datatables');
   Route::get('/system-settings/crypto/withdraw/{id}', [SystemAccountController::class, 'crypto_withdraw_form'])->name('admin.system.account.crypto.withdraw.form');
   Route::post('/system-settings/crypto/withdraw/store', [SystemAccountController::class, 'crypto_withdraw_store'])->name('admin.system.account.crypto.withdraw.store');
+  Route::post('/system-settings/withdraw/store', [SystemAccountController::class, 'withdraw_store'])->name('admin.system.account.withdraw.store');
 
 
   Route::group(['middleware' => 'permissions:General Setting'], function () {

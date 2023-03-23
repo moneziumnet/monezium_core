@@ -53,6 +53,8 @@
                                                 <div class="dropdown-menu dropdown-menu-right">
                                                     @if ($dcurr->type == 2)
                                                         <a class="dropdown-item" href="javascript:;" onclick="Crypto_withdraw({{$dcurr->id}})" >{{ __('Withdraw Crypto') }}</a>
+                                                    @else
+                                                        <a class="dropdown-item" href="javascript:;" onclick="Withdraw({{$dcurr->id}})" >{{ __('Withdraw') }}</a>
                                                     @endif
                                                     <a class="dropdown-item" href="{{route('admin.system.account.transactions', $dcurr->id)}}">{{ __('Transaction View') }}</a>
                                                 </div>
@@ -134,6 +136,29 @@
     </div>
   </div>
 
+  <div class="modal modal-blur fade" id="modal-success-1" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-status bg-primary"></div>
+        <div class="modal-body py-4">
+        <div class="text-center"><i  class="fas fa-info-circle fa-3x text-primary mb-2"></i></div>
+        <h3 class="text-center">@lang('Withdraw Details')</h3>
+        <form action="{{route('admin.system.account.withdraw.store')}}" method="post" class="m-3">
+            @csrf
+            <input type="hidden" name="currency_id" id="fiat_currency_id">
+            <div class="form-group mb-3 mt-3">
+                <label class="form-label required">{{__('Amount')}}</label>
+                <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" step="any" value="{{ old('amount') }}" required>
+            </div>
+            <div class="form-group">
+                <button type="submit" id="submit-btn" class="btn btn-primary w-100 mt-2">{{ __('Withdraw') }}</button>
+            </div>
+            </form>
+        </div>
+    </div>
+    </div>
+  </div>
+
 
 <!--Row-->
 @endsection
@@ -157,6 +182,12 @@ function Crypto_withdraw(id) {
             });
         $('#modal-success-2').modal('show')
     }
+
+function Withdraw(id) {
+    $('#fiat_currency_id').val(id);
+    $('#modal-success-1').modal('show');
+}
+
 
 </script>
 @endsection

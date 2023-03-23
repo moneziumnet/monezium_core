@@ -1733,7 +1733,7 @@ class UserController extends Controller
                             })
                             ->editColumn('receiver', function(Transaction $data) {
                                 $details = json_decode(str_replace(array("\r", "\n"), array('\r', '\n'), $data->data));
-                                return ucwords($details->receiver ?? "");
+                                return str_dis(ucwords($details->receiver ?? ""));
                             })
                             ->editColumn('created_at', function(Transaction $data) {
                                 $date = date('d-m-Y',strtotime($data->created_at));
@@ -1811,7 +1811,7 @@ class UserController extends Controller
                             })
                             ->editColumn('receiver', function(Transaction $data) {
                                 $details = json_decode(str_replace(array("\r", "\n"), array('\r', '\n'), $data->data));
-                                return ucwords($details->receiver ?? "");
+                                return str_dis(ucwords($details->receiver ?? ""));
                             })
                             ->editColumn('created_at', function(Transaction $data) {
                                 $date = date('d-m-Y',strtotime($data->created_at));

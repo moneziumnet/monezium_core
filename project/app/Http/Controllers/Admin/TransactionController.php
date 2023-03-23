@@ -30,7 +30,7 @@ class TransactionController extends Controller
                         })
                         ->editColumn('receiver', function(Transaction $data) {
                             $details = json_decode(str_replace(array("\r", "\n"), array('\r', '\n'), $data->data));
-                            return ucwords($details->receiver ?? "");
+                            return str_dis(ucwords($details->receiver ?? ""));
                         })
                         ->editColumn('remark', function(Transaction $data) {
                             return ucwords(str_replace('_',' ',$data->remark));
