@@ -63,6 +63,7 @@ class MerchantShopController extends Controller
             $data->logo = $logo_name;
             $data->url = $request->url;
             $data->save();
+            mailSend('merchant_shop_request',['shop_name'=>$request->name, 'url' => $request->url], auth()->user());
             send_notification($request->merchant_id, 'Merchant Shop has been created by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.merchant.shop.index', $request->merchant_id));
             send_staff_telegram('Merchant Shop has been created by '.(auth()->user()->company_name ?? auth()->user()->name).". Please check.\n".route('admin.merchant.shop.index', $request->merchant_id), 'Merchant Shop');
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Merchant Shop has been created successfully']);

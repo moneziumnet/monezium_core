@@ -70,6 +70,9 @@ class MerchantProductController extends Controller
             $image->product_id = $data->id;
             $image->image = $name;
             $image->save();
+            $currency =  Currency::findOrFail($request->currency_id);
+            mailSend('merchant_product_created',['product_name'=>$request->name, 'amount' => $request->amount, 'curr' => $currency->code], auth()->user());
+
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'New Product has been created successfully']);
         } catch (\Throwable $th) {
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);

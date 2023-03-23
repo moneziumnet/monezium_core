@@ -82,6 +82,10 @@ class CampaignController extends Controller
         $data->status = $id2;
         $data->update();
         $msg = 'Data Updated Successfully.';
+        $title = $ids == '1' ? "campaign_enable" : 'campaign_disable';
+        $user = User::findOrFail($data->user_id);
+        mailSend($title,['campaign_title'=>$data->title], $user);
+
         return response()->json($msg);
       }
     public function destroy($id)
