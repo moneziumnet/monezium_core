@@ -82,6 +82,8 @@ class UserDpsController extends Controller
                 $trans->details     = trans('Dps created');
 
                 $trans->save();
+                $currency = Currency::findOrFail($request->currency_id);
+                mailSend('dps_run',['amount'=>$request->deposit_amount, 'curr'=> $currency->code ], auth()->user());
                 send_notification(auth()->id(), 'Dps has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.dps.running'));
                 send_staff_telegram('Dps has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).". Please check.\n".route('admin.dps.running'), 'Dps');
 
@@ -103,6 +105,7 @@ class UserDpsController extends Controller
                 $dps->status = 2;
                 $dps->next_installment = NULL;
                 $dps->update();
+                mailSend('dps_finish',[], auth()->user());
                 user_wallet_increment($dps->user_id, $dps->currency_id, $dps->paid_amount, 3);
                 user_wallet_decrement($dps->user_id, $dps->currency_id, $dps->paid_amount, 3);
                 send_notification(auth()->id(), 'Dps Finish has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.dps.matured'));

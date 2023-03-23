@@ -47,6 +47,9 @@ class UserFdrController extends Controller
             $fdr->next_profit_time = NULL;
             $fdr->status = 2;
             $fdr->update();
+
+            mailSend('fdr_finish',[], auth()->user());
+
             send_notification(auth()->id(), 'FDR Finish has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.fdr.closed'));
             send_staff_telegram('FDR Finish has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).". Please check.\n".route('admin.fdr.closed'), 'Fdr');
 
@@ -107,6 +110,10 @@ class UserFdrController extends Controller
             // $trans->user_id = auth()->id();
             $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.$gs->disqus.'"}';
             $trans->save();
+
+            $currency = Currency::findOrFail($request->currency_id);
+            mailSend('fdr_run',['amount'=>$request->fdr_amount, 'curr'=> $currency->code ], auth()->user());
+
             send_notification(auth()->id(), 'FDR has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.fdr.running'));
             send_staff_telegram('FDR has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).". Please check.\n".route('admin.fdr.running'), 'Fdr');
 

@@ -186,6 +186,14 @@ class LoanController extends Controller
         }
         $data->next_installment = Carbon::now()->addDays($data->plan->installment_interval);
       }
+      $currency = Currency::findOrFail($data->currency_id);
+      $user = User::whereId($data->user_id)->first();
+      if ($id2 == 1) {
+          mailSend('loan_approved',[], $user);
+      }
+      else if($id2 == 2) {
+        mailSend('loan_reject',[], $user);
+      }
       $data->status = $id2;
       $data->update();
 

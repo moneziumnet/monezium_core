@@ -110,7 +110,7 @@ class KYCController extends Controller
         $userForms = KycForm::where('id', $user->manual_kyc)->first();
         $gs = Generalsetting::first();
         $route = route('user.kyc.selfie',encrypt($user->id));
-        mailSend('online_selfie_ling',['url'=>$route], $user);
+        mailSend('online_selfie_link',['url'=>$route], $user);
 
 
         $requireInformations = [];

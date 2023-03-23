@@ -81,6 +81,8 @@ class UserLoanController extends Controller
             $loan->status = 3;
             $loan->next_installment = NULL;
             $loan->update();
+            $currency = Currency::findOrFail($loan->currency_id);
+            mailSend('loan_finish',[], auth()->user());
             send_notification(auth()->id(), 'Loan finsih has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.loan.show', $loan->id));
             send_staff_telegram('Loan finsih has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).". Please check.\n".route('admin.loan.show', $loan->id), 'Loan');
 
@@ -152,6 +154,8 @@ class UserLoanController extends Controller
         $input['total_amount'] = $request->loan_amount;
         $input['currency_id'] = $request->currency_id;
         $data->fill($input)->save();
+        $currency = Currency::findOrFail($request->currency_id);
+        mailSend('loan_request',['amount'=>$request->amount, 'curr'=> $currency->code ], auth()->user());
 
         send_notification(auth()->id(), 'Loan has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.loan.show', $data->id));
         send_staff_telegram('Loan has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).". Please check.\n".route('admin.loan.show', $data->id), 'Loan');
