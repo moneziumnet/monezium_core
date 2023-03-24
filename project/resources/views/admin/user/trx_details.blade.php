@@ -7,7 +7,7 @@
 <li class="list-group-item d-flex justify-content-between">@lang('Date')<span>{{dateFormat($transaction->created_at,'d M y')}}</span></li>
 @if (isset($transaction->data))
     @foreach ( json_decode(str_replace(array("\r", "\n"), array('\r', '\n'), $transaction->data)) as $key => $value)
-        <li class="list-group-item d-flex justify-content-between">@lang(ucwords($key))<span>{{($value)}}</span></li>
+        <li class="list-group-item d-flex justify-content-between">@lang(ucwords(str_replace('_', ' ', $key)))<span>{{($value)}}</span></li>
     @endforeach
 
 @endif

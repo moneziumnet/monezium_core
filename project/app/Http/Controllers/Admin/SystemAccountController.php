@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Models\Generalsetting;
 use App\Models\CryptoApi;
 use App\Models\Transaction;
+use App\Models\SubInsBank;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
@@ -30,6 +31,8 @@ class SystemAccountController extends Controller
     {
         $wallets = Wallet::where('user_id',0)->where('wallet_type', 9)->with('currency')->get();
         $data['wallets'] = $wallets;
+        $data['banks'] = SubInsBank::where('status', 1)->get();
+
         return view('admin.system.systemwallet',$data);
     }
 
@@ -151,6 +154,11 @@ class SystemAccountController extends Controller
         $gs = Generalsetting::first();
 
 
+        $trax_details = $request->except('_token', 'currency_id', 'beneficiary_user_name');
+        $trax_details['sender'] = $gs->disqus;
+        $trax_details['receiver'] = $request->beneficiary_user_name;
+        $trax_details = json_encode($trax_details, True);
+
         $trans = new Transaction();
         $trans->trnx = $txnid;
         $trans->user_id     = 0;
@@ -164,10 +172,10 @@ class SystemAccountController extends Controller
         $trans->type        = '-';
         $trans->remark      = 'withdraw';
         $trans->details     = trans('Withdraw money from System Wallet');
-        $trans->data        = '{"sender":"'.($gs->disqus).'", "receiver":"'.($gs->disqus).'"}';
+        $trans->data        = $trax_details;
         $trans->save();
 
-        return redirect()->back()->with('message','Cryto Withdraw successfully.');
+        return redirect()->back()->with('message','Withdraw successfully.');
     }
 
     public function create($currency_id)

@@ -143,15 +143,58 @@
         <div class="modal-body py-4">
         <div class="text-center"><i  class="fas fa-info-circle fa-3x text-primary mb-2"></i></div>
         <h3 class="text-center">@lang('Withdraw Details')</h3>
-        <form action="{{route('admin.system.account.withdraw.store')}}" method="post" class="m-3">
+        <form action="{{route('admin.system.account.withdraw.store')}}" method="post" class="m-3" id="iban-submit">
             @csrf
             <input type="hidden" name="currency_id" id="fiat_currency_id">
+            <div class="form-group mt-3">
+                <label class="form-label required">{{ __('Bank Account') }}</label>
+                <select name="payment_gateway" id="subbank" class="form-control" required>
+                    <option value="">{{ __('Select Bank Account') }}</option>
+                    @foreach ($banks as $item)
+                        <option value="{{ $item->name }}">
+                            {{ $item->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group mt-3">
+                <label class="form-label required">{{__('Beneficiary User Name')}}</label>
+                <input name="beneficiary_user_name" id="beneficiary_user_name" class="form-control" autocomplete="off" placeholder="{{__('John Doe')}}" type="text" pattern="[^À-ž()/><\][\\\-;&$@!|]+" required>
+            </div>
+            <div class="form-group mt-2">
+                <label class="form-label required">{{__('Beneficiary Account/IBAN')}}</label>
+                <input name="account_iban" id="account_iban" class="form-control iban-input" autocomplete="off" placeholder="{{__('Enter Account/IBAN')}}" type="text" value="{{ old('account_iban') }}" required>
+                <small class="text-danger iban-validation"></small>
+            </div>
+
+            <div class="form-group mt-2">
+                <label class="form-label required">{{__('Beneficiary Bank Name')}}</label>
+                <input name="bank_name" id="bank_name" class="form-control" autocomplete="off" placeholder="{{__('Enter Bank Name')}}" type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" value="{{ old('bank_name') }}" required readonly>
+            </div>
+
+            <div class="form-group mt-2">
+                <label class="form-label required">{{__('Beneficiary Bank Address')}}</label>
+                <input name="bank_address" id="bank_address" class="form-control" autocomplete="off" placeholder="{{__('Enter Bank Address')}}" type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" value="{{ old('bank_address') }}" required readonly>
+            </div>
+
+            <div class="form-group mt-2">
+                <label class="form-label required">{{__('Beneficiary SWIFT/BIC')}}</label>
+                <input name="swift_bic" id="swift" class="form-control" autocomplete="off" placeholder="{{__('MEINATWW')}}" type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" value="{{ old('swift_bic') }}" required readonly>
+            </div>
+
             <div class="form-group mb-3 mt-3">
                 <label class="form-label required">{{__('Amount')}}</label>
                 <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" step="any" value="{{ old('amount') }}" required>
             </div>
+
+            <div class="form-group mt-3">
+                <label class="form-label required">{{ __('Description') }}</label>
+                <textarea name="description" id="description" class="form-control" autocomplete="off"
+                    placeholder="{{ __('Please input description') }}" type="text" required></textarea>
+            </div>
+
             <div class="form-group">
-                <button type="submit" id="submit-btn" class="btn btn-primary w-100 mt-2">{{ __('Withdraw') }}</button>
+                <button type="submit" id="submit-btn" class="btn btn-primary w-100 mt-2"  data-bs-dismiss="modal">{{ __('Withdraw') }}</button>
             </div>
             </form>
         </div>
@@ -187,7 +230,6 @@ function Withdraw(id) {
     $('#fiat_currency_id').val(id);
     $('#modal-success-1').modal('show');
 }
-
 
 </script>
 @endsection
