@@ -466,8 +466,13 @@ class UserWhatsappController extends Controller
 
                         send_message_whatsapp('You completed Bank Transfer successfully.', $phone);
                         $user = User::findOrFail($whatsapp_user->user_id);
-                        send_notification($user->id, 'Bank transfer has been created by '.($user->company_name ?? $user->name).' via Whatsapp. Please check.', route('admin-user-banks', $user->id));
-                        send_staff_telegram('Bank transfer has been created by '.($user->company_name ?? $user->name)." via Whatsapp. Please check.".route('admin-user-banks', $user->id), 'Bank Transfer');
+                        $currency = Currency::findOrFail($balance_transfer->currency_id);
+                        $subbank = SubInsBank::findOrFail($balance_transfer->subbank);
+                        mailSend('create_withdraw',['amount'=>amount($balance_transfer->final_amount,1,2), 'trnx'=> $balance_transfer->transaction_no,'curr' => $currency->code,'method'=>$subbank->name,'charge'=> amount($balance_transfer->cost,1,2),'date_time'=> dateFormat($balance_transfer->created_at)], $user);
+
+                        send_notification($user->id, 'Bank transfer has been created on Whatsapp by '.($user->company_name ?? $user->name).".\n Amount is ".$currency->symbol.$balance_transfer->final_amount."\n Payment Gateway:".$subbank->name."\n Charge:".$currency->symbol.amount($balance_transfer->cost,1,2)."\n Transaction ID:".$balance_transfer->transaction_no."\n Status:Pending", route('admin-user-banks', $user->id));
+
+                        send_staff_telegram('Bank transfer has been created on Whatsapp by '.($user->company_name ?? $user->name).".\n Amount is ".$currency->symbol.$balance_transfer->final_amount."\n Payment Gateway:".$subbank->name."\n Charge:".$currency->symbol.amount($balance_transfer->cost,1,2)."\n Transaction ID:".$balance_transfer->transaction_no."\n Status:Pending"."\n Please check.".route('admin-user-banks', $user->id), 'Bank Transfer');
 
                         return;
 

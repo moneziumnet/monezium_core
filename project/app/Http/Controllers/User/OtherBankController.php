@@ -183,8 +183,8 @@ class OtherBankController extends Controller
             $subbank = SubInsBank::findOrFail($request->subbank);
             mailSend('create_withdraw',['amount'=>amount($data->final_amount,1,2), 'trnx'=> $data->transaction_no,'curr' => $currency->code,'method'=>$subbank->name,'charge'=> amount($data->cost,1,2),'date_time'=> dateFormat($data->created_at)], $user);
 
-            send_notification($user->id, 'Bank transfer has been created by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin-user-banks', $user->id));
-            send_staff_telegram('Bank transfer has been created by '.(auth()->user()->company_name ?? auth()->user()->name).". Please check.\n".route('admin-user-banks', $user->id), 'Bank Transfer');
+            send_notification($user->id, 'Bank transfer has been created by '.(auth()->user()->company_name ?? auth()->user()->name).".\n Amount is ".$currency->symbol.$data->final_amount."\n Payment Gateway:".$subbank->name."\n Charge:".$currency->symbol.amount($data->cost,1,2)."\n Transaction ID:".$data->transaction_no."\n Status:Pending", route('admin-user-banks', $user->id));
+            send_staff_telegram('Bank transfer has been created by '.(auth()->user()->company_name ?? auth()->user()->name).".\n Amount is ".$currency->symbol.$data->final_amount."\n Payment Gateway:".$subbank->name."\n Charge:".$currency->symbol.amount($data->cost,1,2)."\n Transaction ID:".$data->transaction_no."\n Status:Pending"."\n Please check.\n".route('admin-user-banks', $user->id), 'Bank Transfer');
 
             return redirect(route('user.beneficiaries.index'))->with('message','Money Send successfully.');
 

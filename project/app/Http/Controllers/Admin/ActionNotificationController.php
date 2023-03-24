@@ -13,12 +13,15 @@ class ActionNotificationController extends Controller
 {
     public function datatables()
     {
-        $datas = ActionNotification::orderBy('status','asc');
+        $datas = ActionNotification::orderBy('id','desc');
 
         return Datatables::of($datas)
                         ->editColumn('user_name',function(ActionNotification $data){
                             $user = User::findOrFail($data->user_id);
                             return $user->company_name ?? $user->name;
+                        })
+                        ->editColumn('description',function(ActionNotification $data){
+                            return nl2br($data->description);
                         })
                         ->editColumn('status', function(ActionNotification $data) {
                               if ($data->status == 1) {

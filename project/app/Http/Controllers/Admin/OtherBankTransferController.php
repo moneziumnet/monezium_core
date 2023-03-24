@@ -567,7 +567,8 @@ class OtherBankTransferController extends Controller
       $currency =  Currency::findOrFail($data->currency_id);
       $subbank = SubInsBank::findOrFail($data->subbank);
       mailSend('accept_withdraw',['amount'=>amount($data->final_amount,1,2), 'trnx'=> $trans->trnx,'curr' => $currency->code,'method'=>$subbank->name,'charge'=> amount($data->cost,1,2),'date_time'=> dateFormat($data->updated_at)], $user);
-
+      send_notification($user->id, 'Bank transfer has been completed'.".\n Amount is ".$currency->symbol.$data->final_amount."\n Payment Gateway:".$subbank->name."\n Charge:".$currency->symbol.amount($data->cost,1,2)."\n Transaction ID:".$data->transaction_no."\n Status:Complete", route('admin-user-banks', $user->id));
+      send_staff_telegram('Bank transfer has been completed by '.($user->company_name ?? $user->name).".\n Amount is ".$currency->symbol.$data->final_amount."\n Payment Gateway:".$subbank->name."\n Charge:".$currency->symbol.amount($data->cost,1,2)."\n Transaction ID:".$data->transaction_no."\n Status:Complete"."\n Please check.\n".route('admin-user-banks', $user->id), 'Bank Transfer');
       $msg = __('Status Updated Successfully.');
     }
 
@@ -579,6 +580,9 @@ class OtherBankTransferController extends Controller
       $currency =  Currency::findOrFail($data->currency_id);
       $subbank = SubInsBank::findOrFail($data->subbank);
       mailSend('reject_withdraw',['amount'=> amount($data->final_amount,1,2), 'trnx'=> $data->transaction_no,'curr' => $currency->code,'method'=>$subbank->name,'reason'=>'Admin reject your request.','date_time'=> dateFormat($data->updated_at)],$user);
+
+      send_notification($user->id, 'Bank transfer has been rejected'.".\n Amount is ".$currency->symbol.$data->final_amount."\n Payment Gateway:".$subbank->name."\n Charge:".$currency->symbol.amount($data->cost,1,2)."\n Transaction ID:".$data->transaction_no."\n Status:Rejected", route('admin-user-banks', $user->id));
+      send_staff_telegram('Bank transfer has been rejected by '.($user->company_name ?? $user->name).".\n Amount is ".$currency->symbol.$data->final_amount."\n Payment Gateway:".$subbank->name."\n Charge:".$currency->symbol.amount($data->cost,1,2)."\n Transaction ID:".$data->transaction_no."\n Status:Rejected"."\n Please check.\n".route('admin-user-banks', $user->id), 'Bank Transfer');
 
       $msg = __('Status Updated Successfully.');
     }
