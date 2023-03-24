@@ -64,8 +64,8 @@ class MerchantShopController extends Controller
             $data->url = $request->url;
             $data->save();
             mailSend('merchant_shop_request',['shop_name'=>$request->name, 'url' => $request->url], auth()->user());
-            send_notification($request->merchant_id, 'Merchant Shop has been created by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.merchant.shop.index', $request->merchant_id));
-            send_staff_telegram('Merchant Shop has been created by '.(auth()->user()->company_name ?? auth()->user()->name).". Please check.\n".route('admin.merchant.shop.index', $request->merchant_id), 'Merchant Shop');
+            send_notification($request->merchant_id, 'Merchant Shop has been created by '.(auth()->user()->company_name ?? auth()->user()->name)."\nShop Name is ".$request->name."\nShop online url is".$request->url."\n Please check.", route('admin.merchant.shop.index', $request->merchant_id));
+            send_staff_telegram('Merchant Shop has been created by '.(auth()->user()->company_name ?? auth()->user()->name)."\nShop Name is ".$request->name."\nShop online url is".$request->url."\n Please check.\n".route('admin.merchant.shop.index', $request->merchant_id), 'Merchant Shop');
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Merchant Shop has been created successfully']);
         } catch (\Throwable $th) {
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);

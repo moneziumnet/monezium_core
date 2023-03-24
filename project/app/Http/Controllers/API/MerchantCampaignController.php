@@ -104,8 +104,8 @@ class MerchantCampaignController extends Controller
             $data->fill($input)->save();
             $currency =  Currency::findOrFail($request->currency_id);
             mailSend('campaign_create',['campaign_title'=>$request->title, 'amount' => $request->goal, 'curr' => $currency->code], auth()->user());
-            send_notification(auth()->id(), 'New Campaign has been created by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.campaign.index'));
-            send_staff_telegram('New Campaign has been created by '.(auth()->user()->company_name ?? auth()->user()->name).". Please check.\n".route('admin.campaign.index'), 'Campaign');
+            send_notification(auth()->id(), 'New Campaign has been created by '.(auth()->user()->company_name ?? auth()->user()->name)."\n Campaign Title is ".$request->title."\n Please check.", route('admin.campaign.index'));
+            send_staff_telegram('New Campaign has been created by '.(auth()->user()->company_name ?? auth()->user()->name)."\n Campaign Title is ".$request->title."\n Please check.\n".route('admin.campaign.index'), 'Campaign');
 
              return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'New Campaign has been created successfully']);
         } catch (\Throwable $th) {
@@ -250,8 +250,8 @@ class MerchantCampaignController extends Controller
                 $user = User::findOrFail($data->user_id);
                 mailSend('donate',['campaign_title'=>$data->title, 'amount' => $newdonation->amount, 'curr' => $currency->code, 'date_time'=>$newdonation->created_at, 'user_name' => $newdonation->user_name], $user);
 
-                send_notification($data->user_id, 'Campaign has been donated by '.$request->user_name.'. Please check.', route('admin.donation.index'));
-                send_staff_telegram('Campaign has been donated by '.$request->user_name.". Please check.\n".route('admin.donation.index'), 'Donation');
+                send_notification($data->user_id, 'Campaign has been donated by '.$request->user_name."\n Campaign Title is ".$data->title."\Donate Amount : ".$currency->symbol.$newdonation->amount."\n Please check.", route('admin.donation.index'));
+                send_staff_telegram('Campaign has been donated by '.$request->user_name."\n Campaign Title is ".$data->title."\Donate Amount : ".$currency->symbol.$newdonation->amount."\n Please check.\n".route('admin.donation.index'), 'Donation');
                 return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'You have donated for Campaign successfully (Payment Gateway).']);
             }
             elseif($request->payment == 'wallet'){
@@ -354,8 +354,8 @@ class MerchantCampaignController extends Controller
                 $user = User::findOrFail($data->user_id);
                 mailSend('donate',['campaign_title'=>$data->title, 'amount' => $newdonation->amount, 'curr' => $currency->code, 'date_time'=>$newdonation->created_at, 'user_name' => $newdonation->user_name], $user);
 
-                send_notification($data->user_id, 'Campaign has been donated by '.$request->user_name.'. Please check.', route('admin.donation.index'));
-                send_staff_telegram('Campaign has been donated by '.$request->user_name.". Please check.\n".route('admin.donation.index'), 'Donation');
+                send_notification($data->user_id, 'Campaign has been donated by '.$request->user_name."\n Campaign Title is ".$data->title."\Donate Amount : ".$currency->symbol.$newdonation->amount."\n Please check.", route('admin.donation.index'));
+                send_staff_telegram('Campaign has been donated by '.$request->user_name."\n Campaign Title is ".$data->title."\Donate Amount : ".$currency->symbol.$newdonation->amount."\n Please check.\n".route('admin.donation.index'), 'Donation');
 
                 return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'You have donated for Campaign successfully.']);
             }
@@ -391,8 +391,8 @@ class MerchantCampaignController extends Controller
                 $user = User::findOrFail($data->user_id);
                 mailSend('donate',['campaign_title'=>$data->title, 'amount' => $newdonation->amount, 'curr' => $currency->code, 'date_time'=>$newdonation->created_at, 'user_name' => $newdonation->user_name], $user);
 
-                send_notification($data->user_id, 'Campaign has been donated by '.$request->user_name.'. Please check.', route('admin.donation.index'));
-                send_staff_telegram('Campaign has been donated by '.$request->user_name.". Please check.\n".route('admin.donation.index'), 'Donation');
+                send_notification($data->user_id, 'Campaign has been donated by '.$request->user_name."\n Campaign Title is ".$data->title."\Donate Amount : ".$currency->symbol.$newdonation->amount."\n Please check.", route('admin.donation.index'));
+                send_staff_telegram('Campaign has been donated by '.$request->user_name."\n Campaign Title is ".$data->title."\Donate Amount : ".$currency->symbol.$newdonation->amount."\n Please check.\n".route('admin.donation.index'), 'Donation');
                 return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'You have donated for Campaign successfully (Deposit Bank).']);
 
             }
@@ -477,8 +477,8 @@ class MerchantCampaignController extends Controller
                 $currency = Currency::findOrFail($data->currency_id);
                 $user = User::findOrFail($data->user_id);
                 mailSend('donate',['campaign_title'=>$data->title, 'amount' => $newdonation->amount, 'curr' => $currency->code, 'date_time'=>$newdonation->created_at, 'user_name' => $newdonation->user_name], $user);
-                send_notification($data->user_id, 'Campaign has been donated by '.$request->user_name.'. Please check.', route('admin.donation.index'));
-                send_staff_telegram('Campaign has been donated by '.$request->user_name.". Please check.\n".route('admin.donation.index'), 'Donation');
+                send_notification($data->user_id, 'Campaign has been donated by '.$request->user_name."\n Campaign Title is ".$data->title."\Donate Amount : ".$currency->symbol.$newdonation->amount."\n Please check.", route('admin.donation.index'));
+                send_staff_telegram('Campaign has been donated by '.$request->user_name."\n Campaign Title is ".$data->title."\Donate Amount : ".$currency->symbol.$newdonation->amount."\n Please check.\n".route('admin.donation.index'), 'Donation');
                 return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'You have donated for Campaign successfully (Crypto).']);
 
             }
