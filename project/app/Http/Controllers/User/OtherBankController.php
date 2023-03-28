@@ -173,7 +173,7 @@ class OtherBankController extends Controller
             $data->payment_type = $request->payment_type;
             $data->amount = $request->amount + $transaction_global_cost*$rate;
             $data->final_amount = $request->amount;
-            $data->description = $request->des;
+            $data->description = preg_replace('/\p{Cf}+/u', '', $request->des);
             $data->status = 0;
             $data->save();
 
