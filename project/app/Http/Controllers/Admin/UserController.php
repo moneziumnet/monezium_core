@@ -727,6 +727,7 @@ class UserController extends Controller
             $data = User::findOrFail($id);
             $data['data'] = $data;
             $data['kycforms'] = KycForm::where('status', 1)->get();
+            $data['user_list'] = User::where('email_verified', 'Yes')->get();
             return view('admin.user.profilesettings',$data);
         }
 
@@ -2204,6 +2205,10 @@ class UserController extends Controller
             }
             else {
                 $data['user_type'] = '';
+            }
+
+            if($request->referral_id) {
+                $data['referral_id'] = $request->referral_id;
             }
 
 

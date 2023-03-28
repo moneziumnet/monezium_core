@@ -79,6 +79,17 @@
               </div>
 
               <div class="form-group">
+                <label for="inp-name">{{ __('Select Supervisor') }}</label>
+
+                <select class="form-control" name="referral_id" id="referral_id" >
+                  <option value="0">{{ __('Select Supervisor') }}</option>
+                  @foreach ($user_list as $item)
+                    <option value="{{$item->id}}" @if($item->id == $data->referral_id) selected @endif>{{$item->company_name ?? $item->name}}</option>
+                  @endforeach
+              </select>
+              </div>
+
+              <div class="form-group">
                 <label for="inp-name">{{ __('Type') }}</label>
 
                 <select class="select mb-3" name="user_type[]" multiple id="user_type">
@@ -95,8 +106,6 @@
       </div>
     </div>
   </div>
-</div>
-</div>
 </div>
 <!--Row-->
 @endsection
