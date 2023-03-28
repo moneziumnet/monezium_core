@@ -2202,6 +2202,10 @@ class UserController extends Controller
             if (!empty($request->input('user_type'))) {
                 $data['user_type'] = implode(',',$request->input('user_type'));
             }
+            else {
+                $data['user_type'] = '';
+            }
+
 
             $user->update($data);
             $msg = 'Customer Information Updated Successfully.';
