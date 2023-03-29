@@ -39,32 +39,16 @@
           </div>
         </a>
         <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-          <a href="{{ route('user.profile.index') }}" class="dropdown-item">{{__('Edit Profile')}}</a>
-          <a class="dropdown-item" href="{{route('user.module.view')}}">
-            {{__('Module')}}
-          </a>
-          <a class="dropdown-item" href="{{route(config('chatify.routes.prefix'))}}">
-             {{__('Chat')}}
-          </a>
-          <a href="{{ route('user.change.password.form') }}" class="dropdown-item">{{__('Change Password')}}</a>
-          <a class="dropdown-item" href="{{route('user.package.index')}}">
-            {{__('Pricing Plan')}}
-          </a>
-          <a class="dropdown-item" href="{{route('user.securityform')}}">
-            {{__('Security')}}
-          </a>
-          <a class="dropdown-item" href="{{route('user.login.activity')}}">
-            {{__('Login Activity')}}
-          </a>
+          <a href="{{ route('user.profile.index') }}" class="dropdown-item">{{__('Profile')}}</a>
           <a class="dropdown-item" href="{{route('user.aml.kyc')}}">
             {{__('AML/KYC')}}
           </a>
-          <a class="dropdown-item" href="{{route('user.pincode.index')}}">
-            {{__('Pincode')}}
+          <a class="dropdown-item" href="{{route(config('chatify.routes.prefix'))}}">
+             {{__('Live Chat')}}
           </a>
-          {{-- <a class="dropdown-item" href="{{route('user.show2faForm')}}">
-            {{__('2FA Security')}}
-          </a> --}}
+          <a class="dropdown-item" href="{{route('user.module.view')}}">
+            {{__('Setting')}}
+          </a>
           <a class="dropdown-item" href="{{route('user.message.index')}}">
             {{__('Support Tickets')}}
           </a>
