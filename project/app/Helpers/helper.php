@@ -942,7 +942,7 @@ if (!function_exists('RPC_BTC_Send')) {
         try {
             $response = $client->request('POST', $link . '/wallet/' . $wallet_name, ["headers" => $headers, "body" => $body]);
             $res = json_decode($response->getBody());
-        } catch (RequestExceptione $th) {
+        } catch (RequestException $th) {
             return json_decode($th->getResponse()->getBody());
         }
         return json_encode(['code' => '0', 'message' => 'Transaction success!']);
@@ -1386,3 +1386,22 @@ if (!function_exists('plan_details_by_type')) {
         return $plandetail;
     }
 }
+
+if (!function_exists('merchant_shop_webhook_send')) {
+
+    function merchant_shop_webhook_send($url, $details)
+    {
+        $client = new Client();
+
+        try {
+            $response = $client->post($url, [
+                    $details
+            ]);
+            $data = $response->getBody();
+            Log::Info($data);
+        } catch (RequestException $th) {
+            Log::Info($th->getResponse()->getBody());
+        }
+    }
+}
+

@@ -133,6 +133,7 @@
                     <input type="hidden" name="user_id" value={{$user->id}} />
                     <input type="hidden" name="amount" value={{$amount}} />
                     <input type="hidden" name="currency_id" value={{$currency->id}} />
+                    <input type="hidden" name="shop_key" value={{$shop_key}} />
                     <input type="hidden" name="deposit_no" id="deposit_no" />
                 </form>
 

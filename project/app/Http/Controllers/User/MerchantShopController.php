@@ -61,6 +61,7 @@ class MerchantShopController extends Controller
         }
 
         $data->merchant_id = $request->merchant_id;
+        $data->site_key ='MT-'.Str::random(12);
         $data->name = $request->name;
         $data->document = $name;
         $data->logo = $logo_name;

@@ -14,6 +14,7 @@ use App\Models\User;
 use App\Models\UserApiCred;
 use App\Models\Wallet;
 use App\Models\SubInsBank;
+use App\Models\MerchantShop;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,24 +28,31 @@ class AccessController extends Controller
             $site_key = $request->site_key;
             $amount = $request->amount;
             $currency_id = $request->currency;
+            $shop_key = $request->shop_key;
         } else {
             $site_key = Session::get('site_key');
             $amount = Session::get('amount');
             $currency_id = Session::get('currency_id');
+            $shop_key = Session::get('shop_key');
         }
 
         $currency = Currency::where('code', $currency_id)->first();
         $user_api = UserApiCred::where('access_key', $site_key)->first();
         if($user_api) {
+            $shop = MerchantShop::where('site_key', $shop_key)->where('merchant_id', $user_api->user_id)->first();
+            if(!$shop) {
+                return view('api.error');
+            }
             Session::put('site_key', $site_key);
             Session::put('currency_id', $currency_id);
             Session::put('amount', $amount);
+            Session::put('shop_key', $shop_key);
             $user = $user_api->user;
             $bankaccounts = BankAccount::where('user_id', $user->id)->where('currency_id', $currency->id)->get();
 
             $crypto_ids =  Wallet::where('user_id', $user->id)->where('user_type',1)->where('wallet_type', 8)->pluck('currency_id')->toArray();
             $cryptolist = Currency::whereStatus(1)->where('type', 2)->whereIn('id', $crypto_ids)->get();
-            return view('api.payment', compact('bankaccounts','cryptolist','amount','currency','user'));
+            return view('api.payment', compact('bankaccounts','cryptolist','amount','currency','user', 'shop_key'));
         } else {
             return view('api.error');
         }
@@ -109,6 +117,7 @@ class AccessController extends Controller
         } else if($request->payment == 'bank_pay'){
 
             $bankaccount = BankAccount::where('id', $request->bank_account)->first();
+            $shop = MerchantShop::where('site_key', $request->shop_key)->first();
 
             $deposit = new DepositBank();
             $deposit['deposit_number'] = $request->deposit_no;
@@ -116,15 +125,19 @@ class AccessController extends Controller
             $deposit['currency_id'] = $request->currency_id;
             $deposit['amount'] = $request->amount;
             $deposit['sub_bank_id'] = $bankaccount->subbank_id;
+            $deposit['txnid'] = $request->deposit_no;
+            $deposit['purpose'] = 'merchant_shop';
+            $deposit['purpose_data'] = $shop->id;
             $deposit['status'] = "pending";
             $deposit->save();
             $user = User::findOrFail($request->user_id);
             $currency = Currency::findOrFail($request->currency_id);
             $subbank = SubInsBank::findOrFail($bankaccount->subbank_id);
-
+            if($shop->webhook) {
+                merchant_shop_webhook_send($shop->webhook, ['amount'=>$deposit->amount, 'curr' => ($currency ? $currency->code : ' '), 'trnx' => $data->deposit_number, 'date_time'=>$deposit->created_at ,'type' => 'Bank', 'shop'=>$shop->name, 'status' => 'pending' ]);
+            }
             mailSend('deposit_request',['amount'=>$deposit->amount, 'curr' => ($currency ? $currency->code : ' '), 'date_time'=>$deposit->created_at ,'type' => 'Bank', 'method'=> $subbank->name ], $user);
             send_notification($request->user_id, 'Bank has been deposited '."\n Amount is ".$currency->symbol.$request->amount."\n Transaction ID : ".$request->deposit_no, route('admin.deposits.bank.index'));
-            $currency = Currency::findOrFail($request->currency_id);
             send_whatsapp($request->user_id, 'Bank has been deposited '."\n Amount is ".$currency->symbol.$request->amount."\n Transaction ID : ".$request->deposit_no."\nPlease check more details to click this url\n".route('user.depositbank.index'));
             send_telegram($request->user_id, 'Bank has been deposited '."\n Amount is ".$currency->symbol.$request->amount."\n Transaction ID : ".$request->deposit_no."\nPlease check more details to click this url\n".route('user.depositbank.index'));
             send_staff_telegram('Bank has been deposited '."\n Amount is ".$currency->symbol.$request->amount."\n Transaction ID : ".$request->deposit_no."\nPlease check more details to click this url\n".route('admin.deposits.bank.index'), 'Deposit Bank');

@@ -16,6 +16,7 @@ use App\Models\User;
 use App\Models\Wallet;
 use App\Models\WebhookRequest;
 use App\Models\CampaignDonation;
+use App\Models\MerchantShop;
 use Illuminate\Http\Request;
 use Datatables;
 
@@ -155,6 +156,12 @@ class DepositBankController extends Controller
         if($id2 == 'reject') {
             $msg = 'Data Updated Successfully.';
             mailSend('deposit_reject',['amount'=>$data->amount, 'curr' => $data->currency->code, 'trnx' => $data->deposit_number, 'type' => 'Bank' ], $user);
+            if ($data->purpose) {
+                $shop = MerchantShop::where('id', $data->purpose_data)->first();
+                if($shop && $shop->webhook) {
+                    merchant_shop_webhook_send($shop->webhook, ['amount'=>$data->amount, 'curr' => $data->currency->code, 'trnx' => $data->txnid, 'date_time'=>$data->updated_at ,'type' => 'Bank', 'shop'=>$shop->name, 'status' => 'reject' ]);
+                }
+            }
             return redirect()->back()->with("message", $msg);
         }
 
@@ -239,7 +246,13 @@ class DepositBankController extends Controller
             $campaign->update();
         }
 
-            mailSend('deposit_approved',['amount'=>$data->amount, 'curr' => $data->currency->code, 'trnx' => $data->deposit_number ,'date_time'=>$trans->created_at ,'type' => 'Bank' ], $user);
+        mailSend('deposit_approved',['amount'=>$data->amount, 'curr' => $data->currency->code, 'trnx' => $data->deposit_number ,'date_time'=>$trans->created_at ,'type' => 'Bank' ], $user);
+        if ($data->purpose) {
+            $shop = MerchantShop::where('id', $data->purpose_data)->first();
+            if($shop && $shop->webhook) {
+                merchant_shop_webhook_send($shop->webhook, ['amount'=>$data->amount, 'curr' => $data->currency->code, 'trnx' => $data->txnid, 'date_time'=>$trans->created_at ,'type' => 'Bank', 'shop'=>$shop->name, 'status' => 'complete' ]);
+            }
+        }
 
         $msg = 'Data Updated Successfully.';
         return redirect()->back()->with("message", $msg);

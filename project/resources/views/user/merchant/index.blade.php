@@ -128,8 +128,9 @@
                             <pre><code id="api-sample-code" class="language-html">&lt;div id="mt-payment-system"
     data-sitekey="{{@$cred->access_key}}"
     data-siteurl="{{url('/')}}"
-    data-currency="USD"
+    data-currency="EUR"
     data-amount="500"
+    data-shopkey="$shopkey"
     fn-success="onsuccess"
     fn-error="onerror"&gt;
     &lt;button&gt;Buy&lt;/button&gt;

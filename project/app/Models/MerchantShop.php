@@ -13,6 +13,7 @@ class MerchantShop extends Model
         'document',
         'url',
         'webhook',
+        'site_key',
         'status',
     ];
 

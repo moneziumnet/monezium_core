@@ -16,11 +16,12 @@ mt_payment_element.addEventListener("click", function() {
     const mt_siteurl = mt_payment_element.getAttribute('data-siteurl');
     const mt_currency = mt_payment_element.getAttribute('data-currency');
     const mt_amount = mt_payment_element.getAttribute('data-amount');
+    const mt_shopkey = mt_payment_element.getAttribute('data-shopkey');
     const device_width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
     const window_features = `left=${device_width / 2 - 240},top=100,width=480,height=600`;
 
     mt_window = window.open(
-      `${mt_siteurl}/access?site_key=${mt_sitekey}&&currency=${mt_currency}&&amount=${mt_amount}`, "", window_features
+      `${mt_siteurl}/access?site_key=${mt_sitekey}&&currency=${mt_currency}&&amount=${mt_amount}&&shop_key=${mt_shopkey}`, "", window_features
     );
 
     mt_payment_interval_id = window.setInterval(mt_check_window, 500);

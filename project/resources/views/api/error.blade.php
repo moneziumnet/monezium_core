@@ -32,7 +32,7 @@
                 </div>
 
                 <div class="text-center" style="margin: 100px 0px;">
-                    <h3>Invalid Site Key.<br/>Please contact your site owner.</h3>
+                    <h3>Invalid Site Access Key or Shop Site Key.<br/>Please contact your site owner.</h3>
                 </div>
 
                 <p class="text-muted text-center mt-5">

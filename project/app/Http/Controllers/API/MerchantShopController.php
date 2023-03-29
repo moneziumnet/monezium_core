@@ -62,6 +62,7 @@ class MerchantShopController extends Controller
             $data->document = $name;
             $data->logo = $logo_name;
             $data->url = $request->url;
+            $data->site_key ='MT-'.Str::random(12);
             $data->webhook = $request->webhook;
             $data->save();
             mailSend('merchant_shop_request',['shop_name'=>$request->name, 'url' => $request->url], auth()->user());
