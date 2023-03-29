@@ -18,5 +18,8 @@
 		<li class="nav-item">
             <a class="nav-link {{menu('user.change.password.form')}}" id="user_password" href="{{route('user.change.password.form') }}" role="button">{{__('Change Password')}}</a>
         </li>
+		<li class="nav-item">
+            <a class="nav-link {{menu('user.change.theme.form')}}" id="user_theme" href="{{route('user.change.theme.form') }}" role="button">{{__('Change Theme')}}</a>
+        </li>
     </ul>
 </div>

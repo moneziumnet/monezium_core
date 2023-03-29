@@ -679,6 +679,8 @@ Route::prefix('user')->group(function() {
 
       Route::get('/change-password', [UserController::class,'changePasswordForm'])->name('user.change.password.form');
       Route::post('/change-password', [UserController::class,'changePassword'])->name('user.change.password');
+      Route::get('/change-theme', [UserController::class,'changetheme'])->name('user.change.theme.form');
+      Route::post('/update-theme', [UserController::class,'updatetheme'])->name('user.change.theme');
       Route::post('qr-code-scan',   [UserController::class,'scanQR'])->name('scan.qr');
 
       Route::get('/pincode', [UserTelegramController::class,'index'])->name('user.pincode.index');

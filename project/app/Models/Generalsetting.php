@@ -59,7 +59,6 @@ class Generalsetting extends Model
             'affilate_charge',
             'secret_string',
             'gap_limit',
-            'withdraw_status',
             'isWallet',
             'affilate_new_user',
             'affilate_user',
@@ -90,7 +89,6 @@ class Generalsetting extends Model
             'module_section',
             'user_module',
             'other_bank_limit',
-            'website_theme',
         ];
 
     public $timestamps = false;

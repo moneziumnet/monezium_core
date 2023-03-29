@@ -37,7 +37,6 @@ class CreateGeneralsettingsTable extends Migration
             $table->text('disqus')->nullable();
             $table->boolean('is_contact')->default(false);
             $table->boolean('is_faq')->default(false);
-            $table->tinyInteger('withdraw_status')->default(0);
             $table->string('smtp_host', 191);
             $table->string('smtp_port', 191);
             $table->string('smtp_encryption')->nullable();
@@ -107,7 +106,6 @@ class CreateGeneralsettingsTable extends Migration
             $table->tinyInteger('is_verify')->nullable()->default(0);
             $table->boolean('two_fa')->default(true);
             $table->double('other_bank_limit')->nullable();
-            $table->tinyInteger('website_theme')->default(0);
         });
     }
 

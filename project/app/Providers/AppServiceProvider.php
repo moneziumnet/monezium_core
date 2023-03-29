@@ -78,6 +78,13 @@ class AppServiceProvider extends ServiceProvider
                     $data = DB::table('languages')->where('is_default','=',1)->first();
                     App::setlocale($data->name);
                 }
+                if(Auth::user()) {
+                    $settings->with('website_theme', Auth::user()->website_theme);
+                }
+                else {
+                    $settings->with('website_theme', 0);
+                }
+
             }
 
             if (Session::has('currency')) {

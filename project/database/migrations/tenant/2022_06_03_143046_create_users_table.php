@@ -87,6 +87,7 @@ class CreateUsersTable extends Migration
             $table->string('issued_authority', 255)->nullable();
             $table->dateTime('date_of_issue')->nullable();
             $table->dateTime('date_of_expire')->nullable();
+            $table->tinyInteger('website_theme')->default('0');
         });
     }
 

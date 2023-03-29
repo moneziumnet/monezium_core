@@ -27,43 +27,6 @@
 
           {{ csrf_field() }}
 
-          <div class="row">
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="inp-title">{{  __('Withdraw')  }}</label>
-                <div class="frm-btn btn-group mb-1">
-                    <button type="button" class="btn btn-sm btn-rounded dropdown-toggle btn-{{ $gs->withdraw_status == 1 ? 'success' : 'danger' }}" data-toggle="dropdown"
-                      aria-haspopup="true" aria-expanded="false">
-                      {{ $gs->withdraw_status == 1 ? __('Activated') : __('Deactivated')}}
-                    </button>
-                    <div class="dropdown-menu">
-                      <a class="dropdown-item drop-change" href="javascript:;" data-status="1" data-val="{{ __('Activated') }}" data-href="{{ route('admin.gs.status',['withdraw_status',1]) }}">{{ __('Activate') }}</a>
-                      <a class="dropdown-item drop-change" href="javascript:;" data-status="0" data-val="{{ __('Deactivated') }}" data-href="{{ route('admin.gs.status',['withdraw_status',0]) }}">{{ __('Deactivate') }}</a>
-                    </div>
-                  </div>
-              </div>
-            </div>
-
-
-            <div class="col-md-3">
-                <div class="form-group">
-                  <label for="inp-title">{{  __('Website Theme')  }}</label>
-                  <div class="frm-btn btn-group mb-1">
-                      <button type="button" class="btn btn-sm btn-rounded dropdown-toggle btn-{{ $gs->website_theme == 0 ? 'success' : 'primary' }}" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        {{ $gs->website_theme == 0 ? __('Default') : __('Classic')}}
-                      </button>
-                      <div class="dropdown-menu">
-                        <a class="dropdown-item theme-change" href="javascript:;" data-status="0" data-val="{{ __('Default') }}" data-href="{{ route('admin.gs.status',['website_theme',0]) }}">{{ __('Default') }}</a>
-                        <a class="dropdown-item theme-change" href="javascript:;" data-status="1" data-val="{{ __('Classic') }}" data-href="{{ route('admin.gs.status',['website_theme',1]) }}">{{ __('Classic') }}</a>
-                      </div>
-                    </div>
-                </div>
-              </div>
-
-          </div>
-
-
         <div class="row">
 
           <div class="col-md-4">

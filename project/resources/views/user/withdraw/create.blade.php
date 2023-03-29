@@ -25,9 +25,7 @@
                 <div class="card p-5">
                     <div class="gocover" style="background: url({{ asset('assets/images/'.$gs->loader) }}) no-repeat scroll center center rgba(45, 45, 45, 0.5);"></div>
 
-                        @if ($gs->withdraw_status == 0)
-                            <p class="text-center text-danger">{{__('WithDraw is temporary Off')}}</p>
-                        @else
+
                             @includeIf('includes.flash')
                             <form action="{{route('user.withdraw.store')}}" method="POST" id="withdraw_form" enctype="multipart/form-data">
                                 @csrf
@@ -73,7 +71,6 @@
 
 
                             </form>
-                        @endif
                 </div>
             </div>
         </div>
