@@ -29,7 +29,7 @@
                         @csrf
 
                         <div class="form-group mb-3 mt-3 col-md-6">
-                            <label class="form-label required">{{__('Current Password')}}</label>
+                            <label class="form-label required">{{__('Current Theme')}}</label>
                             <select name="website_theme" id="website_theme" class="form-select" required>
                                 <option value="0" @if ($website_theme == 0)
                                     selected                                   
