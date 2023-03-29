@@ -635,6 +635,19 @@ class UserController extends Controller
         return redirect()->back()->with('success','Password Successfully Changed.');
     }
 
+    public function changetheme()
+    {
+        return view('user.changetheme');
+    }
+
+    public function updatetheme(Request $request)
+    {
+        $user = Auth::user();
+        $user->website_theme = $request->website_theme;
+        $user->update();
+        return redirect()->back()->with('success','Theme Successfully Changed.');
+    }
+
     public function showTwoFactorForm()
     {
         $gnl = Generalsetting::first();
