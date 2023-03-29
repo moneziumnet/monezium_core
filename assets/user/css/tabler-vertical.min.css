@@ -11172,11 +11172,9 @@ body {
 		right: 0;
 	}
 }
-@media (min-width: 1200px) {
-	.navbar-vertical.navbar-expand-xl .navbar-brand {
-		padding: 0.75rem 0;
-		justify-content: center;
-	}
+.navbar-vertical.navbar-expand-xl .navbar-brand {
+	padding: 0.75rem 0;
+	justify-content: center;
 }
 @media (min-width: 1200px) {
 	.navbar-vertical.navbar-expand-xl .navbar-collapse {

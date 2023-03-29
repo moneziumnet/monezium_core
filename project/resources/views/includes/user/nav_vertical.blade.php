@@ -1,9 +1,14 @@
-<div class="navbar-expand-xl navbar-vertical navbar-dark">
+<div class="navbar navbar-expand-xl navbar-vertical navbar-dark">
   <div class="collapse navbar-collapse" id="navbar-menu">
     <div class="navbar navbar-dark">
-      <div class="container-xl">
+      <div class="container-fluid">
         <ul class="navbar-nav">
-          <li class="nav-item {{ request()->routeIs('user.dashboard') ? 'active' : '' }}">
+          <h1 class="navbar-brand navbar-brand-autodark">
+            <a href="{{ route('front.index') }}">
+              <img src="{{asset('assets/images/'.$gs->logo)}}" width="110" height="32" alt="Tabler" class="navbar-brand-image">
+            </a>
+          </h1>
+          <li class="mt-3 nav-item {{ request()->routeIs('user.dashboard') ? 'active' : '' }}">
             <a class="nav-link" href="{{route('user.dashboard')}}">
               <span class="nav-link-icon d-md-none d-lg-inline-block">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
