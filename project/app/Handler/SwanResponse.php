@@ -8,6 +8,7 @@ use App\Models\BankAccount;
 use App\Models\BankGateway;
 use App\Models\BalanceTransfer;
 use App\Models\DepositBank;
+use App\Models\SubInsBank;
 use Illuminate\Http\Request;
 use App\Models\WebhookRequest;
 use Spatie\WebhookClient\WebhookConfig;

@@ -19,6 +19,7 @@ use App\Models\Transaction;
 use App\Models\BankAccount;
 use App\Models\Charge;
 use App\Models\Order;
+use App\Models\SubInsBank;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;

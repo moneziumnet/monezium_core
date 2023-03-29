@@ -6,6 +6,7 @@ use App\Models\WebhookRequest;
 use App\Models\DepositBank;
 use App\Models\BankGateway;
 use App\Models\User;
+use App\Models\SubInsBank;
 use Illuminate\Http\Request;
 use Spatie\WebhookClient\WebhookConfig;
 use Spatie\WebhookClient\WebhookResponse\RespondsToWebhook;

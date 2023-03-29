@@ -12,6 +12,7 @@ use App\Models\Generalsetting;
 use App\Models\PaymentGateway;
 use App\Models\User;
 use App\Models\Wallet;
+use App\Models\SubInsBank;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;

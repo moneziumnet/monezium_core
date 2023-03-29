@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Models\BankAccount;
 use App\Models\DepositBank;
 use App\Models\Wallet;
+use App\Models\SubInsBank;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
