@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "3039afe8-cc67-411d-be97-4e184d9325d2",
+		"_postman_id": "bb00024f-cebe-4648-a518-0f2b75f25e7f",
 		"name": "MT Payment System",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "21872003"
@@ -5897,6 +5897,41 @@
 											"src": []
 										}
 									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/merchant/shop/update/{id}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"merchant",
+										"shop",
+										"update",
+										"{id}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Register Merchant Shop Webhook",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"webhook\":\"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
 								},
 								"url": {
 									"raw": "{{baseUrl}}/merchant/shop/update/{id}",

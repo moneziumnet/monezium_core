@@ -65,6 +65,7 @@
                                                 <a href="javascript:void(0)" class="dropdown-item disabled"><i class="fas fa-edit me-2"></i>{{__('Edit')}}</a>
                                                 <a href="{{route('user.merchant.shop.view_product',$val->id)}}" class="dropdown-item" ><i class="fas fa-file-contract me-2"></i>{{__('View')}}</a>
                                             @endif
+                                            <a href="javascript:void(0)" class="dropdown-item" data-bs-target="#modal-webhook-{{$val->id}}" data-bs-toggle="modal"><i class="fas fa-link me-2"></i>{{__('Register Webhook')}}</a>
                                             <a href="javascript:void(0)" class="dropdown-item" data-bs-target="#delete{{$val->id}}" data-bs-toggle="modal" ><i class="fas fa-trash-alt me-2"></i>{{__('Delete')}}</a>
                                       </div>
                                       </div>
@@ -87,7 +88,6 @@
                               <div class="modal-dialog modal-dialog-centered" role="document">
                                   <div class="modal-content">
                                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                      <div class="modal-status bg-success"></div>
 
                                       <div class="modal-body text-center py-4">
                                           <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
@@ -101,6 +101,33 @@
                                         </div>
                                   </div>
                               </div>
+                          </div>
+
+                          <div class="modal modal-blur fade" id="modal-webhook-{{$val->id}}" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title">{{('Register Webhook')}}</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                        
+                                <form action="{{route('user.merchant.shop.webhook',$val->id)}}" method="post">
+                                    @csrf
+                                    <div class="modal-body">
+                        
+                                      <div class="form-group mt-3">
+                                        <label class="form-label">{{__('Shop Webhook URL')}}</label>
+                                        <input name="webhook" id="webhook" class="form-control" autocomplete="off" placeholder="{{__('https://example.com')}}" type="url" value="{{$val->webhook}}" >
+                                      </div>
+                        
+                                    </div>
+                        
+                                    <div class="modal-footer">
+                                        <button type="submit" id="submit-btn" class="btn btn-primary">{{ __('Submit') }}</button>
+                                    </div>
+                                </form>
+                              </div>
+                            </div>
                           </div>
                       </div>
                     @endforeach

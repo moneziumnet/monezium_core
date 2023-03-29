@@ -228,6 +228,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/user/merchant/shop/store', [MerchantShopController::class,'store']);
         Route::get('/user/merchant/shop/edit/{id}', [MerchantShopController::class,'edit']);
         Route::post('/user/merchant/shop/update/{id}', [MerchantShopController::class,'update']);
+        Route::post('/user/merchant/shop/webhook/{id}', [MerchantShopController::class,'webhook_register']);
         Route::get('/user/merchant/shop/delete/{id}', [MerchantShopController::class,'delete']);
         Route::get('/user/merchant/shop/{id}/view/product', [MerchantShopController::class,'view_products']);
 

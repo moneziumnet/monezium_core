@@ -53,6 +53,12 @@
                             <label class="form-label required">{{__('Shop URL')}}</label>
                             <input name="url" id="url" class="form-control" autocomplete="off" placeholder="{{__('https://example.com')}}" type="url" value="{{$data->url}}" required>
                         </div>
+
+                        <div class="form-group mb-3 mt-3">
+                            <label class="form-label">{{__('Shop Webhook URL')}}</label>
+                            <input name="webhook" id="webhook" class="form-control" autocomplete="off" placeholder="{{__('https://example.com')}}" type="url" value="{{$data->webhook}}" >
+                        </div>
+
                         <input name="merchant_id" type="hidden" class="form-control" value="{{auth()->id()}}">
 
 

@@ -20,6 +20,7 @@ class CreateMerchantShopsTable extends Migration
             $table->integer('merchant_id');
             $table->string('document');
             $table->string('url');
+            $table->string('webhook')->nullable();
             $table->unsignedInteger('status')->default(0)->comment('1 => active, 0 => inactive');
             $table->timestamps();
         });

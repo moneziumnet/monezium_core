@@ -31,6 +31,7 @@
                                         <th>{{ __('Shop Name') }}</th>
                                         <th>{{ __('Merchant') }}</th>
                                         <th>{{ __('URL') }}</th>
+                                        <th>{{ __('WebHook') }}</th>
                                         <th>{{ __('Document') }}</th>
                                         <th>{{ __('Status') }}</th>
                                     </tr>
@@ -88,6 +89,7 @@
                         { data: 'name', name: 'name' },
 						{ data: 'merchant_id', name: 'merchant_id' },
                         { data: 'url', name: 'url' },
+                        { data: 'webhook', name: 'webhook' },
 						{ data: 'document', name: 'document' },
             			{ data: 'status', name: 'status', searchable: false, orderable: false }
 

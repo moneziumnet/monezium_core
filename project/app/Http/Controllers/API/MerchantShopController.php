@@ -62,6 +62,7 @@ class MerchantShopController extends Controller
             $data->document = $name;
             $data->logo = $logo_name;
             $data->url = $request->url;
+            $data->webhook = $request->webhook;
             $data->save();
             mailSend('merchant_shop_request',['shop_name'=>$request->name, 'url' => $request->url], auth()->user());
             send_notification($request->merchant_id, 'Merchant Shop has been created by '.(auth()->user()->company_name ?? auth()->user()->name)."\nShop Name is ".$request->name."\nShop online url is".$request->url."\n Please check.", route('admin.merchant.shop.index', $request->merchant_id));
@@ -115,6 +116,7 @@ class MerchantShopController extends Controller
             $data->merchant_id = $request->merchant_id;
             $data->name = $request->name;
             $data->url = $request->url;
+            $data->webhook = $request->webhook;
 
             $data->update();
 
@@ -123,6 +125,15 @@ class MerchantShopController extends Controller
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
         }
     }
+
+    Public function webhook_register(Request $request, $id) {
+        $data = MerchantShop::findOrFail($id);
+        $data->webhook = $request->webhook;
+        $data->save();
+        return redirect()->back()->with('message','Merchant Shop webhook has been registered successfully');
+
+    }
+    
     public function delete($id) {
         try {
             $data = MerchantShop::findOrFail($id);

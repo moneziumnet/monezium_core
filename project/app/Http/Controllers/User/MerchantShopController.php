@@ -65,6 +65,7 @@ class MerchantShopController extends Controller
         $data->document = $name;
         $data->logo = $logo_name;
         $data->url = $request->url;
+        $data->webhook = $request->webhook;
         $data->save();
 
         mailSend('merchant_shop_request',['shop_name'=>$request->name, 'url' => $request->url], auth()->user());
@@ -112,10 +113,19 @@ class MerchantShopController extends Controller
         $data->merchant_id = $request->merchant_id;
         $data->name = $request->name;
         $data->url = $request->url;
+        $data->webhook = $request->webhook;
 
         $data->update();
 
         return redirect()->back()->with('message','Merchant Shop has been updated successfully');
+    }
+
+    Public function webhook_register(Request $request, $id) {
+        $data = MerchantShop::findOrFail($id);
+        $data->webhook = $request->webhook;
+        $data->save();
+        return redirect()->back()->with('message','Merchant Shop webhook has been registered successfully');
+
     }
     public function delete($id) {
         $data = MerchantShop::findOrFail($id);

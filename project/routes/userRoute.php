@@ -207,6 +207,7 @@ Route::prefix('user')->group(function() {
       Route::post('/merchant/shop/store', [MerchantShopController::class,'store'])->name('user.merchant.shop.store');
       Route::get('/merchant/shop/edit/{id}', [MerchantShopController::class,'edit'])->name('user.merchant.shop.edit');
       Route::post('/merchant/shop/update/{id}', [MerchantShopController::class,'update'])->name('user.merchant.shop.update');
+      Route::post('/merchant/shop/webhook/{id}', [MerchantShopController::class,'webhook_register'])->name('user.merchant.shop.webhook');
       Route::get('/merchant/shop/delete/{id}', [MerchantShopController::class,'delete'])->name('user.merchant.shop.delete');
       Route::get('/merchant/shop/{id}/view/product', [MerchantShopController::class,'view_products'])->name('user.merchant.shop.view_product');
 
