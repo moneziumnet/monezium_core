@@ -121,7 +121,7 @@
 								<td data-label="@lang('Amount')">
 									<span class="{{$data->type == '+' ? 'text-success':'text-danger'}}">{{$data->type}} {{amount($data->amount,$data->currency->type,2)}} {{$data->currency->code}}</span>
 								</td>
-								<td data-label="@lang('Fee')" class="text-end">
+								<td data-label="@lang('Fee')" >
 									<span class="{{$data->type == '+' ? 'text-danger':'text-danger'}}">{{'-'}} {{amount($data->charge,$data->currency->type,2)}} {{$data->currency->code}}</span>
 								</td>
 								<td data-label="@lang('Details')" class="text-end">
