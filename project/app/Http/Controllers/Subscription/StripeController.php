@@ -37,7 +37,7 @@ class StripeController extends Controller
 
         $support = ['USD'];
         if(!in_array($request->currency_code,$support)){
-            return redirect()->back()->with('warning','Please Select USD Or EUR Currency For Paypal.');
+            return redirect()->back()->with('warning','Please Select USD Currency For Stripe.');
         }
 
         $validator = Validator::make($request->all(),[

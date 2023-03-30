@@ -78,7 +78,7 @@ class StripeController extends Controller
 
         $support = ['USD'];
         if(!in_array($currency_code,$support)){
-            return redirect()->back()->with('warning','Please Select USD Or EUR Currency For Paypal.');
+            return redirect()->back()->with('warning','Please Select USD Currency For Stripe.');
         }
         $user = auth()->user();
 
@@ -156,7 +156,7 @@ class StripeController extends Controller
                     $trans->save();
 
 
-                       mailSend('deposit_approved',['amount'=>$deposit->amount, 'curr' => $currency->code, 'trnx' => $deposit->deposit_number ,'date_time'=>$trans->created_at ,'type' => 'Razorpay' ], $user);
+                       mailSend('deposit_approved',['amount'=>$deposit->amount, 'curr' => $currency->code, 'trnx' => $deposit->deposit_number ,'date_time'=>$trans->created_at ,'type' => 'Stripe' ], $user);
 
                     return redirect()->route('user.deposit.create')->with('success','Deposit amount '.$request->amount.' '.$currency->code.' successfully!');
                 }
