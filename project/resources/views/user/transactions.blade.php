@@ -91,8 +91,8 @@
 								<th>@lang('Sender')</th>
 								<th>@lang('Receiver')</th>
 								<th >@lang('Description')</th>
-								<th>@lang('Amount')</th>
-								<th>@lang('Fee')</th>
+								<th class="text-end">@lang('Amount')</th>
+								<th class="text-end">@lang('Fee')</th>
 								<th class="text-end"  style="padding-right: 28px;">@lang('Details')</th>
 							</tr>
 						  </thead>
@@ -118,10 +118,10 @@
 								<td   style="white-space: normal; max-width:400px;" data-label="@lang('Description')">
 									{{__(json_decode($data->data)->description ?? "")}} </br> <span class="badge badge-dark">{{ucwords(str_replace('_',' ',$data->remark))}}</span>
 								</td>
-								<td data-label="@lang('Amount')">
+								<td data-label="@lang('Amount')" class="text-end">
 									<span class="{{$data->type == '+' ? 'text-success':'text-danger'}}">{{$data->type}} {{amount($data->amount,$data->currency->type,2)}} {{$data->currency->code}}</span>
 								</td>
-								<td data-label="@lang('Fee')" >
+								<td data-label="@lang('Fee')" class="text-end">
 									<span class="{{$data->type == '+' ? 'text-danger':'text-danger'}}">{{'-'}} {{amount($data->charge,$data->currency->type,2)}} {{$data->currency->code}}</span>
 								</td>
 								<td data-label="@lang('Details')" class="text-end">
