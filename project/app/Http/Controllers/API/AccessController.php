@@ -9,17 +9,38 @@ use App\Models\CryptoDeposit;
 use App\Models\Currency;
 use App\Models\DepositBank;
 use App\Models\Generalsetting;
-use App\Models\Transaction;
+use App\Models\Transaction as AppTransaction;
 use App\Models\User;
 use App\Models\UserApiCred;
 use App\Models\Wallet;
 use App\Models\SubInsBank;
 use App\Models\MerchantShop;
+use App\Models\MerchantSetting;
+use Cartalyst\Stripe\Laravel\Facades\Stripe;
+use Illuminate\Support\Str;
+use Config;
+use Input;
+use URL;
+
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Redirect;
+
+use PayPal\{
+    Api\Item,
+    Api\Payer,
+    Api\Amount,
+    Api\Payment,
+    Api\ItemList,
+    Rest\ApiContext,
+    Api\Transaction,
+    Api\RedirectUrls,
+    Api\PaymentExecution,
+    Auth\OAuthTokenCredential
+};
 
 class AccessController extends Controller
 {
@@ -52,7 +73,8 @@ class AccessController extends Controller
 
             $crypto_ids =  Wallet::where('user_id', $user->id)->where('user_type',1)->where('wallet_type', 8)->pluck('currency_id')->toArray();
             $cryptolist = Currency::whereStatus(1)->where('type', 2)->whereIn('id', $crypto_ids)->get();
-            return view('api.payment', compact('bankaccounts','cryptolist','amount','currency','user', 'shop_key'));
+            $gateways = MerchantSetting::where('user_id', $user_api->user_id)->get();
+            return view('api.payment', compact('bankaccounts','cryptolist','amount','currency','user', 'shop_key', 'gateways'));
         } else {
             return view('api.error');
         }
@@ -101,6 +123,7 @@ class AccessController extends Controller
         $data['total_amount'] = $request->amount;
         $data['cal_amount'] = floatval(getRate($pre_currency, $code));
         $data['wallet'] =  Wallet::where('user_id', $request->user_id)->where('user_type',1)->where('wallet_type', 8)->where('currency_id', $select_currency->id)->first();
+        $data['shop_key'] = $request->shop_key;
 
         if(!$data['wallet']) {
             return redirect()->back()->with('error', $select_currency->code .' Crypto wallet does not existed in sender.');
@@ -108,8 +131,165 @@ class AccessController extends Controller
         return view('api.crypto', $data);
     }
 
+    public function gateway_pay(Request $request) {
+        $currency = Currency::findOrFail($request->currency_id);
+        $merchant_setting = MerchantSetting::where('id', $request->link_pay_submit)->where('user_id', $request->user_id)->first();
+        $amount = $request->amount;
+        $shop_key = $request->shop_key;
+        
+        if(!$merchant_setting) {
+            return redirect()->back()->with('error', 'Payment Gateway does not existed in Merchant .');
+        }
+
+        return view('api.gateway', compact('currency', 'merchant_setting', 'amount', 'shop_key'));
+    }
+
     public function pay_submit(Request $request) {
         if($request->payment == 'gateway'){
+            $merchant_setting = MerchantSetting::where('id', $request->gateway_id)->where('user_id', $request->user_id)->first();
+            if(!$merchant_setting) {
+                return response()->json([
+                    'type' => 'mt_payment_error',
+                    'payload' => 'This Payment Gateway does not existed in Merchant .'
+                ]);
+            }
+            if($merchant_setting->keyword == 'paypal') {
+
+                $paydata = $merchant_setting->information;
+        
+                $paypal_conf = \Config::get('paypal');
+                $paypal_conf['client_id'] = $paydata['client_id'];
+                $paypal_conf['secret'] = $paydata['client_secret'];
+                $paypal_conf['settings']['mode'] = $paydata['sandbox_check'] == 1 ? 'sandbox' : 'live';
+                $_api_context = new ApiContext(new OAuthTokenCredential(
+                    $paypal_conf['client_id'],
+                    $paypal_conf['secret'])
+                );
+                $_api_context->setConfig($paypal_conf['settings']);
+
+
+                $cancel_url = action('Deposit\PaypalController@cancle');
+                $notify_url = action('Deposit\PaypalController@notify');
+
+                $shop = MerchantShop::where('site_key', $request->shop_key)->where('merchant_id', $request->user_id)->first();
+                $item_name = $shop->name." Merchant Payment";
+                $item_number = Str::random(12);
+                $item_amount = $request->amount;
+                $currency_code = Currency::where('id',$request->currency_id)->first()->code;
+
+                $payer = new Payer();
+                $payer->setPaymentMethod('paypal');
+                $item_1 = new Item();
+                $item_1->setName($item_name)
+                    ->setCurrency($currency_code)
+                    ->setQuantity(1)
+                    ->setPrice($item_amount);
+                $item_list = new ItemList();
+                $item_list->setItems(array($item_1));
+                $amount = new Amount();
+                $amount->setCurrency($currency_code)
+                    ->setTotal($item_amount);
+                $transaction = new Transaction();
+                $transaction->setAmount($amount)
+                    ->setItemList($item_list)
+                    ->setDescription($item_name.' Via Paypal');
+                $redirect_urls = new RedirectUrls();
+                $redirect_urls->setReturnUrl($notify_url)
+                    ->setCancelUrl($cancel_url);
+                $payment = new Payment();
+                $payment->setIntent('Sale')
+                    ->setPayer($payer)
+                    ->setRedirectUrls($redirect_urls)
+                    ->setTransactions(array($transaction));
+
+                try {
+                    $payment->create($_api_context);
+                } catch (\PayPal\Exception\PPConnectionException $ex) {
+                    return response()->json([
+                        'type' => 'mt_payment_error',
+                        'payload' => $ex->getMessage()
+                    ]);
+                }
+                foreach ($payment->getLinks() as $link) {
+                    if ($link->getRel() == 'approval_url') {
+                        $redirect_url = $link->getHref();
+                        break;
+                    }
+                }
+
+                Session::put('paypal_payment_id', $payment->getId());
+                Session::put('deposit_number',$item_number);
+
+                if (isset($redirect_url)) {
+                    return Redirect::away($redirect_url);
+                }
+
+                return response()->json([
+                    'type' => 'mt_payment_error',
+                    'payload' => 'Unknown error occurred'
+                ]);
+            }
+            else if ($merchant_setting->keyword == 'stripe') {
+                $paydata = $merchant_setting->information;
+                Config::set('services.stripe.key', $paydata['key']);
+                Config::set('services.stripe.secret', $paydata['secret']);
+
+                $shop = MerchantShop::where('site_key', $request->shop_key)->where('merchant_id', $request->user_id)->first();
+                $item_name = $shop->name." Merchant Payment";
+                $item_number = Str::random(4).time();
+                $item_amount = $request->amount;
+                $currency_code = Currency::where('id',$request->currency_id)->first()->code;
+
+                $validator = Validator::make($request->all(),[
+                    'cardNumber' => 'required',
+                    'cardCVC' => 'required',
+                    'month' => 'required',
+                    'year' => 'required',
+                ]);
+                if ($validator->passes()) {
+
+                    $stripe = Stripe::make(Config::get('services.stripe.secret'));
+                    try{
+                        $token = $stripe->tokens()->create([
+                            'card' =>[
+                                    'number' => $request->cardNumber,
+                                    'exp_month' => $request->month,
+                                    'exp_year' => $request->year,
+                                    'cvc' => $request->cardCVC,
+                                ],
+                            ]);
+                        if (!isset($token['id'])) {
+                            return back()->with('error','Token Problem With Your Token.');
+                        }
+        
+                        $charge = $stripe->charges()->create([
+                            'card' => $token['id'],
+                            'currency' => $currency_code,
+                            'amount' => $item_amount,
+                            'description' => $item_name,
+                            ]);
+        
+                        if ($charge['status'] == 'succeeded') {
+                            return response()->json([
+                                'type' => 'mt_payment_success',
+                                'payload' => 'Gateway Payment completed1111'
+                            ]);
+                        }
+        
+                    }catch (Exception $e){
+                        return back()->with('unsuccess', $e->getMessage());
+                    }catch (\Cartalyst\Stripe\Exception\CardErrorException $e){
+                        return back()->with('unsuccess', $e->getMessage());
+                    }catch (\Cartalyst\Stripe\Exception\MissingParameterException $e){
+                        return back()->with('unsuccess', $e->getMessage());
+                    }
+                }
+
+
+
+                return redirect()->back()->with('error', 'This Payment Gateway is stripe.');
+            }
+
             return response()->json([
                 'type' => 'mt_payment_success',
                 'payload' => 'Gateway Payment completed'
@@ -186,7 +366,7 @@ class AccessController extends Controller
                     $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
                 }
 
-                $trans = new Transaction();
+                $trans = new AppTransaction();
                 $trans->trnx = str_rand();
                 $trans->user_id     = $user->id;
                 $trans->user_type   = 1;
@@ -216,7 +396,7 @@ class AccessController extends Controller
             $wallet->balance -= $request->amount;
             $wallet->update();
 
-            $trnx              = new Transaction();
+            $trnx              = new AppTransaction();
             $trnx->trnx        = str_rand();
             $trnx->user_id     = auth()->id();
             $trnx->user_type   = 1;
@@ -250,7 +430,7 @@ class AccessController extends Controller
                     $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
                 }
 
-                $trans = new Transaction();
+                $trans = new AppTransaction();
                 $trans->trnx = str_rand();
                 $trans->user_id     = $request->user_id;
                 $trans->user_type   = 1;
@@ -276,7 +456,7 @@ class AccessController extends Controller
             $rcvWallet->balance += $request->amount;
             $rcvWallet->update();
 
-            $rcvTrnx              = new Transaction();
+            $rcvTrnx              = new AppTransaction();
             $rcvTrnx->trnx        = $trnx->trnx;
             $rcvTrnx->user_id     = $request->user_id;
             $rcvTrnx->user_type   = 1;

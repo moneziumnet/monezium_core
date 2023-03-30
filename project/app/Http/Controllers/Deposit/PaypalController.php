@@ -118,13 +118,13 @@ class PaypalController extends Controller
         $payer->setPaymentMethod('paypal');
         $item_1 = new Item();
         $item_1->setName($item_name)
-            ->setCurrency('USD')
+            ->setCurrency($currency_code)
             ->setQuantity(1)
             ->setPrice($item_amount);
         $item_list = new ItemList();
         $item_list->setItems(array($item_1));
         $amount = new Amount();
-        $amount->setCurrency('USD')
+        $amount->setCurrency($currency_code)
             ->setTotal($item_amount);
         $transaction = new Transaction();
         $transaction->setAmount($amount)
@@ -230,7 +230,7 @@ class PaypalController extends Controller
                 Session::forget('paypal_payment_id');
                 Session::forget('deposit_number');
 
-                return redirect()->route('user.deposit.create')->with('success','Deposit amount '.$deposit->amount.' (USD) successfully!');
+                return redirect()->route('user.deposit.create')->with('success','Deposit amount '.$deposit->amount.' ('.$currency->code.') successfully!');
         }
 
     }

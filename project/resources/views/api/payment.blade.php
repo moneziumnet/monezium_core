@@ -130,6 +130,14 @@
                                 {{ $crypto_item->code }}</button>
                         @endforeach
                     </div>
+                    <div class="mt-4" id="gateway_pay" style="display: none;">
+                        @foreach ($gateways as $gateway_item)
+                            <button name="link_pay_submit" value="{{ $gateway_item->id }}"
+                                class="col btn btn-primary w-100 mb-2 gateway-submit">
+                                {{ __('Pay with ') }}{{ ucfirst($gateway_item->keyword) }}
+                                </button>
+                        @endforeach
+                    </div>
                     <input type="hidden" name="user_id" value={{$user->id}} />
                     <input type="hidden" name="amount" value={{$amount}} />
                     <input type="hidden" name="currency_id" value={{$currency->id}} />
@@ -207,6 +215,7 @@
                 $('#pay_form_submit').attr('action', "{{route('api.pay.submit')}}");
                 $('#pay_form_submit').attr('method', "POST");
                 document.getElementById("crypto_pay").style.display = "none";
+                document.getElementById("gateway_pay").style.display = "none";
                 document.getElementById("default_pay").style.display = "block";
                 $("#bank_account").prop('required', true);
                 document.getElementById("bank_part").style.display = "block";
@@ -214,6 +223,17 @@
                 $('#pay_form_submit').attr('action',"{{route('api.pay.crypto')}}");
                 $('#pay_form_submit').attr('method', "GET");
                 document.getElementById("crypto_pay").style.display = "block";
+                document.getElementById("default_pay").style.display = "none";
+                document.getElementById("gateway_pay").style.display = "none";
+                $("#bank_account").prop('required', false);
+                $("#description").prop('required', false);
+                document.getElementById('bank_account_part').style.display = "none";
+                document.getElementById("bank_part").style.display = "none";
+            } else if ($(this).attr('id') == 'gateway') {
+                $('#pay_form_submit').attr('action',"{{route('api.pay.gateway')}}");
+                $('#pay_form_submit').attr('method', "GET");
+                document.getElementById("crypto_pay").style.display = "none";
+                document.getElementById("gateway_pay").style.display = "block";
                 document.getElementById("default_pay").style.display = "none";
                 $("#bank_account").prop('required', false);
                 $("#description").prop('required', false);
@@ -223,6 +243,7 @@
                 $('#pay_form_submit').attr('action', "{{route('api.pay.submit')}}");
                 $('#pay_form_submit').attr('method', "POST");
                 document.getElementById("crypto_pay").style.display = "none";
+                document.getElementById("gateway_pay").style.display = "none";
                 document.getElementById("default_pay").style.display = "block";
                 $("#bank_account").prop('required', false);
                 $("#description").prop('required', false);
@@ -272,6 +293,12 @@
             }
         });
         
+        $('.gateway-submit').on('click', function() {
+            if (document.getElementById('pay_form_submit').checkValidity()) {
+                $('#pay_form_submit').submit();
+            }
+        });
+
         $(document).on('submit','#pay_form_submit',function(e){
             if($(this).attr('method').toUpperCase() == "POST") {
                 e.preventDefault();

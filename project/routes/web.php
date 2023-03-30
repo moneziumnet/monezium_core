@@ -47,6 +47,7 @@ Route::get('/access', [AccessController::class, 'index'])->name('api.pay.index')
 Route::get('/access/login', [AccessController::class, 'login'])->name('api.pay.login');
 Route::post('/access/login_submit', [AccessController::class, 'login_submit'])->name('api.pay.login.submit');
 Route::get('/access/crypto', [AccessController::class, 'crypto_pay'])->name('api.pay.crypto');
+Route::get('/access/gateway', [AccessController::class, 'gateway_pay'])->name('api.pay.gateway');
 Route::post('/access/submit', [AccessController::class, 'pay_submit'])->name('api.pay.submit');
 
 Route::get('blogs', [FrontendController::class, 'blog'])->name('front.blog');

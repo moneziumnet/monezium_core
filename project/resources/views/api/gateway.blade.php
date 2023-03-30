@@ -30,42 +30,48 @@
                 <div class="text-center my-4">
 
                     <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
-                        <h2 class="me-3">Payment by crypto</h2>
+                        <h2 class="me-3">Payment by {{ucFirst($merchant_setting->keyword)}}</h2>
 
                 </div>
 
                 <form action="{{route('api.pay.submit')}}" method="POST" enctype="multipart/form-data" id="pay_form_submit">
                     @csrf
-                    <div class="text-center">
-                        <img id="qrcode" src="{{'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl='.$wallet->wallet_no.'&choe=UTF-8'}}" class="" alt="">
-                    </div>
-                    <div class="text-center mt-2">
-                        <span id="qrdetails" class="ms-2 check">{{__($wallet->wallet_no)}}</span>
-                    </div>
 
-                    <div class="form-group mb-3 mt-3">
-                        <label class="form-label required">{{$wallet->currency->code}} {{__('Address')}}</label>
-                        <input name="address" id="address" class="form-control" autocomplete="off"  type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" value="{{ $wallet->wallet_no }}" readonly required>
-                    </div>
 
                     <div class="form-group mb-3 mt-3">
                         <label class="form-label required">{{__('Amount')}}</label>
-                        <input name="amount" id="amount" class="form-control" autocomplete="off"  type="number" value="{{ $total_amount / $cal_amount }}" readonly required>
+                        <input name="amount" id="amount" class="form-control" autocomplete="off"  type="number" value="{{ $amount }}" readonly required>
                     </div>
 
-                    <!-- <div class="form-group mb-3 mt-3">
-                        <label class="form-label required">{{__('Hash')}}</label>
-                        <input name="hash" id="hash" class="form-control" autocomplete="off"  type="text" placeholder="0x...." required>
-                    </div>
+                    @if ($merchant_setting->keyword == 'stripe')
+                        <input type="hidden" name="cmd" value="_xclick">
+                        <input type="hidden" name="no_note" value="1">
+                        <input type="hidden" name="lc" value="UK">
+                        <input type="hidden" name="bn" value="PP-BuyNowBF:btn_buynow_LG.gif:NonHostedGuest">
 
-                    <div class="form-group mb-3 mt-3">
-                        <label class="form-label required">{{$wallet->currency->code}} {{__('Your Address')}}</label>
-                        <input name="sender_address" id="sender_address" class="form-control" autocomplete="off"  type="text"  required>
-                    </div> -->
+                        <div class="col-lg-6 mb-3">
+                            <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control card-elements" name="cardNumber" placeholder="{{ __('Card Number') }}" autocomplete="off" autofocus oninput="validateCard(this.value);"/>
+                            <span id="errCard"></span>
+                        </div>
 
-                    <input type="hidden" name="currency_id" value="{{$wallet->currency->id}}">
-                    <input type="hidden" name="user_id" value="{{$wallet->user_id}}">
-                    <input type="hidden" name="payment" value="crypto">
+                        <div class="col-lg-6 cardRow mb-3">
+                            <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control card-elements" placeholder="{{ ('Card CVC') }}" name="cardCVC" oninput="validateCVC(this.value);">
+                            <span id="errCVC"></span>
+                        </div>
+
+                        <div class="col-lg-6 mb-3">
+                            <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control card-elements" placeholder="{{ __('Month') }}" name="month" >
+                        </div>
+
+                        <div class="col-lg-6">
+                            <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control card-elements" placeholder="{{ __('Year') }}" name="year">
+                        </div>
+                    @endif
+
+                    <input type="hidden" name="currency_id" value="{{$currency->id}}">
+                    <input type="hidden" name="user_id" value="{{$merchant_setting->user_id}}">
+                    <input type="hidden" name="payment" value="gateway">
+                    <input type="hidden" name="gateway_id" value="{{$merchant_setting->id}}">
                     <input type="hidden" name="shop_key" value="{{$shop_key}}">
                     <div class="form-footer">
                         <button type="submit" class="btn btn-primary w-100">{{__('Done')}}</button>
@@ -87,6 +93,11 @@
     <script src="{{ asset('assets/user/js/notify.min.js') }}"></script>
     <script src="{{ asset('assets/front/js/toastr.min.js') }}"></script>
 
+    <script type="text/javascript" src="{{ asset('assets/front/js/payvalid.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/front/js/paymin.js') }}"></script>
+    <script type="text/javascript" src="https://js.stripe.com/v3/"></script>
+    <script type="text/javascript" src="{{ asset('assets/front/js/payform.js') }}"></script>
+
     <script>
         'use strict';
         $(document).on('submit','#pay_form_submit',function(e){
@@ -96,6 +107,9 @@
                 $.ajax({
                     method: $(this).attr('method'),
                     url: $(this).attr('action'),
+                    headers: {
+                        'Access-Control-Allow-Origin': '*'
+                    },
                     data: $(this).serialize(),
                     success: function(msg) {
                         window.close();
@@ -104,6 +118,31 @@
                 });
             }
         });
+        var cnstatus = false;
+        var dateStatus = false;
+        var cvcStatus = false;
+
+        function validateCard(cn) {
+        cnstatus = Stripe.card.validateCardNumber(cn);
+        if (!cnstatus) {
+            $("#errCard").html('Card number not valid<br>');
+        } else {
+            $("#errCard").html('');
+        }
+        btnStatusChange();
+
+
+        }
+
+        function validateCVC(cvc) {
+        cvcStatus = Stripe.card.validateCVC(cvc);
+        if (!cvcStatus) {
+            $("#errCVC").html('CVC number not valid');
+        } else {
+            $("#errCVC").html('');
+        }
+        btnStatusChange();
+        }
     </script>
     @stack('js')
 </body>

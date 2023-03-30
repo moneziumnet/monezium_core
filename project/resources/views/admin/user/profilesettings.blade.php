@@ -97,7 +97,7 @@
                 <select class="select mb-3" name="user_type[]" multiple id="user_type">
                   {{-- <option value="">{{ __('Select Customer Type') }}</option> --}}
                   @foreach(DB::table('customer_types')->orderBy('type_name','asc')->get() as $c_type)
-                  <option value="{{ $c_type->id }}" @if(in_array($c_type->id, $userType)) selected @endif>{{ $c_type->type_name }}</option>
+                    <option value="{{ $c_type->id }}" @if(in_array($c_type->id, $userType)) selected @endif>{{ $c_type->type_name }}</option>
                   @endforeach
                 </select>
               </div>

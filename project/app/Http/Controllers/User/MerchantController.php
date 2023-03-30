@@ -52,7 +52,7 @@ class MerchantController extends Controller
         return view('user.merchant.setting', $data);
     }
 
-    public function setting_update($tab = "paypal", Request $request) {
+    public function setting_update(Request $request, $tab = "paypal") {
         $data = MerchantSetting::where('user_id', auth()->id())
             ->where('keyword', $tab)
             ->first();
@@ -64,7 +64,7 @@ class MerchantController extends Controller
             $data->information = array(
                 'client_id' => $request->client_id,
                 'client_secret' => $request->client_secret,
-                'sandbox_check' => $request->sandbox_check == 'on'
+                'sandbox_check' => $request->sandbox_check == 'on' ? 1 : 0
             );
         } else {
             $data->information = array(
