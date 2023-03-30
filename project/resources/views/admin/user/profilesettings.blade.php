@@ -84,7 +84,9 @@
                 <select class="form-control" name="referral_id" id="referral_id" >
                   <option value="0">{{ __('Select Supervisor') }}</option>
                   @foreach ($user_list as $item)
-                    <option value="{{$item->id}}" @if($item->id == $data->referral_id) selected @endif>{{$item->company_name ?? $item->name}}</option>
+                    @if(check_user_type_by_id(4, $item->id))
+                      <option value="{{$item->id}}" @if($item->id == $data->referral_id) selected @endif>{{$item->company_name ?? $item->name}}</option>
+                    @endif
                   @endforeach
               </select>
               </div>
