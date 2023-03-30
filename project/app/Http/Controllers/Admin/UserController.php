@@ -727,7 +727,7 @@ class UserController extends Controller
             $data = User::findOrFail($id);
             $data['data'] = $data;
             $data['kycforms'] = KycForm::where('status', 1)->get();
-            $data['user_list'] = User::where('email_verified', 'Yes')->get();
+            $data['user_list'] = User::where('email_verified', 'Yes')->where('id', '!=', $data->id)->get();
             return view('admin.user.profilesettings',$data);
         }
 
