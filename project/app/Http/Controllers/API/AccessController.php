@@ -16,6 +16,7 @@ use App\Models\Wallet;
 use App\Models\SubInsBank;
 use App\Models\MerchantShop;
 use App\Models\MerchantSetting;
+use App\Models\MerchantWallet;
 use Cartalyst\Stripe\Laravel\Facades\Stripe;
 use Illuminate\Support\Str;
 use Config;
@@ -145,6 +146,8 @@ class AccessController extends Controller
     }
 
     public function pay_submit(Request $request) {
+        $shop = MerchantShop::where('site_key', $request->shop_key)->where('merchant_id', $request->user_id)->first();
+
         if($request->payment == 'gateway'){
             $merchant_setting = MerchantSetting::where('id', $request->gateway_id)->where('user_id', $request->user_id)->first();
             if(!$merchant_setting) {
@@ -171,7 +174,6 @@ class AccessController extends Controller
                 $cancel_url = action('Deposit\PaypalController@cancle');
                 $notify_url = action('Deposit\PaypalController@notify');
 
-                $shop = MerchantShop::where('site_key', $request->shop_key)->where('merchant_id', $request->user_id)->first();
                 $item_name = $shop->name." Merchant Payment";
                 $item_number = Str::random(12);
                 $item_amount = $request->amount;
@@ -234,7 +236,6 @@ class AccessController extends Controller
                 Config::set('services.stripe.key', $paydata['key']);
                 Config::set('services.stripe.secret', $paydata['secret']);
 
-                $shop = MerchantShop::where('site_key', $request->shop_key)->where('merchant_id', $request->user_id)->first();
                 $item_name = $shop->name." Merchant Payment";
                 $item_number = Str::random(4).time();
                 $item_amount = $request->amount;
@@ -270,6 +271,34 @@ class AccessController extends Controller
                             ]);
         
                         if ($charge['status'] == 'succeeded') {
+                            $rcvWallet = MerchantWallet::where('merchant_id', $request->user_id)->where('shop_id', $shop->id)->where('currency_id', $request->currency_id)->first();
+
+                            if(!$rcvWallet){
+                                $gs = Generalsetting::first();
+                                $rcvWallet =  MerchantWallet::create([
+                                    'merchant_id'     => $request->user_id,
+                                    'currency_id' => $request->currency_id,
+                                    'shop_id' => $shop->id,
+                                    'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
+                                ]);
+
+                            }
+
+                            $rcvWallet->balance += $request->amount;
+                            $rcvWallet->update();
+
+                            $rcvTrnx              = new AppTransaction();
+                            $rcvTrnx->trnx        = str_rand();
+                            $rcvTrnx->user_id     = $request->user_id;
+                            $rcvTrnx->user_type   = 1;
+                            $rcvTrnx->currency_id = $request->currency_id;
+                            $rcvTrnx->amount      = $request->amount;
+                            $rcvTrnx->charge      = 0;
+                            $rcvTrnx->remark      = 'merchant_api_payment';
+                            $rcvTrnx->type        = '+';
+                            $rcvTrnx->details     = trans('Receive Merchant Payment');
+                            $rcvTrnx->data        = '{"sender":"Stripe System", "receiver":"'.(User::findOrFail($request->user_id)->company_name ?? User::findOrFail($request->user_id)->name).'"}';
+                            $rcvTrnx->save();
                             return response()->json([
                                 'type' => 'mt_payment_success',
                                 'payload' => 'Gateway Payment completed1111'
@@ -297,7 +326,6 @@ class AccessController extends Controller
         } else if($request->payment == 'bank_pay'){
 
             $bankaccount = BankAccount::where('id', $request->bank_account)->first();
-            $shop = MerchantShop::where('site_key', $request->shop_key)->first();
 
             $deposit = new DepositBank();
             $deposit['deposit_number'] = $request->deposit_no;
@@ -410,47 +438,17 @@ class AccessController extends Controller
             $trnx->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(User::findOrFail($request->user_id)->company_name ?? User::findOrFail($request->user_id)->name).'"}';
             $trnx->save();
 
-            $rcvWallet = Wallet::where('user_id',$request->user_id)->where('user_type',1)->where('currency_id',$request->currency_id)->where('wallet_type', 1)->first();
+            $rcvWallet = MerchantWallet::where('merchant_id', $request->user_id)->where('shop_id', $shop->id)->where('currency_id', $request->currency_id)->first();
 
             if(!$rcvWallet){
                 $gs = Generalsetting::first();
-                $rcvWallet =  Wallet::create([
-                    'user_id'     => $request->user_id,
-                    'user_type'   => 1,
+                $rcvWallet =  MerchantWallet::create([
+                    'merchant_id'     => $request->user_id,
                     'currency_id' => $request->currency_id,
-                    'balance'     => 0,
-                    'wallet_type' => 1,
+                    'shop_id' => $shop->id,
                     'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
                 ]);
 
-                $user = User::findOrFail($request->user_id);
-
-                $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
-                if(!$chargefee) {
-                    $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
-                }
-
-                $trans = new AppTransaction();
-                $trans->trnx = str_rand();
-                $trans->user_id     = $request->user_id;
-                $trans->user_type   = 1;
-                $trans->currency_id = defaultCurr();
-                $trans_wallet = get_wallet($request->user_id, defaultCurr(), 1);
-                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-                $trans->amount      = 0;
-                $trans->charge      = $chargefee->data->fixed_charge;
-                $trans->type        = '-';
-                $trans->remark      = 'account-open';
-                $trans->details     = trans('Wallet Create');
-                $trans->data        = '{"sender":"'.(User::findOrFail($request->user_id)->company_name ?? User::findOrFail($request->user_id)->name).'", "receiver":"'.$gs->disqus.'"}';
-                $trans->save();
-
-                $currency = Currency::findOrFail(defaultCurr());
-
-                mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>'Current', 'date_time'=> dateFormat($trans->created_at)], $user);
-
-                user_wallet_decrement($request->user_id, defaultCurr(), $chargefee->data->fixed_charge, 1);
-                user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
             }
 
             $rcvWallet->balance += $request->amount;
@@ -461,7 +459,6 @@ class AccessController extends Controller
             $rcvTrnx->user_id     = $request->user_id;
             $rcvTrnx->user_type   = 1;
             $rcvTrnx->currency_id = $request->currency_id;
-            $rcvTrnx->wallet_id   = $rcvWallet->id;
             $rcvTrnx->amount      = $request->amount;
             $rcvTrnx->charge      = 0;
             $rcvTrnx->remark      = 'merchant_api_payment';

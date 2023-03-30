@@ -325,7 +325,10 @@ class MoneyRequestController extends Controller
         $trans->user_type   = $data->user_type;
         $trans->currency_id = $currency_id;
         $trans->amount      = $data->amount;
-
+        if (!isset($data->shop_id)) {
+            $trans_wallet       = get_wallet($sender->id, $currency_id);
+            $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+        }
         $trans_wallet       = get_wallet($sender->id, $currency_id);
         $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
 
@@ -343,8 +346,10 @@ class MoneyRequestController extends Controller
         $trans->user_type   = $data->user_type;
         $trans->currency_id = $currency_id;
 
-        $trans_wallet       = get_wallet($receiver->id, $currency_id);
-        $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+        if (!isset($data->shop_id)) {
+            $trans_wallet       = get_wallet($receiver->id, $currency_id);
+            $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+        }
 
         $trans->amount      = $data->amount;
         $trans->charge      = $data->cost + $data->supervisor_cost;

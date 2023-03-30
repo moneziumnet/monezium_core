@@ -214,9 +214,15 @@ class DepositBankController extends Controller
         }
         $final_chargefee = $transaction_global_cost + $transaction_custom_cost;
         $final_amount = $amount - $final_chargefee;
-
-        user_wallet_increment($user->id, $data->currency_id, $final_amount*$rate, 1);
-        user_wallet_increment(0, $data->currency_id, $transaction_global_cost*$rate, 9);
+        if($data->purpose) {
+            $shop = MerchantShop::where('id', $data->purpose_data)->first();
+            merchant_shop_wallet_increment($user->id, $data->currency_id, $shop->id);
+            user_wallet_increment(0, $data->currency_id, $transaction_global_cost*$rate, 9);
+        }
+        else {
+            user_wallet_increment($user->id, $data->currency_id, $final_amount*$rate, 1);
+            user_wallet_increment(0, $data->currency_id, $transaction_global_cost*$rate, 9);
+        }
 
         $trans_wallet = get_wallet($user->id, $data->currency_id, 1);
 
@@ -228,8 +234,12 @@ class DepositBankController extends Controller
         $trans->amount      = $data->amount;
         $trans->charge      = $final_chargefee*$rate;
         $trans->type        = '+';
-
-        $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+        if($data->purpose) {
+            $trans->wallet_id  = null;
+        }
+        else {
+            $trans->wallet_id  = isset($trans_wallet) ? $trans_wallet->id : null;
+        }
 
         $trans->remark      = 'deposit';
         $trans->details     = trans('Deposit complete');
