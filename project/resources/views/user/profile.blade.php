@@ -27,7 +27,7 @@
                         @csrf
 
                         <div class="row">
-                          <div class="col-md-6 mx-auto">
+                          <div class="col-md-6">
                               <div class="form-group">
                                 <label class="font-weight-bold">{{ __('Set Image') }} </label>
                                 <div class="wrapper-image-preview">

@@ -31,7 +31,7 @@
                             <form action="{{route('user.securityform')}}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group mb-3 mt-3">
-                                    <input type="checkbox" name="login_fa_yn" id="login_fa_yn" value="Y" @if($user->login_fa_yn == "Y") checked @endif> {{__('Login With 2FA Authorization')}}
+                                    <input type="checkbox" name="login_fa_yn" id="login_fa_yn" class="form-check-input" value="Y" @if($user->login_fa_yn == "Y") checked @endif> {{__('Login With 2FA Authorization')}}
                                 </div>
                                 <div class="form-group mb-3 mt-3">
                                     <label class="form-label">{{__('Select 2FA Option')}}</label>
@@ -45,7 +45,7 @@
                                 </div>
 
                                 <div class="form-group mb-3 mt-3">
-                                    <input type="checkbox" name="payment_fa_yn" id="payment_fa_yn" value="Y"  @if($user->payment_fa_yn == "Y") checked @endif> {{__('Payments with 2FA Authorization')}}
+                                    <input type="checkbox" name="payment_fa_yn" id="payment_fa_yn" class="form-check-input" value="Y"  @if($user->payment_fa_yn == "Y") checked @endif> {{__('Payments with 2FA Authorization')}}
                                 </div>
                                 <div class="form-group mb-3 mt-3">
                                     <label class="form-label">{{__('Select 2FA Option')}}</label>
@@ -62,37 +62,37 @@
                                 </div>
                                 <div class="row ms-4" id="check_box">
                                     <div class="form-group mb-3 mt-3 col-md-4">
-                                        <input type="checkbox" name="otp_payment[]" value="Bank Incoming"  @if($user->paymentcheck('Bank Incoming')) checked @endif> {{__('Bank Incoming')}}
+                                        <input type="checkbox" name="otp_payment[]" class="form-check-input" value="Bank Incoming"  @if($user->paymentcheck('Bank Incoming')) checked @endif> {{__('Bank Incoming')}}
                                     </div>
                                     <div class="form-group mb-3 mt-3 col-md-4">
-                                        <input type="checkbox" name="otp_payment[]" value="Payment Gateway Incoming"  @if($user->paymentcheck('Payment Gateway Incoming')) checked @endif> {{__('Payment Gateway Incoming')}}
+                                        <input type="checkbox" name="otp_payment[]" class="form-check-input" value="Payment Gateway Incoming"  @if($user->paymentcheck('Payment Gateway Incoming')) checked @endif> {{__('Payment Gateway Incoming')}}
                                     </div>
                                     <div class="form-group mb-3 mt-3 col-md-4">
-                                        <input type="checkbox" name="otp_payment[]" value="Crypto Incoming"  @if($user->paymentcheck('Crypto Incoming')) checked @endif> {{__('Crypto Incoming')}}
+                                        <input type="checkbox" name="otp_payment[]" class="form-check-input" value="Crypto Incoming"  @if($user->paymentcheck('Crypto Incoming')) checked @endif> {{__('Crypto Incoming')}}
                                     </div>
                                     <div class="form-group mb-3 mt-3 col-md-4">
-                                        <input type="checkbox" name="otp_payment[]" value="Withdraw"  @if($user->paymentcheck('Withdraw')) checked @endif> {{__('Withdraw')}}
+                                        <input type="checkbox" name="otp_payment[]" class="form-check-input" value="Withdraw"  @if($user->paymentcheck('Withdraw')) checked @endif> {{__('Withdraw')}}
                                     </div>
                                     <div class="form-group mb-3 mt-3 col-md-4">
-                                        <input type="checkbox" name="otp_payment[]" value="External Payments"  @if($user->paymentcheck('External Payments')) checked @endif> {{__('External Payments')}}
+                                        <input type="checkbox" name="otp_payment[]" class="form-check-input" value="External Payments"  @if($user->paymentcheck('External Payments')) checked @endif> {{__('External Payments')}}
                                     </div>
                                     <div class="form-group mb-3 mt-3 col-md-4">
-                                        <input type="checkbox" name="otp_payment[]" value="Withdraw Crypto"  @if($user->paymentcheck('Withdraw Crypto')) checked @endif> {{__('Withdraw Crypto')}}
+                                        <input type="checkbox" name="otp_payment[]" class="form-check-input" value="Withdraw Crypto"  @if($user->paymentcheck('Withdraw Crypto')) checked @endif> {{__('Withdraw Crypto')}}
                                     </div>
                                     <div class="form-group mb-3 mt-3 col-md-4">
-                                        <input type="checkbox" name="otp_payment[]" value="Payment between accounts"  @if($user->paymentcheck('Payment between accounts')) checked @endif> {{__('Payment between accounts')}}
+                                        <input type="checkbox" name="otp_payment[]" class="form-check-input" value="Payment between accounts"  @if($user->paymentcheck('Payment between accounts')) checked @endif> {{__('Payment between accounts')}}
                                     </div>
                                     <div class="form-group mb-3 mt-3 col-md-4">
-                                        <input type="checkbox" name="otp_payment[]" value="Internal Payment"  @if($user->paymentcheck('Internal Payment')) checked @endif> {{__('Internal Payment')}}
+                                        <input type="checkbox" name="otp_payment[]" class="form-check-input" value="Internal Payment"  @if($user->paymentcheck('Internal Payment')) checked @endif> {{__('Internal Payment')}}
                                     </div>
                                     <div class="form-group mb-3 mt-3 col-md-4">
-                                        <input type="checkbox" name="otp_payment[]" value="Request Money"  @if($user->paymentcheck('Request Money')) checked @endif> {{__('Request Money')}}
+                                        <input type="checkbox" name="otp_payment[]" class="form-check-input" value="Request Money"  @if($user->paymentcheck('Request Money')) checked @endif> {{__('Request Money')}}
                                     </div>
                                     <div class="form-group mb-3 mt-3 col-md-4">
-                                        <input type="checkbox" name="otp_payment[]" value="Exchange"  @if($user->paymentcheck('Exchange')) checked @endif> {{__('Exchange')}}
+                                        <input type="checkbox" name="otp_payment[]" class="form-check-input" value="Exchange"  @if($user->paymentcheck('Exchange')) checked @endif> {{__('Exchange')}}
                                     </div>
                                     <div class="form-group mb-3 mt-3 col-md-4">
-                                        <input type="checkbox" name="otp_payment[]" value="Receive Request Money"  @if($user->paymentcheck('Receive Request Money')) checked @endif> {{__('Receive Request Money')}}
+                                        <input type="checkbox" name="otp_payment[]" class="form-check-input" value="Receive Request Money"  @if($user->paymentcheck('Receive Request Money')) checked @endif> {{__('Receive Request Money')}}
                                     </div>
                                 </div>
 

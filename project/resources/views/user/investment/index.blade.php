@@ -70,7 +70,7 @@
 
                 <div class="col-sm-6 col-lg-3 col-xl-3">
                     <div class="plan__item position-relative">
-                        <div class="ribbon ribbon-top ribbon-bookmark bg-green">
+                        <div class="ribbon ribbon-top ribbon-bookmark bg-primary">
                         </div>
                         <div class="plan__item-header">
                             <div class="left">
@@ -135,10 +135,10 @@
                                     </div>
                                 </li>
                             </ul>
-                            <a href="javascript:;" class="btn btn-green w-100 apply-dps" data-id="{{ $data->id}}" data-bs-toggle="modal" data-bs-target="#modal-apply-dps">
+                            <a href="javascript:;" class="btn btn-primary w-100 apply-dps" data-id="{{ $data->id}}" data-bs-toggle="modal" data-bs-target="#modal-apply-dps">
                                 {{__('Apply')}}
                               </a>
-                                {{-- <a href="{{ route('user.dps.planDetails',$data->id) }}" class="btn btn-green w-100">{{__('Apply')}}</a> --}}
+                                {{-- <a href="{{ route('user.dps.planDetails',$data->id) }}" class="btn btn-primary w-100">{{__('Apply')}}</a> --}}
                         </div>
                     </div>
                 </div>
@@ -344,7 +344,7 @@
             @foreach ($fdr_plans as $key=>$data)
                 <div class="col-sm-6 col-lg-3 col-xl-3">
                     <div class="plan__item position-relative">
-                        <div class="ribbon ribbon-top ribbon-bookmark bg-green">
+                        <div class="ribbon ribbon-top ribbon-bookmark bg-primary">
                         </div>
                         <div class="plan__item-header">
                             <div class="left">
@@ -409,7 +409,7 @@
                                 </li>
                                 @endif
                             </ul>
-                            <a href="javascript:;" class="btn btn-green w-100 apply-fdr" data-id="{{ $data->id}}" data-bs-toggle="modal" data-bs-target="#modal-apply-fdr">
+                            <a href="javascript:;" class="btn btn-primary w-100 apply-fdr" data-id="{{ $data->id}}" data-bs-toggle="modal" data-bs-target="#modal-apply-fdr">
                                     {{__('Apply')}}
                                   </a>
                         </div>

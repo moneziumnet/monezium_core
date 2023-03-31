@@ -55,9 +55,9 @@
             @else
 
             @foreach ($plans as $key=>$data)
-                <div class="col-sm-6 col-lg-3 col-xl-3">
+                <div class="col-sm-6 col-lg-4 col-xl-4">
                     <div class="plan__item position-relative">
-                        <div class="ribbon ribbon-top ribbon-bookmark bg-green">
+                        <div class="ribbon ribbon-top ribbon-bookmark bg-blue">
                         </div>
                         <div class="plan__item-header">
                             <div class="left">
@@ -109,7 +109,7 @@
                                     </div>
                                 </li>
                             </ul>
-                            <a href="javascript:;" class="btn btn-green w-100 apply-loan" data-id="{{ $data->id}}" data-bs-toggle="modal" data-bs-target="#modal-apply">
+                            <a href="javascript:;" class="btn btn-primary w-100 apply-loan" data-id="{{ $data->id}}" data-bs-toggle="modal" data-bs-target="#modal-apply">
                                 {{__('Apply')}}
                             </a>
                         </div>
