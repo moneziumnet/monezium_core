@@ -135,7 +135,7 @@ class MerchantShopController extends Controller
             ]);
         }
         $data->update(['status' => $id2]);
-        $user = User::findOrFail($data->user_id);
+        $user = User::findOrFail($data->merchant_id);
         mailSend('merchant_shop_approved',['shop_name'=>$data->name], $user);
 
         $msg = __('Data Updated Successfully.');
