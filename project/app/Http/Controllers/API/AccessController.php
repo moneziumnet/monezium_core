@@ -348,7 +348,7 @@ class AccessController extends Controller
             $currency = Currency::findOrFail($request->currency_id);
             $subbank = SubInsBank::findOrFail($bankaccount->subbank_id);
             if($shop->webhook) {
-                merchant_shop_webhook_send($shop->webhook, ['amount'=>$deposit->amount, 'curr' => ($currency ? $currency->code : ' '), 'trnx' => $data->deposit_number, 'date_time'=>$deposit->created_at ,'type' => 'Bank', 'shop'=>$shop->name, 'status' => 'pending' ]);
+                merchant_shop_webhook_send($shop->webhook, ['amount'=>$deposit->amount, 'curr' => ($currency ? $currency->code : ' '), 'trnx' => $deposit->deposit_number, 'date_time'=>$deposit->created_at ,'type' => 'Bank', 'shop'=>$shop->name, 'status' => 'pending' ]);
             }
             mailSend('deposit_request',['amount'=>$deposit->amount, 'curr' => ($currency ? $currency->code : ' '), 'date_time'=>$deposit->created_at ,'type' => 'Bank', 'method'=> $subbank->name ], $user);
             send_notification($request->user_id, 'Bank has been deposited '."\n Amount is ".$currency->symbol.$request->amount."\n Transaction ID : ".$request->deposit_no, route('admin.deposits.bank.index'));
