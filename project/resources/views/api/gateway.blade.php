@@ -108,7 +108,6 @@
                     method: $(this).attr('method'),
                     url: $(this).attr('action'),
                     headers: {
-                        'Access-Control-Allow-Origin': '*',
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     },
                     data: $(this).serialize(),

@@ -72,7 +72,8 @@ class AccessController extends Controller
             $user = $user_api->user;
             $bankaccounts = BankAccount::where('user_id', $user->id)->where('currency_id', $currency->id)->get();
 
-            $crypto_ids =  Wallet::where('user_id', $user->id)->where('user_type',1)->where('wallet_type', 8)->pluck('currency_id')->toArray();
+            $crypto_ids =  MerchantWallet::where('merchant_id', $user->id)->where('shop_id', $shop->id)->pluck('currency_id')->toArray();
+
             $cryptolist = Currency::whereStatus(1)->where('type', 2)->whereIn('id', $crypto_ids)->get();
             $gateways = MerchantSetting::where('user_id', $user_api->user_id)->get();
             return view('api.payment', compact('bankaccounts','cryptolist','amount','currency','user', 'shop_key', 'gateways'));
@@ -123,7 +124,9 @@ class AccessController extends Controller
         $code = $select_currency->code;
         $data['total_amount'] = $request->amount;
         $data['cal_amount'] = floatval(getRate($pre_currency, $code));
-        $data['wallet'] =  Wallet::where('user_id', $request->user_id)->where('user_type',1)->where('wallet_type', 8)->where('currency_id', $select_currency->id)->first();
+        $shop = MerchantShop::where('site_key', $request->shop_key)->where('merchant_id', $request->user_id)->first();
+
+        $data['wallet'] =  MerchantWallet::where('merchant_id', $request->user_id)->where('shop_id', $shop->id)->where('currency_id', $select_currency->id)->first();
         $data['shop_key'] = $request->shop_key;
 
         if(!$data['wallet']) {
@@ -221,9 +224,12 @@ class AccessController extends Controller
 
                 Session::put('paypal_payment_id', $payment->getId());
                 Session::put('deposit_number',$item_number);
+                // Session::put('user_id',$item_number);
 
                 if (isset($redirect_url)) {
-                    return Redirect::away($redirect_url);
+                    return redirect()->away($redirect_url);
+
+                    // return Redirect::away($redirect_url);
                 }
 
                 return response()->json([
@@ -301,7 +307,7 @@ class AccessController extends Controller
                             $rcvTrnx->save();
                             return response()->json([
                                 'type' => 'mt_payment_success',
-                                'payload' => 'Gateway Payment completed1111'
+                                'payload' => 'Gateway Payment completed'
                             ]);
                         }
         
