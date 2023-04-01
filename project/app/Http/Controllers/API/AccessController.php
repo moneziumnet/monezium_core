@@ -174,7 +174,7 @@ class AccessController extends Controller
                 $_api_context->setConfig($paypal_conf['settings']);
 
 
-                $notify_url = route('api.pay.paypal.status', $merchant_setting->id);
+                $notify_url = route('api.pay.paypal.status', $shop->id);
 
                 $item_name = $shop->name." Merchant Payment";
                 $item_number = Str::random(12);
@@ -477,12 +477,13 @@ class AccessController extends Controller
         }
     }
 
-    public function notify(Request $request, $setting)
+    public function notify(Request $request, $shop_id)
     {
 
         $paymentId = $request->paymentId;
         $payerId = $request->PayerID;
-        $merchant_setting = MerchantSetting::where('id', $setting)->first();
+        $shop = MerchantShop::where('id', $shop_id)->first();
+        $merchant_setting = MerchantSetting::where('user_id', $shop->merchant_id)->where('keyword', 'paypal')->first();
         $paydata = $merchant_setting->information;
     
         $apiContext = new ApiContext(
@@ -506,8 +507,39 @@ class AccessController extends Controller
 
         if ($result->getState() == 'approved') {
             $resp = json_decode($payment, true);
+            $currency_code = $resp['transactions'][0]['amount']['currency'];
+            $amount = $resp['transactions'][0]['amount']['total'];
+            $currency = Currency::where('code', $currency_code)->first();
+            $rcvWallet = MerchantWallet::where('merchant_id', $merchant_setting->user_id)->where('shop_id', $shop->id)->where('currency_id', $currency->id)->first();
+            
+            if(!$rcvWallet){
+                $gs = Generalsetting::first();
+                $rcvWallet =  MerchantWallet::create([
+                    'merchant_id'     => $merchant_setting->user_id,
+                    'currency_id' => $currency->id,
+                    'shop_id' => $shop->id,
+                    'wallet_no' => $gs->wallet_no_prefix. date('ydis') . random_int(100000, 999999)
+                ]);
 
-                return redirect()->back()->with('success','Paypal have done successfully!');
+            }
+
+            $rcvWallet->balance += $amount;
+            $rcvWallet->update();
+
+            $rcvTrnx  = new AppTransaction();
+            $rcvTrnx->trnx = str_rand();
+            $rcvTrnx->user_id = $merchant_setting->user_id;
+            $rcvTrnx->user_type = 1;
+            $rcvTrnx->currency_id = $currency->id;
+            $rcvTrnx->amount = $amount;
+            $rcvTrnx->charge = 0;
+            $rcvTrnx->remark = 'merchant_api_payment';
+            $rcvTrnx->type = '+';
+            $rcvTrnx->details = trans('Receive Merchant Payment');
+            $rcvTrnx->data = '{"sender":"Paypal System", "receiver":"'.(User::findOrFail($merchant_setting->user_id)->company_name ?? User::findOrFail($merchant_setting->user_id)->name).'"}';
+            $rcvTrnx->save();
+
+            return redirect()->back()->with('success','Paypal have done successfully!');
         }
 
     }
