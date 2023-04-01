@@ -174,8 +174,7 @@ class AccessController extends Controller
                 $_api_context->setConfig($paypal_conf['settings']);
 
 
-                $cancel_url = action('Deposit\PaypalController@cancle');
-                $notify_url = action('Deposit\PaypalController@notify');
+                $notify_url = route('api.pay.paypal.status', $merchant_setting->id);
 
                 $item_name = $shop->name." Merchant Payment";
                 $item_number = Str::random(12);
@@ -199,8 +198,7 @@ class AccessController extends Controller
                     ->setItemList($item_list)
                     ->setDescription($item_name.' Via Paypal');
                 $redirect_urls = new RedirectUrls();
-                $redirect_urls->setReturnUrl($notify_url)
-                    ->setCancelUrl($cancel_url);
+                $redirect_urls->setReturnUrl($notify_url);
                 $payment = new Payment();
                 $payment->setIntent('Sale')
                     ->setPayer($payer)
@@ -477,5 +475,40 @@ class AccessController extends Controller
                 'payload' => 'Wallet Payment completed'
             ]);
         }
+    }
+
+    public function notify(Request $request, $setting)
+    {
+
+        $paymentId = $request->paymentId;
+        $payerId = $request->PayerID;
+        $merchant_setting = MerchantSetting::where('id', $setting)->first();
+        $paydata = $merchant_setting->information;
+    
+        $apiContext = new ApiContext(
+            new OAuthTokenCredential(
+                $paydata['client_id'],
+                $paydata['client_secret']
+            )
+        );
+    
+        $payment = Payment::get($paymentId, $apiContext);
+        $execution = new PaymentExecution();
+        $execution->setPayerId($payerId);
+    
+        try {
+            $result = $payment->execute($execution, $apiContext);
+            // Payment was successful
+        } catch (\Exception $e) {
+            return back()->with(['msg' => 'Error executing payment with PayPal.']);
+        }
+
+
+        if ($result->getState() == 'approved') {
+            $resp = json_decode($payment, true);
+
+                return redirect()->back()->with('success','Paypal have done successfully!');
+        }
+
     }
 }
