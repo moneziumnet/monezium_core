@@ -101,14 +101,13 @@
     <script>
         'use strict';
         $(document).on('submit','#pay_form_submit',function(e){
-            if($(this).attr('method').toUpperCase() == "POST") {
+            if($(this).attr('method').toUpperCase() == "POST" && '{{$merchant_setting->keyword}}' == 'stripe') {
                 e.preventDefault();
 
                 $.ajax({
                     method: $(this).attr('method'),
                     url: $(this).attr('action'),
                     headers: {
-                        'Access-Control-Allow-Origin': '*',
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     },
                     data: $(this).serialize(),
@@ -143,6 +142,17 @@
             $("#errCVC").html('');
         }
         btnStatusChange();
+        }
+    </script>
+
+    <script type="text/javascript">
+        window.onbeforeunload = function(evt) {
+            var message = "Are you sure?"; 
+            /* InternetExplorer/Firefox*/
+            var e = evt || window.event
+            e.returnValue = message 
+            /* WebKit browser */
+            return message;
         }
     </script>
     @stack('js')

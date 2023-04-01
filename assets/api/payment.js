@@ -41,5 +41,16 @@ window.addEventListener("message", function (event) {
       break;
     default:
       break;
-  } 
+  }
+//   window.addEventListener('beforeunload', function(e) {
+//     alert("Are you sure you want to leave?");
+//     // Cancel the event
+//     e.preventDefault();
+//     // Chrome requires returnValue to be set
+//     e.returnValue = '';
+
+//     // Perform necessary actions here
+//     alert("Are you sure you want to leave?");
+
+// });
 });
