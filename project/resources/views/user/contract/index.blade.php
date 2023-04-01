@@ -4,7 +4,7 @@
 
 @endpush
 
-
+@section('title', __('Contracts'))
 
 @section('contents')
 <div class="container-xl">

@@ -1,5 +1,7 @@
 @extends('layouts.user')
 
+@section('title', __('Invoice Setting'))
+
 @section('contents')
 
 <div class="container-xl">

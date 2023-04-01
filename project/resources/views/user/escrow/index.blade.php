@@ -1,5 +1,7 @@
 @extends('layouts.user')
 
+@section('title', __('My Escrows'))
+
 @section('contents')
 
 <div class="container-xl">

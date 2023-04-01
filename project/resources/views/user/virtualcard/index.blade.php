@@ -4,6 +4,8 @@
 
 @endpush
 
+@section('title', __('Cards'))
+
 @section('contents')
 <div class="page-body">
   <div class="container-xl">

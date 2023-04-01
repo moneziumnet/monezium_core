@@ -9621,7 +9621,7 @@ body {
 	min-height: 3.5rem;
 	/* background: 0 0; */
 	background: #EBF0F0;
-	color: rgba(30, 41, 59, 0.7);
+	color: #000;
 }
 .navbar-collapse .navbar {
 	flex-grow: 1;
@@ -11688,9 +11688,15 @@ body {
 }
 .footer-bottom {
 	border-top: 1px solid #e6e7e9;
-	padding:0 2.5rem;
-	font-size:0.7rem;
+	padding: 1rem 0;
+	font-size:0.75rem;
 	font-weight:700;
+}
+.footer-link {
+	color: #000;
+}
+.theme-dark .footer-link {
+	color: #fff;
 }
 .footer-transparent {
 	background-color: transparent;
@@ -15668,6 +15674,17 @@ a.step-item:hover {
 .markdown > table thead th,
 .table thead th {
 	color: #000;
+	font-size: 0.75rem;
+	font-weight: 800;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	line-height: 1.6;
+	padding-top: 0.5rem;
+	padding-bottom: 0.5rem;
+}
+.theme-dark .markdown > table thead th,
+.theme-dark .table thead th {
+	color: #fff;
 	font-size: 0.75rem;
 	font-weight: 800;
 	text-transform: uppercase;

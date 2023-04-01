@@ -10,8 +10,10 @@
         </a>
       </h1>
     @else
-    <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
-    </h1>
+    <!-- <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3"></h1> -->
+    <div style="font-weight: 900;font-size: 16px;">
+      @yield('title')
+    </div>
     @endif
     <div class="navbar-nav flex-row order-md-last">
       {{-- <div class="change-language me-2">

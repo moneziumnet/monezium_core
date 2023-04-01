@@ -2,6 +2,8 @@
 
 @section('contents')
 
+@section('title', __('Merchant Setting'))
+
 <div class="container-xl">
     <div class="page-header d-print-none">
         <div class="d-flex align-items-end card-header tab-card-header">

@@ -8,6 +8,8 @@
    @lang('Exchange Money')
 @endsection --}}
 
+@section('title', __('Exchange Money'))
+
 @section('contents')
 <div class="container-xl">
     <div class="page-header d-print-none">

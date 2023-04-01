@@ -64,33 +64,34 @@
         </div>
     </div> -->
     <div class="footer-bottom">
-        <div class="footer-wrapper row justify-content mt-3">
-            <div class="col-sm-6 col-md-6 mb-3">
-                <a href="{{ route('front.page','privacy') }}" style="margin-left:0.5rem;">{{__('Privacy & Policy') }}</a>
-                <a href="{{ route('front.page','term-service') }}" style="margin-left:0.5rem;">{{ __('Term of Service') }}</a>
-                <a href="{{ route('front.page','about') }}" style="margin-left:0.5rem;">{{ __('About Us') }}</a>
-                <a href="{{ route('front.page','contact') }}" style="margin-left:0.5rem;">Contacts</a>
+        <div class="container-xl d-flex">
+            <div class="col-sm-6 col-md-8 d-flex" style="justify-content: left; align-items: center;">
+                <a href="{{ route('front.page','privacy') }}" class="footer-link" style="margin: 0 0.5rem;">{{__('Privacy & Policy') }}</a>
+                <a href="{{ route('front.page','term-service') }}" class="footer-link" style="margin: 0 0.5rem;">{{ __('Term of Service') }}</a>
+                <a href="{{ route('front.page','about') }}" class="footer-link" style="margin: 0 0.5rem;">{{ __('About Us') }}</a>
+                <a href="{{ route('front.page','contact') }}" class="footer-link" style="margin: 0 0.5rem;">{{ __('Contacts') }}</a>
                 <!-- @php
                     echo $gs->copyright;
                 @endphp -->
-                <span style="margin-left:0.6rem; font-weight:400">© 2022 All rights reserved</span>
+                <span style="margin: 0 0.6rem; font-weight:400">© 2023 All rights reserved</span>
             </div>
-            <div class="col-sm-6 col-md-6 mb-3">
-                <a href="?theme=dark" class="hide-theme-dark" style="float: right;margin-left:0.8rem;" title="Enable dark mode" data-bs-toggle="tooltip" data-bs-placement="bottom">
+            <div class="col-sm-6 col-md-4 d-flex" style="justify-content: right; align-items: center;">
+                <span style="float: right;">English</span>
+                <a href="?theme=dark" class="hide-theme-dark footer-link" style="float: right;margin-left:0.8rem;" title="Enable dark mode" data-bs-toggle="tooltip" data-bs-placement="bottom">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                     <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
                     </svg>
                 </a>
-                <a href="?theme=light" class="hide-theme-light" style="float: right;margin-left:0.8rem;" title="Enable light mode" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                <a href="?theme=light" class="hide-theme-light footer-link" style="float: right;margin-left:0.8rem;" title="Enable light mode" data-bs-toggle="tooltip" data-bs-placement="bottom">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                     <circle cx="12" cy="12" r="4" />
                     <path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7" />
                     </svg>
                 </a>
-                <span style="float: right;">English</span>
             </div>
+            
         </div>
     </div>
 </footer>

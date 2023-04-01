@@ -24,14 +24,16 @@
 
   <body>
     <div class="wrapper">
-      @includeIf('includes.user.header')
       @if($website_theme == 0)
+        @includeIf('includes.user.header')
         @includeIf('includes.user.nav')
       @else
         @includeIf('includes.user.nav_vertical')
       @endif
       <div class="page-wrapper">
-
+        @if($website_theme !== 0)
+          @includeIf('includes.user.header')
+        @endif
         @yield('contents')
         @includeIf('includes.user.footer')
       </div>

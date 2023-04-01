@@ -26,6 +26,8 @@
 </style>
 @endpush
 
+@section('title', __('Internal Payment'))
+
 @section('contents')
 <div class="container-xl">
     <div class="page-header d-print-none">

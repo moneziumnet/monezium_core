@@ -11643,6 +11643,18 @@ body {
 	color: #626976;
 	margin-top: auto;
 }
+.footer-bottom {
+	border-top: 1px solid #e6e7e9;
+	padding: 1rem 0;
+	font-size:0.75rem;
+	font-weight:700;
+}
+.footer-link {
+	color: #000;
+}
+.theme-dark .footer-link {
+	color: #fff;
+}
 .footer-transparent {
 	background-color: transparent;
 	border-top: 0;

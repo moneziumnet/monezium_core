@@ -3,6 +3,8 @@
 @push('css')
 @endpush
 
+@section('title', __('Payment to own Account'))
+
 @section('contents')
     <div class="container-xl">
         <div class="page-header d-print-none">

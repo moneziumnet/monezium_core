@@ -4,6 +4,8 @@
 <link href="{{asset('assets/front/css/default.min.css')}}" rel="stylesheet"/>
 @endpush
 
+@section('title', __('Merchant'))
+
 @section('contents')
 <div class="container-xl">
         <div class="container-xl">

@@ -3,7 +3,7 @@
 @push('css')
 @endpush
 
-
+@section('title', __('ICO'))
 
 @section('contents')
     @include('user.ico.tabs')

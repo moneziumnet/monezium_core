@@ -4,6 +4,8 @@
     
 @endpush
 
+@section('title', __('Redeemed History'))
+
 @section('contents')
 <div class="container-xl">
   <div class="page-header d-print-none">
