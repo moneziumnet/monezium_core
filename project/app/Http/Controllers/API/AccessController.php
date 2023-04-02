@@ -174,7 +174,8 @@ class AccessController extends Controller
                 $_api_context->setConfig($paypal_conf['settings']);
 
 
-                $notify_url = route('api.pay.paypal.status', $shop->id);
+                $notify_url = route('api.pay.paypal.success', $shop->id);
+                $cancel_url = route('api.pay.paypal.cancel', $shop->id);
 
                 $item_name = $shop->name." Merchant Payment";
                 $item_number = Str::random(12);
@@ -198,7 +199,8 @@ class AccessController extends Controller
                     ->setItemList($item_list)
                     ->setDescription($item_name.' Via Paypal');
                 $redirect_urls = new RedirectUrls();
-                $redirect_urls->setReturnUrl($notify_url);
+                $redirect_urls->setReturnUrl($notify_url)
+                    ->setCancelUrl($cancel_url);
                 $payment = new Payment();
                 $payment->setIntent('Sale')
                     ->setPayer($payer)
@@ -501,7 +503,7 @@ class AccessController extends Controller
             $result = $payment->execute($execution, $apiContext);
             // Payment was successful
         } catch (\Exception $e) {
-            return back()->with(['msg' => 'Error executing payment with PayPal.']);
+            return back()->with(['msg' => 'Error executing payment withP ayPal.']);
         }
 
 
@@ -541,6 +543,13 @@ class AccessController extends Controller
 
             return redirect()->back()->with('success','Paypal have done successfully!');
         }
+
+    }
+
+    public function cancel(Request $request, $shop_id) {
+        $shop = MerchantShop::where('id', $shop_id)->first();
+
+        return redirect()->back()->with('success','Paypal payment for '.$shop->name.' have canceled successfully!');
 
     }
 }

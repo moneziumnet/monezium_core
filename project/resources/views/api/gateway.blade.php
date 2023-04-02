@@ -145,7 +145,7 @@
         }
     </script>
 
-    <script type="text/javascript">
+    {{-- <script type="text/javascript">
         window.onbeforeunload = function(evt) {
             var message = "Are you sure?"; 
             /* InternetExplorer/Firefox*/
@@ -154,7 +154,7 @@
             /* WebKit browser */
             return message;
         }
-    </script>
+    </script> --}}
     @stack('js')
 </body>
 
