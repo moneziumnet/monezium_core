@@ -10,10 +10,11 @@
     <link href="{{ asset('assets/user/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
     @if($website_theme == 0)
         <link href="{{asset('assets/user/css/tabler.min.css')}}" rel="stylesheet"/>
+        <link href="{{asset('assets/user/css/tabler-flags.min.css')}}" rel="stylesheet"/>
     @else
         <link href="{{asset('assets/user/css/tabler-vertical.min.css')}}" rel="stylesheet"/>
+        <link href="{{asset('assets/user/css/tabler-vertical-flags.min.css')}}" rel="stylesheet"/>
     @endif
-    <link href="{{asset('assets/user/css/tabler-flags.min.css')}}" rel="stylesheet"/>
     <link href="{{asset('assets/user/css/tabler-payments.min.css')}}" rel="stylesheet"/>
     <link href="{{asset('assets/user/css/tabler-vendors.min.css')}}" rel="stylesheet"/>
 	<link rel="stylesheet" href="{{asset('assets/front/css/toastr.min.css')}}">

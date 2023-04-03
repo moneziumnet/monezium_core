@@ -8,15 +8,15 @@
               <img src="{{asset('assets/images/'.$gs->logo)}}" width="110" height="32" alt="Tabler" class="navbar-brand-image">
             </a>
           </h1>
-          <li class="mt-3 nav-item {{ request()->routeIs('user.dashboard') ? 'active' : '' }}">
+          <li class="mt-3 nav-item">
+            <span class="nav-item-header">
+              {{__('Navigation')}}
+            </span>
+          </li>
+          <li class="nav-item {{ request()->routeIs('user.dashboard') ? 'active' : '' }}">
             <a class="nav-link" href="{{route('user.dashboard')}}">
               <span class="nav-link-icon d-md-none d-lg-inline-block">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                  <polyline points="5 12 3 12 12 3 21 12 19 12" />
-                  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
-                  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
-                </svg>
+                <i class="fas fa-home"></i>
               </span>
               <span class="nav-link-title">
                 @lang('Home')
@@ -32,10 +32,10 @@
         <li class="nav-item dropdown {{ request()->routeIs('user.shop.index', 'user.shop.order', 'user.campaign.donate', 'user.merchant.product.crypto.pay', 'user.merchant.product.crypto') ? 'active' : '' }}">
         <a class="nav-link" href="{{route('user.shop.index')}}">
             <span class="nav-link-icon d-md-none d-lg-inline-block">
-            <i class="fas fa-shopping-bag"></i>
+              <i class="fas fa-shopping-bag"></i>
             </span>
             <span class="nav-link-title">
-            {{__('Shop')}}
+              {{__('Shop')}}
             </span>
         </a>
         </li>
@@ -271,7 +271,37 @@
               </a>
             </li>
             @endif
-        </ul>
+
+            <li class="mt-3 nav-item">
+              <span class="nav-item-header">
+                {{__('Balances')}}
+              </span>
+            </li>
+            @php
+              $wallets = DB::table('wallets')->where('user_id',auth()->id())->where('user_type',1)->where('wallet_type', 1)->get();
+            @endphp 
+            @foreach($wallets as $key => $wallet)
+              @php
+                $currency = DB::table('currencies')->where('id', $wallet->currency_id)->first();
+              @endphp
+              <li class="nav-item">
+                <span class="nav-link">
+                  <span class="nav-link-icon d-md-none d-lg-inline-block">
+                    @if ($wallet->currency_id === 1)
+                      <span class="flag flag-country-us"></span>
+                    @elseif ($wallet->currency_id === 2)
+                      <span class="flag flag-country-eu"></span>
+                    @elseif ($wallet->currency_id === 3)
+                      <span class="flag flag-country-gb"></span>
+                    @endif
+                  </span>
+                  <span class="nav-link-title">
+                  {{ amount($wallet->balance) }}  {{$currency->code}}
+                  </span>
+                </span>
+              </li>
+            @endforeach
+          </ul>
       </div>
     </div>
   </div>

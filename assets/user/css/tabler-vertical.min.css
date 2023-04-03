@@ -10761,8 +10761,12 @@ body {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
+	margin: 0.25rem 0;
+}
+.navbar-nav .nav-item .nav-item-header {
+	padding: 0 1.5rem;
+	font-weight: 300;
+	color: #747A80;
 }
 .navbar-side {
 	margin: 0;
