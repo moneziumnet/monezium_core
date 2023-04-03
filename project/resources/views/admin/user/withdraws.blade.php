@@ -31,7 +31,7 @@
                     <th>{{ __("Phone") }}</th>
                     <th>{{ __("Amount") }}</th>
                     <th>{{ __("Method") }}</th>
-                    <th>{{ __("Withdraw Date") }}</th>
+                    <th>{{ __("Date") }}</th>
                     <th>{{ __("Status") }}</th>
                     <th>{{ __("Actions") }}</th>
                 </tr>

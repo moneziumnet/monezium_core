@@ -44,7 +44,7 @@
                             <table class="table table-vcenter table-mobile-md card-table">
                                 <thead>
                                 <tr>
-                                    <th>{{ __('Withdraw Date') }}</th>
+                                    <th>{{ __('Date') }}</th>
                                     <th>{{ __('Sender Address') }}</th>
                                     <th>{{ __('Reciever Address') }}</th>
                                     <th>{{ __('Amount') }}</th>
@@ -55,7 +55,7 @@
                                 <tbody>
                                 @foreach($withdraws as $withdraw)
                                     <tr>
-                                        <td data-label="{{ __('Withdraw Date') }}">
+                                        <td data-label="{{ __('Date') }}">
                                         <div>
                                           {{date('d-M-Y',strtotime($withdraw->created_at))}}
                                         </div>

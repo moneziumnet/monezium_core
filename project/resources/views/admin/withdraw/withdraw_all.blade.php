@@ -250,7 +250,7 @@
                                 <span>${$(this).data('method_name')}</span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between align-items-center">
-                                @lang('Withdraw Date')
+                                @lang('Date')
                                 <span>${$(this).data('date')}</span>
                             </li>
                         </ul>

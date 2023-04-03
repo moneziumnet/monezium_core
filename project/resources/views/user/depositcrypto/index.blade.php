@@ -44,7 +44,7 @@
                             <table class="table table-vcenter table-mobile-md card-table">
                                 <thead>
                                 <tr>
-                                    <th>{{ __('Incoming Date') }}</th>
+                                    <th>{{ __('Date') }}</th>
                                     <th>{{ __('Crypto Address') }}</th>
                                     <th>{{ __('Amount') }}</th>
                                     <th class="text-end">{{ __('Details') }}</th>
@@ -53,7 +53,7 @@
                                 <tbody>
                                 @foreach($deposits as $deposit)
                                     <tr>
-                                        <td data-label="{{ __('Incoming Date') }}">
+                                        <td data-label="{{ __('Date') }}">
                                         <div>
                                           {{date('d-M-Y',strtotime($deposit->created_at))}}
                                         </div>

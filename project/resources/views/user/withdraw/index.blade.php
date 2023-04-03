@@ -43,7 +43,7 @@
                             <table class="table table-vcenter table-mobile-md card-table">
                                 <thead>
                                 <tr>
-                                    <th>{{ __('Withdraw Date') }}</th>
+                                    <th>{{ __('Date') }}</th>
                                     <th>{{ __('Method') }}</th>
                                     <th>{{ __('Amount') }}</th>
                                     <th>{{ __('Status') }}</th>
@@ -54,7 +54,7 @@
                                 <tbody>
                                   @foreach($withdraws as $key=>$withdraw)
                                       <tr>
-                                          <td data-label="{{ __('Withdraw Date') }}">{{date('d-M-Y',strtotime($withdraw->created_at))}}</td>
+                                          <td data-label="{{ __('Date') }}">{{date('d-M-Y',strtotime($withdraw->created_at))}}</td>
                                           <td data-label="{{ __('Method') }}">{{$withdraw->method->name}}</td>
                                           <td data-label="{{ __('Amount') }}">{{ amount($withdraw->amount, $withdraw->currency->type, 2).$withdraw->currency->symbol }}</td>
                                           @if ($withdraw->status == '1')

@@ -44,7 +44,7 @@
                             <table class="table table-vcenter table-mobile-md card-table">
                                 <thead>
                                 <tr>
-                                    <th>{{ __('Incoming Date') }}</th>
+                                    <th>{{ __('Date') }}</th>
                                     <th>{{ __('Deposit No') }}</th>
                                     <th>{{ __('Bank Name') }}</th>
                                     <th>{{ __('Bank SWIFT') }}</th>
@@ -65,7 +65,7 @@
                                         }
                                     @endphp
                                     <tr>
-                                        <td data-label="{{ __('Incoming Date') }}">
+                                        <td data-label="{{ __('Date') }}">
                                           {{date('d-M-Y',strtotime($deposit->created_at))}}
                                         </td>
                                         <td data-label="{{ __('Deposit No') }}">
