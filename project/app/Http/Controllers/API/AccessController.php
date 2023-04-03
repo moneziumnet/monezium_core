@@ -227,8 +227,11 @@ class AccessController extends Controller
                 // Session::put('user_id',$item_number);
 
                 if (isset($redirect_url)) {
-                    return redirect()->away($redirect_url);
-
+                    // return redirect()->away($redirect_url);
+                    return response()->json([
+                        'type' => 'login',
+                        'payload' => $redirect_url
+                    ]);
                     // return Redirect::away($redirect_url);
                 }
 
@@ -266,7 +269,10 @@ class AccessController extends Controller
                                 ],
                             ]);
                         if (!isset($token['id'])) {
-                            return back()->with('error','Token Problem With Your Token.');
+                            return response()->json([
+                                'type' => 'mt_payment_error',
+                                'payload' => 'Token Problem With Your Token.'
+                            ]);
                         }
         
                         $charge = $stripe->charges()->create([
@@ -312,17 +318,28 @@ class AccessController extends Controller
                         }
         
                     }catch (Exception $e){
-                        return back()->with('unsuccess', $e->getMessage());
+                        return response()->json([
+                            'type' => 'mt_payment_error',
+                            'payload' => $e->getMessage()
+                        ]);
                     }catch (\Cartalyst\Stripe\Exception\CardErrorException $e){
-                        return back()->with('unsuccess', $e->getMessage());
+                        return response()->json([
+                            'type' => 'mt_payment_error',
+                            'payload' => $e->getMessage()
+                        ]);
                     }catch (\Cartalyst\Stripe\Exception\MissingParameterException $e){
-                        return back()->with('unsuccess', $e->getMessage());
+                        return response()->json([
+                            'type' => 'mt_payment_error',
+                            'payload' => $e->getMessage()
+                        ]);
                     }
                 }
 
 
-
-                return redirect()->back()->with('error', 'This Payment Gateway is stripe.');
+                return response()->json([
+                    'type' => 'mt_payment_error',
+                    'payload' => 'Please Enter Valid Credit Card Informations.'
+                ]);
             }
 
             return response()->json([
@@ -347,8 +364,9 @@ class AccessController extends Controller
             $user = User::findOrFail($request->user_id);
             $currency = Currency::findOrFail($request->currency_id);
             $subbank = SubInsBank::findOrFail($bankaccount->subbank_id);
+            $send_data = ['amount'=>$deposit->amount, 'curr' => ($currency ? $currency->code : ' '), 'trnx' => $deposit->deposit_number, 'date_time'=>$deposit->created_at ,'type' => 'Bank', 'shop'=>$shop->name, 'status' => 'pending' ];
             if($shop->webhook) {
-                merchant_shop_webhook_send($shop->webhook, ['amount'=>$deposit->amount, 'curr' => ($currency ? $currency->code : ' '), 'trnx' => $deposit->deposit_number, 'date_time'=>$deposit->created_at ,'type' => 'Bank', 'shop'=>$shop->name, 'status' => 'pending' ]);
+                merchant_shop_webhook_send($shop->webhook, $send_data);
             }
             mailSend('deposit_request',['amount'=>$deposit->amount, 'curr' => ($currency ? $currency->code : ' '), 'date_time'=>$deposit->created_at ,'type' => 'Bank', 'method'=> $subbank->name ], $user);
             send_notification($request->user_id, 'Bank has been deposited '."\n Amount is ".$currency->symbol.$request->amount."\n Transaction ID : ".$request->deposit_no, route('admin.deposits.bank.index'));
@@ -359,7 +377,7 @@ class AccessController extends Controller
 
             return response()->json([
                 'type' => 'mt_payment_success',
-                'payload' => 'Bank Payment completed'
+                'payload' => $send_data
             ]);
         } else if($request->payment == 'crypto'){
             $data = new CryptoDeposit();
@@ -503,7 +521,8 @@ class AccessController extends Controller
             $result = $payment->execute($execution, $apiContext);
             // Payment was successful
         } catch (\Exception $e) {
-            return back()->with(['msg' => 'Error executing payment withP ayPal.']);
+            merchant_shop_webhook_send($shop->webhook, ['type' => 'Paypal', 'shop'=>$shop->name, 'status' => 'reject' ]);
+            return back()->with(['msg' => 'Error executing payment with PayPal.']);
         }
 
 
@@ -541,6 +560,8 @@ class AccessController extends Controller
             $rcvTrnx->data = '{"sender":"Paypal System", "receiver":"'.(User::findOrFail($merchant_setting->user_id)->company_name ?? User::findOrFail($merchant_setting->user_id)->name).'"}';
             $rcvTrnx->save();
 
+            merchant_shop_webhook_send($shop->webhook, ['amount'=>$amount, 'curr' => $currency->code, 'trnx' => $rcvTrnx->txnid, 'date_time'=>$rcvTrnx->created_at ,'type' => 'Paypal', 'shop'=>$shop->name, 'status' => 'complete' ]);
+
             return redirect()->back()->with('success','Paypal have done successfully!');
         }
 
@@ -548,6 +569,7 @@ class AccessController extends Controller
 
     public function cancel(Request $request, $shop_id) {
         $shop = MerchantShop::where('id', $shop_id)->first();
+        merchant_shop_webhook_send($shop->webhook, ['type' => 'Paypal', 'shop'=>$shop->name, 'status' => 'reject' ]);
 
         return redirect()->back()->with('success','Paypal payment for '.$shop->name.' have canceled successfully!');
 

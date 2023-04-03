@@ -100,8 +100,24 @@
 
     <script>
         'use strict';
+        var paypalwindow;
+        // $(window).on('beforeunload', function(evt) {
+        //     // var message = "Are you sure?";
+        //     // console.log(message);
+        //     // alert(message); 
+        //     // evt.preventDefault();
+        //     // /* InternetExplorer/Firefox*/
+        //     // var e = evt || window.event
+        //     // e.returnValue = message 
+        //     // /* WebKit browser */
+        //     // return message;
+        //     var message = "Are you sure?";
+        //     console.log(message);
+        //     evt.preventDefault(); // Prevents the browser from showing the default confirmation dialog
+        //     return message; // Shows the confirmation dialog with custom message
+        // });
         $(document).on('submit','#pay_form_submit',function(e){
-            if($(this).attr('method').toUpperCase() == "POST" && '{{$merchant_setting->keyword}}' == 'stripe') {
+            if($(this).attr('method').toUpperCase() == "POST") {
                 e.preventDefault();
 
                 $.ajax({
@@ -112,8 +128,13 @@
                     },
                     data: $(this).serialize(),
                     success: function(msg) {
-                        window.close();
-                        window.opener.postMessage(msg,"*");
+                        if(msg && msg.type == 'login') {
+                            window.location = msg.payload
+                        } else {
+                            window.close();
+                            window.opener.postMessage(msg,"*");
+
+                        }
                     }
                 });
             }
@@ -147,7 +168,8 @@
 
     {{-- <script type="text/javascript">
         window.onbeforeunload = function(evt) {
-            var message = "Are you sure?"; 
+            var message = "Are you sure?";
+            alert(message); 
             /* InternetExplorer/Firefox*/
             var e = evt || window.event
             e.returnValue = message 
