@@ -29,7 +29,6 @@ class MoneziumMailer
     }
     public function sendCustomMail(array $mailData)
     {
-        return true;
         $setup = Generalsetting::first();
         $pageSetting = Pagesetting::first();
         $data = [
