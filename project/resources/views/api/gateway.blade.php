@@ -100,22 +100,6 @@
 
     <script>
         'use strict';
-        var paypalwindow = null;
-        // $(window).on('beforeunload', function(evt) {
-        //     // var message = "Are you sure?";
-        //     // console.log(message);
-        //     // alert(message); 
-        //     // evt.preventDefault();
-        //     // /* InternetExplorer/Firefox*/
-        //     // var e = evt || window.event
-        //     // e.returnValue = message 
-        //     // /* WebKit browser */
-        //     // return message;
-        //     var message = "Are you sure?";
-        //     console.log(message);
-        //     evt.preventDefault(); // Prevents the browser from showing the default confirmation dialog
-        //     return message; // Shows the confirmation dialog with custom message
-        // });
         $(document).on('submit','#pay_form_submit',function(e){
             if($(this).attr('method').toUpperCase() == "POST") {
                 e.preventDefault();
@@ -129,15 +113,12 @@
                     data: $(this).serialize(),
                     success: function(msg) {
                         if(msg && msg.type == 'login') {
-                            const device_width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
-                            const window_features = `left=${device_width / 2 - 240},top=100,width=480,height=600`;
-                            paypalwindow =  window.open(msg.payload.redirect_url, "", window_features);
                             var new_msg = {
                                 "type": "mt_payment_success",
                                 "payload" : msg.payload
                             }
-                            window.close();
                             window.opener.postMessage(new_msg,"*");
+                            window.location = msg.payload.redirect_url
                         } else {
                             window.close();
                             window.opener.postMessage(msg,"*");

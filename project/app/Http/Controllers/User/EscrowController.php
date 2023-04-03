@@ -14,6 +14,7 @@ use App\Helpers\MediaHelper;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
 use App\Http\Controllers\Controller;
+use DB;
 
 class EscrowController extends Controller
 {

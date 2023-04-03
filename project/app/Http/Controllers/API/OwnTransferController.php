@@ -12,6 +12,7 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Auth;
+use DB;
 
 class OwnTransferController extends Controller
 {

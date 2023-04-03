@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Wallet;
 use App\Models\User;
 use App\Models\Charge;
+use DB;
 
 class WithdrawalController extends Controller
 {

@@ -13,6 +13,7 @@ use App\Models\Charge;
 use App\Models\PlanDetail;
 use Illuminate\Http\Request;
 use Datatables;
+use DB;
 
 class DepositController extends Controller
 {

@@ -20,6 +20,7 @@ use App\Classes\GoogleAuthenticator;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Str;
 use Auth;
+use DB;
 
 class SendController extends Controller
 {
