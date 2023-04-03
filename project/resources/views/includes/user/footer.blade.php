@@ -65,7 +65,7 @@
     </div> -->
     <div class="footer-bottom">
         <div class="container-xl d-flex">
-            <div class="col-sm-6 col-md-8 d-flex" style="justify-content: left; align-items: center;">
+            <div class="col-sm-6 col-md-10 d-flex" style="justify-content: left; align-items: center;">
                 <a href="{{ route('front.page','privacy') }}" class="footer-link" style="margin: 0 0.5rem;">{{__('Privacy & Policy') }}</a>
                 <a href="{{ route('front.page','term-service') }}" class="footer-link" style="margin: 0 0.5rem;">{{ __('Term of Service') }}</a>
                 <a href="{{ route('front.page','about') }}" class="footer-link" style="margin: 0 0.5rem;">{{ __('About Us') }}</a>
@@ -73,9 +73,13 @@
                 <!-- @php
                     echo $gs->copyright;
                 @endphp -->
-                <span style="margin: 0 0.6rem; font-weight:400">© 2023 All rights reserved</span>
+                <span style="margin: 0 0.6rem; font-weight:400">
+                @php
+                    echo $gs->copyright;
+                @endphp
+                </span>
             </div>
-            <div class="col-sm-6 col-md-4 d-flex" style="justify-content: right; align-items: center;">
+            <div class="col-sm-6 col-md-2 d-flex" style="justify-content: right; align-items: center;">
                 <span style="float: right;">English</span>
                 <a href="?theme=dark" class="hide-theme-dark footer-link" style="float: right;margin-left:0.8rem;" title="Enable dark mode" data-bs-toggle="tooltip" data-bs-placement="bottom">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">

@@ -30,7 +30,7 @@
 
                 <div class="col-sm-6 col-lg-4 col-xl-4">
                     <div class="plan__item position-relative">
-                        <div class="ribbon ribbon-top ribbon-bookmark bg-green">
+                        <div class="ribbon ribbon-top ribbon-bookmark bg-primary">
                         </div>
                         <div class="plan__item-header">
                             <div class="left">
@@ -164,7 +164,7 @@
                                 @endif
                             </ul>
                             @if (auth()->user()->bank_plan_id == $data->id)
-                                <a href="javascript:;" class="btn btn-green w-100">
+                                <a href="javascript:;" class="btn btn-primary w-100">
                                     {{__('Current Plan')}}
                                 </a>
 
@@ -172,7 +172,7 @@
                                     ({{ auth()->user()->plan_end_date ? auth()->user()->plan_end_date->toDateString() : '' }}) <a href="{{route('user.package.subscription',$data->id)}}" class="text--base">@lang('Renew Plan')</a>
                                 </div>
                             @else
-                                <a href="{{route('user.package.subscription',$data->id)}}" class="btn btn-green w-100">
+                                <a href="{{route('user.package.subscription',$data->id)}}" class="btn btn-primary w-100">
                                     {{__('Get Started')}}
                                 </a>
                             @endif

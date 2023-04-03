@@ -4,6 +4,8 @@
 
 @endpush
 
+@section('title', __('Loan'))
+
 @section('contents')
 
 <div class="container-xl">
