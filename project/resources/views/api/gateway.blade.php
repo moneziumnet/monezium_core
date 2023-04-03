@@ -100,7 +100,7 @@
 
     <script>
         'use strict';
-        var paypalwindow;
+        var paypalwindow = null;
         // $(window).on('beforeunload', function(evt) {
         //     // var message = "Are you sure?";
         //     // console.log(message);
@@ -129,7 +129,15 @@
                     data: $(this).serialize(),
                     success: function(msg) {
                         if(msg && msg.type == 'login') {
-                            window.location = msg.payload
+                            const device_width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+                            const window_features = `left=${device_width / 2 - 240},top=100,width=480,height=600`;
+                            paypalwindow =  window.open(msg.payload.redirect_url, "", window_features);
+                            var new_msg = {
+                                "type": "mt_payment_success",
+                                "payload" : msg.payload
+                            }
+                            window.close();
+                            window.opener.postMessage(new_msg,"*");
                         } else {
                             window.close();
                             window.opener.postMessage(msg,"*");

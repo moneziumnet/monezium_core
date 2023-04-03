@@ -174,11 +174,13 @@ class AccessController extends Controller
                 $_api_context->setConfig($paypal_conf['settings']);
 
 
-                $notify_url = route('api.pay.paypal.success', $shop->id);
-                $cancel_url = route('api.pay.paypal.cancel', $shop->id);
-
+                
                 $item_name = $shop->name." Merchant Payment";
                 $item_number = Str::random(12);
+
+                $notify_url = route('api.pay.paypal.success', $shop->id, $item_number);
+                $cancel_url = route('api.pay.paypal.cancel', $shop->id, $item_number);
+                
                 $item_amount = $request->amount;
                 $currency_code = Currency::where('id',$request->currency_id)->first()->code;
 
@@ -230,7 +232,7 @@ class AccessController extends Controller
                     // return redirect()->away($redirect_url);
                     return response()->json([
                         'type' => 'login',
-                        'payload' => $redirect_url
+                        'payload' => ['reference' => $item_number, 'message' => 'Paypal Payment is Pending', 'status' => 'pending', 'redirect_url' => $redirect_url]
                     ]);
                     // return Redirect::away($redirect_url);
                 }
@@ -372,7 +374,7 @@ class AccessController extends Controller
 
             return response()->json([
                 'type' => 'mt_payment_success',
-                'payload' => ['reference' => $deposit->deposit_no, 'message' => 'Bank Payment Completed', 'status' => 'pending']
+                'payload' => ['reference' => $deposit->deposit_no, 'message' => 'Bank Payment is Pending', 'status' => 'pending']
             ]);
         } else if($request->payment == 'crypto'){
             $data = new CryptoDeposit();
@@ -384,7 +386,7 @@ class AccessController extends Controller
             $data->save();
             return response()->json([
                 'type' => 'mt_payment_success',
-                'payload' => ['reference' => Str::random(12), 'message' => 'Crypto Payment completed', 'status' => 'pending']
+                'payload' => ['reference' => Str::random(12), 'message' => 'Crypto Payment is Pending', 'status' => 'pending']
             ]);
         } elseif($request->payment == 'wallet'){
             if(Auth::guest()) {
@@ -492,7 +494,7 @@ class AccessController extends Controller
         }
     }
 
-    public function notify(Request $request, $shop_id)
+    public function notify(Request $request, $shop_id, $item_number)
     {
 
         $paymentId = $request->paymentId;
@@ -543,7 +545,7 @@ class AccessController extends Controller
             $rcvWallet->update();
 
             $rcvTrnx  = new AppTransaction();
-            $rcvTrnx->trnx = str_rand();
+            $rcvTrnx->trnx = $item_number;
             $rcvTrnx->user_id = $merchant_setting->user_id;
             $rcvTrnx->user_type = 1;
             $rcvTrnx->currency_id = $currency->id;
@@ -562,9 +564,9 @@ class AccessController extends Controller
 
     }
 
-    public function cancel(Request $request, $shop_id) {
+    public function cancel(Request $request, $shop_id, $item_number) {
         $shop = MerchantShop::where('id', $shop_id)->first();
-        merchant_shop_webhook_send($shop->webhook, ['type' => 'Paypal', 'shop'=>$shop->name, 'status' => 'reject' ]);
+        merchant_shop_webhook_send($shop->webhook, ['type' => 'Paypal', 'shop'=>$shop->name, 'status' => 'reject' , 'reference' => $item_number]);
 
         return redirect()->back()->with('success','Paypal payment for '.$shop->name.' have canceled successfully!');
 
