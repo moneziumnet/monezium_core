@@ -108,7 +108,7 @@
         <div class="col-md-6 mb-3">
           <div class="card h-100 card--info-item">
             <div class="text-end icon">
-              <i class="fas fa-dollar-sign"></i>
+              <i class="fas fa-euro-sign"></i>
             </div>
             <div class="card-body">
               <div class="h2 m-0">{{ round($depositAmount, 2) }} {{$currency->code}}</div>
@@ -121,7 +121,7 @@
       <div class="col-md-6 mb-3">
         <div class="card h-100 card--info-item">
           <div class="text-end icon">
-            <i class="fas fa-dollar-sign"></i>
+            <i class="fas fa-euro-sign"></i>
           </div>
           <div class="card-body p-3 p-md-4">
             <div class="h2 m-0">{{ round($withdrawAmount, 2) }} {{$currency->code}}</div>
@@ -373,7 +373,7 @@
                       <div class="card h-100 card--info-item">
                       <div class="text-end icon">
                           <i class="fas ">
-                              $
+                          {{$item->currency->symbol}}
                           </i>
                       </div>
                       <div class="card-body">

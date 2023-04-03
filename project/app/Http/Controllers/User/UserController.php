@@ -53,7 +53,7 @@ class UserController extends Controller
         $wallets = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('wallet_type', 1)->with('currency')->get();
         $data['wallets'] = $wallets;
         $data['cryptowallets'] = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('wallet_type', 8)->with('currency')->get();
-        $data['transactions'] = Transaction::whereUserId(auth()->id())->orderBy('id','desc')->limit(5)->get();
+        $data['transactions'] = Transaction::whereUserId(auth()->id())->orderBy('id','desc')->limit(15)->get();
         $data['bankaccountlist'] = BankAccount::whereUserId(auth()->id())->get();
         $data['currencies'] = Currency::where('type', 1)->where('status', 1)->get();
         $data['crypto_currencies'] = Currency::where('type', 2)->where('status', 1)->get();

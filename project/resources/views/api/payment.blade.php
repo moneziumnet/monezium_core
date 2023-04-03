@@ -48,7 +48,7 @@
                                 <input type="radio" name="payment" value="gateway" id="gateway"
                                     class="form-selectgroup-input select_method">
                                 <span class="form-selectgroup-label">
-                                    <i class="fas fa-dollar-sign me-2"></i>
+                                    <i class="fas fa-euro-sign me-2"></i>
                                     @lang('Pay with gateways')</span>
                             </label>
                         </div>

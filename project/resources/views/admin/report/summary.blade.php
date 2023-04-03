@@ -61,7 +61,7 @@
                                             <div class="h5 mb-0 font-weight-bold text-gray-800">{{__($data['balance'])}}</div>
                                             </div>
                                             <div class="col-auto">
-                                                <i class="fas fa-dollar-sign fa-2x text-success"></i>
+                                                <i class="fas fa-euro-sign fa-2x text-success"></i>
                                             </div>
                                         </div>
                                         </div>

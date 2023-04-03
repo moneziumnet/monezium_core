@@ -170,7 +170,7 @@
             <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ count($transactions) }} </div>
           </div>
           <div class="col-auto">
-            <i class="fas fa-dollar-sign fa-2x text-success"></i>
+            <i class="fas fa-euro-sign fa-2x text-success"></i>
           </div>
         </div>
       </div>
@@ -333,7 +333,7 @@
             <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ round($depositAmount,2) }} {{ $currency->code}} </div>
           </div>
           <div class="col-auto">
-            <i class="fas fa-dollar-sign fa-2x text-success"></i>
+            <i class="fas fa-euro-sign fa-2x text-success"></i>
           </div>
         </div>
       </div>
@@ -349,7 +349,7 @@
             <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ round($withdrawAmount,2) }} {{ $currency->code}}</div>
           </div>
           <div class="col-auto">
-            <i class="fas fa-dollar-sign fa-2x text-success"></i>
+            <i class="fas fa-euro-sign fa-2x text-success"></i>
           </div>
         </div>
       </div>
@@ -365,7 +365,7 @@
             <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">{{ round($ChargeAmount,2) }} {{ $currency->code}}</div>
           </div>
           <div class="col-auto">
-            <i class="fas fa-dollar-sign fa-2x text-success"></i>
+            <i class="fas fa-euro-sign fa-2x text-success"></i>
           </div>
         </div>
       </div>
