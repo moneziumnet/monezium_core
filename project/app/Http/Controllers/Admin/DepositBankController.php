@@ -159,7 +159,7 @@ class DepositBankController extends Controller
             if ($data->purpose) {
                 $shop = MerchantShop::where('id', $data->purpose_data)->first();
                 if($shop && $shop->webhook) {
-                    merchant_shop_webhook_send($shop->webhook, ['amount'=>$data->amount, 'curr' => $data->currency->code, 'trnx' => $data->txnid, 'date_time'=>$data->updated_at ,'type' => 'Bank', 'shop'=>$shop->name, 'status' => 'reject' ]);
+                    merchant_shop_webhook_send($shop->webhook, ['amount'=>$data->amount, 'curr' => $data->currency->code, 'reference' => $data->txnid, 'date_time'=>$data->updated_at ,'type' => 'Bank', 'shop'=>$shop->name, 'status' => 'reject' ]);
                 }
             }
             return redirect()->back()->with("message", $msg);
@@ -260,7 +260,7 @@ class DepositBankController extends Controller
         if ($data->purpose) {
             $shop = MerchantShop::where('id', $data->purpose_data)->first();
             if($shop && $shop->webhook) {
-                merchant_shop_webhook_send($shop->webhook, ['amount'=>$data->amount, 'curr' => $data->currency->code, 'trnx' => $data->txnid, 'date_time'=>$trans->created_at ,'type' => 'Bank', 'shop'=>$shop->name, 'status' => 'complete' ]);
+                merchant_shop_webhook_send($shop->webhook, ['amount'=>$data->amount, 'curr' => $data->currency->code, 'reference' => $data->txnid, 'date_time'=>$trans->created_at ,'type' => 'Bank', 'shop'=>$shop->name, 'status' => 'complete' ]);
             }
         }
 

@@ -313,7 +313,7 @@ class AccessController extends Controller
                             $rcvTrnx->save();
                             return response()->json([
                                 'type' => 'mt_payment_success',
-                                'payload' => 'Gateway Payment completed'
+                                'payload' => ['reference' => $rcvTrnx->trnx, 'message' => 'Gateway Stripe Payment completed', 'status' => 'complete']
                             ]);
                         }
         
@@ -341,11 +341,6 @@ class AccessController extends Controller
                     'payload' => 'Please Enter Valid Credit Card Informations.'
                 ]);
             }
-
-            return response()->json([
-                'type' => 'mt_payment_success',
-                'payload' => 'Gateway Payment completed'
-            ]);
         } else if($request->payment == 'bank_pay'){
 
             $bankaccount = BankAccount::where('id', $request->bank_account)->first();
@@ -364,10 +359,10 @@ class AccessController extends Controller
             $user = User::findOrFail($request->user_id);
             $currency = Currency::findOrFail($request->currency_id);
             $subbank = SubInsBank::findOrFail($bankaccount->subbank_id);
-            $send_data = ['amount'=>$deposit->amount, 'curr' => ($currency ? $currency->code : ' '), 'trnx' => $deposit->deposit_number, 'date_time'=>$deposit->created_at ,'type' => 'Bank', 'shop'=>$shop->name, 'status' => 'pending' ];
-            if($shop->webhook) {
-                merchant_shop_webhook_send($shop->webhook, $send_data);
-            }
+            // $send_data = ['amount'=>$deposit->amount, 'curr' => ($currency ? $currency->code : ' '), 'reference' => $deposit->deposit_number, 'date_time'=>$deposit->created_at ,'type' => 'Bank', 'shop'=>$shop->name, 'status' => 'pending' ];
+            // if($shop->webhook) {
+            //     merchant_shop_webhook_send($shop->webhook, $send_data);
+            // }
             mailSend('deposit_request',['amount'=>$deposit->amount, 'curr' => ($currency ? $currency->code : ' '), 'date_time'=>$deposit->created_at ,'type' => 'Bank', 'method'=> $subbank->name ], $user);
             send_notification($request->user_id, 'Bank has been deposited '."\n Amount is ".$currency->symbol.$request->amount."\n Transaction ID : ".$request->deposit_no, route('admin.deposits.bank.index'));
             send_whatsapp($request->user_id, 'Bank has been deposited '."\n Amount is ".$currency->symbol.$request->amount."\n Transaction ID : ".$request->deposit_no."\nPlease check more details to click this url\n".route('user.depositbank.index'));
@@ -377,7 +372,7 @@ class AccessController extends Controller
 
             return response()->json([
                 'type' => 'mt_payment_success',
-                'payload' => $send_data
+                'payload' => ['reference' => $deposit->deposit_no, 'message' => 'Bank Payment Completed', 'status' => 'pending']
             ]);
         } else if($request->payment == 'crypto'){
             $data = new CryptoDeposit();
@@ -389,7 +384,7 @@ class AccessController extends Controller
             $data->save();
             return response()->json([
                 'type' => 'mt_payment_success',
-                'payload' => 'Crypto Payment completed'
+                'payload' => ['reference' => Str::random(12), 'message' => 'Crypto Payment completed', 'status' => 'pending']
             ]);
         } elseif($request->payment == 'wallet'){
             if(Auth::guest()) {
@@ -492,7 +487,7 @@ class AccessController extends Controller
             $rcvTrnx->save();
             return response()->json([
                 'type' => 'mt_payment_success',
-                'payload' => 'Wallet Payment completed'
+                'payload' => ['reference' => $rcvTrnx->trnx, 'message' => 'Wallet Payment completed', 'status' => 'complete']
             ]);
         }
     }
@@ -560,7 +555,7 @@ class AccessController extends Controller
             $rcvTrnx->data = '{"sender":"Paypal System", "receiver":"'.(User::findOrFail($merchant_setting->user_id)->company_name ?? User::findOrFail($merchant_setting->user_id)->name).'"}';
             $rcvTrnx->save();
 
-            merchant_shop_webhook_send($shop->webhook, ['amount'=>$amount, 'curr' => $currency->code, 'trnx' => $rcvTrnx->txnid, 'date_time'=>$rcvTrnx->created_at ,'type' => 'Paypal', 'shop'=>$shop->name, 'status' => 'complete' ]);
+            merchant_shop_webhook_send($shop->webhook, ['amount'=>$amount, 'curr' => $currency->code, 'reference' => $rcvTrnx->txnid, 'date_time'=>$rcvTrnx->created_at ,'type' => 'Paypal', 'shop'=>$shop->name, 'status' => 'complete' ]);
 
             return redirect()->back()->with('success','Paypal have done successfully!');
         }
