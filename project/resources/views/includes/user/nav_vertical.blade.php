@@ -95,7 +95,7 @@
                 @endif
                 @if(isEnabledUserModule('Payment between accounts') && !(auth()->user()->kyc_status != 1 && in_array('Payment between accounts',$kyc_modules)))
                 <a class="dropdown-item" href="{{ route('ownaccounttransfer-index') }}">
-                    {{__('Payment between accounts')}}
+                    {{__('Between accounts')}}
                 </a>
                 @endif
                 @if(isEnabledUserModule('Internal Payment') && !(auth()->user()->kyc_status != 1 && in_array('Internal Payment',$kyc_modules)))
@@ -176,7 +176,7 @@
 
                 @if(isEnabledUserModule('Merchant own Account'))
                 <a class="dropdown-item" href="{{route('user.merchant.send.money.create')}}">
-                    {{__('Payment to own Account')}}
+                    {{__('Own Account')}}
                 </a>
                 @endif
 
