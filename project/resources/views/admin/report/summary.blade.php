@@ -50,7 +50,7 @@
 
                             <h3 class="text-center py-5">{{__('No Transaction Data Found')}}</h3>
                         @else
-                            <div class="row mb-3 p-3" style="max-height: 600px;overflow-y: scroll;">
+                            <div class="row mb-3 p-3" >
                                 @foreach ($transactions as $key=>$data)
                                 <div class="col-xl-4 col-md-6 mb-4">
                                     <div class="card h-100">
