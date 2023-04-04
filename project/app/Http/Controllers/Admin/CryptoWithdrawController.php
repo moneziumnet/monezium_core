@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Models\CryptoWithdraw;
 use App\Models\Generalsetting;
 use App\Http\Controllers\Controller;
+use DB;
 
 class CryptoWithdrawController extends Controller
 {

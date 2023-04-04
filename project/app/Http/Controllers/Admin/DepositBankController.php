@@ -19,6 +19,7 @@ use App\Models\CampaignDonation;
 use App\Models\MerchantShop;
 use Illuminate\Http\Request;
 use Datatables;
+use DB;
 
 class DepositBankController extends Controller
 {
@@ -216,7 +217,7 @@ class DepositBankController extends Controller
         $final_amount = $amount - $final_chargefee;
         if($data->purpose) {
             $shop = MerchantShop::where('id', $data->purpose_data)->first();
-            merchant_shop_wallet_increment($user->id, $data->currency_id, $shop->id);
+            merchant_shop_wallet_increment($user->id, $data->currency_id, $final_amount*$rate, $shop->id);
             user_wallet_increment(0, $data->currency_id, $transaction_global_cost*$rate, 9);
         }
         else {

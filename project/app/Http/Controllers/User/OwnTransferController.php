@@ -12,6 +12,7 @@ use App\Classes\GoogleAuthenticator;
 use App\Models\Transaction;
 use App\Http\Controllers\Controller;
 use Auth;
+use DB;
 
 class OwnTransferController extends Controller
 {

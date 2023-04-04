@@ -1394,10 +1394,8 @@ if (!function_exists('merchant_shop_webhook_send')) {
         $client = new Client();
 
         try {
-            $response = $client->post($url, [
-                    $details
-            ]);
-            $data = $response->getBody();
+            $response = $client->request('POST', $url, ["form_params" => $details]);
+            $data = json_decode($response->getBody(), true);
             Log::Info($data);
         } catch (RequestException $th) {
             Log::Info($th->getResponse()->getBody());
