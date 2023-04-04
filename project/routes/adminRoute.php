@@ -78,6 +78,7 @@ use App\Http\Controllers\Admin\ActionNotificationController;
 use App\Http\Controllers\Admin\AdminBeneficiaryController;
 use App\Http\Controllers\Admin\ReportTransactionController;
 use App\Http\Controllers\Admin\PayTransactionController;
+use App\Http\Controllers\Admin\StaffManageController;
 
 
 Route::prefix('admin')->group(function () {
@@ -210,6 +211,12 @@ Route::prefix('admin')->group(function () {
     Route::get('/contract/aoa/{id}/datatables', [ContractManageController::class, 'aoa_datatables'])->name('admin.aoa.datatables');
     Route::get('/contract/aoa/view/{id}', [ContractManageController::class, 'aoa_view'])->name('admin.aoa.view');
 
+  });
+
+  Route::group(['middleware' => 'permissions:Staff Management'], function () {
+    Route::get('/staffs', [StaffManageController::class, 'index'])->name('admin.staff.index');
+    Route::get('/staffs/datatables', [StaffManageController::class, 'datatables'])->name('admin.staff.datatables');
+    Route::get('/staffs/status/{id}/{status}', [StaffManageController::class, 'staff_status'])->name('admin.staff.status');
   });
 
   Route::group(['middleware' => 'permissions:Manage Customers'], function () {

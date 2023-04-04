@@ -10,6 +10,14 @@
 
 @endif
 
+@if(getModule('Staff Management'))
+<li class="nav-item">
+  <a class="nav-link" href="{{ route('admin.staff.index') }}">
+    <i class="fas fa-user-friends"></i>
+    <span>{{ __('Staff Management') }}</span></a>
+</li>
+@endif
+
 @if(getModule('Manage Customers'))
 <li class="nav-item">
   <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#customer" aria-expanded="true" aria-controls="collapseTable">

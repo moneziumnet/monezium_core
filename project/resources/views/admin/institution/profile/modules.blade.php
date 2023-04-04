@@ -37,6 +37,14 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <div class="custom-control custom-switch">
+                      <input type="checkbox" name="section[]" value="Staff Management" {{ $data->sectionCheck('Staff Management') ? 'checked' : '' }} class="custom-control-input" id="staff_management">
+                      <label class="custom-control-label" for="staff_management">{{__('Staff Management')}}</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <div class="custom-control custom-switch">
                       <input type="checkbox" name="section[]" value="Manage Customers" {{ $data->sectionCheck('Manage Customers') ? 'checked' : '' }} class="custom-control-input" id="manage_customers">
                       <label class="custom-control-label" for="manage_customers">{{__('Manage Customers')}}</label>
                     </div>
