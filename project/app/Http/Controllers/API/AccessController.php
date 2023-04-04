@@ -374,7 +374,7 @@ class AccessController extends Controller
 
             return response()->json([
                 'type' => 'mt_payment_success',
-                'payload' => ['reference' => $deposit->deposit_no, 'message' => 'Bank Payment is Pending', 'status' => 'pending']
+                'payload' => ['reference' => $deposit->deposit_number, 'message' => 'Bank Payment is Pending', 'status' => 'pending']
             ]);
         } else if($request->payment == 'crypto'){
             $data = new CryptoDeposit();
