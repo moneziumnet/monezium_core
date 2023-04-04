@@ -143,7 +143,7 @@
           <div id="chart_finance_monthly" class="chart-lg"></div>
         </div>
       </div>
-      @if($website_theme == 0)
+      @if($website_theme == 1)
       <div class="container-fluid">
         <div class="page-header d-print-none">
           <div class="row align-items-center">

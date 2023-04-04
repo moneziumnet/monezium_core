@@ -8,7 +8,7 @@
     <title>{{$gs->title}}</title>
     <link rel="shortcut icon" href="{{asset('assets/images/'.$gs->favicon)}}">
     <link href="{{ asset('assets/user/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
-    @if($website_theme == 0)
+    @if($website_theme == 1)
         <link href="{{asset('assets/user/css/tabler.min.css')}}" rel="stylesheet"/>
         <link href="{{asset('assets/user/css/tabler-flags.min.css')}}" rel="stylesheet"/>
     @else
@@ -25,14 +25,14 @@
 
   <body>
     <div class="wrapper">
-      @if($website_theme == 0)
+      @if($website_theme == 1)
         @includeIf('includes.user.header')
         @includeIf('includes.user.nav')
       @else
         @includeIf('includes.user.nav_vertical')
       @endif
       <div class="page-wrapper">
-        @if($website_theme !== 0)
+        @if($website_theme !== 1)
           @includeIf('includes.user.header')
         @endif
         @yield('contents')
