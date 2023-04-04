@@ -4972,6 +4972,19 @@ fieldset:disabled .btn {
 	border-color: transparent;
 	border-style: solid;
 }
+.trx_info_amount {
+	font-size: 20px;
+	line-height: 28px;
+	font-weight: 800;
+	margin: 1rem 0 0 0;
+}
+.trx_info_date {
+	font-size: 14px;
+	line-height: 21px;
+	font-weight: 400;
+	color: #747A80;
+	margin: auto;
+}
 .bs-tooltip-auto[data-popper-placement^="top"],
 .bs-tooltip-top {
 	padding: 0.4rem 0;
@@ -6740,11 +6753,12 @@ fieldset:disabled .btn {
 	) !important;
 }
 .bg-success {
-	--tblr-bg-opacity: 1;
+	--tblr-bg-opacity: 0.25;
 	background-color: rgba(
-		var(--tblr-primary-rgb),
+		var(--tblr-success-rgb),
 		var(--tblr-bg-opacity)
 	) !important;
+	color: #23E33E;
 }
 .bg-info {
 	--tblr-bg-opacity: 1;

@@ -522,17 +522,10 @@
         <hr class="mt-3 mb-5">
       </div>
       <div class="modal-body text-center">
-        <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
-        <p id="trx_title_amount" style="font-size: 20px;
-        line-height: 28px;
-        font-weight: 800;
-        margin: 1rem 0 0 0;"></p>
-        <p id="trx_title_date" style="font-size: 14px;
-        line-height: 21px;
-        font-weight: 400;
-        color: #747A80;
-        margin: auto;"></p>
-        <span class="badge bg-success">Complete</span>
+        <i class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+        <p class="trx_info_amount"></p>
+        <p class="trx_info_date"></p>
+        <span class="badge bg-success-lt">Paid</span>
 
         <ul class="list-group mt-2">
 
@@ -572,8 +565,8 @@
           }else{
             var parser = new DOMParser();
             var node = parser.parseFromString(res, "text/html");
-            $('#trx_title_amount').text(node.getElementById("trnx_amount").textContent + " to " + node.getElementById("Receiver").textContent);
-            $('#trx_title_date').text("Completed " + node.getElementById("trnx_date").textContent);
+            $('.trx_info_amount').text(node.getElementById("trnx_amount").textContent + " to " + node.getElementById("Receiver").textContent);
+            $('.trx_info_date').text("Completed " + node.getElementById("trnx_date").textContent);
             $('.list-group').html(res)
           }
           $('#modal-success').modal('show')
