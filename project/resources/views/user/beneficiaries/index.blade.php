@@ -161,7 +161,7 @@
                                           <td data-label="{{ __('Amount') }}">{{$data->currency->symbol}}{{$data->final_amount}} {{$data->currency->code}}</td>
                                           <td data-label="{{ __('Status') }}">
                                             @if ($data->status == 1)
-                                              <span class="badge bg-success">{{ __('Completed')}}</span>
+                                              <span class="badge bg-success-lt">{{ __('Completed')}}</span>
                                             @elseif($data->status == 2)
                                               <span class="badge bg-danger">{{ __('Rejected')}}</span>
                                             @else
@@ -189,28 +189,30 @@
 <div class="modal modal-blur fade" id="modal-details" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-md modal-dialog-centered" role="document">
       <div class="modal-content">
+        <div class="modal-title">
+          <div class="ms-3">
+            <p>@lang('Transfer Log Details')</p>
+          </div>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          <div class="modal-status bg-primary"></div>
-          <div class="modal-body text-center py-4">
-              <i class="fas fa-info-circle fa-3x text-primary mb-2"></i>
-              <h3>@lang('Transfer Log Details')</h3>
-              <div class="transfer-log-details">
+          <hr class="mt-3 mb-5">
+        </div>
+        <div class="modal-body text-center">
+            <i class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+            <h3>@lang('Transfer Log Details')</h3>
+            <span class="badge" id="bank_status">Paid</span>
+            <div class="transfer-log-details">
 
+            </div>
+        </div>
+        <div class="modal-footer">
+          <div class="w-100">
+              <div class="d-flex justify-content-end">
+                <a id="copy_transfer" class="footer-link">
+                  <i class="fas fa-copy me-1"></i> @lang('Copy Transaction')
+                </a>
               </div>
           </div>
-          <div class="modal-footer">
-              <div class="w-100">
-                  <div class="d-flex">
-                          <a href="#" class="btn w-50 me-2" data-bs-dismiss="modal">
-                              @lang('Close')
-                          </a>
-                          <a href="" id="copy_transfer" class="btn w-50" >
-                            @lang('Copy Transaction')
-                          </a>
-						   
-                  </div>
-              </div>
-          </div>
+        </div>
       </div>
   </div>
 </div>
@@ -218,26 +220,20 @@
 <div class="modal modal-blur fade" id="modal-details-2" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-md modal-dialog-centered" role="document">
       <div class="modal-content">
+        <div class="modal-title">
+          <div class="ms-3">
+            <p>@lang('Beneficiary Details')</p>
+          </div>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          <div class="modal-status bg-primary"></div>
-          <div class="modal-body text-center py-4">
-              <i class="fas fa-info-circle fa-3x text-primary mb-2"></i>
-              <h3>@lang('Beneficiary Details')</h3>
-              <div class="beneficiary-details-info">
+          <hr class="mt-3 mb-5">
+        </div>
+        <div class="modal-body text-center">
+            <i class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+            <h3>@lang('Beneficiary Details')</h3>
+            <div class="beneficiary-details-info">
 
-              </div>
-          </div>
-          <div class="modal-footer">
-              <div class="w-100">
-                  <div class="row">
-                      <div class="col">
-                          <a href="#" class="btn w-100" data-bs-dismiss="modal">
-                              @lang('Close')
-                          </a>
-                      </div>
-                  </div>
-              </div>
-          </div>
+            </div>
+        </div>
       </div>
   </div>
 </div>
@@ -249,12 +245,25 @@
 'use strict';
 
 $('.details').on('click', function() {
-    var url = "{{url('user/beneficiaries/details/')}}"+'/'+$(this).data('id')
+    var url = "{{url('user/beneficiaries/details/')}}"+'/' + $(this).data('id')
     var copy_url = "{{url('user/other-bank/copy')}}" + '/' + $(this).data('id')
     $.get(url,function (res) {
-        $('.transfer-log-details').html(res)
-        $('#copy_transfer').attr('href', copy_url)
-        $('#modal-details').modal('show')
+      var parser = new DOMParser();
+      var node = parser.parseFromString(res, "text/html");
+      var status = node.getElementById("beneficiary_status").textContent;
+      if (status == 1) {
+        $('#bank_status').attr("class", "badge bg-success-lt");
+        $('#bank_status').text("Completed");
+      } else if (status == 2) {
+        $('#bank_status').attr("class", "badge bg-danger");
+        $('#bank_status').text("Reject");
+      } else {
+        $('#bank_status').attr("class", "badge bg-warning");
+        $('#bank_status').text("Pending");
+      }
+      $('.transfer-log-details').html(res);
+      $('#copy_transfer').attr('href', copy_url);
+      $('#modal-details').modal('show');
     })
 })
 

@@ -4280,6 +4280,7 @@ fieldset:disabled .btn {
     font-weight: 400;
     font-size: 14px;
     line-height: 21px;
+	text-align: right;
 }
 .theme-dark .list-group-item .list-item-content {
 	color: #fff;
@@ -4786,7 +4787,7 @@ fieldset:disabled .btn {
 }
 @media (min-width: 576px) {
 	.modal-dialog {
-		max-width: 440px;
+		max-width: 540px;
 		margin: 1.75rem auto;
 	}
 	.modal-dialog-scrollable {
