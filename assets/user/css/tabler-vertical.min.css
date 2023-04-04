@@ -4267,10 +4267,19 @@ fieldset:disabled .btn {
 .list-group-item {
 	position: relative;
 	display: block;
-	padding: 0.75rem 1rem;
-	color: #0f172a;
+	padding: 0.5rem 1rem;
+	color: #747A80;
 	background-color: inherit;
-	border: 1px solid #e6e7e9;
+	/* border: 1px solid #e6e7e9; */
+	font-size: 12px;
+    font-weight: 500;
+    line-height: 18px;
+}
+.list-group-item .list-item-content {
+	color: #000;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 21px;
 }
 .list-group-item:first-child {
 	border-top-left-radius: inherit;
@@ -4711,10 +4720,10 @@ fieldset:disabled .btn {
 	flex-direction: column;
 	width: 100%;
 	pointer-events: auto;
-	background-color: #f8fafc;
+	background-color: #fff;
 	background-clip: padding-box;
 	border: 1px solid transparent;
-	border-radius: 4px;
+	border-radius: 10px;
 	outline: 0;
 }
 .modal-backdrop {
@@ -4771,7 +4780,7 @@ fieldset:disabled .btn {
 }
 @media (min-width: 576px) {
 	.modal-dialog {
-		max-width: 540px;
+		max-width: 440px;
 		margin: 1.75rem auto;
 	}
 	.modal-dialog-scrollable {
@@ -14667,8 +14676,8 @@ textarea[cols] {
 	position: absolute;
 	top: 0;
 	right: 0;
-	width: 3.5rem;
-	height: 3.5rem;
+	width: 3rem;
+	height: 3rem;
 	margin: 0;
 	padding: 0;
 	z-index: 10;
@@ -14723,6 +14732,10 @@ textarea[cols] {
 	font-size: 1rem;
 	font-weight: 600;
 	line-height: 1.4285714286;
+	color: #fff;
+	border-radius: 10px;
+	background-color: #0164AF;
+	border: 1px solid rgba(98, 105, 118, 0.16);
 }
 .modal-footer {
 	padding-top: 0;

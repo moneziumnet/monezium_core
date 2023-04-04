@@ -513,27 +513,32 @@
 
 <div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-md modal-dialog-centered" role="document">
-  <div class="modal-content">
-      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      <div class="modal-status bg-primary"></div>
-      <div class="modal-body text-center py-4">
-      <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
-      <h3>@lang('Transaction Details')</h3>
-      <p class="trx_details"></p>
-      <ul class="list-group mt-2">
+    <div class="modal-content">
+      <div class="modal-title">
+        <div class="ms-3">
+          <p>@lang('Transaction Details')</p>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <hr class="mt-3 mb-5">
+      </div>
+      <div class="modal-body text-center">
+        <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+        <p id="trx_title_amount" style="font-size: 20px;
+        line-height: 28px;
+        font-weight: 800;
+        margin: 1rem 0 0 0;"></p>
+        <p id="trx_title_date" style="font-size: 14px;
+        line-height: 21px;
+        font-weight: 400;
+        color: #747A80;
+        margin: auto;"></p>
+        <span class="badge bg-success">Complete</span>
 
-      </ul>
+        <ul class="list-group mt-2">
+
+        </ul>
       </div>
-      <div class="modal-footer">
-      <div class="w-100">
-          <div class="row">
-          <div class="col"><a href="#" class="btn w-100" data-bs-dismiss="modal">
-              @lang('Close')
-              </a></div>
-          </div>
-      </div>
-      </div>
-  </div>
+    </div>
   </div>
 </div>
 
@@ -560,12 +565,15 @@
       'use strict';
 
       $('.details').on('click',function () {
-        var url = "{{url('user/transaction/details/')}}"+'/'+$(this).data('data').id
-        $('.trx_details').text($(this).data('data').details)
+        var url = "{{url('user/transaction/details/')}}"+'/'+$(this).data('data').id;
         $.get(url,function (res) {
           if(res == 'empty'){
-            $('.list-group').html("<p>@lang('No details found!')</p>")
+            $('.list-group').html("<p>@lang('No details found!')</p>");
           }else{
+            var parser = new DOMParser();
+            var node = parser.parseFromString(res, "text/html");
+            $('#trx_title_amount').text(node.getElementById("trnx_amount").textContent + " to " + node.getElementById("Receiver").textContent);
+            $('#trx_title_date').text("Completed " + node.getElementById("trnx_date").textContent);
             $('.list-group').html(res)
           }
           $('#modal-success').modal('show')
