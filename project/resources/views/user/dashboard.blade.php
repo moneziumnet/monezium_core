@@ -181,7 +181,7 @@
                 @if (isset($wallet_type[$item->wallet_type]))
                     <div class="col-sm-6 col-md-6 mb-3">
                         <div class="card h-100 card--info-item">
-                        <div class="text-end icon">
+                        <div class="text-end icon rounded-circle">
                             <i class="fas ">
                                 {{$item->currency->symbol}}
                             </i>
@@ -283,7 +283,7 @@
               @foreach ($cryptowallets as $item)
                       <div class="col-sm-6 col-md-6 mb-3">
                           <div class="card h-100 card--info-item">
-                          <div class="text-end icon">
+                          <div class="text-end icon rounded-circle">
                               <i class="fas ">
                                   {{$item->currency->symbol}}
                               </i>
@@ -373,7 +373,7 @@
               @foreach ($bankaccountlist as $item)
                   <div class="col-sm-6 col-md-12 mb-3">
                       <div class="card h-100 card--info-item">
-                      <div class="text-end icon">
+                      <div class="text-end icon rounded-circle">
                           <i class="fas ">
                           {{$item->currency->symbol}}
                           </i>
