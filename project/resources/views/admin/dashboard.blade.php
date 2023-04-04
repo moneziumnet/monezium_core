@@ -418,11 +418,11 @@
 
 @section('scripts')
 <script>
-    var array_months = '{{$array_months}}';
+    var array_months = '{{$array_months ?? ''}}';
     array_months = array_months.split(',');
-    var array_deposits = '{{$array_deposits}}';
+    var array_deposits = '{{$array_deposits ?? ''}}';
     array_deposits = array_deposits.split(',');
-    var array_withdraws = '{{$array_withdraws}}';
+    var array_withdraws = '{{$array_withdraws ?? ''}}';
     array_withdraws = array_withdraws.split(',');
     document.addEventListener("DOMContentLoaded", function () {
         window.tabler_chart = window.tabler_chart || {};
