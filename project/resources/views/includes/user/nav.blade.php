@@ -1,7 +1,7 @@
 <div class="navbar-expand-xl">
   <div class="collapse navbar-collapse" id="navbar-menu">
     <div class="navbar navbar-light">
-      <div class="container-xl">
+      <div class="container-fluid">
         <ul class="navbar-nav">
           <li class="nav-item {{ request()->routeIs('user.dashboard') ? 'active' : '' }}">
             <a class="nav-link" href="{{route('user.dashboard')}}">

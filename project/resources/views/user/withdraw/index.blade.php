@@ -7,7 +7,7 @@
 @section('title', __('Withdrawal'))
 
 @section('contents')
-<div class="container-xl">
+<div class="container-fluid">
     <div class="page-header d-print-none">
         @include('user.ex_payment_tab')
         <div class="d-flex flex-wrap justify-content-between mt-3">
@@ -32,7 +32,7 @@
 </div>
 
 <div class="page-body">
-    <div class="container-xl">
+    <div class="container-fluid">
         <div class="row row-cards">
             <div class="col-12">
                 <div class="card">

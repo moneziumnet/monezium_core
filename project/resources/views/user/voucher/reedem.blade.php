@@ -7,7 +7,7 @@
 @section('title', __('Redeem Voucher'))
 
 @section('contents')
-<div class="container-xl">
+<div class="container-fluid">
     <div class="page-header d-print-none">
       <div class="row align-items-center">
         <div class="col">
@@ -18,7 +18,7 @@
 </div>
 
 <div class="page-body">
-  <div class="container-xl">
+  <div class="container-fluid">
     <div class="row row-deck row-cards">
         <div class="col-12">
             <div class="card">
@@ -73,7 +73,7 @@
         </div>
     </div>
   </div>
-  <div class="container-xl">
+  <div class="container-fluid">
     <div class="row row-deck row-cards mt-3">
         <div class="col-md-12">
             <h2> @lang('Recent Reedemed Vouchers')</h2>

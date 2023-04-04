@@ -39,7 +39,7 @@
     <div class="wrapper mb-3 mt-5">
           <div class="page-wrapper">
             <div class="page-body">
-                <div class="container-xl">
+                <div class="container-fluid">
                     <div class="card card-lg">
                       <div class="card-body">
                         @include('includes.flash')

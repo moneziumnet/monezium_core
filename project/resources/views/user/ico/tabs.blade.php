@@ -1,4 +1,4 @@
-<div class="container-xl">
+<div class="container-fluid">
     <div class="page-header d-print-none">
         <div class="card-header tab-card-header">
             <ul class="nav nav-pills card-header-tabs" id="pills-tab" role="tablist">

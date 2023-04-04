@@ -4,7 +4,7 @@
 @php
     $type = $invoice->type ? $invoice->type : 'Invoice';
 @endphp
-<div class="container-xl">
+<div class="container-fluid">
   <div class="page-header d-print-none">
     @include('user.invoicetab')
     <div class="row align-items-center mt-3">
@@ -27,7 +27,7 @@
   </div>
 </div>
 
-<div class="container-xl">
+<div class="container-fluid">
     <div class="card card-lg">
       <div class="card-body">
         @if ($invoice->template == 0)

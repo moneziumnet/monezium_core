@@ -9,7 +9,7 @@
 @endsection
 
 @section('content')
-    <div class="container-xl">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
                 <form action="{{route('user.deposit.submit')}}" method="POST">

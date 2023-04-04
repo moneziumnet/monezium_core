@@ -5,7 +5,7 @@
 @endpush
 
 @section('contents')
-<div class="container-xl">
+<div class="container-fluid">
     <div class="page-header d-print-none">
       <div class="row align-items-center">
         <div class="col">
@@ -17,7 +17,7 @@
     </div>
   </div>
   <div class="page-body">
-    <div class="container-xl">
+    <div class="container-fluid">
       <div class="row mb--25-none">
           @if (count($plans) == 0)
               <div class="card">
@@ -140,7 +140,7 @@
     </div>
   </div>
 
-  <div class="container-xl">
+  <div class="container-fluid">
     <div class="page-header d-print-none">
       <div class="row align-items-center">
         <div class="col">
@@ -156,7 +156,7 @@
 </div>
 
 <div class="page-body">
-    <div class="container-xl">
+    <div class="container-fluid">
         <div class="row row-cards">
             <div class="col-12">
                 <div class="card">

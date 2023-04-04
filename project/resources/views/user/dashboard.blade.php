@@ -7,7 +7,7 @@
 @section('title', __('Home'))
 
 @section('contents')
-<div class="container-xl">
+<div class="container-fluid">
 
   <div class="page-header d-print-none">
   <div class="row align-items-center">
@@ -39,7 +39,7 @@
   </div>
 </div>
 <div class="page-body">
-  <div class="container-xl d-flex">
+  <div class="container-fluid d-flex">
     @if (auth()->user()->kyc_status == 1)
       @if ($kyc_request_id != 0)
         @if ($kyc_request_status != 3)
@@ -112,27 +112,29 @@
       </div>
     </div>
     @endif
-    <div class="col-md-6 row justify-content-start me-3">
-      @if (isEnabledUserModule('Incoming'))
+    <div class="col-md-6 justify-content-start pe-3">
+      <div class="row">
+        @if (isEnabledUserModule('Incoming'))
+          <div class="col-md-6 mb-3">
+            <div class="card h-100 card--info-item">
+              <div class="card-body">
+                <div class="h1 m-0">{{$currency->symbol}}{{ round($depositAmount, 2) }}</div>
+                <div class="text-muted">@lang('Total Deposit')</div>
+              </div>
+            </div>
+          </div>
+        @endif
+        @if (isEnabledUserModule('External Payments'))
         <div class="col-md-6 mb-3">
           <div class="card h-100 card--info-item">
-            <div class="card-body">
-              <div class="h2 m-0">{{$currency->symbol}}{{ round($depositAmount, 2) }}</div>
-              <div class="text-muted">@lang('Total Deposit')</div>
+            <div class="card-body p-3 p-md-4">
+              <div class="h2 m-0">{{$currency->symbol}}{{ round($withdrawAmount, 2) }}</div>
+              <div class="text-muted">@lang('Total Withdraw')</div>
             </div>
           </div>
         </div>
-      @endif
-      @if (isEnabledUserModule('External Payments'))
-      <div class="col-md-6 mb-3">
-        <div class="card h-100 card--info-item">
-          <div class="card-body p-3 p-md-4">
-            <div class="h2 m-0">{{$currency->symbol}}{{ round($withdrawAmount, 2) }}</div>
-            <div class="text-muted">@lang('Total Withdraw')</div>
-          </div>
-        </div>
+        @endif
       </div>
-      @endif
       <div class="card mb-3">
         <div class="card-body">
           <div class="d-flex justify-content-center">
@@ -142,7 +144,7 @@
         </div>
       </div>
       @if($website_theme == 0)
-      <div class="container-xl">
+      <div class="container-fluid">
         <div class="page-header d-print-none">
           <div class="row align-items-center">
             <div class="col">
@@ -232,7 +234,7 @@
       </div>
 
       @if (isEnabledUserModule('Crypto'))
-      <div class="container-xl">
+      <div class="container-fluid">
           <div class="page-header d-print-none">
             <div class="row align-items-center">
               <div class="col">
@@ -305,7 +307,7 @@
       @endif
       <hr>
 
-      <div class="container-xl">
+      <div class="container-fluid">
           <div class="page-header d-print-none">
             <div class="row align-items-center">
               <div class="col">
@@ -396,7 +398,7 @@
       </div>
     </div>
 
-    <div class="col-md-6 ms-3">
+    <div class="col-md-6">
       <div class="row justify-content-start">
         {{-- <div class="col-sm-6 col-md-4 mb-3">
           <div class="card h-100 card--info-item">

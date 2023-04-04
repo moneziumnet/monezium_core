@@ -6,7 +6,7 @@
 @section('contents')
 
     <div class="page-body">
-        <div class="container-xl">
+        <div class="container-fluid">
             <div class="d-flex my-3">
               <h2 class="me-auto">Transaction details</h2>
               <a class="btn btn-primary" href="{{route('user.card.index')}}">Back</a>

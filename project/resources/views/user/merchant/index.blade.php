@@ -7,8 +7,8 @@
 @section('title', __('Merchant'))
 
 @section('contents')
-<div class="container-xl">
-        <div class="container-xl">
+<div class="container-fluid">
+        <div class="container-fluid">
             <div class="page-header d-print-none">
                 <div class="row align-items-center">
                 <div class="col">
@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="page-body">
-            <div class="container-xl">
+            <div class="container-fluid">
             <div class="row justify-content " style="max-height: 368px;overflow-y: scroll;">
                 @if (!isset($wallet))
                     @foreach ($wallets as $item)
@@ -48,7 +48,7 @@
             </div>
         </div>
         @if (isEnabledUserModule('Crypto'))
-        <div class="container-xl">
+        <div class="container-fluid">
             <div class="page-header d-print-none">
                 <div class="row align-items-center">
                 <div class="col">
@@ -60,7 +60,7 @@
             </div>
         </div>
         <div class="page-body">
-            <div class="container-xl">
+            <div class="container-fluid">
             <div class="row justify-content " style="max-height: 368px;overflow-y: scroll;">
                 @if (!isset($wallet))
                     @foreach ($wallets as $item)
@@ -94,7 +94,7 @@
 
 <div class="row container-xl" style="margin-left: auto; margin-right:auto;">
     <div class="col-md-6">
-        <div class="container-xl">
+        <div class="container-fluid">
             <div class="page-header d-print-none">
                 <div class="row align-items-center">
                 <div class="col">
@@ -107,7 +107,7 @@
         </div>
 
     <div class="page-body">
-        <div class="container-xl">
+        <div class="container-fluid">
             <div class="row row-cards">
                 <div class="col-12">
                     <div class="card">
@@ -156,7 +156,7 @@
     </div>
     </div>
     <div class="col-md-6">
-        <div class="container-xl">
+        <div class="container-fluid">
             <div class="page-header d-print-none">
               <div class="row align-items-center">
                 <div class="col">
@@ -169,7 +169,7 @@
         </div>
 
         <div class="page-body">
-            <div class="container-xl">
+            <div class="container-fluid">
 
                 <div class="row row-cards">
                     <div class="col-12">

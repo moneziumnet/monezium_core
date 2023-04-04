@@ -5,7 +5,7 @@
 @endpush
 
 @section('contents')
-<div class="container-xl">
+<div class="container-fluid">
     <div class="page-header d-print-none">
         @include('user.settingtab')
       <div class="row align-items-center">
@@ -19,7 +19,7 @@
 </div>
 
 <div class="page-body">
-    <div class="container-xl">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12 col-md-12">
                     <div class="card border-0 shadow-sm">

@@ -9,7 +9,7 @@
     @include('user.ico.tabs')
 
     <div class="page-body">
-        <div class="container-xl mt-3 mb-3">
+        <div class="container-fluid mt-3 mb-3">
             <div class="row row-cards">
                 <div class="row justify-content" style="max-height: 1600px;overflow-y: auto;">
                     @if (count($ico_tokens) == 0)

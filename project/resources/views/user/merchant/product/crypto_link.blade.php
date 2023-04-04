@@ -17,7 +17,7 @@
   </head>
   <body>
     <div class="wrapper mb-3 mt-5">
-        <div class="container-xl">
+        <div class="container-fluid">
         <div class="page-header d-print-none">
             <div class="row align-items-center">
             <div class="col">
@@ -40,7 +40,7 @@
 
 
         <div class="page-body">
-            <div class="container-xl">
+            <div class="container-fluid">
                 <div class="row row-cards">
                     <div class="col-12">
                         <div class="card p-5">

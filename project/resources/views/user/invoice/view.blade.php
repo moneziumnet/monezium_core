@@ -25,7 +25,7 @@
     @endphp
     <div class="wrapper mb-3">
           <div class="page-wrapper">
-            <div class="container-xl">
+            <div class="container-fluid">
               <!-- Page title -->
               <div class="page-header text-white d-print-none">
                 <div class="row align-items-center">
@@ -49,7 +49,7 @@
               </div>
             </div>
             <div class="page-body">
-                <div class="container-xl">
+                <div class="container-fluid">
                     <div class="card card-lg">
                       <div class="card-body">
                         @if ($invoice->template == 0)

@@ -44,7 +44,7 @@
 
           <div class="page-wrapper">
             <div class="page-body">
-                <div class="container-xl">
+                <div class="container-fluid">
                     <div class="col-sm-12 text-right" style="text-align: right">
                         <a href="{{route('user.aoa-pdf', $data->id)}}">
                           <i class="fas fa-file-pdf" aria-hidden="true"></i> {{__('PDF')}}

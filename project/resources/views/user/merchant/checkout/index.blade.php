@@ -8,7 +8,7 @@
 
 @section('contents')
 
-<div class="container-xl">
+<div class="container-fluid">
   <div class="page-header d-print-none">
     @include('user.merchant.tab')
     <div class="row align-items-center">
@@ -34,7 +34,7 @@
 </div>
 
 <div class="page-body">
-  <div class="container-xl">
+  <div class="container-fluid">
     <div class="row row-cards">
       <div class="row justify-content " style="max-height: 800px;overflow-y: scroll;">
           @if (count($checkouts) != 0)

@@ -8,7 +8,7 @@
 
 @section('contents')
 <div class="page-body">
-  <div class="container-xl">
+  <div class="container-fluid">
 
     <div class="row align-items-center mb-2 mt-3">
     <div class="col">

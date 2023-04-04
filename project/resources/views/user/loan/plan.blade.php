@@ -8,7 +8,7 @@
 
 @section('contents')
 
-<div class="container-xl">
+<div class="container-fluid">
   <div class="page-header d-print-none">
     <div class="row align-items-center">
       <h2 class="page-title">
@@ -17,7 +17,7 @@
     </div>
   </div>
   <div class="page-body">
-    <div class="container-xl">
+    <div class="container-fluid">
     <div class="row justify-content " style="max-height: 368px;">
       @foreach ($wallets as $item)
       <div class="col-sm-6 col-md-4 mb-3">
@@ -48,7 +48,7 @@
     </div>
   </div>
   <div class="page-body">
-    <div class="container-xl">
+    <div class="container-fluid">
       <div class="row mb--25-none">
           @if (count($plans) == 0)
               <div class="card">
@@ -130,7 +130,7 @@
     </div>
   </div>
   <div class="page-body">
-    <div class="container-xl">
+    <div class="container-fluid">
         <div class="row row-cards">
             <div class="col-12">
                 <div class="card">

@@ -7,7 +7,7 @@
 @section('title', __('Shop'))
 
 @section('contents')
-<div class="container-xl">
+<div class="container-fluid">
   <div class="page-header d-print-none">
     <div class="row align-items-center">
       <div class="col">
@@ -24,7 +24,7 @@
 
 
 <div class="page-body">
-  <div class="container-xl mt-3 mb-3">
+  <div class="container-fluid mt-3 mb-3">
       <div class="row row-cards">
           <div class="row justify-content " style="max-height: 1600px;overflow-y: scroll;">
                   @if (count($products) == 0)
@@ -100,7 +100,7 @@
         </div>
     </div>
 </div>
-<div class="container-xl">
+<div class="container-fluid">
     <div class="page-header d-print-none">
       <div class="row align-items-center">
         <div class="col">
@@ -117,7 +117,7 @@
 
 
 <div class="page-body">
-    <div class="container-xl mt-3 mb-3">
+    <div class="container-fluid mt-3 mb-3">
         <div class="row row-cards">
             <div class="row justify-content " style="max-height: 1600px;overflow-y: scroll;">
                     @if (count($campaigns) == 0)

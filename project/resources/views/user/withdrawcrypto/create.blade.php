@@ -10,7 +10,7 @@
 @endpush
 
 @section('contents')
-<div class="container-xl">
+<div class="container-fluid">
     <div class="page-header d-print-none">
         @include('user.ex_payment_tab')
       <div class="row align-items-center mt-3">
@@ -24,7 +24,7 @@
 </div>
 
 <div class="page-body">
-    <div class="container-xl">
+    <div class="container-fluid">
         <div class="row row-cards">
             <div class="col-12">
                 <div class="card p-3 p-sm-4 p-lg-5">
