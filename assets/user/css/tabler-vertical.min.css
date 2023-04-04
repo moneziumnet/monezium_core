@@ -10389,6 +10389,9 @@ body {
 	.navbar-expand-xl.navbar-vertical ~ .page-wrapper {
 		margin-left: 19rem;
 	}
+	.navbar-expand-xl.navbar-vertical ~ .page-wrapper footer {
+		margin-left: 19rem;
+	}
 	.navbar-expand-xl.navbar-vertical.navbar-right ~ .navbar,
 	.navbar-expand-xl.navbar-vertical.navbar-right ~ .page-wrapper {
 		margin-left: 0;
@@ -11290,6 +11293,7 @@ body {
 	.navbar-vertical.navbar-expand-xl .navbar-collapse .navbar-nav .nav-link {
 		padding: 0.5rem 1.5rem;
 		justify-content: flex-start;
+		font-size: 17px;
 	}
 	.navbar-vertical.navbar-expand-xl .navbar-collapse .dropdown-menu-columns {
 		flex-direction: column;
@@ -11728,6 +11732,9 @@ body {
 	border-top: 1px solid #e6e7e9;
 	font-size:0.75rem;
 	font-weight:700;
+}
+.theme-dark .footer-bottom {
+	border-top: 1px solid #4c4c4c;
 }
 .footer-link {
 	color: #000;
@@ -14847,7 +14854,7 @@ textarea[cols] {
 .nav-link-icon {
 	width: 1.5rem;
 	height: 1.25rem;
-	margin-right: 0.25rem;
+	margin-right: 0.75rem;
 	opacity: 0.7;
 }
 .nav-link-icon svg {

@@ -10,6 +10,7 @@ body .wrapper {
 }
 .page-body {
 	flex:1;
+	padding-bottom: 80px;
 }
 
 .special-box {
@@ -685,11 +686,19 @@ div[class*="col"]:nth-of-type(6n + 4) .card--info-item .icon {
 }
 
 footer {
-   left: 0;
-   bottom: 0;
-   width: 100%;
-	font-size: 14px;
-	line-height: 1.65;
+	width: 100%;
+    font-size: 14px;
+    line-height: 1.65;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    z-index: 10;
+}
+
+.theme-dark footer {
+	background: #1e293b;
 }
 
 footer ul li{
