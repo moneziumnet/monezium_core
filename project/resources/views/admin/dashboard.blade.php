@@ -16,6 +16,7 @@
 </div>
 
 @endif
+@if(!Auth::guard('admin')->user()->IsSuper())
 <div class="card mt-3 mb-3">
     <div class="card-body">
       <div class="d-flex justify-content-center">
@@ -24,6 +25,7 @@
       <div id="chart_finance_monthly" class="chart-lg"></div>
     </div>
 </div>
+@endif
 @if(Auth::guard('admin')->user()->IsSuper())
 <div class="row mb-3">
   <div class="col-xl-4 col-md-6 mb-4">
