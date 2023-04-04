@@ -4281,6 +4281,12 @@ fieldset:disabled .btn {
     font-size: 14px;
     line-height: 21px;
 }
+.theme-dark .list-group-item .list-item-content {
+	color: #fff;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 21px;
+}
 .list-group-item:first-child {
 	border-top-left-radius: inherit;
 	border-top-right-radius: inherit;
@@ -6753,12 +6759,12 @@ fieldset:disabled .btn {
 	) !important;
 }
 .bg-success {
-	--tblr-bg-opacity: 0.25;
+	--tblr-bg-opacity: 0.2;
 	background-color: rgba(
 		var(--tblr-success-rgb),
 		var(--tblr-bg-opacity)
 	) !important;
-	color: #23E33E;
+	color: #2fb344;
 }
 .bg-info {
 	--tblr-bg-opacity: 1;
@@ -14697,9 +14703,9 @@ textarea[cols] {
 	position: absolute;
 	top: 0;
 	right: 0;
-	width: 3rem;
-	height: 3rem;
-	margin: 0;
+	width: 2.6rem;
+	height: 2.6rem;
+	margin: 0.3rem;
 	padding: 0;
 	z-index: 10;
 }

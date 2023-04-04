@@ -63,7 +63,7 @@
                                     <h5 class="mb-1">{{__('Sold: ')}} {{$val->sold ?? '0'}}{{__('/')}}{{$val->sold+$val->quantity}}</h5>
                                     <h5 class="mb-3">{{__('Currenct Stock:')}} {{$val->quantity}}</h5>
                                     @if($val->status==1)
-                                        <span class="badge badge-pill bg-success"><i class="fas fa-check"></i> {{__('Active')}}</span>
+                                        <span class="badge badge-pill bg-primary"><i class="fas fa-check"></i> {{__('Active')}}</span>
                                     @else
                                         <span class="badge badge-pill bg-danger"><i class="fas fa-ban"></i> {{__('Disabled')}}</span>
                                     @endif
@@ -158,7 +158,7 @@
                                       <h5 class="mb-3">{{__('Created Date:')}} {{$val->created_at}}</h5>
                                       <h6 class="mb-3">{{__('Description:')}} {{$val->description}}</h6>
                                       @if($val->status==1)
-                                          <span class="badge badge-pill bg-success"><i class="fas fa-check"></i> {{__('Active')}}</span>
+                                          <span class="badge badge-pill bg-primary"><i class="fas fa-check"></i> {{__('Active')}}</span>
                                       @else
                                           <span class="badge badge-pill bg-danger"><i class="fas fa-ban"></i> {{__('Disabled')}}</span>
                                       @endif
