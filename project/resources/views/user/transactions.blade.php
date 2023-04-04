@@ -144,33 +144,38 @@
     </div>
 </div>
 <div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
         <div class="modal-content">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="modal-status bg-primary"></div>
-            <div class="modal-body text-center py-4">
-            <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
-            <h3>@lang('Transaction Details')</h3>
-            <p class="trx_details"></p>
-            <ul class="list-group mt-2">
-            </ul>
+          <div class="modal-title">
+            <div class="ms-3">
+              <p>@lang('Transaction Details')</p>
             </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <hr class="mt-3 mb-5">
+          </div>
+          <div class="modal-body text-center">
+            <i class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+            <p class="trx_info_amount"></p>
+            <p class="trx_info_date"></p>
+            <span class="badge bg-success-lt">Paid</span>
+            <ul class="list-group mt-2">
+    
+            </ul>
+          </div>
             <div class="modal-footer">
             <div class="w-100">
                 <div class="row">
                     <div class="col-sm-6">
-                        <a class="print_pdf btn btn-primary w-100" >
+                        {{-- <a class="print_pdf btn btn-primary w-100" >
                             @lang('Print PDF')
+                        </a> --}}
+                        <a class="print_pdf footer-link">
+                          <i class="fas fa-file-pdf me-1"></i> @lang('Download Pdf')
                         </a>
                     </div>
-                    <div class="col-sm-6">
-                        <a href="#" class="send_email btn btn-green w-100" data-bs-dismiss="modal">
-                            @lang('Send Email')
-                        </a>
-                    </div>
-                    <div class="col mt-2">
-                        <a href="#" class="btn w-100" data-bs-dismiss="modal">
-                        @lang('Close')
+                    <div class="col-sm-6 d-flex justify-content-end">
+                        <a class="send_email footer-link">
+                          <i class="fas fa-print me-1"></i> @lang('Send Email')
                         </a>
                     </div>
                 </div>
@@ -228,6 +233,10 @@
           if(res == 'empty'){
             $('.list-group').html("<p>@lang('No details found!')</p>")
           }else{
+            var parser = new DOMParser();
+            var node = parser.parseFromString(res, "text/html");
+            $('.trx_info_amount').text(node.getElementById("trnx_amount").textContent + " to " + node.getElementById("Receiver").textContent);
+            $('.trx_info_date').text("Completed " + node.getElementById("trnx_date").textContent);
             $('.list-group').html(res)
           }
           $('#modal-success').modal('show')
