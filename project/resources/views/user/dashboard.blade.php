@@ -10,7 +10,8 @@
 <div class="container-xl">
 
   <div class="page-header d-print-none">
-    <div class="mb-2">
+  <div class="row align-items-center">
+    <div class="col mb-2">
       <div class="d-flex">
         <span class="balance-body">{{ showprice($userBalance,$currency) }}</span>
         <span class="change-language">
@@ -24,9 +25,17 @@
         </span>
       </div>
       <div class="d-flex">
-        <span class="balance-footer">{{ __('Total balance from all accounts') }} <span class="text-primary ms-2" style="font-weight:700;">{{ __('USD') }}</span></span>
+        <span class="balance-footer">{{ __('Total balance from all accounts') }} <span class="text-primary ms-2" style="font-weight:700;"></span></span>
       </div>
     </div>
+    <div class="col-auto ms-auto d-print-none">
+      <div class="btn-list">
+        <a data-bs-toggle="modal" data-bs-target="#modal-wallet-create" class="footer-link">
+          <i class="fas fa-plus me-1"></i> {{__('Open a wallet')}}
+        </a>
+      </div>
+    </div>
+  </div>
   </div>
 </div>
 <div class="page-body">
@@ -107,12 +116,9 @@
       @if (isEnabledUserModule('Incoming'))
         <div class="col-md-6 mb-3">
           <div class="card h-100 card--info-item">
-            <div class="text-end icon">
-              <i class="fas fa-euro-sign"></i>
-            </div>
             <div class="card-body">
-              <div class="h2 m-0">{{ round($depositAmount, 2) }} {{$currency->code}}</div>
-              <div class="text-muted">@lang('Total Deposit Amount')</div>
+              <div class="h2 m-0">{{$currency->symbol}}{{ round($depositAmount, 2) }}</div>
+              <div class="text-muted">@lang('Total Deposit')</div>
             </div>
           </div>
         </div>
@@ -120,12 +126,9 @@
       @if (isEnabledUserModule('External Payments'))
       <div class="col-md-6 mb-3">
         <div class="card h-100 card--info-item">
-          <div class="text-end icon">
-            <i class="fas fa-euro-sign"></i>
-          </div>
           <div class="card-body p-3 p-md-4">
-            <div class="h2 m-0">{{ round($withdrawAmount, 2) }} {{$currency->code}}</div>
-            <div class="text-muted">@lang('Totoal Withdraw Amount')</div>
+            <div class="h2 m-0">{{$currency->symbol}}{{ round($withdrawAmount, 2) }}</div>
+            <div class="text-muted">@lang('Total Withdraw')</div>
           </div>
         </div>
       </div>
@@ -138,7 +141,7 @@
           <div id="chart_finance_monthly" class="chart-lg"></div>
         </div>
       </div>
-
+      @if($website_theme == 0)
       <div class="container-xl">
         <div class="page-header d-print-none">
           <div class="row align-items-center">
@@ -149,8 +152,7 @@
             </div>
             <div class="col-auto ms-auto d-print-none">
                 <div class="btn-list">
-
-                  <a  data-bs-toggle="modal" data-bs-target="#modal-wallet-create" class="btn btn-primary d-sm-inline-block">
+                  <a  data-bs-toggle="modal" data-bs-target="#modal-wallet-create" class="footer-link">
                       <i class="fas fa-plus me-1"></i> {{__('Create Wallet')}}
                   </a>
                 </div>
@@ -173,6 +175,32 @@
           $wallet_type['7'] = 'Merchant';
       }
       @endphp
+      <div class="row justify-content mt-3" style="max-height: 368px;">
+        @if (count($wallets) != 0)
+            @foreach ($wallets as $item)
+                @if (isset($wallet_type[$item->wallet_type]))
+                    <div class="col-sm-6 col-md-6 mb-3">
+                        <div class="card h-100 card--info-item">
+                        <div class="text-end icon">
+                            <i class="fas ">
+                                {{$item->currency->symbol}}
+                            </i>
+                        </div>
+                        <div class="card-body">
+                            <div class="h3 m-0 text-uppercase"> {{$wallet_type[$item->wallet_type]}}</div>
+                            <div class="h4 m-0 text-uppercase"> {{ $item->wallet_no }}</div>
+                            <div class="text-muted">{{ amount($item->balance,$item->currency->type,2) }}  {{$item->currency->code}}</div>
+                        </div>
+                        </div>
+                    </div>
+                @endif
+            @endforeach
+        @else
+            <p class="text-center">@lang('NO Wallet FOUND')</p>
+        @endif
+      </div>
+      <hr>
+      @endif
       <div class="modal modal-blur fade" id="modal-wallet-create" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
           <div class="modal-content">
@@ -203,32 +231,6 @@
         </div>
       </div>
 
-      <div class="row justify-content mt-3" style="max-height: 368px;">
-        @if (count($wallets) != 0)
-            @foreach ($wallets as $item)
-                @if (isset($wallet_type[$item->wallet_type]))
-                    <div class="col-sm-6 col-md-6 mb-3">
-                        <div class="card h-100 card--info-item">
-                        <div class="text-end icon">
-                            <i class="fas ">
-                                {{$item->currency->symbol}}
-                            </i>
-                        </div>
-                        <div class="card-body">
-                            <div class="h3 m-0 text-uppercase"> {{$wallet_type[$item->wallet_type]}}</div>
-                            <div class="h4 m-0 text-uppercase"> {{ $item->wallet_no }}</div>
-                            <div class="text-muted">{{ amount($item->balance,$item->currency->type,2) }}  {{$item->currency->code}}</div>
-                        </div>
-                        </div>
-                    </div>
-                @endif
-            @endforeach
-        @else
-            <p class="text-center">@lang('NO Wallet FOUND')</p>
-        @endif
-      </div>
-      <hr>
-
       @if (isEnabledUserModule('Crypto'))
       <div class="container-xl">
           <div class="page-header d-print-none">
@@ -240,7 +242,7 @@
               </div>
               <div class="col-auto ms-auto d-print-none">
                 <div class="btn-list">
-                  <a  data-bs-toggle="modal" data-bs-target="#modal-crypto-wallet-create" class="btn btn-primary d-sm-inline-block">
+                  <a  data-bs-toggle="modal" data-bs-target="#modal-crypto-wallet-create" class="footer-link">
                     <i class="fas fa-plus me-1"></i> {{__('Create Crypto Wallet')}}
                   </a>
                 </div>
@@ -279,7 +281,7 @@
       <div class="row justify-content mb-3" style="max-height: 368px;overflow-y: scroll;">
           @if (count($cryptowallets) != 0)
               @foreach ($cryptowallets as $item)
-                      <div class="col-sm-6 col-md-4">
+                      <div class="col-sm-6 col-md-6 mb-3">
                           <div class="card h-100 card--info-item">
                           <div class="text-end icon">
                               <i class="fas ">
@@ -408,11 +410,8 @@
           </div>
         </div> --}}
         @if (isEnabledUserModule('Loan'))
-        <div class="col-sm-6 col-md-4 mb-3">
-          <div class="card h-100 card--info-item">
-            <div class="text-end icon">
-              <i class="fas fa-hand-holding-usd"></i>
-            </div>
+        <div class="col-md-4 mb-3">
+          <div class="card card--info-item">
             <div class="card-body">
               <div class="h1 m-0">{{ count($user->loans) }}</div>
               <div class="text-muted">@lang('Loan')</div>
@@ -422,11 +421,8 @@
         @endif
   
         @if (isEnabledUserModule('Investments'))
-        <div class="col-sm-6 col-md-4 mb-3">
-          <div class="card h-100 card--info-item">
-            <div class="text-end icon">
-              <i class="fas fa-wallet"></i>
-            </div>
+        <div class="col-md-4 mb-3">
+          <div class="card card--info-item">
             <div class="card-body">
               <div class="h1 m-0">{{ count($user->dps) }}</div>
               <div class="text-muted">@lang('DPS')</div>
@@ -434,11 +430,8 @@
           </div>
         </div>
   
-        <div class="col-sm-6 col-md-4 mb-3">
-          <div class="card h-100 card--info-item">
-            <div class="text-end icon">
-              <i class="far fa-credit-card"></i>
-            </div>
+        <div class="col-md-4 mb-3">
+          <div class="card card--info-item">
             <div class="card-body">
               <div class="h1 m-0">{{ count($user->fdr) }}</div>
               <div class="text-muted">@lang('FDR')</div>
@@ -448,7 +441,7 @@
         @endif
       </div>
 
-      <div class="row row-deck row-cards mb-3">
+      <div class="row row-deck cards mb-3">
         <div class="col-lg-12">
             <div class="card">
               <div class="card-header">
@@ -462,7 +455,6 @@
                 <table class="table card-table table-vcenter table-mobile-md text-nowrap datatable">
                   {{-- <thead>
                     <tr>
-                      <th class="w-1">@lang('No').</th>
                       <th>@lang('Remark')</th>
                       <th>@lang('Amount')</th>
                       <th class="text-end"  style="padding-right: 28px;">@lang('Details')</th>
@@ -471,11 +463,6 @@
                   <tbody>
                     @foreach ($transactions as $key=>$data)
                     <tr>
-                      <td data-label="@lang('No')">
-                        <div>
-                          <span class="text-muted">{{ $loop->iteration }}</span>
-                        </div>
-                      </td>
                       <td data-label="@lang('Remark')">
                         <div class="card-content">
                           <span>{{ucwords(str_replace('_',' ',$data->remark))}}</span>
@@ -487,11 +474,11 @@
                       </td>
                       <td data-label="@lang('Amount')">
                         <div style="text-align:right;">
-                          <span class="card-content">{{$data->type}} {{amount($data->amount,$data->currency->type,2)}} {{$data->currency->code}}</span>
+                          <span class="card-content">{{$data->type}} {{amount($data->amount+$data->charge,$data->currency->type,2)}} {{$data->currency->code}}</span>
                         </div>
                     </td>
                     <td data-label="@lang('Details')" class="text-end">
-                            <button class="btn btn-primary btn-sm details" data-data="{{$data}}">@lang('Details')</button>
+                            <a class="footer-link details" data-data="{{$data}}">@lang('Details')</a>
                         </td>
                    </tr>
                     @endforeach

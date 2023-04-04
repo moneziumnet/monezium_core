@@ -301,8 +301,45 @@
                 </span>
               </li>
             @endforeach
+            <!-- <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="modal" data-bs-target="#modal-wallet-create">
+                <i class="fas fa-plus me-1"></i> {{__(' Open a balance')}}
+              </a>
+            </li> -->
           </ul>
       </div>
+      <!-- <div class="modal modal-blur fade" id="modal-wallet-create" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+              <h5 class="modal-title">{{('Wallet Create')}}</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <form action="{{route('user.wallet.create')}}" method="POST" enctype="multipart/form-data">
+              @php
+                $currencies = DB::table('currencies')->where('type', 1)->get();
+              @endphp
+                  @csrf
+                  <div class="modal-body">
+                      <div class="form-group">
+                          <label class="form-label required">{{__('Currency')}}</label>
+                          <select name="currency_id" class="form-select" required>
+                              <option value="">{{ __('Select Currency') }}</option>
+                              @foreach ($currencies as $key => $value)
+                                      <option value="{{$value->id}}">{{$value->code}}</option>
+                              @endforeach
+                          </select>
+                      </div>
+                      <input type="hidden" name="user_id" value="{{auth()->user()->id}}">
+                  </div>
+
+                  <div class="modal-footer">
+                      <button  id="submit-btn" class="btn btn-primary">{{ __('Create') }}</button>
+                  </div>
+              </form>
+          </div>
+        </div>
+      </div> -->
     </div>
   </div>
 </div>
