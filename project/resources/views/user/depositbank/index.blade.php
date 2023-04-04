@@ -118,21 +118,28 @@
 <div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-md modal-dialog-centered" role="document">
     <div class="modal-content">
+      <div class="modal-title">
+        <div class="ms-3">
+          <p>@lang('Deposit Details')</p>
+        </div>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        <div class="modal-status bg-primary"></div>
-        <div class="modal-body text-center py-4">
+        <hr class="mt-3 mb-5">
+      </div>
+      <div class="modal-body text-center">
         <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
         <h3>@lang('Deposit Details')</h3>
+        <span class="badge" id="bank_status">Paid</span>
+
         <p class="bank_details"></p>
         <ul class="list-group details-list mt-2">
-            <li class="list-group-item">@lang('Receiver Name')<span id="user_name"></span></li>
-            <li class="list-group-item">@lang('Receiver Address')<span id="user_address"></span></li>
-            <li class="list-group-item">@lang('Bank Name')<span id="bank_name"></span></li>
-            <li class="list-group-item">@lang('Bank Address')<span id="bank_address"></span></li>
-            <li class="list-group-item">@lang('Bank IBAN')<span id="bank_iban"></span></li>
-            <li class="list-group-item">@lang('Bank SWIFT')<span id="bank_swift"></span></li>
-            <li class="list-group-item">@lang('Amount')<span id="amount"></span></li>
-            <li class="list-group-item">@lang('Description')<span id="bank_details"></span></li>
+            <li class="list-group-item">@lang('Receiver Name')<span class="list-item-content" id="user_name"></span></li>
+            <li class="list-group-item">@lang('Receiver Address')<span class="list-item-content" id="user_address"></span></li>
+            <li class="list-group-item">@lang('Bank Name')<span class="list-item-content" id="bank_name"></span></li>
+            <li class="list-group-item">@lang('Bank Address')<span class="list-item-content" id="bank_address"></span></li>
+            <li class="list-group-item">@lang('Bank IBAN')<span class="list-item-content" id="bank_iban"></span></li>
+            <li class="list-group-item">@lang('Bank SWIFT')<span class="list-item-content" id="bank_swift"></span></li>
+            <li class="list-group-item">@lang('Amount')<span class="list-item-content" id="amount"></span></li>
+            <li class="list-group-item">@lang('Description')<span class="list-item-content" id="bank_details"></span></li>
         </ul>
         </div>
     </div>
@@ -160,6 +167,18 @@
           $('#bank_swift').text($(this).data('data').swift);
           $('#bank_details').text(($(this).data('deposit').details??"") + " / " + $(this).data('deposit').deposit_number);
           $('#amount').text($(this).data('amount'));
+
+          var status = $(this).data('deposit').status;
+          if (status === "complete") {
+            $('#bank_status').attr("class", "badge bg-success-lt");
+            $('#bank_status').text("Paid");
+          } else if (status === "pending") {
+            $('#bank_status').attr("class", "badge bg-warning");
+            $('#bank_status').text("Pending");
+          } else {
+            $('#bank_status').attr("class", "badge bg-danger");
+            $('#bank_status').text("Reject");
+          }
           $('#modal-success').modal('show');
       })
     </script>
