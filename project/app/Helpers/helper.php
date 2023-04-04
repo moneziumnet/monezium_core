@@ -69,9 +69,9 @@ if (!function_exists('showPrice')) {
         $price = round(($price) * getRate($currency), 2);
 
         if ($gs->currency_format == 0) {
-            return $currency->symbol . $price;
+            return $currency->symbol . numFormat($price, 2);
         } else {
-            return $price . $currency->symbol;
+            return numFormat($price, 2) . $currency->symbol;
         }
     }
 }

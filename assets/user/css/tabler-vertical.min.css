@@ -606,9 +606,6 @@ progress {
 	--tblr-gutter-y: 0;
 	display: flex;
 	flex-wrap: wrap;
-	margin-top: calc(-1 * var(--tblr-gutter-y));
-	margin-right: calc(-0.5 * var(--tblr-gutter-x));
-	margin-left: calc(-0.5 * var(--tblr-gutter-x));
 }
 .row > * {
 	flex-shrink: 0;
@@ -4141,6 +4138,20 @@ fieldset:disabled .btn {
 .btn .badge {
 	position: relative;
 	top: -1px;
+}
+.balance-body {
+	font-size: 42px;
+	font-weight: 900;
+	color: inherit;
+	display: flex;
+	align-items: center;
+}
+.balance-footer {
+	font-size: 14px;
+	font-weight: 400;
+	color: #747A80;
+	display: flex;
+	align-items: center;
 }
 .alert {
 	position: relative;
@@ -12963,6 +12974,26 @@ a.badge {
 	box-shadow: rgba(30, 41, 59, 0.04) 0 2px 4px 0;
 	border: 1px solid rgba(98, 105, 118, 0.16);
 	background: var(--tblr-card-bg, #fff);
+}
+.card .card-content {
+	font-size:14px;
+	font-weight:700;
+	color:#000;
+}
+.card .card-datetime {
+	font-size:12px;
+	font-weight:400;
+	color:#747A80;
+}
+.theme-dark .card .card-content {
+	font-size:14px;
+	font-weight:700;
+	color: #fff;
+}
+.theme-dark .card .card-datetime {
+	font-size:12px;
+	font-weight:400;
+	color:#747A80;
 }
 @media print {
 	.card {
