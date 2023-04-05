@@ -45,12 +45,24 @@ class LoginController extends Controller
             $current_domain = $current_domain->pluck('domain')->toArray()[0];
         }
 
-        // dd($current_domain);
 
-        $user = Staff::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->first();
 
         if (!empty($user)) {
-            if ($user->id == 1 && empty($user->tenant_id)) {
+            if($user->is_banned == 1)
+            {
+            //   Auth::guard('staff')->logout();
+              return response()->json(array('errors' => [ 0 => 'You are Banned From this system!' ]));
+            }
+
+            if($user->email_verified == 'No')
+            {
+            //   Auth::guard('staff')->logout();
+              return response()->json(array('errors' => [ 0 => 'Your Email is not Verified!' ]));
+            }
+            if (!empty($current_domain))
+            {
+
                 if (Auth::guard('staff')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
                     return response()->json(route('staff.dashboard'));
                 }
@@ -61,31 +73,7 @@ class LoginController extends Controller
                     );
                     return response()->json(array('errors' => $msg));
                 }
-            }
-            elseif (!empty($current_domain) || !empty($user->tenant_id))
-            {
-                if (empty($current_domain) && !empty($user->tenant_id))
-                {
-                    return response()->json(array('errors' => [ 0 =>  __('Permission denied, Please use your domain after approve') ]));
-                }
 
-                $user = tenancy()->central(function ($tenant) {
-                    return User::where('tenant_id', $tenant->id)->first();
-                });
-                if ($user->status == 1) {
-                    if (Auth::guard('staff')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
-                        return response()->json(route('staff.dashboard'));
-                    }
-                    else {
-                        $msg = array(
-                            'type' => 'warn',
-                            'message' => "Credentials Doesn't Match !"
-                        );
-                        return response()->json(array('errors' => $msg));
-                    }
-                } else {
-                    return response()->json(array('errors' => [ 0 => 'Please Contact to administrator' ]));
-                }
             }
              else {
                 return response()->json(array('errors' => [ 0 =>  __('permission denied') ]));

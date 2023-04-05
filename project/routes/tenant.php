@@ -26,6 +26,7 @@ Route::middleware([
   require 'adminRoute.php';
   require 'userRoute.php';
   require 'web.php';
+  require 'staffRoute.php';
 });
 Route::middleware([
   'api',

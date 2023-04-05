@@ -25,7 +25,7 @@
             <div class="col-lg-12 col-md-12 col-sm-12">
               <div class="login-form">
                 <div class="text-center">
-                  <h1 class="h4 text-gray-900 mb-4">{{ __('Admin Login') }}</h1>
+                  <h1 class="h4 text-gray-900 mb-4">{{ __('Staff Login') }}</h1>
                 </div>
                 @include('includes.admin.form-login')
 
@@ -33,7 +33,7 @@
                   {{ csrf_field() }}
                   <div class="form-group">
                     <input name="email"  type="email" class="form-control" id="exampleInputEmail" aria-describedby="emailHelp"
-                      placeholder="{{ __('Enter Email Address') }}" value="admin@gmail.com" required >
+                      placeholder="{{ __('Enter Email Address') }}" value="staff@gmail.com" required >
                   </div>
                   <div class="form-group">
                     <input name="password" type="password" class="form-control" value="1234" id="exampleInputPassword" placeholder="Password" required>
