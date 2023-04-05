@@ -5,31 +5,27 @@ namespace App\Http\Controllers\Staff;
 use Zip;
 use App\Models\Blog;
 use App\Models\User;
-use App\Models\Admin;
-use App\Models\Contact;
-use App\Models\Deposit;
 use App\Models\Currency;
 use App\Models\Withdraw;
 use App\Models\Transaction;
 use App\Models\BankAccount;
 use App\Models\Charge;
+use App\Models\Deposit;
 use App\Models\DepositBank;
 use App\Models\BalanceTransfer;
-use Carbon\Carbon;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use InvalidArgumentException;
-use App\Models\Generalsetting;
-use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
-use App\Models\Language;
-use App\Models\RequestDomain;
 use App\Models\Withdrawals;
+use App\Models\Generalsetting;
+use App\Http\Controllers\Controller;
+use Carbon\Carbon;
+use InvalidArgumentException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Session;
+use GuzzleHttp\Client;
 
 class DashboardController extends Controller
 {
@@ -145,20 +141,6 @@ class DashboardController extends Controller
         $data['array_months'] = implode(",",array_unique($yms));
         $data['array_deposits'] = implode(",",array_values($deposit_list));
         $data['array_withdraws'] = implode(",",array_values($withdraw_list));
-
-
-        // if (file_exists(public_path().'/rooted.txt')){
-        //     $rooted = file_get_contents(public_path().'/rooted.txt');
-        //     if ($rooted < date('Y-m-d', strtotime("+10 days"))){
-        //         $activation_notify = "<i class='icofont-warning-alt icofont-4x'></i><br>Please activate your system.<br> If you do not activate your system now, it will be inactive on ".$rooted."!!<br><a href='".url('/admin/activation')."' class='btn btn-success'>Activate Now</a>";
-        //     }
-        // }
-
-
-
-
-
-        
 
         return view('staff.dashboard', $data);
     }

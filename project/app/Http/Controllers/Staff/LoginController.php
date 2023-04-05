@@ -48,7 +48,7 @@ class LoginController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        if (!empty($user)) {
+        if (!empty($user) && check_user_type_by_id(5, $user->id)) {
             if($user->is_banned == 1)
             {
             //   Auth::guard('staff')->logout();
@@ -79,7 +79,7 @@ class LoginController extends Controller
                 return response()->json(array('errors' => [ 0 =>  __('permission denied') ]));
             }
         } else {
-            return response()->json(array('errors' => [ 0 => 'Staff not found' ]));
+            return response()->json(array('errors' => [ 0 => 'This user is not Staff.' ]));
         }
 
 
