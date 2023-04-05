@@ -24,9 +24,8 @@
         <div class="tab-pane fade show active" id="modules" role="tabpanel" aria-labelledby="modules-tab">
             <div class="card-body">
                 <div class="card mb-4">
-                    <p class="h4 p-3">{{__('KYC Details')}}</p>
-                    <hr>
-                    <div class="row mt-3 ml-3" id="user_kyc">
+                    <p class="h4 p-3 border-bottom">{{__('KYC Details')}}</p>
+                    <div class="row ml-3 mb-2 mt-2" id="user_kyc">
                         <div class="col-md-4 ml-3">
                             <div class="row">
                                 <div class="h5 mt-2">{{  __('KYC Status')  }}</div>
@@ -63,8 +62,9 @@
                             </div>
                         </div>
                     </div>
-                    <hr>
-                    <div class="col-md-8">
+                </div>
+                <div class="card mb-4">
+                    <div class="col-md-8 mt-2">
                         <form action="{{route('admin.manage.kyc.add.more')}}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="user_id" value="{{$data->id}}">
@@ -86,11 +86,11 @@
                             </div>
                         </form>
                     </div>
+                </div>
+                <div class="card mb-4">
 
-                    <hr>
-
-                    <p class="h4 p-3">{{__('Additional Request History')}}</p>
-                    <div class="table-responsive p-3 mt-3">
+                    <p class="h4 p-3 border-bottom">{{__('Additional Request History')}}</p>
+                    <div class="table-responsive p-3">
                       <table id="geniustable1" class="table table-hover dt-responsive" cellspacing="0" width="100%">
                           <thead class="thead-light">
                           <tr>
