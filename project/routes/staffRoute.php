@@ -35,7 +35,14 @@ Route::prefix('staff')->group(function () {
     Route::post('/kyc-form/add/more', [KycManageController::class, 'add_more_form'])->name('staff.manage.kyc.add.more');
     Route::get('/users/more/kyc/{id1}/{id2}', [KycManageController::class, 'kyc_more'])->name('staff.more.user.kyc');
     Route::get('/users/kyc/more/details/{id}', [KycManageController::class, 'moreDetails'])->name('staff.more.user.kyc.details');
-
+    Route::get('/manage-kyc-form', [KycManageController::class, 'index'])->name('staff.manage.kyc.index');
+    Route::get('/manage-kyc-form/datatables', [KycManageController::class, 'kycdatatables'])->name('staff.kyc.form.datatables');
+    Route::get('/kyc-form/edit/{id}', [KycManageController::class, 'edit_form'])->name('staff.manage.kyc.edit');
+    Route::post('/kyc-form/edit/{id}', [KycManageController::class, 'update_form'])->name('staff.manage.kyc.update');
+    Route::get('/kyc-form/delete/{id}', [KycManageController::class, 'deletedField'])->name('staff.kyc.form.delete');
+    Route::get('/kyc-form/status/{id1}/{id2}', [KycManageController::class, 'form_status'])->name('staff.manage.kyc.status');
+    Route::get('/kyc-form/create', [KycManageController::class, 'create_form'])->name('staff.manage.kyc.create');
+    Route::post('/kyc-form/store', [KycManageController::class, 'store_form'])->name('staff.manage.kyc.store');
 
 });
 

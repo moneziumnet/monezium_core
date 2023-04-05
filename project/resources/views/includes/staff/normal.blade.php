@@ -7,10 +7,8 @@
 </li>
 
 <li class="nav-item">
-  <a class="nav-link" href="#" >
+  <a class="nav-link" href="{{ route('staff.manage.kyc.index') }}" >
     <i class="fas fa-id-card"></i>
     <span>{{ __('AML/KYC Management') }}</span>
   </a>
 </li>
-
-
