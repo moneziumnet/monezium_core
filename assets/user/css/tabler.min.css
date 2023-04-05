@@ -11662,11 +11662,13 @@ body {
 	font-size:0.75rem;
 	font-weight:700;
 }
-.footer-link {
-	color: #000;
+.tx-color {
+	--tblr-text-opacity: 1;
+	color: rgba(var(--tblr-black-rgb), var(--tblr-text-opacity)) !important;
 }
-.theme-dark .footer-link {
-	color: #fff;
+.theme-dark .tx-color {
+	--tblr-text-opacity: 1;
+	color: rgba(var(--tblr-white-rgb), var(--tblr-text-opacity)) !important;
 }
 .footer-transparent {
 	background-color: transparent;

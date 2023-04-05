@@ -65,11 +65,11 @@
     </div> -->
     <div class="footer-bottom">
         <div class="container-xl d-flex">
-            <div class="col-sm-6 col-md-10 d-flex" style="justify-content: left; align-items: center;">
-                <a href="{{ route('front.page','privacy') }}" class="footer-link" style="margin: 0 0.5rem;">{{__('Privacy & Policy') }}</a>
-                <a href="{{ route('front.page','term-service') }}" class="footer-link" style="margin: 0 0.5rem;">{{ __('Term of Service') }}</a>
-                <a href="{{ route('front.page','about') }}" class="footer-link" style="margin: 0 0.5rem;">{{ __('About Us') }}</a>
-                <a href="{{ route('front.page','contact') }}" class="footer-link" style="margin: 0 0.5rem;">{{ __('Contacts') }}</a>
+            <div class="col-sm-6 col-md-10 d-flex justify-content-start align-items-center">
+                <a href="{{ route('front.page','privacy') }}" class="tx-color" style="margin: 0 0.5rem;">{{__('Privacy & Policy') }}</a>
+                <a href="{{ route('front.page','term-service') }}" class="tx-color" style="margin: 0 0.5rem;">{{ __('Term of Service') }}</a>
+                <a href="{{ route('front.page','about') }}" class="tx-color" style="margin: 0 0.5rem;">{{ __('About Us') }}</a>
+                <a href="{{ route('front.page','contact') }}" class="tx-color" style="margin: 0 0.5rem;">{{ __('Contacts') }}</a>
                 <!-- @php
                     echo $gs->copyright;
                 @endphp -->
@@ -79,15 +79,15 @@
                 @endphp
                 </span>
             </div>
-            <div class="col-sm-6 col-md-2 d-flex" style="justify-content: right; align-items: center;">
+            <div class="col-sm-6 col-md-2 d-flex justify-content-end align-items-center">
                 <span style="float: right;">English</span>
-                <a href="?theme=dark" class="hide-theme-dark footer-link" style="float: right;margin-left:0.8rem;" title="Enable dark mode" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                <a href="?theme=dark" class="hide-theme-dark tx-color" style="float: right;margin-left:0.8rem;" title="Enable dark mode" data-bs-toggle="tooltip" data-bs-placement="bottom">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                     <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
                     </svg>
                 </a>
-                <a href="?theme=light" class="hide-theme-light footer-link" style="float: right;margin-left:0.8rem;" title="Enable light mode" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                <a href="?theme=light" class="hide-theme-light tx-color" style="float: right;margin-left:0.8rem;" title="Enable light mode" data-bs-toggle="tooltip" data-bs-placement="bottom">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                     <circle cx="12" cy="12" r="4" />

@@ -73,10 +73,10 @@
             @php
               $str_end_time = $e_time ?? '';
             @endphp
-            <a href="{{url('user/transactions-pdf?search='.request('search').'&wallet_id='.request('wallet_id').'&remark='.request('remark').'&s_time='.request('s_time').'&e_time='.$str_end_time)}}" id="download_pdf">
+            <a href="{{url('user/transactions-pdf?search='.request('search').'&wallet_id='.request('wallet_id').'&remark='.request('remark').'&s_time='.request('s_time').'&e_time='.$str_end_time)}}" id="download_pdf" class="tx-color">
               <i class="fas fa-file-pdf" aria-hidden="true"></i> {{__('PDF')}}
             </a> &nbsp;
-            <a href="{{url('user/transactions-export?search='.request('search').'&wallet_id='.request('wallet_id').'&remark='.request('remark').'&s_time='.request('s_time').'&e_time='.$str_end_time)}}">
+            <a href="{{url('user/transactions-export?search='.request('search').'&wallet_id='.request('wallet_id').'&remark='.request('remark').'&s_time='.request('s_time').'&e_time='.$str_end_time)}}" class="tx-color">
               <i class="fas fa-file-excel" aria-hidden="true"></i> {{__('Export')}}
             </a>
           </div>
@@ -169,12 +169,12 @@
                         {{-- <a class="print_pdf btn btn-primary w-100" >
                             @lang('Print PDF')
                         </a> --}}
-                        <a class="print_pdf footer-link">
+                        <a href="#" class="print_pdf tx-color">
                           <i class="fas fa-file-pdf me-1"></i> @lang('Download Pdf')
                         </a>
                     </div>
                     <div class="col-sm-6 d-flex justify-content-end">
-                        <a class="send_email footer-link">
+                        <a href="#" class="send_email tx-color">
                           <i class="fas fa-print me-1"></i> @lang('Send Email')
                         </a>
                     </div>

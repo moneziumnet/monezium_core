@@ -207,7 +207,7 @@
         <div class="modal-footer">
           <div class="w-100">
               <div class="d-flex justify-content-end">
-                <a id="copy_transfer" class="footer-link">
+                <a href="#" id="copy_transfer" class="tx-color">
                   <i class="fas fa-copy me-1"></i> @lang('Copy Transaction')
                 </a>
               </div>

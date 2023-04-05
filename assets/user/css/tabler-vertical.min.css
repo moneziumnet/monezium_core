@@ -223,7 +223,8 @@ a {
 	text-decoration: none;
 }
 a:hover {
-	color: #1a569d;
+	/* color: #1a569d; */
+	color: #000;
 	text-decoration: underline;
 }
 a:not([href]):not([class]),
@@ -11743,11 +11744,13 @@ body {
 .theme-dark .footer-bottom {
 	border-top: 1px solid #4c4c4c;
 }
-.footer-link {
-	color: #000;
+.tx-color {
+	--tblr-text-opacity: 1;
+	color: rgba(var(--tblr-black-rgb), var(--tblr-text-opacity)) !important;
 }
-.theme-dark .footer-link {
-	color: #fff;
+.theme-dark .tx-color {
+	--tblr-text-opacity: 1;
+	color: rgba(var(--tblr-white-rgb), var(--tblr-text-opacity)) !important;
 }
 .footer-transparent {
 	background-color: transparent;

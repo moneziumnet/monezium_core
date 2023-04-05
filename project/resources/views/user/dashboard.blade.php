@@ -30,7 +30,7 @@
     </div>
     <div class="col-auto ms-auto d-print-none">
       <div class="btn-list">
-        <a href="#" data-bs-toggle="modal" data-bs-target="#modal-wallet-create" class="footer-link">
+        <a href="#" data-bs-toggle="modal" data-bs-target="#modal-wallet-create" class="tx-color">
           <i class="fas fa-plus me-1"></i> {{__('Open a wallet')}}
         </a>
       </div>
@@ -154,7 +154,7 @@
             </div>
             <div class="col-auto ms-auto d-print-none">
                 <div class="btn-list">
-                  <a href="#" data-bs-toggle="modal" data-bs-target="#modal-wallet-create" class="footer-link">
+                  <a href="#" data-bs-toggle="modal" data-bs-target="#modal-wallet-create" class="tx-color">
                       <i class="fas fa-plus me-1"></i> {{__('Create Wallet')}}
                   </a>
                 </div>
@@ -246,7 +246,7 @@
               </div>
               <div class="col-auto ms-auto d-print-none">
                 <div class="btn-list">
-                  <a href="#" data-bs-toggle="modal" data-bs-target="#modal-crypto-wallet-create" class="footer-link">
+                  <a href="#" data-bs-toggle="modal" data-bs-target="#modal-crypto-wallet-create" class="tx-color">
                     <i class="fas fa-plus me-1"></i> {{__('Create Crypto Wallet')}}
                   </a>
                 </div>
@@ -473,7 +473,7 @@
                     <tr>
                       <td data-label="@lang('Remark')">
                         <div class="card-content">
-                          <span>{{ucwords(str_replace('_',' ',$data->remark))}}</span>
+                          <a href="#" class="tx-color details" data-data="{{$data}}">{{ucwords(str_replace('_',' ',$data->remark))}}</a>
                         </div>
                         <div class="card-datetime">
                           <span>{{dateFormat($data->created_at,'d-M-Y h:m:s')}}</span>
@@ -482,12 +482,12 @@
                       </td>
                       <td data-label="@lang('Amount')">
                         <div style="text-align:right;">
-                          <span class="card-content">{{$data->type}} {{amount($data->amount+$data->charge,$data->currency->type,2)}} {{$data->currency->code}}</span>
+                          <a href="#" class="card-content details" data-data="{{$data}}">{{$data->type}} {{amount($data->amount+$data->charge,$data->currency->type,2)}} {{$data->currency->code}}</a>
                         </div>
                     </td>
-                    <td data-label="@lang('Details')" class="text-end">
-                            <a class="footer-link details" data-data="{{$data}}">@lang('Details')</a>
-                        </td>
+                    {{-- <td data-label="@lang('Details')" class="text-end">
+                      <a href="#" class="tx-color details" data-data="{{$data}}">@lang('Details')</a>
+                    </td> --}}
                    </tr>
                     @endforeach
     
