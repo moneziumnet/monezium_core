@@ -77,7 +77,7 @@
                                       <h5 class="mb-1">{{__('Shop URl: ')}} {{$val->url}}</h5>
                                       <p class="mb-1">{{__('Document: ')}} <a href ="{{asset('assets/doc/'.$val->document)}}" class="primary" attributes-list download >{{ __('Download Document')}} </a></p>
                                       @if($val->status==1)
-                                          <span class="badge badge-pill bg-success"><i class="fas fa-check"></i> {{__('Approved')}}</span>
+                                          <span class="badge badge-pill bg-primary"><i class="fas fa-check"></i> {{__('Approved')}}</span>
                                       @else
                                           <span class="badge badge-pill bg-danger"><i class="fas fa-ban"></i> {{__('Pending')}}</span>
                                       @endif
@@ -107,8 +107,10 @@
                           <div class="modal modal-blur fade" id="modal-webhook-{{$val->id}}" tabindex="-1" role="dialog" aria-hidden="true">
                             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                               <div class="modal-content">
-                                <div class="modal-header">
-                                  <h5 class="modal-title">{{('Register Webhook')}}</h5>
+                                <div class="modal-title" style="border-radius: 10px 10px 0 0">
+                                  <div class="ms-3">
+                                    <p>{{('Register Webhook')}}</p>
+                                  </div>
                                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                         

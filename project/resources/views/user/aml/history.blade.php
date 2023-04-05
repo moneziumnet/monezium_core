@@ -72,7 +72,7 @@
                                             @if ($item->status == 0 )
                                                 <span class="badge bg-warning">Pending</span>
                                             @elseif ($item->status == 1)
-                                                <span class="badge bg-success">Approved</span>
+                                                <span class="badge bg-primary">Approved</span>
                                             @elseif ($item->status == 2)
                                                 <span class="badge bg-danger">Rejected</span>
                                             @elseif ($item->status == 3)

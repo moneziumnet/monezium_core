@@ -81,7 +81,7 @@
                                     <h5 class="mb-1">{{__('Sold: ')}} {{$val->sold}}</h5>
                                     <h5 class="mb-3">{{__('Currenct Stock:')}} {{$val->quantity}}</h5>
                                     @if($val->status==1)
-                                        <span class="badge badge-pill bg-success"><i class="fas fa-check"></i> {{__('Active')}}</span>
+                                        <span class="badge badge-pill bg-primary"><i class="fas fa-check"></i> {{__('Active')}}</span>
                                     @else
                                         <span class="badge badge-pill bg-danger"><i class="fas fa-ban"></i> {{__('Disabled')}}</span>
                                     @endif
@@ -93,7 +93,6 @@
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    <div class="modal-status bg-success"></div>
 
                                     <div class="modal-body text-center py-4">
                                         <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
@@ -144,9 +143,13 @@
 <div class="modal modal-blur fade" id="modal-category" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
     <div class="modal-content">
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        <div class="modal-status bg-primary"></div>
-        <div class="modal-body text-center py-4">
+        <div class="modal-title" style="border-radius: 10px 10px 0 0">
+            <div class="ms-3">
+              <p>{{('New Category')}}</p>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
             <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
             <h3>{{__('Add New Category')}}</h3>
             <div class="row text-start">
@@ -182,9 +185,13 @@
 <div class="modal modal-blur fade" id="modal-send-email" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
     <div class="modal-content">
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        <div class="modal-status bg-primary"></div>
-        <div class="modal-body text-center py-4">
+        <div class="modal-title" style="border-radius: 10px 10px 0 0">
+            <div class="ms-3">
+              <p>{{('E-mail')}}</p>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
             <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
             <h3>{{__('Send E-mail')}}</h3>
             <div class="row text-start">
@@ -216,9 +223,13 @@
 <div class="modal modal-blur fade" id="modal-product" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
     <div class="modal-content">
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        <div class="modal-status bg-primary"></div>
-        <div class="modal-body text-center py-4">
+        <div class="modal-title" style="border-radius: 10px 10px 0 0">
+            <div class="ms-3">
+              <p>{{('New Product')}}</p>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
             <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
             <h3>{{__('Add New Product')}}</h3>
             <div class="row text-start">

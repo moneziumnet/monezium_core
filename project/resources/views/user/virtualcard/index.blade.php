@@ -76,8 +76,10 @@
 <div class="modal modal-blur fade" id="modal-form" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">{{('Create Virtual Card')}}</h5>
+        <div class="modal-title" style="border-radius: 10px 10px 0 0">
+          <div class="ms-3">
+            <p>{{('Create Virtual Card')}}</p>
+          </div>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">

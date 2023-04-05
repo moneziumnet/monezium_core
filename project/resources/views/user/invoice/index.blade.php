@@ -177,9 +177,13 @@
 <div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
     <div class="modal-content">
+      <div class="modal-title" style="border-radius: 10px 10px 0 0">
+        <div class="ms-3">
+          <p>{{('E-mail')}}</p>
+        </div>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        <div class="modal-status bg-primary"></div>
-        <div class="modal-body text-center py-4">
+      </div>
+        <div class="modal-body text-center">
           <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
           <h3>{{__('Send E-mail')}}</h3>
           <div class="row text-start">

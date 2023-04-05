@@ -185,9 +185,11 @@
     <div class="modal modal-blur fade" id="modal-apply" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
           <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">{{('Create Layer')}}</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-title" style="border-radius: 10px 10px 0 0">
+                <div class="ms-3">
+                  <p>{{('Create Layer')}}</p>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <form action="{{ route('user.layer.store') }}" method="post">
@@ -218,9 +220,11 @@
     <div class="modal modal-blur fade" id="modal-login" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
           <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">{{('Login Layer')}}</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-title" style="border-radius: 10px 10px 0 0">
+                <div class="ms-3">
+                  <p>{{('Login Layer')}}</p>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="{{ route('user.layer.login') }}" method="post">
                 @csrf
@@ -248,9 +252,11 @@
     <div class="modal modal-blur fade" id="modal-logout" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
           <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">{{('Logut Layer')}}</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-title" style="border-radius: 10px 10px 0 0">
+                <div class="ms-3">
+                  <p>{{('Logut Layer')}}</p>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body text-center">
                 <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>

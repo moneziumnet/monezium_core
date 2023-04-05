@@ -17,7 +17,7 @@
     @endif
     <link href="{{asset('assets/user/css/tabler-payments.min.css')}}" rel="stylesheet"/>
     <link href="{{asset('assets/user/css/tabler-vendors.min.css')}}" rel="stylesheet"/>
-	<link rel="stylesheet" href="{{asset('assets/front/css/toastr.min.css')}}">
+	  <link rel="stylesheet" href="{{asset('assets/front/css/toastr.min.css')}}">
     <link href="{{asset('assets/user/css/demo.min.css')}}" rel="stylesheet"/>
     <link href="{{asset('assets/user/css/custom.css')}}" rel="stylesheet"/>
     @stack('css')
