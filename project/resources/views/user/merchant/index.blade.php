@@ -27,7 +27,7 @@
                     @if ($item->currency->type == 1)
                     <div class="col-sm-6 col-md-4 mb-3">
                         <div class="card h-100 card--info-item">
-                            <div class="text-end icon">
+                            <div class="text-end icon rounded-circle">
                             <i class="fas ">
                                 {{$item->currency->symbol}}
                             </i>
@@ -68,7 +68,7 @@
                     <div class="col-sm-6 col-md-4 mb-3" >
                         <div>
                             <div class="card h-100 card--info-item">
-                                <div class="text-end icon">
+                                <div class="text-end icon rounded-circle">
                                 <i class="fas ">
                                     {{$item->currency->symbol}}
                                 </i>
