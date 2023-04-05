@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\Staff;
 use App\Models\Generalsetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -19,30 +19,16 @@ class StaffManageController extends Controller
 
     public function datatables()
     {
-        $datas = User::orderByRaw("CASE WHEN user_type LIKE '%5%' THEN 0 ELSE 1 END")
-        ->orderByRaw("ISNULL(user_type)")
-        ->orderBy('user_type', 'ASC')
-        ->get();
+        $datas = Staff::orderBy('status', 'desc')->get();
 
          return Datatables::of($datas)
-            ->addColumn('name', function(User $data) {
+            ->addColumn('name', function(Staff $data) {
                 $name = $data->company_name ?? $data->name;
                 return $name;
             })
-            ->addColumn('action', function(User $data) {
-                return '<div class="btn-group mb-1">
-                    <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    '.'Actions' .'
-                    </button>
-                    <div class="dropdown-menu" x-placement="bottom-start">
-                    <a href="' . route('admin-user-profile',$data->id) . '"  class="dropdown-item">'.__("Profile").'</a>
-                    </div>
-                </div>';
-            })
-
-            ->addColumn('status', function(User $data) {
-                $status      = check_user_type_by_id(5, $data->id) ? __('Turn On') : __('Turn Off');
-                $status_sign = check_user_type_by_id(5, $data->id) ? 'success'   : 'danger';
+            ->addColumn('status', function(Staff $data) {
+                $status      = $data->status == 1 ? __('Turn On') : __('Turn Off');
+                $status_sign = $data->status == 1 ? 'success'   : 'danger';
 
                     return '<div class="btn-group mb-1">
                     <button type="button" class="btn btn-'.$status_sign.' btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -65,22 +51,42 @@ class StaffManageController extends Controller
 
     public function staff_status($id,$status)
     {
-        $user = User::findOrFail($id);
-        if($status && !check_user_type_by_id(5, $id)) {
-            $user_type = explode(',',  $user->user_type);
-            array_push($user_type, 5);
-            $user->user_type = implode(',', $user_type);
-        }
-        elseif(!$status && check_user_type_by_id(5, $id)) {
-            $user_type = explode(',',  $user->user_type);
-            $index = array_search("5", $user_type); 
-            if ($index !== false) {
-                unset($user_type[$index]); 
-                $user->user_type = implode(',', $user_type);
-            }
-        }
+        $user = Staff::findOrFail($id);
+        $user->status = $status;
         $user->update();
-        $msg = 'Data Updated Successfully.';
+        $msg = 'Staff Status Updated Successfully.';
+        return response()->json($msg);
+    }
+
+    public function create()
+    {
+        return view('admin.staff.create');
+    }
+
+    public function store(Request $request)
+    {
+
+        $rules = [
+            'email'   => 'required|email|unique:staffs',
+            'password' => 'required||min:6|confirmed'
+        ];
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
+        }
+
+        $gs = Generalsetting::first();
+
+        $user = new Staff;
+        $user->email = $request->email;
+        $user->password = bcrypt($request['password']);
+        $user->name = trim($request->firstname)." ".trim($request->lastname);
+        $user->save();
+
+        
+        $msg = __('You have added New Staff Successfully. Please view staff list. ').'<a href="'.route('admin.staff.index').'">'.__('View Lists.').'</a>';
+
         return response()->json($msg);
     }
 

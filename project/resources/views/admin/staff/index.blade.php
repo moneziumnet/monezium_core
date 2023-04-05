@@ -30,7 +30,6 @@
                     <th>{{ __("Name") }}</th>
                     <th>{{ __("Email") }}</th>
                     <th>{{__('Staff Status')}}</th>
-                    <th>{{ __("Actions") }}</th>
                 </tr>
               </thead>
             </table>
@@ -86,12 +85,19 @@
                columns: [
                         { data: 'name', name: 'name' },
                         { data: 'email', name: 'email' },
-                        { data: 'status',searchable: false, orderable: false},
-            			{ data: 'action', searchable: false, orderable: false }
+                        { data: 'status',searchable: false, orderable: false}
                      ],
                 language : {
                     processing: '<img src="{{asset('assets/images/'.$gs->admin_loader)}}">'
                 }
+            });
+
+            $(function() {
+                $(".btn-area").append('<div class="col-sm-12 col-md-4 pr-3 text-right">'+
+                    '<a class="btn btn-primary" href="{{route('admin.staff.create')}}">'+
+                '<i class="fas fa-plus"></i> Add New Staff'+
+                '</a>'+
+                '</div>');
             });
 
 

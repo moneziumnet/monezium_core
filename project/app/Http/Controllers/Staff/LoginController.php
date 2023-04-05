@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\Staff;
 
 use App\Models\Generalsetting;
 use Illuminate\Http\Request;
@@ -46,9 +46,9 @@ class LoginController extends Controller
         }
 
 
-        $user = User::where('email', $request->email)->first();
+        $user = Staff::where('email', $request->email)->first();
 
-        if (!empty($user) && check_user_type_by_id(5, $user->id)) {
+        if (!empty($user) && $user->status == 1) {
             if($user->is_banned == 1)
             {
             //   Auth::guard('staff')->logout();
@@ -79,14 +79,8 @@ class LoginController extends Controller
                 return response()->json(array('errors' => [ 0 =>  __('permission denied') ]));
             }
         } else {
-            return response()->json(array('errors' => [ 0 => 'This user is not Staff.' ]));
+            return response()->json(array('errors' => [ 0 => 'This user\'s staff role is disable.' ]));
         }
-
-
-
-
-        // if unsuccessful, then redirect back to the login with the form data
-
     }
 
     public function logout()
@@ -105,9 +99,9 @@ class LoginController extends Controller
 
       $gs = Generalsetting::findOrFail(1);
       $input =  $request->all();
-      if (User::where('email', '=', $request->email)->count() > 0) {
+      if (Staff::where('email', '=', $request->email)->count() > 0) {
       // user found
-      $staff = User::where('email', '=', $request->email)->firstOrFail();
+      $staff = Staff::where('email', '=', $request->email)->firstOrFail();
       $token = md5(time().$staff->name.$staff->email);
 
       $input['email_token'] = $token;

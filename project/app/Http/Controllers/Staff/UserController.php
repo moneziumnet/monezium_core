@@ -25,7 +25,7 @@ class UserController extends Controller
 
     public function datatables()
     {
-            $datas = User::where('id', '!=', auth()->id())->orderBy('id','desc');
+            $datas = User::orderBy('id','desc');
 
             return Datatables::of($datas)
             ->addColumn('name', function(User $data) {

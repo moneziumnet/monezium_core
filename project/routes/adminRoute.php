@@ -217,6 +217,8 @@ Route::prefix('admin')->group(function () {
     Route::get('/staffs', [StaffManageController::class, 'index'])->name('admin.staff.index');
     Route::get('/staffs/datatables', [StaffManageController::class, 'datatables'])->name('admin.staff.datatables');
     Route::get('/staffs/status/{id}/{status}', [StaffManageController::class, 'staff_status'])->name('admin.staff.status');
+    Route::get('/staff/create', [StaffManageController::class, 'create'])->name('admin.staff.create');
+    Route::post('/staff/create', [StaffManageController::class, 'store'])->name('admin.staff.store');
   });
 
   Route::group(['middleware' => 'permissions:Manage Customers'], function () {
