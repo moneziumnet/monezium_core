@@ -1,6 +1,7 @@
-@extends('layouts.admin')
+@extends('layouts.staff')
 
 @section('content')
+
 <div class="card">
   <div class="d-sm-flex align-items-center justify-content-between py-3">
     <h5 class="mb-0 text-gray-800 pl-3">{{ __('Dashboard') }}</h1>
@@ -17,7 +18,6 @@
 </div>
 
 @endif
-@if(!Auth::guard('admin')->user()->IsSuper())
 <div class="card mt-3 mb-3">
     <div class="card-body">
       <div class="d-flex justify-content-center">
@@ -26,95 +26,7 @@
       <div id="chart_finance_monthly" class="chart-lg"></div>
     </div>
 </div>
-@endif
-@if(Auth::guard('admin')->user()->IsSuper())
-<div class="row mb-3">
-  <div class="col-xl-4 col-md-6 mb-4">
-    <div class="card h-100">
-      <div class="card-body">
-        <div class="row align-items-center">
-          <div class="col mr-2">
-            <div class="text-xs font-weight-bold text-uppercase mb-1">{{ __('Active Institutions') }}</div>
-            <div class="h5 mb-0 font-weight-bold text-gray-800">{{count($ainstitutions)}}</div>
-          </div>
-          <div class="col-auto">
-            <i class="fas fa-user fa-2x text-success"></i>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-xl-4 col-md-6 mb-4">
-    <div class="card h-100">
-      <div class="card-body">
-        <div class="row align-items-center">
-          <div class="col mr-2">
-            <div class="text-xs font-weight-bold text-uppercase mb-1">{{ __('Languages') }}</div>
-            <div class="h5 mb-0 font-weight-bold text-gray-800">{{count($languages)}}</div>
-          </div>
-          <div class="col-auto">
-            <i class="fas fa-user fa-2x text-success"></i>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-xl-4 col-md-6 mb-4">
-    <div class="card h-100">
-      <div class="card-body">
-        <div class="row align-items-center">
-          <div class="col mr-2">
-            <div class="text-xs font-weight-bold text-uppercase mb-1">{{ __('Active Domains') }}</div>
-            <div class="h5 mb-0 font-weight-bold text-gray-800">{{count($adomains)}}</div>
-          </div>
-          <div class="col-auto">
-            <i class="fas fa-user fa-2x text-success"></i>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="row mb-3">
-  <div class="col-xl-12 col-lg-12 mb-4">
-    <div class="card">
-      <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold text-primary">@lang('Recent Registration Institutions')</h6>
-      </div>
-      @if (count($ainstitutions)>0)
 
-      <div class="table-responsive">
-        <table class="table align-items-center table-flush">
-          <thead class="thead-light">
-            <tr>
-              <th>@lang('Serial No')</th>
-              <th>@lang('Name')</th>
-              <th>@lang('Email')</th>
-              <th>@lang('Status')</th>
-              <!-- <th>@lang('Action')</th> -->
-            </tr>
-          </thead>
-          <tbody>
-            @foreach ($ainstitutions as $key=>$data)
-            <tr>
-              <td data-label="@lang('Serial No')">{{ $loop->iteration}}</td>
-              <td data-label="@lang('Name')">{{ $data->name }}</td>
-              <td data-label="@lang('Email')">{{ $data->email }}</td>
-              <td data-label="@lang('Status')"><span class="badge badge-{{ $data->status == 1 ? 'success' : 'danger'}}">{{ $data->status == 1 ? 'activated' : 'deactivated'}}</span></td>
-              <!-- <td data-label="@lang('Action')"><a href="{{ route('admin-user-profile',$data->id) }}" class="btn btn-sm btn-primary">@lang('Detail')</a></td> -->
-            </tr>
-            @endforeach
-          </tbody>
-        </table>
-      </div>
-      <div class="card-footer"></div>
-      @else
-      <p class="text-center">@lang('NO USER FOUND')</p>
-      @endif
-    </div>
-  </div>
-</div>
-@else
 <div class="row mb-3">
   <div class="col-xl-3 col-md-6 mb-4">
     <div class="card h-100">
@@ -415,7 +327,6 @@
     </div>
   </div>
 </div>
-@endif
 @endsection
 
 

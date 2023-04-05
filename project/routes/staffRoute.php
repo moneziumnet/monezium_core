@@ -4,6 +4,7 @@ use App\Http\Controllers;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Staff\LoginController;
+use App\Http\Controllers\Staff\DashboardController;
 
 
 Route::prefix('staff')->group(function () {
@@ -15,6 +16,9 @@ Route::prefix('staff')->group(function () {
     Route::get('/change-password/{token}', [LoginController::class, 'showChangePassForm'])->name('staff.change.token');
     Route::post('/change-password', [LoginController::class, 'changepass'])->name('staff.change.password');
     Route::get('/logout', [LoginController::class, 'logout'])->name('staff.logout');
+
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('staff.dashboard');
+
 
 });
 
