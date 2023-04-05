@@ -30,7 +30,7 @@
     </div>
     <div class="col-auto ms-auto d-print-none">
       <div class="btn-list">
-        <a data-bs-toggle="modal" data-bs-target="#modal-wallet-create" class="footer-link">
+        <a href="#" data-bs-toggle="modal" data-bs-target="#modal-wallet-create" class="footer-link">
           <i class="fas fa-plus me-1"></i> {{__('Open a wallet')}}
         </a>
       </div>
@@ -154,7 +154,7 @@
             </div>
             <div class="col-auto ms-auto d-print-none">
                 <div class="btn-list">
-                  <a  data-bs-toggle="modal" data-bs-target="#modal-wallet-create" class="footer-link">
+                  <a href="#" data-bs-toggle="modal" data-bs-target="#modal-wallet-create" class="footer-link">
                       <i class="fas fa-plus me-1"></i> {{__('Create Wallet')}}
                   </a>
                 </div>
@@ -206,10 +206,12 @@
       <div class="modal modal-blur fade" id="modal-wallet-create" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
           <div class="modal-content">
-              <div class="modal-header">
-              <h5 class="modal-title">{{('Wallet Create')}}</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-title" style="border-radius: 10px 10px 0 0">
+              <div class="ms-3">
+                <p>{{('Wallet Create')}}</p>
               </div>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
               <form action="{{route('user.wallet.create')}}" method="POST" enctype="multipart/form-data">
                   @csrf
                   <div class="modal-body">
@@ -244,7 +246,7 @@
               </div>
               <div class="col-auto ms-auto d-print-none">
                 <div class="btn-list">
-                  <a  data-bs-toggle="modal" data-bs-target="#modal-crypto-wallet-create" class="footer-link">
+                  <a href="#" data-bs-toggle="modal" data-bs-target="#modal-crypto-wallet-create" class="footer-link">
                     <i class="fas fa-plus me-1"></i> {{__('Create Crypto Wallet')}}
                   </a>
                 </div>
@@ -255,10 +257,12 @@
       <div class="modal modal-blur fade" id="modal-crypto-wallet-create" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title">{{('Crypto Wallet Create')}}</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-title" style="border-radius: 10px 10px 0 0">
+            <div class="ms-3">
+              <p>{{('Crypto Wallet Create')}}</p>
             </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
             <form action="{{route('user.wallet.crypto.create')}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
@@ -332,10 +336,12 @@
       <div class="modal modal-blur fade" id="modal-bank-create" tabindex="-1" role="dialog" aria-hidden="true">
           <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
           <div class="modal-content">
-              <div class="modal-header">
-              <h5 class="modal-title">{{('Bank Account Create')}}</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-title" style="border-radius: 10px 10px 0 0">
+              <div class="ms-3">
+                <p>{{('Bank Account Create')}}</p>
               </div>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
               <form action="" class="bankaccount" method="POST" enctype="multipart/form-data">
                   @csrf
                   <div class="modal-body">
