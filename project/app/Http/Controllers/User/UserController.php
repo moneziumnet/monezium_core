@@ -384,7 +384,9 @@ class UserController extends Controller
         ->whereBetween('created_at', [$s_time, $e_time])
         ->orderBy('created_at', 'desc')
         ->with('currency')->latest()->paginate(20);
-        $remark_list = Transaction::where('user_id',auth()->id())->pluck('remark');
+        $remark_list = Transaction::where('user_id', auth()->id())->orderBy('remark', 'asc')->pluck('remark')->map(function ($item) {
+            return ucfirst($item);
+        });
         $remark_list = array_unique($remark_list->all());
 
         $wallet_list = Transaction::where('user_id',auth()->id())->pluck('wallet_id');

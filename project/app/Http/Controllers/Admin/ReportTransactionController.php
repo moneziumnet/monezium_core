@@ -377,7 +377,9 @@ class ReportTransactionController extends Controller
         $e_time = request('e_time');
         $s_time = $s_time ? $s_time : '';
         $e_time = $e_time ? $e_time : Carbontime::now()->addDays(1)->format('Y-m-d');
-        $remark_list = Transaction::pluck('remark');
+        $remark_list = Transaction::orderBy('remark', 'asc')->pluck('remark')->map(function ($item) {
+            return ucfirst($item);
+        });
         $remark_list = array_unique($remark_list->all());
         if($remark != 'all_mark' && $remark != null) {
             $transactions = Transaction::when($remark,function($q) use($remark){
