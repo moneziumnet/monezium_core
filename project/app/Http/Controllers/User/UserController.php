@@ -37,6 +37,9 @@ use PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel\Current;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Session;
 use Symfony\Component\Console\Completion\Suggestion;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
+
 
 class UserController extends Controller
 {
@@ -383,7 +386,10 @@ class UserController extends Controller
             return $q->where('remark',$remark);
         })
         ->when($search,function($q) use($search){
-            return $q->where('trnx','LIKE',"%{$search}%");
+            return $q->where('user_id',auth()->id())
+                     ->where('trnx','LIKE',"%{$search}%")
+                     ->orWhere(DB::raw("decrypt(data, 'key', config('app.key'))"), 'LIKE', "%{$search}%")
+                     ->where('user_id',auth()->id());
         })
         ->whereBetween('created_at', [$s_time, $e_time])
         ->orderBy('created_at', 'desc')
