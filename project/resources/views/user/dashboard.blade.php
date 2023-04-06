@@ -39,13 +39,13 @@
   </div>
 </div>
 <div class="page-body">
-  <div class="container-fluid d-flex">
+  <div class="container-fluid d-flex row">
     @if (auth()->user()->kyc_status == 1)
       @if ($kyc_request_id != 0)
         @if ($kyc_request_status != 3)
 
           @if ($kyc_request_status == 2)
-            <div class="row mb-3">
+            <div class="col-md-12 mb-3">
               <div class="col-md-12">
                 <div class="card">
                   <div class="card-body">
@@ -60,7 +60,7 @@
               </div>
             </div>
           @elseif ($kyc_request_status == 0)
-            <div class="row mb-3">
+            <div class="col-md-12 mb-3">
               <div class="col-md-12">
                 <div class="card">
                   <div class="card-body">
@@ -79,7 +79,7 @@
       @endif
 
     @else
-    <div class="row mb-3">
+    <div class="col-md-6 mb-3">
       <div class="col-md-12">
         <div class="card">
           <div class="card-body">
