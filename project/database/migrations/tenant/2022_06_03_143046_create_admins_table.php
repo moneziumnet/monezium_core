@@ -17,7 +17,7 @@ class CreateAdminsTable extends Migration
             $table->increments('id');
             $table->string('name', 191);
             $table->string('email', 191)->unique();
-            $table->string('phone', 191);
+            $table->string('phone', 191)->nullable();
             $table->tinyInteger('plan_id')->default(1);
             $table->string('photo', 191)->nullable();
             $table->string('zip', 191)->nullable();
@@ -31,6 +31,7 @@ class CreateAdminsTable extends Migration
             $table->timestamps();
             $table->string('tenant_id')->nullable();
             $table->text('section')->nullable();
+            $table->enum('role', ['admin', 'staff'])->default('admin');
         });
     }
 

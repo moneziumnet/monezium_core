@@ -71,5 +71,6 @@ class Kernel extends HttpKernel
         'super' => \App\Http\Middleware\SuperAdmin::class,
         'otp' => \App\Http\Middleware\Otp::class,
         'kyc' => \App\Http\Middleware\KYC::class,
+        'checkRole' => \App\Http\Middleware\CheckRole::class,
     ];
 }

@@ -1,3 +1,4 @@
+@if(Auth::guard('admin')->user()->role === 'admin')
 <div class="card-header tab-card-header">
     <ul class="nav nav-pills card-header-tabs" id="pills-tab" role="tablist">
         <li class="nav-item">
@@ -54,3 +55,23 @@
         </li>
     </ul>
 </div>
+@elseif(Auth::guard('admin')->user()->role === 'staff')
+<div class="card-header tab-card-header">
+    <ul class="nav nav-pills card-header-tabs" id="pills-tab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link {{menu('admin-user-profile')}}" id="information" href="{{route('admin-user-profile',$data->id) }}" role="button" >Information</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{menu('admin-user-documents')}} {{menu('admin-user.view-document')}} {{menu('admin-user.createfile')}}" id="documents" href="{{route('admin-user-documents',$data->id) }}" role="button" >Documents</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{menu('admin-user-banks')}}" id="banks" href="{{route('admin-user-banks',$data->id) }}" role="button" >Banks</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{menu('admin.user.kycinfo')}}" id="modules" href="{{route('admin.user.kycinfo',$data->id) }}" role="button" >AML/KYC</a>
+        </li>
+    </ul>
+</div>
+@endif
+
+
