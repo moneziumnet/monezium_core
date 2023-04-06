@@ -64,7 +64,7 @@
                 </div>
                 <div class="form-group">
 
-                <button type="submit" class="input-group-text bg-primary text-white border-0"><i class="fas fa-search"></i></button>
+                <button type="submit" class="input-group-text bg-primary text-white border-0 ms-2" style="height: 35px;"><i class="fas fa-search"></i></button>
                 </div>
             </form>
         </div>
