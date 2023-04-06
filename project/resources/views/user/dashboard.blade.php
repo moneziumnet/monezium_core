@@ -295,7 +295,10 @@
                               </i>
                           </div>
                           <div class="card-body">
-                              <div class="h3 m-0 text-uppercase">{{ amount(Crypto_Balance($item->user_id, $item->currency_id), 2)}}  {{$item->currency->code}}</div>
+                              <div class="row">
+                                <div class="col h3 m-0 text-uppercase">{{ amount(Crypto_Balance($item->user_id, $item->currency_id), 2)}}  {{$item->currency->code}}</div>
+                                <a class="col-auto btn-icon-clipboard copy" data-clipboard-text="{{$item->wallet_no}}" title="Copy"><i class="fa fa-copy text-xs"></i></a>
+                              </div>
                               <div class="h4 m-0"> {{str_dis($item->wallet_no)}}</div>
                               <div class="text-muted"> ({{ amount(Crypto_Balance_Fiat($item->user_id, $item->currency_id), 1)}}  {{$currency->code}})</div>
 
@@ -554,9 +557,19 @@
 @endsection
 
 @push('js')
+<script src="{{asset('assets/user/js/clipboard.min.js')}}"></script>
+
 <script>
   'use strict';
-
+  var clipboard = new ClipboardJS('.copy');
+  clipboard.on('success', function(e) {
+    toastr.options =
+    {
+      "closeButton" : true,
+      "progressBar" : true
+    }
+    toastr.success("Crypto Address Copied");
+  });
   function myFunction() {
     var copyText = document.getElementById("cronjobURL");
     copyText.select();
