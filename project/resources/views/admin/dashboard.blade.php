@@ -389,6 +389,7 @@
           <thead class="thead-light">
             <tr>
               <th>@lang('Serial No')</th>
+              <th>@lang('Create Date')</th>
               <th>@lang('Name')</th>
               <th>@lang('Email')</th>
               <th>@lang('Status')</th>
@@ -399,6 +400,7 @@
             @foreach ($users as $key=>$data)
             <tr>
               <td data-label="@lang('Serial No')">{{ $loop->iteration}}</td>
+              <td data-label="@lang('Create Date')">{{ dateFormat($data->created_at, 'Y-m-d')}}</td>
               <td data-label="@lang('Name')">{{ $data->name }}</td>
               <td data-label="@lang('Email')">{{ $data->email }}</td>
               <td data-label="@lang('Status')"><span class="badge badge-{{ $data->is_banned == 0 ? 'success' : 'danger'}}">{{ $data->is_banned == 0 ? 'activated' : 'deactivated'}}</span></td>
