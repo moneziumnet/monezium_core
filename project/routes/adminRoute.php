@@ -637,7 +637,6 @@ Route::prefix('admin')->group(function () {
     });
 
     Route::group(['middleware' => 'permissions:Support Ticket'], function () {
-      Route::post('/send/message', [MessageController::class, 'usercontact'])->name('admin.send.message');
       Route::get('/user/ticket', [MessageController::class, 'index'])->name('admin.user.message');
       Route::get('/tickets/datatables/', [MessageController::class, 'datatables'])->name('admin.message.datatables');
       Route::get('/ticket/{id}', [MessageController::class, 'message'])->name('admin.message.show');
@@ -785,6 +784,7 @@ Route::prefix('admin')->group(function () {
   Route::get('/logout', [LoginController::class, 'logout'])->name('admin.logout');
   
   Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+  Route::post('/send/message', [MessageController::class, 'usercontact'])->name('admin.send.message');
 
   Route::group(['middleware' => 'permissions:Manage Customers'], function () {
       Route::get('/users', [UserController::class, 'index'])->name('admin.user.index');

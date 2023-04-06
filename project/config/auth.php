@@ -57,10 +57,6 @@ return [
             'provider' => 'admins',
         ],
 
-        'staff' => [
-            'driver' => 'session',
-            'provider' => 'staffs',
-        ],
     ],
 
     /*
@@ -90,10 +86,6 @@ return [
             'model' => App\Models\Admin::class,
         ],
 
-        'staffs' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Staff::class,
-        ],
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',

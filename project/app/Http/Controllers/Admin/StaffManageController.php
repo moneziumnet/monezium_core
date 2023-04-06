@@ -82,6 +82,7 @@ class StaffManageController extends Controller
         $user->email = $request->email;
         $user->password = bcrypt($request['password']);
         $user->name = trim($request->firstname)." ".trim($request->lastname);
+        $user->role = 'staff';
         $user->save();
 
         

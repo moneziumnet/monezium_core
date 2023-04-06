@@ -71,17 +71,30 @@ class UserController extends Controller
                     return '<div clase="text-right">'.$currency->symbol.amount(userBalance($data->id), $currency->type, 2).'</div>';
                 })
                 ->addColumn('action', function(User $data) {
-                    return '<div class="btn-group mb-1">
-                        <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        '.'Actions' .'
-                        </button>
-                        <div class="dropdown-menu" x-placement="bottom-start">
-                        <a href="' . route('admin-user-profile',$data->id) . '"  class="dropdown-item">'.__("Profile").'</a>
-                        <a href="javascript:;" class="dropdown-item send" data-email="'. $data->email .'" data-toggle="modal" data-target="#vendorform">'.__("Send").'</a>
-                        <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.  route('admin-user-delete',$data->id).'">'.__("Delete").'</a>
-                        <a href="'.  route('admin-user-login',encrypt($data->id)).'" class="dropdown-item" target="_blank">'.__("Login").'</a>
-                        </div>
-                    </div>';
+                    if(auth()->user()->role === 'admin') {
+                        return '<div class="btn-group mb-1">
+                            <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            '.'Actions' .'
+                            </button>
+                            <div class="dropdown-menu" x-placement="bottom-start">
+                            <a href="' . route('admin-user-profile',$data->id) . '"  class="dropdown-item">'.__("Profile").'</a>
+                            <a href="javascript:;" class="dropdown-item send" data-email="'. $data->email .'" data-toggle="modal" data-target="#vendorform">'.__("Send").'</a>
+                            <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="dropdown-item" data-href="'.  route('admin-user-delete',$data->id).'">'.__("Delete").'</a>
+                            <a href="'.  route('admin-user-login',encrypt($data->id)).'" class="dropdown-item" target="_blank">'.__("Login").'</a>
+                            </div>
+                        </div>';
+                    }
+                    elseif(auth()->user()->role === 'staff') {
+                        return '<div class="btn-group mb-1">
+                            <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            '.'Actions' .'
+                            </button>
+                            <div class="dropdown-menu" x-placement="bottom-start">
+                            <a href="' . route('admin-user-profile',$data->id) . '"  class="dropdown-item">'.__("Profile").'</a>
+                            <a href="javascript:;" class="dropdown-item send" data-email="'. $data->email .'" data-toggle="modal" data-target="#vendorform">'.__("Send").'</a>
+                            </div>
+                        </div>';
+                        }
                 })
 
                 ->addColumn('status', function(User $data) {

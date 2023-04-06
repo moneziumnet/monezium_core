@@ -22,9 +22,7 @@ class Authenticate extends Middleware
             }elseif($request->is('user') || $request->is('user/*')){
 
                 return redirect('/user/login');
-            }elseif($request->is('staff') || $request->is('staff/*')){
-                return redirect('/staff/login');
-            } elseif ($request->is('api') || $request->is('api/*')) {
+            }elseif ($request->is('api') || $request->is('api/*')) {
                 abort(response()->json('Your token is invalid', 401));
             } else {
                 return redirect()->guest(route('front.index'));
