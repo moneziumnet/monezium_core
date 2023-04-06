@@ -83,7 +83,9 @@ class UserController extends Controller
             $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency='.$def_currency->code);
             $rate = json_decode($response->getBody());
 
-            $deposits = DepositBank::where('status', 'complete')->where('user_id', auth()->id())->get();
+            // $deposits = DepositBank::where('status', 'complete')->where('user_id', auth()->id())->get();
+            $deposits = Transaction::where('remark', 'deposit')->orWhere('remark', 'Deposit')->where('user_id', auth()->id())->get();
+
             $deposit_balance = 0;
             foreach ($deposits as $value) {
                 $currency = Currency::findOrFail($value->currency_id)->code;
@@ -91,7 +93,8 @@ class UserController extends Controller
             }
 
 
-            $withdraws = BalanceTransfer::where('status', 1)->where('user_id', auth()->id())->where('type', 'other')->get();
+            // $withdraws = BalanceTransfer::where('status', 1)->where('user_id', auth()->id())->where('type', 'other')->get();
+            $withdraws = Transaction::where('remark', 'withdraw')->where('user_id', auth()->id())->get();
             $withdraw_balance = 0;
             foreach ($withdraws as $value) {
                 $currency = Currency::findOrFail($value->currency_id)->code;
@@ -119,12 +122,14 @@ class UserController extends Controller
             $data['userBalance'] = userBalance(auth()->id());
 
 
-            $deposits = DepositBank::select('id', 'updated_at', 'amount', 'currency_id' )->whereStatus('complete')->where('user_id', auth()->id())
-                ->get()
+            // $deposits = DepositBank::select('id', 'updated_at', 'amount', 'currency_id' )->whereStatus('complete')->where('user_id', auth()->id())
+            $deposits = Transaction::select('id', 'updated_at', 'amount', 'currency_id' )->where('remark', 'deposit')->orWhere('remark', 'Deposit')->where('user_id', auth()->id())
+            ->get()
                 ->groupBy(function($date) {
                     return Carbon::parse($date->updated_at)->format('Y-m'); // grouping by months
                 });
-            $withdraws = BalanceTransfer::select('id', 'updated_at', 'amount', 'currency_id' )->whereStatus(1)->where('user_id', auth()->id())->where('type', 'other')
+            // $withdraws = BalanceTransfer::select('id', 'updated_at', 'amount', 'currency_id' )->whereStatus(1)->where('user_id', auth()->id())->where('type', 'other')
+            $withdraws = Transaction::select('id', 'updated_at', 'amount', 'currency_id' )->where('remark', 'withdraw')->where('user_id', auth()->id())
             ->get()
             ->groupBy(function($date) {
                 return Carbon::parse($date->updated_at)->format('Y-m'); // grouping by months
@@ -357,7 +362,9 @@ class UserController extends Controller
         ->whereBetween('created_at', [$s_time, $e_time])
         ->orderBy('created_at', 'desc')
         ->with('currency')->latest()->paginate(20);
-        $remark_list = Transaction::where('user_id',auth()->id())->pluck('remark');
+        $remark_list = Transaction::where('user_id', auth()->id())->orderBy('remark', 'asc')->pluck('remark')->map(function ($item) {
+            return ucfirst($item);
+        });
         $data['remark_list'] = array_unique($remark_list->all());
 
         $wallet_list = Transaction::where('user_id',auth()->id())->pluck('wallet_id');
