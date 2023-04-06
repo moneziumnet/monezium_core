@@ -84,7 +84,7 @@ class UserController extends Controller
             $rate = json_decode($response->getBody());
 
             // $deposits = DepositBank::where('status', 'complete')->where('user_id', auth()->id())->get();
-            $deposits = Transaction::where('remark', 'deposit')->orWhere('remark', 'Deposit')->where('user_id', auth()->id())->get();
+            $deposits = Transaction::where('remark', 'deposit')->where('user_id', auth()->id())->orWhere('remark', 'Deposit')->where('user_id', auth()->id())->get();
 
             $deposit_balance = 0;
             foreach ($deposits as $value) {
@@ -123,7 +123,7 @@ class UserController extends Controller
 
 
             // $deposits = DepositBank::select('id', 'updated_at', 'amount', 'currency_id' )->whereStatus('complete')->where('user_id', auth()->id())
-            $deposits = Transaction::select('id', 'updated_at', 'amount', 'currency_id' )->where('remark', 'deposit')->orWhere('remark', 'Deposit')->where('user_id', auth()->id())
+            $deposits = Transaction::select('id', 'updated_at', 'amount', 'currency_id' )->where('remark', 'deposit')->where('user_id', auth()->id())->orWhere('remark', 'Deposit')->where('user_id', auth()->id())
             ->get()
                 ->groupBy(function($date) {
                     return Carbon::parse($date->updated_at)->format('Y-m'); // grouping by months
