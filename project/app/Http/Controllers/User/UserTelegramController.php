@@ -1206,6 +1206,7 @@ class UserTelegramController extends Controller
                                 send_message_telegram($to_message, $chat_id);
                                 return;
                             }
+                            $trnx = $res;
                         }
                         else if($fromWallet->currency->code == 'BTC') {
                             $res = RPC_BTC_Send('sendtoaddress',[$w_session->data->sender_address, amount($w_session->data->amount, 2)],$fromWallet->keyword);
@@ -1216,6 +1217,7 @@ class UserTelegramController extends Controller
                                 send_message_telegram($to_message, $chat_id);
                                 return;
                             }
+                            $trnx = $fromWallet->wallet_no;
                         }
                         else {
                             RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
@@ -1228,6 +1230,7 @@ class UserTelegramController extends Controller
                                 send_message_telegram($to_message, $chat_id);
                                 return;
                             }
+                            $trnx = json_decode($result)->message;
                         }
 
 
@@ -1236,6 +1239,7 @@ class UserTelegramController extends Controller
                         $cryptowithdraw->user_id = $w_session->user_id;
                         $cryptowithdraw->amount = $w_session->data->amount ;
                         $cryptowithdraw->sender_address = $w_session->data->sender_address;
+                        $cryptowithdraw->hash = $trnx ;
                         $cryptowithdraw->status = 1 ;
                         $cryptowithdraw->save();
 

@@ -184,13 +184,18 @@ class WithdrawCryptoController extends Controller
             if($fromWallet->currency->code == 'ETH') {
                 RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
                 $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$request->sender_address.'", "value": "0x'.dechex($amountToAdd*$crypto_rate*pow(10,18)).'"}';
-                RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
+                $res = RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
+                if ($res == 'error') {
+                    return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'You can not withdraw money because Ether has some issue.']);
+                }
+                $trnx = $res;
             }
             else if($fromWallet->currency->code == 'BTC') {
                 $res = RPC_BTC_Send('sendtoaddress',[$request->sender_address, amount($amountToAdd*$crypto_rate, 2)],$fromWallet->keyword);
                 if (isset($res->error->message)){
                     return response()->json(['status' => '401', 'error_code' => '0', 'message' => __('Error: ') . $res->error->message]);
                 }
+                $trnx = $fromWallet->wallet_no;
             }
             else {
                 RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
@@ -199,10 +204,12 @@ class WithdrawCryptoController extends Controller
                 if (json_decode($result)->code == 1){
                     return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Ethereum client error: '.json_decode($result)->message]);
                 }
+                $trnx = json_decode($result)->message;
             }
 
             $withdraw = new CryptoWithdraw();
             $input = $request->all();
+            $withdraw->hash = $trnx;
             $withdraw->status = 1;
 
             $withdraw->fill($input)->save();

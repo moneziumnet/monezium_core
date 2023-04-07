@@ -1213,6 +1213,7 @@ class UserWhatsappController extends Controller
                                 send_message_whatsapp($to_message, $phone);
                                 return;
                             }
+                            $trnx = $res;
                         }
                         else if($fromWallet->currency->code == 'BTC') {
                             $res = RPC_BTC_Send('sendtoaddress',[$w_session->data->sender_address, amount($w_session->data->amount, 2)],$fromWallet->keyword);
@@ -1223,6 +1224,7 @@ class UserWhatsappController extends Controller
                                 send_message_whatsapp($to_message, $phone);
                                 return;
                             }
+                            $trnx = $fromWallet->wallet_no;
                         }
                         else {
                             RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
@@ -1235,6 +1237,7 @@ class UserWhatsappController extends Controller
                                 send_message_whatsapp($to_message, $phone);
                                 return;
                             }
+                            $trnx = json_decode($result)->message;
                         }
 
 
@@ -1244,6 +1247,7 @@ class UserWhatsappController extends Controller
                         $cryptowithdraw->amount = $w_session->data->amount ;
                         $cryptowithdraw->sender_address = $w_session->data->sender_address;
                         $cryptowithdraw->status = 1 ;
+                        $cryptowithdraw->hash = $trnx ;
                         $cryptowithdraw->save();
 
 
