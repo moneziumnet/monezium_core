@@ -118,6 +118,7 @@
         <ul class="list-group mt-2">
             <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Sender Address')<span id="crypto_address" style="margin-left: 60px"></span></li>
             <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Receiver Address')<span id="sender_address" style="margin-left: 60px"></span></li>
+            <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Transaction ID')<a id="trnx_url" href="" target="_blank"><span id="trnx" style="margin-left: 60px"></span></a></li>
             <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Amount')<span id="amount" style="margin-left: 60px"></span></li>
         </ul>
         </div>
@@ -134,6 +135,14 @@
       $('.details').on('click', function() {
           $('#crypto_address').text($(this).data('address'));
           $('#sender_address').text($(this).data('data').sender_address);
+          var code = $(this).data('data').currency.code;
+          if (code == 'BTC') {
+            $('#trnx_url').attr('href','https://www.blockchain.com/explorer/transactions/btc/' + $(this).data('data').hash);
+          }
+          else {
+            $('#trnx_url').attr('href','https://etherscan.io/tx/' + $(this).data('data').hash);
+          }
+          $('#trnx').text($(this).data('data').hash);
           $('#amount').text($(this).data('data').amount + $(this).data('data').currency.code);
           $('#modal-success').modal('show');
 
