@@ -68,7 +68,6 @@ class UserController extends Controller
         $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency='.$def_currency->code);
         $rate = json_decode($response->getBody());
 
-        // $deposits = DepositBank::where('status', 'complete')->where('user_id', auth()->id())->get();
         $deposits = Transaction::where('remark', 'deposit')->where('user_id', auth()->id())->orWhere('remark', 'Deposit')->where('user_id', auth()->id())->get();
         $deposit_balance = 0;
         foreach ($deposits as $value) {
@@ -77,7 +76,6 @@ class UserController extends Controller
         }
 
 
-        // $withdraws = BalanceTransfer::where('status', 1)->where('user_id', auth()->id())->where('type', 'other')->get();
         $withdraws = Transaction::where('remark', 'withdraw')->where('user_id', auth()->id())->get();
         $withdraw_balance = 0;
         foreach ($withdraws as $value) {
@@ -164,13 +162,11 @@ class UserController extends Controller
             return redirect()->route('user.dashboard')->with(array('message' => 'Bank Account has been created successfully.'));
         }
 
-        // $deposits = DepositBank::select('id', 'updated_at', 'amount', 'currency_id' )->whereStatus('complete')->where('user_id', auth()->id())
         $deposits = Transaction::select('id', 'updated_at', 'amount', 'currency_id' )->where('remark', 'deposit')->where('user_id', auth()->id())->orWhere('remark', 'Deposit')->where('user_id', auth()->id())
             ->get()
             ->groupBy(function($date) {
                 return Carbon::parse($date->updated_at)->format('Y-m'); // grouping by months
             });
-        // $withdraws = BalanceTransfer::select('id', 'updated_at', 'amount', 'currency_id' )->whereStatus(1)->where('user_id', auth()->id())->where('type', 'other')
         $withdraws = Transaction::select('id', 'updated_at', 'amount', 'currency_id' )->where('remark', 'withdraw')->where('user_id', auth()->id())
         ->get()
         ->groupBy(function($date) {
@@ -388,7 +384,7 @@ class UserController extends Controller
         ->when($search,function($q) use($search){
             return $q->where('user_id',auth()->id())
                      ->where('trnx','LIKE',"%{$search}%")
-                     ->orWhere(DB::raw("decrypt(data, 'key', config('app.key'))"), 'LIKE', "%{$search}%")
+                    //  ->orwhereRaw("(aes_decrypt(data, 'aes-256-cbc', '".config('app.key')."', OPENSSL_RAW_DATA, SUBSTR(data, 1, 16))) LIKE '%$search%'")
                      ->where('user_id',auth()->id());
         })
         ->whereBetween('created_at', [$s_time, $e_time])
