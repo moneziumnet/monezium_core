@@ -101,6 +101,7 @@ Route::prefix('user')->group(function() {
     Route::post('/domain-register/{id}', [RegisterController::class,'domainRegister'])->name('user.domain.register.submit');
 
     Route::get('/register/verify/{token}', [RegisterController::class,'token'])->name('user.register.token');
+    Route::get('/notifications', [UserController::class,'notification'])->name('user.notifications');
 
     Route::group(['middleware' => ['otp','banuser']],function () {
 

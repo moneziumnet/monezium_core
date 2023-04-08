@@ -21,6 +21,7 @@ use App\Models\KycRequest;
 use App\Models\LoginActivity;
 use App\Models\BalanceTransfer;
 use App\Models\DepositBank;
+use App\Models\ActionNotification;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
@@ -1111,6 +1112,12 @@ class UserController extends Controller
       {
           $history = LoginActivity::where('user_id', auth()->id())->orderBy('created_at', 'desc')->paginate(20);
           return view('user.loginactivity', compact('history'));
+      }
+
+      public function notification()
+      {
+          $notifications = ActionNotification::where('user_id', auth()->id())->orderBy('created_at', 'desc')->paginate(20);
+          return view('user.notifications', compact('notifications'));
       }
 
 

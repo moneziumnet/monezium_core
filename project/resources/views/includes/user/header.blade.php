@@ -80,7 +80,7 @@
                   <div class="list-group-item">
                     <div class="row align-items-center">
                       <div class="col text-truncate">
-                        <a href="#" class="text-body d-block">@lang("Notification") {{__($key + 1)}}</a>
+                        <a href="{{route('user.notifications')}}" class="text-body d-block">@lang("Notification") {{__($key + 1)}}</a>
                         <div class="d-block text-muted text-truncate mt-n1">
                           {{__(substr($item->description, 0, 50))}}
                         </div>
@@ -102,6 +102,9 @@
         </a>
         <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
           <a href="{{ route('user.profile.index') }}" class="dropdown-item">{{__('Profile')}}</a>
+          <a class="dropdown-item" href="{{route('user.notifications')}}">
+            {{__('Notifications')}}
+          </a>
           <a class="dropdown-item" href="{{route('user.aml.kyc')}}">
             {{__('AML/KYC')}}
           </a>
