@@ -82,6 +82,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/user/register/{id}', [UserController::class,'register']);
         Route::post('/user/forgot', [UserController::class,'forgot']);
         Route::post('/user/logout', [UserController::class,'logout']);
+        Route::post('/user/notifications', [UserController::class,'notification']);
 
         Route::get('/user/loan', [UserLoanController::class, 'loan_index']);
         Route::get('/user/loan-plan', [UserLoanController::class, 'loanplan']);

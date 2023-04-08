@@ -1011,6 +1011,23 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get latest Notificaton",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/notifications",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"notifications"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

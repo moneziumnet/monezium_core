@@ -22,6 +22,7 @@ use App\Models\LoginActivity;
 use App\Models\BalanceTransfer;
 use App\Models\DepositBank;
 use App\Models\BankPlan;
+use App\Models\ActionNotification;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Generalsetting;
@@ -1018,5 +1019,10 @@ class UserController extends Controller
     public function logout() {
         auth()->user()->tokens()->delete();
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'You logged out successfully.']);
+    }
+    public function notification()
+    {
+        $data['notifications'] = ActionNotification::where('user_id', auth()->id())->orderBy('created_at', 'desc')->paginate(20);
+        return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'success', 'data' => $data]);
     }
 }

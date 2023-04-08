@@ -82,7 +82,7 @@
                       <div class="col text-truncate">
                         <a href="{{route('user.notifications')}}" class="text-body d-block">@lang("Notification") {{__($key + 1)}}</a>
                         <div class="d-block text-muted text-truncate mt-n1">
-                          {{__(substr($item->description, 0, 50))}}
+                          {{__(substr($item->description, 0, 50))}} ...
                         </div>
                       </div>
                     </div>
