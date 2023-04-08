@@ -56,7 +56,6 @@ class DashboardController extends Controller
 
             $data['blogs'] = Blog::all();
             $data['deposits'] = Deposit::all();
-            // $deposits = DepositBank::where('status', 'complete')->get();
             $deposits = Transaction::where('remark', 'deposit')->orWhere('remark', 'Deposit')->get();
             $deposit_transaction = Transaction::where('remark', 'deposit')->orWhere('remark', 'Deposit')->get();
             $deposit_balance = 0;
@@ -71,7 +70,6 @@ class DashboardController extends Controller
                 $charge_balance = $charge_balance + $value->charge / $rate->data->rates->$currency;
             }
 
-            // $withdraws = BalanceTransfer::where('status', 1)->where('type', 'other')->get();
             $withdraws = Transaction::where('remark', 'withdraw')->get();
             $withdraw_balance = 0;
             foreach ($withdraws as $value) {
@@ -92,13 +90,11 @@ class DashboardController extends Controller
 
             $data['activation_notify'] = "";
 
-            // $deposits = DepositBank::select('id', 'updated_at', 'amount', 'currency_id' )->whereStatus('complete')
             $deposits = Transaction::select('id', 'updated_at', 'amount', 'currency_id' )->where('remark', 'deposit')->orWhere('remark', 'Deposit')
             ->get()
             ->groupBy(function($date) {
                 return Carbon::parse($date->updated_at)->format('Y-m'); // grouping by months
             });
-            // $withdraws = BalanceTransfer::select('id', 'updated_at', 'amount', 'currency_id' )->whereStatus(1)->where('type', 'other')
             $withdraws = Transaction::select('id', 'updated_at', 'amount', 'currency_id' )->where('remark', 'withdraw')
             ->get()
             ->groupBy(function($date) {
