@@ -16745,3 +16745,40 @@ img {
 		height: 1.6rem;
 	}
 }
+
+.status-dot {
+    --tblr-status-dot-color: var(--tblr-status-color, #616876);
+    --tblr-status-size: 0.5rem;
+    position: relative;
+    display: inline-block;
+    width: var(--tblr-status-size);
+    height: var(--tblr-status-size);
+    border-radius: 100rem;
+}
+
+.status-dot-animated:before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: inherit;
+    border-radius: inherit;
+    opacity: .6;
+    animation: 1s linear 2s backwards infinite status-pulsate-tertiary;
+}
+
+@keyframes status-pulsate-tertiary {
+    25% {
+        transform: scale(1,1)
+    }
+
+    80% {
+        transform: scale(3,3);
+        opacity: 0
+    }
+
+    100% {
+        transform: scale(3,3);
+        opacity: 0
+    }
+}

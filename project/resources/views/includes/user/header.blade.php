@@ -88,6 +88,7 @@
                 @foreach ($notifications as $key => $item )
                   <div class="list-group-item">
                     <div class="row align-items-center">
+                      <div class="col-auto"><span class="bg-red status-dot status-dot-animated d-block"></span></div>
                       <div class="col text-truncate">
                         <a href="{{route('user.notifications')}}" class="h4 d-block text-muted text-truncate mt-n1 mt-2 ms-2 me-2">
                           {{__(substr($item->description, 0, 50))}} ...
