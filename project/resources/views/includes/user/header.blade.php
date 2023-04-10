@@ -35,6 +35,15 @@
           </div>
         </form>
       </div>
+      <div class="change-language flex-grow-1 flex-md-grow-0 nav-item me-2">
+        <select name="language" class="language selectors nice language-bar">
+            @foreach(DB::table('languages')->get() as $language)
+                <option value="{{route('front.language',$language->id)}}" {{ Session::has('language') ? ( Session::get('language') == $language->id ? 'selected' : '' ) : (DB::table('languages')->where('is_default','=',1)->first()->id == $language->id ? 'selected' : '') }} >
+                    {{$language->language}}
+                </option>
+            @endforeach
+        </select>
+      </div>
       <a href="?theme=dark" class="nav-link px-0 hide-theme-dark " title="Enable dark mode" data-bs-toggle="tooltip" data-bs-placement="bottom">
         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
