@@ -323,6 +323,7 @@ class MerchantCampaignController extends Controller
 
                     $currency = Currency::findOrFail(defaultCurr());
                     mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type' => 'Current', 'date_time'=> dateFormat($trans->created_at)], $campaign_user);
+                    send_notification($campaign_user->id, 'New Current Wallet Created for '.($campaign_user->company_name ?? $campaign_user->name).'. Please check .', route('admin-user-accounts', $campaign_user->id));
 
 
                     user_wallet_decrement($campaign_user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);

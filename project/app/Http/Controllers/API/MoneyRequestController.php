@@ -169,6 +169,8 @@ class MoneyRequestController extends Controller
                 mailSend('request_money_sent',['amount'=>$request->amount, 'curr' => $currency->code, 'from' => ($user->company_name ?? $user->name), 'to' => ($receiver->company_name ?? $receiver->name ), 'charge'=> 0, 'date_time'=> $data->created_at ], $receiver);
                 return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Request Money Send Successfully.']);
             }
+            send_notification(auth()->id(), (auth()->user()->company_name ?? auth()->user()->name).' send request money to '.$request->account_email.' Please check .', route('admin.request.money'));
+
         } catch (\Throwable $th) {
             return response()->json(['status' => '401', 'error_code' => '0', 'message' => $th->getMessage()]);
         }
@@ -368,7 +370,10 @@ class MoneyRequestController extends Controller
 
 
             mailSend('request_money_complete',['amount'=>$data->amount, 'curr' => $currency->code, 'from' => ($user->company_name ?? $user->name), 'to' => ($receiver->company_name ?? $receiver->name ), 'charge'=> $data->cost + $data->supervisor_cost, 'date_time'=> $data->created_at, 'trnx' => $data->transaction_no ], $receiver);
+            send_notification($receiver->id, $data->amount.$currency->code.' Money is sent from '.($user->company_name ?? $user->name).' to '.($receiver->company_name ?? $receiver->name ).'. Please check .', route('admin-user-transactions', $receiver->id));
+
             mailSend('request_money_complete',['amount'=>$data->amount, 'curr' => $currency->code, 'from' => ($user->company_name ?? $user->name), 'to' => ($receiver->company_name ?? $receiver->name ), 'charge'=> 0, 'date_time'=> $data->created_at, 'trnx' => $data->transaction_no ], $user);
+            send_notification($user->id, $data->amount.$currency->code.' Money is sent from '.($user->company_name ?? $user->name).' to '.($receiver->company_name ?? $receiver->name ).'. Please check .', route('admin-user-transactions', $user->id));
 
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Successfully Money Send.']);
         } catch (\Throwable $th) {
