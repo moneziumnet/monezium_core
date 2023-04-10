@@ -556,7 +556,7 @@ class UserController extends Controller
         $data->update($input);
         $msg = 'Successfully updated your profile';
         mailSend('profile_udpate',[], auth()->user());
-        send_notification($user->id, ($user->company_name ?? $user->name).' profile is updated. Please check .', route('admin-user-profile', $user->id));
+        send_notification($data->id, ($data->company_name ?? $data->name).' profile is updated. Please check .', route('admin-user-profile', $data->id));
 
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Successfully updated your profile']);
     }

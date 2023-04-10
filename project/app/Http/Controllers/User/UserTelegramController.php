@@ -869,7 +869,9 @@ class UserTelegramController extends Controller
 
 
                             mailSend('send_money',['amount'=>($w_session->data->amount - $w_session->data->cost), 'curr' => $currency->code, 'trnx' => $txnid, 'from' => ($user->company_name ?? $user->name), 'to' => ($receiver->company_name ?? $receiver->name ), 'charge'=> 0, 'date_time'=> $trans->created_at ], $receiver);
+                            send_notification($receiver->id, ($w_session->data->amount - $w_session->data->cost).$currency->code.' Money is sent from '.($user->company_name ?? $user->name).' to '.($receiver->company_name ?? $receiver->name ).'. Please check .', route('admin-user-transactions', $receiver->id));
                             mailSend('send_money',['amount'=>$w_session->data->amount, 'curr' => $currency->code, 'trnx' => $txnid, 'from' => ($user->company_name ?? $user->name), 'to' => ($receiver->company_name ?? $receiver->name ), 'charge'=>  $w_session->data->cost, 'date_time'=> $trans->created_at ], $user);
+                            send_notification($user->id, $w_session->data->amount.$currency->code.' Money is sent from '.($user->company_name ?? $user->name).' to '.($receiver->company_name ?? $receiver->name ).'. Please check .', route('admin-user-transactions', $user->id));
 
                             $w_session->data = null;
                             $w_session->save();
@@ -1021,6 +1023,8 @@ class UserTelegramController extends Controller
                         $w_session->save();
 
                         $currency = Currency::findOrFail($data->currency_id);
+                        send_notification($user->id, ($user->company_name ?? $user->name).' send request money to '.$data->receiver_email.' Please check .', route('admin.request.money'));
+
                         if($data->receiver_id == 0){
                             $to =  $data->receiver_email;
                             $subject = " Money Request";
@@ -1507,6 +1511,7 @@ class UserTelegramController extends Controller
 
                                 $def_currency = Currency::findOrFail(defaultCurr());
                                 mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $def_currency->code, 'type' => $wallet_type_list[$w_session->data->wallet_type], 'date_time'=> dateFormat($trans->created_at)], $user);
+                                send_notification($user->id, 'New '.$wallet_type_list[$w_session->data->wallet_type].' Wallet Created for '.($user->company_name ?? $user->name).'. Please check .', route('admin-user-accounts', $user->id));
                                 user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
                                 user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
                             }

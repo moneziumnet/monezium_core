@@ -336,7 +336,9 @@ class SendController extends Controller
                 $currency = Currency::findOrFail($currency_id);
 
                 mailSend('send_money',['amount'=>$request->amount, 'curr' => $currency->code, 'trnx' => $txnid, 'from' => ($user->company_name ?? $user->name), 'to' => ($receiver->company_name ?? $receiver->name ), 'charge'=> 0, 'date_time'=> $trans->created_at ], $receiver);
+                send_notification($receiver->id, $request->amount.$currency->code.' Money is sent from '.($user->company_name ?? $user->name).' to '.($receiver->company_name ?? $receiver->name ).'. Please check .', route('admin-user-transactions', $receiver->id));
                 mailSend('send_money',['amount'=>$request->amount + $finalCharge*$rate, 'curr' => $currency->code, 'trnx' => $txnid, 'from' => ($user->company_name ?? $user->name), 'to' => ($receiver->company_name ?? $receiver->name ), 'charge'=> $finalCharge*$rate, 'date_time'=> $trans->created_at ], $user);
+                send_notification($user->id, ($request->amount + $finalCharge*$rate).$currency->code.' Money is sent from '.($user->company_name ?? $user->name).' to '.($receiver->company_name ?? $receiver->name ).'. Please check .', route('admin-user-transactions', $user->id));
 
             return redirect()->route('user.send.money.success');
         }else{
