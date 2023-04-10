@@ -27,7 +27,7 @@
                                     <table id="geniustable" class="table table-hover dt-responsive" cellspacing="0" width="100%">
                                         <thead class="thead-light">
                                             <tr>
-                                                <th>{{__('Date')}} / {{__('Transaction ID')}}</th>
+                                                <th>{{ __('Date') }} / {{ __('Transaction ID') }}</th>
                                                 <th>{{ __('Bank Name') }}</th>
                                                 <th>{{ __('Sender') }}</th>
                                                 <th>{{ __('Receiver') }}</th>
