@@ -175,7 +175,7 @@
                         {{-- <a class="print_pdf btn btn-primary w-100" >
                             @lang('Print PDF')
                         </a> --}}
-                        <a href="#" class="print_pdf tx-color">
+                        <a class="print_pdf tx-color">
                           <i class="fas fa-file-pdf me-1"></i> @lang('Download Pdf')
                         </a>
                     </div>
