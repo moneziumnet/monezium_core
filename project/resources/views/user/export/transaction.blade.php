@@ -26,7 +26,7 @@
             </th>
         </tr>
         <tr>
-            <th style="width:100px;font-size:8px;">Date/Transaction No.</th>
+            <th style="width:100px;font-size:8px;">Date / Transaction ID</th>
             <th style="width:110px;font-size:8px;">Sender</th>
             <th style="width:120px;font-size:8px;">Receiver</th>
 			<th style="width: 220px;font-size:8px;">Description</th>
@@ -43,7 +43,7 @@
         @foreach($trans as $tran)
         <tr>
 
-            <td style="font-size:8px;">{{date('d-m-Y', strtotime($tran->created_at))}} {{$tran->trnx}}</td>
+            <td style="font-size:8px;">{{date('d-M-Y', strtotime($tran->created_at))}} {{$tran->trnx}}</td>
             <td style="font-size:8px;">{{__(json_decode($tran->data)->sender ?? "")}}</td>
             <td style="font-size:8px;">{{__(json_decode($tran->data)->receiver ?? "")}}</td>
 			<td style="text-align: left; font-size:8px;">{{__(json_decode($tran->data)->description ?? "")}}<br/>{{ucwords(str_replace('_',' ',$tran->remark))}}</td>

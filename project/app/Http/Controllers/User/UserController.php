@@ -447,7 +447,10 @@ class UserController extends Controller
         ];
 
         $pdf = PDF::loadView('frontend.myPDF', $data);
-        return $pdf->download('transaction.pdf');
+        foreach ($transaction as $key => $trans) {
+            $pdf_name = date('dmY', strtotime($trans->created_at)).'_'.$trans->trnx.'.pdf';
+        }
+        return $pdf->download($pdf_name);
     }
 
     public function sendToMail(Request $request)
@@ -490,7 +493,7 @@ class UserController extends Controller
 
         <table>
           <tr>
-            <th style="width:15%;font-size:8px;">Date/Transaction No.</th>
+            <th style="width:15%;font-size:8px;">Date / Transaction ID</th>
             <th style="width:15%;font-size:8px;">Sender</th>
             <th style="width:15%;font-size:8px;">Receiver</th>
             <th style="width:30%;font-size:8px;">Description</th>
@@ -498,7 +501,7 @@ class UserController extends Controller
             <th style="width:10%;font-size:8px;">Fee</th>
           </tr>
           <tr>
-            <td style="font-size:8px;">'.date('d-m-Y', strtotime($tran->created_at)).' <br/> '.$tran->trnx.'</td>
+            <td style="font-size:8px;">'.date('d-M-Y', strtotime($tran->created_at)).' <br/> '.$tran->trnx.'</td>
             <td style="font-size:8px;">'.(json_decode($tran->data)->sender ?? "").'</td>
             <td style="font-size:8px;">'.(json_decode($tran->data)->receiver ?? "").'</td>
             <td style="text-align: left; font-size:8px;">'.(json_decode($tran->data)->description ?? "").'<br/>'.ucwords(str_replace('_',' ',$tran->remark)).'</td>
