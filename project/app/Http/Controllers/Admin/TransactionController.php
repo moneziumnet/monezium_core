@@ -21,7 +21,7 @@ class TransactionController extends Controller
                             return $data->type.amount($data->amount,$currency->type,2).$currency->code;
                         })
                         ->editColumn('created_at', function(Transaction $data) {
-                            $date = date('d-m-Y',strtotime($data->created_at));
+                            $date = date('d-M-Y',strtotime($data->created_at));
                             return $date;
                         })
                         ->editColumn('sender', function(Transaction $data) {

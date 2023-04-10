@@ -22,7 +22,7 @@
 		<table id="geniustable" class="table table-hover dt-responsive" cellspacing="0" width="100%">
 		  <thead class="thead-light">
 			<tr>
-				<th>{{__('Transaction no')}}</th>
+				<th>{{__('Date')}} / {{__('Transaction ID')}}</th>
 				<th>{{__('Transfer From')}}</th>
 				<th>{{__('Transfer To')}}</th>
 				<th>{{__('Amount')}}</th>
@@ -84,7 +84,15 @@
 		searching: true,
 		ajax: '{{ route('admin.other.banks.transfer.datatables') }}',
 		columns: [
-			{ data: 'transaction_no', name: 'transaction_no' },
+			// { data: 'transaction_no', name: 'transaction_no' },
+			{ data: 'date', name: 'date',
+				render: function(data, type, row, meta) {
+					if(type === 'display') {
+						data = row.date + '<br>' + row.transaction_no;
+					}
+					return data;
+				}
+			},
 			{ data: 'user_id', name: 'user_id' },
 			{ data: 'beneficiary_id', name: 'beneficiary_id' },
 			{ data: 'amount', name: 'amount' },

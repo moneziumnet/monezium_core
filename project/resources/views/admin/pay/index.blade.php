@@ -27,8 +27,7 @@
                                     <table id="geniustable" class="table table-hover dt-responsive" cellspacing="0" width="100%">
                                         <thead class="thead-light">
                                             <tr>
-                                                <th>{{ __('Date') }}</th>
-                                                <th>{{ __('Transaction ID') }}</th>
+                                                <th>{{__('Date')}} / {{__('Transaction ID')}}</th>
                                                 <th>{{ __('Bank Name') }}</th>
                                                 <th>{{ __('Sender') }}</th>
                                                 <th>{{ __('Receiver') }}</th>
@@ -94,8 +93,14 @@
                 searching: true,
                 ajax: "{{  route('admin.pay.transaction.datatables',['id' => $data->id]) }}",
                 columns: [
-                    { data: 'date', name: 'date' },
-                    { data: 'trnx_no', name: 'trnx_no' },
+                    { data: 'date', name: 'date', 
+                        render: function(data, type, row, meta) {
+                        if(type === 'display') {
+                            data = row.date + '<br>' + row.trnx_no;
+                        }
+                        return data;
+                    }},
+                    // { data: 'trnx_no', name: 'trnx_no' },
                     { data: 'bank_name', name: 'bank_name' },
                     { data: 'sender_name', name: 'sender_name' },
                     { data: 'receiver_name', name: 'receiver_name' },

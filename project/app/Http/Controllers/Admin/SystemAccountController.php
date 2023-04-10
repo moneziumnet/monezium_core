@@ -64,7 +64,7 @@ class SystemAccountController extends Controller
             return str_dis(ucwords($details->receiver ?? ""));
         })
         ->editColumn('created_at', function(Transaction $data) {
-            $date = date('d-m-Y',strtotime($data->created_at));
+            $date = date('d-M-Y',strtotime($data->created_at));
             return $date;
         })
         ->editColumn('remark', function(Transaction $data) {

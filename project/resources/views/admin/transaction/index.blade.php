@@ -22,8 +22,7 @@
 		<table id="geniustable" class="table table-hover dt-responsive" cellspacing="0" width="100%">
 		  <thead class="thead-light">
        <tr>
-        <th>{{__('Date')}}</th>
-        <th>{{__('Transaction ID')}}</th>
+        <th>{{__('Date')}} / {{__('Transaction ID')}}</th>
         <th>{{__('Sender')}}</th>
         <th>{{__('Receiver')}}</th>
         <th>{{__('Description')}}</th>
@@ -83,8 +82,14 @@
            searching: true,
            ajax: '{{ route('admin.transactions.datatables') }}',
            columns: [
-                { data: 'created_at', name: 'created_at' },
-                { data: 'trnx', name: 'trnx' },
+                { data: 'created_at', name: 'created_at',
+                  render: function(data, type, row, meta) {
+                    if(type === 'display') {
+                      data = row.created_at + '<br>' + row.trnx;
+                    }
+                    return data;
+                  }
+                },
                 { data: 'sender', name: 'sender' },
                 { data: 'receiver', name: 'receiver' },
                 { data: 'details', name: 'details' },

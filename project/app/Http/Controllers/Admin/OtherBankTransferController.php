@@ -53,6 +53,11 @@ class OtherBankTransferController extends Controller
         },
       ])
 
+      ->editColumn('date', function(BalanceTransfer $data) {
+        $date = date('d-M-Y',strtotime($data->created_at));
+        return $date;
+      })
+
       ->editColumn('user_id', function (BalanceTransfer $data) {
         $data = User::whereId($data->user_id)->first();
         if ($data) {

@@ -27,7 +27,6 @@
                <tr>
                 <th>@lang('Date')</th>
                 <th>@lang('Description')</th>
-                <th>@lang('URL')</th>
                 <th >@lang('IP')</th>
                 <th>@lang('User Agent')</th>
                </tr>
@@ -55,7 +54,6 @@
            columns: [
                 { data: 'created_at', name: 'created_at' },
                 { data: 'subject', name: 'subject' },
-                { data: 'url', name: 'url' },
                 { data: 'ip', name: 'ip' },
                 { data: 'agent', name: 'agent' },
             ],
