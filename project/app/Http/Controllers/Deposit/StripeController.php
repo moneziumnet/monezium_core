@@ -157,7 +157,7 @@ class StripeController extends Controller
 
 
                        mailSend('deposit_approved',['amount'=>$deposit->amount, 'curr' => $currency->code, 'trnx' => $deposit->deposit_number ,'date_time'=>$trans->created_at ,'type' => 'Stripe' ], $user);
-                       send_notification($user->id, 'Stripe Deposit  for '.($user->company_name ?? $user->name).' is approved. Please check .', route('admin.deposits.index'));
+                       send_notification($user->id, 'Stripe Deposit for '.($user->company_name ?? $user->name).'is approved '."\n Amount is ".$currency->symbol.$deposit->amount."\n Transaction ID : ".$deposit->deposit_number, route('admin.deposits.index'));
 
                     return redirect()->route('user.deposit.create')->with('success','Deposit amount '.$request->amount.' '.$currency->code.' successfully!');
                 }

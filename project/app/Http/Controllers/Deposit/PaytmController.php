@@ -441,7 +441,7 @@ class PaytmController extends Controller
             // $trans->user_id = $user->id;
             $trans->save();
             mailSend('deposit_approved',['amount'=>$deposit->amount, 'curr' => $currency->code, 'trnx' => $deposit->deposit_number ,'date_time'=>$trans->created_at ,'type' => 'Paym' ], $user);
-            send_notification($user->id, 'Paym Deposit  for '.($user->company_name ?? $user->name).' is approved. Please check .', route('admin.deposits.index'));
+            send_notification($user->id, 'Paym Deposit for '.($user->company_name ?? $user->name).'is approved '."\n Amount is ".$currency->symbol.$deposit->amount."\n Transaction ID : ".$deposit->deposit_number, route('admin.deposits.index'));
 
             Session::forget('deposit_number');
 

@@ -72,7 +72,7 @@ class MerchantProductController extends Controller
         $image->save();
         $currency =  Currency::findOrFail($request->currency_id);
         mailSend('merchant_product_created',['product_name'=>$request->name, 'amount' => $request->amount, 'curr' => $currency->code], auth()->user());
-        send_notification(auth()->id(), 'New Merchant Product for '.(auth()->user()->company_name ?? auth()->user()->name).' is created. Please check .', route('admin.merchant.shop.index', auth()->id()));
+        send_notification(auth()->id(), 'New Merchant Product for '.(auth()->user()->company_name ?? auth()->user()->name).' is created.'."\n Product Name : ".$request->name."\n Product Price : ".$request->amount.$currency->code, route('admin.merchant.shop.index', auth()->id()));
         return redirect()->back()->with('message','New Product has been created successfully');
     }
 
@@ -304,7 +304,7 @@ class MerchantProductController extends Controller
 
                 $currency = Currency::findOrFail(defaultCurr());
                 mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type' => 'Current', 'date_time'=> dateFormat($trans->created_at)], $user);
-                send_notification($user->id, 'New Current Wallet Created for '.($user->company_name ?? $user->name).'. Please check .', route('admin-user-accounts', $user->id));
+                send_notification($user->id, 'New Current Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$currency->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $user->id));
 
                 user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
                 user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
@@ -369,7 +369,7 @@ class MerchantProductController extends Controller
 
 
             mailSend('merchant_product_selled',['amount'=>$data->amount * $request->quantity, 'product_name'=> $data->name, 'product_amount' => $data->amount, 'quantity' => $request->quantity ,'date_time'=>$order->created_at, 'type' => $order->type, 'buyer'=>$order->name, 'trnx' => $rcvTrnx->trnx ], $data->user);
-            send_notification($data->user_id, 'Merchant Product for '.($data->user->company_name ?? $data->user->name).' is selled. Please check .', route('admin-user-transactions', $data->user_id));
+            send_notification($data->user_id, 'Merchant Product for '.($data->user->company_name ?? $data->user->name).' is selled.'."\n Product Name : ".$data->name."\n Transaction ID : ".$rcvTrnx->trnx, route('admin-user-transactions', $data->user_id));
             return redirect(route('user.shop.index'))->with('message','You have paid for buy project successfully ');
 
         }

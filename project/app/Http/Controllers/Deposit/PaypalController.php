@@ -218,7 +218,7 @@ class PaypalController extends Controller
                 $trans->details     = trans('Deposit Paypal complete');
 
                 mailSend('deposit_approved',['amount'=>$deposit->amount, 'curr' => $currency->code, 'trnx' => $deposit->deposit_number ,'date_time'=>$trans->created_at ,'type' => 'Paypal' ], $user);
-                send_notification($user->id, 'Paypal Deposit  for '.($user->company_name ?? $user->name).' is approved. Please check .', route('admin.deposits.index'));
+                send_notification($user->id, 'Paypal Deposit for '.($user->company_name ?? $user->name).'is approved '."\n Amount is ".$currency->symbol.$deposit->amount."\n Transaction ID : ".$deposit->deposit_number, route('admin.deposits.index'));
                 // $trans->email = $user->email;
                 // $trans->amount = $deposit->amount;
                 // $trans->type = "Deposit";

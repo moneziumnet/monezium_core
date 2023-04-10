@@ -161,7 +161,7 @@ class InstamojoController extends Controller
 
 
             mailSend('deposit_approved',['amount'=>$input['amount'], 'curr' => $currency->code, 'trnx' => $order_data['item_number'] ,'date_time'=>$trans->created_at ,'type' => 'InstamojoPay System' ], $user);
-            send_notification($user->id, 'InstamojoPay Deposit  for '.($user->company_name ?? $user->name).' is approved. Please check .', route('admin.deposits.index'));
+            send_notification($user->id, 'InstamojoPay Deposit for '.($user->company_name ?? $user->name).'is approved '."\n Amount is ".$currency->symbol.$input['amount']."\n Transaction ID : ".$order_data['item_number'], route('admin.deposits.index'));
 
             return redirect()->route('user.deposit.create')->with('success','Deposit amount '.$input['amount'].' ('.$input['currency_code'].') successfully!');
 

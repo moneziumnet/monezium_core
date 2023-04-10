@@ -114,7 +114,7 @@ class UserFdrController extends Controller
             $currency = Currency::findOrFail($request->currency_id);
             mailSend('fdr_run',['amount'=>$request->fdr_amount, 'curr'=> $currency->code ], auth()->user());
 
-            send_notification(auth()->id(), 'FDR has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.fdr.running'));
+            send_notification(auth()->id(), 'FDR has been requested by '.(auth()->user()->company_name ?? auth()->user()->name)."\n FDR Amount : ".$request->fdr_amount.$currency->code, route('admin.fdr.running'));
             send_staff_telegram('FDR has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).". Please check.\n".route('admin.fdr.running'), 'Fdr');
 
             return redirect()->route('user.invest.index')->with('message','FDR Requesting Successfully');

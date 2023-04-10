@@ -165,7 +165,7 @@ class ExchangeMoneyController extends Controller
             $wallet_type_list = array('1'=>'Current', '2'=>'Card', '3'=>'Deposit', '4'=>'Loan', '5'=>'Escrow', '6'=>'Supervisor', '7'=>'Merchant', '8'=>'Crypto', '10'=>'Manager');
 
             mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>$wallet_type_list[$request->wallet_type], 'date_time'=> dateFormat($trans->created_at)], $user);
-            send_notification($user->id, 'New '.$wallet_type_list[$request->wallet_type].' Wallet Created for '.($user->company_name ?? $user->name).'. Please check .', route('admin-user-accounts', $user->id));
+            send_notification($user->id, 'New '.$wallet_type_list[$request->wallet_type].' Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$currency->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $user->id));
 
             user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
             user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
@@ -561,7 +561,7 @@ class ExchangeMoneyController extends Controller
         $exchange->save();
 
         mailSend('exchange_money', ['from_curr' => $fromWallet->currency->code, 'to_curr' => $toWallet->currency->code, 'charge' => amount($charge + $transaction_custom_cost * $from_rate, $fromWallet->currency->type, 3), 'from_amount' => amount($request->amount, $fromWallet->currency->type, 3), 'to_amount' => amount($finalAmount, $toWallet->currency->type, 3), 'date_time' => dateFormat($exchange->created_at)], auth()->user());
-        send_notification(auth()->id(), amount($request->amount, $fromWallet->currency->type, 3).$fromWallet->currency->code.' Money is exchanged to '.amount($finalAmount, $toWallet->currency->type, 3).$toWallet->currency->code.'. Please check .', route('admin-user-transactions', auth()->id()));
+        send_notification(auth()->id(), amount($request->amount, $fromWallet->currency->type, 3).$fromWallet->currency->code.' Money is exchanged to '.amount($finalAmount, $toWallet->currency->type, 3).$toWallet->currency->code."\n Charge Fee : ".amount($charge + $transaction_custom_cost * $from_rate,$fromWallet->currency->type,3).$fromWallet->currency->code."\n Transaction ID : ".$exchange->trnx, route('admin-user-transactions', auth()->id()));
 
         return back()->with('message', 'Money exchanged successfully.');
     }
