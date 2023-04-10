@@ -46,6 +46,7 @@ class SubscriptionController extends Controller
         }
         $currency = Currency::findOrFail($request->currency_id);
         mailSend('plan_upgrade',['amount' => $plan->amount, 'curr' => $currency->code, 'date_time' => $trnx->created_at], auth()->user());
+        send_notification($user->id, ($user->company_name ?? $user->name).' Pricing Plan is updated. Please check .', route('admin-user-pricingplan', $user->id));
 
         return redirect()->route('user.dashboard')->with('message','Bank Plan Updated');
     }

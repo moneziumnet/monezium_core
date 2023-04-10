@@ -131,6 +131,7 @@ class MoneyRequestController extends Controller
         $data->details = $request->details;
         $data->user_type = 1;
 
+        send_notification(auth()->id(), (auth()->user()->company_name ?? auth()->user()->name).' send request money to '.$request->account_email.' Please check .', route('admin.request.money'));
 
         if($receiver === null){
             $gs = Generalsetting::first();
@@ -362,7 +363,9 @@ class MoneyRequestController extends Controller
 
 
         mailSend('request_money_complete',['amount'=>$data->amount, 'curr' => $currency->code, 'from' => ($user->company_name ?? $user->name), 'to' => ($receiver->company_name ?? $receiver->name ), 'charge'=> $data->cost + $data->supervisor_cost, 'date_time'=> $data->created_at, 'trnx' => $data->transaction_no ], $receiver);
+        send_notification($receiver->id, $data->amount.$currency->code.' Money is sent from '.($user->company_name ?? $user->name).' to '.($receiver->company_name ?? $receiver->name ).'. Please check .', route('admin-user-transactions', $receiver->id));
         mailSend('request_money_complete',['amount'=>$data->amount, 'curr' => $currency->code, 'from' => ($user->company_name ?? $user->name), 'to' => ($receiver->company_name ?? $receiver->name ), 'charge'=> 0, 'date_time'=> $data->created_at, 'trnx' => $data->transaction_no ], $user);
+        send_notification($user->id, $data->amount.$currency->code.' Money is sent from '.($user->company_name ?? $user->name).' to '.($receiver->company_name ?? $receiver->name ).'. Please check .', route('admin-user-transactions', $user->id));
 
         return redirect()->route('user.money.request.index')->with('message','Successfully Money Send.');
         //return back()->with('message','Successfully Money Send.');

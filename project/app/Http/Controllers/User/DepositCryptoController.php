@@ -88,6 +88,7 @@ class DepositCryptoController extends Controller
         $gs =  Generalsetting::findOrFail(1);
         $user = auth()->user();
         mailSend('deposit_request',['amount'=>$deposit->amount, 'curr' => $currency->code, 'date_time'=>$deposit->created_at ,'type' => 'Crypto', 'method'=> $currency->code ], $user);
+        send_notification($user->id, 'Crytpo has been deposited by '.($user->company_name ?? $user->name)."\n Amount is ".$currency->symbol.$deposit->amount."\n Payment Gateway : Crypto \n", route('admin.deposits.crypto.index'));
 
         return redirect(route('user.cryptodeposit.index'))->with('message','Deposit amount '.$request->amount.' ('.$currency->code.') successfully!');
     }
