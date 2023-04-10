@@ -343,7 +343,7 @@ class UserController extends Controller
         $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
         $trans->save();
         mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $default_currency->code, 'type'=>'Current', 'date_time'=> dateFormat($trans->created_at)], $user);
-        send_notification($user->id, 'New Current Wallet Created for '.($user->company_name ?? $user->name).'. Please check .', route('admin-user-accounts', $user->id));
+        send_notification($user->id, 'New Current Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$default_currency->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $user->id));
 
 
         $trans = new Transaction();
@@ -606,7 +606,7 @@ class UserController extends Controller
                     $currency = Currency::findOrFail(defaultCurr());
 
                     mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>$wallet_type_list[$wallet_type], 'date_time'=> dateFormat($trans->created_at)], $user);
-                    send_notification($user->id, 'New '.$wallet_type_list[$wallet_type].' Wallet Created for '.($user->company_name ?? $user->name).'. Please check .', route('admin-user-accounts', $user->id));
+                    send_notification($user->id, 'New '.$wallet_type_list[$wallet_type].' Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$currency->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $user->id));
                 }
                   $user_wallet = new Wallet();
                   $user_wallet->user_id = $id;
@@ -1098,9 +1098,9 @@ class UserController extends Controller
                 }
                 $currency = Currency::findOrFail($currency_id);
                 mailSend('send_money',['amount'=>$finalamount, 'curr' => $currency->code, 'trnx' => $txnid, 'from' => ($user->company_name ?? $user->name), 'to' => ($receiver->company_name ?? $receiver->name ), 'charge'=> 0, 'date_time'=> $trans->created_at ], $receiver);
-                send_notification($receiver->id, $finalamount.$currency->code.' Money is sent from '.($user->company_name ?? $user->name).' to '.($receiver->company_name ?? $receiver->name ).'. Please check .', route('admin-user-transactions', $receiver->id));
+                send_notification($receiver->id, $finalamount.$currency->code.' Money is sent from '.($user->company_name ?? $user->name).' to '.($receiver->company_name ?? $receiver->name )."\n Charge Fee : 0".$currency->code."\n Transaction ID : ".$txnid, route('admin-user-transactions', $receiver->id));
                 mailSend('send_money',['amount'=>$request->amount, 'curr' => $currency->code, 'trnx' => $txnid, 'from' => ($user->company_name ?? $user->name), 'to' => ($receiver->company_name ?? $receiver->name ), 'charge'=> $finalCharge*$rate, 'date_time'=> $trans->created_at ], $user);
-                send_notification($user->id, $request->amount.$currency->code.' Money is sent from '.($user->company_name ?? $user->name).' to '.($receiver->company_name ?? $receiver->name ).'. Please check .', route('admin-user-transactions', $user->id));
+                send_notification($user->id, $request->amount.$currency->code.' Money is sent from '.($user->company_name ?? $user->name).' to '.($receiver->company_name ?? $receiver->name )."\n Charge Fee : ".$finalCharge*$rate.$currency->code."\n Transaction ID : ".$txnid, route('admin-user-transactions', $user->id));
 
                 return redirect(route('admin-user-accounts',$user->id))->with('message', 'Send money successfully.');
             }else{
@@ -1328,7 +1328,7 @@ class UserController extends Controller
                 $wallet_type_list = array('1'=>'Current', '2'=>'Card', '3'=>'Deposit', '4'=>'Loan', '5'=>'Escrow', '6'=>'Supervisor', '7'=>'Merchant', '8'=>'Crypto', '10'=>'Manager');
 
                 mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>$wallet_type_list[$request->wallet_type], 'date_time'=> dateFormat($trans->created_at)], $user);
-                send_notification($user->id, 'New '.$wallet_type_list[$request->wallet_type].' Wallet Created for '.($user->company_name ?? $user->name).'. Please check .', route('admin-user-accounts', $user->id));
+                send_notification($user->id, 'New '.$wallet_type_list[$request->wallet_type].' Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$currency->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $user->id));
 
                 user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
                 user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
@@ -1374,7 +1374,7 @@ class UserController extends Controller
             $toTrnx->save();
 
             mailSend('exchange_money',['from_curr'=>$fromWallet->currency->code,'to_curr'=>$toWallet->currency->code,'charge'=> amount($charge,$fromWallet->currency->type,3),'from_amount'=> amount($request->amount,$fromWallet->currency->type,3),'to_amount'=> amount($finalAmount,$toWallet->currency->type,3),'date_time'=> dateFormat($trnx->created_at)],$user);
-            send_notification($user->id, amount($request->amount,$fromWallet->currency->type,3).$fromWallet->currency->code.' Money is exchanged to '.amount($finalAmount,$toWallet->currency->type,3).$toWallet->currency->code.'. Please check .', route('admin-user-transactions', $user->id));
+            send_notification($user->id, amount($request->amount,$fromWallet->currency->type,3).$fromWallet->currency->code.' Money is exchanged to '.amount($finalAmount,$toWallet->currency->type,3).$toWallet->currency->code."\n Charge Fee : ".amount($charge,$fromWallet->currency->type,3).$fromWallet->currency->code."\n Transaction ID : ".$trnx->trnx, route('admin-user-transactions', $user->id));
 
 
             return back()->with('message','Money exchanged successfully.');

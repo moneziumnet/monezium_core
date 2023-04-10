@@ -85,7 +85,7 @@ class CampaignController extends Controller
         $title = $ids == '1' ? "campaign_enable" : 'campaign_disable';
         $user = User::findOrFail($data->user_id);
         mailSend($title,['campaign_title'=>$data->title], $user);
-        send_notification($user->id, 'Campaign status is updated for '.($user->company_name ?? $user->name).'. Please check .', route('admin.campaign.index'));
+        send_notification($user->id, 'Campaign status is updated for '.($user->company_name ?? $user->name)."\n Campaign Title : ".$data->title, route('admin.campaign.index'));
 
 
         return response()->json($msg);

@@ -128,7 +128,7 @@ class ManageEscrowController extends Controller
             $currency = Currency::findOrFail(defaultCurr());
 
             mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>'Escrow', 'date_time'=> dateFormat($trans->created_at)], $user);
-            send_notification($user->id, 'New Escrow Wallet Created for '.($user->company_name ?? $user->name).'. Please check .', route('admin-user-accounts', $user->id));
+            send_notification($user->id, 'New Escrow Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$currency->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $user->id));
 
         }
 
@@ -155,7 +155,7 @@ class ManageEscrowController extends Controller
         $escrow->update();
 
         mailSend('escrow_return',['amount'=>amount($escrow->amount,$escrow->currency->type,2), 'trnx'=> $trnx->trnx,'curr' => $escrow->currency->code,'date_time'=> dateFormat($trnx->created_at)], $wallet->user);
-        send_notification($user->id, 'Escrow fund for '.($user->company_name ?? $user->name).' is returned. Please check .', route('admin.escrow.manage'));
+        send_notification($user->id, 'Escrow fund for '.($user->company_name ?? $user->name).' is returned.'."\n Refund amount : ".amount($escrow->amount,$escrow->currency->type,2).$escrow->currency->code."\n Transaction ID : ".$trnx->trnx, route('admin.escrow.manage'));
 
         return back()->with('success','Payment has been returned to '.@$wallet->user->email);
 
