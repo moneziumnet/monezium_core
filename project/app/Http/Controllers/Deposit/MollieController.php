@@ -162,6 +162,7 @@ class MollieController extends Controller
             $gs =  Generalsetting::findOrFail(1);
             $user = auth()->user();
             mailSend('deposit_approved',['amount'=>$deposit->amount, 'curr' => $currency->code, 'trnx' => $deposit->deposit_number ,'date_time'=>$trans->created_at ,'type' => 'MobilePay System' ], $user);
+            send_notification($user->id, 'MobilePay Deposit  for '.($user->company_name ?? $user->name).' is approved. Please check .', route('admin.deposits.index'));
 
             Session::forget('molly_data');
             return redirect()->route('user.deposit.create')->with('success','Deposit amount ('.$input['amount'].') successfully!');

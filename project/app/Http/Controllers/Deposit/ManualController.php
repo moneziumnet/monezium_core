@@ -65,6 +65,8 @@ class ManualController extends Controller
 
 
             mailSend('deposit_request',['amount'=>$deposit->amount, 'curr' => $currency->code, 'date_time'=>$deposit->created_at ,'type' => 'Manual', 'method'=>'Payment Gateway' ], $user);
+            send_notification($user->id, 'Payment has been deposited by '.($user->company_name ?? $user->name)."\n Amount is ".$currency->symbol.$deposit->amount."\n Transaction ID : ".$deposit->deposit_number, route('admin.deposits.index'));
+
 
         return redirect()->route('user.deposit.create')->with('success','Deposit amount '.$request->amount.' ('.$currency->code.') successfully!');
     }

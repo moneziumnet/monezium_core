@@ -225,6 +225,7 @@ class RazorpayController extends Controller
             // $trans->user_id = $user->id;
             $trans->save();
             mailSend('deposit_approved',['amount'=>$deposit->amount, 'curr' => $currency->code, 'trnx' => $deposit->deposit_number ,'date_time'=>$trans->created_at ,'type' => 'Razorpay' ], $user);
+            send_notification($user->id, 'Razorpay Deposit  for '.($user->company_name ?? $user->name).' is approved. Please check .', route('admin.deposits.index'));
 
 
 
