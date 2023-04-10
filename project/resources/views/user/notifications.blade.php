@@ -35,7 +35,9 @@
 								<td data-label="@lang('Date')">{{dateFormat($data->created_at,'d-M-Y h:i:s')}} </td>
 
 								<td data-label="@lang('Description')">
-									{{__($data->description)}}
+									@php
+										echo nl2br($data->description)
+									@endphp
 								</td>
 							</tr>
 							@empty

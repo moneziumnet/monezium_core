@@ -58,7 +58,7 @@
         </svg>
       </a>
       @php
-        $notifications = DB::table('action_notifications')->where('user_id', auth()->id())->latest()->limit(5)->get();
+        $notifications = DB::table('action_notifications')->where('user_id', auth()->id())->where('user_status', 0)->orderBy('user_status','asc')->orderBy('created_at','desc')->limit(5)->get();
       @endphp   
       <div class="nav-item dropdown me-3">
         <a href="#" class="nav-link px-0" data-bs-toggle="dropdown" tabindex="-1" aria-label="Show notifications" aria-expanded="false">
@@ -89,10 +89,9 @@
                   <div class="list-group-item">
                     <div class="row align-items-center">
                       <div class="col text-truncate">
-                        <a href="{{route('user.notifications')}}" class="text-body d-block">@lang("Notification") {{__($key + 1)}}</a>
-                        <div class="d-block text-muted text-truncate mt-n1">
+                        <a href="{{route('user.notifications')}}" class="h4 d-block text-muted text-truncate mt-n1 mt-2 ms-2 me-2">
                           {{__(substr($item->description, 0, 50))}} ...
-                        </div>
+                        </a>
                       </div>
                     </div>
                   </div>

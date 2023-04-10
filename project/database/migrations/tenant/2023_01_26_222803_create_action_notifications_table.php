@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('url')->nullable();
             $table->text('description')->nullable();
             $table->tinyInteger('status')->default(0)->comment('0 => unread, 1 => read');
+            $table->tinyInteger('user_status')->default(0)->comment('0 => unread, 1 => read');
             $table->timestamps();
         });
     }

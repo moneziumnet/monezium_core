@@ -1125,6 +1125,7 @@ class UserController extends Controller
       public function notification()
       {
           $notifications = ActionNotification::where('user_id', auth()->id())->orderBy('created_at', 'desc')->paginate(20);
+          $data = ActionNotification::where('user_status', '0')->update(['user_status' => '1']);
           return view('user.notifications', compact('notifications'));
       }
 
