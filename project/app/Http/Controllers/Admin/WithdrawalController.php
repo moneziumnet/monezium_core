@@ -38,6 +38,7 @@ class WithdrawalController extends Controller
 
 
       mailSend('accept_withdraw',['amount'=>amount($withdraw->amount,$withdraw->currency->type,2), 'trnx'=> $withdraw->trx,'curr' => $withdraw->currency->code,'method'=>$withdraw->method->name,'charge'=> amount($withdraw->charge,$withdraw->currency->type,2),'date_time'=> dateFormat($withdraw->updated_at)], $withdraw->user);
+      send_notification($withdraw->user->id, $withdraw->method->name.' Withdraw  for '.($withdraw->user->company_name ?? $withdraw->user->name).' is approved. Please check .', route('admin.withdraw.accepted'));
 
         return back()->with('success','Withdraw Accepted Successfully');
     }
@@ -144,6 +145,7 @@ class WithdrawalController extends Controller
         }
 
         mailSend('reject_withdraw',['amount'=> amount($withdraw->amount,$withdraw->currency->type,2), 'trnx'=> $trnx->trnx,'curr' => $withdraw->currency->code,'method'=>$withdraw->method->name,'reason'=>$withdraw->reject_reason,'date_time'=> dateFormat($trnx->created_at)],$user);
+        send_notification($user->id, $withdraw->method->name.' Withdraw  for '.($user->company_name ?? $user->name).' is rejected. Please check .', route('admin.withdraw.rejected'));
 
         return back()->with('success','Withdraw Rejected Successfully');
     }

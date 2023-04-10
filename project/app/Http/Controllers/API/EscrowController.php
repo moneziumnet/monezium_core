@@ -258,7 +258,9 @@ class EscrowController extends Controller
             mailSend('escrow_dispute',[ 'date_time'=>$dispute->created_at, 'user_name' => (auth()->user()->company_name ?? auth()->user()->name), 'trnx' => $escrow->trnx, 'reason' => $dispute->message], $owner);
 
 
-            send_notification(auth()->id(), 'Dispute about Escrow has been created by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.'."\nEscrow ID:".$escrow->trnx, route('admin.escrow.disputed'));
+            send_notification($escrow->user_id, 'Dispute about Escrow has been created by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.'."\nEscrow ID:".$escrow->trnx, route('admin.escrow.disputed'));
+            send_notification($escrow->recipient_id, 'Dispute about Escrow has been created by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.'."\nEscrow ID:".$escrow->trnx, route('admin.escrow.disputed'));
+
             send_staff_telegram('Dispute about Escrow has been created by '.(auth()->user()->company_name ?? auth()->user()->name)."\nEscrow ID:".$escrow->trnx."\n Please check.\n".route('admin.escrow.disputed'), 'Escrow');
 
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Replied submitted']);
@@ -314,6 +316,7 @@ class EscrowController extends Controller
                 $currency = Currency::findOrFail(defaultCurr());
 
                 mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>'Escrow', 'date_time'=> dateFormat($trans->created_at)], $user);
+                send_notification($user->id, 'New Escrow Wallet Created for '.($user->company_name ?? $user->name).'. Please check .', route('admin-user-accounts', $user->id));
 
                 user_wallet_decrement($recipient->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
                 user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
