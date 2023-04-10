@@ -65,7 +65,7 @@
     </div> -->
     <div class="footer-bottom">
         <div class="container-xl d-flex">
-            <div class="col-sm-6 col-md-10 d-flex justify-content-start align-items-center">
+            <div class="col-md-9 d-flex align-items-center">
                 <a href="{{ route('front.page','privacy') }}" class="tx-color" style="margin: 0 0.5rem;">{{__('Privacy & Policy') }}</a>
                 <a href="{{ route('front.page','term-service') }}" class="tx-color" style="margin: 0 0.5rem;">{{ __('Term of Service') }}</a>
                 <a href="{{ route('front.page','about') }}" class="tx-color" style="margin: 0 0.5rem;">{{ __('About Us') }}</a>
@@ -79,7 +79,7 @@
                 @endphp
                 </span>
             </div>
-            <div class="col-sm-6 col-md-2 d-flex justify-content-end align-items-center">
+            <div class="col-md-3 d-flex align-items-center">
                 <span style="float: right;">English</span>
                 <a href="?theme=dark" class="hide-theme-dark tx-color" style="float: right;margin-left:0.8rem;" title="Enable dark mode" data-bs-toggle="tooltip" data-bs-placement="bottom">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
