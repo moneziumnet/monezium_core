@@ -203,7 +203,7 @@
                         <div class="plan__item-body">
                             <ul>
                                 <li>
-                                    <div class="name">
+                                    <div class="name font-weight-normal">
                                         @lang('Duration')
                                     </div>
 

@@ -46,7 +46,7 @@
                         <div class="plan__item-body">
                             <ul>
                             <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Maximum Send Money (Daily)')
                                         </div>
                                         <div class="info">
@@ -55,7 +55,7 @@
                                     </li>
 
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Maximum Send Money (Monthly)')
                                         </div>
 
@@ -65,7 +65,7 @@
                                     </li>
 
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Maximum Request Money (Daily)')
                                         </div>
 
@@ -75,7 +75,7 @@
                                     </li>
 
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Maximum Request Money (Monthly)')
                                         </div>
 
@@ -85,7 +85,7 @@
                                     </li>
 
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Maximum Withdraw Amount (Daily)')
                                         </div>
 
@@ -94,7 +94,7 @@
                                         </div>
                                     </li>
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Maximum Withdraw Amount (Monthly)')
                                         </div>
 
@@ -104,7 +104,7 @@
                                     </li>
 
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Maximum Deposit Money (Daily)')
                                         </div>
 
@@ -114,7 +114,7 @@
                                     </li>
 
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Maximum Deposit Money (Monthly)')
                                         </div>
 
@@ -124,7 +124,7 @@
                                     </li>
 
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Maximum Escrow Money (Daily)')
                                         </div>
 
@@ -134,7 +134,7 @@
                                     </li>
 
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Maximum Escrow Money (Monthly)')
                                         </div>
 
@@ -144,7 +144,7 @@
                                     </li>
 
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Installment Interval')
                                         </div>
                                         <div class="info">

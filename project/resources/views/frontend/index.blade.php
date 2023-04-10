@@ -219,7 +219,7 @@
                             <div class="plan__item-body">
                                 <ul>
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Maximum Send Money (Daily)')
                                         </div>
                                         <div class="info">
@@ -228,7 +228,7 @@
                                     </li>
 
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Maximum Send Money (Monthly)')
                                         </div>
 
@@ -238,7 +238,7 @@
                                     </li>
 
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Maximum Request Money (Daily)')
                                         </div>
 
@@ -248,7 +248,7 @@
                                     </li>
 
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Maximum Request Money (Monthly)')
                                         </div>
 
@@ -258,7 +258,7 @@
                                     </li>
 
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Maximum Withdraw Amount (Daily)')
                                         </div>
 
@@ -268,7 +268,7 @@
                                     </li>
 
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Maximum Withdraw Amount (Monthly)')
                                         </div>
 
@@ -278,7 +278,7 @@
                                     </li>
 
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Maximum Deposit Amount (Daily)')
                                         </div>
 
@@ -288,7 +288,7 @@
                                     </li>
 
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Maximum Deposit Amount (Monthly)')
                                         </div>
 
@@ -298,7 +298,7 @@
                                     </li>
 
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Maximum Escrow Amount (Daily)')
                                         </div>
 
@@ -308,7 +308,7 @@
                                     </li>
 
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Maximum Escrow Amount (Monthly)')
                                         </div>
 
@@ -318,7 +318,7 @@
                                     </li>
 
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Installment Interval')
                                         </div>
                                         <div class="info">
@@ -350,7 +350,7 @@
                             <div class="plan__item-body">
                                 <ul>
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Per Installment')
                                         </div>
 
@@ -360,7 +360,7 @@
                                     </li>
 
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Total Deposit')
                                         </div>
 
@@ -370,7 +370,7 @@
                                     </li>
 
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('After Matured')
                                         </div>
 
@@ -380,7 +380,7 @@
                                     </li>
 
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Installment Interval')
                                         </div>
 
@@ -390,7 +390,7 @@
                                     </li>
 
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Total Installment')
                                         </div>
 
@@ -423,7 +423,7 @@
                             <div class="plan__item-body">
                                 <ul>
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Minimum Amount')
                                         </div>
 
@@ -433,7 +433,7 @@
                                     </li>
 
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Maximum Amount')
                                         </div>
 
@@ -443,7 +443,7 @@
                                     </li>
 
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Interval Type')
                                         </div>
 
@@ -453,7 +453,7 @@
                                     </li>
 
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Locked In Period')
                                         </div>
 
@@ -464,7 +464,7 @@
 
                                     @if ($data->interest_interval)
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Get Profit every')
                                         </div>
 
@@ -500,7 +500,7 @@
                             <div class="plan__item-body">
                                 <ul>
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Minimum Amount')
                                         </div>
 
@@ -510,7 +510,7 @@
                                     </li>
 
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Maximum Amount')
                                         </div>
 
@@ -520,7 +520,7 @@
                                     </li>
 
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Installment Interval')
                                         </div>
 
@@ -530,7 +530,7 @@
                                     </li>
 
                                     <li>
-                                        <div class="name">
+                                        <div class="name font-weight-normal">
                                             @lang('Total Installment')
                                         </div>
 

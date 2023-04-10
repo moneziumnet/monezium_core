@@ -45,7 +45,7 @@
                         <div class="plan__item-body">
                             <ul>
                                 <li>
-                                    <div class="name">
+                                    <div class="name font-weight-normal">
                                         @lang('Per Installment')
                                     </div>
 
@@ -55,7 +55,7 @@
                                 </li>
 
                                 <li>
-                                    <div class="name">
+                                    <div class="name font-weight-normal">
                                         @lang('Total Deposit')
                                     </div>
 
@@ -65,7 +65,7 @@
                                 </li>
 
                                 <li>
-                                    <div class="name">
+                                    <div class="name font-weight-normal">
                                         @lang('After Matured')
                                     </div>
 
@@ -75,7 +75,7 @@
                                 </li>
 
                                 <li>
-                                    <div class="name">
+                                    <div class="name font-weight-normal">
                                         @lang('Installment Interval')
                                     </div>
 
@@ -85,7 +85,7 @@
                                 </li>
 
                                 <li>
-                                    <div class="name">
+                                    <div class="name font-weight-normal">
                                         @lang('Total Installment')
                                     </div>
 

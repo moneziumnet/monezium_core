@@ -73,7 +73,7 @@
                         <div class="plan__item-body">
                             <ul>
                                 <li>
-                                    <div class="name">
+                                    <div class="name font-weight-normal">
                                         @lang('Minimum Amount')
                                     </div>
 
@@ -83,7 +83,7 @@
                                     </div>
                                 </li>
                                 <li>
-                                    <div class="name">
+                                    <div class="name font-weight-normal">
                                         @lang('Maximum Amount')
                                     </div>
 
@@ -93,7 +93,7 @@
                                     </div>
                                 </li>
                                 <li>
-                                    <div class="name">
+                                    <div class="name font-weight-normal">
                                         @lang('Installment Interval')
                                     </div>
 
@@ -102,7 +102,7 @@
                                     </div>
                                 </li>
                                 <li>
-                                    <div class="name">
+                                    <div class="name font-weight-normal">
                                         @lang('Total Installment')
                                     </div>
 
