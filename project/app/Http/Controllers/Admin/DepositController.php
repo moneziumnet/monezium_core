@@ -149,6 +149,7 @@ class DepositController extends Controller
         $data->update(['status' => 'complete']);
         $currency = Currency::findOrFail($data->currency_id);
         mailSend('deposit_approved',['amount'=>$data->amount, 'curr' => $currency->code, 'trnx' => $data->deposit_number ,'date_time'=>$trans->created_at ,'type' => $data->method ], $user);
+        send_notification($user->id, $data->method.' Deposit  for '.($user->company_name ?? $user->name).' is approved. Please check .', route('admin.deposits.index'));
 
         $msg = 'Data Updated Successfully.';
         return response()->json($msg);

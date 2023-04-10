@@ -190,9 +190,11 @@ class LoanController extends Controller
       $user = User::whereId($data->user_id)->first();
       if ($id2 == 1) {
           mailSend('loan_approved',[], $user);
+          send_notification($user->id, 'Loan  for '.($user->company_name ?? $user->name).' is approved. Please check .', route('admin.loan.running'));
       }
       else if($id2 == 2) {
         mailSend('loan_reject',[], $user);
+        send_notification($user->id, 'Loan  for '.($user->company_name ?? $user->name).' is rejected. Please check .', route('admin.loan.rejected'));
       }
       $data->status = $id2;
       $data->update();

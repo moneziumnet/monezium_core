@@ -157,6 +157,8 @@ class DepositBankController extends Controller
         if($id2 == 'reject') {
             $msg = 'Data Updated Successfully.';
             mailSend('deposit_reject',['amount'=>$data->amount, 'curr' => $data->currency->code, 'trnx' => $data->deposit_number, 'type' => 'Bank' ], $user);
+            send_notification($user->id, 'Bank Deposit  for '.($user->company_name ?? $user->name).' is rejected. Please check .', route('admin.deposits.bank.index'));
+
             if ($data->purpose) {
                 $shop = MerchantShop::where('id', $data->purpose_data)->first();
                 if($shop && $shop->webhook) {
@@ -258,6 +260,7 @@ class DepositBankController extends Controller
         }
 
         mailSend('deposit_approved',['amount'=>$data->amount, 'curr' => $data->currency->code, 'trnx' => $data->deposit_number ,'date_time'=>$trans->created_at ,'type' => 'Bank' ], $user);
+        send_notification($user->id, 'Bank Deposit  for '.($user->company_name ?? $user->name).' is approved. Please check .', route('admin.deposits.bank.index'));
         if ($data->purpose) {
             $shop = MerchantShop::where('id', $data->purpose_data)->first();
             if($shop && $shop->webhook) {

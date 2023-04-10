@@ -512,6 +512,7 @@ if (!function_exists('user_wallet_increment')) {
                     $trans->save();
                     $currency = Currency::findOrFail(defaultCurr());
                     mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>$wallet_type_list[$wallet_type], 'date_time'=> dateFormat($trans->created_at)], $user);
+                    send_notification($auth_id, 'New '.$wallet_type_list[$wallet_type].' Wallet Created for '.($user->company_name ?? $user->name).'. Please check .', route('admin-user-accounts', $auth_id));
 
                 } else {
                     $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
@@ -535,6 +536,7 @@ if (!function_exists('user_wallet_increment')) {
                     $currency = Currency::findOrFail(defaultCurr());
 
                     mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>$wallet_type_list[$wallet_type], 'date_time'=> dateFormat($trans->created_at)], $user);
+                    send_notification($auth_id, 'New '.$wallet_type_list[$wallet_type].' Wallet Created for '.($user->company_name ?? $user->name).'. Please check .', route('admin-user-accounts', $auth_id));
                 }
                 user_wallet_decrement($auth_id, defaultCurr(), $chargefee->data->fixed_charge, 1);
                 user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
@@ -733,6 +735,7 @@ if (!function_exists('wallet_monthly_fee')) {
                     $trans->save();
                     $currency = Currency::findOrFail($value->currency_id);
                     mailSend('account_maintenance',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>$wallet_type_list[$value->wallet_type], 'date_time'=> dateFormat($trans->created_at)], $user);
+                    send_notification($user->id, $wallet_type_list[$value->wallet_type].' Wallet of '.($user->company_name ?? $user->name).' is maintenanced. Please check .', route('admin-user-transactions', $user->id));
 
                     $user->update();
                 }
@@ -773,6 +776,8 @@ if (!function_exists('wallet_monthly_fee')) {
                     $currency = Currency::findOrFail($value->currency_id);
 
                     mailSend('account_maintenance',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>'Card', 'date_time'=> dateFormat($trans->created_at)], $user);
+                    send_notification($user->id, 'Card Wallet of '.($user->company_name ?? $user->name).' is maintenanced. Please check .', route('admin-user-transactions', $user->id));
+
                     $user->update();
                 }
 
