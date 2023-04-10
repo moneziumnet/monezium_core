@@ -448,7 +448,7 @@ class UserController extends Controller
 
         $pdf = PDF::loadView('frontend.myPDF', $data);
         foreach ($transaction as $key => $trans) {
-            $pdf_name = date('dmY', strtotime($trans->created_at)).'_'.$trans->trnx.'.pdf';
+            $pdf_name = date('mdY', strtotime($trans->created_at)).'_'.$trans->trnx.'.pdf';
         }
         return $pdf->download($pdf_name);
     }
