@@ -316,7 +316,7 @@ class EscrowController extends Controller
                 $currency = Currency::findOrFail(defaultCurr());
 
                 mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>'Escrow', 'date_time'=> dateFormat($trans->created_at)], $user);
-                send_notification($user->id, 'New Escrow Wallet Created for '.($user->company_name ?? $user->name).'. Please check .', route('admin-user-accounts', $user->id));
+                send_notification($user->id, 'New Escrow Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$currency->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $user->id));
 
                 user_wallet_decrement($recipient->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
                 user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);

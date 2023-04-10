@@ -133,7 +133,7 @@ class RailsBankController extends Controller
             $currency = Currency::findOrFail(defaultCurr());
 
             mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>'Bank', 'date_time'=> dateFormat($trans->created_at)], $user);
-            send_notification($user->id, 'New Bank Wallet Created for '.($user->company_name ?? $user->name).'. Please check .', route('admin-user-banks', $user->id));
+            send_notification($user->id, 'New Bank Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$currency->code."\n Transaction ID : ".$trans->trnx, route('admin-user-banks', $user->id));
 
             user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
             user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);

@@ -156,7 +156,7 @@ class UserLoanController extends Controller
             $data->fill($input)->save();
             $currency = Currency::findOrFail($request->currency_id);
             mailSend('loan_request',['amount'=>$request->amount, 'curr'=> $currency->code ], auth()->user());
-            send_notification(auth()->id(), 'Loan has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.loan.show', $data->id));
+            send_notification(auth()->id(), 'Loan has been requested by '.(auth()->user()->company_name ?? auth()->user()->name)."\n Loan Amount : ".$request->amount.$currency->code, route('admin.loan.show', $data->id));
             send_staff_telegram('Loan has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).". Please check.\n".route('admin.loan.show', $data->id), 'Loan');
 
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Loan Requesting Successfully']);

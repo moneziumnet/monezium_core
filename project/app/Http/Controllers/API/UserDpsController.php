@@ -84,7 +84,7 @@ class UserDpsController extends Controller
                 $trans->save();
                 $currency = Currency::findOrFail($request->currency_id);
                 mailSend('dps_run',['amount'=>$request->deposit_amount, 'curr'=> $currency->code ], auth()->user());
-                send_notification(auth()->id(), 'Dps has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).'. Please check.', route('admin.dps.running'));
+                send_notification(auth()->id(), 'Dps has been requested by '.(auth()->user()->company_name ?? auth()->user()->name)."\n DPS Amount : ".$request->deposit_amount.$currency->code, route('admin.dps.running'));
                 send_staff_telegram('Dps has been requested by '.(auth()->user()->company_name ?? auth()->user()->name).". Please check.\n".route('admin.dps.running'), 'Dps');
 
                 return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'DPS application submitted']);

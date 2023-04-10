@@ -139,7 +139,7 @@ class MoneyRequestController extends Controller
             $data->user_type = 1;
 
             
-            send_notification(auth()->id(), (auth()->user()->company_name ?? auth()->user()->name).' send request money to '.$request->account_email.' Please check .', route('admin.request.money'));
+            send_notification(auth()->id(), (auth()->user()->company_name ?? auth()->user()->name).' send request money to '.$request->account_email."\n Amount is ".$request->amount.$currency->code , route('admin.request.money'));
             if($receiver === null){
                 $gs = Generalsetting::first();
                 $to = $request->account_email;
@@ -370,10 +370,10 @@ class MoneyRequestController extends Controller
 
 
             mailSend('request_money_complete',['amount'=>$data->amount, 'curr' => $currency->code, 'from' => ($user->company_name ?? $user->name), 'to' => ($receiver->company_name ?? $receiver->name ), 'charge'=> $data->cost + $data->supervisor_cost, 'date_time'=> $data->created_at, 'trnx' => $data->transaction_no ], $receiver);
-            send_notification($receiver->id, $data->amount.$currency->code.' Money is sent from '.($user->company_name ?? $user->name).' to '.($receiver->company_name ?? $receiver->name ).'. Please check .', route('admin-user-transactions', $receiver->id));
+            send_notification($receiver->id, $data->amount.$currency->code.' Money is sent from '.($user->company_name ?? $user->name).' to '.($receiver->company_name ?? $receiver->name )."\n Charge Fee : ".($data->cost + $data->supervisor_cost).$currency->code."\n Transaction ID : ".$data->transaction_no, route('admin-user-transactions', $receiver->id));
 
             mailSend('request_money_complete',['amount'=>$data->amount, 'curr' => $currency->code, 'from' => ($user->company_name ?? $user->name), 'to' => ($receiver->company_name ?? $receiver->name ), 'charge'=> 0, 'date_time'=> $data->created_at, 'trnx' => $data->transaction_no ], $user);
-            send_notification($user->id, $data->amount.$currency->code.' Money is sent from '.($user->company_name ?? $user->name).' to '.($receiver->company_name ?? $receiver->name ).'. Please check .', route('admin-user-transactions', $user->id));
+            send_notification($user->id, $data->amount.$currency->code.' Money is sent from '.($user->company_name ?? $user->name).' to '.($receiver->company_name ?? $receiver->name )."\n Charge Fee : 0".$currency->code."\n Transaction ID : ".$data->transaction_no, route('admin-user-transactions', $user->id));
 
             return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'Successfully Money Send.']);
         } catch (\Throwable $th) {
