@@ -58,7 +58,7 @@
 @elseif(Auth::guard('admin')->user()->role === 'staff')
 <div class="card-header tab-card-header">
     <ul class="nav nav-pills card-header-tabs" id="pills-tab" role="tablist">
-        @if(getModule('Infromation'))
+        @if(getModule('Information'))
         <li class="nav-item">
             <a class="nav-link {{menu('admin-user-profile')}}" id="information" href="{{route('admin-user-profile',$data->id) }}" role="button" >Information</a>
         </li>
