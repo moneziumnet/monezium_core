@@ -17,7 +17,7 @@
 </div>
 
 @endif
-@if(!Auth::guard('admin')->user()->IsSuper())
+@if(!Auth::guard('admin')->user()->IsSuper() && Auth::guard('admin')->user()->role == 'admin')
 <div class="card mt-3 mb-3">
     <div class="card-body">
       <div class="d-flex justify-content-center">
@@ -28,7 +28,7 @@
 </div>
 @endif
 @if(Auth::guard('admin')->user()->IsSuper())
-<div class="row mb-3">
+<div class="row mb-3 mt-3">
   <div class="col-xl-4 col-md-6 mb-4">
     <div class="card h-100">
       <div class="card-body">
@@ -115,7 +115,7 @@
   </div>
 </div>
 @else
-<div class="row mb-3">
+<div class="row mb-3 mt-3">
   <div class="col-xl-3 col-md-6 mb-4">
     <div class="card h-100">
       <div class="card-body">
@@ -325,7 +325,7 @@
   </div>
 
 </div>
-
+@if(Auth::guard('admin')->user()->role == 'admin')
 <div class="row mb-3">
   <div class="col-xl-4 col-md-6 mb-4">
     <div class="card h-100">
@@ -375,6 +375,7 @@
     </div>
   </div>
 </div>
+@endif
 
 <div class="row mb-3">
   <div class="col-xl-12 col-lg-12 mb-4">

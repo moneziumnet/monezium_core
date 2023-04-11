@@ -151,14 +151,12 @@
           <img src="{{ asset('assets/images/'.$gs->logo) }}">
         </div>
       </a>
-      @if(!(Auth::guard('admin')->user()->role == 'staff'))
 
       <li class="nav-item">
         <a class="nav-link" href="{{ route('admin.dashboard') }}">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>{{ __('Dashboard') }}</span></a>
       </li>
-      @endif
 
       @if(Auth::guard('admin')->user()->IsSuper())
         @include('includes.admin.roles.super')
