@@ -388,13 +388,16 @@ class UserController extends Controller
         })
         ->when($search,function($q) use($search){
             return $q->where('user_id',auth()->id())
-                     ->where('trnx','LIKE',"%{$search}%")
-                    //  ->orwhereRaw("(aes_decrypt(data, 'aes-256-cbc', '".config('app.key')."', OPENSSL_RAW_DATA, SUBSTR(data, 1, 16))) LIKE '%$search%'")
-                     ->where('user_id',auth()->id());
+                ->orWhere('trnx','LIKE',"%{$search}%")
+                ->where('user_id',auth()->id());
         })
         ->whereBetween('created_at', [$s_time, $e_time])
         ->orderBy('created_at', 'desc')
         ->with('currency')->latest()->paginate(20);
+        $transactions = $transactions->filter(function ($item) use($search) {
+            return stripos(strtolower($item->data), strtolower($search)) !== false;
+        });
+ 
         $remark_list = Transaction::where('user_id', auth()->id())->orderBy('remark', 'asc')->pluck('remark')->map(function ($item) {
             return ucfirst($item);
         });

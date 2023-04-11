@@ -105,16 +105,8 @@
 							</tr>
 						  </thead>
 						  <tbody>
-						  @php
-							$i = ($transactions->currentpage() - 1) * $transactions->perpage() + 1;
-						  @endphp
 							@forelse ($transactions as $key=>$data)
 							<tr>
-								<!--<td data-label="@lang('No')">
-								  <div>
-									<span class="text-muted">{{ $i++ }}</span>
-								  </div>
-								</td>-->
 								<td data-label="@lang('Date')">{{dateFormat($data->created_at,'d-M-Y')}} </br> {{__(str_dis($data->trnx))}} </td>
 
 								<td data-label="@lang('Sender')">
@@ -143,7 +135,7 @@
 						  </tbody>
 						</table>
 					  </div>
-                      {{ $transactions->links() }}
+                      {{ $search ? "" : $transactions->links() }}
                 </div>
             </div>
         </div>
