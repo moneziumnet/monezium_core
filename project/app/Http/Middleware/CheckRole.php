@@ -19,7 +19,7 @@ class CheckRole
     {
 
         if (Auth::guard('admin')->check()) {
-            if(($data === 'admin' && Auth::guard('admin')->user()->role === 'admin') || $data === 'staff') {
+            if(($data === 'admin' && Auth::guard('admin')->user()->role === 'admin') || $data === 'staff' || Auth::guard('admin')->user()->IsSuper()) {
                 return $next($request);
             }
         }

@@ -13,10 +13,10 @@ class Permissions
             if(Auth::guard('admin')->user()->id == 1){
                 return $next($request);
             }
-            if(Auth::guard('admin')->user()->role == 'staff'){
+            if(Auth::guard('admin')->user()->IsSuper()){
                 return $next($request);
             }
-            if (Auth::guard('admin')->user()->sectionCheck($data)){
+            if(Auth::guard('admin')->user()->role == 'staff' && Auth::guard('admin')->user()->sectionCheck($data)){
                 return $next($request);
             }
         }

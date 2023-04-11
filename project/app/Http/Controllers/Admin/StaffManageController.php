@@ -9,6 +9,7 @@ use App\Models\Generalsetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Datatables;
+use Auth;
 
 class StaffManageController extends Controller
 {
@@ -39,6 +40,16 @@ class StaffManageController extends Controller
                         <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="'. route('admin.staff.status',['id' => $data->id, 'status' => 'guest']).'">'.__("Turn Off").'</a>
                     </div>
                     </div>';
+            })
+            ->addColumn('action', function(Admin $data) {
+                return '<div class="btn-group mb-1">
+                    <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    '.'Actions' .'
+                    </button>
+                    <div class="dropdown-menu" x-placement="bottom-start">
+                    <a href="' . route('admin-staff-profilemodule',$data->id) . '"  class="dropdown-item">'.__("Profile").'</a>
+                    </div>
+                </div>';
             })
 
             ->rawColumns(['name','action','status'])
@@ -89,6 +100,34 @@ class StaffManageController extends Controller
         $msg = __('You have added New Staff Successfully. Please view staff list. ').'<a href="'.route('admin.staff.index').'">'.__('View Lists.').'</a>';
 
         return response()->json($msg);
+    }
+
+    public function profileModules($id)
+    {
+        $data = Admin::findOrFail($id);
+        $data['data'] = $data;
+        return view('admin.staff.profilemodules',$data);
+    }
+
+    public function moduleupdate(Request $request, $id)
+    {
+        if ($id != Auth::guard('admin')->user()->id) {
+            $input = $request->all();
+            $data = Admin::findOrFail($id);
+            if (!empty($request->section)) {
+                $input['section'] = implode(" , ", $request->section);
+            } else {
+                $input['section'] = '';
+            }
+            $data->section = $input['section'];
+            $data->update();
+            $msg = 'Data Updated Successfully.';
+
+            return response()->json($msg);
+        } else {
+            $msg = 'You can not change your role.';
+            return response()->json($msg);
+        }
     }
 
     

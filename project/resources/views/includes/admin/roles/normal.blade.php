@@ -1,4 +1,4 @@
-@if(Auth::guard('admin')->user()->tenant_id)
+{{-- @if(Auth::guard('admin')->user()->tenant_id) --}}
 
 @if(getModule('Sub Institutions management'))
 <li class="nav-item">
@@ -435,4 +435,4 @@
 @endif
 
 
-@endif
+{{-- @endif --}}

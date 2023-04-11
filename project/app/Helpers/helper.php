@@ -31,15 +31,19 @@ use ERC20\ERC20;
 if (!function_exists('getModule')) {
     function getModule($value)
     {
-        $admin = tenancy()->central(function ($tenant) {
+        if(auth()->guard('admin')->user()->role == 'admin') {
+            $admin = tenancy()->central(function ($tenant) {
             if ($tenant) {
                 return Admin::where('tenant_id', $tenant->id)->first();
-            } else {
-                return auth()->guard('admin')->user();
-            }
-
-        });
-
+                } else {
+                    return auth()->guard('admin')->user();
+                }
+    
+            });
+        }
+        elseif(auth()->guard('admin')->user()->role == 'staff') {
+            $admin = auth()->guard('admin')->user();
+        }
         $sections = explode(" , ", $admin->section);
         if (in_array($value, $sections)) {
             return true;

@@ -380,13 +380,19 @@ class UserController extends Controller
 
         public function profileInfo($id)
         {
-            $data = User::findOrFail($id);
-            $data['loans'] = UserLoan::whereUserId($data->id)->get();
-            $data['dps'] = UserDps::whereUserId($data->id)->get();
-            $data['fdr'] = UserFdr::whereUserId($data->id)->get();
-            $data['withdraws'] = Withdrawals::whereUserId($data->id)->get();
-            $data['data'] = $data;
-            return view('admin.user.profile',$data);
+            if ((Auth::guard('admin')->user()->role == 'staff' && getModule('Information')) || Auth::guard('admin')->user()->role == 'admin') {
+                $data = User::findOrFail($id);
+                $data['loans'] = UserLoan::whereUserId($data->id)->get();
+                $data['dps'] = UserDps::whereUserId($data->id)->get();
+                $data['fdr'] = UserFdr::whereUserId($data->id)->get();
+                $data['withdraws'] = Withdrawals::whereUserId($data->id)->get();
+                $data['data'] = $data;
+                return view('admin.user.profile',$data);
+            }
+            else {
+                return redirect()->route('admin.dashboard');
+            }
+
         }
 
         public function profileAccounts($id)

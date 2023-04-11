@@ -160,10 +160,8 @@
 
       @if(Auth::guard('admin')->user()->IsSuper())
         @include('includes.admin.roles.super')
-      @elseif(Auth::guard('admin')->user()->role === 'admin')
+      @else
         @include('includes.admin.roles.normal')
-      @elseif(Auth::guard('admin')->user()->role === 'staff')
-        @include('includes.admin.roles.staff')
       @endif
 
     </ul>

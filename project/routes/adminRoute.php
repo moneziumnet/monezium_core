@@ -82,7 +82,6 @@ use App\Http\Controllers\Admin\StaffManageController;
 
 
 Route::prefix('admin')->group(function () {
-  Route::group(['middleware' => 'checkRole:admin'], function () {
 
     //-----------------------------Clear Cache--------------------
     Route::get('/cache/clear', function () {
@@ -211,12 +210,28 @@ Route::prefix('admin')->group(function () {
       Route::get('/staffs/status/{id}/{status}', [StaffManageController::class, 'staff_status'])->name('admin.staff.status');
       Route::get('/staff/create', [StaffManageController::class, 'create'])->name('admin.staff.create');
       Route::post('/staff/create', [StaffManageController::class, 'store'])->name('admin.staff.store');
+      Route::get('/staff/{id}/module', [StaffManageController::class, 'profileModules'])->name('admin-staff-profilemodule');
+      Route::post('/staff/{id}/module/update', [StaffManageController::class, 'moduleupdate'])->name('admin-staff-updatemodules');
     });
 
     Route::group(['middleware' => 'permissions:Manage Customers'], function () {
       Route::get('/users/bonus', [BonusController::class, 'index'])->name('admin.user.bonus');
       Route::post('/users/edit/', [BonusController::class, 'update'])->name('admin.bonus.update');
 
+      Route::get('/users', [UserController::class, 'index'])->name('admin.user.index');
+      Route::get('/users/datatables', [UserController::class, 'datatables'])->name('admin-user-datatables'); //JSON REQUEST
+      Route::get('/user/{id}/profile', [UserController::class, 'profileInfo'])->name('admin-user-profile');
+      Route::get('/users/create', [UserController::class, 'create'])->name('admin.user.create');
+      Route::post('/users/create', [UserController::class, 'store'])->name('admin.user.store');
+      Route::get('/user/{id}/documents', [UserController::class, 'profileDocuments'])->name('admin-user-documents');
+      Route::get('/user/document/create/{user_id}', [UserController::class,'createfile'])->name('admin-user.createfile');
+      Route::post('/user/document/create/{user_id}', [UserController::class,'storefile'])->name('admin-user.createfile');
+      Route::get('/user/document/download/{id}', [UserController::class,'fileDownload'])->name('admin-user.download');
+      Route::get('/user/document/fileview/{id}', [UserController::class,'fileView'])->name('admin-user.view-document');
+      Route::get('/user/document/delete/{id}', [UserController::class,'fileDestroy'])->name('admin-user.document-delete');
+      Route::get('/user/{id}/banks', [PayTransactionController::class, 'index'])->name('admin-user-banks');
+      Route::get('/user/pay/detail/{id}', [PayTransactionController::class, 'trxDetails'])->name('admin-user-banks-details');
+      Route::get('/pay/datatables', [PayTransactionController::class, 'datatables'])->name('admin.pay.transaction.datatables');
 
       Route::get('/users/edit/{id}', [UserController::class, 'edit'])->name('admin-user-edit');
       Route::post('/users/edit/{id}', [UserController::class, 'update'])->name('admin-user-update');
@@ -319,6 +334,34 @@ Route::prefix('admin')->group(function () {
       Route::get('/user/beneficiary/datatables/{id}', [AdminBeneficiaryController::class, 'datatables'])->name('admin-user-beneficiary-database');
       Route::get('/user/beneficiary/details/{id}', [AdminBeneficiaryController::class, 'details'])->name('admin-user-beneficiary-details');
 
+    });
+
+    Route::group(['middleware' => 'permissions:KYC Management'], function () {
+      Route::get('/users/kyc/{id1}/{id2}', [KycManageController::class, 'kyc'])->name('admin.user.kyc');
+      Route::get('/user/kycinfo/more/datatables/{id}', [UserController::class, 'additionkycdatatables'])->name('admin.user.more.kyc.datatables');
+      Route::get('/manage-kyc/datatables', [KycManageController::class, 'datatables'])->name('admin.manage.kyc.datatables');
+      Route::get('/manage-kyc-form', [KycManageController::class, 'index'])->name('admin.manage.kyc.index');
+      Route::get('/kyc-form/create', [KycManageController::class, 'create_form'])->name('admin.manage.kyc.create');
+      Route::post('/kyc-form/store', [KycManageController::class, 'store_form'])->name('admin.manage.kyc.store');
+      Route::get('/kyc-form/edit/{id}', [KycManageController::class, 'edit_form'])->name('admin.manage.kyc.edit');
+      Route::post('/kyc-form/edit/{id}', [KycManageController::class, 'update_form'])->name('admin.manage.kyc.update');
+      Route::get('/kyc-form/status/{id1}/{id2}', [KycManageController::class, 'form_status'])->name('admin.manage.kyc.status');
+      Route::get('/manage-kyc-form/datatables', [KycManageController::class, 'kycdatatables'])->name('admin.kyc.form.datatables');
+      Route::post('/kyc-form/add/more', [KycManageController::class, 'add_more_form'])->name('admin.manage.kyc.add.more');
+      Route::get('/manage-kyc-module', [KycManageController::class, 'module'])->name('admin.manage.module');
+      Route::get('/manage-kyc-form/{user}', [KycManageController::class, 'userKycForm'])->name('admin.manage.kyc.user');
+      Route::post('/manage-kyc-form/{user}', [KycManageController::class, 'kycForm']);
+      Route::post('/kyc-form/update', [KycManageController::class, 'kycFormUpdate'])->name('admin.kyc.form.update');
+      Route::get('/kyc-form/delete/{id}', [KycManageController::class, 'deletedField'])->name('admin.kyc.form.delete');
+      Route::get('/kyc-info/{user}', [KycManageController::class, 'kycInfo'])->name('admin.kyc.info');
+      Route::get('/kyc-info/user/{id}', [KycManageController::class, 'kycDetails'])->name('admin.kyc.details');
+      Route::get('/users/more/kyc/{id1}/{id2}', [KycManageController::class, 'kyc_more'])->name('admin.more.user.kyc');
+      Route::get('/users/kyc/more/details/{id}', [KycManageController::class, 'moreDetails'])->name('admin.more.user.kyc.details');
+      Route::get('/user/{id}/kyc_info', [UserController::class, 'profilekycinfo'])->name('admin.user.kycinfo');
+      Route::get('/user/kycinfo/datatables/{id}', [UserController::class, 'kycdatatables'])->name('admin.user.kyc.datatables');
+      Route::get('/user/kycform/more/{id}', [UserController::class, 'KycForm'])->name('admin.kyc.more.form.create');
+      Route::post('/user/kycform/more/store', [UserController::class, 'StoreKycForm'])->name('admin.kyc.more.form.store');
+  
     });
 
     Route::group(['middleware' => 'permissions:Loan Management'], function () {
@@ -773,7 +816,6 @@ Route::prefix('admin')->group(function () {
     Route::get('/activation', [DashboardController::class, 'activation'])->name('admin-activation-form');
     Route::post('/activation', [DashboardController::class, 'activation_submit'])->name('admin-activate-purchase');
     Route::get('/clear/backup', [DashboardController::class, 'clear_bkup'])->name('admin-clear-backup');
-  });
 
   Route::get('/login', [LoginController::class, 'showLoginForm'])->name('admin.login');
   Route::post('/login', [LoginController::class, 'login'])->name('admin.login.submit');
@@ -785,51 +827,6 @@ Route::prefix('admin')->group(function () {
   
   Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
   Route::post('/send/message', [MessageController::class, 'usercontact'])->name('admin.send.message');
-
-  Route::group(['middleware' => 'permissions:Manage Customers'], function () {
-      Route::get('/users', [UserController::class, 'index'])->name('admin.user.index');
-      Route::get('/users/datatables', [UserController::class, 'datatables'])->name('admin-user-datatables'); //JSON REQUEST
-      Route::get('/user/{id}/profile', [UserController::class, 'profileInfo'])->name('admin-user-profile');
-      Route::get('/users/create', [UserController::class, 'create'])->name('admin.user.create');
-      Route::post('/users/create', [UserController::class, 'store'])->name('admin.user.store');
-      Route::get('/user/{id}/documents', [UserController::class, 'profileDocuments'])->name('admin-user-documents');
-      Route::get('/user/document/create/{user_id}', [UserController::class,'createfile'])->name('admin-user.createfile');
-      Route::post('/user/document/create/{user_id}', [UserController::class,'storefile'])->name('admin-user.createfile');
-      Route::get('/user/document/download/{id}', [UserController::class,'fileDownload'])->name('admin-user.download');
-      Route::get('/user/document/fileview/{id}', [UserController::class,'fileView'])->name('admin-user.view-document');
-      Route::get('/user/document/delete/{id}', [UserController::class,'fileDestroy'])->name('admin-user.document-delete');
-      Route::get('/user/{id}/banks', [PayTransactionController::class, 'index'])->name('admin-user-banks');
-      Route::get('/user/pay/detail/{id}', [PayTransactionController::class, 'trxDetails'])->name('admin-user-banks-details');
-      Route::get('/pay/datatables', [PayTransactionController::class, 'datatables'])->name('admin.pay.transaction.datatables');
-  });
-
-  Route::group(['middleware' => 'permissions:KYC Management'], function () {
-    Route::get('/users/kyc/{id1}/{id2}', [KycManageController::class, 'kyc'])->name('admin.user.kyc');
-    Route::get('/user/kycinfo/more/datatables/{id}', [UserController::class, 'additionkycdatatables'])->name('admin.user.more.kyc.datatables');
-    Route::get('/manage-kyc/datatables', [KycManageController::class, 'datatables'])->name('admin.manage.kyc.datatables');
-    Route::get('/manage-kyc-form', [KycManageController::class, 'index'])->name('admin.manage.kyc.index');
-    Route::get('/kyc-form/create', [KycManageController::class, 'create_form'])->name('admin.manage.kyc.create');
-    Route::post('/kyc-form/store', [KycManageController::class, 'store_form'])->name('admin.manage.kyc.store');
-    Route::get('/kyc-form/edit/{id}', [KycManageController::class, 'edit_form'])->name('admin.manage.kyc.edit');
-    Route::post('/kyc-form/edit/{id}', [KycManageController::class, 'update_form'])->name('admin.manage.kyc.update');
-    Route::get('/kyc-form/status/{id1}/{id2}', [KycManageController::class, 'form_status'])->name('admin.manage.kyc.status');
-    Route::get('/manage-kyc-form/datatables', [KycManageController::class, 'kycdatatables'])->name('admin.kyc.form.datatables');
-    Route::post('/kyc-form/add/more', [KycManageController::class, 'add_more_form'])->name('admin.manage.kyc.add.more');
-    Route::get('/manage-kyc-module', [KycManageController::class, 'module'])->name('admin.manage.module');
-    Route::get('/manage-kyc-form/{user}', [KycManageController::class, 'userKycForm'])->name('admin.manage.kyc.user');
-    Route::post('/manage-kyc-form/{user}', [KycManageController::class, 'kycForm']);
-    Route::post('/kyc-form/update', [KycManageController::class, 'kycFormUpdate'])->name('admin.kyc.form.update');
-    Route::get('/kyc-form/delete/{id}', [KycManageController::class, 'deletedField'])->name('admin.kyc.form.delete');
-    Route::get('/kyc-info/{user}', [KycManageController::class, 'kycInfo'])->name('admin.kyc.info');
-    Route::get('/kyc-info/user/{id}', [KycManageController::class, 'kycDetails'])->name('admin.kyc.details');
-    Route::get('/users/more/kyc/{id1}/{id2}', [KycManageController::class, 'kyc_more'])->name('admin.more.user.kyc');
-    Route::get('/users/kyc/more/details/{id}', [KycManageController::class, 'moreDetails'])->name('admin.more.user.kyc.details');
-    Route::get('/user/{id}/kyc_info', [UserController::class, 'profilekycinfo'])->name('admin.user.kycinfo');
-    Route::get('/user/kycinfo/datatables/{id}', [UserController::class, 'kycdatatables'])->name('admin.user.kyc.datatables');
-    Route::get('/user/kycform/more/{id}', [UserController::class, 'KycForm'])->name('admin.kyc.more.form.create');
-    Route::post('/user/kycform/more/store', [UserController::class, 'StoreKycForm'])->name('admin.kyc.more.form.store');
-
-  });
 
 });
 
