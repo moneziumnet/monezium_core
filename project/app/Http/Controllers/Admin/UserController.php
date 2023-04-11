@@ -85,12 +85,20 @@ class UserController extends Controller
                         </div>';
                     }
                     elseif(auth()->user()->role === 'staff') {
+                        $profile_module_list = ["admin-user-profile"=>"Information" , "admin-user-accounts"=>"Accounts" , "admin-user-documents"=>"Documents" , "admin-user-settings"=>"Setting" , "admin-user-pricingplan"=>"Pricing Plan" , "admin-user-transactions"=>"Customer Transactions" , "admin-user-banks"=>"Banks" , "admin-user-modules"=>"Modules" , "admin-user-bank-account"=>"IBAN" , "admin.contract.management"=>"Contract" , "admin.merchant.shop.index"=>"Merchant Shop" , "admin.user.kycinfo"=>"AML/KYC" , "admin-user-beneficiary"=>"Beneficiary" , "admin-user-layer"=>"Layer" , "admin-user-login-history"=>"Login History"];
+                        $route = '';
+                        foreach ($profile_module_list as $key => $value) {
+                          if(getModule($value)) {
+                            $route = $key;
+                            break;
+                          }
+                        }
                         return '<div class="btn-group mb-1">
                             <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             '.'Actions' .'
                             </button>
                             <div class="dropdown-menu" x-placement="bottom-start">
-                            <a href="' . route('admin-user-profile',$data->id) . '"  class="dropdown-item">'.__("Profile").'</a>
+                            <a href="' . route($route,$data->id) . '"  class="dropdown-item">'.__("Profile").'</a>
                             <a href="javascript:;" class="dropdown-item send" data-email="'. $data->email .'" data-toggle="modal" data-target="#vendorform">'.__("Send").'</a>
                             </div>
                         </div>';

@@ -47,7 +47,7 @@ class StaffManageController extends Controller
                     '.'Actions' .'
                     </button>
                     <div class="dropdown-menu" x-placement="bottom-start">
-                    <a href="' . route('admin-staff-profilemodule',$data->id) . '"  class="dropdown-item">'.__("Profile").'</a>
+                    <a href="' . route('admin-staff-profilemodule',$data->id) . '"  class="dropdown-item">'.__("Permission").'</a>
                     </div>
                 </div>';
             })

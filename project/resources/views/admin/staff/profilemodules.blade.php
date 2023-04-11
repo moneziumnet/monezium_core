@@ -21,7 +21,7 @@
         $currency = defaultCurr();
         @endphp
         @include('includes.admin.form-success')
-        <div class="tab-pane fade show p-3 active" id="modules" role="tabpanel" aria-labelledby="modules-tab">
+        <div class="tab-pane fade show active" id="modules" role="tabpanel" aria-labelledby="modules-tab">
           <div class="card-body">
             <div class="gocover" style="background: url({{asset('assets/images/'.$gs->admin_loader)}}) no-repeat scroll center center rgba(45, 45, 45, 0.5);"></div>
                 <form class="geniusform" action="{{ route('admin-staff-updatemodules',$data->id) }}" method="POST" enctype="multipart/form-data">
@@ -29,8 +29,11 @@
                 @include('includes.admin.form-both')
 
                 {{ csrf_field() }}
-
-                <div class="row">
+                <div class="d-flex flex-row align-items-center justify-content-between">
+                    <h4 class="m-0 font-weight-bold">{{__('Main Module')}}</h6>
+                </div>
+                <hr>
+                <div class="row pl-2">
                     <div class="col-md-6">
                       <div class="form-group">
                         <div class="custom-control custom-switch">
@@ -246,8 +249,11 @@
                       </div>
                     </div>
                 </div>
+                <div class="d-flex flex-row align-items-center justify-content-between mt-3">
+                    <h4 class="m-0 font-weight-bold">{{__('Customer Profile Module')}}</h6>
+                </div>
                 <hr>
-                <div class="row">
+                <div class="row pl-2">
                     <div class="col-md-6">
                         <div class="form-group">
                           <div class="custom-control custom-switch">

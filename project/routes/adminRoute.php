@@ -194,7 +194,6 @@ Route::prefix('admin')->group(function () {
       Route::get('/documents/delete/{id}', [DocumentsController::class, 'destroy'])->name('admin.documents.document-delete');
     });
 
-    Route::group(['middleware' => 'permissions:Contract Management'], function () {
       Route::get('/contract/management/{id}', [ContractManageController::class, 'index'])->name('admin.contract.management');
       Route::get('/contract/datatables/{id}', [ContractManageController::class, 'datatables'])->name('admin.contract.datatables');
       Route::get('/contract/view/{id}', [ContractManageController::class, 'view'])->name('admin.contract.view');
@@ -202,7 +201,6 @@ Route::prefix('admin')->group(function () {
       Route::get('/contract/aoa/{id}/datatables', [ContractManageController::class, 'aoa_datatables'])->name('admin.aoa.datatables');
       Route::get('/contract/aoa/view/{id}', [ContractManageController::class, 'aoa_view'])->name('admin.aoa.view');
 
-    });
 
     Route::group(['middleware' => 'permissions:Staff Management'], function () {
       Route::get('/staffs', [StaffManageController::class, 'index'])->name('admin.staff.index');
@@ -214,7 +212,6 @@ Route::prefix('admin')->group(function () {
       Route::post('/staff/{id}/module/update', [StaffManageController::class, 'moduleupdate'])->name('admin-staff-updatemodules');
     });
 
-    Route::group(['middleware' => 'permissions:Manage Customers'], function () {
       Route::get('/users/bonus', [BonusController::class, 'index'])->name('admin.user.bonus');
       Route::post('/users/edit/', [BonusController::class, 'update'])->name('admin.bonus.update');
 
@@ -334,7 +331,6 @@ Route::prefix('admin')->group(function () {
       Route::get('/user/beneficiary/datatables/{id}', [AdminBeneficiaryController::class, 'datatables'])->name('admin-user-beneficiary-database');
       Route::get('/user/beneficiary/details/{id}', [AdminBeneficiaryController::class, 'details'])->name('admin-user-beneficiary-details');
 
-    });
 
     Route::group(['middleware' => 'permissions:KYC Management'], function () {
       Route::get('/users/kyc/{id1}/{id2}', [KycManageController::class, 'kyc'])->name('admin.user.kyc');
