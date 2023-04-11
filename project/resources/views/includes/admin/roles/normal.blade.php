@@ -291,6 +291,7 @@
 </li>
 @endif
 
+@if(Auth::guard('admin')->user()->role == 'admin')
 <li class="nav-item">
   <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#system_setting" aria-expanded="true" aria-controls="collapseTable">
     <i class="fas fa-fw fa-cogs"></i>
@@ -332,6 +333,7 @@
     </div>
   </div>
 </li>
+@endif
 
 @if(getModule('General Setting'))
 <li class="nav-item">
