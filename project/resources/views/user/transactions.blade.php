@@ -135,7 +135,7 @@
 						  </tbody>
 						</table>
 					  </div>
-                      {{ $search ? "" : $transactions->links() }}
+                      {{ $search == null ? $transactions->links() : ""}}
                 </div>
             </div>
         </div>
