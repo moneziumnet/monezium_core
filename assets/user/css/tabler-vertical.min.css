@@ -16807,8 +16807,12 @@ img {
 	display: flex;
 	align-items: center;
 	font-size: 14px;
+}
+
+.footer-bottom .change-language {
 	display: flex;
 	align-items: center;
+	font-size: 10px;
 }
 
 .change-language .language-bar {

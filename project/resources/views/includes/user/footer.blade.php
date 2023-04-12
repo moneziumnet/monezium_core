@@ -80,18 +80,26 @@
                 </span>
             </div>
             <div class="col-md-3 d-flex align-items-center">
-                <span style="float: right;">English</span>
-                <a href="?theme=dark" class="hide-theme-dark tx-color" style="float: right;margin-left:0.8rem;" title="Enable dark mode" data-bs-toggle="tooltip" data-bs-placement="bottom">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                    <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+                <div class="change-language flex-grow-1 flex-md-grow-0 nav-item me-2">
+                    <select name="language" class="language selectors nice language-bar">
+                        @foreach(DB::table('languages')->get() as $language)
+                            <option value="{{route('front.language',$language->id)}}" {{ Session::has('language') ? ( Session::get('language') == $language->id ? 'selected' : '' ) : (DB::table('languages')->where('is_default','=',1)->first()->id == $language->id ? 'selected' : '') }} >
+                                {{$language->language}}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <a href="?theme=dark" class="nav-link px-0 hide-theme-dark " title="Enable dark mode" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
                     </svg>
                 </a>
-                <a href="?theme=light" class="hide-theme-light tx-color" style="float: right;margin-left:0.8rem;" title="Enable light mode" data-bs-toggle="tooltip" data-bs-placement="bottom">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                    <circle cx="12" cy="12" r="4" />
-                    <path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7" />
+                <a href="?theme=light" class="nav-link px-0 hide-theme-light" title="Enable light mode" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <circle cx="12" cy="12" r="4" />
+                        <path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7" />
                     </svg>
                 </a>
             </div>
