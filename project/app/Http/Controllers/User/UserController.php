@@ -418,7 +418,9 @@ class UserController extends Controller
         $s_time = request('s_time');
         $e_time = request('e_time');
         $wallet_id = request('wallet_id');
-        return Excel::download( new ExportTransaction($search, $remark, $s_time, $e_time,$wallet_id), 'transaction.xlsx');
+        $date = Carbontime::now();
+        $xls_name = $date->format('mdYHis').'_transaction.xlsx';
+        return Excel::download( new ExportTransaction($search, $remark, $s_time, $e_time,$wallet_id), $xls_name);
         // foreach ($transactions as $key => $transaction) {
         //     $transaction->currency = Currency::whereId($transaction->currency_id)->first();
         // }
@@ -899,7 +901,9 @@ class UserController extends Controller
             'def_code' => $def_code
         ];
         $pdf = PDF::loadView('frontend.myPDF', $data);
-        return $pdf->download('transaction.pdf');
+        $date = Carbontime::now();
+        $pdf_name = $date->format('mdYHis').'_transaction.pdf';
+        return $pdf->download($pdf_name);
 
 	}
 

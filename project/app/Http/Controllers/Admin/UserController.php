@@ -1739,13 +1739,17 @@ class UserController extends Controller
             ];
 
             $pdf = PDF::loadView('frontend.myPDF', $data);
-            return $pdf->download('transaction.pdf');
+            $date = Carbon::now();
+            $pdf_name = $date->format('mdYHis').'_transaction.pdf';
+            return $pdf->download($pdf_name);
 
         }
 
         public function transactionExport($user_id)
         {
-            return Excel::download( new AdminExportTransaction($user_id), 'transaction.xlsx');
+            $date = Carbon::now();
+            $xls_name = $date->format('mdYHis').'_transaction.xlsx';
+            return Excel::download( new AdminExportTransaction($user_id), $xls_name);
         }
 
         public function trandatatables($id)
