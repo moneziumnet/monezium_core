@@ -811,11 +811,13 @@ class UserController extends Controller
         ->when($remark,function($q) use($remark){
             return $q->where('remark',$remark);
         })
-        ->when($search,function($q) use($search){
-            return $q->where('trnx','LIKE',"%{$search}%");
-        })
         ->whereBetween('created_at', [$s_time, $e_time])
         ->orderBy('created_at','desc')->get();
+        if(isset($search)) {
+            $transactions = $transactions->filter(function ($item) use($search) {
+                return (stripos(strtolower($item->data), strtolower($search)) !== false) || (stripos(strtolower($item->trnx), strtolower($search)) !== false) || (stripos(strtolower($item->details), strtolower($search)) !== false) || (stripos(strtolower(round($item->amount, 2)), strtolower($search)) !== false) || (stripos(strtolower(round($item->amount, 2)), strtolower($search)) !== false);
+            });
+        }
 
         $s_transactions = Transaction::with('currency')->whereUserId(auth()->id())
         ->when($wallet_id,function($q) use($wallet_id){
@@ -830,6 +832,12 @@ class UserController extends Controller
         ->whereBetween('created_at', ['', $s_time])
         ->orderBy('id','desc')->get();
 
+        if(isset($search)) {
+            $s_transactions = $s_transactions->filter(function ($item) use($search) {
+                return (stripos(strtolower($item->data), strtolower($search)) !== false) || (stripos(strtolower($item->trnx), strtolower($search)) !== false) || (stripos(strtolower($item->details), strtolower($search)) !== false) || (stripos(strtolower(round($item->amount, 2)), strtolower($search)) !== false) || (stripos(strtolower(round($item->amount, 2)), strtolower($search)) !== false);
+            });
+        }
+
         $e_transactions = Transaction::with('currency')->whereUserId(auth()->id())
         ->when($wallet_id,function($q) use($wallet_id){
             return $q->where('wallet_id',$wallet_id);
@@ -842,7 +850,11 @@ class UserController extends Controller
         })
         ->whereBetween('created_at', ['', $e_time])
         ->orderBy('id','desc')->get();
-
+        if(isset($search)) {
+            $e_transactions = $e_transactions->filter(function ($item) use($search) {
+                return (stripos(strtolower($item->data), strtolower($search)) !== false) || (stripos(strtolower($item->trnx), strtolower($search)) !== false) || (stripos(strtolower($item->details), strtolower($search)) !== false) || (stripos(strtolower(round($item->amount, 2)), strtolower($search)) !== false) || (stripos(strtolower(round($item->amount, 2)), strtolower($search)) !== false);
+            });
+        }
         $currency_id = defaultCurr();
         $def_code = Currency::findOrFail($currency_id)->code;
         $client = new Client();
