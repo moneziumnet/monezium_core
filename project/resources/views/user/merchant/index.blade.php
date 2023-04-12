@@ -141,7 +141,7 @@
 &lt;script&gt;
   var onsuccess = function (message) {
     // This param is a success message, e.g:; "Wallet Payment Completed."
-    alert(message);
+    alert(message.message);
   }
   var onerror = function (message) {
     // This param is a error message, e.g:; "Insufficient balance."

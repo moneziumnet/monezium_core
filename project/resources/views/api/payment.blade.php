@@ -24,7 +24,7 @@
     <div>
         <div class="card my-3 mx-auto" style="max-width:450px;">
             <div class="card-header">
-                MT Payment System
+                {{ __($gs->disqus) }}
             </div>
             <div class="card-body">
                 <div class="text-center my-4">
@@ -115,6 +115,11 @@
                             <input name="bank_swift" id="bank_swift" class="form-control shadow-none col-md-4"
                                 type="text" readonly>
                         </div>
+                        <div class="form-group mt-3 text-start">
+                            <label class="form-label">{{ __('Description') }}</label>
+                            <input name="deposit_no" id="deposit_no" class="form-control shadow-none col-md-4"
+                                type="text" readonly>
+                        </div>
                     </div>
 
                     <div class="mt-4" id="default_pay" style="display: block;">
@@ -142,7 +147,6 @@
                     <input type="hidden" name="amount" value={{$amount}} />
                     <input type="hidden" name="currency_id" value={{$currency->id}} />
                     <input type="hidden" name="shop_key" value={{$shop_key}} />
-                    <input type="hidden" name="deposit_no" id="deposit_no" />
                 </form>
 
                 <p class="text-muted text-center mt-5">
@@ -261,6 +265,7 @@
                 $('#bank_address').val(bank.address);
                 $('#bank_iban').val(selected.iban);
                 $('#bank_swift').val(selected.swift);
+                $('#deposit_no').val(generateRandomString(12));
                 document.getElementById('bank_account_part').style.display = "block";
             } else {
                 $("#description").prop('required', false);
@@ -278,7 +283,6 @@
                 $('#detail_bank_address').html($('#bank_address').val());
                 $('#detail_bank_iban').html($('#bank_iban').val());
                 $('#detail_bank_swift').html($('#bank_swift').val());
-                $('#deposit_no').val(generateRandomString(12));
                 $('#detail_deposit_no').text($('#deposit_no').val());
             }
         });
