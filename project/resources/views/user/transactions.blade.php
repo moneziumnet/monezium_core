@@ -135,7 +135,8 @@
 						  </tbody>
 						</table>
 					  </div>
-                      {{ $search == null ? $transactions->links() : ""}}
+            {{ $transactions->appends(['search' => $search, 'remark' => $remark ?? '', 'wallet_id' => $wallet_id ?? '', 's_time' => $s_time, 'e_time' =>$e_time])->links() }}
+
                 </div>
             </div>
         </div>

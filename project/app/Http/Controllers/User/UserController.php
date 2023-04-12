@@ -40,7 +40,7 @@ use Illuminate\Support\Facades\Session;
 use Symfony\Component\Console\Completion\Suggestion;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class UserController extends Controller
 {
@@ -388,12 +388,21 @@ class UserController extends Controller
         })
         ->whereBetween('created_at', [$s_time, $e_time])
         ->orderBy('created_at', 'desc')
-        ->with('currency')->latest()->paginate(20);
+        ->with('currency')->get();
         if(isset($search)) {
             $transactions = $transactions->filter(function ($item) use($search) {
                 return (stripos(strtolower($item->data), strtolower($search)) !== false) || (stripos(strtolower($item->trnx), strtolower($search)) !== false) || (stripos(strtolower($item->details), strtolower($search)) !== false) || (stripos(strtolower(round($item->amount, 2)), strtolower($search)) !== false) || (stripos(strtolower(round($item->charge, 2)), strtolower($search)) !== false);
             });
         }
+
+        $transactions = new LengthAwarePaginator(
+            $transactions->forPage(request()->input('page', 1), 20),
+            $transactions->count(),
+            20,
+            request()->input('page', 1)
+        );
+
+        $transactions->withPath(request()->url());
  
         $remark_list = Transaction::where('user_id', auth()->id())->orderBy('remark', 'asc')->pluck('remark')->map(function ($item) {
             return ucfirst($item);
