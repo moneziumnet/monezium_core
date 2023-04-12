@@ -386,17 +386,12 @@ class UserController extends Controller
         ->when($remark,function($q) use($remark){
             return $q->where('remark',$remark);
         })
-        ->when($search,function($q) use($search){
-            return $q->where('user_id',auth()->id())
-                ->orWhere('trnx','LIKE',"%{$search}%")
-                ->where('user_id',auth()->id());
-        })
         ->whereBetween('created_at', [$s_time, $e_time])
         ->orderBy('created_at', 'desc')
         ->with('currency')->latest()->paginate(20);
         if(isset($search)) {
             $transactions = $transactions->filter(function ($item) use($search) {
-                return stripos(strtolower($item->data), strtolower($search)) !== false;
+                return (stripos(strtolower($item->data), strtolower($search)) !== false) || (stripos(strtolower($item->trnx), strtolower($search)) !== false) || (stripos(strtolower($item->details), strtolower($search)) !== false) || (stripos(strtolower(round($item->amount, 2)), strtolower($search)) !== false) || (stripos(strtolower(round($item->charge, 2)), strtolower($search)) !== false);
             });
         }
  
