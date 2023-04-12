@@ -54,12 +54,14 @@ class ExportTransaction implements FromView
         ->when($this->remark,function($q){
             return $q->where('remark',$this->remark);
         })
-        ->when($this->search,function($q){
-            return $q->where('trnx','LIKE',"%{$this->search}%");
-        })
         ->whereBetween('created_at', [$this->s_time, $this->e_time])
         ->orderBy('id','asc')->get();
-
+        $feed = $this->search;
+        if(isset($feed)) {
+            $transactions = $transactions->filter(function ($item) use($feed) {
+                return (stripos(strtolower($item->data), strtolower($feed)) !== false) || (stripos(strtolower($item->trnx), strtolower($feed)) !== false) || (stripos(strtolower($item->details), strtolower($feed)) !== false) || (stripos(strtolower(round($item->amount, 2)), strtolower($feed)) !== false) || (stripos(strtolower(round($item->amount, 2)), strtolower($feed)) !== false);
+            });
+        }
         return view('user.export.transaction',[
             'trans' => $transactions,
             'user'  => $user
