@@ -1225,7 +1225,7 @@ class UserController extends Controller
                 $data->payment_type = $request->payment_type;
                 $data->amount = $finalAmount;
                 $data->final_amount = $request->amount;
-                $data->description = $request->des;
+                $data->description = preg_replace('/\p{Cf}+/u', '', $request->description);
                 $data->status = 0;
                 $data->save();
 
