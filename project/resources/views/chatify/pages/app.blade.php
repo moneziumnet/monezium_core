@@ -14,7 +14,7 @@
                 <div class="col-auto ms-auto d-print-none">
                     <div class="btn-list">
                         <div class="d-flex justify-content-end">
-                            <label for="layer_id" class="col-form-label mr-3">Layer Name</label>
+                            <label for="layer_id" class="col-form-label mr-3">{{__("Layer Name")}}</label>
                             <div class="form-group me-3 row">
                                 <select  class="form-control me-2 shadow-none" id="layer_id" >
                                     <option value="0">@lang('Default')</option>
@@ -52,7 +52,7 @@
                                     {{-- Header and search bar --}}
                                     <div class="m-header">
                                         <nav>
-                                            <a href="#"><i class="fas fa-inbox"></i> <span class="messenger-headTitle">MESSAGES</span>
+                                            <a href="#"><i class="fas fa-inbox"></i> <span class="messenger-headTitle">{{__("Messages")}}</span>
                                             </a>
                                             {{-- header buttons --}}
                                             <nav class="m-header-right">
@@ -65,7 +65,7 @@
                                         <div class="messenger-listView-tabs">
                                             <a href="#" @if($type == 'user') class="active-tab"
                                                @endif data-view="users">
-                                                <span class="far fa-user"></span> People</a>
+                                                <span class="far fa-user"></span> {{__("People")}}</a>
                                             {{-- <a href="#" @if($type == 'group') class="active-tab"
                                                @endif data-view="groups">
                                                 <span class="fas fa-users"></span> Groups</a> --}}
@@ -80,7 +80,7 @@
 
                                             {{-- Favorites --}}
                                             <div class="favorites-section">
-                                                <p class="messenger-title">Favorites</p>
+                                                <p class="messenger-title">{{__("Favorites")}}</p>
                                                 <div class="messenger-favorites app-scroll-thin"></div>
                                             </div>
 
@@ -106,9 +106,9 @@
                                         {{-- ---------------- [ Search Tab ] ---------------- --}}
                                         <div class="messenger-tab search-tab app-scroll" data-view="search">
                                             {{-- items --}}
-                                            <p class="messenger-title">Search</p>
+                                            <p class="messenger-title">{{__("Search")}}</p>
                                             <div class="search-records">
-                                                <p class="message-hint center-el"><span>Type to search..</span></p>
+                                                <p class="message-hint center-el"><span>{{__("Type to search..")}}</span></p>
                                             </div>
                                         </div>
                                     </div>
@@ -141,12 +141,12 @@
                                     <div class="m-body messages-container app-scroll" style="max-height: 600px;overflow-y: scroll;">
                                         {{-- Internet connection --}}
                                         <div class="internet-connection">
-                                            <span class="ic-connected">Connected</span>
-                                            <span class="ic-connecting">Connecting...</span>
-                                            <span class="ic-noInternet">No internet access</span>
+                                            <span class="ic-connected">{{__("Connected")}}</span>
+                                            <span class="ic-connecting">{{__("Connecting...")}}</span>
+                                            <span class="ic-noInternet">{{__("No internet access")}}</span>
                                         </div>
                                         <div class="messages">
-                                            <p class="message-hint center-el"><span>Please select a chat to start messaging</span>
+                                            <p class="message-hint center-el"><span>{{__("Please select a chat to start messaging")}}</span>
                                             </p>
                                         </div>
                                         {{-- Typing indicator --}}
