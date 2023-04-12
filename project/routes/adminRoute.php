@@ -332,7 +332,6 @@ Route::prefix('admin')->group(function () {
       Route::get('/user/beneficiary/details/{id}', [AdminBeneficiaryController::class, 'details'])->name('admin-user-beneficiary-details');
 
 
-    Route::group(['middleware' => 'permissions:KYC Management'], function () {
       Route::get('/users/kyc/{id1}/{id2}', [KycManageController::class, 'kyc'])->name('admin.user.kyc');
       Route::get('/user/kycinfo/more/datatables/{id}', [UserController::class, 'additionkycdatatables'])->name('admin.user.more.kyc.datatables');
       Route::get('/manage-kyc/datatables', [KycManageController::class, 'datatables'])->name('admin.manage.kyc.datatables');
@@ -357,8 +356,6 @@ Route::prefix('admin')->group(function () {
       Route::get('/user/kycinfo/datatables/{id}', [UserController::class, 'kycdatatables'])->name('admin.user.kyc.datatables');
       Route::get('/user/kycform/more/{id}', [UserController::class, 'KycForm'])->name('admin.kyc.more.form.create');
       Route::post('/user/kycform/more/store', [UserController::class, 'StoreKycForm'])->name('admin.kyc.more.form.store');
-  
-    });
 
     Route::group(['middleware' => 'permissions:Loan Management'], function () {
       Route::get('/loan-plans/datatables', [LoanPlanController::class, 'datatables'])->name('admin.loan.plan.datatables');
