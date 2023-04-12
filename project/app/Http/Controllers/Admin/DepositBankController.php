@@ -149,7 +149,7 @@ class DepositBankController extends Controller
         $sender_name = $gs->disqus;
         if($webhook_request) {
             $data->amount = $webhook_request->amount;
-            $sender_name = $webhook_request->sender_name;
+            $sender_name = preg_replace('/[^A-Za-z0-9- ]/', '', $webhook_request->sender_name);
         }
         $data->status = $id2;
         $data->save();
