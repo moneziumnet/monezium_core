@@ -381,7 +381,7 @@
   <div class="col-xl-12 col-lg-12 mb-4">
     <div class="card">
       <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold text-primary">@lang('Recent Joined Users')</h6>
+        <h6 class="m-0 font-weight-bold text-primary">@lang('Recent Joined Customers(5 members)')</h6>
       </div>
       @if (count($users)>0)
 
@@ -389,7 +389,7 @@
         <table class="table align-items-center table-flush">
           <thead class="thead-light">
             <tr>
-              <th>@lang('Serial No')</th>
+              <th>@lang('No')</th>
               <th>@lang('Create Date')</th>
               <th>@lang('Name')</th>
               <th>@lang('Email')</th>
