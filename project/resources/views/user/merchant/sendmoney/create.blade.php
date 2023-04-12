@@ -30,7 +30,7 @@
                             <div class="form-group mb-3 mt-3">
                                 <label class="form-label required">{{ __('Select Shop') }}</label>
                                 <select name="shop_id" value="{{ old('shop_id') }}" id="shop_id" class="form-control" required>
-                                    <option value="">Select</option>
+                                    <option value="">{{__("Select")}}</option>
                                     @if (!empty($shops))
                                         @foreach ($shops as $shop)
                                             <option value="{{ $shop->shop_id }}">
@@ -46,7 +46,7 @@
                             <div class="form-group mb-3 mt-3">
                                 <label class="form-label required">{{ __('Select Wallet') }}</label>
                                 <select name="wallet_id" value="{{ old('wallet_id') }}" id="wallet_id" class="form-control" required>
-                                    <option value="" balance="0">Select</option>
+                                    <option value="" balance="0">{{__("Select")}}</option>
                                 </select>
                             </div>
                             <div class="form-group mt-3">

@@ -155,7 +155,7 @@
             <i class="fas fa-info-circle fa-3x text-primary mb-2"></i>
             <p class="trx_info_amount"></p>
             <p class="trx_info_date"></p>
-            <span class="badge bg-success-lt">Paid</span>
+            <span class="badge bg-success-lt">{{__("Paid")}}</span>
             <ul class="list-group mt-2">
     
             </ul>

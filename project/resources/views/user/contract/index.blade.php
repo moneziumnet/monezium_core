@@ -84,9 +84,9 @@
                                       <td data-label="{{ __('Status') }}">
                                         <div>
                                             @if ($item->status == 0 )
-                                                <span class="badge bg-warning">Not Signed</span>
+                                                <span class="badge bg-warning">{{__("Not Signed")}}</span>
                                             @else
-                                                <span class="badge bg-success">Signed</span>
+                                                <span class="badge bg-success">{{__('Signed')}}</span>
                                             @endif
                                         </div>
                                       </td>

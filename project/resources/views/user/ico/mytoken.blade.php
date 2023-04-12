@@ -52,9 +52,9 @@
                                                 <a href ="{{asset('assets/doc/'.$val->white_paper)}}" class="btn btn-primary btn-sm" attributes-list download >{{ __('Download White Paper')}} </a>
                                                 <div class="mt-3">
                                                     @if($val->status)
-                                                        <span class="badge bg-success">Approved</span>
+                                                        <span class="badge bg-success">{{__("Approved")}}</span>
                                                     @else
-                                                        <span class="badge bg-warning">Pending</span>
+                                                        <span class="badge bg-warning">{{__("Pending")}}</span>
                                                     @endif
                                                 </div>
                                             </div>

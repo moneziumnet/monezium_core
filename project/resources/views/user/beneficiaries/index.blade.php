@@ -199,7 +199,7 @@
         <div class="modal-body text-center">
             <i class="fas fa-info-circle fa-3x text-primary mb-2"></i>
             <h3>@lang('Transfer Log Details')</h3>
-            <span class="badge" id="bank_status">Paid</span>
+            <span class="badge" id="bank_status">{{__("Paid")}}</span>
             <div class="transfer-log-details">
 
             </div>

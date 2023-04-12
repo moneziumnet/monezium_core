@@ -26,13 +26,13 @@
             </th>
         </tr>
         <tr>
-            <th style="width:100px;font-size:8px;">Date / Transaction ID</th>
-            <th style="width:110px;font-size:8px;">Sender</th>
-            <th style="width:120px;font-size:8px;">Receiver</th>
-			<th style="width: 220px;font-size:8px;">Description</th>
-            <th style="width:100px;font-size:8px;">Amount</th>
-			<th style="width:75px;font-size:8px;">Fee</th>
-			<th style="width:75px;font-size:8px;">Currency</th>
+            <th style="width:100px;font-size:8px;">{{__("Date / Transaction ID")}}</th>
+            <th style="width:110px;font-size:8px;">{{__("Sender")}}</th>
+            <th style="width:120px;font-size:8px;">{{__("Receiver")}}</th>
+			<th style="width: 220px;font-size:8px;">{{__("Description")}}</th>
+            <th style="width:100px;font-size:8px;">{{__("Amount")}}</th>
+			<th style="width:75px;font-size:8px;">{{__("Fee")}}</th>
+			<th style="width:75px;font-size:8px;">{{__("Currency")}}</th>
         </tr>
     </thead>
 

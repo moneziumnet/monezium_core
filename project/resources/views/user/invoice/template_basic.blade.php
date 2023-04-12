@@ -6,11 +6,11 @@
 <div class="row my-5">
     <div class="col-6">
         @if($invoice->product_id)
-            <span class="h3">Product: </span>{{$invoice->product->name}}
+            <span class="h3">{{__("Product")}}: </span>{{$invoice->product->name}}
         @endif
         @if($invoice->contract_id)
             <div class="mt-3">
-                <span class="h3">Contract:</span>
+                <span class="h3">{{__("Contract")}}:</span>
                 <a class="text-primary" href="{{route('contract.view',['id' => encrypt($invoice->contract->id), 'role' => encrypt('contractor')])}}" target="_blank">
                     {{ $invoice->contract->title }}
                 </a>
@@ -18,7 +18,7 @@
         @endif
         @if($invoice->contract_aoa_id)
             <div class="mt-3">
-                <span class="h3">Contract AOA:</span>
+                <span class="h3">{{__("Contract AOA")}}:</span>
                 <a class="text-primary" href="{{route('aoa.view',['id' => encrypt($invoice->aoa->id), 'role' => encrypt('contractor')])}}" target="_blank">
                     {{ $invoice->aoa->title }}
                 </a>

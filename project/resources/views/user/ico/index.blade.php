@@ -47,9 +47,9 @@
                                                 <td>{{ dateFormat($item->end_date) }}</td>
                                                 <td>
                                                     @if($item->status)
-                                                        <span class="badge bg-success">Approved</span>
+                                                        <span class="badge bg-success">{{__("Approved")}}</span>
                                                     @else
-                                                        <span class="badge bg-warning">Pending</span>
+                                                        <span class="badge bg-warning">{{__("Pending")}}</span>
                                                     @endif
                                                 </td>
                                                 <td>

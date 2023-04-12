@@ -28,13 +28,13 @@
 <div class="row mt-3 mb-5">
     @if($invoice->product_id)
     <div class="row">
-        <h3 class="col-3">Product:</h3> 
+        <h3 class="col-3">{{__("Product")}}:</h3> 
         <h3 class="col-9 font-weight-normal">{{$invoice->product->name}}</h3>
     </div>
     @endif
     @if($invoice->contract_id)
     <div class="row">
-        <h3 class="col-3">Contract:</h3>
+        <h3 class="col-3">{{__("Contract")}}:</h3>
         <h3 class="col-9 font-weight-normal">
             <a class="text-primary" href="{{route('contract.view',['id' => encrypt($invoice->contract->id), 'role' => encrypt('contractor')])}}" target="_blank">
                 {{ $invoice->contract->title }}
@@ -44,7 +44,7 @@
     @endif
     @if($invoice->contract_aoa_id)
     <div class="row">
-        <h3 class="col-3">Contract AOA:</h3>
+        <h3 class="col-3">{{__("Contract AOA")}}:</h3>
         <h3 class="col-9 font-weight-normal">
             <a class="text-primary" href="{{route('aoa.view',['id' => encrypt($invoice->aoa->id), 'role' => encrypt('contractor')])}}" target="_blank">
                 {{ $invoice->aoa->title }}

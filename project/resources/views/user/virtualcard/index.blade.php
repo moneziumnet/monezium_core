@@ -57,9 +57,9 @@
                       </div>
                     </div>
                     <hr class="my-0"/>
-                    <h4 class="mt-3">Virtual Card</h4>
+                    <h4 class="mt-3">{{__("Virtual Card")}}</h4>
                     <h2 class="text-primary my-3">XXXX - {{substr($item->card_pan, 12, 4)}}</h2>
-                    <h4>Expiration Date <span class="ms-3">{{$item->expiration}}</span></h4>
+                    <h4>{{__("Expiration Date")}} <span class="ms-3">{{$item->expiration}}</span></h4>
                     <h4>{{$item->first_name}} {{$item->last_name}}</h4>
                   </div>
                 </div>

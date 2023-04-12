@@ -38,8 +38,8 @@
                 <div class="form-group">
                     <label for="inp-user-type" class="form-label">{{ __('Select Type') }}</label>
                     <select id="test" class="form-control form--control mb-3" name="form_select" onchange="showDiv( this)">
-                        <option value="0"> Private</option>
-                        <option value="1"> Corporate</option>
+                        <option value="0"> {{__("Private")}}</option>
+                        <option value="1"> {{__("Corporate")}}</option>
                     </select>
                 </div>
                 <div class="col-sm-6">

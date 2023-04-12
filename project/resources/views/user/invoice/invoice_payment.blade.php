@@ -144,7 +144,7 @@
                 <li class="list-group-item">@lang('Total Price')<span id="detail_total_price"></span></li>
                 <li class="list-group-item">@lang('Deposit No')<span id="detail_deposit_no"></span></li>
             </ul>
-            <span class="btn btn-primary w-100 mt-3" id="payment_submit">Submit</span>
+            <span class="btn btn-primary w-100 mt-3" id="payment_submit">{{__("Submit")}}</span>
             </div>
         </div>
         </div>

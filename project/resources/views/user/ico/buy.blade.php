@@ -33,7 +33,7 @@
                 <div class="card p-5">
                     <div class="row align-items-center">
                         <div class="col-md-5 mb-3">
-                            <h2 class="text-center mb-3">Details</h2>
+                            <h2 class="text-center mb-3">{{__("Details")}}</h2>
                             <li class="list-group-item d-flex justify-content-between">
                                 @lang('Name')<span>{{ $ico_token->name }}</span></li>
                             <li class="list-group-item d-flex justify-content-between">

@@ -57,7 +57,7 @@
                                         <input type="hidden" name="image" class="image-tag">
                                     </div>
                                     <div class="form-group mb-3 mt-3">
-                                        <div id="results">Your captured photo will appear here...</div>
+                                        <div id="results">{{__("Your captured photo will appear here...")}}</div>
                                     </div>
                                     <div class="form-group mb-3 mt-3">
                                         <label class="form-label required">@lang('Front')</label>
@@ -65,7 +65,7 @@
                                         <input type="hidden" name="image_front" class="image-tag-front">
                                     </div>
                                     <div class="form-group mb-3 mt-3">
-                                        <div id="results-front">Your captured photo will appear here...</div>
+                                        <div id="results-front">{{__("Your captured photo will appear here...")}}</div>
                                     </div>
                                     <div class="form-group mb-3 mt-3">
                                         <label class="form-label required">@lang('Back')</label>
@@ -73,7 +73,7 @@
                                         <input type="hidden" name="image_back" class="image-tag-back">
                                     </div>
                                     <div class="form-group mb-3 mt-3">
-                                        <div id="results-back">Your captured photo will appear here...</div>
+                                        <div id="results-back">{{__("Your captured photo will appear here...")}}</div>
                                     </div>
                                     <input type="hidden" name="user_id" value="{{$user_id}}">
                                     <div class="form-footer">

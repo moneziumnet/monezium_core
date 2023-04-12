@@ -36,10 +36,10 @@
                                 <div class="form-group mb-3 mt-3">
                                     <label class="form-label">{{__('Select 2FA Option')}}</label>
                                     <select name="login_fa" id="login_fa" class="form-control">
-                                      <option value="">Select</option>
-                                        <option value="two_fa_email" @if($user->login_fa == "two_fa_email") selected @endif>Two FA by Email</option>
-                                        <option value="two_fa_phone" @if($user->login_fa == "two_fa_phone") selected @endif>Two FA by Phone</option>
-                                        <option value="two_fa_google" @if($user->login_fa == "two_fa_google") selected @endif>Two FA by Google</option>
+                                      <option value="">{{__("Select")}}</option>
+                                        <option value="two_fa_email" @if($user->login_fa == "two_fa_email") selected @endif>{{__("Two FA by Email")}}</option>
+                                        <option value="two_fa_phone" @if($user->login_fa == "two_fa_phone") selected @endif>{{__("Two FA by Phone")}}</option>
+                                        <option value="two_fa_google" @if($user->login_fa == "two_fa_google") selected @endif>{{__("Two FA by Google")}}</option>
                                     </select>
 
                                 </div>
@@ -50,10 +50,10 @@
                                 <div class="form-group mb-3 mt-3">
                                     <label class="form-label">{{__('Select 2FA Option')}}</label>
                                     <select name="payment_fa" id="payment_fa" class="form-control">
-                                      <option value="">Select</option>
-                                        <option value="two_fa_email" @if($user->payment_fa == "two_fa_email") selected @endif>Two FA by Email</option>
-                                        <option value="two_fa_phone" @if($user->payment_fa == "two_fa_phone") selected @endif>Two FA by Phone</option>
-                                        <option value="two_fa_google" @if($user->payment_fa == "two_fa_google") selected @endif>Two FA by Google</option>
+                                      <option value="">{{__("Select")}}</option>
+                                        <option value="two_fa_email" @if($user->payment_fa == "two_fa_email") selected @endif>{{__("Two FA by Email")}}</option>
+                                        <option value="two_fa_phone" @if($user->payment_fa == "two_fa_phone") selected @endif>{{__("Two FA by Phone")}}</option>
+                                        <option value="two_fa_google" @if($user->payment_fa == "two_fa_google") selected @endif>{{__("Two FA by Google")}}</option>
                                     </select>
 
                                 </div>

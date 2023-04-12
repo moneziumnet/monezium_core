@@ -49,7 +49,7 @@
                                         <h5 class="mb-1">{{__('Shop: ')}} {{$checkout->shop->name}}</h5>
                                         <h5 class="mb-1">{{__('Description: ')}} {{$checkout->description}}</h5>
                                         <h5 class="mb-1">{{__('Reference: ')}} {{$checkout->ref_id}}</h5>
-                                        <h5 class="mb-1">{{__('Amount: ')}}@if($checkout->amount==null) Not fixed @else {{$checkout->currency->symbol.$checkout->amount}}({{$checkout->currency->code}}) @endif</h5>
+                                        <h5 class="mb-1">{{__('Amount: ')}}@if($checkout->amount==null) {{__("Not fixed")}} @else {{$checkout->currency->symbol.$checkout->amount}}({{$checkout->currency->code}}) @endif</h5>
                                         <h5 class="mb-1">{{__('Redirect URL: ')}} {{$checkout->redirect_link}}</h5>
                                         <h5 class="mb-3">{{__('Created Date:')}} {{$checkout->created_at}}</h5>
                                         </div>
@@ -190,7 +190,7 @@
                   <li class="list-group-item">@lang('Amount')<span id="detail_amount"></span></li>
                   <li class="list-group-item">@lang('Description')<span id="detail_bank_details"></span></li>
               </ul>
-              <button class="btn btn-primary w-100 mt-3" id="payment_submit">Submit</button>
+              <button class="btn btn-primary w-100 mt-3" id="payment_submit">{{__("Submit")}}</button>
               </div>
           </div>
         </div>

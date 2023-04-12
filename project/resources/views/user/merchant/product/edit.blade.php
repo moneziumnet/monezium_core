@@ -42,7 +42,7 @@
                         <div class="form-group mb-3">
                             <label class="form-label required">{{__('Select Shop')}}</label>
                             <select name="shop_id" id="shop_id" class="form-control" required>
-                                <option value="">Select</option>
+                                <option value="">{{__("Select")}}</option>
                                 @foreach($shops as $shop)
                                 <option value="{{$shop->id}}" {{$shop->id == $data->shop_id ? "selected" : ""}}>{{$shop->name}}</option>
                                 @endforeach
@@ -57,7 +57,7 @@
                         <div class="form-group mb-3">
                             <label class="form-label ">{{__('Select Category')}}</label>
                             <select name="cat_id" id="cat_id" class="form-control" >
-                                <option value="">Select</option>
+                                <option value="">{{__("Select")}}</option>
                                 @foreach($categories as $category)
                                 <option value="{{$category->id}}"  {{$category->id == $data->cat_id ? "selected" : ""}}>{{$category->name}}</option>
                                 @endforeach

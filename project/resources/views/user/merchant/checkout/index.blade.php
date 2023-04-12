@@ -68,7 +68,7 @@
                           <p>{{__('Description')}}: {{$item->description}}</p>
                           <p>{{__('Reference')}}: {{$item->ref_id}}</p>
                           <p>{{__('Shop')}}: {{$item->shop->name}}</p>
-                          <p>{{__('Amount')}}: @if($item->amount==null) Not fixed @else {{$item->currency->symbol.$item->amount}}({{$item->currency->code}}) @endif</p>
+                          <p>{{__('Amount')}}: @if($item->amount==null) {{__("Not fixed")}} @else {{$item->currency->symbol.$item->amount}}({{$item->currency->code}}) @endif</p>
                           <p>{{__('Redirect URL')}}: {{$item->redirect_link}}</p>
                           <p class="text-sm mb-2">{{__('Date')}}: {{date("h:i:A j, M Y", strtotime($item->created_at))}}</p>
                           @if($item->status==1)

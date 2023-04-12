@@ -230,7 +230,7 @@ I need 1000 from you.')}}</textarea>
                                         </div>
                                     </div>
                                     <div class="row form-group mt-3 text-start">
-                                        <button type="button" class="btn w-100" data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn w-100" data-bs-dismiss="modal">{{__('Close')}}</button>
                                     </div>
                                 </div>
                             </div>

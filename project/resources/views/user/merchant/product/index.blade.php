@@ -244,7 +244,7 @@
                             <div class="form-group mb-3">
                                 <label class="form-label required">{{__('Select Shop')}}</label>
                                 <select name="shop_id" id="shop_id" class="form-control" required>
-                                    <option value="">Select</option>
+                                    <option value="">{{__("Select")}}</option>
                                     @foreach($shops as $shop)
                                     <option value="{{$shop->id}}">{{$shop->name}}</option>
                                     @endforeach
@@ -259,7 +259,7 @@
                             <div class="form-group mb-3">
                                 <label class="form-label ">{{__('Select Category')}}</label>
                                 <select name="cat_id" id="cat_id" class="form-control" >
-                                    <option value="">Select</option>
+                                    <option value="">{{__("Select")}}</option>
                                     @foreach($categories as $category)
                                     <option value="{{$category->id}}">{{$category->name}}</option>
                                     @endforeach
@@ -269,7 +269,7 @@
                             <div class="form-group mb-3">
                                 <label class="form-label required">{{__('Select Currency')}}</label>
                                 <select name="currency_id" id="currency_id" class="form-control" required>
-                                    <option value="">Select</option>
+                                    <option value="">{{__("Select")}}</option>
                                     @foreach($currencies as $currency)
                                     <option value="{{$currency->id}}">{{$currency->code}}</option>
                                     @endforeach

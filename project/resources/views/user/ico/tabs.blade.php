@@ -3,11 +3,11 @@
         <div class="card-header tab-card-header">
             <ul class="nav nav-pills card-header-tabs" id="pills-tab" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link {{ menu('user.ico') }}" href="{{ route('user.ico') }}" role="button">All Tokens</a>
+                    <a class="nav-link {{ menu('user.ico') }}" href="{{ route('user.ico') }}" role="button">{{__("All Tokens")}}</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {{ menu('user.ico.mytoken') }}" href="{{ route('user.ico.mytoken') }}"
-                        role="button">My Tokens</a>
+                        role="button">{{__("My Tokens")}}</a>
                 </li>
             </ul>
         </div>

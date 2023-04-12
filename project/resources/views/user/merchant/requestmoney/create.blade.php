@@ -57,7 +57,7 @@
                         <div class="form-group mb-3 mt-3">
                             <label class="form-label required">{{__('Select Shop')}}</label>
                             <select name="shop_id" id="shop_id" class="form-control" required>
-                              <option value="">Select</option>
+                              <option value="">{{__("Select")}}</option>
                               @foreach($shop_list as $shop)
                               <option value="{{$shop->id}}">{{$shop->name}}</option>
                               @endforeach
@@ -68,7 +68,7 @@
                         <div class="form-group mb-3 mt-3">
                           <label class="form-label required">{{__('Select Currency')}}</label>
                           <select name="wallet_id" id="wallet_id" class="form-control" required>
-                            <option value="">Select</option>
+                            <option value="">{{__("Select")}}</option>
                             @php
                             $modules = explode(" , ", auth()->user()->modules);
                             if(in_array('Crypto',$modules)){

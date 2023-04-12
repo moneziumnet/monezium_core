@@ -1225,5 +1225,22 @@
     "Withdraw (Crypto)": "Withdraw (Crypto)",
     "Withdraws (Crypto)": "Withdraws (Crypto)",
     "No Withdraws Data Found": "No Withdraws Data Found",
-    "Reciever Address": "Reciever Address"
+    "Reciever Address": "Reciever Address",
+    "Review": "Review",
+    "Not Signed": "Not Signed",
+    "Signed": "Signed",
+    "Date / Transaction ID": "Date / Transaction ID",
+    "All Tokens": "All Tokens",
+    "My Tokens": "My Tokens",
+    "Contract AOA": "Contract AOA",
+    "Your captured photo will appear here...": "Your captured photo will appear here...",
+    "Not fixed": "Not fixed",
+    "Two FA by Email": "Two FA by Email",
+    "Two FA by Phone": "Two FA by Phone",
+    "Two FA by Google": "Two FA by Google",
+    "Virtual Card": "Virtual Card",
+    "Crypto": "Crypto",
+    "Payment Gateway": "Payment Gateway",
+    "Private": "Private",
+    "Corporate": "Corporate"
 }

@@ -70,13 +70,13 @@
                                       <td data-label="{{ __('Status') }}">
                                         <div>
                                             @if ($item->status == 0 )
-                                                <span class="badge bg-warning">Pending</span>
+                                                <span class="badge bg-warning">{{__('Pending')}}</span>
                                             @elseif ($item->status == 1)
-                                                <span class="badge bg-primary">Approved</span>
+                                                <span class="badge bg-primary">{{__('Approved')}}</span>
                                             @elseif ($item->status == 2)
-                                                <span class="badge bg-danger">Rejected</span>
+                                                <span class="badge bg-danger">{{__('Rejected')}}</span>
                                             @elseif ($item->status == 3)
-                                                <span class="badge bg-info">Review</span>
+                                                <span class="badge bg-info">{{__('Review')}}</span>
                                             @endif
                                         </div>
                                       </td>
