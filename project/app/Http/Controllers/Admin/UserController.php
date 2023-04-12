@@ -2018,9 +2018,64 @@ class UserController extends Controller
             if ($customfee) {
                 $manualfee = $customfee;
             }
-            if ($manualfee->data->fixed_charge > $userBalance) {
-                return redirect()->back()->with(array('warning' => 'Customer Balance not Available.'));
+            $user = User::findOrFail($wallet->user_id);
+            if($user->referral_id != 0){
+                $supervisor_fee = Charge::where('plan_id', 0)->where('user_id', $user->id)->where('name', $manualfee->name)->first();
+                $remark = 'manual_supervisor_fee_'.str_replace(' ', '_', $manualfee->name);
+                if($supervisor_fee) {
+                    if ($manualfee->data->fixed_charge + $supervisor_fee->data->fixed_charge > $userBalance) {
+                        return redirect()->back()->with(array('warning' => 'Customer Balance not Available.'));
+                    }
+                }
+                if (check_user_type_by_id(4, $user->referral_id)) {
+                    user_wallet_decrement($wallet->user_id, $wallet->currency_id,$supervisor_fee->data->fixed_charge,$wallet->wallet_type);
+                    user_wallet_increment($user->referral_id, $wallet->currency_id, $supervisor_fee->data->fixed_charge, 6);
+                    $trans_wallet = get_wallet($user->referral_id, $wallet->currency_id, 6);
+                }
+                elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
+                    $remark = 'manual_manager_fee_'.str_replace(' ', '_', $manualfee->name);
+                    user_wallet_decrement($wallet->user_id, $wallet->currency_id,$supervisor_fee->data->fixed_charge,$wallet->wallet_type);
+                    user_wallet_increment($user->referral_id, $wallet->currency_id, $supervisor_fee->data->fixed_charge, 10);
+                    $trans_wallet = get_wallet($user->referral_id, $wallet->currency_id, 10);
+                }
+                $referral_user = User::findOrFail($user->referral_id);
+
+                $trnx = str_rand();
+                $trans = new Transaction();
+                $trans->trnx = $trnx;
+                $trans->user_id     = $user->id;
+                $trans->user_type   = 1;
+                $trans->currency_id = $wallet->currency_id;
+                $trans->amount      = $supervisor_fee->data->fixed_charge;
+    
+                $trans->wallet_id   = $wallet->id;
+    
+                $trans->charge      = 0;
+                $trans->type        = '-';
+                $trans->remark      = $remark;
+                $trans->details     = trans('Manual Fee');
+    
+                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.($referral_user->company_name ?? $referral_user->name).'"}';
+                $trans->save();
+
+                $trans = new Transaction();
+                $trans->trnx = $trnx;
+                $trans->user_id     = $user->referral_id;
+                $trans->user_type   = 1;
+                $trans->currency_id = $wallet->currency_id;
+                $trans->amount      = $supervisor_fee->data->fixed_charge;
+    
+                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+    
+                $trans->charge      = 0;
+                $trans->type        = '+';
+                $trans->remark      = $remark;
+                $trans->details     = trans('Deposit complete');
+    
+                $trans->data        =  '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.($referral_user->company_name ?? $referral_user->name).'"}';
+                $trans->save();
             }
+
             user_wallet_decrement($wallet->user_id, $wallet->currency->id,$manualfee->data->fixed_charge,$wallet->wallet_type);
             user_wallet_increment(0, $wallet->currency->id,$manualfee->data->fixed_charge,9);
 
