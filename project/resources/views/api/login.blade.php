@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>{{ __($gs->title) }} - Payment</title>
+    <title>{{ __($gs->title) }} - {{__("Payment")}}</title>
     <!-- CSS files -->
     {{-- <link rel="shortcut icon" href="{{getPhoto($gs->favicon)}}"> --}}
 
@@ -24,11 +24,11 @@
     <div>
         <div class="card my-3 mx-auto" style="max-width:400px;">
             <div class="card-header">
-                Genius Bank Payment
+                {{ __($gs->disqus) }}
             </div>
             <div class="card-body">
                 <div class="text-center my-4">
-                    <h2 class="me-3">Login</h2>
+                    <h2 class="me-3">{{__("Login")}}</h2>
                 </div>
 
                 <form class="row gy-3 gx-4 align-items-center" action="{{ route('api.pay.login.submit') }}" method="POST">
@@ -52,7 +52,7 @@
                 </form>
 
                 <p class="text-muted text-center mt-5">
-                    <small class="mt-5">All right reserved <br/> <a href="{{ url('/') }}">{{ $gs->title }}</a></small>
+                    <small class="mt-5">{{__("All right reserved ")}}<br/> <a href="{{ url('/') }}">{{ $gs->title }}</a></small>
                 </p>
             </div>
         </div>

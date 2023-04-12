@@ -1242,5 +1242,11 @@
     "Crypto": "Crypto",
     "Payment Gateway": "Payment Gateway",
     "Private": "Private",
-    "Corporate": "Corporate"
+    "Corporate": "Corporate",
+    "Payment by crypto": "Payment by crypto",
+    "Your access has been blocked!": "Your access has been blocked!",
+    "Invalid Site Access Key or Shop Site Key.": "Invalid Site Access Key or Shop Site Key.",
+    "Please contact your site owner.": "Please contact your site owner.",
+    "Payment by": "Payment by",
+    "Choose Payment Method": "Choose Payment Method"
 }
