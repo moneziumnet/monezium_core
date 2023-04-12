@@ -208,6 +208,7 @@ Route::prefix('admin')->group(function () {
       Route::get('/staffs/status/{id}/{status}', [StaffManageController::class, 'staff_status'])->name('admin.staff.status');
       Route::get('/staff/create', [StaffManageController::class, 'create'])->name('admin.staff.create');
       Route::post('/staff/create', [StaffManageController::class, 'store'])->name('admin.staff.store');
+      Route::get('/staff/delete/{id}', [StaffManageController::class, 'destroy'])->name('admin.staff.delete');
       Route::get('/staff/{id}/module', [StaffManageController::class, 'profileModules'])->name('admin-staff-profilemodule');
       Route::post('/staff/{id}/module/update', [StaffManageController::class, 'moduleupdate'])->name('admin-staff-updatemodules');
     });

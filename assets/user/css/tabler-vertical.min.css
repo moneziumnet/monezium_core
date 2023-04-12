@@ -3813,7 +3813,7 @@ fieldset:disabled .btn {
 	margin-left: 1rem;
 }
 .card-header {
-	padding: 0.75rem 1rem;
+	padding: 0.75rem 1.3rem;
 	margin-bottom: 0;
 	color: #626976;
 	background-color: #fff;
@@ -3823,7 +3823,7 @@ fieldset:disabled .btn {
 	border-radius: 3px 3px 0 0;
 }
 .card-footer {
-	padding: 0.75rem 1rem;
+	padding: 0.75rem 1.3rem;
 	color: #626976;
 	background-color: #fff;
 	border-top: 1px solid rgba(98, 105, 118, 0.16);

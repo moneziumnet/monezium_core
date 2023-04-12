@@ -47,7 +47,8 @@ class StaffManageController extends Controller
                     '.'Actions' .'
                     </button>
                     <div class="dropdown-menu" x-placement="bottom-start">
-                    <a href="' . route('admin-staff-profilemodule',$data->id) . '"  class="dropdown-item">'.__("Permission").'</a>
+                        <a href="' . route('admin-staff-profilemodule',$data->id) . '"  class="dropdown-item">'.__("Permission").'</a>
+                        <a href="' . route('admin.staff.delete',$data->id) . '"  class="dropdown-item">'.__("Delete Staff").'</a>
                     </div>
                 </div>';
             })
@@ -107,6 +108,14 @@ class StaffManageController extends Controller
         $data = Admin::findOrFail($id);
         $data['data'] = $data;
         return view('admin.staff.profilemodules',$data);
+    }
+
+    public function destroy($id)
+    {
+        $data = Admin::findOrFail($id);
+        $data->delete();
+        $msg = 'Staff has been deleted successfully.';
+        return redirect()->back()->with('message',$msg);
     }
 
     public function moduleupdate(Request $request, $id)
