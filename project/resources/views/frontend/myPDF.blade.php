@@ -35,10 +35,9 @@
             width: 100%;
         }
         .document-logo {
-            height: 4rem;
-            width: 4rem;
-            margin-bottom: 2rem;
-            width: auto;
+            height: 5rem;
+            width: 5rem;
+            margin-bottom: 1rem;
         }
     </style>
 </head>
