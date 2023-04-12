@@ -453,7 +453,7 @@ class UserController extends Controller
 
         $user = Auth::user();
         $transaction = Transaction::where('id',$request->trx_id)->whereUserId(auth()->id())->get();
-        $image = public_path('assets/images/'.$gs->logo);
+        $image = public_path('assets/images/'.$gs->footer_logo);
         $image_encode = base64_encode(file_get_contents($image));
         $data = [
             'trans' => $transaction,

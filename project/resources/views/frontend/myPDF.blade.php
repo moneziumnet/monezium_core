@@ -35,7 +35,9 @@
             width: 100%;
         }
         .document-logo {
-            height: 8rem;
+            height: 4rem;
+            width: 4rem;
+            margin-bottom: 2rem;
             width: auto;
         }
     </style>
@@ -44,7 +46,7 @@
     <div>
         <div class="text-center row text-wrap text-center">
             <div class="mt-3">
-                    <img src="{{'data:image/jpeg;base64,'.$image}}" class="document-logo" style="width: auto;">
+                    <img src="{{'data:image/jpeg;base64,'.$image}}" class="document-logo">
             </div>
             <div class="mt-3">
                 <h3 class="font-weight-bold">

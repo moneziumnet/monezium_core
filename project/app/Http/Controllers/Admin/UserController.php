@@ -1725,7 +1725,7 @@ class UserController extends Controller
             $user = User::findOrFail($user_id);
             $transaction = Transaction::whereUserId($user_id)->orderBy('created_at', 'desc')->get();
             $gs = Generalsetting::first();
-            $image = public_path('assets/images/'.$gs->logo);
+            $image = public_path('assets/images/'.$gs->footer_logo);
             $image_encode = base64_encode(file_get_contents($image));
             $currency = Currency::findOrFail(defaultCurr());
 
