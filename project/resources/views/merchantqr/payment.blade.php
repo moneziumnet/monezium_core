@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>{{ __($gs->title) }} - Payment</title>
+    <title>{{ __($gs->title) }} - {{__("Payment")}}</title>
     <!-- CSS files -->
     {{-- <link rel="shortcut icon" href="{{getPhoto($gs->favicon)}}"> --}}
 
@@ -24,11 +24,11 @@
     <div>
         <div class="card my-3 mx-auto" style="max-width:450px;">
             <div class="card-header">
-                MT Payment System
+                {{ __($gs->disqus) }}
             </div>
             <div class="card-body">
                 <div class="text-center my-4">
-                    <h2 class="me-3">Choose Payment Method</h2>
+                    <h2 class="me-3">{{__("Choose Payment Method")}}</h2>
                 </div>
 
                 <form action="{{route('qr.pay.submit')}}" id="pay_form_submit" method="POST" name="pay_form_submit">
@@ -124,7 +124,7 @@
                     <div class="form-group mb-3 mt-3 currency-select">
                         <label class="form-label required">{{__('Select Currency')}}</label>
                         <select name="currency_id" id="currency_id" class="form-control" required>
-                          <option value="">Select Currency</option>
+                          <option value="">{{__("Select Currency")}}</option>
                           @foreach($currencylist as $currency)
                           <option value="{{$currency->id}}">{{$currency->code}}</option>
                           @endforeach
@@ -154,7 +154,7 @@
                 </form>
 
                 <p class="text-muted text-center mt-5">
-                    <small class="mt-5">All right reserved <br/> <a href="{{ url('/') }}">{{ $gs->title }}</a></small>
+                    <small class="mt-5">{{__("All right reserved ")}}<br/> <a href="{{ url('/') }}">{{ $gs->title }}</a></small>
                 </p>
             </div>
         </div>
@@ -176,7 +176,7 @@
                   <li class="list-group-item">@lang('Bank SWIFT')<span id="detail_bank_swift"></span></li>
                   <li class="list-group-item">@lang('Deposit No')<span id="detail_deposit_no"></span></li>
                 </ul>
-              <span class="btn btn-primary w-100 mt-3" id="payment_submit">Submit</span>
+              <span class="btn btn-primary w-100 mt-3" id="payment_submit">{{__("Submit")}}</span>
               </div>
           </div>
         </div>

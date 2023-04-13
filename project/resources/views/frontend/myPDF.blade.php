@@ -99,19 +99,19 @@
                     <td style="width:15%;font-size:8px;"></td>
                     <td style="width:20%;font-size:8px;"></td>
                     <td style="width:15%;font-size:8px;"></td>
-                    <td style="width:15%;font-size:8px;">Start Balance.</td>
+                    <td style="width:15%;font-size:8px;">{{__("Start Balance.")}}</td>
                     <td style="width:15%;font-size:8px;">{{$s_bal.$def_code}}</td>
                 </tr>
             @endif
             <thead>
                 <tr>
-                    <th style="width:15%;font-size:8px;">Date / Transaction ID</th>
-                    <th style="width:15%;font-size:8px;">Sender</th>
-                    <th style="width:15%;font-size:8px;">Receiver</th>
-                    <th style="width:20%;font-size:8px;">Description</th>
-                    <th style="width:15%;font-size:8px;">Amount</th>
-                    <th style="width:10%;font-size:8px;">Fee</th>
-                    <th style="width:10%;font-size:8px;">Currency</th>
+                    <th style="width:15%;font-size:8px;">{{__("Date / Transaction ID")}}</th>
+                    <th style="width:15%;font-size:8px;">{{__("Sender")}}</th>
+                    <th style="width:15%;font-size:8px;">{{__("Receiver")}}</th>
+                    <th style="width:20%;font-size:8px;">{{__("Description")}}</th>
+                    <th style="width:15%;font-size:8px;">{{__("Amount")}}</th>
+                    <th style="width:10%;font-size:8px;">{{__("Fee")}}</th>
+                    <th style="width:10%;font-size:8px;">{{__("Currency")}}</th>
                 </tr>
             </thead>
 
@@ -143,7 +143,7 @@
                         <td style="width:15%;font-size:8px;"></td>
                         <td style="width:20%;font-size:8px;"></td>
                         <td style="width:15%;font-size:8px;"></td>
-                        <td style="width:15%;font-size:8px;">End Balance.</td>
+                        <td style="width:15%;font-size:8px;">{{__("End Balance.")}}</td>
                         <td style="width:15%;font-size:8px;">{{$e_bal.$def_code}}</td>
                     </tr>
                 @endif

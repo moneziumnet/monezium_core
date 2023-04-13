@@ -1266,5 +1266,7 @@
     "Type to search..": "Type to search..",
     "Connected": "Connected",
     "Connecting...": "Connecting...",
-    "No internet access": "No internet access"
+    "No internet access": "No internet access",
+    "Start Balance.": "Start Balance.",
+    "End Balance.": "End Balance."
 }
