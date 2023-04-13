@@ -816,7 +816,39 @@ class UserController extends Controller
             $data['data'] = $data;
             $data['plan'] = $plan;
             $data['plans'] = $plans;
+            $data['global_list'] = Charge::where('plan_id', $data['data']->bank_plan_id)->where('user_id', 0)->orderBy('data','asc')->orderBy('slug', 'asc')->orderBy('name','asc')->get();
             return view('admin.user.profilepricingplansupervisor',$data);
+        }
+
+        public function charge_supervisor_all_update(Request $request, $id) {
+            $data = User::findOrFail($id);
+            $charge_list = Charge::where('plan_id', $data->bank_plan_id)->where('user_id', 0)->orderBy('data','asc')->orderBy('slug', 'asc')->orderBy('name','asc')->get();
+            foreach($charge_list as $item) {
+                $charge = Charge::where('user_id',$id)->where('plan_id', 0)->where('name', $item->name)->first();
+                if($charge) {
+                    $data = [];
+                    foreach($charge->data as $key => $value ) {
+                        $data[$key] = $request->input($key.'_'.$item->id);                     
+                    }
+                    $charge->data = $data;
+                    $charge->update();
+                }
+                else {
+                    $new_charge = new Charge();
+                    $new_charge->name = $request->input('name_'.$item->id); 
+                    $new_charge->slug = $request->input('slug_'.$item->id); 
+                    $new_charge->plan_id = 0; 
+                    $new_charge->user_id = $request->input('user_id_'.$item->id); 
+                    $data = [];
+                    foreach($item->data as $key => $value ) {
+                        $data[$key] = $request->input($key.'_'.$item->id);                     
+                    }
+                    $new_charge->data = $data;
+                    $new_charge->save();
+                }
+            }
+                return back()->with('message','ALl Charge Updated');
+
         }
 
         public function profilePricingplan_manager($id)
@@ -1976,11 +2008,15 @@ class UserController extends Controller
         public function profilePricingplanSupervisordatatables($id)
         {
             $user = User::findOrFail($id);
-            $globals = Charge::where('plan_id', $user->bank_plan_id)->where('user_id', 0)->orderBy('name','desc')->get();
+            $globals = Charge::where('plan_id', $user->bank_plan_id)->where('user_id', 0)->orderBy('data', 'asc')->orderBy('slug','asc')->orderBy('name', 'asc')->get();
             $datas = $globals;
             return Datatables::of($datas)
                             ->editColumn('name', function(Charge $data) {
                                 return $data->name;
+                            })
+                            ->editColumn('type', function(Charge $data) {
+                                $type = ucwords(str_replace('_',' ',$data->slug));
+                                return $type;
                             })
                             ->editColumn('percent', function(Charge $data)  {
                                 if ($data->data){

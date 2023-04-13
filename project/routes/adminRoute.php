@@ -277,6 +277,7 @@ Route::prefix('admin')->group(function () {
       Route::post('/users/{id}/updatemodules', [UserController::class, 'updateModules'])->name('admin-user-updatemodules');
 
       Route::post('/user/{id}/pricingplan/custome/update', [UserController::class, 'charge_custom_all_update'])->name('admin.custom.charge.all.update');
+      Route::post('/user/{id}/pricingplan/supervisor/update', [UserController::class, 'charge_supervisor_all_update'])->name('admin.supervisor.charge.all.update');
 
       Route::get('/wallet/{user_id}/{wallet_id}/transactions', [UserController::class, 'walletTransctions'])->name('admin-wallet-transactions');
       Route::get('/wallet/transactions/datatables/{id}', [UserController::class, 'walletTrandatatables'])->name('admin-wallet.transactions-datatables');
