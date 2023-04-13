@@ -861,6 +861,7 @@ class UserController extends Controller
             $data['data'] = $data;
             $data['plan'] = $plan;
             $data['plans'] = $plans;
+            $data['global_list'] = Charge::where('plan_id', $data['data']->bank_plan_id)->where('user_id', 0)->orderBy('data','asc')->orderBy('slug', 'asc')->orderBy('name','asc')->get();
             return view('admin.user.profilepricingplanmanager',$data);
         }
 
