@@ -450,7 +450,7 @@ class OtherBankTransferController extends Controller
 
                       $transaction_id = $res_body->requestReference;
                 } catch (\Throwable $th) {
-                    return response()->json(array('errors' => [ 0 => $response]));
+                    return response()->json(array('errors' => [ 0 => $th->getMessage()]));
 
                 }
             }
