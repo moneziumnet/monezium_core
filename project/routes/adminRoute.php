@@ -276,6 +276,8 @@ Route::prefix('admin')->group(function () {
       Route::post('/users/{id}/changepassword', [UserController::class, 'changePassword'])->name('admin-user-changepassword');
       Route::post('/users/{id}/updatemodules', [UserController::class, 'updateModules'])->name('admin-user-updatemodules');
 
+      Route::post('/user/{id}/pricingplan/custome/update', [UserController::class, 'charge_custom_all_update'])->name('admin.custom.charge.all.update');
+
       Route::get('/wallet/{user_id}/{wallet_id}/transactions', [UserController::class, 'walletTransctions'])->name('admin-wallet-transactions');
       Route::get('/wallet/transactions/datatables/{id}', [UserController::class, 'walletTrandatatables'])->name('admin-wallet.transactions-datatables');
       Route::get('/wallet/{user_id}/{wallet_id}/internal', [UserController::class, 'internal'])->name('admin-wallet-internal');

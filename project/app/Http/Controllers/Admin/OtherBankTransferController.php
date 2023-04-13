@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Datatables;
 use DateTime;
+use GuzzleHttp\Exception\RequestException;
 
 class OtherBankTransferController extends Controller
 {
@@ -434,7 +435,6 @@ class OtherBankTransferController extends Controller
                     }
                   }';
                   $param = $this->getToken($body, $data->subbank);
-
                   try {
                     $response = $client->request('POST',  'https://client.clearjunction.com/v7/gate/payout/bankTransfer/eu?checkOnly=false', [
                         'body' => $body,
@@ -449,10 +449,10 @@ class OtherBankTransferController extends Controller
                       $res_body = json_decode($response->getBody());
 
                       $transaction_id = $res_body->requestReference;
-                } catch (\Throwable $th) {
-                    return response()->json(array('errors' => [ 0 => $th->getMessage()]));
-
-                }
+                }  catch (RequestException $th) {
+                  return response()->json(array('errors' =>  [ 0 => json_decode($th->getResponse()->getBody())->errors[0]->message]));
+              }
+      
             }
             else if($bankgateway->keyword == 'swan') {
                 try {
