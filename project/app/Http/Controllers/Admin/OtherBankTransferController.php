@@ -544,11 +544,67 @@ class OtherBankTransferController extends Controller
 
     if ($id2 == 1) {
       // user_wallet_decrement($user->id, $data->currency_id, $data->amount);
-      $trans_wallet = get_wallet($user->id, $data->currency_id);
       // user_wallet_increment(0, $data->currency_id, $data->cost, 9);
 
     //   user_wallet_decrement($user->id, $data->currency_id, $data->amount);
     //   user_wallet_increment(0, $data->currency_id, $data->cost, 9);
+      $currency = Currency::findOrFail($data->currency_id);
+      $rate = getRate($currency);
+      if($user->referral_id != 0) {
+        $transaction_custom_fee = check_custom_transaction_fee($data->final_amount, $user, 'withdraw');
+        if($transaction_custom_fee) {
+            $transaction_custom_cost = $transaction_custom_fee->data->fixed_charge + ($data->final_amount/($rate*100)) * $transaction_custom_fee->data->percent_charge;
+        }
+        $remark='withdraw_supervisor_fee';
+        if (check_user_type_by_id(4, $user->referral_id)) {
+            user_wallet_decrement($user->id, $data->currency_id,$transaction_custom_cost*$rate,1);
+            user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost*$rate, 6);
+            $trans_wallet = get_wallet($user->referral_id, $data->currency_id, 6);
+        }
+        elseif (DB::table('managers')->where('manager_id', $user->referral_id)->first()) {
+            $remark='withdraw_manager_fee';
+            user_wallet_decrement($user->id, $data->currency_id,$transaction_custom_cost*$rate,1);
+            user_wallet_increment($user->referral_id, $data->currency_id, $transaction_custom_cost*$rate, 10);
+            $trans_wallet = get_wallet($user->referral_id, $request->currency_id, 10);
+        }
+
+        $trnx = str_rand();
+        $trans = new Transaction();
+        $trans->trnx = $trnx;
+        $trans->user_id     = $user->id;
+        $trans->user_type   = 1;
+        $trans->currency_id = $data->currency_id;
+        $trans->amount      = $transaction_custom_cost*$rate;
+
+        $wallet = get_wallet($user->id, $data->currency_id);
+        $trans->wallet_id   = isset($wallet) ? $wallet->id : null;
+
+        $trans->charge      = 0;
+        $trans->type        = '-';
+        $trans->remark      = $remark;
+        $trans->details     = trans('Withdraw money');
+
+        $trans->data        ='{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'"}';
+        $trans->save();
+
+        $trans = new Transaction();
+        $trans->trnx = $trnx;
+        $trans->user_id     = $user->referral_id;
+        $trans->user_type   = 1;
+        $trans->currency_id = $data->currency_id;
+
+        $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+
+        $trans->amount      = $transaction_custom_cost*$rate;
+        $trans->charge      = 0;
+        $trans->type        = '+';
+        $trans->remark      = $remark;
+        $trans->details     = trans('Withdraw money');
+        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'"}';
+        $trans->save();
+    }
+      $trans_wallet = get_wallet($user->id, $data->currency_id);
+
 
       $trans = new Transaction();
       $trans->trnx = $data->transaction_no;
