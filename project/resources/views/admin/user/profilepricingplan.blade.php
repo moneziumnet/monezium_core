@@ -37,7 +37,7 @@
                             <div class="row align-items-center">
                                 <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-uppercase mb-1">{{$plan->title}} </div>
-                                <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">Price {{ showprice($plan->amount,$currency) }}  </div>
+                                <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">Price {{ $currency->symbol.$plan->amount}}  </div>
                                 <div class="h6 mb-0 mt-2 font-weight-bold text-gray-800">Duration {{$plan->days}} days  </div>
                                 </div>
                             </div>
@@ -66,7 +66,7 @@
                                 <select class="form-control" name="subscription_type" id="subscription_type">
                                 <option value="">{{ __('Select Subscription Type') }}</option>
                                 @foreach($plans as $value)
-                                <option value="{{ $value->id }}">{{ $value->title }} {{ showprice($value->amount,$currency)}} for {{$value->days}} days</option>
+                                <option value="{{ $value->id }}">{{ $value->title }} {{ $currency->symbol.$value->amount}} for {{$value->days}} days</option>
                                 @endforeach
                                 </select>
                             </div>
