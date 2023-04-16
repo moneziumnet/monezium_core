@@ -382,8 +382,8 @@ class MessagesController extends Controller
         $records = User::where('id', '!=', Auth::user()->id)
             ->paginate($request->per_page ?? $this->perPage);
         foreach ($records->items() as $record) {
-            $displayName = $record->company_name == "" ? $record->name : $record->company_name;
-            if (str_contains($displayName, $input) || str_contains($record->name, $input)) {
+            $displayName = $record->company_name ?? $record->name;
+            if (str_contains(strtoupper($displayName), strtoupper($input)) ) {
                 $getRecords .= view('chatify.layouts.listItem', [
                     'get' => 'search_item',
                     'type' => 'user',

@@ -653,6 +653,7 @@ Route::prefix('user')->group(function() {
 
       Route::get('/pricingplan/{id}', [SupervisorController::class, 'index'])->name('user-pricingplan');
       Route::get('/pricingplan/edit/{id}', [SupervisorController::class, 'edit'])->name('user-pricingplan-edit');
+      Route::post('/pricingplan/{id}/supervisor/all/update', [SupervisorController::class, 'charge_supervisor_all_update'])->name('user.supervisor.charge.all.update');
       Route::get('/pricingplan/create/{id}/{charge_id}', [SupervisorController::class, 'create'])->name('user-pricingplan-create');
       Route::get('/pricingplan/datatables/{id}', [SupervisorController::class, 'datatables'])->name('user-pricingplan-datatables');
       Route::post('/pricingplan/updatecharge/{id}', [SupervisorController::class, 'updateCharge'])->name('user-pricingplan-update-charge');
