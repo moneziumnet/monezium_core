@@ -574,12 +574,12 @@ class OtherBankTransferController extends Controller
         $trans->user_id     = $user->id;
         $trans->user_type   = 1;
         $trans->currency_id = $data->currency_id;
-        $trans->amount      = $transaction_custom_cost*$rate;
+        $trans->amount      = 0;
 
         $wallet = get_wallet($user->id, $data->currency_id);
         $trans->wallet_id   = isset($wallet) ? $wallet->id : null;
 
-        $trans->charge      = 0;
+        $trans->charge      = $transaction_custom_cost*$rate;
         $trans->type        = '-';
         $trans->remark      = $remark;
         $trans->details     = trans('Withdraw money');
