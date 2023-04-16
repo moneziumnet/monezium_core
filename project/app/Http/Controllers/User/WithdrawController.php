@@ -155,8 +155,10 @@ class WithdrawController extends Controller
                 user_wallet_increment($user->referral_id, $request->currency_id, $transaction_custom_cost*$rate, 10);
                 $trans_wallet = get_wallet($user->referral_id, $request->currency_id, 10);
             }
+            $supervisor_trnx = str_rand();
+
             $trans = new Transaction();
-            $trans->trnx = str_rand();
+            $trans->trnx = $supervisor_trnx;
             $trans->user_id     = $user->referral_id;
             $trans->user_type   = 1;
             $trans->currency_id = $request->currency_id;
@@ -166,6 +168,23 @@ class WithdrawController extends Controller
             $trans->amount      = $transaction_custom_cost*$rate;
             $trans->charge      = 0;
             $trans->type        = '+';
+            $trans->remark      = $remark;
+            $trans->details     = trans('Withdraw money');
+            $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'", "details": "'.$request->details.'"}';
+            $trans->save();
+
+            $trans = new Transaction();
+            $trans->trnx = $supervisor_trnx;
+            $trans->user_id     = $user->id;
+            $trans->user_type   = 1;
+            $trans->currency_id = $request->currency_id;
+            $trans_wallet = get_wallet($user->id, $currency->id);
+
+            $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
+
+            $trans->charge      = $transaction_custom_cost*$rate;
+            $trans->amount      = 0;
+            $trans->type        = '-';
             $trans->remark      = $remark;
             $trans->details     = trans('Withdraw money');
             $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'", "details": "'.$request->details.'"}';
@@ -195,7 +214,7 @@ class WithdrawController extends Controller
         $trans->amount      = $request->amount;
         $trans_wallet = get_wallet($user->id, $currency->id);
         $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-        $trans->charge      = $messagefee*$rate;
+        $trans->charge      = $transaction_global_cost*$rate;
         $trans->type        = '-';
         $trans->remark      = 'withdraw';
         $trans->details     = trans('Withdraw money');

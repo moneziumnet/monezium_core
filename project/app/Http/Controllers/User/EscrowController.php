@@ -113,8 +113,10 @@ class EscrowController extends Controller
                 user_wallet_increment($user->referral_id, $currency->id, $transaction_custom_cost*$rate, 10);
                 $trans_wallet = get_wallet($user->referral_id, $currency->id, 10);
             }
+            $supervisor_trnx = str_rand();
+
             $trans = new Transaction();
-            $trans->trnx = str_rand();
+            $trans->trnx = $supervisor_trnx;
             $trans->user_id     = $user->referral_id;
             $trans->user_type   = 1;
             $trans->currency_id = $currency->id;
@@ -122,6 +124,21 @@ class EscrowController extends Controller
             $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
             $trans->charge      = 0;
             $trans->type        = '+';
+            $trans->remark      = $remark;
+            $trans->details     = trans('Make Escrow');
+            $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'", "description": "'.$request->description.'"}';
+            $trans->save();
+
+            $trans = new Transaction();
+            $trans->trnx = $supervisor_trnx;
+            $trans->user_id     = $user->id;
+            $trans->user_type   = 1;
+            $trans->currency_id = $currency->id;
+            $trans->charge      = $transaction_custom_cost*$rate;
+
+            $trans->wallet_id   = $senderWallet->id;
+            $trans->amount      = 0;
+            $trans->type        = '-';
             $trans->remark      = $remark;
             $trans->details     = trans('Make Escrow');
             $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'", "description": "'.$request->description.'"}';
@@ -146,7 +163,7 @@ class EscrowController extends Controller
         $trnx->currency_id = $currency->id;
         $trnx->wallet_id   = $senderWallet->id;
         $trnx->amount      = $finalAmount;
-        $trnx->charge      = $finalCharge*$rate;
+        $trnx->charge      = $transaction_global_cost*$rate;
         $trnx->remark      = 'escrow';
         $trnx->type        = '-';
         $trnx->details     = trans('Made escrow to '). $receiver->email;
