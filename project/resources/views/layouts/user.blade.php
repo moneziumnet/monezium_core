@@ -8,12 +8,14 @@
     <title>{{$gs->title}}</title>
     <link rel="shortcut icon" href="{{asset('assets/images/'.$gs->favicon)}}">
     <link href="{{ asset('assets/user/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
+	<link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'> 
     @if($website_theme == 1)
         <link href="{{asset('assets/user/css/tabler.min.css')}}" rel="stylesheet"/>
         <link href="{{asset('assets/user/css/tabler-flags.min.css')}}" rel="stylesheet"/>
     @else
         <link href="{{asset('assets/user/css/tabler-vertical.min.css')}}" rel="stylesheet"/>
         <link href="{{asset('assets/user/css/tabler-vertical-flags.min.css')}}" rel="stylesheet"/>
+		
     @endif
     <link href="{{asset('assets/user/css/tabler-payments.min.css')}}" rel="stylesheet"/>
     <link href="{{asset('assets/user/css/tabler-vendors.min.css')}}" rel="stylesheet"/>
@@ -64,6 +66,7 @@
     <script src="{{asset('assets/front/js/toastr.min.js')}}"></script>
     <script src="{{asset('assets/user/')}}/js/instascan.min.js"></script>
     <script src="{{asset('assets/user/js/apexcharts.min.js')}}"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
     <script>
       'use strict';
