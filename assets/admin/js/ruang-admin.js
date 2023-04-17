@@ -457,9 +457,9 @@ $('.theme-change').on('click',function(){
   var lastClass = btn.attr('class').split(' ').pop();
   btn.removeClass(lastClass);
   if($this.data('status') == '1'){
-    btn.addClass('btn-primary');
-  }else{
     btn.addClass('btn-success');
+  }else{
+    btn.addClass('btn-primary');
   }
   btn.text($this.data('val'));
 

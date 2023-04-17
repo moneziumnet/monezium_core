@@ -59,7 +59,10 @@ class FrontendController extends Controller
 
     public function index(Request $request)
     {
-
+        $gs = Generalsetting::findOrFail(1);
+        if ($gs->website_theme == 1) {
+            return redirect()->route('user.login');
+        }
         $current_domain = tenant('domains');
         if (!empty($current_domain)) {
             $current_domain = $current_domain->pluck('domain')->toArray()[0];

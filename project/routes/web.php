@@ -20,6 +20,7 @@ use App\Models\User;
 use App\Http\Controllers\Chatify\MessagesController;
 
 Route::redirect('admin', 'admin/login');
+Route::redirect('user', 'user/login');
 
 Route::webhooks('webhook-openpayd','openpayd');
 Route::webhooks('webhook-railsbank','railsbank');
