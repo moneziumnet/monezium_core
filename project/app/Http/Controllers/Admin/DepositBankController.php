@@ -212,27 +212,9 @@ class DepositBankController extends Controller
             $trans->remark      = $remark;
             $trans->details     = trans('Deposit complete');
 
-            $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.($referral_user->company_name ?? $referral_user->name).'", "description": "'.$data->details.' / '.$data->deposit_number.'"}';
+            $trans->data        = '{"sender":"'.$gs->disqus.'", "receiver":"'.($referral_user->company_name ?? $referral_user->name).'", "description": "'.$data->details.' / '.$data->deposit_number.'"}';
             $trans->save();
 
-            $trans_wallet = get_wallet($user->id, $data->currency_id, 1);
-
-            $trans = new Transaction();
-            $trans->trnx = $supervisor_trnx;
-            $trans->user_id     = $user->id;
-            $trans->user_type   = 1;
-            $trans->currency_id = $data->currency_id;
-            $trans->amount      = 0;
-
-            $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-
-            $trans->charge      =  $transaction_custom_cost*$rate;
-            $trans->type        = '-';
-            $trans->remark      = $remark;
-            $trans->details     = trans('Deposit complete');
-
-            $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.($referral_user->company_name ?? $referral_user->name).'", "description": "'.$data->details.' / '.$data->deposit_number.'"}';
-            $trans->save();
         }
         $final_chargefee = $transaction_global_cost + $transaction_custom_cost;
         $final_amount = $amount - $final_chargefee;
@@ -254,7 +236,7 @@ class DepositBankController extends Controller
         $trans->user_type   = 1;
         $trans->currency_id = $data->currency_id;
         $trans->amount      = $data->amount;
-        $trans->charge      = $transaction_global_cost*$rate;
+        $trans->charge      = $final_chargefee*$rate;
         $trans->type        = '+';
         if($data->purpose) {
             $trans->wallet_id  = null;

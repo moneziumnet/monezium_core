@@ -12,6 +12,7 @@ use App\Models\BankGateway;
 use App\Models\SubInsBank;
 use App\Models\Transaction;
 use App\Models\BankPoolAccount;
+use App\Models\Generalsetting;
 use GuzzleHttp\Client;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -550,6 +551,7 @@ class OtherBankTransferController extends Controller
     //   user_wallet_increment(0, $data->currency_id, $data->cost, 9);
       $currency = Currency::findOrFail($data->currency_id);
       $rate = getRate($currency);
+      $transaction_custom_cost = 0;
       if($user->referral_id != 0) {
         $transaction_custom_fee = check_custom_transaction_fee($data->final_amount, $user, 'withdraw');
         if($transaction_custom_fee) {
@@ -569,24 +571,7 @@ class OtherBankTransferController extends Controller
         }
 
         $trnx = str_rand();
-        $trans = new Transaction();
-        $trans->trnx = $trnx;
-        $trans->user_id     = $user->id;
-        $trans->user_type   = 1;
-        $trans->currency_id = $data->currency_id;
-        $trans->amount      = 0;
-
-        $wallet = get_wallet($user->id, $data->currency_id);
-        $trans->wallet_id   = isset($wallet) ? $wallet->id : null;
-
-        $trans->charge      = $transaction_custom_cost*$rate;
-        $trans->type        = '-';
-        $trans->remark      = $remark;
-        $trans->details     = trans('Withdraw money');
-
-        $trans->data        ='{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'"}';
-        $trans->save();
-
+        $gs = Generalsetting::findOrFail(1);
         $trans = new Transaction();
         $trans->trnx = $trnx;
         $trans->user_id     = $user->referral_id;
@@ -600,7 +585,7 @@ class OtherBankTransferController extends Controller
         $trans->type        = '+';
         $trans->remark      = $remark;
         $trans->details     = trans('Withdraw money');
-        $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'"}';
+        $trans->data        = '{"sender":"'.$gs->disqus.'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'"}';
         $trans->save();
     }
       $trans_wallet = get_wallet($user->id, $data->currency_id);
@@ -615,7 +600,7 @@ class OtherBankTransferController extends Controller
 
       $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
 
-      $trans->charge      = $data->cost;
+      $trans->charge      = $data->cost + $transaction_custom_cost*$rate;
       $trans->type        = '-';
       $trans->remark      = 'withdraw';
       $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$data->beneficiary->name.'", "transaction_id":"'.$data->transaction_no.'", "description":"'.$data->description.'"}';

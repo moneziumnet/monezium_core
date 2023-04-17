@@ -419,6 +419,7 @@ class UserController extends Controller
             $trax_details['sender'] = $request->fullname;
             $trax_details['receiver'] = $wallet->user->company_name ?? $wallet->user->name;
             $trax_details = json_encode($trax_details, True);
+            $gs = Generalsetting::first();
 
             $user = User::findOrFail($wallet->user_id);
             $rate =  getRate($wallet->currency);
@@ -463,25 +464,9 @@ class UserController extends Controller
                 $trans->remark      = $remark;
                 $trans->details     = trans('Deposit complete');
 
-                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.($referral_user->company_name ?? $referral_user->name).'"}';
+                $trans->data        = '{"sender":"'.$gs->disqus.'", "receiver":"'.($referral_user->company_name ?? $referral_user->name).'"}';
                 $trans->save();
 
-                $trans = new Transaction();
-                $trans->trnx = $supervisor_trnx;
-                $trans->user_id     = $user->id;
-                $trans->user_type   = 1;
-                $trans->currency_id = $wallet->currency_id;
-                $trans->amount      = 0;
-
-                $trans->wallet_id   = $wallet->id;
-
-                $trans->charge      = $transaction_custom_cost*$rate;
-                $trans->type        = '-';
-                $trans->remark      = $remark;
-                $trans->details     = trans('Deposit complete');
-
-                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.($referral_user->company_name ?? $referral_user->name).'"}';
-                $trans->save();
             }
             $fee = $transaction_global_cost + $transaction_custom_cost;
             $final_amount = $amount - $fee;
@@ -495,7 +480,7 @@ class UserController extends Controller
             $trans->wallet_id   = $wallet->id;
             $trans->currency_id = $wallet->currency_id;
             $trans->amount      = $request->amount;
-            $trans->charge      = $transaction_global_cost*$rate;
+            $trans->charge      = $fee*$rate;
             $trans->type        = '+';
             $trans->remark      = 'Deposit';
             $trans->details     = trans('Deposit complete');
@@ -1092,24 +1077,9 @@ class UserController extends Controller
                 $trans->type        = '+';
                 $trans->remark      = $remark;
                 $trans->details     = trans('Send Money');
-                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'", "description": "'.$request->description.'"}';
+                $trans->data        = '{"sender":"'.$gs->disqus.'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'", "description": "'.$request->description.'"}';
                 $trans->save();
 
-                $trans = new Transaction();
-                $trans->trnx = $supervisor_trnx;
-                $trans->user_id     = $user->id;
-                $trans->user_type   = 1;
-
-                $trans->wallet_id   = $wallet->id;
-
-                $trans->currency_id = $currency_id;
-                $trans->amount      = 0;
-                $trans->charge      = $transaction_custom_cost*$rate;
-                $trans->type        = '-';
-                $trans->remark      = $remark;
-                $trans->details     = trans('Send Money');
-                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'", "description": "'.$request->description.'"}';
-                $trans->save();
             }
 
             $finalCharge = $transaction_global_cost+$transaction_custom_cost;
@@ -1165,7 +1135,7 @@ class UserController extends Controller
                 $trans_wallet = get_wallet($user->id, $currency_id, $wallet->wallet_type);
                 $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
                 $trans->amount      = $request->amount;
-                $trans->charge      = $transaction_global_cost*$rate;
+                $trans->charge      = $finalCharge*$rate;
                 $trans->type        = '-';
                 $trans->remark      = 'send';
                 $trans->details     = trans('Send Money');

@@ -97,25 +97,9 @@ class WithdrawalController extends Controller
                 $trans->type        = '-';
                 $trans->remark      = $remark;
                 $trans->details     = trans('Withdraw request rejected');
-                $trans->data        = '{"sender":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'", "receiver":"'.($user->company_name ?? $user->name).'"}';
+                $trans->data        = '{"sender":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'", "receiver":"'.$gs->disqus.'"}';
                 $trans->save();
 
-                $trans = new Transaction();
-                $trans->trnx = $supervisor_trnx;
-                $trans->user_id     = $user->id;
-                $trans->user_type   = 1;
-                $trans->currency_id = $withdraw->currency_id;
-                $trans->amount      = $transaction_custom_cost*$rate;
-                $trans_wallet = get_wallet($withdraw->user_id, $withdraw->currency_id);
-
-                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-
-                $trans->charge      = 0;
-                $trans->type        = '+';
-                $trans->remark      = $remark;
-                $trans->details     = trans('Withdraw request rejected');
-                $trans->data        = '{"sender":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'", "receiver":"'.($user->company_name ?? $user->name).'"}';
-                $trans->save();
             }
             // $wallet->balance += $withdraw->total_amount;
             // $wallet->save();
@@ -125,7 +109,7 @@ class WithdrawalController extends Controller
             $trnx->user_id     = $withdraw->user_id;
             $trnx->user_type   = 1;
             $trnx->currency_id = $withdraw->currency->id;
-            $trnx->amount      = $withdraw->amount - ($transaction_custom_cost ?? 0)*$rate;
+            $trnx->amount      = $withdraw->amount;
 
             $trans_wallet = get_wallet($withdraw->user_id, $withdraw->currency_id);
             $trnx->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
@@ -152,7 +136,7 @@ class WithdrawalController extends Controller
 
             $trnx->wallet_id   = $wallet->id;
 
-            $trnx->amount      = $withdraw->amount - ($transaction_custom_cost ?? 0)*$rate;
+            $trnx->amount      = $withdraw->amount;
             $trnx->charge      = 0;
             $trnx->remark      = 'withdraw_reject';
             $trnx->type        = '+';
