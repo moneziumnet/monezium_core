@@ -20,7 +20,7 @@ class StaffManageController extends Controller
 
     public function datatables()
     {
-        $datas = Admin::where('id', '!=', auth()->id())->orderBy('status', 'desc')->get();
+        $datas = Admin::where('id', '!=', auth()->id())->where('role', '=', 'staff')->orderBy('status', 'desc')->get();
 
          return Datatables::of($datas)
             ->addColumn('name', function(Admin $data) {
@@ -28,16 +28,16 @@ class StaffManageController extends Controller
                 return $name;
             })
             ->addColumn('status', function(Admin $data) {
-                $status      = $data->role == 'staff' ? __('Turn On') : __('Turn Off');
-                $status_sign = $data->role == 'staff' ? 'success'   : 'danger';
+                $status      = $data->status == 1 ? __('Turn On') : __('Turn Off');
+                $status_sign = $data->status == 1 ? 'success'   : 'danger';
 
                     return '<div class="btn-group mb-1">
                     <button type="button" class="btn btn-'.$status_sign.' btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         '.$status .'
                     </button>
                     <div class="dropdown-menu" x-placement="bottom-start">
-                        <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="'. route('admin.staff.status',['id' => $data->id, 'status' => 'staff']).'">'.__("Turn On").'</a>
-                        <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="'. route('admin.staff.status',['id' => $data->id, 'status' => 'guest']).'">'.__("Turn Off").'</a>
+                        <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="'. route('admin.staff.status',['id' => $data->id, 'status' => 1]).'">'.__("Turn On").'</a>
+                        <a href="javascript:;" data-toggle="modal" data-target="#statusModal" class="dropdown-item" data-href="'. route('admin.staff.status',['id' => $data->id, 'status' => 0]).'">'.__("Turn Off").'</a>
                     </div>
                     </div>';
             })
@@ -64,7 +64,7 @@ class StaffManageController extends Controller
     public function staff_status($id,$status)
     {
         $user = Admin::findOrFail($id);
-        $user->role = $status;
+        $user->status = $status;
         $user->update();
         $msg = 'Staff Status Updated Successfully.';
         return response()->json($msg);

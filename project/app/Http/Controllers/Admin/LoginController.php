@@ -69,7 +69,7 @@ class LoginController extends Controller
                     return response()->json(array('errors' => [ 0 =>  __('Permission denied, Please use your domain after approve') ]));
                 }
 
-                if(empty($user->tenant_id) && $user->role == 'guest') {
+                if(empty($user->tenant_id) && $user->status == 0) {
                     return response()->json(array('errors' => [ 0 =>  __('Permission denied, Please use your staff role after approve') ]));
                 }
 
