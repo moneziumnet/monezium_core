@@ -300,7 +300,8 @@ Route::prefix('admin')->group(function () {
       Route::get('/users/deposit/{id}', [UserController::class, 'deposit'])->name('admin-user-deposit');
       Route::post('/user/deposit/{id}', [UserController::class, 'depositUpdate'])->name('admin-user-deposit-update');
       Route::post('/user/balance/add/deduct', [UserController::class, 'adddeduct'])->name('admin.user.balance.add.deduct');
-
+    
+    Route::group(['middleware' => 'permissions:Manage Pricing Plan'], function () {
       Route::get('/bank-plan/datatables', [BankPlanController::class, 'datatables'])->name('admin.bank.plan.datatables');
       Route::get('/bank-plan/detaildatatables/{id}', [BankPlanController::class, 'detaildatatables'])->name('admin.bank.plan.detail.datatables');
       Route::get('/bank-plans', [BankPlanController::class, 'index'])->name('admin.bank.plan.index');
@@ -311,6 +312,7 @@ Route::prefix('admin')->group(function () {
       Route::post('/bank-plan/update/{id}', [BankPlanController::class, 'update'])->name('admin.bank.plan.update');
       Route::post('/bank-plan/detail/update/{id}', [BankPlanController::class, 'plandetailupdate'])->name('admin.bank.plan.detail.update');
       Route::get('/bank-plan/detail/{id}', [BankPlanController::class, 'plandetailget'])->name('admin.bank.plan.detail.get');
+    });
 
       Route::get('/plan/datatables', [PlanController::class, 'datatables'])->name('admin.plan.datatables');
       Route::get('/plans', [PlanController::class, 'index'])->name('admin.plan.index');

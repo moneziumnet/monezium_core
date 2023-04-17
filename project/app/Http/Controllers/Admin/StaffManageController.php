@@ -20,7 +20,7 @@ class StaffManageController extends Controller
 
     public function datatables()
     {
-        $datas = Admin::where('id', '!=', auth()->id())->where('role', '=', 'staff')->orderBy('status', 'desc')->get();
+        $datas = Admin::where('id', '!=', auth()->id())->orderBy('status', 'desc')->get();
 
          return Datatables::of($datas)
             ->addColumn('name', function(Admin $data) {

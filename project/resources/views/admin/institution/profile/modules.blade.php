@@ -50,6 +50,16 @@
                     </div>
                   </div>
                 </div>
+
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" name="section[]" value="Manage Pricing Plan" {{ $data->sectionCheck('Manage Pricing Plan') ? 'checked' : '' }} class="custom-control-input" id="manage_pricing_plan">
+                      <label class="custom-control-label" for="manage_pricing_plan">{{__('Manage Pricing Plan')}}</label>
+                    </div>
+                  </div>
+                </div>
+
                 <div class="col-md-6">
                   <div class="form-group">
                     <div class="custom-control custom-switch">

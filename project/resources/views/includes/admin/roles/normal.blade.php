@@ -18,22 +18,6 @@
 </li>
 @endif
 
-@if(Auth::guard('admin')->user()->role == 'admin' && getModule('Manage Customers'))
-<li class="nav-item">
-  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#customer" aria-expanded="true" aria-controls="collapseTable">
-    <i class="fas fa-user"></i>
-    <span>{{ __('Manage Customers') }}</span>
-  </a>
-  <div id="customer" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
-    <div class="bg-white py-2 collapse-inner rounded">
-      <a class="collapse-item" href="{{ route('admin.user.index') }}">{{ __('User List') }}</a>
-      <a class="collapse-item" href="{{ route('admin.bank.plan.index') }}">{{ __('Pricing Plan') }}</a>
-      <!-- <a class="collapse-item" href="{{ route('admin.gs.user.modules') }}">{{ __('User Modules') }}</a> -->
-      <!-- <a class="collapse-item" href="{{ route('admin.user.bonus') }}">{{ __('Supervisor Fee') }}</a> -->
-    </div>
-  </div>
-</li>
-@endif
 @php
   $profile_module_list = ["Information" , "Accounts" , "Documents" , "Setting" , "Pricing Plan" , "Customer Transactions" , "Banks" , "Modules" , "IBAN" , "Contract" , "Merchant Shop" , "AML/KYC" , "Beneficiary" , "Layer" , "Login History"];
   $current = '';
@@ -43,22 +27,20 @@
     }
   }
 @endphp
-@if((Auth::guard('admin')->user()->role == 'staff' && getModule('Manage Customers')) || !empty($current))
+@if(getModule('Manage Customers') || !empty($current))
 <li class="nav-item">
-  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#customer" aria-expanded="true" aria-controls="collapseTable">
+  <a class="nav-link" href="{{ route('admin.user.index') }}">
     <i class="fas fa-user"></i>
-    <span>{{ __('Manage Customers') }}</span>
-  </a>
-  <div id="customer" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
-    <div class="bg-white py-2 collapse-inner rounded">
-      @if(!empty($current))
-      <a class="collapse-item" href="{{ route('admin.user.index') }}">{{ __('User List') }}</a>
-      @endif
-      @if(Auth::guard('admin')->user()->role == 'staff' && getModule('Manage Customers'))
-      <a class="collapse-item" href="{{ route('admin.bank.plan.index') }}">{{ __('Pricing Plan') }}</a>
-      @endif
-    </div>
-  </div>
+    <span>{{ __('Manage Customers') }}</span></a>
+</li>
+@endif
+
+
+@if(getModule('Manage Pricing Plan'))
+<li class="nav-item">
+  <a class="nav-link" href="{{ route('admin.bank.plan.index') }}">
+    <i class="fas fa-money-bill"></i>
+    <span>{{ __('Manage Pricing Plan') }}</span></a>
 </li>
 @endif
 
