@@ -174,22 +174,7 @@ class OwnTransferController extends Controller
                 $trans->type        = '+';
                 $trans->remark      = $remark;
                 $trans->details     = trans('Own Money Transfer');
-                $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'"}';
-                $trans->save();
-
-                $trans->trnx = $supervisor_trnx;
-                $trans->user_id     = $user->id;
-                $trans->user_type   = 1;
-
-                $trans->wallet_id   = $fromWallet->id;
-
-                $trans->currency_id = $fromWallet->currency->id;
-                $trans->amount      = 0;
-                $trans->charge      = $transaction_custom_cost*$rate;
-                $trans->type        = '-';
-                $trans->remark      = $remark;
-                $trans->details     = trans('Own Money Transfer');
-                $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'"}';
+                $trans->data        = '{"sender":"'.$gs->disqus.'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'"}';
                 $trans->save();
             }
 
@@ -208,7 +193,7 @@ class OwnTransferController extends Controller
             $trnx->currency_id = $fromWallet->currency->id;
             $trnx->wallet_id   = $fromWallet->id;
             $trnx->amount      = $request->amount;
-            $trnx->charge      = $transaction_global_cost*$rate;
+            $trnx->charge      = ($transaction_global_cost + $transaction_custom_cost)*$rate;
             $trnx->remark      = 'payment_between_accounts';
             $trnx->type        = '-';
             $trnx->details     = trans('Transfer  '.$fromWallet->currency->code.'money other wallet');
@@ -221,7 +206,7 @@ class OwnTransferController extends Controller
             $toTrnx->user_type   = 1;
             $toTrnx->currency_id = $toWallet->currency->id;
             $toTrnx->wallet_id   = $toWallet->id;
-            $toTrnx->amount      = $request->amount-($transaction_global_cost)*$rate;
+            $toTrnx->amount      = $request->amount-($transaction_global_cost+ $transaction_custom_cost)*$rate;
             $toTrnx->charge      = 0;
             $toTrnx->remark      = 'payment_between_accounts';
             $toTrnx->type          = '+';

@@ -282,24 +282,9 @@ class ExchangeMoneyController extends Controller
                 $trans->type = '+';
                 $trans->remark = $remark;
                 $trans->details = trans('Exchange Money');
-                $trans->data = '{"sender":"' . (auth()->user()->company_name ?? auth()->user()->name) . '", "receiver":"' . (User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name) . '"}';
+                $trans->data = '{"sender":"' . $gs->disqus . '", "receiver":"' . (User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name) . '"}';
                 $trans->save();
 
-                $trans = new Transaction();
-                $trans->trnx = $supervisor_trnx;
-                $trans->user_id = $user->id;
-                $trans->user_type = 1;
-
-                $trans->wallet_id = $fromWallet->id;
-
-                $trans->currency_id = $fromWallet->currency->id;
-                $trans->amount = 0;
-                $trans->charge = $transaction_custom_cost * $from_rate;
-                $trans->type = '-';
-                $trans->remark = $remark;
-                $trans->details = trans('Exchange Money');
-                $trans->data = '{"sender":"' . (auth()->user()->company_name ?? auth()->user()->name) . '", "receiver":"' . (User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name) . '"}';
-                $trans->save();
             }
 
             if ($fromWallet->currency->code == 'ETH' && $toWallet->currency->type == 1) {
@@ -578,7 +563,7 @@ class ExchangeMoneyController extends Controller
             $exchange->from_wallet_id = $fromWallet->id;
             $exchange->to_wallet_id = $toWallet->id;
             $exchange->user_id = auth()->id();
-            $exchange->charge = $charge ;
+            $exchange->charge = $charge + $transaction_custom_cost * $from_rate;
             $exchange->from_amount = $request->amount;
             $exchange->to_amount = $finalAmount;
             $exchange->save();

@@ -62,6 +62,7 @@ class EscrowController extends Controller
         [
             'wallet_id.required' => 'Wallet is required'
         ]);
+        $gs = Generalsetting::first();
 
 
         $receiver = User::where('email',$request->receiver)->first();
@@ -126,23 +127,9 @@ class EscrowController extends Controller
             $trans->type        = '+';
             $trans->remark      = $remark;
             $trans->details     = trans('Make Escrow');
-            $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'", "description": "'.$request->description.'"}';
+            $trans->data        = '{"sender":"'.$gs.'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'", "description": "'.$request->description.'"}';
             $trans->save();
 
-            $trans = new Transaction();
-            $trans->trnx = $supervisor_trnx;
-            $trans->user_id     = $user->id;
-            $trans->user_type   = 1;
-            $trans->currency_id = $currency->id;
-            $trans->charge      = $transaction_custom_cost*$rate;
-
-            $trans->wallet_id   = $senderWallet->id;
-            $trans->amount      = 0;
-            $trans->type        = '-';
-            $trans->remark      = $remark;
-            $trans->details     = trans('Make Escrow');
-            $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'", "description": "'.$request->description.'"}';
-            $trans->save();
         }
 
         $escrow               = new Escrow();
@@ -163,7 +150,7 @@ class EscrowController extends Controller
         $trnx->currency_id = $currency->id;
         $trnx->wallet_id   = $senderWallet->id;
         $trnx->amount      = $finalAmount;
-        $trnx->charge      = $transaction_global_cost*$rate;
+        $trnx->charge      = $finalCharge*$rate;
         $trnx->remark      = 'escrow';
         $trnx->type        = '-';
         $trnx->details     = trans('Made escrow to '). $receiver->email;

@@ -214,24 +214,7 @@ class SendController extends Controller
             $trans->type        = '+';
             $trans->remark      = $remark;
             $trans->details     = trans('Send Money');
-            $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'", "description": "'.$request->description.'"}';
-            $trans->save();
-
-            $trans = new Transaction();
-            $trans->trnx = $supervisor_trnx;
-            $trans->user_id     = $user->id;
-            $trans->user_type   = 1;
-            $trans_wallet = get_wallet($user->id, $currency_id, $wallet->wallet_type);
-
-            $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-
-            $trans->currency_id = $currency_id;
-            $trans->amount      = 0;
-            $trans->charge      = $transaction_custom_cost*$rate;
-            $trans->type        = '-';
-            $trans->remark      = $remark;
-            $trans->details     = trans('Send Money');
-            $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'", "description": "'.$request->description.'"}';
+            $trans->data        = '{"sender":"'.$gs->disqus.'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'", "description": "'.$request->description.'"}';
             $trans->save();
 
         }
@@ -319,8 +302,8 @@ class SendController extends Controller
             $trans->currency_id = $currency_id;
             $trans_wallet = get_wallet($user->id, $currency_id, $wallet->wallet_type);
             $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-            $trans->amount      = $request->amount + $transaction_global_cost*$rate;
-            $trans->charge      = $transaction_global_cost*$rate;
+            $trans->amount      = $request->amount + $finalCharge*$rate;
+            $trans->charge      = $finalCharge*$rate;
             $trans->type        = '-';
             $trans->remark      = 'send';
             $trans->details     = trans('Send Money');

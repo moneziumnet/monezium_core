@@ -72,7 +72,7 @@ class WithdrawCryptoController extends Controller
             $global_range = PlanDetail::where('plan_id', $user->bank_plan_id)->where('type', 'withdraw')->first();
             $dailywithdraw = CryptoWithdraw::where('user_id', $user->id)->whereDate('created_at', '=', date('Y-m-d'))->whereStatus('complete')->sum('amount');
             $monthlywithdraw = CryptoWithdraw::where('user_id', $user->id)->whereMonth('created_at', '=', date('m'))->whereStatus('complete')->sum('amount');
-
+            $gs = Generalsetting::first();
             if ( $amountToAdd < $global_range->min ||  $amountToAdd > $global_range->max) {
                 return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Your amount is not in defined range. Max value is '.$global_range->max.' and Min value is '.$global_range->min]);
 
@@ -180,25 +180,9 @@ class WithdrawCryptoController extends Controller
                 $trans->type        = '+';
                 $trans->remark      = $remark;
                 $trans->details     = trans('Withdraw money');
-                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'"}';
+                $trans->data        = '{"sender":"'.$gs->disqus.'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'"}';
                 $trans->save();
 
-                $trans = new Transaction();
-                $trans->trnx = $supervisor_trnx;
-                $trans->user_id     = $user->id;
-                $trans->user_type   = 1;
-                $trans->currency_id = $request->currency_id;
-                $trans_wallet = get_wallet($user->id, $currency->id, 8);
-
-                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-
-                $trans->charge      = $transaction_custom_cost*$crypto_rate;
-                $trans->amount      = 0;
-                $trans->type        = '-';
-                $trans->remark      = $remark;
-                $trans->details     = trans('Withdraw money');
-                $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.(User::findOrFail($user->referral_id)->company_name ?? User::findOrFail($user->referral_id)->name).'"}';
-                $trans->save();
             }
             if($fromWallet->currency->code == 'ETH') {
                 RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
@@ -243,7 +227,7 @@ class WithdrawCryptoController extends Controller
             $trans->user_type   = 1;
             $trans->currency_id = $request->currency_id;
             $trans->amount      = $messagefinal*$crypto_rate;
-            $trans->charge      = $transaction_global_cost*$crypto_rate;
+            $trans->charge      = $messagefee*$crypto_rate;
 
             $trans_wallet = get_wallet($user->id, $currency->id, 8);
             $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;

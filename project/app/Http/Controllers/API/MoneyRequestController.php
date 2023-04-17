@@ -302,24 +302,9 @@ class MoneyRequestController extends Controller
                 $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
                 $trans->remark      = $remark;
                 $trans->details     = trans('Request Money');
-                $trans->data        = '{"sender":"'.($receiver->company_name ?? $receiver->name).'", "receiver":"'.($referral_user->company_name ?? $referral_user->name).'", "description": "'.$data->details.'"}';
+                $trans->data        = '{"sender":"'.$gs->disqus.'", "receiver":"'.($referral_user->company_name ?? $referral_user->name).'", "description": "'.$data->details.'"}';
                 $trans->save();
 
-                $trans = new Transaction();
-                $trans->trnx = $supervisor_trnx;
-                $trans->user_id     = $receiver->id;
-                $trans->user_type   = 1;
-                $trans->currency_id = $currency_id;
-                $trans->amount      = 0;
-                $trans->charge      = $data->supervisor_cost;
-                $trans->type        = '-';
-                $trans_wallet       = get_wallet($receiver->id, $currency_id);
-
-                $trans->wallet_id   = isset($trans_wallet) ? $trans_wallet->id : null;
-                $trans->remark      = $remark;
-                $trans->details     = trans('Request Money');
-                $trans->data        = '{"sender":"'.($receiver->company_name ?? $receiver->name).'", "receiver":"'.($referral_user->company_name ?? $referral_user->name).'", "description": "'.$data->details.'"}';
-                $trans->save();
             }
 
             if ($wallet->currency->type == 2) {
@@ -378,7 +363,7 @@ class MoneyRequestController extends Controller
             }
 
             $trans->amount      = $data->amount;
-            $trans->charge      = $data->cost;
+            $trans->charge      = $data->cost + $data->supervisor_cost;
             $trans->type        = '+';
             $trans->remark      = 'Recieve';
             $trans->data        = '{"sender":"'.(auth()->user()->company_name ?? auth()->user()->name).'", "receiver":"'.($receiver->company_name ?? $receiver->name).'", "description": "'.$data->details.'"}';
