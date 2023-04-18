@@ -151,7 +151,7 @@
             <div class="col-lg-6">
                 <div class="how-it-wrapper">
                     <div class="how-it-header bg--title">
-                        <h3 class="title text--white m-0">@lang('Create Account')</h3>
+                        <h3 class="title text--Black m-0">@lang('Create Account')</h3>
                         <p>@lang('Veniam laudantium cumque quasi, fuga magni esse.')</p>
                     </div>
                     <div class="how-it-body">

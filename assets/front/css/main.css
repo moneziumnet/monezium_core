@@ -1762,6 +1762,7 @@ div[class*="col"]:nth-of-type(4n + 4) .feature-item:hover .feature-item__icon {
 	-webkit-border-radius: 7px 7px 0 0;
 	-moz-border-radius: 7px 7px 0 0;
 	border-radius: 7px 7px 0 0;
+	border: 1px solid #e8eaff;
 }
 
 .how-it-wrapper .how-it-header p {
@@ -1778,7 +1779,6 @@ div[class*="col"]:nth-of-type(4n + 4) .feature-item:hover .feature-item__icon {
 	-webkit-border-radius: 0 0 7px 7px;
 	-moz-border-radius: 0 0 7px 7px;
 	border-radius: 0 0 7px 7px;
-	background: #ffffff;
 }
 
 @media (max-width: 575px) {
