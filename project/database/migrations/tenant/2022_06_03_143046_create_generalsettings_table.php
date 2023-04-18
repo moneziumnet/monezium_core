@@ -106,7 +106,7 @@ class CreateGeneralsettingsTable extends Migration
             $table->tinyInteger('is_verify')->nullable()->default(0);
             $table->boolean('two_fa')->default(true);
             $table->double('other_bank_limit')->nullable();
-            $table->tinyInteger('website_theme')->default(0);
+            $table->tinyInteger('frontend_status')->default(0);
         });
     }
 

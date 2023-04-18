@@ -450,18 +450,17 @@ $('.drop-change').on('click',function(){
 
 });
 
-$('.theme-change').on('click',function(){
+$('.theme-change').on('change',function(){
   var $this = $(this);
-  var link = $this.data('href');
-  var btn = $this.parent().prev();
-  var lastClass = btn.attr('class').split(' ').pop();
-  btn.removeClass(lastClass);
-  if($this.data('status') == '1'){
-    btn.addClass('btn-success');
-  }else{
-    btn.addClass('btn-primary');
-  }
-  btn.text($this.data('val'));
+  // var btn = $this.parent().prev();
+  // var lastClass = btn.attr('class').split(' ').pop();
+  // btn.removeClass(lastClass);
+  if(this.checked) {
+      var link = $this.data('turnon');
+    }else{
+      var link = $this.data('turnoff');
+
+    }
 
   $.get(link, function(data) {
   }).done(function(data) {

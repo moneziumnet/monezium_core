@@ -60,7 +60,7 @@ class FrontendController extends Controller
     public function index(Request $request)
     {
         $gs = Generalsetting::findOrFail(1);
-        if ($gs->website_theme == 1) {
+        if ($gs->frontend_status == 1) {
             return redirect()->route('user.login');
         }
         $current_domain = tenant('domains');

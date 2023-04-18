@@ -30,17 +30,13 @@
         <div class="row">
           <div class="col-md-3">
             <div class="form-group">
-              <label for="inp-title">{{  __('Website Theme')  }}</label>
-              <div class="frm-btn btn-group mb-1">
-                  <button type="button" class="btn btn-sm btn-rounded dropdown-toggle btn-{{ $gs->website_theme == 1 ? 'success' : 'primary' }}" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
-                    {{ $gs->website_theme == 1 ? __('Classic') : __('General')}}
-                  </button>
-                  <div class="dropdown-menu">
-                    <a class="dropdown-item theme-change" href="javascript:;" data-status="0" data-val="{{ __('General') }}" data-href="{{ route('admin.gs.status',['website_theme',0]) }}">{{ __('General') }}</a>
-                    <a class="dropdown-item theme-change" href="javascript:;" data-status="1" data-val="{{ __('Classic') }}" data-href="{{ route('admin.gs.status',['website_theme',1]) }}">{{ __('Classic') }}</a>
-                  </div>
+              <label for="inp-title">{{  __('Frontend Page')  }}</label>
+              <div class="form-group">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" name="frontend_status" value="1" data-turnon="{{ route('admin.gs.status',['frontend_status',1]) }}"  data-turnoff="{{ route('admin.gs.status',['frontend_status',0]) }}" class="custom-control-input theme-change" {{$gs->frontend_status == 1 ? 'checked' : ''}} id="frontend">
+                  <label class="custom-control-label" for="frontend">{{__('Turn ON/OFF')}}</label>
                 </div>
+              </div>
             </div>
           </div>
 

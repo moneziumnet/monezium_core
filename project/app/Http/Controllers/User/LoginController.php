@@ -23,7 +23,7 @@ class LoginController extends Controller
     public function showLoginForm()
     {
       $gs = Generalsetting::findOrFail(1);
-      if ($gs->website_theme == 1) {
+      if ($gs->frontend_status == 1) {
         return view('user.login_classic');
       }
       return view('user.login');

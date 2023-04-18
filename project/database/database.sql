@@ -1358,7 +1358,7 @@ CREATE TABLE `generalsettings`  (
   `telegram_token` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
   `telegram_section` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
   `whatsapp_bot_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-  `website_theme` tinyint(4) NOT NULL DEFAULT 0,
+  `frontend_status` tinyint(4) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
