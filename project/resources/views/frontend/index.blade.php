@@ -220,7 +220,7 @@
                                 <ul>
                                     <li>
                                         <div class="name font-weight-normal">
-                                            @lang('Maximum Send Money (Daily)')
+                                            @lang('Send Money (Daily)')
                                         </div>
                                         <div class="info">
                                             {{ $currency->symbol.plan_details_by_type('send', $data->id)->daily_limit }}
@@ -229,7 +229,7 @@
 
                                     <li>
                                         <div class="name font-weight-normal">
-                                            @lang('Maximum Send Money (Monthly)')
+                                            @lang('Send Money (Monthly)')
                                         </div>
 
                                         <div class="info">
@@ -239,7 +239,7 @@
 
                                     <li>
                                         <div class="name font-weight-normal">
-                                            @lang('Maximum Request Money (Daily)')
+                                            @lang('Request Money (Daily)')
                                         </div>
 
                                         <div class="info">
@@ -249,7 +249,7 @@
 
                                     <li>
                                         <div class="name font-weight-normal">
-                                            @lang('Maximum Request Money (Monthly)')
+                                            @lang('Request Money (Monthly)')
                                         </div>
 
                                         <div class="info">
@@ -259,7 +259,7 @@
 
                                     <li>
                                         <div class="name font-weight-normal">
-                                            @lang('Maximum Withdraw Amount (Daily)')
+                                            @lang('Withdraw Amount (Daily)')
                                         </div>
 
                                         <div class="info">
@@ -269,7 +269,7 @@
 
                                     <li>
                                         <div class="name font-weight-normal">
-                                            @lang('Maximum Withdraw Amount (Monthly)')
+                                            @lang('Withdraw Amount (Monthly)')
                                         </div>
 
                                         <div class="info">
@@ -279,7 +279,7 @@
 
                                     <li>
                                         <div class="name font-weight-normal">
-                                            @lang('Maximum Deposit Amount (Daily)')
+                                            @lang('Deposit Amount (Daily)')
                                         </div>
 
                                         <div class="info">
@@ -289,7 +289,7 @@
 
                                     <li>
                                         <div class="name font-weight-normal">
-                                            @lang('Maximum Deposit Amount (Monthly)')
+                                            @lang('Deposit Amount (Monthly)')
                                         </div>
 
                                         <div class="info">
@@ -299,7 +299,7 @@
 
                                     <li>
                                         <div class="name font-weight-normal">
-                                            @lang('Maximum Escrow Amount (Daily)')
+                                            @lang('Escrow Amount (Daily)')
                                         </div>
 
                                         <div class="info">
@@ -309,7 +309,7 @@
 
                                     <li>
                                         <div class="name font-weight-normal">
-                                            @lang('Maximum Escrow Amount (Monthly)')
+                                            @lang('Escrow Amount (Monthly)')
                                         </div>
 
                                         <div class="info">
