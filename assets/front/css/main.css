@@ -452,6 +452,11 @@ textarea {
 /*Footer*/
 .footer-top {
 	padding: 90px 0 45px;
+	color: #000;
+}
+
+.footer-bottom {
+	color: #000;
 }
 
 .footer-wrapper {
