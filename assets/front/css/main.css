@@ -491,7 +491,8 @@ textarea {
 }
 
 .footer-wrapper .footer-logo a img {
-	width: 100%;
+	max-width: 10rem;
+	max-height: 4rem;
 }
 
 @media (max-width: 991px) {
@@ -821,7 +822,8 @@ header {
 }
 
 .navbar-wrapper .logo img {
-	width: 100%;
+	max-width: 16rem;
+	max-height: 3rem;
 }
 
 .change-language {

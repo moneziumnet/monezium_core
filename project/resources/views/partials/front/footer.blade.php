@@ -2,7 +2,7 @@
     <div class="footer-top position-relative">
         <div class="container">
             <div class="footer-wrapper">
-                <div class="footer-logo">
+                <div class="footer-logo d-flex justify-content-center">
                     <a href="index.html">
                         <img src="{{ asset('assets/images/'.$gs->footer_logo) }}" alt="logo">
                     </a>
