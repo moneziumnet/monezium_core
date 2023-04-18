@@ -53,15 +53,16 @@
 	--tblr-black-rgb: 0, 0, 0;
 	--tblr-body-color-rgb: 30, 41, 59;
 	--tblr-body-bg-rgb: 248, 250, 252;
-	--tblr-font-sans-serif: "Inter", -apple-system, BlinkMacSystemFont,
+	--tblr-font-sans-serif: "sans-serif", -apple-system, BlinkMacSystemFont,
 		San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
-	--tblr-font-monospace: "Inter";
+	--tblr-font-monospace: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+	--tblr-font-inter: "Inter";
 	--tblr-gradient: linear-gradient(
 		180deg,
 		rgba(255, 255, 255, 0.15),
 		rgba(255, 255, 255, 0)
 	);
-	--tblr-body-font-family: var(--tblr-font-monospace);
+	--tblr-body-font-family: var(--tblr-font-inter);
 	--tblr-body-font-size: 14px;
 	--tblr-body-font-weight: 700;
 	--tblr-body-line-height: 1.4285714286;
