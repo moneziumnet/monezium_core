@@ -33,8 +33,8 @@
               <label for="inp-title">{{  __('Frontend Page')  }}</label>
               <div class="form-group">
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" name="frontend_status" value="1" data-turnon="{{ route('admin.gs.status',['frontend_status',1]) }}"  data-turnoff="{{ route('admin.gs.status',['frontend_status',0]) }}" class="custom-control-input theme-change" {{$gs->frontend_status == 1 ? 'checked' : ''}} id="frontend">
-                  <label class="custom-control-label" for="frontend">{{__('Turn ON/OFF')}}</label>
+                  <input type="checkbox" name="frontend_status" value="1" data-turnon="{{ route('admin.gs.status',['frontend_status',0]) }}"  data-turnoff="{{ route('admin.gs.status',['frontend_status',1]) }}" class="custom-control-input theme-change" {{$gs->frontend_status == 0 ? 'checked' : ''}} id="frontend">
+                  <label class="custom-control-label" for="frontend">{{__('Diable/Enable')}}</label>
                 </div>
               </div>
             </div>
