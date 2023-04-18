@@ -40,6 +40,10 @@ class RegisterController extends Controller
     {
         //$data = BankPlan::findOrFail($id);
         //return view('user.register', compact('data'));
+        $gs = Generalsetting::findOrFail(1);
+        if ($gs->frontend_status == 1) {
+          return view('user.register_classic', compact('id'));
+        }
         return view('user.register', compact('id'));
     }
 
