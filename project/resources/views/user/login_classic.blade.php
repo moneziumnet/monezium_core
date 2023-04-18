@@ -84,6 +84,13 @@
     <script src="{{asset('assets/front/js/main.js')}}"></script>
     <script src="{{asset('assets/front/js/custom.js')}}"></script>
 
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $.getJSON("https://api.ipify.org/?format=json", function(e) {
+                $('#global_ip').val(e.ip);
+            });
+        })
+    </script>
     <script>
         'use strict';
         @if(Session::has('message'))
@@ -105,13 +112,6 @@
         @endif
     </script>
 
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $.getJSON("https://api.ipify.org/?format=json", function(e) {
-                $('#global_ip').val(e.ip);
-            });
-        })
-    </script>
 
 
 </body>
