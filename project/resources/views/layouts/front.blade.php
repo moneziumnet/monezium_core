@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="{{asset('assets/front/css/main.css')}}" />
     <link rel="stylesheet" href="{{asset('assets/front/css/toastr.min.css')}}">
 
-    <link rel="stylesheet" href="{{ asset('assets/front/css/styles.php?color='.str_replace('#','',$gs->colors)) }}">
+    {{-- <link rel="stylesheet" href="{{ asset('assets/front/css/styles.php?color='.str_replace('#','',$gs->colors)) }}"> --}}
 
     @if ($default_font->font_value)
         <link href="https://fonts.googleapis.com/css?family={{ $default_font->font_value }}&display=swap" rel="stylesheet">

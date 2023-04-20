@@ -28,7 +28,7 @@
                 </div>
             </div>
             <div class="col-lg-6">
-                <div class="how-it-img text-lg-end">
+                <div class="how-it-img">
                     <img src="{{ asset('assets/images/'.$ps->hero_photo) }}" alt="about">
                 </div>
             </div>
@@ -193,8 +193,6 @@
 <section class="plan-section bg--section pt-50 pb-150" id="pricing">
     <div class="container">
         <div class="section-title text-center">
-            <h6 class="subtitle text--base">@lang('Pricing Plan')</h6>
-
             <div class="pricing-checkbox">
                 <ul class="nav nav-tabs nav--tabs">
                     <li>
@@ -337,7 +335,7 @@
                                         </div>
                                     </li>
                                 </ul>
-                                <a href="{{ route('user.register',$data->id) }}" class="w-100 text--black">{{__('Apply')}} <i class="fas fa-arrow-right me-1"></i></a>
+                                <a href="{{ route('user.register',$data->id) }}" class="w-100 text--black d-flex justify-content-center align-items-center">{{__('Apply Now')}} <i class="fas fa-arrow-right ms-2"></i></a>
                             </div>
                         </div>
                     </div>
@@ -410,7 +408,7 @@
                                         </div>
                                     </li>
                                 </ul>
-                                <a href="{{ route('user.dps.planDetails',$data->id) }}" class="cmn--btn bg--base w-100 text--white">{{__('Apply')}}</a>
+                                <a href="{{ route('user.dps.planDetails',$data->id) }}" class="w-100 text--black d-flex justify-content-center align-items-center">{{__('Apply Now')}} <i class="fas fa-arrow-right ms-2"></i></a>
                             </div>
                         </div>
                     </div>
@@ -485,9 +483,10 @@
                                     </li>
                                     @endif
                                 </ul>
-                                <button class="cmn--btn w-100 apply-pension" type="button" data-bs-toggle="modal" data-bs-target="#modal-pension" data-id="{{ $data->id}}" data-title="{{ $data->title }}">
+                                {{-- <button class="cmn--btn w-100 apply-pension" type="button" data-bs-toggle="modal" data-bs-target="#modal-pension" data-id="{{ $data->id}}" data-title="{{ $data->title }}">
                                     @lang('Apply Now')
-                                </button>
+                                </button> --}}
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#modal-pension" data-id="{{ $data->id}}" data-title="{{ $data->title }}" class="apply-pension w-100 text--black d-flex justify-content-center align-items-center">{{__('Apply Now')}} <i class="fas fa-arrow-right ms-2"></i></a>
                             </div>
                         </div>
                     </div>
@@ -550,9 +549,10 @@
                                         </div>
                                     </li>
                                 </ul>
-                                <button class="cmn--btn w-100 apply-loan" type="button" data-bs-toggle="modal" data-bs-target="#modal-apply" data-id="{{ $data->id}}" data-title="{{ $data->title }}">
+                                {{-- <button class="cmn--btn w-100 apply-loan" type="button" data-bs-toggle="modal" data-bs-target="#modal-apply" data-id="{{ $data->id}}" data-title="{{ $data->title }}">
                                     @lang('Apply Now')
-                                </button>
+                                </button> --}}
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#modal-apply" data-id="{{ $data->id}}" data-title="{{ $data->title }}" class="apply-loan w-100 text--black d-flex justify-content-center align-items-center">{{__('Apply Now')}} <i class="fas fa-arrow-right ms-2"></i></a>
                             </div>
                         </div>
                     </div>

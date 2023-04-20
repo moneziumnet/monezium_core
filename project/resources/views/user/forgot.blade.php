@@ -9,15 +9,7 @@
     <section class="hero-section bg--overlay bg_img" data-img="{{ asset('assets/images/'.$gs->breadcumb_banner) }}">
         <div class="container">
             <div class="hero-content">
-                <h2 class="hero-title">@lang('Forgot Password')</h2>
-                <ul class="breadcrumb">
-                    <li>
-                        <a href="{{ route('front.index') }}">@lang('Home')</a>
-                    </li>
-                    <li>
-                        @lang('Forgot Password')
-                    </li>
-                </ul>
+                <h1 class="hero-title">@lang('Forgot Password')</h1>
             </div>
         </div>
     </section>
@@ -39,7 +31,7 @@
                     </div>
 
                     <div class="col-sm-12">
-                        <button type="submit" class="cmn--btn bg--base me-3">
+                        <button type="submit" class="btn cmn--btn me-3">
                             @lang('Submit')
                         </button>
                         <div class="d-flex flex-wrap justify-content-between align-items-center mt-2">

@@ -403,7 +403,8 @@ div[class*="col"]:nth-of-type(6n + 4) .card--info-item .icon {
 .plan__item-header .right {
 	text-align: center;
 	padding: 15px 15px 10px;
-	background: rgba(0, 78, 137, 0.1);
+	border-radius: 10px;
+    border: 1px solid var(--tblr-border-color);
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
@@ -435,7 +436,7 @@ div[class*="col"]:nth-of-type(6n + 4) .card--info-item .icon {
 	content: "\f058";
 	font-family: "Font Awesome 5 Free";
 	font-weight: 500;
-	color: #ff8500;
+	color: #000;
 	font-size: 14px;
 	margin-right: 5px;
 }
@@ -457,25 +458,18 @@ div[class*="col"]:nth-of-type(6n + 4) .card--info-item .icon {
 }
 
 .plan__item:hover {
-	background: #004e89 !important;
-	color: #b4d4ff;
-}
-
-.plan__item:hover .plan__item-header {
-	border-color: rgba(255, 255, 255, 0.2);
+	/* background: #004e89 !important;
+	color: #b4d4ff; */
+	-webkit-transform: translateY(-8px);
+    -ms-transform: translateY(-8px);
+    transform: translateY(-8px);
+    box-shadow: 0 0 7px rgba(0, 78, 137, 0.2);
 }
 
 .plan__item:hover .plan__item-header .right {
 	background: rgba(255, 255, 255, 0.1);
 }
 
-.plan__item:hover .plan__item-header .right .title {
-	color: #ff8500;
-}
-
-.plan__item:hover .plan__item-header .title {
-	color: #fff;
-}
 @media screen and (max-width: 575px) {
 	.special-box .table-responsive-sm {
 		padding-left: 15px;
