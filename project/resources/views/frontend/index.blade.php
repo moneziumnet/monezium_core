@@ -6,24 +6,34 @@
 
 @section('content')
 <!-- Banner -->
-<section class="banner-section bg--overlay bg_img" data-img="{{ asset('assets/images/'.$ps->hero_photo) }}">
+<section class="banner-section">
     <div class="container">
-        <div class="banner-wrapper">
-            <div class="banner-content">
-                <h1 class="banner-title">{{ $ps->hero_title }}</h1>
-                <p>
-                    {{ $ps->hero_subtitle }}
-                </p>
-                <div class="btn__grp">
-                    <a href="{{ $ps->hero_btn_url }}" class="cmn--btn">
-                        @lang('Get Started')
-                    </a>
-                    <a href="{{ $ps->hero_link }}" class="video--btn" data-lightbox>
-                        <i class="fas fa-play"></i>
-                    </a>
+        <div class="row flex-wrap-reverse">
+            <div class="col-lg-6">
+                <div class="banner-wrapper">
+                    <div class="banner-content">
+                        <h1 class="banner-title">{{ $ps->hero_title }}</h1>
+                        <p>
+                            {{ $ps->hero_subtitle }}
+                        </p>
+                        <div class="btn__grp">
+                            <a href="{{ $ps->hero_btn_url }}" class="cmn--btn">
+                                @lang('Get Started')
+                            </a>
+                            <a href="{{ $ps->hero_link }}" class="video--btn" data-lightbox>
+                                <i class="fas fa-play"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="how-it-img text-lg-end">
+                    <img src="{{ asset('assets/images/'.$ps->hero_photo) }}" alt="about">
                 </div>
             </div>
         </div>
+        
     </div>
 </section>
 <!-- Banner -->
@@ -117,7 +127,8 @@
             <div class="col-md-6 col-xl-4">
                 <div class="service-item">
                     <div class="service-item__icon">
-                        <img src="{{asset('assets/images/'.$data->photo)}}" alt="strong" />
+                        {{-- <img src="{{asset('assets/images/'.$data->photo)}}" alt="strong" /> --}}
+                        <i class="fas fa-piggy-bank"></i>
                     </div>
                     <div class="service-item__cont">
                         <h5 class="service-item__cont-title">
@@ -326,7 +337,7 @@
                                         </div>
                                     </li>
                                 </ul>
-                                <a href="{{ route('user.register',$data->id) }}" class="cmn--btn bg--base w-100 text--white">{{__('Apply')}}</a>
+                                <a href="{{ route('user.register',$data->id) }}" class="w-100 text--black">{{__('Apply')}} <i class="fas fa-arrow-right me-1"></i></a>
                             </div>
                         </div>
                     </div>

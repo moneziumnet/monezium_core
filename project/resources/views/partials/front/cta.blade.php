@@ -1,4 +1,4 @@
-<section class="ctas-section bg--overlay bg_img bg_fixed" data-img="{{ asset('assets/images/'.$ps->quick_background) }}">
+<section class="ctas-section bg--overlay bg_img bg_fixed">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-md-6">
@@ -8,7 +8,7 @@
             </div>
             <div class="col-md-6">
                 <div class="ctas-content">
-                    <div class="section-title text-white">
+                    <div class="section-title text-black">
                         <h6 class="subtitle text--base">@lang('Quick Start')</h6>
                         <h3 class="title">{{ $ps->quick_title }}</h3>
                         <p>

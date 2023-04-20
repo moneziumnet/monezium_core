@@ -9,15 +9,7 @@
 	<section class="hero-section bg--overlay bg_img" data-img="{{ asset('assets/images/'.$gs->breadcumb_banner) }}">
 		<div class="container">
 			<div class="hero-content">
-				<h2 class="hero-title">@lang('About US')</h2>
-				<ul class="breadcrumb">
-					<li>
-						<a href="{{route('front.index')}}">@lang('Home')</a>
-					</li>
-					<li>
-						@lang('About US')
-					</li>
-				</ul>
+				<h1 class="hero-title">@lang('About Us')</h1>
 			</div>
 		</div>
 	</section>
@@ -58,7 +50,7 @@
 
                         </ul>
                         <div class="btn__grp mt-4 pt-3">
-                            <a href="{{ $ps->about_link }}" class="cmn--btn btn-outline">@lang('Get Started')</a>
+                            <a href="{{ $ps->about_link }}" class="cmn--btn">@lang('Get Started')</a>
                             <a href="{{ route('front.about') }}" class="cmn--btn">@lang('More About Us')</a>
                         </div>
                     </div>

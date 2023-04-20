@@ -9,15 +9,7 @@
     <section class="hero-section bg--overlay bg_img" data-img="{{ asset('assets/images/'.$gs->breadcumb_banner) }}">
         <div class="container">
             <div class="hero-content">
-                <h2 class="hero-title"> @lang('Contact') </h2>
-                <ul class="breadcrumb">
-                    <li>
-                        <a href="{{ route('front.index') }}">@lang('Home')</a>
-                    </li>
-                    <li>
-                        @lang('Contact')
-                    </li>
-                </ul>
+                <h1 class="hero-title"> @lang('Contact') </h1>
             </div>
         </div>
     </section>
@@ -104,7 +96,7 @@
                                     <textarea id="message" name="message" class="form-control form--control"></textarea>
                                 </div>
                                 <div class="col-sm-12">
-                                    <button type="submit" class="cmn--btn bg--base">
+                                    <button type="submit" class="btn cmn--btn">
                                         @lang('Send Message')
                                     </button>
                                 </div>

@@ -10,15 +10,7 @@
 	<section class="hero-section bg--overlay bg_img" data-img="{{ asset('assets/images/'.$gs->breadcumb_banner) }}">
 		<div class="container">
 			<div class="hero-content">
-				<h2 class="hero-title">@lang('Blog')</h2>
-				<ul class="breadcrumb">
-					<li>
-						<a href="{{route('front.index')}}">@lang('Home')</a>
-					</li>
-					<li>
-						@lang('Blog Posts')
-					</li>
-				</ul>
+				<h1 class="hero-title">@lang('Blog')</h1>
 			</div>
 		</div>
 	</section>

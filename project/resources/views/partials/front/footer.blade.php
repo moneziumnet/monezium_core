@@ -70,7 +70,7 @@
             </div>
         </div>
     </div>
-    <div class="footer-bottom position-relative pb-5">
+    <div class="footer-bottom position-relative pb-4 pt-4">
         <div class="container text-center">
             <p>
                 @php
