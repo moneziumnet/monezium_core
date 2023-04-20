@@ -55,7 +55,7 @@
           </div>
 
           <label for="about_link">{{  __('About Link')  }}</label>
-            <input type="text"  pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="about_link" name="about_link"  placeholder="{{ __('Enter About Link') }}" value="{{ $data->about_link }}" required>
+            <input type="url"  class="form-control" id="about_link" name="about_link"  placeholder="{{ __('Enter About Link') }}" value="{{ $data->about_link }}" required>
           </div>
 
           <div class="featured-keyword-area p-4">

@@ -42,7 +42,7 @@
 
             <div class="form-group">
                 <label for="hero_link">{{  __('Hero Video Link')  }}</label>
-                <input type="url" class="form-control" id="hero_link" name="hero_link"  placeholder="{{ __('Enter Video Link') }}" value="{{ $data->hero_link }}" required>
+                <input type="url" class="form-control" id="hero_link" name="hero_link"  placeholder="{{ __('Enter Video Link') }}" value="{{ $data->hero_link }}">
             </div>
 
             <div class="form-group">

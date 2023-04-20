@@ -31,7 +31,7 @@
 
           <div class="form-group">
             <label for="subtitle">{{ __('Sub Title') }}</label>
-            <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="input-field" name="subtitle" placeholder="{{ __('Sub Title') }}" required="" value="">
+            <input type="text" pattern="[^À-ž()/><\][\\;$!|]+" class="input-field" name="subtitle" placeholder="{{ __('Sub Title') }}" required="" value="">
           </div>
 
           <div class="form-group">
