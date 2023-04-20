@@ -710,9 +710,9 @@ footer {
 	-webkit-transition: all ease 0.3s;
 	-moz-transition: all ease 0.3s;
 	transition: all ease 0.3s;
-	background: #ff8500;
+	background: #000;
 }
-
+/* 
 .social-icons li a i[class*="facebook"] {
 	background: #3b5998;
 }
@@ -763,7 +763,7 @@ footer {
 
 .social-icons li a i[class*="vimeo"] {
 	background: #1ab7ea;
-}
+} */
 
 .contact-bar {
 	display: flex;

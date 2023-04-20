@@ -28,7 +28,7 @@
           {{ csrf_field() }}
 
         <div class="row">
-          <div class="col-md-3">
+          <div class="col-md-4">
             <div class="form-group">
               <label for="inp-title">{{  __('Frontend Page')  }}</label>
               <div class="form-group">
@@ -49,23 +49,14 @@
 
           <div class="col-md-4">
             <div class="form-group">
-              <div class="cp-container" id="cp3-container">
-                <div class="input-group" title="Using input value">
-                    <input  type="color" name="colors"  class="form-control"  value="{{ $gs->colors }}" id="exampleInputPassword1">
-                </div>
-              </div>
+              <label for="inp-prefix">{{  __('User Account No Prefix')  }}</label>
+              <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="inp-prefix" name="account_no_prefix"  placeholder="{{ __('User Account No Prefix') }}" value="{{ $gs->account_no_prefix }}" required>
             </div>
           </div>
 
         </div>
 
         <div class="row">
-          <div class="col-md-4">
-              <div class="form-group">
-                <label for="inp-prefix">{{  __('User Account No Prefix')  }}</label>
-                <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="inp-prefix" name="account_no_prefix"  placeholder="{{ __('User Account No Prefix') }}" value="{{ $gs->account_no_prefix }}" required>
-              </div>
-          </div>
 
           <div class="col-md-4">
             <div class="form-group">
@@ -81,14 +72,12 @@
             </div>
           </div>
 
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="form-group">
-                  <label for="other_bank_limit">{{  __('Add documnets from account')  }}</label>
-                  <input type="number" step="any" class="form-control" id="other_bank_limit" name="other_bank_limit"  placeholder="{{ __('Add documnets from account') }}" value="{{ $gs->other_bank_limit }}">
-                </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="other_bank_limit">{{  __('Add documnets from account')  }}</label>
+              <input type="number" step="any" class="form-control" id="other_bank_limit" name="other_bank_limit"  placeholder="{{ __('Add documnets from account') }}" value="{{ $gs->other_bank_limit }}">
             </div>
+          </div>
 
         </div>
 
