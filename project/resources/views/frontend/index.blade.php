@@ -127,8 +127,7 @@
             <div class="col-md-6 col-xl-4">
                 <div class="service-item">
                     <div class="service-item__icon">
-                        {{-- <img src="{{asset('assets/images/'.$data->photo)}}" alt="strong" /> --}}
-                        <i class="fas fa-piggy-bank"></i>
+                        <img src="{{asset('assets/images/'.$service->photo)}}" alt="strong" />
                     </div>
                     <div class="service-item__cont">
                         <h5 class="service-item__cont-title">

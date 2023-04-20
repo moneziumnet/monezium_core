@@ -19,7 +19,7 @@
         <span></span>
     </div>
     <div class="nav-menu-area">
-        <div class="menu-close text--danger d-lg-none">
+        <div class="menu-close d-lg-none">
             <i class="fas fa-times"></i>
         </div>
         <ul class="nav-menu">

@@ -987,7 +987,7 @@ header {
 		bottom: 0;
 		width: 100%;
 		max-width: 320px;
-		background: #004e89;
+		background: #fff;
 		padding: 30px 20px;
 		overflow-y: auto;
 		-webkit-transition: all ease 0.3s;
@@ -1010,16 +1010,16 @@ header {
 	}
 
 	.nav-menu-area .nav-menu li a {
-		color: #fff;
+		color: #000;
 		display: flex;
 		justify-content: space-between;
 		padding: 5px 0;
-		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		border-bottom: 1px solid #000;
 	}
 
 	.nav-menu-area .nav-menu li a.cmn--btn {
-		background: #fff;
-		color: #000;
+		background: #000;
+		color: #fff;
 		display: inline-flex;
 		padding: 5px 15px;
 		margin-top: 15px;
@@ -1738,7 +1738,7 @@ div[class*="col"]:nth-of-type(4n + 4) .feature-item:hover .feature-item__icon {
 	border-color: #000;
 }
 .service-item:hover .service-item__icon img {
-	filter: brightness(100);
+	filter: brightness(0) invert(1);
 }
 
 .service-item:hover .service-item__cont-title a,

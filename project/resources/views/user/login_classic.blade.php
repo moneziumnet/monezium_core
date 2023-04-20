@@ -24,12 +24,6 @@
         <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
     @endif
 
-    @if ($default_font->font_family)
-        <link rel="stylesheet" id="colorr" href="{{ asset('assets/front/css/font.php?font_familly='.$default_font->font_family) }}">
-    @else
-        <link rel="stylesheet" id="colorr" href="{{ asset('assets/front/css/font.php?font_familly='."Open Sans") }}">
-    @endif
-
     @stack('css')
     <link rel="shortcut icon" href="{{asset('assets/images/'.$gs->favicon)}}">
 </head>
