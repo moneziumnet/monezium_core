@@ -113,7 +113,7 @@ class UserTelegramController extends Controller
         $gs = Generalsetting::first();
         $text = $data['message']['text'];
 
-        $telegram_user = UserTelegram::where('chat_id', $data['message']['chat']['id'])->first();
+        $telegram_user = UserTelegram::where('chat_id', $data['message']['chat']['id'])->where('status', 1)->first();
         $chat_id = $data['message']['chat']['id'];
         if($telegram_user && $telegram_user->status == 1  && $telegram_user->user_id != 0) {
             $w_session = TelegramSession::where('user_id', $telegram_user->user_id)->first();
