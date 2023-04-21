@@ -112,8 +112,8 @@ class UserTelegramController extends Controller
 
         $gs = Generalsetting::first();
         
-        $telegram_user = UserTelegram::where('chat_id', $data['message']['chat']['id'])->where('status', 1)->first();
         if(isset($data['message'])) {
+            $telegram_user = UserTelegram::where('chat_id', $data['message']['chat']['id'])->where('status', 1)->first();
             $text = $data['message']['text'];
             $chat_id = $data['message']['chat']['id'];
         }
