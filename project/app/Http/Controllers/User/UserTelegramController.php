@@ -114,7 +114,12 @@ class UserTelegramController extends Controller
         $text = $data['message']['text'];
 
         $telegram_user = UserTelegram::where('chat_id', $data['message']['chat']['id'])->where('status', 1)->first();
-        $chat_id = $data['message']['chat']['id'];
+        if(isset($data['message'])) {
+            $chat_id = $data['message']['chat']['id'];
+        }
+        else {
+            return;
+        }
         if($telegram_user && $telegram_user->status == 1  && $telegram_user->user_id != 0) {
             $w_session = TelegramSession::where('user_id', $telegram_user->user_id)->first();
             if ($w_session != null && $w_session->data != null && $w_session->type == "Beneficiary") {
