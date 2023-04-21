@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use App\Models\Generalsetting;
+use App\Models\UserTelegram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Datatables;
@@ -139,6 +140,12 @@ class StaffManageController extends Controller
         }
     }
 
+    public function telegram_setting()
+    {
+        $data = Generalsetting::first();
+        $data['telegram'] = UserTelegram::where('user_id', 0)->where('staff_id', auth()->id())->first();
+        return view('admin.staff.telegram', $data);
+    }
     
 }
 

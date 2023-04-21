@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Models\User;
+use App\Models\Admin;
 use App\Models\UserTelegram;
 use App\Models\UserWhatsapp;
 use App\Models\Currency;
@@ -114,7 +115,7 @@ class UserTelegramController extends Controller
 
         $telegram_user = UserTelegram::where('chat_id', $data['message']['chat']['id'])->first();
         $chat_id = $data['message']['chat']['id'];
-        if($telegram_user && $telegram_user->status == 1) {
+        if($telegram_user && $telegram_user->status == 1  && $telegram_user->user_id != 0) {
             $w_session = TelegramSession::where('user_id', $telegram_user->user_id)->first();
             if ($w_session != null && $w_session->data != null && $w_session->type == "Beneficiary") {
                 if($text == '#') {
@@ -2268,15 +2269,36 @@ class UserTelegramController extends Controller
                 }
             }
         }
+        else if($telegram_user && $telegram_user->status == 1 && $telegram_user->user_id == 0) {
+            switch ($text) {
+                case 'Logout':
+                    $telegram = UserTelegram::where('chat_id', $chat_id)->first();
+                    $telegram->status = 0;
+                    $telegram->save();
+                    $to_message = 'You have been log out successfully. ';
+                    send_message_telegram($to_message, $chat_id);
+                    break;
+                default:
+                    # code...
+                    $to_message = "Welcome to ".$gs->disqus."\nYou can receive staff message from our system.\nCommand 1: Logout";
+                    send_message_telegram($to_message, $chat_id);
+                    break;
+            }
+        }
         else{
             $text_split = explode(' ', $text);
-            if($text_split[0] == 'Login') {
-                $text = 'Login';
+            if($text_split[0] == 'CustomerLogin') {
+                $text = 'CustomerLogin';
+                $email = $text_split[1];
+                $pincode = $text_split[2];
+            }
+            if($text_split[0] == 'StaffLogin') {
+                $text = 'StaffLogin';
                 $email = $text_split[1];
                 $pincode = $text_split[2];
             }
             switch ($text) {
-                case 'Login':
+                case 'CustomerLogin':
                     $user = User::where('email', $email)->first();
                     if(!$user) {
                         send_message_telegram('This user dose not exist in our system', $chat_id);
@@ -2297,9 +2319,30 @@ class UserTelegramController extends Controller
                     $to_message = "You login Successfully,\nPlease use follow command list:\nCommand 1: Beneficiary\nCommand 2: BankTransfer\nCommand 3: Balance\nCommand 4: CryptoBalance\nCommand 5: Beneficiary_Simple\nCommand 6: InternalTransfer\nCommand 7: RequestMoney\nCommand 8: CryptoWithdraw\nCommand 9: Exchange\nCommand 10: Logout";
                     send_message_telegram($to_message, $chat_id);
                     break;
+                case 'StaffLogin':
+                    $user = Admin::where('email', $email)->first();
+                    if(!$user) {
+                        send_message_telegram('This Staff dose not exist in our system', $chat_id);
+                        break;
+                    }
+                    $telegram = UserTelegram::where('staff_id', $user->id)->where('pincode', $pincode)->first();
+                    if(!$telegram) {
+                        send_message_telegram('Pincode is not matched with email. Please input again', $chat_id);
+                        break;
+                    }
+                    if($telegram->status == 1) {
+                        send_message_telegram('You are already login.', $chat_id);
+                        break;
+                    }
+                    $telegram->chat_id = $chat_id;
+                    $telegram->status = 1;
+                    $telegram->save();
+                    $to_message = "You login Successfully,\nYou can receive staff message from our system.\nPlease use follow command list:\nCommand 1: Logout";
+                    send_message_telegram($to_message, $chat_id);
+                    break;
                 default:
                     # code...
-                    $to_message = "Welcome to ".$gs->disqus."\nWhat could We help you?\nWe are here to help you with your problem.\nKindly choose an option to connect with our support team.\nFirstly we have to login by using Login Command.\nCommand 1: Login {email} {pincode}\nCommand 2: Help";
+                    $to_message = "Welcome to ".$gs->disqus."\nWhat could We help you?\nWe are here to help you with your problem.\nKindly choose an option to connect with our support team.\nFirstly we have to login by using Login Command.\nCommand 1: CustomerLogin {email} {pincode}\nCommand 2: StaffLogin {email} {pincode}\nCommand 3: Help";
                     send_message_telegram($to_message, $chat_id);
                     break;
             }

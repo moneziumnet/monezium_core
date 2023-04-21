@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('pincode')->nullable();
             $table->bigInteger('chat_id')->nullable();
             $table->tinyInteger('status')->default(0)->comment('0 => logout, 1 => login');
+            $table->integer('staff_id')->nullable();
             $table->timestamps();
         });
     }

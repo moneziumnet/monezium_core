@@ -297,17 +297,18 @@ class GeneralSettingController extends Controller
     public function telegramapi(){
         $data = Generalsetting::first();
         $data['data'] = $data;
-        $data['telegram'] = UserTelegram::where('user_id', 0)->first();
+        $data['telegram'] = UserTelegram::where('user_id', 0)->where('staff_id', auth()->id())->first();
         return view('admin.generalsetting.telegramapi', $data);
     }
 
     public function telegram_generate(Request $request)
     {
-        $telegram = UserTelegram::where('user_id', 0)->first();
+        $telegram = UserTelegram::where('user_id', 0)->where('staff_id', auth()->id())->first();
         if(!$telegram){
             $telegram = new UserTelegram();
         }
         $telegram->user_id = 0;
+        $telegram->staff_id = auth()->id();
         $telegram->pincode = Str::random(8);
         $telegram->save();
         return redirect()->back()->with('message','PinCode is generated successfully.');

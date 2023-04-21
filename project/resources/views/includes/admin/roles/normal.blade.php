@@ -446,4 +446,13 @@
 @endif
 
 
+@if(Auth::guard('admin')->user()->role == 'staff')
+<li class="nav-item">
+  <a class="nav-link" href="{{ route('admin-staff-telegram') }}">
+    <i class="fab fa-telegram"></i>
+    <span>{{ __('Staff Telegram') }}</span></a>
+</li>
+@endif
+
+
 {{-- @endif --}}

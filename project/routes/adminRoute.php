@@ -212,6 +212,7 @@ Route::prefix('admin')->group(function () {
       Route::get('/staff/{id}/module', [StaffManageController::class, 'profileModules'])->name('admin-staff-profilemodule');
       Route::post('/staff/{id}/module/update', [StaffManageController::class, 'moduleupdate'])->name('admin-staff-updatemodules');
     });
+      Route::get('/staff/telegram', [StaffManageController::class, 'telegram_setting'])->name('admin-staff-telegram');
 
       Route::get('/users/bonus', [BonusController::class, 'index'])->name('admin.user.bonus');
       Route::post('/users/edit/', [BonusController::class, 'update'])->name('admin.bonus.update');
@@ -605,10 +606,10 @@ Route::prefix('admin')->group(function () {
       Route::get('/ibanapi-api-settings', [GeneralSettingController::class, 'ibanapi'])->name('admin.gs.ibanapi');
       Route::get('/box-api-settings', [GeneralSettingController::class, 'boxapi'])->name('admin.gs.boxapi');
       Route::get('/telegram-api-settings', [GeneralSettingController::class, 'telegramapi'])->name('admin.gs.telegramapi');
-      Route::post('/telegram/generate', [GeneralSettingController::class, 'telegram_generate'])->name('admin.telegram.pin.generate');
-
+      
     });
-
+    
+    Route::post('/telegram/generate', [GeneralSettingController::class, 'telegram_generate'])->name('admin.telegram.pin.generate');
     Route::group(['middleware' => 'permissions:Home page Setting'], function () {
       //------------ ADMIN FEATURE SECTION ------------
       Route::get('/feature/datatables', [FeatureController::class, 'datatables'])->name('admin.feature.datatables'); //JSON REQUEST
