@@ -2092,7 +2092,7 @@ class UserTelegramController extends Controller
                         send_message_telegram($to_message, $chat_id);
                         break;
                     case 'Logout':
-                        $telegram = UserTelegram::where('chat_id', $chat_id)->where('user_id', auth()->id())->where('status', 1)->first();
+                        $telegram = UserTelegram::where('chat_id', $chat_id)->where('user_id', '!=', 0)->where('status', 1)->first();
                         $telegram->status = 0;
                         $telegram->save();
                         $to_message = 'You have been log out successfully. ';
