@@ -81,7 +81,7 @@ class DepositBankController extends Controller
                     $user_info = User::find($data->user_id);
                     return '<div class="btn-group mb-1">
                             <a href="javascript:;"
-                                data-sendinfo = \''.json_encode($send_info, JSON_UNESCAPED_UNICODE | JSON_HEX_QUOT | JSON_HEX_APOS).'\'
+                                data-sendinfo = `'.json_encode($send_info, JSON_UNESCAPED_UNICODE | JSON_HEX_QUOT | JSON_HEX_APOS).'`
                                 data-number="'.$data->deposit_number.'"
                                 data-status="'.$data->status.'"
                                 data-description="'.($data->details ?? $send_info->reference).'"
