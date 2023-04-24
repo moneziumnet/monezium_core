@@ -2268,7 +2268,7 @@ class UserTelegramController extends Controller
                         break;
                     case 'Contact_Staff':
                         $staff_list = UserTelegram::where('chat_id', '!=', null)->where('user_id', '==', 0)->where('status', 1)->get();
-                        $to_message = '';
+                        $to_message = "The following contact list is an online staff member who can be contacted.\n";
                         foreach($staff_list as $value) {
                             $to_message = $to_message."@".get_telegram_username($value->chat_id)."\n";
                         }
