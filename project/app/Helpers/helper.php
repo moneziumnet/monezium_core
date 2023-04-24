@@ -1384,7 +1384,7 @@ if (!function_exists('get_telegram_username')) {
             $response = $client->request('GET', $link . '/getChat?chat_id='.$chat_id);
             $data = json_decode($response->getBody());
             
-            Log::Info($data);
+            Log::Info($response->getBody());
             return $data->result->username;
         } catch (\Throwable $th) {
             Log::Info($th->getMessage());
