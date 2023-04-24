@@ -1372,6 +1372,26 @@ if (!function_exists('send_message_telegram')) {
     }
 }
 
+if (!function_exists('get_telegram_username')) {
+    function get_telegram_username($chat_id)
+    {
+        $gs = Generalsetting::first();
+        $token = $gs->telegram_token;
+        $link = 'https://api.telegram.org:443/bot' . $token;
+
+        $client = new Client();
+        try {
+            $response = $client->request('GET', $link . '/getChat?chat_id='.$chat_id);
+            $data = json_decode($response->getBody());
+            
+            Log::Info($data);
+            return $data->result->username;
+        } catch (\Throwable $th) {
+            Log::Info($th->getMessage());
+        }
+    }
+}
+
 if (!function_exists('prefix_get_next_key_array')) {
 
     function prefix_get_next_key_array($arr, $key)

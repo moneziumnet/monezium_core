@@ -2266,6 +2266,15 @@ class UserTelegramController extends Controller
                         $new_session->save();
                         send_message_telegram($to_message, $chat_id);
                         break;
+                    case 'Contact_Staff':
+                        $staff_list = UserTelegram::where('chat_id', '!=', null)->where('user_id', '==', 0)->where('status', 1)->get();
+                        $to_message = '';
+                        foreach($staff_list as $value) {
+                            $to_message = $to_message."@".get_telegram_username($value->chat_id)."\n";
+                        }
+                        send_message_telegram($to_message, $chat_id);
+                        break;
+
                     default:
                         # code...
                         $to_message = "Welcome to ".$gs->disqus."\nWhat could We help you?\nWe are here to help you with your problem.\nKindly choose an option to connect with our support team.\nCommand 1: Beneficiary\nCommand 2: BankTransfer\nCommand 3: Balance\nCommand 4: CryptoBalance\nCommand 5: Beneficiary_Simple\nCommand 6: InternalTransfer\nCommand 7: RequestMoney\nCommand 8: CryptoWithdraw\nCommand 9: Exchange\nCommand 10: Logout";
