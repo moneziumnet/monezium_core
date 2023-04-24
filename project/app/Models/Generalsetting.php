@@ -85,23 +85,12 @@ class Generalsetting extends Model
             'box_user_id',
             'telegram_token',
             'whatsapp_bot_number',
-            'telegram_section',
             'module_section',
             'user_module',
             'other_bank_limit',
         ];
 
     public $timestamps = false;
-
-    public function telegram_section_check($value)
-    {
-        $sections = explode(" , ", $this->telegram_section);
-        if (in_array($value, $sections)){
-            return true;
-        }else{
-            return false;
-        }
-    }
 
     public function sectionCheck($value)
     {

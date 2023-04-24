@@ -96,7 +96,6 @@ class CreateGeneralsettingsTable extends Migration
             $table->text('box_secret')->nullable();
             $table->text('box_user_id')->nullable();
             $table->text('telegram_token')->nullable();
-            $table->mediumText('telegram_section')->nullable();
             $table->text('currency_api')->nullable();
             $table->tinyInteger('two_factor')->default(0);
             $table->tinyInteger('kyc')->default(0);

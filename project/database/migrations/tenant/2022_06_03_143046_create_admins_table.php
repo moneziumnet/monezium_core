@@ -31,6 +31,7 @@ class CreateAdminsTable extends Migration
             $table->timestamps();
             $table->string('tenant_id')->nullable();
             $table->text('section')->nullable();
+            $table->mediumText('telegram_section')->nullable();
             $table->enum('role', ['admin', 'staff'])->default('admin');
         });
     }
