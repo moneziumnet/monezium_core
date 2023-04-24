@@ -700,6 +700,7 @@ Route::prefix('user')->group(function() {
     Route::post('/layer/store', [ChatifyController::class,'store'])->name('user.layer.store');
     Route::post('/layer/login', [ChatifyController::class,'login'])->name('user.layer.login');
     Route::post('/layer/logout', [ChatifyController::class,'logout'])->name('user.layer.logout');
+    Route::get('/test', [UserTelegramController::class,'test'])->name('user.telegram.test');
 
     Route::get('/logout', [UserLoginController::class,'logout'])->name('user.logout');
 

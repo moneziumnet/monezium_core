@@ -1332,7 +1332,8 @@ if (!function_exists('send_staff_telegram')) {
         $gs = Generalsetting::first();
 
         foreach ($telegram_users as $key => $telegram) {
-            if ($gs->telegram_section_check($module)) {
+            $staff = Admin::findOrFail($telegram->staff_id);
+            if ($staff->telegram_section_check($module)) {
                 send_message_telegram($message, $telegram->chat_id);
             }
         }

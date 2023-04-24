@@ -2437,4 +2437,8 @@ class UserTelegramController extends Controller
         return response()->json(['status' => '200', 'error_code' => '0', 'message' => 'You have been logout successfully']);
     }
 
+    public function test() {
+        send_staff_telegram('this is test for staff', 'Test');
+    }
+
 }
