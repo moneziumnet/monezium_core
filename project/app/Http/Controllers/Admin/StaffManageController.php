@@ -49,6 +49,7 @@ class StaffManageController extends Controller
                     </button>
                     <div class="dropdown-menu" x-placement="bottom-start">
                         <a href="' . route('admin-staff-profilemodule',$data->id) . '"  class="dropdown-item">'.__("Permission").'</a>
+                        <a href="' . route('admin-manage-staff-setting',$data->id) . '"  class="dropdown-item">'.__("Telegram Setting").'</a>
                         <a href="' . route('admin.staff.delete',$data->id) . '"  class="dropdown-item">'.__("Delete Staff").'</a>
                     </div>
                 </div>';
@@ -140,11 +141,32 @@ class StaffManageController extends Controller
         }
     }
 
+    public function manage_telegram_setting($id){
+        $data['telegram'] = UserTelegram::where('user_id', 0)->where('staff_id', $id)->first();
+        $data['data'] = Admin::findOrFail($data['telegram']->staff_id);
+        return view('admin.staff.manage_telegram', $data);
+    }
+
     public function telegram_setting()
     {
-        $data = Generalsetting::first();
         $data['telegram'] = UserTelegram::where('user_id', 0)->where('staff_id', auth()->id())->first();
+        $data['data'] = Admin::findOrFail($data['telegram']->staff_id);
         return view('admin.staff.telegram', $data);
+    }
+
+    public function telegram_module_udpate(Request $request, $id) {
+            $input = $request->all();
+            $data = Admin::findOrFail($id);
+            if (!empty($request->telegram_section)) {
+                $input['telegram_section'] = implode(" , ", $request->telegram_section);
+            } else {
+                $input['telegram_section'] = '';
+            }
+            $data->telegram_section = $input['telegram_section'];
+            $data->update();
+            $msg = 'Data Updated Successfully.';
+
+            return response()->json($msg);
     }
     
 }
