@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 use App\Models\Generalsetting;
 use App\Models\UserTelegram;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\Currency;
@@ -131,13 +132,19 @@ class GeneralSettingController extends Controller
                 $input['user_module'] = '';
             }
 
-            if (!empty($request->telegram_section)) {
-                $input['telegram_section'] = implode(" , ", $request->telegram_section);
-            }
             $this->emailConfig($input);
 
             $data->update($input);
-
+            
+            
+            $data = Admin::findOrFail(auth()->id());
+            if (!empty($request->telegram_section)) {
+                $input['telegram_section'] = implode(" , ", $request->telegram_section);
+            } else {
+                $input['telegram_section'] = '';
+            }
+            $data->telegram_section = $input['telegram_section'];
+            $data->update();
 
             if($request->ajax()){
                 $msg = 'Data Updated Successfully.';
@@ -296,8 +303,8 @@ class GeneralSettingController extends Controller
 
     public function telegramapi(){
         $data = Generalsetting::first();
-        $data['data'] = $data;
         $data['telegram'] = UserTelegram::where('user_id', 0)->where('staff_id', auth()->id())->first();
+        $data['data'] = Admin::findOrFail($data['telegram']->staff_id);
         return view('admin.generalsetting.telegramapi', $data);
     }
 

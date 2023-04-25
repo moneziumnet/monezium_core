@@ -210,8 +210,10 @@ Route::prefix('admin')->group(function () {
       Route::post('/staff/create', [StaffManageController::class, 'store'])->name('admin.staff.store');
       Route::get('/staff/delete/{id}', [StaffManageController::class, 'destroy'])->name('admin.staff.delete');
       Route::get('/staff/{id}/module', [StaffManageController::class, 'profileModules'])->name('admin-staff-profilemodule');
+      Route::get('/staff/{id}/telegram/module', [StaffManageController::class, 'manage_telegram_setting'])->name('admin-manage-staff-setting');
       Route::post('/staff/{id}/module/update', [StaffManageController::class, 'moduleupdate'])->name('admin-staff-updatemodules');
     });
+      Route::post('/staff/{id}/telegram/module/update', [StaffManageController::class, 'telegram_module_udpate'])->name('admin.staff.telegram.module.update');
       Route::get('/staff/telegram', [StaffManageController::class, 'telegram_setting'])->name('admin-staff-telegram');
 
       Route::get('/users/bonus', [BonusController::class, 'index'])->name('admin.user.bonus');
