@@ -150,7 +150,7 @@ class StaffManageController extends Controller
     public function telegram_setting()
     {
         $data['telegram'] = UserTelegram::where('user_id', 0)->where('staff_id', auth()->id())->first();
-        $data['data'] = Admin::findOrFail($data['telegram']->staff_id);
+        $data['data'] = Admin::findOrFail(auth()->id());
         return view('admin.staff.telegram', $data);
     }
 

@@ -304,7 +304,7 @@ class GeneralSettingController extends Controller
     public function telegramapi(){
         $data = Generalsetting::first();
         $data['telegram'] = UserTelegram::where('user_id', 0)->where('staff_id', auth()->id())->first();
-        $data['data'] = Admin::findOrFail($data['telegram']->staff_id);
+        $data['data'] = Admin::findOrFail(auth()->id());
         return view('admin.generalsetting.telegramapi', $data);
     }
 
