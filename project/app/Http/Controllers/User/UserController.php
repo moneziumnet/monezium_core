@@ -875,10 +875,16 @@ class UserController extends Controller
                 $code = $value->currency->code;
                 if($value->type == '+') {
                     $s_balance = $s_balance + $value->amount / ($rate->data->rates->$code ?? $value->currency->rate);
+                    $s_balance = $s_balance - $value->charge / ($rate->data->rates->$code ?? $value->currency->rate);
 
+                }
+                elseif($value->type == '-' && $value->amount == 0) {
+                    dd($value);
+                    $s_balance = $s_balance - $value->charge / ($rate->data->rates->$code ?? $value->currency->rate);
                 }
                 else {
                     $s_balance = $s_balance - $value->amount / ($rate->data->rates->$code ?? $value->currency->rate);
+                    $s_balance = $s_balance + $value->charge / ($rate->data->rates->$code ?? $value->currency->rate);
 
                 }
         }
@@ -891,9 +897,12 @@ class UserController extends Controller
                 $e_balance = $e_balance - $value->charge / ($rate->data->rates->$code ?? $value->currency->rate);
 
             }
+            elseif($value->type == '-' && $value->amount == 0) {
+                $e_balance = $e_balance - $value->charge / ($rate->data->rates->$code ?? $value->currency->rate);
+            }
             else {
                 $e_balance = $e_balance - $value->amount / ($rate->data->rates->$code ?? $value->currency->rate);
-                $e_balance = $e_balance - $value->charge / ($rate->data->rates->$code ?? $value->currency->rate);
+                $e_balance = $e_balance + $value->charge / ($rate->data->rates->$code ?? $value->currency->rate);
 
             }
     }
