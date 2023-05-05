@@ -394,6 +394,7 @@ class UserController extends Controller
                 $data['dps'] = UserDps::whereUserId($data->id)->get();
                 $data['fdr'] = UserFdr::whereUserId($data->id)->get();
                 $data['withdraws'] = Withdrawals::whereUserId($data->id)->get();
+                $data['user_list'] = User::where('email_verified', 'Yes')->where('id', '!=', $data->id)->get();
                 $data['data'] = $data;
                 return view('admin.user.profile',$data);
             }
@@ -759,7 +760,6 @@ class UserController extends Controller
             $data = User::findOrFail($id);
             $data['data'] = $data;
             $data['kycforms'] = KycForm::where('status', 1)->get();
-            $data['user_list'] = User::where('email_verified', 'Yes')->where('id', '!=', $data->id)->get();
             return view('admin.user.profilesettings',$data);
         }
 
