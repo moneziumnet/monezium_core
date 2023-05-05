@@ -224,7 +224,12 @@
                           <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="inp-address" name="address" placeholder="{{ __('Enter Address') }}" value="{{ $data->address }}" required>
                         </div>
                       </div>
-
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="inp-phone">{{ __('Phone Number') }}</label>
+                          <input type="text" pattern="^[0-9]+$" class="form-control" id="inp-phone" name="phone" placeholder="{{ __('Enter Phone number') }}" value="{{ $data->phone }}" required>
+                        </div>
+                      </div>
                       @php
                         $private_required = isset($data->company_name) ? '' : 'required';
                         $corporate_required = isset($data->company_name) ? 'required' : '';

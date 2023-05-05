@@ -53,10 +53,6 @@
             <form class="geniusform" action="{{ route('admin-user-update',$data->id) }}" method="POST" enctype="multipart/form-data">
               @include('includes.admin.form-both')
               {{ csrf_field() }}
-              <div class="form-group">
-                <label for="inp-phone">{{ __('Phone Number') }}</label>
-                <input type="number" class="form-control" id="inp-phone" name="phone" placeholder="{{ __('Enter Phone') }}" value="{{ $data->phone }}" required>
-              </div>
               @php
               $userType = explode(',', $data->user_type);
               @endphp
