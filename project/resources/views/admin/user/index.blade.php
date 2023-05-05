@@ -29,7 +29,9 @@
                 <tr>
                     <th>{{ __("Name") }}</th>
                     <th>{{ __("Email") }}</th>
-                    <th class="text-right">{{ __("Balance") }}</th>
+                    @if(Auth::guard('admin')->user()->role == 'admin' || (Auth::guard('admin')->user()->role == 'staff' && getModule('Customer Balance')))
+                        <th class="text-right">{{ __("Balance") }}</th>
+                    @endif
                     <th>{{__('Status')}}</th>
                     <th>{{__('Verify')}}</th>
                     <th>{{ __("Options") }}</th>
@@ -176,7 +178,9 @@
                columns: [
                         { data: 'name', name: 'name' },
                         { data: 'email', name: 'email' },
-                        { data: 'balance', searchable: false, name: 'balance', className:"text-right"},
+                        @if(Auth::guard('admin')->user()->role == 'admin' || (Auth::guard('admin')->user()->role == 'staff' && getModule('Customer Balance')))
+                            { data: 'balance', searchable: false, name: 'balance', className:"text-right"},
+                        @endif
                         { data: 'status',searchable: false, orderable: false},
                         { data: 'verify',searchable: false, orderable: false},
             			{ data: 'action', searchable: false, orderable: false }
