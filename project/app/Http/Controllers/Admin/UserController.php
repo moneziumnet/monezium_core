@@ -157,7 +157,9 @@ class UserController extends Controller
     {
         $userType = 'user';
         $userForms = KycForm::where('id',1)->first();
-        return view('admin.user.create',compact('userForms'));
+        $bankplans = BankPlan::where('type', 'private')->orderBy('amount', 'asc')->get();
+        $supervisor_list = User::where('email_verified', 'Yes')->get();
+        return view('admin.user.create',compact('userForms', 'bankplans', 'supervisor_list'));
     }
 
             //*** POST Request
@@ -176,7 +178,7 @@ class UserController extends Controller
         }
 
         $gs = Generalsetting::first();
-        $subscription = BankPlan::findOrFail(1);
+        $subscription = BankPlan::where('keyword', $request->bank_plan)->where('type', 'private')->first();
 
         $user = new User;
         $input = $request->all();
@@ -186,7 +188,6 @@ class UserController extends Controller
         $input['account_number'] = $gs->account_no_prefix . date('ydis') . random_int(100000, 999999);
         $token = md5(time() . $request->name . $request->email);
         $input['verification_link'] = $token;
-        $input['referral_id'] = $request->input('reff')? $request->input('reff'):'0';
         $input['affilate_code'] = md5($request->name . $request->email);
         $input['name'] = trim($request->firstname)." ".trim($request->lastname);
         $input['dob'] = $request->customer_dob;

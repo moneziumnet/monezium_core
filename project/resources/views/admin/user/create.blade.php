@@ -55,25 +55,51 @@
                             <option value="1"> Corporate</option>
                         </select>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="form-group col-sm-6">
+                        <label for="inp-name">{{ __('Select Supervisor') }}</label>
+          
+                        <select class="form-control" name="referral_id" id="referral_id" >
+                          <option value="0">{{ __('Select Supervisor') }}</option>
+                          @foreach ($supervisor_list as $item)
+                            @if(check_user_type_by_id(4, $item->id))
+                              <option value="{{$item->id}}" >{{$item->company_name ?? $item->name}}</option>
+                            @endif
+                          @endforeach
+                      </select>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="inp-user-type" class="form-label">{{ __('Select Pricing Plan') }}</label>
+                        <select id="bank_plan" class="form-control form--control mb-3" name="bank_plan" >
+                            @foreach ($bankplans as $item)
+                            <option value="{{$item->keyword}}"> {{$item->title}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-6">
                         <label for="name" class="form-label">@lang('Your First Name')</label>
                         <input type="text" pattern="[^À-ž()/><\][\\\-;&$@!|]+" id="name" name="firstname" class="form-control form--control" required>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="form-group col-sm-6">
                         <label for="name" class="form-label">@lang('Your Last Name')</label>
                         <input type="text" pattern="[^À-ž()/><\][\\\-;&$@!|]+" id="name" name="lastname" class="form-control form--control" required>
                     </div>
                     <div class="col-sm-6">
-                        <label for="customer_dob" class="form-label">@lang('Your Birthday')</label>
-                        <input type="date" id="customer_dob" name="customer_dob" class="form-control form--control" required>
+                        <div class="form-group">
+                            <label for="customer_dob" class="form-label">@lang('Your Birthday')</label>
+                            <input type="date" id="customer_dob" name="customer_dob" class="form-control form--control" required>
+                        </div>
                     </div>
                     <div class="col-sm-6">
-                        <label for="email" class="form-label">@lang('Your Email')</label>
-                        <input type="email" id="email" name="email" class="form-control form--control" required>
+                        <div class="form-group">
+                            <label for="email" class="form-label">@lang('Your Email')</label>
+                            <input type="email" id="email" name="email" class="form-control form--control" required>
+                        </div>
                     </div>
                     <div class="col-sm-12">
-                        <label for="phone" class="form-label">@lang('Your Phone')</label>
-                        <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" id="phone" name="phone" class="form-control form--control" required>
+                        <div class="form-group">
+                            <label for="phone" class="form-label">@lang('Your Phone')</label>
+                            <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" id="phone" name="phone" class="form-control form--control" required>
+                        </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
@@ -236,7 +262,7 @@
                         <div class="form-group col-sm-12">
                             <label class="form-label {{$field->required == 1 ? 'required':'Optional'}}">@lang($field->label)</label>
                             @if ($field->type == 1)
-                            <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" name="{{strtolower(str_replace(' ', '_', $field->label))}}" class="form-control" autocomplete="off" placeholder="@lang($field->label)" min="1" {{$field->required == 1 ? 'required':'Optional'}}>
+                            <input type="text"  name="{{strtolower(str_replace(' ', '_', $field->label))}}" class="form-control" autocomplete="off" placeholder="@lang($field->label)" min="1" {{$field->required == 1 ? 'required':'Optional'}}>
                             @else
                             <textarea class="form-control" name="{{strtolower(str_replace(' ', '_', $field->label))}}" placeholder="@lang($field->label)"></textarea>
                             @endif
