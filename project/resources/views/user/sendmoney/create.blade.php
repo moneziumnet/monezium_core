@@ -207,7 +207,7 @@
                                             <span class="badge bg-red"></span></span>
                                         </span>
                                         <div class="col text-truncate">
-                                          <span>{{$reciver->name}}</span>
+                                          <span>{{$reciver->company_name ?? $reciver->name}}</span>
                                           <br>
                                           <small class="text-muted text-truncate mt-n1">{{ $reciver->email }}</small>
                                         </div>

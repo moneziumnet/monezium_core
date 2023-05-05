@@ -63,7 +63,7 @@
                                 <tr>
                                     <th width="45%">{{__('Customer Name')}}</th>
                                     <td width="10%">:</td>
-                                    <td width="45%">{{$bankaccount->user->name}}</td>
+                                    <td width="45%">{{$bankaccount->user->company_name ?? $bankaccount->user->name}}</td>
                                 </tr>
                                 <tr>
                                     <th width="45%">{{__('Customer Email')}}</th>

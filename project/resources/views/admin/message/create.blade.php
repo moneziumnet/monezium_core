@@ -6,7 +6,7 @@
 
     <div class="card">
         <div class="d-sm-flex align-items-center py-3 justify-content-between">
-        <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Conversation With') }} {{$conv->user->name}}</h5>
+        <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Conversation With') }} {{$conv->user->company_name ?? $conv->user->name}}</h5>
         <ol class="breadcrumb m-0 py-0">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
             <li class="breadcrumb-item"><a href="{{ route('admin.user.message')}}">{{ __('Manage Tickets') }}</a></li>

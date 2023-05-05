@@ -136,7 +136,7 @@
                                             </td>
                                             <td data-label="{{ __('Name') }}">
                                                 <div>
-                                                    {{ ucfirst($data->name) }}
+                                                    {{ ucfirst($data->company_name ?? $data->name) }}
                                                 </div>
                                             </td>
                                             <td data-label="{{ __('Joined At') }}">

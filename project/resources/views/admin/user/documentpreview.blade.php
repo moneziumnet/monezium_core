@@ -9,7 +9,7 @@ href="https://cdn01.boxcdn.net/platform/elements/16.0.0/en-US/explorer.css"
 
 <div class="card">
   <div class="d-sm-flex align-items-center justify-content-between py-3">
-    <h5 class=" mb-0 text-gray-800 pl-3">{{ $data->name }}</h5>
+    <h5 class=" mb-0 text-gray-800 pl-3">{{ $data->company_name ?? $data->name }}</h5>
     <ol class="breadcrumb py-0 m-0">
       <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
       <li class="breadcrumb-item"><a href="{{ route('admin.user.index') }}">{{ __('User List') }}</a></li>
