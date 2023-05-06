@@ -84,7 +84,7 @@
 	"use strict";
 
     var table = $('#geniustable').DataTable({
-           ordering: false,
+           ordering: true,
            processing: true,
            serverSide: true,
            searching: true,
@@ -98,14 +98,13 @@
                     return data;
                   }
                 },
-                // { data: 'trnx', name: 'trnx' },
                 { data: 'sender', name: 'sender' },
                 { data: 'receiver', name: 'receiver' },
                 { data: 'details', name: 'details' },
                 { data: 'remark', name:'remark' },
                 { data: 'amount', name: 'amount' },
                 { data: 'charge', name: 'charge' },
-                { data: 'action', name: 'action' },
+                { data: 'action', name: 'action', orderable: false },
             ],
             language : {
                 processing: '<img src="{{asset('assets/images/'.$gs->admin_loader)}}">'
@@ -115,7 +114,6 @@
         function getDetails (id)
         {
             var url = "{{url('admin/user/transaction/details/')}}"+'/'+id
-            // $('.trx_details').text($(this).data('data').details)
             $.get(url,function (res) {
               if(res == 'empty'){
                 $('.list-group').html("<p>@lang('No details found!')</p>")
