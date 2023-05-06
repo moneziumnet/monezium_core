@@ -59,10 +59,10 @@ class UserController extends Controller
 
         public function datatables()
         {
-             $datas = User::orderBy('id','desc');
+             $datas = User::orderBy('id','desc')->get();
 
              return Datatables::of($datas)
-                ->addColumn('name', function(User $data) {
+                ->editColumn('name', function(User $data) {
                     $name = $data->company_name ?? $data->name;
                     return $name;
                 })
@@ -134,7 +134,7 @@ class UserController extends Controller
                         </div>
                         </div>';
                 })
-                ->rawColumns(['name','action','status', 'verify', 'balance'])
+                ->rawColumns(['action','status', 'verify', 'balance'])
                 ->toJson();
         }
         public function login($id)
