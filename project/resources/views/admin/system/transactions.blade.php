@@ -90,14 +90,7 @@
            searching: true,
            ajax: '{{ route('admin.system.account.transactions.datatables',$data->id) }}',
            columns: [
-                { data: 'created_at', name: 'created_at',
-                  render: function(data, type, row, meta) {
-                    if(type === 'display') {
-                      data = row.created_at + '<br>' + row.trnx;
-                    }
-                    return data;
-                  }
-                },
+                { data: 'created_at', name: 'created_at', orderable: false},
                 { data: 'sender', name: 'sender' },
                 { data: 'receiver', name: 'receiver' },
                 { data: 'details', name: 'details' },

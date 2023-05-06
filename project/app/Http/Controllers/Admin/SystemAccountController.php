@@ -65,7 +65,7 @@ class SystemAccountController extends Controller
         })
         ->editColumn('created_at', function(Transaction $data) {
             $date = date('d-M-Y',strtotime($data->created_at));
-            return $date;
+            return $date.'<br>'.$data->trnx;
         })
         ->editColumn('remark', function(Transaction $data) {
             return ucwords(str_replace('_',' ',$data->remark));
@@ -79,7 +79,7 @@ class SystemAccountController extends Controller
             ' . __("Details") . '</a>';
         })
 
-        ->rawColumns(['action'])
+        ->rawColumns(['created_at','action'])
         ->toJson();
     }
 
