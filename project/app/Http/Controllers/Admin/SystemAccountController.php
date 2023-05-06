@@ -43,10 +43,49 @@ class SystemAccountController extends Controller
 
     }
 
-    public function trn_datables($id) {
+    public function trn_datables(Request $request, $id) {
         $datas = Transaction::where('currency_id', $id)->where('charge','>', 0)->orWhere('user_id', 0)->where('currency_id', $id)->orderBy('created_at','desc')->get();
 
         return Datatables::of($datas)
+        ->filter(function ($instance) use ($request) {
+
+            if (!empty($request->get('sender'))) {
+                $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                    return Str::contains(Str::lower($row['sender_name']), Str::lower($request->get('sender'))) ? true : false;
+                });
+            }
+            if (!empty($request->get('receiver'))) {
+                $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                    return Str::contains(Str::lower($row['receiver_name']), Str::lower($request->get('receiver'))) ? true : false;
+                });
+            }
+            if (!empty($request->get('trnx_no'))) {
+                $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                    return Str::contains(Str::lower($row['trnx_no']), Str::lower($request->get('trnx_no'))) ? true : false;
+                });
+            }
+            if (!empty($request->get('s_time'))) {
+                $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                    if(dateFormat($row['date'], 'Y-m-d') >= dateFormat($request->get('s_time'), 'Y-m-d') && dateFormat($row['date'], 'Y-m-d') <= (dateFormat($request->get('e_time'), 'Y-m-d') ?? Carbontime::now()->addDays(1)->format('Y-m-d'))) {
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
+                });
+            }
+
+            if (!empty($request->get('e_time'))) {
+                $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                    if(dateFormat($row['date'], 'Y-m-d') <= dateFormat($request->get('e_time'), 'Y-m-d') ) {
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
+                });
+            }
+        })
         ->editColumn('amount', function(Transaction $data) {
             $currency = Currency::whereId($data->currency_id)->first();
             return $data->type.amount($data->amount,$currency->type,2).$currency->code;

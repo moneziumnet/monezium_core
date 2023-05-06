@@ -106,13 +106,23 @@
 
 <script type="text/javascript">
 	"use strict";
+  $(document).ready(function () {
 
     var table = $('#geniustable').DataTable({
            ordering: true,
            processing: true,
            serverSide: true,
-           searching: true,
-           ajax: '{{ route('admin.system.account.transactions.datatables',$data->id) }}',
+          //  searching: true,
+           ajax: {
+            url: '{{ route('admin.system.account.transactions.datatables',$data->id) }}',
+            data : function (d) {
+                        d.sender = $('#sender_name').val(),
+                        d.receiver = $('#receiver_name').val(),
+                        d.s_time = $('#s_time').val(),
+                        d.e_time = $('#e_time').val(),
+                        d.trnx_no = $('#trnx_no').val()
+                    }
+          },
            columns: [
                 { data: 'created_at', name: 'created_at', orderable: false},
                 { data: 'sender', name: 'sender' },
@@ -127,6 +137,23 @@
                 processing: '<img src="{{asset('assets/images/'.$gs->admin_loader)}}">'
             }
         });
+
+        $('#sender_name').on('keyup', function () {
+                table.draw();
+        });
+        $('#receiver_name').on('keyup', function () {
+            table.draw();
+        });
+        $('#trnx_no').on('keyup', function () {
+            table.draw();
+        });
+        $('#s_time').on('change', function () {
+            table.draw();
+        });
+        $('#e_time').on('change', function () {
+            table.draw();
+        });
+      });
 
         function getDetails (id)
         {
