@@ -51,17 +51,17 @@ class SystemAccountController extends Controller
 
             if (!empty($request->get('sender'))) {
                 $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                    return Str::contains(Str::lower($row['sender_name']), Str::lower($request->get('sender'))) ? true : false;
+                    return Str::contains(Str::lower($row['sender']), Str::lower($request->get('sender'))) ? true : false;
                 });
             }
             if (!empty($request->get('receiver'))) {
                 $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                    return Str::contains(Str::lower($row['receiver_name']), Str::lower($request->get('receiver'))) ? true : false;
+                    return Str::contains(Str::lower($row['receiver']), Str::lower($request->get('receiver'))) ? true : false;
                 });
             }
             if (!empty($request->get('trnx_no'))) {
                 $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                    return Str::contains(Str::lower($row['trnx_no']), Str::lower($request->get('trnx_no'))) ? true : false;
+                    return Str::contains(Str::lower($row['trnx']), Str::lower($request->get('trnx_no'))) ? true : false;
                 });
             }
             if (!empty($request->get('s_time'))) {
