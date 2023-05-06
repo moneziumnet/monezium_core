@@ -27,6 +27,30 @@
             <div class="card mb-4">
 
                 <div class="table-responsive p-3">
+                  <div class="btn-list align-items-center">
+                    <div class="d-flex justify-content-center row">
+                        <div class="form-group mr-3 col-lg-2">
+                            <label for="s_time" class="form-label">{{ __('Start Time') }}</label>
+                            <input class="form-control shadow-none mr-2" type="date" placeholder="{{__('Start Time')}}" id="s_time" name="s_time" >
+                        </div>
+                        <div class="form-group mr-3  col-lg-2">
+                            <label for="e_time" class="form-label">{{ __('Close time') }}</label>
+                            <input class="form-control shadow-none mr-2" type="date" placeholder="{{__('End Time')}}" id="e_time" name="e_time" >
+                        </div>
+                        <div class="form-group mr-3  col-lg-2">
+                            <label for="sender_name" class="form-label">{{ __('Sender') }}</label>
+                            <input class="form-control shadow-none mr-2" type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" placeholder="{{__('Sender Name')}}" id="sender_name" name="sender_name" >
+                        </div>
+                        <div class="form-group mr-3  col-lg-2">
+                            <label for="receiver_name" class="form-label">{{ __('Receiver') }}</label>
+                            <input class="form-control shadow-none mr-2" type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" placeholder="{{__('Rceiver Name')}}" id="receiver_name" name="receiver_name" >
+                        </div>
+                        <div class="form-group mr-3  col-lg-2">
+                            <label for="trnx_no" class="form-label">{{ __('TransactionID') }}</label>
+                            <input class="form-control shadow-none mr-2" type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" placeholder="{{__('Transaction ID')}}" id="trnx_no" name="trnx_no" >
+                        </div>
+                    </div>
+                </div>
                     <table id="geniustable" class="table table-hover dt-responsive" cellspacing="0" width="100%">
                     <thead class="thead-light">
                     <tr>
