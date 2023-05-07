@@ -126,8 +126,8 @@ class SystemAccountController extends Controller
             return str_dis(ucwords($details->receiver ?? ""));
         })
         ->editColumn('created_at', function(Transaction $data) {
-            $date = date('d-M-Y',strtotime($data->created_at));
-            return $date;
+            $date = date('Y-M-d',strtotime($data->created_at));
+            return $date.'<br>'.$data->trnx;
         })
         ->editColumn('remark', function(Transaction $data) {
             return ucwords(str_replace('_',' ',$data->remark));

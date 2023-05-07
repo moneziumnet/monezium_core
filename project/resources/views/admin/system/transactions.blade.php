@@ -144,14 +144,7 @@
                     }
           },
            columns: [
-                { data: 'created_at', name: 'created_at', orderable: false,
-                  render: function(data, type, row, meta) {
-                    if(type === 'display') {
-                      data = row.created_at + '<br>' + row.trnx;
-                    }
-                    return data;
-                  }
-                },
+                { data: 'created_at', name: 'created_at' },
                 { data: 'sender', name: 'sender' },
                 { data: 'receiver', name: 'receiver' },
                 { data: 'details', name: 'details' },
@@ -162,7 +155,8 @@
             ],
             language : {
                 processing: '<img src="{{asset('assets/images/'.$gs->admin_loader)}}">'
-            }
+            },
+            order: [[0, 'desc']]
         });
 
         $('#sender_name').on('keyup', function () {
