@@ -66,7 +66,7 @@ class SystemAccountController extends Controller
             }
             if (!empty($request->get('s_time'))) {
                 $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                    if(dateFormat($row['date'], 'Y-m-d') >= dateFormat($request->get('s_time'), 'Y-m-d') && dateFormat($row['date'], 'Y-m-d') <= (dateFormat($request->get('e_time'), 'Y-m-d') ?? Carbontime::now()->addDays(1)->format('Y-m-d'))) {
+                    if(dateFormat($row['created_at'], 'Y-m-d') >= dateFormat($request->get('s_time'), 'Y-m-d') && dateFormat($row['created_at'], 'Y-m-d') <= (dateFormat($request->get('e_time'), 'Y-m-d') ?? Carbontime::now()->addDays(1)->format('Y-m-d'))) {
                         return true;
                     }
                     else {
@@ -77,7 +77,7 @@ class SystemAccountController extends Controller
 
             if (!empty($request->get('e_time'))) {
                 $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                    if(dateFormat($row['date'], 'Y-m-d') <= dateFormat($request->get('e_time'), 'Y-m-d') ) {
+                    if(dateFormat($row['created_at'], 'Y-m-d') <= dateFormat($request->get('e_time'), 'Y-m-d') ) {
                         return true;
                     }
                     else {
@@ -104,7 +104,7 @@ class SystemAccountController extends Controller
         })
         ->editColumn('created_at', function(Transaction $data) {
             $date = date('d-M-Y',strtotime($data->created_at));
-            return $date.'<br>'.$data->trnx;
+            return $date;
         })
         ->editColumn('remark', function(Transaction $data) {
             return ucwords(str_replace('_',' ',$data->remark));

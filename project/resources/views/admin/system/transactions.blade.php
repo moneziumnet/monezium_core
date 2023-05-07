@@ -124,7 +124,14 @@
                     }
           },
            columns: [
-                { data: 'created_at', name: 'created_at', orderable: false},
+                { data: 'created_at', name: 'created_at', 
+                  render: function(data, type, row, meta) {
+                    if(type === 'display') {
+                      data = row.created_at + '<br>' + row.trnx;
+                    }
+                    return data;
+                  }
+                },
                 { data: 'sender', name: 'sender' },
                 { data: 'receiver', name: 'receiver' },
                 { data: 'details', name: 'details' },
