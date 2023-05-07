@@ -165,7 +165,7 @@ class KYCController extends Controller
         }
         if($request->status == 1) {
             $pre_sections = explode(" , ", $user->section);
-            $sectionlist = ['Incoming', 'External Payments', 'Request Money', 'Transactions', 'Payments', 'Payment between accounts', 'Exchange Money'];
+            $sectionlist = ['Incoming', 'External Payments', 'Request Money', 'Transactions', 'Payments', 'Payment between accounts', 'Exchange Money', 'Internal Payment'];
             foreach($sectionlist as $key=>$section){
                 if (!$user->sectionCheck($section)) {
                     $manualfee = Charge::where('user_id', $request->id )->where('plan_id', $user->bank_plan_id)->where('name', $section)->first();
