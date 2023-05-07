@@ -466,6 +466,7 @@ Route::prefix('admin')->group(function () {
       Route::post('/create-charge', [ManageChargeController::class, 'createCharge'])->name('admin.create.charge');
       Route::post('/update-charge/{id}', [ManageChargeController::class, 'updateCharge'])->name('admin.update.charge');
       Route::get('/database-charge/{id}', [ManageChargeController::class, 'datatables'])->name('admin.charge.plan.datatables');
+      Route::post('/charge/all/udpate/{id}', [ManageChargeController::class, 'charge_all_update'])->name('admin.update.all.charge');
     });
 
     //manage escrow

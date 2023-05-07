@@ -14,42 +14,6 @@
   </div>
 </div>
 
-
-{{-- <div class="row mt-3">
-    @forelse ($charges as $charge)
-    <div class="col-sm-6 col-lg-4 col-xl-3 currency--card">
-      <div class="card card-primary">
-        <div class="card-header">
-          <h4>{{$charge->name}}</h4>
-        </div>
-        <div class="card-body">
-          <ul class="list-group mb-3">
-            @foreach ($charge->data as $key => $value)
-              @if ($key == 'percent_charge' || $key == 'fixed_charge')
-                <li class="list-group-item d-flex justify-content-between">@lang(ucwords(str_replace('_',' ',$key)).' :')
-                  <span class="font-weight-bold">{{@$value}}
-                    @if ($key == 'percent_charge')
-                        %
-                    @else --}}
-                      {{-- {{$gs->curr_code}} --}}
-                    {{-- @endif
-                  </span>
-                </li>
-              @endif
-            @endforeach
-          </ul> --}}
-          {{-- @if (access('edit charge')) --}}
-          {{-- <a href="{{route('admin.edit.charge',$charge->id)}}" class="btn btn-primary btn-block"><i class="fas fa-edit"></i> @lang('Edit Charge')</a> --}}
-          {{-- @endif --}}
-        {{-- </div>
-      </div>
-    </div>
-    @empty
-    <div class="col-md-12 text-center">
-        <h5>@lang('No data found')</h5>
-    </div>
-    @endforelse
-</div> --}}
 <div class="row mt-3">
     <div class="col-lg-12">
 
@@ -98,6 +62,84 @@
     </div>
     </div>
   </div>
+
+  <div class="modal modal-blur fade" id="editModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-md modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-status bg-primary"></div>
+        <div class="modal-body text-center m-4">
+        <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
+        <h3>@lang('Plan Details')</h3>
+        <form method="post" action="{{route('admin.update.all.charge', $plan_id)}}" class="mt-3">
+          @csrf
+          <div class="row">
+            <div class="col-md-4">
+              <label class="h5">{{__("Charge Name")}}</label>
+            </div>
+            <div class="col-md-2">
+              <label class="h5">{{__("Percent Charge (%)")}}</label>
+            </div>
+            <div class="col-md-2">
+              <label class="h5">{{__("Fixed Charge")}}</label>
+            </div>
+            <div class="col-md-2">
+              <label class="h5">{{__("From")}}</label>
+            </div>
+            <div class="col-md-2">
+              <label class="h5">{{__("Till")}}</label>
+            </div>
+          </div>
+          <div style="max-height: 600px;overflow-y: scroll; overflow-x: hidden;">
+            @foreach ($global_list as $item)
+            <div class="row border-bottom mt-2 p-2 align-items-center">
+              <div class="col-md-4">
+                <label class="h6">{{$item->name}}</label>
+              </div>
+              <input  type="hidden" name="name_{{$item->id}}" class="form-control" value="{{$item->name}}">
+              <input  type="hidden" name="user_id_{{$item->id}}" class="form-control" value="0">
+              <input  type="hidden" name="slug_{{$item->id}}" class="form-control" value="{{$item->slug}}">
+              @php
+                $item_key = $item->id;
+              @endphp
+
+              @foreach ($item->data as $key => $value )
+              @switch($key)
+                @case('percent_charge')
+                  <div class="col-md-2">
+                    <input type="number" step="any" name="{{$key}}_{{$item_key}}" class="form-control" value="{{@$value}}">
+                  </div>
+                  @break
+                @case('fixed_charge')
+                  <div class="col-md-2">
+                    <input type="number" step="any" name="{{$key}}_{{$item_key}}" class="form-control" value="{{@$value}}">
+                  </div>
+                  @break
+                @case('from')
+                  <div class="col-md-2">
+                    <input type="number" step="any" name="{{$key}}_{{$item_key}}" class="form-control" value="{{@$value}}">
+                  </div>
+                  @break
+                @case('till')
+                  <div class="col-md-2">
+                    <input type="number" step="any" name="{{$key}}_{{$item_key}}" class="form-control" value="{{@$value}}">
+                  </div>
+                  @break
+              
+                @default
+                  
+              @endswitch
+
+              @endforeach
+              
+            </div>
+            @endforeach
+          </div>
+            <button type="submit" id="submit-btn" class="mt-3 btn btn-primary w-100">{{ __('Save') }}</button>
+        </form>
+        </div>
+    </div>
+    </div>
+  </div>
 @endsection
 
 @section('scripts')
@@ -124,11 +166,19 @@
             }
         });
         $(function() {
-        $(".btn-area").append('<div class="col-sm-12 col-md-4 pr-3 text-right">'+
-            '<button class="btn btn-primary"  data-id="'+'{{$plan_id}}'+'" onclick="createglobalplan(\''+'{{$plan_id}}'+'\')" ><i class="fas fa-plus"></i> {{__('Add New Charge')}} </button>'+
-        '</a>'+
-        '</div>');
-    });
+            $(".btn-area").append('<div class="col-sm-6 col-md-2 pr-3 text-right">'+
+                '<button class="btn btn-primary"  data-id="'+'{{$plan_id}}'+'" onclick="createglobalplan(\''+'{{$plan_id}}'+'\')" ><i class="fas fa-plus"></i> {{__('Add New Charge')}} </button>'+
+            '</a>'+
+            '</div>');
+        });
+
+        $(function() {
+            $(".btn-area").append('<div class="col-sm-6 col-md-2 pr-3 text-right">'+
+              '<a href="javascript:;" data-toggle="modal" data-target="#editModal" class="btn btn-primary" >'+
+                'All Edit'+
+              '</a>'+
+            '</div>');
+        });
     function createglobalplan(id)
         {
                 var url = "{{url('admin/user/pricingplancreate')}}"+'/'+`${id}`

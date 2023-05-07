@@ -12,7 +12,7 @@ class ManageChargeController extends Controller
 
     public function datatables($id)
     {
-         $datas = Charge::where('plan_id', $id)->where('user_id', 0)->get();
+         $datas = Charge::where('plan_id', $id)->where('user_id', 0)->orderBy('data','asc')->orderBy('slug', 'asc')->orderBy('name','asc')->get();
 
          return Datatables::of($datas)
                             ->editColumn('name', function(Charge $data) {
@@ -51,12 +51,7 @@ class ManageChargeController extends Controller
 
     public function index(Request $request, $id)
     {
-        $search  = $request->search;
-        $charges = Charge::when($search,function($q) use($search){
-            return $q->where('name','like',"%$search%");
-        })->where('plan_id', $id)->get();
-        $data['search'] = $search;
-        $data['charges'] = $charges;
+        $data['global_list'] = Charge::where('plan_id', $id)->where('user_id', 0)->orderBy('data','asc')->orderBy('slug', 'asc')->orderBy('name','asc')->get();
         $data['plan_id'] = $id;
         return view('admin.charge.index', $data);
     }
@@ -111,5 +106,23 @@ class ManageChargeController extends Controller
         $charge->data = $inputs;
         $charge->update();
         return back()->with('message',$charge->name.' Plan Charge Updated');
+    }
+
+
+    public function charge_all_update(Request $request, $id) {
+        $charge_list = Charge::where('plan_id', $id)->where('user_id', 0)->orderBy('data','asc')->orderBy('slug', 'asc')->orderBy('name','asc')->get();
+        foreach($charge_list as $item) {
+            $charge = Charge::where('user_id',0)->where('plan_id', $id)->where('name', $item->name)->first();
+            if($charge) {
+                $data = [];
+                foreach($charge->data as $key => $value ) {
+                    $data[$key] = $request->input($key.'_'.$item->id);                     
+                }
+                $charge->data = $data;
+                $charge->update();
+            }
+        }
+            return back()->with('message','ALl Charge Updated');
+
     }
 }
