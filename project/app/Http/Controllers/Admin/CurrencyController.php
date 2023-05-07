@@ -19,7 +19,7 @@ class CurrencyController extends Controller
     //*** JSON Request
     public function datatables()
     {
-        $datas = Currency::orderBy('id','desc');
+        $datas = Currency::orderBy('id','desc')->get();
          return Datatables::of($datas)
                             ->editColumn('type', function(Currency $data){
                                 if($data->type == 1){

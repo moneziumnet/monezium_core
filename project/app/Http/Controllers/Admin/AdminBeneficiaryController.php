@@ -12,7 +12,7 @@ class AdminBeneficiaryController extends Controller
 {
     public function datatables($id)
     {
-        $datas = Beneficiary::where('user_id', $id)->orderBy('id','desc');
+        $datas = Beneficiary::where('user_id', $id)->orderBy('id','desc')->get();
 
         return Datatables::of($datas)
                         ->addColumn('detail', function (Beneficiary $data) {

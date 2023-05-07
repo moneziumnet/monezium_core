@@ -84,7 +84,6 @@
 		searching: true,
 		ajax: '{{ route('admin.other.banks.transfer.datatables') }}',
 		columns: [
-			// { data: 'transaction_no', name: 'transaction_no' },
 			{ data: 'date', name: 'date',
 				render: function(data, type, row, meta) {
 					if(type === 'display') {

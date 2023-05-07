@@ -19,7 +19,7 @@ class KycManageController extends Controller
 {
     public function datatables()
     {
-        $datas = User::where('kyc_info','!=',NULL)->OrWhere('kyc_token', '!=', NULL)->orderBy('id','desc');
+        $datas = User::where('kyc_info','!=',NULL)->OrWhere('kyc_token', '!=', NULL)->orderBy('id','desc')->get();
 
         return Datatables::of($datas)
                             ->addColumn('action', function(User $data) {

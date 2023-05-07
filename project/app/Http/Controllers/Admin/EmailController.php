@@ -23,7 +23,7 @@ class EmailController extends Controller
     //*** JSON Request
     public function datatables()
     {
-         $datas = EmailTemplate::orderBy('id','desc');
+         $datas = EmailTemplate::orderBy('id','desc')->get();
          //--- Integrating This Collection Into Datatables
          return DataTables::of($datas)
                             ->addColumn('action', function(EmailTemplate $data) {

@@ -19,7 +19,7 @@ class SitemapController extends Controller
     //*** JSON Request
     public function datatables()
     {
-         $datas = Sitemap::orderBy('id','desc');
+         $datas = Sitemap::orderBy('id','desc')->get();
          //--- Integrating This Collection Into Datatables
          return Datatables::of($datas)
                             ->addColumn('action', function(Sitemap $data) {

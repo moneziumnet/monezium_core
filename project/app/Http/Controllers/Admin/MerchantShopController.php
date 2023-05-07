@@ -24,7 +24,7 @@ class MerchantShopController extends Controller
     //*** JSON Request
     public function datatables($id)
     {
-        $datas = MerchantShop::where('merchant_id', $id)->orderBy('id','desc');
+        $datas = MerchantShop::where('merchant_id', $id)->orderBy('id','desc')->get();
          return Datatables::of($datas)
                             ->editColumn('merchant_id', function(MerchantShop $data){
                                 $user = User::findOrFail($data->merchant_id);

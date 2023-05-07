@@ -16,7 +16,7 @@ class ContractManageController extends Controller
 {
     public function datatables($id)
     {
-        $datas = Contract::where('user_id', $id)->orderBy('id','desc');
+        $datas = Contract::where('user_id', $id)->orderBy('id','desc')->get();
 
         return Datatables::of($datas)
                         ->addColumn('title',function(Contract $data){
@@ -88,7 +88,7 @@ class ContractManageController extends Controller
 
     public function aoa_datatables($id)
     {
-        $datas = ContractAoa::where('contract_id', $id)->orderBy('id','desc');
+        $datas = ContractAoa::where('contract_id', $id)->orderBy('id','desc')->get();
 
         return Datatables::of($datas)
                         ->addColumn('title',function(ContractAoa $data){

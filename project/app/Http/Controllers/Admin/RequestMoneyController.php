@@ -18,7 +18,7 @@ class RequestMoneyController extends Controller
 
     public function datatables()
     {
-         $datas = MoneyRequest::orderBy('id','desc');
+         $datas = MoneyRequest::orderBy('id','desc')->get();
 
          return Datatables::of($datas)
             ->editColumn('user_id', function(MoneyRequest $data) {

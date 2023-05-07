@@ -18,7 +18,7 @@ class FontController extends Controller
     //*** JSON Request
     public function datatables()
     {
-         $datas = Font::orderBy('id','desc');
+         $datas = Font::orderBy('id','desc')->get();
          //--- Integrating This Collection Into Datatables
         return Datatables::of($datas)
                             ->addColumn('action', function(Font $data) {

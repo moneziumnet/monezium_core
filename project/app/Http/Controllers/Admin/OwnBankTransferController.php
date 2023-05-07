@@ -18,7 +18,7 @@ class OwnBankTransferController extends Controller
 
     public function datatables()
     {
-         $datas = BalanceTransfer::whereType('own')->orderBy('id','desc');
+         $datas = BalanceTransfer::whereType('own')->orderBy('id','desc')->get();
 
          return Datatables::of($datas)
 

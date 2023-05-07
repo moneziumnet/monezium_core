@@ -19,7 +19,7 @@ class CryptoWithdrawController extends Controller
 {
     public function datatables()
     {
-        $datas = CryptoWithdraw::orderBy('id','desc');
+        $datas = CryptoWithdraw::orderBy('id','desc')->get();
 
         return Datatables::of($datas)
                         ->editColumn('created_at', function(CryptoWithdraw $data) {

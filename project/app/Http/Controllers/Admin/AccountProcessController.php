@@ -12,7 +12,7 @@ class AccountProcessController extends Controller
 {
     public function datatables()
     {
-         $datas = AccountProcess::orderBy('id','desc');
+         $datas = AccountProcess::orderBy('id','desc')->get();
          //--- Integrating This Collection Into Datatables
          return Datatables::of($datas)
                             ->editColumn('details', function(AccountProcess $data) {

@@ -10,7 +10,7 @@ class ICOController extends Controller
 {
     public function datatables()
     {
-        $datas = IcoToken::orderBy('id','desc');
+        $datas = IcoToken::orderBy('id','desc')->get();
 
         return Datatables::of($datas)
                         ->editColumn('name',function(IcoToken $data){

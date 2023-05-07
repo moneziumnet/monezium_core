@@ -20,7 +20,7 @@ class AdminLanguageController extends Controller
     //*** JSON Request
     public function datatables()
     {
-         $datas = AdminLanguage::orderBy('id','desc');
+         $datas = AdminLanguage::orderBy('id','desc')->get();
 
          //--- Integrating This Collection Into Datatables
          return Datatables::of($datas)

@@ -19,7 +19,7 @@ class CryptoDepositController extends Controller
 {
     public function datatables()
     {
-        $datas = CryptoDeposit::orderBy('id','desc');
+        $datas = CryptoDeposit::orderBy('id','desc')->get();
 
         return Datatables::of($datas)
                         ->editColumn('created_at', function(CryptoDeposit $data) {

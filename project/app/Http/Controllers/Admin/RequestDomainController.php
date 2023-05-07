@@ -27,7 +27,7 @@ class RequestDomainController extends Controller
     //*** JSON Request
     public function datatables()
     {
-        $datas = RequestDomain::orderBy('id', 'desc');
+        $datas = RequestDomain::orderBy('id', 'desc')->get();
         //--- Integrating This Collection Into Datatables
         return Datatables::of($datas)
             ->editColumn('created_at', function (RequestDomain $data) {

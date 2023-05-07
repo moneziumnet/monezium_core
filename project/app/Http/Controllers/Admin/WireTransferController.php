@@ -18,7 +18,7 @@ class WireTransferController extends Controller
 
     public function datatables()
     {
-         $datas = WireTransfer::orderBy('id','desc');
+         $datas = WireTransfer::orderBy('id','desc')->get();
 
          return Datatables::of($datas)
                             ->editColumn('wire_transfer_bank_id', function(WireTransfer $data) {

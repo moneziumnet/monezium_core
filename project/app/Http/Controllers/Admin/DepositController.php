@@ -19,7 +19,7 @@ class DepositController extends Controller
 {
     public function datatables()
     {
-        $datas = Deposit::orderBy('id','desc');
+        $datas = Deposit::orderBy('id','desc')->get();
 
         return Datatables::of($datas)
                         ->editColumn('created_at', function(Deposit $data) {

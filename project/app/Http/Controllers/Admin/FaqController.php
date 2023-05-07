@@ -11,7 +11,7 @@ class FaqController extends Controller
 {
     public function datatables()
     {
-         $datas = Faq::orderBy('id','desc');
+         $datas = Faq::orderBy('id','desc')->get();
          //--- Integrating This Collection Into Datatables
          return Datatables::of($datas)
                             ->editColumn('details', function(Faq $data) {

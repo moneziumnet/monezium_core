@@ -40,7 +40,7 @@ class OtherBankTransferController extends Controller
 
   public function datatables()
   {
-    $datas = BalanceTransfer::whereType('other')->orderBy('id', 'desc');
+    $datas = BalanceTransfer::whereType('other')->orderBy('id', 'desc')->get();
 
     return Datatables::of($datas)
       ->setRowAttr([
@@ -125,7 +125,7 @@ class OtherBankTransferController extends Controller
   public function subdatatables(Request $request)
   {
 
-    $datas = BalanceTransfer::whereType('other')->where('user_id', $request->id)->orderBy('id', 'desc');
+    $datas = BalanceTransfer::whereType('other')->where('user_id', $request->id)->orderBy('id', 'desc')->get();
 
     return Datatables::of($datas)
 

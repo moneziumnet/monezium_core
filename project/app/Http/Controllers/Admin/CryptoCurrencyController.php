@@ -19,7 +19,7 @@ class CryptoCurrencyController extends Controller
 
     public function datatables()
     {
-        $datas = Currency::orderBy('id','desc')->where('type', 2);
+        $datas = Currency::orderBy('id','desc')->where('type', 2)->get();
          return Datatables::of($datas)
                             ->addColumn('action', function(Currency $data) {
                                 $delete = '<a href="javascript:;" data-href="' . route('admin.crypto.currency.delete',$data->id) . '" data-toggle="modal" data-target="#deleteModal" class="dropdown-item">'.__("Delete").'</a>';

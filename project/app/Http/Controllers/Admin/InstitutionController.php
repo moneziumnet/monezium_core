@@ -25,7 +25,7 @@ class InstitutionController extends Controller
     //*** JSON Request
     public function datatables()
     {
-        $datas = Admin::where('id', '!=', 1)->where('id', '!=', Auth::guard('admin')->user()->id)->orderBy('id');
+        $datas = Admin::where('id', '!=', 1)->where('id', '!=', Auth::guard('admin')->user()->id)->orderBy('id')->get();
 
         //--- Integrating This Collection Into Datatables
         return Datatables::of($datas)
@@ -61,7 +61,7 @@ class InstitutionController extends Controller
     }
     public function subDatatables()
     {
-        $datas = Admin::where('id', '!=', 1)->where('id', '!=', Auth::guard('admin')->user()->id)->where('role', '!=', 'staff')->orderBy('id');
+        $datas = Admin::where('id', '!=', 1)->where('id', '!=', Auth::guard('admin')->user()->id)->where('role', '!=', 'staff')->orderBy('id')->get();
 
         //--- Integrating This Collection Into Datatables
         return Datatables::of($datas)

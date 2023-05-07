@@ -18,7 +18,7 @@ class WithdrawMethodController extends Controller
 
     public function datatables()
     {
-         $datas = WithdrawMethod::orderBy('id','desc');
+         $datas = WithdrawMethod::orderBy('id','desc')->get();
 
 
             return Datatables::of($datas)

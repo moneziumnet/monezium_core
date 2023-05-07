@@ -20,7 +20,7 @@ class BlogCategoryController extends Controller
     //*** JSON Request
     public function datatables()
     {
-         $datas = BlogCategory::orderBy('id','desc');
+         $datas = BlogCategory::orderBy('id','desc')->get();
          //--- Integrating This Collection Into Datatables
          
          return Datatables::of($datas)

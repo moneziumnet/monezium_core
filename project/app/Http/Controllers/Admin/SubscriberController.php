@@ -16,7 +16,7 @@ class SubscriberController extends Controller
     //*** JSON Request
     public function datatables()
     {
-         $datas = Subscriber::orderBy('id','desc');
+         $datas = Subscriber::orderBy('id','desc')->get();
          //--- Integrating This Collection Into Datatables
          return Datatables::of($datas)
                             ->addColumn('sl', function(Subscriber $data) {

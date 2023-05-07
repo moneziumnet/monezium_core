@@ -13,7 +13,7 @@ class ActionNotificationController extends Controller
 {
     public function datatables()
     {
-        $datas = ActionNotification::orderBy('id','desc');
+        $datas = ActionNotification::orderBy('id','desc')->get();
 
         return Datatables::of($datas)
                         ->editColumn('user_name',function(ActionNotification $data){

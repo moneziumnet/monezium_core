@@ -21,7 +21,7 @@ class LanguageController extends Controller
     //*** JSON Request
     public function datatables()
     {
-         $datas = Language::orderBy('id','desc');
+         $datas = Language::orderBy('id','desc')->get();
          //--- Integrating This Collection Into Datatables
          return Datatables::of($datas)
                             ->addColumn('action', function(Language $data) {

@@ -20,7 +20,7 @@ class CampaignController extends Controller
 {
     public function datatables()
     {
-        $datas = Campaign::orderBy('id','desc')->with('category');
+        $datas = Campaign::orderBy('id','desc')->with('category')->get();
 
         return Datatables::of($datas)
                         ->editColumn('date', function(Campaign $data) {
@@ -108,7 +108,7 @@ class CampaignController extends Controller
 
     public function donation_datatables()
     {
-        $datas = CampaignDonation::orderBy('id','desc');
+        $datas = CampaignDonation::orderBy('id','desc')->get();
 
         return Datatables::of($datas)
                         ->editColumn('date', function(CampaignDonation $data) {
