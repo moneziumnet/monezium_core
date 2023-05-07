@@ -46,6 +46,10 @@
                             <input class="form-control shadow-none mr-2" type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" placeholder="{{__('Rceiver Name')}}" id="receiver_name" name="receiver_name" >
                         </div>
                         <div class="form-group mr-3  col-lg-2">
+                          <label for="trnx_no" class="form-label">{{ __('TransactionID') }}</label>
+                          <input class="form-control shadow-none mr-2" type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" placeholder="{{__('Transaction ID')}}" id="trnx_no" name="trnx_no" >
+                        </div>
+                        <div class="form-group mr-3  col-lg-2">
                           <label  class="form-label">{{ __('Remark') }}</label>
                           <select name="remark" id="remark" class="form-control mr-2 shadow-none" >
                               <option value="">@lang('All Remark')</option>
@@ -53,10 +57,15 @@
                                   <option value="{{$item}}">@lang(ucwords(str_replace('_',' ',$item)))</option>
                               @endforeach
                           </select>
-                      </div>
+                        </div>
                         <div class="form-group mr-3  col-lg-2">
-                            <label for="trnx_no" class="form-label">{{ __('TransactionID') }}</label>
-                            <input class="form-control shadow-none mr-2" type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" placeholder="{{__('Transaction ID')}}" id="trnx_no" name="trnx_no" >
+                          <label  class="form-label">{{ __('Month list') }}</label>
+                          <select name="month" id="month" class="form-control mr-2 shadow-none" >
+                              <option value="">@lang('All')</option>
+                              @foreach ($month_list as $key => $item)
+                                  <option value="{{$item}}">{{$item}}</option>
+                              @endforeach
+                          </select>
                         </div>
                     </div>
                 </div>
@@ -121,7 +130,7 @@
            ordering: true,
            processing: true,
            serverSide: true,
-          //  searching: true,
+           searching: false,
            ajax: {
             url: '{{ route('admin.system.account.transactions.datatables',$data->id) }}',
             data : function (d) {
@@ -129,12 +138,13 @@
                         d.receiver = $('#receiver_name').val(),
                         d.s_time = $('#s_time').val(),
                         d.e_time = $('#e_time').val(),
-                        d.trnx_no = $('#trnx_no').val()
-                        d.remark = $('#remark').val()
+                        d.trnx_no = $('#trnx_no').val(),
+                        d.remark = $('#remark').val(),
+                        d.month = $('#month').val()
                     }
           },
            columns: [
-                { data: 'created_at', name: 'created_at', 
+                { data: 'created_at', name: 'created_at', orderable: false,
                   render: function(data, type, row, meta) {
                     if(type === 'display') {
                       data = row.created_at + '<br>' + row.trnx;
@@ -171,6 +181,9 @@
             table.draw();
         });
         $('#remark').on('change', function () {
+            table.draw();
+        });
+        $('#month').on('change', function () {
             table.draw();
         });
       });

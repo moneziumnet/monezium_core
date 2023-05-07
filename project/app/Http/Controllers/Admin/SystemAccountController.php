@@ -43,6 +43,9 @@ class SystemAccountController extends Controller
             return ucfirst($item);
         });
         $data['remark_list'] = array_unique($remark_list->all());
+
+        $month_list =  Transaction::where('currency_id', $id)->where('charge','>', 0)->selectRaw("DATE_FORMAT(created_at,'%Y-%m') as created_date")->orWhere('user_id', 0)->where('currency_id', $id)->selectRaw("DATE_FORMAT(created_at,'%Y-%m') as created_date")->get()->pluck('created_date')->toArray();
+        $data['month_list'] = array_unique($month_list);
         return view('admin.system.transactions',$data);
 
     }
@@ -87,6 +90,17 @@ class SystemAccountController extends Controller
             if (!empty($request->get('e_time'))) {
                 $instance->collection = $instance->collection->filter(function ($row) use ($request) {
                     if(dateFormat($row['created_at'], 'Y-m-d') <= dateFormat($request->get('e_time'), 'Y-m-d') ) {
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
+                });
+            }
+
+            if (!empty($request->get('month'))) {
+                $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                    if(dateFormat($row['created_at'], 'Y-m') == dateFormat($request->get('month'), 'Y-m') ) {
                         return true;
                     }
                     else {
