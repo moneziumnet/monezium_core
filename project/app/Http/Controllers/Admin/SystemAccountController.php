@@ -39,6 +39,10 @@ class SystemAccountController extends Controller
     public function transactions($id) {
         $wallet = Currency::findOrFail($id);
         $data['data'] = $wallet;
+        $remark_list = Transaction::where('currency_id', $id)->where('charge','>', 0)->orWhere('user_id', 0)->where('currency_id', $id)->orderBy('remark', 'asc')->pluck('remark')->map(function ($item) {
+            return ucfirst($item);
+        });
+        $data['remark_list'] = array_unique($remark_list->all());
         return view('admin.system.transactions',$data);
 
     }
@@ -62,6 +66,11 @@ class SystemAccountController extends Controller
             if (!empty($request->get('trnx_no'))) {
                 $instance->collection = $instance->collection->filter(function ($row) use ($request) {
                     return Str::contains(Str::lower($row['trnx']), Str::lower($request->get('trnx_no'))) ? true : false;
+                });
+            }
+            if (!empty($request->get('remark'))) {
+                $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                    return Str::contains(Str::lower($row['remark']), Str::lower($request->get('remark'))) ? true : false;
                 });
             }
             if (!empty($request->get('s_time'))) {

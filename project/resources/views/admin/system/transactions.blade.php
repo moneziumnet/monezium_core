@@ -46,6 +46,15 @@
                             <input class="form-control shadow-none mr-2" type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" placeholder="{{__('Rceiver Name')}}" id="receiver_name" name="receiver_name" >
                         </div>
                         <div class="form-group mr-3  col-lg-2">
+                          <label  class="form-label">{{ __('Remark') }}</label>
+                          <select name="remark" id="remark" class="form-control mr-2 shadow-none" >
+                              <option value="">@lang('All Remark')</option>
+                              @foreach ($remark_list as $item)
+                                  <option value="{{$item}}">@lang(ucwords(str_replace('_',' ',$item)))</option>
+                              @endforeach
+                          </select>
+                      </div>
+                        <div class="form-group mr-3  col-lg-2">
                             <label for="trnx_no" class="form-label">{{ __('TransactionID') }}</label>
                             <input class="form-control shadow-none mr-2" type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" placeholder="{{__('Transaction ID')}}" id="trnx_no" name="trnx_no" >
                         </div>
@@ -121,6 +130,7 @@
                         d.s_time = $('#s_time').val(),
                         d.e_time = $('#e_time').val(),
                         d.trnx_no = $('#trnx_no').val()
+                        d.remark = $('#remark').val()
                     }
           },
            columns: [
@@ -158,6 +168,9 @@
             table.draw();
         });
         $('#e_time').on('change', function () {
+            table.draw();
+        });
+        $('#remark').on('change', function () {
             table.draw();
         });
       });
