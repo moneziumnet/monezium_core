@@ -122,6 +122,16 @@ class StaffManageController extends Controller
 
     public function moduleupdate(Request $request, $id)
     {
+        $rules = [
+            'customer_access'   => 'required'
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
+        }
+
         if ($id != Auth::guard('admin')->user()->id) {
             $input = $request->all();
             $data = Admin::findOrFail($id);
@@ -130,7 +140,7 @@ class StaffManageController extends Controller
             } else {
                 $input['section'] = '';
             }
-            $data->section = $input['section'];
+            $data->section = $input['section'].' , '.$request->customer_access;
             $data->update();
             $msg = 'Data Updated Successfully.';
 

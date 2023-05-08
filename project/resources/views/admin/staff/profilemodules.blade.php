@@ -37,6 +37,14 @@
                     <div class="col-md-6">
                       <div class="form-group">
                         <div class="custom-control custom-switch">
+                          <input type="checkbox" name="section[]" value="Dashboard" {{ $data->sectionCheck('Dashboard') ? 'checked' : '' }} class="custom-control-input" id="dashboard">
+                          <label class="custom-control-label" for="dashboard">{{__('Dashboard')}}</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
                           <input type="checkbox" name="section[]" value="Sub Institutions management" {{ $data->sectionCheck('Sub Institutions management') ? 'checked' : '' }} class="custom-control-input" id="manage_ins">
                           <label class="custom-control-label" for="manage_ins">{{__('Sub Institutions management')}}</label>
                         </div>
@@ -260,6 +268,32 @@
                     </div>
                 </div>
                 <div class="d-flex flex-row align-items-center justify-content-between mt-3">
+                  <h4 class="m-0 font-weight-bold">{{__('Customer Access Setting')}}</h6>
+                </div>
+                <hr>
+                <div class="row pl-2">
+                  <div class="customer-select-options col-md-12 required">
+                    <div class="mb-2 col-md-4">
+                        <label class="form-selectgroup-item">
+                            <input type="radio" name="customer_access" value="Supervisor" id="supervisor"
+                                class="form-selectgroup-input select_method" {{ $data->sectionCheck('Supervisor') ? 'checked' : '' }}>
+                            <span class="form-selectgroup-label">
+                                <i class="fas fa-user-friends me-2"></i>
+                                @lang('Supervisor')</span>
+                        </label>
+                    </div>
+                    <div class="mb-2 col-md-4">
+                        <label class="form-selectgroup-item">
+                            <input type="radio" name="customer_access" value="Customer" id="customer"
+                                class="form-selectgroup-input select_method" {{ $data->sectionCheck('Customer') ? 'checked' : '' }}>
+                            <span class="form-selectgroup-label">
+                                <i class="fas fa-user me-2"></i>
+                                @lang('Customer')</span>
+                        </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex flex-row align-items-center justify-content-between mt-3">
                     <h4 class="m-0 font-weight-bold">{{__('Customer Profile Module')}}</h6>
                 </div>
                 <hr>
@@ -389,14 +423,6 @@
                         <div class="custom-control custom-switch">
                           <input type="checkbox" name="section[]" value="Customer Balance" {{ $data->sectionCheck('Customer Balance') ? 'checked' : '' }} class="custom-control-input" id="customer_balance">
                           <label class="custom-control-label" for="customer_balance">{{__('Customer Balance')}}</label>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <div class="custom-control custom-switch">
-                          <input type="checkbox" name="section[]" value="Dashboard" {{ $data->sectionCheck('Dashboard') ? 'checked' : '' }} class="custom-control-input" id="dashboard">
-                          <label class="custom-control-label" for="dashboard">{{__('Dashboard')}}</label>
                         </div>
                       </div>
                     </div>

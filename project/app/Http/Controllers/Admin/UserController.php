@@ -59,7 +59,15 @@ class UserController extends Controller
 
         public function datatables()
         {
-             $datas = User::orderBy('id','desc')->get();
+            if(Auth::guard('admin')->user()->role == 'admin') {
+                $datas = User::orderBy('id','desc')->get();
+            }
+            elseif(Auth::guard('admin')->user()->role == 'staff' && getModule('Customer')) {
+                $datas = User::orderBy('id','desc')->get();
+            }
+            elseif(Auth::guard('admin')->user()->role == 'staff' && getModule('Supervisor')) {
+                $datas = User::where('user_type', 'LIKE', '%4%')->orderBy('id','desc')->get();
+            }
 
              return Datatables::of($datas)
                 ->editColumn('name', function(User $data) {
