@@ -79,14 +79,4 @@ class BeneficiaryController extends Controller
         return redirect()->route('user.beneficiaries.index')->with('message','Beneficiary has been updated successfully');
     }
 
-    public function update_bank_db() {
-        $data = BankGateway::all();
-        foreach ($data as $value) {
-            # code...
-            $value->information = Crypt::encryptString($value->information);
-            $value->update();
-        }
-        return response()->json('success');
-    }
-
 }
