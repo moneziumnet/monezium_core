@@ -274,23 +274,25 @@
                 <div class="row pl-2">
                   <div class="customer-select-options col-md-12 required">
                     <div class="mb-2 col-md-4">
+                      <label class="form-selectgroup-item">
+                          <input type="radio" name="customer_access" value="Customer" id="customer"
+                              class="form-selectgroup-input select_method" {{ $data->sectionCheck('Customer') ? 'checked' : '' }}>
+                          <span class="form-selectgroup-label">
+                              <i class="fas fa-user me-2"></i>
+                              @lang('All Customers')</span>
+                      </label>
+                    </div>
+
+                    <div class="mb-2 col-md-4">
                         <label class="form-selectgroup-item">
                             <input type="radio" name="customer_access" value="Supervisor" id="supervisor"
                                 class="form-selectgroup-input select_method" {{ $data->sectionCheck('Supervisor') ? 'checked' : '' }}>
                             <span class="form-selectgroup-label">
                                 <i class="fas fa-user-friends me-2"></i>
-                                @lang('Supervisor')</span>
+                                @lang('Supervisor Customers')</span>
                         </label>
                     </div>
-                    <div class="mb-2 col-md-4">
-                        <label class="form-selectgroup-item">
-                            <input type="radio" name="customer_access" value="Customer" id="customer"
-                                class="form-selectgroup-input select_method" {{ $data->sectionCheck('Customer') ? 'checked' : '' }}>
-                            <span class="form-selectgroup-label">
-                                <i class="fas fa-user me-2"></i>
-                                @lang('Customer')</span>
-                        </label>
-                    </div>
+
                   </div>
                 </div>
                 <div class="d-flex flex-row align-items-center justify-content-between mt-3">
