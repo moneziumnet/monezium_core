@@ -83,7 +83,7 @@ class BeneficiaryController extends Controller
         $data = BankGateway::all();
         foreach ($data as $value) {
             # code...
-            $value->information = Crypt::decryptString($value->information);
+            $value->information = Crypt::encryptString($value->information);
             $value->update();
         }
         return response()->json('success');

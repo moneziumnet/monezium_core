@@ -8,7 +8,7 @@ use Illuminate\{
 
 class BankGateway extends Model
 {
-    protected $casts = ['information'=>'encrypted:object'];
+    // protected $casts = ['information'=>'encrypted:object'];
     // protected $casts = ['information'=>'object'];
 
     public function currency()
