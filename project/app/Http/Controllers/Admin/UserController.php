@@ -107,12 +107,18 @@ class UserController extends Controller
                             break;
                           }
                         }
+                        if($route) {
+                            $route = '<a href="' . route($route,$data->id) . '"  class="dropdown-item">'.__("Profile").'</a>';
+                        }
+                        else {
+                            $route = '';
+                        }
                         return '<div class="btn-group mb-1">
                             <button type="button" class="btn btn-primary btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             '.'Actions' .'
                             </button>
                             <div class="dropdown-menu" x-placement="bottom-start">
-                            <a href="' . route($route,$data->id) . '"  class="dropdown-item">'.__("Profile").'</a>
+                            '.$route.'
                             <a href="javascript:;" class="dropdown-item send" data-email="'. $data->email .'" data-toggle="modal" data-target="#vendorform">'.__("Send").'</a>
                             </div>
                         </div>';
