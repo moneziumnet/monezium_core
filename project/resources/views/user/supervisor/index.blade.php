@@ -100,7 +100,7 @@
               <label class="h5">{{__("Percent Charge (%)")}}</label>
             </div>
             <div class="col-md-2">
-              <label class="h5">{{__("Fixed Charge (%)")}}</label>
+              <label class="h5">{{__("Fixed Charge")}}</label>
             </div>
             <div class="col-md-2">
               <label class="h5">{{__("From")}}</label>
