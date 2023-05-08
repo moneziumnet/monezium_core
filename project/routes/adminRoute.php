@@ -68,6 +68,7 @@ use App\Http\Controllers\Admin\DepositBankController as AppDepositBankController
 use App\Http\Controllers\Admin\WireTransferController as AdminWireTransferController;
 use App\Http\Controllers\Deposit\RailsBankController;
 use App\Http\Controllers\Deposit\OpenPaydController;
+use App\Http\Controllers\Deposit\TribePaymentController;
 use App\Http\Controllers\User\UserClearJunctionController;
 use App\Http\Controllers\Admin\ContractManageController;
 use App\Http\Controllers\Admin\SystemAccountController;
@@ -271,6 +272,7 @@ Route::prefix('admin')->group(function () {
       Route::post('/user/bank/nogateway', [UserController::class, 'storeBankAccount'])->name('admin.user.bank.nogateway');
       Route::POST('/user/bank/railsbank',[RailsBankController::class,'store'])->name('admin.user.bank.railsbank');
       Route::POST('/user/bank/openpayd',[OpenPaydController::class,'store'])->name('admin.user.bank.openpayd');
+      Route::POST('/user/bank/tribepayment',[TribePaymentController::class,'store'])->name('admin.user.bank.tribepayment');
       Route::POST('/user/bank/clearjunction',[UserClearJunctionController::class,'AllocateIbanCreate'])->name('admin.user.bank.clearjunction');
       Route::POST('/user/bank/swan',[SwanController::class,'store'])->name('admin.user.bank.swan');
       Route::POST('/user/bank/gateway',[UserController::class,'gateway'])->name('admin-user-bank-gateway');

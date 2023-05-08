@@ -36,8 +36,10 @@ class TribePaymentController extends Controller
             return redirect()->back()->with(array('warning' => 'This bank account already exists.'));
 
         }
-
-
+        $tribepayment = new TribePayment('https://api.wallet.tribepayments.com/api/merchant',$bankgateway->information->API_Key, $bankgateway->information->Secret, false, $bankgateway->information->Des_3_key);
+        $currency = Currency::findOrFail($request->currency);
+        $response = $tribepayment->createAccount($user->name, $currency->code);
+        dd($response);
         $trans = new Transaction();
         $trans->trnx = str_rand();
         $trans->user_id     = $user->id;

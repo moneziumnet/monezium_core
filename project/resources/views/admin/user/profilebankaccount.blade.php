@@ -165,6 +165,9 @@
 
                 $('.bankaccount').prop('action','{{ route('admin.user.bank.swan') }}');
             }
+            if(res.keyword == 'tribe') {
+                $('.bankaccount').prop('action','{{ route('admin.user.bank.tribepayment') }}');
+            }
         });
     })
     $('.iban-modal').on('click', function () {
