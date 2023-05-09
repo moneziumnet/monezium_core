@@ -118,6 +118,7 @@
 
     var table = $('#geniustable').DataTable({
            ordering: false,
+           pageLength: 10,
            processing: true,
            serverSide: true,
            searching: true,
