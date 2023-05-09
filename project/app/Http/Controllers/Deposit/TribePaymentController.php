@@ -40,7 +40,37 @@ class TribePaymentController extends Controller
         $currency = Currency::findOrFail($request->currency);
         $username = explode(' ', $user->name);
         $response = $tribepayment->createAccount('info_monezium_com', $currency->code);
+        if($response['status'] == 'error') {
+            return redirect()->back()->with(array('warning' => $response['msg']));
+        }
         $response = $tribepayment->createIban($response['account_id'], null, null, null, null, null, null, null, null, null, null, '44', null, null, $currency->code, null, null, null, null);
+        if($response['status'] == 'error') {
+            return redirect()->back()->with(array('warning' => $response['msg'].' '.$response['description']));
+        }
+        $response = $tribepayment->getIbanByRequestId($response['iban_request_id']);
+        if($response['status'] == 'error') {
+            return redirect()->back()->with(array('warning' => $response['msg'].' '.$response['description']));
+        }
+        if($response['iban_request_status'] == 1 ) {
+            $iban = $response['data']['iban'];
+        }
+        else {
+            $iban = '';
+        }
+        $data = New BankAccount();
+        $data->user_id = $request->user;
+        $data->subbank_id = $request->subbank;
+        $data->iban = $iban;
+        $data->swift =  '';
+        $data->currency_id = $request->currency;
+        $data->save();
+
+        $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
+        if(!$chargefee) {
+            $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', 0)->first();
+        }
+
+
         $trans = new Transaction();
         $trans->trnx = str_rand();
         $trans->user_id     = $user->id;
