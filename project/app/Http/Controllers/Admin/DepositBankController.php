@@ -25,7 +25,7 @@ class DepositBankController extends Controller
 {
     public function datatables()
     {
-        $datas = DepositBank::orderBy('id','desc')->get();
+        $datas = DepositBank::orderBy('id','desc');
 
         return Datatables::of($datas)
             ->setRowAttr([
