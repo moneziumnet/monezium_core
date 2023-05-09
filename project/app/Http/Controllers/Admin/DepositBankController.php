@@ -30,7 +30,7 @@ class DepositBankController extends Controller
         return Datatables::of($datas)
             ->setRowAttr([
                 'style' => function(DepositBank $data) {
-                    $webhook_request = WebhookRequest::where('reference', 'LIKE', '%'.$data->deposit_number)->orWhere('transaction_id', 'LIKE', '%'.$data->deposit_number)->where('is_pay_in', true)->first();
+                    $webhook_request = WebhookRequest::where('reference', 'LIKE', '%'.$data->deposit_number.'%')->orWhere('transaction_id', 'LIKE', '%'.$data->deposit_number.'%')->where('is_pay_in', true)->first();
                     if($data->status == 'pending' && (!$webhook_request || $webhook_request->status == "processing")) {
                         return "background-color: #ffcaca;";
                     } else {
@@ -43,7 +43,7 @@ class DepositBankController extends Controller
                 return $date;
             })
             ->editColumn('deposit_number', function(DepositBank $data) {
-                $send_info = WebhookRequest::where('reference', 'LIKE', '%'.$data->deposit_number)->orWhere('transaction_id', 'LIKE', '%'.$data->deposit_number)->with('currency')->first();
+                $send_info = WebhookRequest::where('reference', 'LIKE', '%'.$data->deposit_number.'%')->orWhere('transaction_id', 'LIKE', '%'.$data->deposit_number.'%')->with('currency')->first();
                 $deposit_no = $data->deposit_number;
                 if ($send_info) {
                     $deposit_no = $send_info->transaction_id;
@@ -74,7 +74,7 @@ class DepositBankController extends Controller
             ->addColumn('action', function(DepositBank $data) {
 
                 @$detail = SubInsBank::where('id', $data->sub_bank_id)->with('subInstitution')->first();
-                $send_info = WebhookRequest::where('transaction_id', 'LIKE', '%'.$data->deposit_number)->orWhere('reference', 'LIKE', '%'.$data->deposit_number)->with('currency')->first();
+                $send_info = WebhookRequest::where('transaction_id', 'LIKE', '%'.$data->deposit_number.'%')->orWhere('reference', 'LIKE', '%'.$data->deposit_number.'%')->with('currency')->first();
 
 
                 if(!$detail) {
@@ -145,7 +145,7 @@ class DepositBankController extends Controller
           return redirect()->back()->with("error", $msg);
         }
 
-        $webhook_request = WebhookRequest::where('reference', 'LIKE', '%'.$data->deposit_number)->orWhere('transaction_id', $data->deposit_number)->first();
+        $webhook_request = WebhookRequest::where('reference', 'LIKE', '%'.$data->deposit_number.'%')->orWhere('transaction_id', $data->deposit_number)->first();
         $sender_name = $gs->disqus;
         if($webhook_request) {
             $data->amount = $webhook_request->amount;

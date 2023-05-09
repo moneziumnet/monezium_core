@@ -117,7 +117,7 @@ class UserBankTransactionController extends Controller
             $temp['user_id'] = $value->user_id;
             $temp['type'] = 'Bank Deposit';
             $temp['trnx_no'] = $value->deposit_number;
-            $send_info = WebhookRequest::where('transaction_id', 'LIKE', '%'.$value->deposit_number)->orWhere('reference', 'LIKE', '%'.$value->deposit_number)->with('currency')->first();
+            $send_info = WebhookRequest::where('transaction_id', 'LIKE', '%'.$value->deposit_number.'%')->orWhere('reference', 'LIKE', '%'.$value->deposit_number.'%')->with('currency')->first();
             $temp['sender_name'] = $send_info->sender_name ?? null;
             $temp['receiver_name'] = auth()->user()->company_name ?? auth()->user()->name;
             $currency = Currency::findOrFail($value->currency_id);
