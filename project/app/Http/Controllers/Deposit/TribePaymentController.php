@@ -38,8 +38,9 @@ class TribePaymentController extends Controller
         }
         $tribepayment = new TribePayment('https://api.wallet.tribepayments.com/api/merchant',$bankgateway->information->API_Key, $bankgateway->information->Secret, false, $bankgateway->information->Des_3_key);
         $currency = Currency::findOrFail($request->currency);
-        $response = $tribepayment->createAccount($user->name, $currency->code);
-        dd($response);
+        $username = explode(' ', $user->name);
+        $response = $tribepayment->createAccount('info_monezium_com', $currency->code);
+        $response = $tribepayment->createIban($response['account_id'], null, null, null, null, null, null, null, null, null, null, '44', null, null, $currency->code, null, null, null, null);
         $trans = new Transaction();
         $trans->trnx = str_rand();
         $trans->user_id     = $user->id;
