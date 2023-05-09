@@ -7,6 +7,7 @@ use App\Models\BalanceTransfer;
 use App\Models\WebhookRequest;
 use App\Models\Beneficiary;
 use App\Models\Currency;
+use App\Models\Country;
 use App\Models\BankAccount;
 use App\Models\BankGateway;
 use App\Models\SubInsBank;
@@ -20,6 +21,7 @@ use Illuminate\Support\Str;
 use Datatables;
 use DateTime;
 use GuzzleHttp\Exception\RequestException;
+use App\Classes\TribePayment;
 
 class OtherBankTransferController extends Controller
 {
@@ -531,6 +533,18 @@ class OtherBankTransferController extends Controller
                     return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
                 }
 
+            }
+            else if($bankgateway->keyword == 'tribe') {
+              $tribepayment = New TribePayment('https://api.wallet.tribepayments.com/api/merchant',$bankgateway->information->API_Key, $bankgateway->information->Secret, false, $bankgateway->information->Des_3_key);
+              $receiver_type =  $data->beneficiary->type == 'RETAIL' ? 1: 2;
+              $country = Country::findOrFail($user->country);
+              $bank_country = Country::where('iso2', substr($data->iban, 0,2))->first();
+
+              $response = $tribepayment->transferAccount2Iban(null, $customer_bank->iban, $data->final_amount, $data->iban, $data->beneficiary->name, null, null, null, null, null, null, null, null, $currency->code, null, null, $receiver_type, null, null, $data->beneficiary->bank_name, $data->swift_bic, null, null, null, $bank_country->iso3, $user->company_name ?? $user->name, $country->iso3, null, $user->dob, null, null, $user->your_id, $user->issued_authority, $user->personal_code, null, false, null, null, null, null, null, null, null, null, null, null, false);
+              if($response['status'] == 'error') {
+                return response()->json(array('errors' => [ 0 => $response['msg'] ]));
+              }
+              $transaction_id = $response['transaction_id'];
             }
         }
         else {
