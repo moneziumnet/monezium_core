@@ -134,7 +134,7 @@ class OpenpaydResponse implements RespondsToWebhook
             $webrequest->status = strtolower($obj->status);
             $webrequest->data = $obj;
             $webrequest->gateway_type = "openpayd";
-            $webrequest->is_pay_in = true;
+            $webrequest->is_pay_in = false;
 
             $webrequest->save();
             return response()->json("success");
