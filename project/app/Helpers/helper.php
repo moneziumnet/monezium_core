@@ -326,14 +326,16 @@ if (!function_exists('nexmo')) {
 }
 
 if (!function_exists('userBalance')) {
-    function userBalance($user_id)
+    function userBalance($user_id, $rate = null)
     {
         $wallets = Wallet::where('user_id', $user_id)->with('currency')->get();
-        $currency_id = defaultCurr();
-        $code = Currency::findOrFail($currency_id)->code;
-        $client = new Client();
-        $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency=' . $code);
-        $rate = json_decode($response->getBody());
+        if($rate == null) {
+            $currency_id = defaultCurr();
+            $code = Currency::findOrFail($currency_id)->code;
+            $client = new Client();
+            $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency=' . $code);
+            $rate = json_decode($response->getBody());
+        }
         $totalbalance = 0;
         foreach ($wallets as $key => $wallet) {
             if ($wallet && $wallet->currency) {

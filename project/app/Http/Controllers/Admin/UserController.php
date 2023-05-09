@@ -49,6 +49,7 @@ use Illuminate\Contracts\Auth\Authenticatable as OtherAuth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use App\Classes\BoxApi;
+use GuzzleHttp\Client;
 
 class UserController extends Controller
 {
@@ -59,6 +60,12 @@ class UserController extends Controller
 
         public function datatables()
         {
+            $client = new Client();
+            $currency_id = defaultCurr();
+            $code = Currency::findOrFail($currency_id)->code;
+            $response = $client->request('GET', 'https://api.coinbase.com/v2/exchange-rates?currency=' . $code);
+            $rate = json_decode($response->getBody());
+            
             if(Auth::guard('admin')->user()->role == 'admin') {
                 $datas = User::orderBy('id','desc')->get();
             }
@@ -80,9 +87,9 @@ class UserController extends Controller
                     $name = $data->company_name ?? $data->name;
                     return $name;
                 })
-                ->editColumn('balance', function(User $data) {
+                ->editColumn('balance', function(User $data) use($rate) {
                     $currency = Currency::findOrFail(defaultCurr());
-                    return '<div clase="text-right">'.$currency->symbol.amount(userBalance($data->id), $currency->type, 2).'</div>';
+                    return '<div clase="text-right">'.$currency->symbol.amount(userBalance($data->id, $rate), $currency->type, 2).'</div>';
                 })
                 ->addColumn('action', function(User $data) {
                     if(auth()->user()->role === 'admin') {
