@@ -23,6 +23,8 @@ use Illuminate\Support\Facades\DB;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Validator;
 use App\Classes\TribePayment;
+use App\Models\WebhookRequest;
+use \Spatie\WebhookClient\Models\WebhookCall;
 
 class TribePaymentController extends Controller
 {
@@ -97,6 +99,20 @@ class TribePaymentController extends Controller
 
         return redirect()->back()->with(array('message' => 'Bank Account has been created successfully'));
 
+    }
+
+    public function account_webhook(Request $request) {
+        $tribepayment = new WebhookCall();
+        $tribepayment->name = 'tribepayment';
+        $tribepayment->payload =str2obj($request->getContent());
+        $tribepayment->url = route('tribe-account-completed');
+        $tribepayment->save();
+
+        $bankaccount = BankAccount::where('iban', $request->iban)->first();
+        if($bankaccount && $request->iban_request_status == "5") {
+            $bankaccount->swift = $request->bic;
+            $bankaccount->save();
+        }
     }
 
 }

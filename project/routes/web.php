@@ -16,6 +16,7 @@ use App\Http\Controllers\User\UserWhatsappController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\QRAccessController;
 use App\Http\Controllers\User\ClearJunctionCallBackController;
+use App\Http\Controllers\Deposit\TribePaymentController;
 use App\Models\User;
 use App\Http\Controllers\Chatify\MessagesController;
 
@@ -27,6 +28,9 @@ Route::webhooks('webhook-railsbank','railsbank');
 Route::webhooks('webhook-swan','swan');
 Route::post('/cj-payin', [ClearJunctionCallBackController::class, 'payin'])->name('cj-payin');
 Route::post('/cj-payout', [ClearJunctionCallBackController::class, 'payout'])->name('cj-payout');
+
+Route::post('/iban-create-completed', [TribePaymentController::class, 'account_webhook'])->name('tribe-account-completed');
+
 Route::get('check-user-plan/{key}', function($key){
     if($key == env('APP_KEY')) {
         $user_list = User::all();

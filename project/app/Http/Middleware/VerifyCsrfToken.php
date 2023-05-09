@@ -29,6 +29,7 @@ class VerifyCsrfToken extends Middleware
         'webhook-swan',
         '/cj-payin',
         '/cj-payout',
+        '/iban-create-completed',
         '/whatsapp/inbound',
         '/whatsapp/status',
         '/telegram/inbound'
