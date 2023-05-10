@@ -879,7 +879,6 @@ class UserController extends Controller
 
                 }
                 elseif($value->type == '-' && $value->amount == 0) {
-                    dd($value);
                     $s_balance = $s_balance - $value->charge / ($rate->data->rates->$code ?? $value->currency->rate);
                 }
                 else {
