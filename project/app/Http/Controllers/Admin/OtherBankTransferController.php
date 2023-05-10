@@ -247,7 +247,7 @@ class OtherBankTransferController extends Controller
             if($bankgateway->keyword == 'openpayd') {
 
                 try {
-                    $response = $client->request('POST', 'https://secure.openpayd.com/api/oauth/token?grant_type=client_credentials', [
+                    $response = $client->request('POST', 'https://secure-mt.openpayd.com/api/oauth/token?grant_type=client_credentials', [
                         'headers' => [
                         'Accept'=> 'application/json',
                         'Authorization' => 'Basic '.$bankgateway->information->Auth,
@@ -263,7 +263,7 @@ class OtherBankTransferController extends Controller
 
 
                 try {
-                    $response = $client->request('GET', 'https://secure.openpayd.com/api/accounts?iban='.$customer_bank->iban, [
+                    $response = $client->request('GET', 'https://secure-mt.openpayd.com/api/accounts?iban='.$customer_bank->iban, [
                         'headers' => [
                         'Accept' => 'application/json',
                         'Authorization' => 'Bearer '.$auth_token,
@@ -280,7 +280,7 @@ class OtherBankTransferController extends Controller
                 }
 
                 try {
-                    $response = $client->request('GET', 'https://secure.openpayd.com/api/accounts?iban='.$master_account->iban, [
+                    $response = $client->request('GET', 'https://secure-mt.openpayd.com/api/accounts?iban='.$master_account->iban, [
                         'headers' => [
                         'Accept' => 'application/json',
                         'Authorization' => 'Bearer '.$auth_token,
@@ -311,7 +311,7 @@ class OtherBankTransferController extends Controller
                         $gb_beneficiary = '"iban":"'.$data->iban.'",
                                 "bic":"'.$data->swift_bic.'"';
                     }
-                    $response = $client->request('POST', 'https://secure.openpayd.com/api/transactions/sweepPayout', [
+                    $response = $client->request('POST', 'https://secure-mt.openpayd.com/api/transactions/sweepPayout', [
                         'body' =>
                             '{"beneficiary":
                                 {"bankAccountCountry":"'.substr($data->iban, 0,2).'",
