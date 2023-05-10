@@ -302,7 +302,7 @@
                         @foreach($user_list as $item)
                           @if(check_user_type_by_id(4, $item->id))
 
-                          <option value="{{ $item->id }}" >{{ $item->company_name ?? $item->name }}</option>
+                          <option value="{{ $item->id }}" @if(in_array($item->id, $supervisor_list)) selected @endif >{{ $item->company_name ?? $item->name }}</option>
                           @endif
                         @endforeach
                       </select>

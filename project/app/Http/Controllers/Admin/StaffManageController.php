@@ -109,9 +109,10 @@ class StaffManageController extends Controller
 
     public function profileModules($id)
     {
-        $data = Admin::findOrFail($id);
-        $data['data'] = $data;
+        $admin = Admin::findOrFail($id);
+        $data['data'] = $admin;
         $data['user_list'] = User::all();
+        $data['supervisor_list'] = explode(',', $admin->supervisor_list);
         return view('admin.staff.profilemodules',$data);
     }
 
@@ -142,6 +143,12 @@ class StaffManageController extends Controller
                 $input['section'] = implode(" , ", $request->section);
             } else {
                 $input['section'] = '';
+            }
+            if (!empty($request->supervisor_list)) {
+                $data->supervisor_list = implode(',',$request->supervisor_list);
+            }
+            else {
+                $data->supervisor_list = '';
             }
             $data->section = $input['section'].' , '.$request->customer_access;
             $data->update();
