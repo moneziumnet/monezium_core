@@ -276,7 +276,7 @@
                     <div class="mb-2 col-md-4">
                       <label class="form-selectgroup-item">
                           <input type="radio" name="customer_access" value="Customer" id="customer"
-                              class="form-selectgroup-input select_method" {{ $data->sectionCheck('Customer') ? 'checked' : '' }}>
+                              class="form-selectgroup-input select_method customer" {{ $data->sectionCheck('Customer') ? 'checked' : '' }}>
                           <span class="form-selectgroup-label">
                               <i class="fas fa-user me-2"></i>
                               @lang('All Customers without Supervisor')</span>
@@ -462,6 +462,12 @@
     columns: 1,
     placeholder: 'Select Supervisor'
   });
+  $(document).ready(function() {
+    $('.customer').click(function() {
+      $("#supervisor_list option:selected").removeAttr("selected");
+      $('#supervisor_list').multiselect('reload');
+    });
+    })
 </script>
 @endsection
 

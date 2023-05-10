@@ -73,13 +73,8 @@ class UserController extends Controller
                 $datas = User::orderBy('id','desc')->get();
             }
             elseif(Auth::guard('admin')->user()->role == 'staff' && getModule('Supervisor')) {
-                $supervisor = User::where('email', Auth::guard('admin')->user()->email)->first();
-                if($supervisor) {
-                    $datas = User::where('referral_id', $supervisor->id)->orderBy('id','desc')->get();
-                }
-                else {
-                    $datas = [];
-                }
+                    $supervisor_list = explode(',', Auth::guard('admin')->user()->supervisor_list);
+                    $datas = User::whereIn('id', $supervisor_list)->orderBy('id','desc')->get();
             }
 
              return Datatables::of($datas)
