@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
+use App\Models\User;
 use App\Models\Generalsetting;
 use App\Models\UserTelegram;
 use Illuminate\Http\Request;
@@ -110,6 +111,7 @@ class StaffManageController extends Controller
     {
         $data = Admin::findOrFail($id);
         $data['data'] = $data;
+        $data['user_list'] = User::all();
         return view('admin.staff.profilemodules',$data);
     }
 
