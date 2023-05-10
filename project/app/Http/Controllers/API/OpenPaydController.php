@@ -31,7 +31,7 @@ class OpenPaydController extends Controller
                 return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'This bank account already exists.']);
             }
             try {
-                $response = $client->request('POST', 'https://secure-mt.openpayd.com/api/oauth/token?grant_type=client_credentials', [
+                $response = $client->request('POST', 'https://secure.openpayd.com/api/oauth/token?grant_type=client_credentials', [
                     'headers' => [
                        'Accept'=> 'application/json',
                       'Authorization' => 'Basic '.$bankgateway->information->Auth,
@@ -99,7 +99,7 @@ class OpenPaydController extends Controller
                             "friendlyName": "'.$user->company_name.'"
                             }';
                     }
-                    $response = $client->request('POST', 'https://secure-mt.openpayd.com/api/linkedClient', [
+                    $response = $client->request('POST', 'https://secure.openpayd.com/api/linkedClient', [
                         'body' => $body,
                         'headers' => [
                         'Accept' => 'application/json',
@@ -124,7 +124,7 @@ class OpenPaydController extends Controller
             }
             try {
                 $currency = Currency::whereId($request->currency)->first();
-                $response = $client->request('POST', 'https://secure-mt.openpayd.com/api/accounts', [
+                $response = $client->request('POST', 'https://secure.openpayd.com/api/accounts', [
                     'body' => '{"currency":"'.$currency->code.'","friendlyName":"Billing Account('.$currency->code.')"}',
                     'headers' => [
                     'Accept' => 'application/json',
@@ -143,7 +143,7 @@ class OpenPaydController extends Controller
             }
 
             try {
-                $response = $client->request('GET', 'https://secure-mt.openpayd.com/api/bank-accounts?internalAccountId='.$internal_id, [
+                $response = $client->request('GET', 'https://secure.openpayd.com/api/bank-accounts?internalAccountId='.$internal_id, [
                     'headers' => [
                     'Accept' => 'application/json',
                     'Authorization' => 'Bearer '.$auth_token,
