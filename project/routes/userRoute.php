@@ -75,7 +75,6 @@ use App\Http\Controllers\User\DepositCryptoController;
 use App\Http\Controllers\User\UserICOController;
 use App\Http\Controllers\User\WithdrawCryptoController;
 use App\Http\Controllers\User\VirtualCardController;
-use App\Http\Controllers\User\UserShopController;
 use App\Http\Controllers\Deposit\SwanController;
 use App\Http\Controllers\User\UserTelegramController;
 use App\Http\Controllers\User\UserWhatsappController;
@@ -124,9 +123,6 @@ Route::prefix('user')->group(function() {
       Route::get('/transaction/details/pdf/{id}', [UserController::class,'trxDetails_pdf'])->name('user.trxDetails.pdf');
       Route::post('/transactions/details/mail', [UserController::class,'sendToMail'])->name('user.trxDetails.mail');
 
-      Route::get('/shop', [UserShopController::class,'index'])->name('user.shop.index');
-      Route::get('/shop/order/{id}', [UserShopController::class,'order'])->name('user.shop.order');
-      Route::get('/shop/campaign/donate/{id}', [UserShopController::class,'donate'])->name('user.campaign.donate');
 
 
       Route::get('/export-pdf', [UserController::class,'generatePDF'])->name('user.export.pdf');
