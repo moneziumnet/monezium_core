@@ -38,10 +38,6 @@ class RouteServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
 
         $this->routes(function () {
-            Route::middleware('api')
-                ->namespace($this->namespace)
-                ->group(base_path('routes/api.php'));
-
             Route::middleware('web')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
@@ -55,7 +51,6 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/userRoute.php'));
         });
         $this->mapWebRoutes();
-        $this->mapApiRoutes();
         $this->mapAdminRoutes();
         $this->mapUserRoutes();
     }
@@ -89,16 +84,6 @@ class RouteServiceProvider extends ServiceProvider
                 ->domain($domain)
                 ->namespace($this->namespace)
                 ->group(base_path('routes/adminRoute.php'));
-        }
-    }
-
-    protected function mapApiRoutes()
-    {
-        foreach ($this->centralDomains() as $domain) {
-            Route::middleware('api')
-                ->domain($domain)
-                ->namespace($this->namespace)
-                ->group(base_path('routes/api.php'));
         }
     }
 

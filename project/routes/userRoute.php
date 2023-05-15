@@ -24,7 +24,6 @@ use App\Http\Controllers\User\RegisterController;
 use App\Http\Controllers\User\SendController;
 use App\Http\Controllers\User\TransferLogController;
 use App\Http\Controllers\User\UserController;
-use App\Http\Controllers\User\UserFdrController;
 use App\Http\Controllers\User\WireTransferController;
 use App\Http\Controllers\User\WithdrawController;
 use App\Http\Controllers\User\VoucherController;
@@ -149,10 +148,6 @@ Route::prefix('user')->group(function() {
       Route::post('/kyc-form', [KYCController::class,'kyc'])->name('user.kyc.submit');
       Route::post('/kyc/status', [KYCController::class,'kyc_status'])->name('user.kyc.status');
       Route::post('/kyc-take-selfie/save', [KYCController::class,'takeOnlineSelfie'])->name('user.kyc.selfie.post');
-
-      Route::post('/fdr-amount', [UserFdrController::class,'fdrAmount'])->name('user.fdr.amount');
-      Route::post('/fdr-request', [UserFdrController::class,'fdrRequest'])->name('user.fdr.request');
-      Route::post('/fdr/finish', [UserFdrController::class,'finish'])->name('user.fdr.finish');
 
       Route::get('/merchant/index', [MerchantController::class,'index'])->name('user.merchant.index');
       Route::get('/merchant/setting/{tab?}', [MerchantController::class,'setting'])->name('user.merchant.setting');
