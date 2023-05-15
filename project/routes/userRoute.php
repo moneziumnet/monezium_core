@@ -24,7 +24,6 @@ use App\Http\Controllers\User\RegisterController;
 use App\Http\Controllers\User\SendController;
 use App\Http\Controllers\User\TransferLogController;
 use App\Http\Controllers\User\UserController;
-use App\Http\Controllers\User\UserDpsController;
 use App\Http\Controllers\User\UserFdrController;
 use App\Http\Controllers\User\WireTransferController;
 use App\Http\Controllers\User\WithdrawController;
@@ -61,7 +60,6 @@ use App\Http\Controllers\User\UserOpenPaydController;
 use App\Http\Controllers\User\UserRailsbankController;
 use App\Http\Controllers\User\SupervisorController;
 use App\Http\Controllers\User\OwnTransferController;
-use App\Http\Controllers\User\UserInvestmentController;
 use App\Http\Controllers\User\UserClearJunctionController;
 use App\Http\Controllers\User\UserEMbankController;
 use App\Http\Controllers\User\UserTreezorBankController;
@@ -151,9 +149,6 @@ Route::prefix('user')->group(function() {
       Route::post('/kyc-form', [KYCController::class,'kyc'])->name('user.kyc.submit');
       Route::post('/kyc/status', [KYCController::class,'kyc_status'])->name('user.kyc.status');
       Route::post('/kyc-take-selfie/save', [KYCController::class,'takeOnlineSelfie'])->name('user.kyc.selfie.post');
-
-
-      Route::get('/invest', [UserInvestmentController::class,'index'])->name('user.invest.index');
 
       Route::post('/dps-plan', [UserDpsController::class,'planDetails'])->name('user.dps.planDetails');
       Route::post('/dps-submit', [UserDpsController::class,'dpsSubmit'])->name('user.loan.dpsSubmit');
