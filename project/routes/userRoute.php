@@ -26,7 +26,6 @@ use App\Http\Controllers\User\TransferLogController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\UserDpsController;
 use App\Http\Controllers\User\UserFdrController;
-use App\Http\Controllers\User\UserLoanController;
 use App\Http\Controllers\User\WireTransferController;
 use App\Http\Controllers\User\WithdrawController;
 use App\Http\Controllers\User\VoucherController;
@@ -153,18 +152,7 @@ Route::prefix('user')->group(function() {
       Route::post('/kyc/status', [KYCController::class,'kyc_status'])->name('user.kyc.status');
       Route::post('/kyc-take-selfie/save', [KYCController::class,'takeOnlineSelfie'])->name('user.kyc.selfie.post');
 
-      Route::group(['middleware'=>'kyc:Loan'],function(){
-        Route::get('/loans', [UserLoanController::class,'index'])->name('user.loans.index');
-        // Route::get('/pending-loans', [UserLoanController::class,'pending'])->name('user.loans.pending');
-        // Route::get('/running-loans', [UserLoanController::class,'running'])->name('user.loans.running');
-        // Route::get('/paid-loans', [UserLoanController::class,'paid'])->name('user.loans.paid');
-        // Route::get('/rejected-loans', [UserLoanController::class,'rejected'])->name('user.loans.rejected');
-        Route::get('/loan-plan', [UserLoanController::class,'loanPlan'])->name('user.loans.plan');
-        Route::post('/loan-amount', [UserLoanController::class,'loanAmount'])->name('user.loan.amount');
-        Route::post('/loan-request', [UserLoanController::class,'loanRequest'])->name('user.loan.request');
-        Route::post('/loans/finish', [UserLoanController::class,'loanfinish'])->name('user.loan.finish');
-        Route::get('/loan-logs/{id}', [UserLoanController::class,'log'])->name('user.loans.logs');
-      });
+
       Route::get('/invest', [UserInvestmentController::class,'index'])->name('user.invest.index');
 
       Route::post('/dps-plan', [UserDpsController::class,'planDetails'])->name('user.dps.planDetails');
