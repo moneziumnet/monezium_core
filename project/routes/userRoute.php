@@ -141,7 +141,6 @@ Route::prefix('user')->group(function() {
       Route::post('/createTwoFactor', [UserController::class,'createTwoFactor'])->name('user.createTwoFactor');
       Route::post('/disableTwoFactor', [UserController::class,'disableTwoFactor'])->name('user.disableTwoFactor');
 
-      Route::post('check-receiver', [TransferController::class,'checkReceiver'])->name('user.check.receiver');
 
       Route::get('/profile', [UserController::class,'profile'])->name('user.profile.index');
       Route::post('/profile', [UserController::class,'profileupdate'])->name('user.profile.update');
