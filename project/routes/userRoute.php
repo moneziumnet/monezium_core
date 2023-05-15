@@ -150,11 +150,6 @@ Route::prefix('user')->group(function() {
       Route::post('/kyc/status', [KYCController::class,'kyc_status'])->name('user.kyc.status');
       Route::post('/kyc-take-selfie/save', [KYCController::class,'takeOnlineSelfie'])->name('user.kyc.selfie.post');
 
-      Route::post('/dps-plan', [UserDpsController::class,'planDetails'])->name('user.dps.planDetails');
-      Route::post('/dps-submit', [UserDpsController::class,'dpsSubmit'])->name('user.loan.dpsSubmit');
-      Route::post('/dps/finish', [UserDpsController::class,'finish'])->name('user.dps.finish');
-      Route::get('/dps-logs/{id}', [UserDpsController::class,'log'])->name('user.dps.logs');
-
       Route::post('/fdr-amount', [UserFdrController::class,'fdrAmount'])->name('user.fdr.amount');
       Route::post('/fdr-request', [UserFdrController::class,'fdrRequest'])->name('user.fdr.request');
       Route::post('/fdr/finish', [UserFdrController::class,'finish'])->name('user.fdr.finish');
