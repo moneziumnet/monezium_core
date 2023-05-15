@@ -47,14 +47,6 @@ use App\Http\Controllers\User\ManageInvoiceController;
 use App\Http\Controllers\User\EscrowController;
 use App\Http\Controllers\User\TransferController;
 use App\Http\Controllers\User\ExchangeMoneyController;
-use App\Http\Controllers\User\MerchantController;
-use App\Http\Controllers\User\MerchantShopController;
-use App\Http\Controllers\User\MerchantProductController;
-use App\Http\Controllers\User\MerchantSendController;
-use App\Http\Controllers\User\MerchantMoneyRequestController;
-use App\Http\Controllers\User\MerchantOtherBankController;
-use App\Http\Controllers\User\MerchantCheckoutController;
-use App\Http\Controllers\User\MerchantCampaignController;
 use App\Http\Controllers\User\UserOpenPaydController;
 use App\Http\Controllers\User\UserRailsbankController;
 use App\Http\Controllers\User\SupervisorController;
@@ -149,74 +141,7 @@ Route::prefix('user')->group(function() {
       Route::post('/kyc/status', [KYCController::class,'kyc_status'])->name('user.kyc.status');
       Route::post('/kyc-take-selfie/save', [KYCController::class,'takeOnlineSelfie'])->name('user.kyc.selfie.post');
 
-      Route::get('/merchant/index', [MerchantController::class,'index'])->name('user.merchant.index');
-      Route::get('/merchant/setting/{tab?}', [MerchantController::class,'setting'])->name('user.merchant.setting');
-      Route::post('/merchant/setting/{tab?}', [MerchantController::class,'setting_update'])->name('user.merchant.settingUpdate');
-      Route::post('/merchant/cryptowallet/update', [MerchantController::class,'address_edit'])->name('user.merchant.cryptowallet.update');
-      Route::post('/merchant/download-qr',  [MerchantController::class,'downloadQR'])->name('user.merchant.download.qr');
 
-      Route::get('/merchant/send-money',[MerchantSendController::class,'create'])->name('user.merchant.send.money.create');
-      Route::post('/merchant/send-money',[MerchantSendController::class,'store'])->name('user.merchant.send.money.store');
-      Route::get('/merchant/send/money/success',[MerchantSendController::class,'success'])->name('user.merchant.send.money.success');
-      Route::get('/merchant/send/money/cancle',[MerchantSendController::class,'cancle'])->name('user.merchant.send.money.cancle');
-      Route::get('/merchant/send-money/{number}',[MerchantSendController::class,'savedUser'])->name('user.merchant.send.money.savedUser');
-      Route::post('/merchant/save-account',[MerchantSendController::class,'saveAccount'])->name('user.merchant.save.account');
-
-      Route::get('/merchant/money-request', [MerchantMoneyRequestController::class,'index'])->name('user.merchant.money.request.index');
-      Route::get('/merchant/money-request/create', [MerchantMoneyRequestController::class,'create'])->name('user.merchant.money.request.create');
-      Route::post('/merchant/money-request/store', [MerchantMoneyRequestController::class,'store'])->name('user.merchant.money.request.store');
-      Route::get('/merchant/money-request/details/{id}', [MerchantMoneyRequestController::class,'details'])->name('user.merchant.money.request.details');
-
-      Route::get('/merchant/other-bank',[MerchantOtherBankController::class,'index'])->name('user.merchant.other.bank');
-      Route::get('/merchant/other-bank/{id}',[MerchantOtherBankController::class,'othersend'])->name('user.merchant.other.send');
-      Route::post('/merchant/other-bank/store', [MerchantOtherBankController::class,'store'])->name('user.merchant.other.send.store');
-
-      Route::get('/merchant/shop', [MerchantShopController::class,'index'])->name('user.merchant.shop.index');
-      Route::get('/merchant/shop/create', [MerchantShopController::class,'create'])->name('user.merchant.shop.create');
-      Route::post('/merchant/shop/store', [MerchantShopController::class,'store'])->name('user.merchant.shop.store');
-      Route::get('/merchant/shop/edit/{id}', [MerchantShopController::class,'edit'])->name('user.merchant.shop.edit');
-      Route::post('/merchant/shop/update/{id}', [MerchantShopController::class,'update'])->name('user.merchant.shop.update');
-      Route::post('/merchant/shop/webhook/{id}', [MerchantShopController::class,'webhook_register'])->name('user.merchant.shop.webhook');
-      Route::get('/merchant/shop/delete/{id}', [MerchantShopController::class,'delete'])->name('user.merchant.shop.delete');
-      Route::get('/merchant/shop/{id}/view/product', [MerchantShopController::class,'view_products'])->name('user.merchant.shop.view_product');
-
-      Route::get('/merchant/product', [MerchantProductController::class,'index'])->name('user.merchant.product.index');
-      Route::post('/merchant/product/store', [MerchantProductController::class,'store'])->name('user.merchant.product.store');
-      Route::post('/merchant/product/category/create', [MerchantProductController::class,'category_create'])->name('user.merchant.product.category.create');
-      Route::get('/merchant/product/edit/{id}', [MerchantProductController::class,'edit'])->name('user.merchant.product.edit');
-      Route::post('/merchant/product/update/{id}', [MerchantProductController::class,'update'])->name('user.merchant.product.update');
-      Route::get('/merchant/product/delete/{id}', [MerchantProductController::class,'delete'])->name('user.merchant.product.delete');
-      Route::get('/merchant/product/status/{id}', [MerchantProductController::class,'status'])->name('user.merchant.product.status');
-      Route::post('/merchant/product/pay', [MerchantProductController::class,'pay'])->name('user.merchant.product.pay');
-      Route::get('/merchant/product/crypto/{id}', [MerchantProductController::class,'crypto'])->name('user.merchant.product.crypto');
-      Route::get('/merchant/product/crypto/pay/{id}', [MerchantProductController::class,'crypto_pay'])->name('user.merchant.product.crypto.pay');
-      Route::get('/merchant/product/order', [MerchantProductController::class,'order'])->name('user.merchant.product.order');
-      Route::post('/merchant/product/send_email', [MerchantProductController::class,'send_email'])->name('user.merchant.product.send_email');
-      Route::get('/merchant/product/order/{id}', [MerchantProductController::class,'order_by_product'])->name('user.merchant.product.order_by_product');
-
-      Route::get('/merchant/campaign', [MerchantCampaignController::class,'index'])->name('user.merchant.campaign.index');
-      Route::post('/merchant/campaign/store', [MerchantCampaignController::class,'store'])->name('user.merchant.campaign.store');
-      Route::post('/merchant/campaign/category/create', [MerchantCampaignController::class,'category_create'])->name('user.merchant.campaign.category.create');
-      Route::get('/merchant/campaign/edit/{id}', [MerchantCampaignController::class,'edit'])->name('user.merchant.campaign.edit');
-      Route::post('/merchant/campaign/update/{id}', [MerchantCampaignController::class,'update'])->name('user.merchant.campaign.update');
-      Route::get('/merchant/campaign/delete/{id}', [MerchantCampaignController::class,'delete'])->name('user.merchant.campaign.delete');
-      Route::get('/merchant/campaign/status/{id}', [MerchantCampaignController::class,'status'])->name('user.merchant.campaign.status');
-      Route::post('/merchant/campaign/pay', [MerchantCampaignController::class,'pay'])->name('user.merchant.campaign.pay');
-      Route::get('/merchant/campaign/crypto/{id}', [MerchantCampaignController::class,'crypto'])->name('user.merchant.campaign.crypto');
-      Route::get('/merchant/campaign/crypto/pay/{id}', [MerchantCampaignController::class,'crypto_pay'])->name('user.merchant.campaign.crypto.pay');
-      Route::get('/merchant/campaign/donation/{id}', [MerchantCampaignController::class,'donation_by_campaign'])->name('user.merchant.campaign.donation_list');
-      Route::post('/merchant/campaign/send_email',[MerchantCampaignController::class,'send_email'])->name('user.merchant.campaign.send_email');
-
-      Route::get('/merchant/checkout',[MerchantCheckoutController::class,'index'])->name('user.merchant.checkout.index');
-      Route::get('/merchant/checkout/edit/{id}',[MerchantCheckoutController::class,'edit'])->name('user.merchant.checkout.edit');
-      Route::post('/merchant/checkout/create', [MerchantCheckoutController::class,'store'])->name('user.merchant.checkout.store');
-      Route::post('/merchant/checkout/update/{id}', [MerchantCheckoutController::class,'update'])->name('user.merchant.checkout.update');
-      Route::get('/merchant/checkout/status/{id}', [MerchantCheckoutController::class,'status'])->name('user.merchant.checkout.status');
-      Route::get('/merchant/checkout/delete/{id}', [MerchantCheckoutController::class,'delete'])->name('user.merchant.checkout.delete');
-      Route::get('/merchant/checkout/transaction/history', [MerchantCheckoutController::class,'transactionhistory'])->name('user.merchant.checkout.transactionhistory');
-      Route::get('/merchant/checkout/transaction/status/{id}/{status}', [MerchantCheckoutController::class,'transaction_status'])->name('user.merchant.checkout.transaction.status');
-      Route::post('/merchant/checkout/send_email',[MerchantCheckoutController::class,'send_email'])->name('user.merchant.checkout.send_email');
-      Route::post('/merchant/checkout/transaction', [MerchantCheckoutController::class,'transaction'])->name('user.merchant.checkout.transaction');
 
       Route::group(['middleware'=>'kyc:Request Money'],function(){
         Route::get('/money-request', [MoneyRequestController::class,'index'])->name('user.money.request.index');
