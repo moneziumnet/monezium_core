@@ -42,7 +42,6 @@ use App\Http\Controllers\Subscription\SubscriptionController;
 use App\Http\Controllers\User\DashboardController as AppDashboardController;
 use App\Http\Controllers\User\OtherBankController as UserOtherBankController;
 use App\Http\Controllers\User\LoginController as UserLoginController;
-use App\Http\Controllers\User\ManageInvoiceController;
 use App\Http\Controllers\User\TransferController;
 use App\Http\Controllers\User\ExchangeMoneyController;
 use App\Http\Controllers\User\UserOpenPaydController;
@@ -58,7 +57,6 @@ use App\Http\Controllers\Deposit\RailsBankController;
 use App\Http\Controllers\Deposit\OpenPaydController;
 use App\Http\Controllers\User\UserContractManageController;
 use App\Http\Controllers\User\DepositCryptoController;
-use App\Http\Controllers\User\UserICOController;
 use App\Http\Controllers\User\WithdrawCryptoController;
 use App\Http\Controllers\User\VirtualCardController;
 use App\Http\Controllers\Deposit\SwanController;
@@ -170,42 +168,6 @@ Route::prefix('user')->group(function() {
           Route::post('invoice/setting',   [ManageInvoiceController::class,'invoice_setting_save'])->name('user.invoice.invoic_setting');
       });
 
-
-      //ICO
-      Route::group(['middleware'=>'kyc:ICO'], function(){
-        Route::get('ico', [UserICOController::class, 'index'])->name('user.ico');
-        Route::get('ico/mytoken', [UserICOController::class, 'mytoken'])->name('user.ico.mytoken');
-        Route::get('ico/edit/{id}', [UserICOController::class, 'edit'])->name('user.ico.edit');
-        Route::get('ico/buy/{id}', [UserICOController::class, 'show_buy'])->name('user.ico.buy');
-        Route::get('ico/delete/{id}', [UserICOController::class, 'delete'])->name('user.ico.delete');
-        Route::get('ico/details/{id}', [UserICOController::class, 'details'])->name('user.ico.details');
-        Route::post('ico/buy/{id}', [UserICOController::class, 'buy'])->name('user.ico.buy');
-        Route::post('ico/store', [UserICOController::class, 'store'])->name('user.ico.store');
-        Route::post('ico/update/{id}', [UserICOController::class, 'update'])->name('user.ico.update');
-      });
-      //invoice
-      Route::get('invoices',   [ManageInvoiceController::class,'index'])->name('user.invoice.index');
-      Route::post('invoice/pay-status',   [ManageInvoiceController::class,'payStatus'])->name('user.invoice.pay.status');
-      Route::post('invoice/publish-status',   [ManageInvoiceController::class,'publishStatus'])->name('user.invoice.publish.status');
-
-      Route::get('invoices-edit/{id}',   [ManageInvoiceController::class,'edit'])->name('user.invoice.edit');
-      Route::post('invoices-update/{id}',   [ManageInvoiceController::class,'update'])->name('user.invoice.update');
-      Route::get('invoice-cancel/{id}',   [ManageInvoiceController::class,'cancel'])->name('user.invoice.cancel');
-      Route::post('invoice/send-mail',   [ManageInvoiceController::class,'sendToMail'])->name('user.invoice.send.mail');
-      Route::get('invoice/view/{number}',   [ManageInvoiceController::class,'view'])->name('user.invoice.view');
-      Route::get('invoice/incoming/view/{number}',   [ManageInvoiceController::class,'incoming_view'])->name('user.invoice.incoming.view');
-
-      Route::get('invoices-payment/{number}',   [ManageInvoiceController::class,'invoicePayment'])->name('user.invoice.payment');
-      Route::post('invoices-payment/submit',   [ManageInvoiceController::class,'invoicePaymentSubmit'])->name('user.invoice.payment.submit');
-      Route::get('invoices-payment/submit/crypto/{id}',   [ManageInvoiceController::class,'invoicePaymentCrypto'])->name('user.invoice.payment.crypto');
-      Route::post('invoices-payment/link/pay',   [ManageInvoiceController::class,'invoice_link_pay'])->name('user.invoice.link.pay');
-      Route::get('invoices-payment/link/crypto/{id}',   [ManageInvoiceController::class,'invoice_link_crypto'])->name('user.invoice.link.crypto');
-
-      Route::post('invoice/beneficiary/create',   [ManageInvoiceController::class,'beneficiary_create'])->name('user.invoice.beneficiary.create');
-      Route::get('invoices/incoming',   [ManageInvoiceController::class,'incoming_index'])->name('user.invoice.incoming.index');
-      Route::get('invoices/incoming/edit/{id}',   [ManageInvoiceController::class,'incoming_edit'])->name('user.invoice.incoming.edit');
-      Route::post('invoices/incoming/update/{id}',   [ManageInvoiceController::class,'incoming_update'])->name('user.invoice.incoming.update');
-      Route::post('invoice/tax/create',   [ManageInvoiceController::class,'tax_create'])->name('user.invoice.tax');
 
 
       Route::get('contract',   [UserContractManageController::class,'index'])->name('user.contract.index');
