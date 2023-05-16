@@ -43,7 +43,6 @@ use App\Http\Controllers\User\DashboardController as AppDashboardController;
 use App\Http\Controllers\User\OtherBankController as UserOtherBankController;
 use App\Http\Controllers\User\LoginController as UserLoginController;
 use App\Http\Controllers\User\ManageInvoiceController;
-use App\Http\Controllers\User\EscrowController;
 use App\Http\Controllers\User\TransferController;
 use App\Http\Controllers\User\ExchangeMoneyController;
 use App\Http\Controllers\User\UserOpenPaydController;
@@ -172,13 +171,6 @@ Route::prefix('user')->group(function() {
       });
 
 
-       //escrow
-      Route::group(['middleware'=>'kyc:Escrow'],function(){
-        Route::get('make-escrow',   [EscrowController::class,'create'])->name('user.escrow.create');
-        Route::post('make-escrow',   [EscrowController::class,'store']);
-        Route::get('escrow/calcharge/{amount}',   [EscrowController::class,'calcharge']);
-      });
-
       //ICO
       Route::group(['middleware'=>'kyc:ICO'], function(){
         Route::get('ico', [UserICOController::class, 'index'])->name('user.ico');
@@ -238,15 +230,6 @@ Route::prefix('user')->group(function() {
       Route::post('contract/aoa/send-mail',   [UserContractManageController::class,'aoa_sendToMail'])->name('user.contract.aoa.send.mail');
       Route::get('pay-invoice',   [DepositController::class,'invoicePayment'])->name('user.pay.invoice');
       Route::post('contract/beneficiary/create',   [UserContractManageController::class,'beneficiary_create'])->name('user.contract.beneficiary.create');
-
-
-      //escrow
-      Route::get('my-escrow',   [EscrowController::class,'index'])->name('user.escrow.index');
-      Route::get('escrow-pending',   [EscrowController::class,'pending'])->name('user.escrow.pending');
-      Route::get('escrow-dispute/{id}',   [EscrowController::class,'disputeForm'])->name('user.escrow.dispute');
-      Route::post('escrow-dispute/{id}',   [EscrowController::class,'disputeStore']);
-      Route::get('release-escrow/{id}',   [EscrowController::class,'release'])->name('user.escrow.release');
-      Route::get('file-download/{id}',   [EscrowController::class,'fileDownload'])->name('user.escrow.file.download');
 
       Route::group(['middleware'=>'kyc:Wire Transfer'],function(){
         Route::get('wire-transfer',[WireTransferController::class,'index'])->name('user.wire.transfer.index');
