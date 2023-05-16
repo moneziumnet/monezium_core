@@ -76,67 +76,6 @@
 </li>
 @endif
 
-@if(getModule('Loan Management'))
-<li class="nav-item">
-  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#loan" aria-expanded="true" aria-controls="collapseTable">
-    <i class="fas fa-cash-register"></i>
-    <span>{{ __('Loan Management') }}</span>
-  </a>
-  <div id="loan" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
-    <div class="bg-white py-2 collapse-inner rounded">
-      <a class="collapse-item" href="{{ route('admin.loan.plan.index') }}">{{ __('Loan Plans') }}</a>
-      <a class="collapse-item" href="{{ route('admin.loan.index') }}">{{ __('All Loans') }}</a>
-      <a class="collapse-item" href="{{ route('admin.loan.pending') }}">{{ __('Pending Loan') }}</a>
-      <a class="collapse-item" href="{{ route('admin.loan.running') }}">{{ __('Running Loan') }}</a>
-      <a class="collapse-item" href="{{ route('admin.loan.completed') }}">{{ __('Paid Loan') }}</a>
-      <a class="collapse-item" href="{{ route('admin.loan.rejected') }}">{{ __('Rejected Loan') }}</a>
-    </div>
-  </div>
-</li>
-@endif
-
-@if(getModule('DPS Management'))
-<li class="nav-item">
-  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#dps" aria-expanded="true" aria-controls="collapseTable">
-    <i class="fas fa-warehouse"></i>
-    <span>{{ __('DPS Management') }}</span>
-  </a>
-  <div id="dps" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
-    <div class="bg-white py-2 collapse-inner rounded">
-      <a class="collapse-item" href="{{ route('admin.dps.plan.index') }}">{{ __('Dps Plans') }}</a>
-      <a class="collapse-item" href="{{ route('admin.dps.index') }}">{{ __('All Dps') }}</a>
-      <a class="collapse-item" href="{{ route('admin.dps.running') }}">{{ __('Running Dps') }}</a>
-      <a class="collapse-item" href="{{ route('admin.dps.matured') }}">{{ __('Matured Dps') }}</a>
-    </div>
-  </div>
-</li>
-@endif
-
-@if(getModule('FDR Management'))
-<li class="nav-item">
-  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#fdr" aria-expanded="true" aria-controls="collapseTable">
-    <i class="fas fa-user-shield"></i>
-    <span>{{ __('FDR Management') }}</span>
-  </a>
-  <div id="fdr" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
-    <div class="bg-white py-2 collapse-inner rounded">
-      <a class="collapse-item" href="{{ route('admin.fdr.plan.index') }}">{{ __('Fdr Plans') }}</a>
-      <a class="collapse-item" href="{{ route('admin.fdr.index') }}">{{ __('All Fdr') }}</a>
-      <a class="collapse-item" href="{{ route('admin.fdr.running') }}">{{ __('Running Fdr') }}</a>
-      <a class="collapse-item" href="{{ route('admin.fdr.closed') }}">{{ __('Closed Fdr') }}</a>
-    </div>
-  </div>
-</li>
-@endif
-@if(getModule('ICO Management'))
-<li class="nav-item">
-  <a class="nav-link" href="{{ route('admin.ico.index') }}">
-    <i class="fas fa-coins"></i>
-    <span>{{ __('ICO Management') }}</span>
-  </a>
-</li>
-@endif
-
 
 @if(getModule('Deposits'))
 <li class="nav-item">
@@ -173,42 +112,7 @@
 </li>
 @endif
 
-@if(getModule('Manage Escrow'))
-<li class="nav-item">
-  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#escrow" aria-expanded="true" aria-controls="collapseTable">
-    <i class="fas fa-hands-helping"></i>
-    <span>{{ __('Manage Escrow') }} @if (isset($disputed) && $disputed > 0) <small class="badge badge-primary mr-4">!</small> @endif</span>
-  </a>
-  <div id="escrow" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
-    <div class="bg-white py-2 collapse-inner rounded">
-      {{-- @if (access('manage escrow')) --}}
-      <a class="collapse-item" href="{{ route('admin.escrow.manage') }}">{{ __('All Escrow') }}</a>
-      {{-- @endif
-        @if (access('manage on-hold')) --}}
-      <a class="collapse-item" href="{{ route('admin.escrow.onHold') }}">{{ __('On-hold Escrow') }}</a>
-      {{-- @endif
-        @if (access('manage disputed')) --}}
-      <a class="collapse-item {{isset($disputed) && $disputed > 0 ? 'beep beep-sidebar':''}}" href="{{ route('admin.escrow.disputed') }}">{{ __('Disputed Escrows') }}</a>
-      {{-- @endif --}}
-    </div>
-  </div>
-</li>
-@endif
 
-<!-- @if(getModule('Wire Transfer'))
-  <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#wiretransfer" aria-expanded="true" aria-controls="collapseTable">
-      <i class="fas fa-wallet"></i>
-    <span>{{ __('Wire Transfer') }}</span>
-  </a>
-    <div id="wiretransfer" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
-      <div class="bg-white py-2 collapse-inner rounded">
-        <a class="collapse-item" href="{{ route('admin.wire.transfer.banks.index') }}">{{ __('Wire Transfer Bank') }}</a>
-        <a class="collapse-item" href="{{ route('admin.wire.transfer.index') }}">{{ __('Wire Transfers') }}</a>
-      </div>
-    </div>
-  </li>
-  @endif -->
 
 @if(getModule('Request Money'))
 <li class="nav-item">
@@ -239,21 +143,6 @@
     <div class="bg-white py-2 collapse-inner rounded">
       <a class="collapse-item" href="{{ route('admin.report.transaction.index') }}">{{ __('Statistic') }}</a>
       <a class="collapse-item" href="{{ route('admin.report.transaction.summary')}}">{{ __('Summary Fee') }}</a>
-    </div>
-  </div>
-</li>
-@endif
-
-@if(getModule('Crowdfunding'))
-<li class="nav-item">
-  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#crowdfunding" aria-expanded="true" aria-controls="collapseTable">
-    <i class="fas fa-donate"></i>
-    <span>{{ __('Crowdfunding') }}</span>
-  </a>
-  <div id="crowdfunding" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
-    <div class="bg-white py-2 collapse-inner rounded">
-      <a class="collapse-item" href="{{ route('admin.campaign.index') }}">{{ __('Campaign') }}</a>
-      <a class="collapse-item" href="{{ route('admin.donation.index') }}">{{ __('Donations') }}</a>
     </div>
   </div>
 </li>

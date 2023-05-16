@@ -33,12 +33,7 @@
         <li class="nav-item">
             <a class="nav-link {{menu('admin-user-bank-account')}}" id="modules" href="{{route('admin-user-bank-account',$data->id) }}" role="button" >IBANs</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link {{menu('admin.contract.management')}} {{menu('admin.aoa.index')}}" id="modules" href="{{route('admin.contract.management',$data->id) }}" role="button" >Contract</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link {{menu('admin.merchant.shop.index')}} " id="modules" href="{{route('admin.merchant.shop.index',$data->id) }}" role="button" >Merchant Shop</a>
-        </li>
+
         @if(getModule('KYC Management'))
             <li class="nav-item">
                 <a class="nav-link {{menu('admin.user.kycinfo')}}" id="modules" href="{{route('admin.user.kycinfo',$data->id) }}" role="button" >AML/KYC</a>
