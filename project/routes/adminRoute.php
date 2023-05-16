@@ -4,8 +4,6 @@ use App\Http\Controllers;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Admin\FaqController;
-use App\Http\Controllers\Admin\FdrController;
-use App\Http\Controllers\Admin\ICOController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\FontController;
 use App\Http\Controllers\Admin\PageController;
@@ -18,7 +16,6 @@ use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\CounterController;
-use App\Http\Controllers\Admin\FdrPlanController;
 use App\Http\Controllers\Admin\FeatureController;
 use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\Admin\SeoToolController;
@@ -45,7 +42,6 @@ use App\Http\Controllers\Admin\BlogCategoryController;
 
 use App\Http\Controllers\Admin\ManageChargeController;
 
-use App\Http\Controllers\Admin\ManageEscrowController;
 use App\Http\Controllers\Admin\RequestMoneyController;
 use App\Http\Controllers\Admin\AdminLanguageController;
 
@@ -68,7 +64,6 @@ use App\Http\Controllers\Deposit\TribePaymentController;
 use App\Http\Controllers\User\UserClearJunctionController;
 use App\Http\Controllers\Admin\ContractManageController;
 use App\Http\Controllers\Admin\SystemAccountController;
-use App\Http\Controllers\Admin\MerchantShopController;
 use App\Http\Controllers\Deposit\SwanController;
 use App\Http\Controllers\Admin\ActionNotificationController;
 use App\Http\Controllers\Admin\AdminBeneficiaryController;
@@ -322,10 +317,6 @@ Route::prefix('admin')->group(function () {
       Route::post('/plan/store', [PlanController::class, 'store'])->name('admin.plan.store');
       Route::post('/plan/update/{id}', [PlanController::class, 'update'])->name('admin.plan.update');
 
-      Route::get('/merchant/shop/{id}', [MerchantShopController::class, 'index'])->name('admin.merchant.shop.index');
-      Route::get('/merchant/shop/datatables/{id}', [MerchantShopController::class, 'datatables'])->name('admin.merchant.shop.datatables');
-      Route::get('/merchant/shop/status/{id1}/{id2}', [MerchantShopController::class, 'status'])->name('admin.merchant.shop.status');
-
       Route::post('/username-by-email', [UserController::class,'username_by_email'])->name('admin.username.email');
       Route::post('/username-by-phone', [UserController::class,'username_by_phone'])->name('admin.username.phone');
 
@@ -364,29 +355,6 @@ Route::prefix('admin')->group(function () {
       Route::post('/user/kycform/more/store', [UserController::class, 'StoreKycForm'])->name('admin.kyc.more.form.store');
 
 
-    Route::group(['middleware' => 'permissions:FDR Management'], function () {
-      Route::get('/fdr-plans/datatables', [FdrPlanController::class, 'datatables'])->name('admin.fdr.plan.datatables');
-      Route::get('/fdr-plans', [FdrPlanController::class, 'index'])->name('admin.fdr.plan.index');
-      Route::get('/fdr-plans/create', [FdrPlanController::class, 'create'])->name('admin.fdr.plan.create');
-      Route::post('/fdr-plans/store', [FdrPlanController::class, 'store'])->name('admin.fdr.plan.store');
-      Route::get('/fdr-plans/edit/{id}', [FdrPlanController::class, 'edit'])->name('admin.fdr.plan.edit');
-      Route::post('/fdr-plans/update/{id}', [FdrPlanController::class, 'update'])->name('admin.fdr.plan.update');
-      Route::get('/fdr-plans/delete/{id}', [FdrPlanController::class, 'destroy'])->name('admin.fdr.plan.delete');
-      Route::get('/fdr-plans/{id1}/status/{status}', [FdrPlanController::class, 'status'])->name('admin.fdr.plan.status');
-
-      Route::get('/fdr-installment/cron', [FdrController::class, 'nextProfitCheck'])->name('admin.fdr.installment.cron');
-      Route::get('/fdr/datatables/{status}', [FdrController::class, 'datatables'])->name('admin.fdr.datatables');
-      Route::get('/fdr', [FdrController::class, 'index'])->name('admin.fdr.index');
-      Route::get('/running-fdr', [FdrController::class, 'running'])->name('admin.fdr.running');
-      Route::get('/closed-fdr', [FdrController::class, 'closed'])->name('admin.fdr.closed');
-    });
-
-    Route::group(['middleware' => 'permissions:ICO Management'], function () {
-      Route::get('/ico', [ICOController::class, 'index'])->name('admin.ico.index');
-      Route::get('/ico/details/{id}', [ICOController::class, 'details'])->name('admin.ico.details');
-      Route::get('/ico/datatables', [ICOController::class, 'datatables'])->name('admin.ico.datatables');
-      Route::get('/ico/status/{id}/{status}', [ICOController::class, 'status'])->name('admin.ico.status');
-    });
 
     Route::group(['middleware' => 'permissions:Report'], function () {
       Route::get('/bank/report/transaction', [ReportTransactionController::class,'index'])->name('admin.report.transaction.index');
@@ -427,17 +395,7 @@ Route::prefix('admin')->group(function () {
       Route::post('/charge/all/udpate/{id}', [ManageChargeController::class, 'charge_all_update'])->name('admin.update.all.charge');
     });
 
-    //manage escrow
-    Route::group(['middleware' => 'permissions:Manage Escrow'], function () {
-      Route::get('manage/escrow', [ManageEscrowController::class, 'index'])->name('admin.escrow.manage');
-      Route::get('escrow/on-hold', [ManageEscrowController::class, 'onHold'])->name('admin.escrow.onHold');
-      Route::get('escrow-disputed', [ManageEscrowController::class, 'disputed'])->name('admin.escrow.disputed');
-      Route::get('escrow-details/{id}', [ManageEscrowController::class, 'details'])->name('admin.escrow.details');
-      Route::post('escrow-details/{id}', [ManageEscrowController::class, 'disputeStore']);
-      Route::get('file-download/{id}',   [ManageEscrowController::class, 'fileDownload'])->name('admin.escrow.file.download');
-      Route::post('return-payment',   [ManageEscrowController::class, 'returnPayment'])->name('admin.escrow.return.payment');
-      Route::get('escrow-close/{id}', [ManageEscrowController::class, 'close'])->name('admin.escrow.close');
-    });
+
 
     Route::group(['middleware' => 'permissions:Bank Transfer'], function () {
       Route::get('/own-banks/transfer/datatables', [OwnBankTransferController::class, 'datatables'])->name('admin.own.banks.transfer.datatables');
