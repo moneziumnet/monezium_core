@@ -3,13 +3,11 @@
 use App\Http\Controllers;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
-use App\Http\Controllers\Admin\DpsController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\FdrController;
 use App\Http\Controllers\Admin\ICOController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\FontController;
-use App\Http\Controllers\Admin\LoanController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PlanController;
 use App\Http\Controllers\Admin\UserController;
@@ -20,7 +18,6 @@ use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\CounterController;
-use App\Http\Controllers\Admin\DpsPlanController;
 use App\Http\Controllers\Admin\FdrPlanController;
 use App\Http\Controllers\Admin\FeatureController;
 use App\Http\Controllers\Admin\MessageController;
@@ -34,7 +31,6 @@ use App\Http\Controllers\Admin\CryptoCurrencyController;
 use App\Http\Controllers\Admin\CryptoDepositController;
 use App\Http\Controllers\Admin\CryptoWithdrawController;
 use App\Http\Controllers\Admin\LanguageController;
-use App\Http\Controllers\Admin\LoanPlanController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DocumentsController;
 use App\Http\Controllers\Admin\KycManageController;
@@ -367,24 +363,6 @@ Route::prefix('admin')->group(function () {
       Route::get('/user/kycform/more/{id}', [UserController::class, 'KycForm'])->name('admin.kyc.more.form.create');
       Route::post('/user/kycform/more/store', [UserController::class, 'StoreKycForm'])->name('admin.kyc.more.form.store');
 
-
-    Route::group(['middleware' => 'permissions:DPS Management'], function () {
-      Route::get('/dps-plans/datatables', [DpsPlanController::class, 'datatables'])->name('admin.dps.plan.datatables');
-      Route::get('/dps-plans', [DpsPlanController::class, 'index'])->name('admin.dps.plan.index');
-      Route::get('/dps-plans/create', [DpsPlanController::class, 'create'])->name('admin.dps.plan.create');
-      Route::post('/dps-plans/store', [DpsPlanController::class, 'store'])->name('admin.dps.plan.store');
-      Route::get('/dps-plans/edit/{id}', [DpsPlanController::class, 'edit'])->name('admin.dps.plan.edit');
-      Route::post('/dps-plans/update/{id}', [DpsPlanController::class, 'update'])->name('admin.dps.plan.update');
-      Route::get('/dps-plans/delete/{id}', [DpsPlanController::class, 'destroy'])->name('admin.dps.plan.delete');
-      Route::get('/dps-plans/{id1}/status/{status}', [DpsPlanController::class, 'status'])->name('admin.dps.plan.status');
-
-      Route::get('/dps-installment/cron', [DpsController::class, 'installmentCheck'])->name('admin.dps.installment.cron');
-      Route::get('/dps/datatables/{status}', [DpsController::class, 'datatables'])->name('admin.dps.datatables');
-      Route::get('/dps', [DpsController::class, 'index'])->name('admin.dps.index');
-      Route::get('/running-dps', [DpsController::class, 'running'])->name('admin.dps.running');
-      Route::get('/matured-dps', [DpsController::class, 'matured'])->name('admin.dps.matured');
-      Route::get('/dps-log/show/{id}', [DpsController::class, 'logShow'])->name('admin.dps.log.show');
-    });
 
     Route::group(['middleware' => 'permissions:FDR Management'], function () {
       Route::get('/fdr-plans/datatables', [FdrPlanController::class, 'datatables'])->name('admin.fdr.plan.datatables');
