@@ -46,7 +46,6 @@ use App\Http\Controllers\User\TransferController;
 use App\Http\Controllers\User\ExchangeMoneyController;
 use App\Http\Controllers\User\UserOpenPaydController;
 use App\Http\Controllers\User\UserRailsbankController;
-use App\Http\Controllers\User\SupervisorController;
 use App\Http\Controllers\User\OwnTransferController;
 use App\Http\Controllers\User\UserClearJunctionController;
 use App\Http\Controllers\User\UserEMbankController;
@@ -444,17 +443,6 @@ Route::prefix('user')->group(function() {
 
       Route::get('/referrals',[ReferralController::class,'referred'])->name('user.referral.index');
       Route::post('/invite-user',[ReferralController::class,'invite_send'])->name('user.referral.invite-user');
-
-      Route::get('/pricingplan/{id}', [SupervisorController::class, 'index'])->name('user-pricingplan');
-      Route::get('/pricingplan/edit/{id}', [SupervisorController::class, 'edit'])->name('user-pricingplan-edit');
-      Route::post('/pricingplan/{id}/supervisor/all/update', [SupervisorController::class, 'charge_supervisor_all_update'])->name('user.supervisor.charge.all.update');
-      Route::get('/pricingplan/create/{id}/{charge_id}', [SupervisorController::class, 'create'])->name('user-pricingplan-create');
-      Route::get('/pricingplan/datatables/{id}', [SupervisorController::class, 'datatables'])->name('user-pricingplan-datatables');
-      Route::post('/pricingplan/updatecharge/{id}', [SupervisorController::class, 'updateCharge'])->name('user-pricingplan-update-charge');
-      Route::post('/pricingplan/createcharge', [SupervisorController::class, 'createCharge'])->name('user-pricingplan-create-charge');
-      Route::get('/manager/create', [SupervisorController::class, 'createmanager'])->name('user.manager.create');
-      Route::post('/manager/create', [SupervisorController::class, 'storemanager'])->name('user.manager.store');
-      Route::get('/manager/delete/{id}', [SupervisorController::class, 'deletemanager'])->name('user.manager.delete');
 
     //   Route::get('/own/money',[OwnTransferContoller::class, 'index'])->name('user.ownaccounttransfer.index');
       Route::get('/own', [OwnTransferController::class, 'index'])->name('ownaccounttransfer-index');
