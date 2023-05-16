@@ -26,7 +26,6 @@ use App\Http\Controllers\User\TransferLogController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\WireTransferController;
 use App\Http\Controllers\User\WithdrawController;
-use App\Http\Controllers\User\VoucherController;
 use App\Http\Middleware\KYC;
 use App\Http\Middleware\Otp;
 use App\Models\Childcategory;
@@ -172,11 +171,6 @@ Route::prefix('user')->group(function() {
           Route::post('invoice/setting',   [ManageInvoiceController::class,'invoice_setting_save'])->name('user.invoice.invoic_setting');
       });
 
-      //Voucher
-      Route::group(['middleware'=>'kyc:Voucher'],function(){
-        Route::get('create-voucher',   [VoucherController::class,'create'])->name('user.create.voucher');
-        Route::post('create-voucher',   [VoucherController::class,'submit']);
-      });
 
        //escrow
       Route::group(['middleware'=>'kyc:Escrow'],function(){
@@ -197,13 +191,6 @@ Route::prefix('user')->group(function() {
         Route::post('ico/store', [UserICOController::class, 'store'])->name('user.ico.store');
         Route::post('ico/update/{id}', [UserICOController::class, 'update'])->name('user.ico.update');
       });
-
-      //Reedem voucher
-      Route::get('vouchers',  [VoucherController::class,'vouchers'])->name('user.vouchers');
-      Route::get('reedem-voucher',  [VoucherController::class,'reedemForm'])->name('user.reedem.voucher');
-      Route::post('reedem-voucher',  [VoucherController::class,'reedemSubmit'])->name('user.reedemSubmit');
-      Route::get('reedemed-history',  [VoucherController::class,'reedemHistory'])->name('user.reedem.history');
-
       //invoice
       Route::get('invoices',   [ManageInvoiceController::class,'index'])->name('user.invoice.index');
       Route::post('invoice/pay-status',   [ManageInvoiceController::class,'payStatus'])->name('user.invoice.pay.status');

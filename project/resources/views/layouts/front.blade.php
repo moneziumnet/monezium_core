@@ -71,68 +71,7 @@
 
     @include('cookie-consent::index')
 
-    <!-- Modal -->
-    <div class="modal fade" id="modal-apply">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg--section">
-                    <h5 class="modal-title loan-title m-0">@lang('Basic')</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form action="{{ route('user.loan.amount') }}" method="post">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="pt-3 pb-4">
-                            <label for="amount" class="form-label">@lang('Amount')</label>
-                            <div class="input-group input--group">
-                                <input type="number" name="amount" class="form-group-input form-control form--control"
-                                    placeholder="0.00" id="amount">
-                                <button type="button" class="input-group-text">{{$currency->curr_name}}</button>
-                            </div>
-                            <input type="hidden" name="planId" id="planId" value="">
-                        </div>
-                    </div>
-                    <div class="modal-footer bg--section">
-                        <button type="button" class="btn shadow-none btn--danger" data-bs-dismiss="modal">@lang('Close')</button>
-                        <button type="submit" class="btn shadow-none btn--success">@lang('Proceed')</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!-- Modal -->
-
-    <!-- Modal -->
-    <div class="modal fade" id="modal-pension">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg--section">
-                    <h5 class="modal-title loan-title m-0">@lang('Basic')</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form action="{{ route('user.fdr.amount') }}" method="post">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="pt-3 pb-4">
-                            <label for="amount" class="form-label">@lang('Amount')</label>
-                            <div class="input-group input--group">
-                                <input type="number" name="amount" class="form-group-input form-control form--control"
-                                    placeholder="0.00" id="amount">
-                                <button type="button" class="input-group-text">{{$currency->curr_name}}</button>
-                            </div>
-                            <input type="hidden" name="planId" id="fdrplan" value="">
-                        </div>
-                    </div>
-                    <div class="modal-footer bg--section">
-                        <button type="button" class="btn shadow-none btn--danger" data-bs-dismiss="modal">@lang('Close')</button>
-                        <button type="submit" class="btn shadow-none btn--success">@lang('Proceed')</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!-- Modal -->
-
+   
 
     <script src="{{asset('assets/front/js/jquery-3.6.0.min.js')}}"></script>
     <script src="{{asset('assets/front/js/bootstrap.min.js')}}"></script>
