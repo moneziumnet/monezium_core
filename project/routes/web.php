@@ -5,8 +5,6 @@ use App\Http\Controllers\API\AccessController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Frontend\FrontendController;
-use App\Http\Controllers\User\ManageInvoiceController;
-use App\Http\Controllers\User\UserContractManageController;
 use App\Http\Controllers\User\KYCController;
 use App\Http\Controllers\User\UserTelegramController;
 use App\Http\Controllers\User\UserWhatsappController;
@@ -180,10 +178,6 @@ Route::get('/faq', [FrontendController::class, 'faq'])->name('front.faq');
 Route::get('/{slug}', [FrontendController::class, 'page'])->name('front.page');
 Route::post('/subscriber', [FrontendController::class, 'subscriber'])->name('front.subscriber');
 
-Route::get('view-invoice/{number}',   [ManageInvoiceController::class,'invoiceView'])->name('invoice.view');
-Route::get('pay-invoice/{number}',   [ManageInvoiceController::class,'invoicePaymentByLink'])->name('invoice.pay');
-Route::get('view-contract/{id}/{role}',   [UserContractManageController::class,'contract_view'])->name('contract.view');
-Route::get('view-aoa/{id}/{role}',   [UserContractManageController::class,'aoa_sign_view'])->name('aoa.view');
 
 Route::get('/currency/{id}', [FrontendController::class, 'currency'])->name('front.currency');
 Route::get('/language/{id}', [FrontendController::class, 'language'])->name('front.language');

@@ -55,7 +55,6 @@ use App\Http\Controllers\User\UserBankableController;
 use App\Http\Controllers\User\UserGlobalPassController;
 use App\Http\Controllers\Deposit\RailsBankController;
 use App\Http\Controllers\Deposit\OpenPaydController;
-use App\Http\Controllers\User\UserContractManageController;
 use App\Http\Controllers\User\DepositCryptoController;
 use App\Http\Controllers\User\WithdrawCryptoController;
 use App\Http\Controllers\User\VirtualCardController;
@@ -160,38 +159,8 @@ Route::prefix('user')->group(function() {
       Route::get('exchange-money/history',  [ExchangeMoneyController::class,'exchangeHistory'])->name('user.exchange.history');
       Route::get('exchange-money/calcharge/{amount}/{fromtype}/{totype}',  [ExchangeMoneyController::class,'calcharge'])->name('user.exchange.calcharge');
 
-       //invoice
-       Route::group(['middleware'=>'kyc:Invoice'],function(){
-          Route::get('create-invoice',   [ManageInvoiceController::class,'create'])->name('user.invoice.create');
-          Route::get('invoice/setting',   [ManageInvoiceController::class,'invoic_setting'])->name('user.invoice.invoic_setting');
-          Route::post('create-invoice',   [ManageInvoiceController::class,'store']);
-          Route::post('invoice/setting',   [ManageInvoiceController::class,'invoice_setting_save'])->name('user.invoice.invoic_setting');
-      });
 
-
-
-      Route::get('contract',   [UserContractManageController::class,'index'])->name('user.contract.index');
-      Route::get('contract/view/{id}',   [UserContractManageController::class,'view'])->name('user.contract.view');
-      Route::get('contract/create',   [UserContractManageController::class,'create'])->name('user.contract.create');
-      Route::post('contract/store',   [UserContractManageController::class,'store'])->name('user.contract.store');
-      Route::post('contract/sign/{id}',   [UserContractManageController::class,'contract_sign'])->name('user.contract.sign');
-      Route::get('contract/edit/{id}',   [UserContractManageController::class,'edit'])->name('user.contract.edit');
-      Route::post('contract/update/{id}',   [UserContractManageController::class,'update'])->name('user.contract.update');
-      Route::get('contract/delete/{id}',   [UserContractManageController::class,'delete'])->name('user.contract.delete');
-      Route::get('contract/pdf/{id}',   [UserContractManageController::class,'export_pdf'])->name('user.contract-pdf');
-      Route::post('contract/send-mail',   [UserContractManageController::class,'sendToMail'])->name('user.contract.send.mail');
-      Route::get('contract/aoa/{id}',   [UserContractManageController::class,'aoa_index'])->name('user.contract.aoa');
-      Route::get('contract/aoa/view/{id}',   [UserContractManageController::class,'aoa_view'])->name('user.contract.aoa.view');
-      Route::post('contract/aoa/sign/{id}',   [UserContractManageController::class,'aoa_sign'])->name('user.aoa.sign');
-      Route::get('contract/aoa/create/{id}',   [UserContractManageController::class,'aoa_create'])->name('user.contract.aoa.create');
-      Route::post('contract/aoa/store/{id}',   [UserContractManageController::class,'aoa_store'])->name('user.contract.aoa.store');
-      Route::get('contract/aoa/edit/{id}',   [UserContractManageController::class,'aoa_edit'])->name('user.contract.aoa.edit');
-      Route::post('contract/aoa/update/{id}',   [UserContractManageController::class,'aoa_update'])->name('user.contract.aoa.update');
-      Route::get('contract/aoa/delete/{id}',   [UserContractManageController::class,'aoa_delete'])->name('user.contract.aoa.delete');
-      Route::get('contract/aoa/pdf/{id}',   [UserContractManageController::class,'export_aoa_pdf'])->name('user.aoa-pdf');
-      Route::post('contract/aoa/send-mail',   [UserContractManageController::class,'aoa_sendToMail'])->name('user.contract.aoa.send.mail');
       Route::get('pay-invoice',   [DepositController::class,'invoicePayment'])->name('user.pay.invoice');
-      Route::post('contract/beneficiary/create',   [UserContractManageController::class,'beneficiary_create'])->name('user.contract.beneficiary.create');
 
       Route::group(['middleware'=>'kyc:Wire Transfer'],function(){
         Route::get('wire-transfer',[WireTransferController::class,'index'])->name('user.wire.transfer.index');
