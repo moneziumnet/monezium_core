@@ -367,27 +367,6 @@ Route::prefix('admin')->group(function () {
       Route::get('/user/kycform/more/{id}', [UserController::class, 'KycForm'])->name('admin.kyc.more.form.create');
       Route::post('/user/kycform/more/store', [UserController::class, 'StoreKycForm'])->name('admin.kyc.more.form.store');
 
-    Route::group(['middleware' => 'permissions:Loan Management'], function () {
-      Route::get('/loan-plans/datatables', [LoanPlanController::class, 'datatables'])->name('admin.loan.plan.datatables');
-      Route::get('/loan-plans', [LoanPlanController::class, 'index'])->name('admin.loan.plan.index');
-      Route::get('/loan-plans/create', [LoanPlanController::class, 'create'])->name('admin.loan.plan.create');
-      Route::post('/loan-plans/store', [LoanPlanController::class, 'store'])->name('admin.loan.plan.store');
-      Route::get('/loan-plans/edit/{id}', [LoanPlanController::class, 'edit'])->name('admin.loan.plan.edit');
-      Route::post('/loan-plans/update/{id}', [LoanPlanController::class, 'update'])->name('admin.loan.plan.update');
-      Route::get('/loan-plans/delete/{id}', [LoanPlanController::class, 'destroy'])->name('admin.loan.plan.delete');
-      Route::get('/loan-plans/{id1}/status/{status}', [LoanPlanController::class, 'status'])->name('admin.loan.plan.status');
-
-      Route::get('/loan-installment/cron', [LoanController::class, 'installmentCheck'])->name('admin.loan.installment.cron');
-      Route::get('/loan/datatables/{status}', [LoanController::class, 'datatables'])->name('admin.loan.datatables');
-      Route::get('/loan', [LoanController::class, 'index'])->name('admin.loan.index');
-      Route::get('/completed-loan', [LoanController::class, 'completed'])->name('admin.loan.completed');
-      Route::get('/running-loan', [LoanController::class, 'running'])->name('admin.loan.running');
-      Route::get('/pending-loan', [LoanController::class, 'pending'])->name('admin.loan.pending');
-      Route::get('/rejected-loan', [LoanController::class, 'rejected'])->name('admin.loan.rejected');
-      Route::get('/loan/status/{id1}/{id2}', [LoanController::class, 'status'])->name('admin.loan.status');
-      Route::get('/loan/show/{id}', [LoanController::class, 'show'])->name('admin.loan.show');
-      Route::get('/loan-log/show/{id}', [LoanController::class, 'logShow'])->name('admin.loan.log.show');
-    });
 
     Route::group(['middleware' => 'permissions:DPS Management'], function () {
       Route::get('/dps-plans/datatables', [DpsPlanController::class, 'datatables'])->name('admin.dps.plan.datatables');
