@@ -32,31 +32,6 @@
                 {{ csrf_field() }}
 
                 <div class="row">
-                    <div class="col-md-6">
-                    <div class="form-group">
-                        <div class="custom-control custom-switch">
-                        <input type="checkbox" name="section[]" value="Shop" {{ $data->sectionCheck('Shop') ? 'checked' : '' }} class="custom-control-input" id="Shop">
-                        <label class="custom-control-label" for="Shop">{{__('Shop')}}</label>
-                        </div>
-                    </div>
-                    </div>
-                    <div class="col-md-6">
-                    <div class="form-group">
-                        <div class="custom-control custom-switch">
-                        <input type="checkbox" name="section[]" value="Loan" {{ $data->sectionCheck('Loan') ? 'checked' : '' }} class="custom-control-input" id="Loan">
-                        <label class="custom-control-label" for="Loan">{{__('Loan')}}</label>
-                        </div>
-                    </div>
-                    </div>
-
-                    <div class="col-md-6">
-                    <div class="form-group">
-                        <div class="custom-control custom-switch">
-                        <input type="checkbox" name="section[]" value="Investments" {{ $data->sectionCheck('Investments') ? 'checked' : '' }} class="custom-control-input" id="Investments">
-                        <label class="custom-control-label" for="Investments">{{__('Investments')}}</label>
-                        </div>
-                    </div>
-                    </div>
 
                     <div class="col-md-6">
                     <div class="form-group">
@@ -76,14 +51,6 @@
                     </div>
                     </div>
 
-                    <div class="col-md-6">
-                    <div class="form-group">
-                        <div class="custom-control custom-switch">
-                        <input type="checkbox" name="section[]" value="Cards" {{ $data->sectionCheck('Cards') ? 'checked' : '' }} class="custom-control-input" id="Cards">
-                        <label class="custom-control-label" for="Cards">{{__('Cards')}}</label>
-                        </div>
-                    </div>
-                    </div>
 
                     <div class="col-md-6">
                     <div class="form-group">
@@ -148,106 +115,6 @@
                         </div>
                     </div>
 
-                    <div class="col-md-6">
-                    <div class="form-group">
-                        <div class="custom-control custom-switch">
-                        <input type="checkbox" name="section[]" value="Voucher" {{ $data->sectionCheck('Voucher') ? 'checked' : '' }} class="custom-control-input" id="Voucher">
-                        <label class="custom-control-label" for="Voucher">{{__('Voucher')}}</label>
-                        </div>
-                    </div>
-                    </div>
-
-
-                    <div class="col-md-6">
-                    <div class="form-group">
-                        <div class="custom-control custom-switch">
-                        <input type="checkbox" name="section[]" value="Merchant Shop" {{ $data->sectionCheck('Merchant Shop') ? 'checked' : '' }} class="custom-control-input" id="Merchant Shop">
-                        <label class="custom-control-label" for="Merchant Shop">{{__('Merchant Shop')}}</label>
-                        </div>
-                    </div>
-                    </div>
-                    <div class="col-md-6">
-                    <div class="form-group">
-                        <div class="custom-control custom-switch">
-                        <input type="checkbox" name="section[]" value="Merchant Product" {{ $data->sectionCheck('Merchant Product') ? 'checked' : '' }} class="custom-control-input" id="Merchant Product">
-                        <label class="custom-control-label" for="Merchant Product">{{__('Merchant Product')}}</label>
-                        </div>
-                    </div>
-                    </div>
-                    <div class="col-md-6">
-                    <div class="form-group">
-                        <div class="custom-control custom-switch">
-                        <input type="checkbox" name="section[]" value="Merchant Checkout" {{ $data->sectionCheck('Merchant Checkout') ? 'checked' : '' }} class="custom-control-input" id="Merchant Checkout">
-                        <label class="custom-control-label" for="Merchant Checkout">{{__('Merchant Checkout')}}</label>
-                        </div>
-                    </div>
-                    </div>
-                    <div class="col-md-6">
-                    <div class="form-group">
-                        <div class="custom-control custom-switch">
-                        <input type="checkbox" name="section[]" value="Merchant Transaction" {{ $data->sectionCheck('Merchant Transaction') ? 'checked' : '' }} class="custom-control-input" id="Merchant Transaction">
-                        <label class="custom-control-label" for="Merchant Transaction">{{__('Merchant Transaction')}}</label>
-                        </div>
-                    </div>
-                    </div>
-                    <div class="col-md-6">
-                    <div class="form-group">
-                        <div class="custom-control custom-switch">
-                        <input type="checkbox" name="section[]" value="Merchant Campaign" {{ $data->sectionCheck('Merchant Campaign') ? 'checked' : '' }} class="custom-control-input" id="Merchant Campaign">
-                        <label class="custom-control-label" for="Merchant Campaign">{{__('Merchant Campaign')}}</label>
-                        </div>
-                    </div>
-                    </div>
-                    <div class="col-md-6">
-                    <div class="form-group">
-                        <div class="custom-control custom-switch">
-                        <input type="checkbox" name="section[]" value="Merchant own Account" {{ $data->sectionCheck('Merchant own Account') ? 'checked' : '' }} class="custom-control-input" id="Merchant own Account">
-                        <label class="custom-control-label" for="Merchant own Account">{{__('Merchant own Account')}}</label>
-                        </div>
-                    </div>
-                    </div>
-                    <div class="col-md-6">
-                    <div class="form-group">
-                        <div class="custom-control custom-switch">
-                        <input type="checkbox" name="section[]" value="Merchant Request Money" {{ $data->sectionCheck('Merchant Request Money') ? 'checked' : '' }} class="custom-control-input" id="Merchant Request Money">
-                        <label class="custom-control-label" for="Merchant Request Money">{{__('Merchant Request Money')}}</label>
-                        </div>
-                    </div>
-                    </div>
-
-                    <div class="col-md-6">
-                    <div class="form-group">
-                        <div class="custom-control custom-switch">
-                        <input type="checkbox" name="section[]" value="Invoice" {{ $data->sectionCheck('Invoice') ? 'checked' : '' }} class="custom-control-input" id="Invoice">
-                        <label class="custom-control-label" for="Invoice">{{__('Invoice')}}</label>
-                        </div>
-                    </div>
-                    </div>
-                    <div class="col-md-6">
-                    <div class="form-group">
-                        <div class="custom-control custom-switch">
-                        <input type="checkbox" name="section[]" value="Contracts" {{ $data->sectionCheck('Contracts') ? 'checked' : '' }} class="custom-control-input" id="Contracts">
-                        <label class="custom-control-label" for="Contracts">{{__('Contracts')}}</label>
-                        </div>
-                    </div>
-                    </div>
-
-                    <div class="col-md-6">
-                    <div class="form-group">
-                        <div class="custom-control custom-switch">
-                        <input type="checkbox" name="section[]" value="Escrow" {{ $data->sectionCheck('Escrow') ? 'checked' : '' }} class="custom-control-input" id="Escrow">
-                        <label class="custom-control-label" for="Escrow">{{__('Escrow')}}</label>
-                        </div>
-                    </div>
-                    </div>
-                    <div class="col-md-6">
-                    <div class="form-group">
-                        <div class="custom-control custom-switch">
-                        <input type="checkbox" name="section[]" value="ICO" {{ $data->sectionCheck('ICO') ? 'checked' : '' }} class="custom-control-input" id="ICO">
-                        <label class="custom-control-label" for="ICO">{{__('ICO')}}</label>
-                        </div>
-                    </div>
-                    </div>
                 </div>
                 <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Submit') }}</button>
                 </form>
