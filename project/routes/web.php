@@ -24,6 +24,7 @@ Route::redirect('admin', 'admin/login');
 Route::redirect('user', 'user/login');
 
 Route::webhooks('webhook-openpayd','openpayd');
+Route::webhooks('webhook-openpayd-uk','openpayd-uk');
 Route::webhooks('webhook-railsbank','railsbank');
 Route::webhooks('webhook-swan','swan');
 Route::post('/cj-payin', [ClearJunctionCallBackController::class, 'payin'])->name('cj-payin');

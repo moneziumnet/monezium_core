@@ -89,7 +89,7 @@
                         @endforeach
                         </select>
                     </div>
-                    @if(!isset($bank_gateway) || $bank_gateway->keyword == 'openpayd')
+                    @if(!isset($bank_gateway) || $bank_gateway->keyword == 'openpayd' || $bank_gateway->keyword == 'openpayd-uk')
                         <div class="form-group">
                             <label for="inp-name">{{ __('IBAN') }}</label>
                             <input type="text" class="form-control iban-input" name="iban" required />
