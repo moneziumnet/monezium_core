@@ -157,6 +157,9 @@
             if(res.keyword == 'openpayd') {
                 $('.bankaccount').prop('action','{{ route('admin.user.bank.openpayd') }}');
             }
+            if(res.keyword == 'openpayd-uk') {
+                $('.bankaccount').prop('action','{{ route('admin.user.bank.openpayduk') }}');
+            }
             if(res.keyword == 'clearjunction') {
 
                 $('.bankaccount').prop('action','{{ route('admin.user.bank.clearjunction') }}');
