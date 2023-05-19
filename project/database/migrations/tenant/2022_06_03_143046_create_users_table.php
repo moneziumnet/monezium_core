@@ -33,6 +33,7 @@ class CreateUsersTable extends Migration
             $table->text('email');
             $table->string('password', 191)->nullable();
             $table->string('holder_id')->nullable();
+            $table->string('holder_id_uk')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->tinyInteger('is_provider')->default(0);
