@@ -342,6 +342,104 @@ class OtherBankTransferController extends Controller
                 return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
                 }
             }
+            if($bankgateway->keyword == 'openpayd-uk') {
+
+              try {
+                  $response = $client->request('POST', 'https://secure.openpayd.com/api/oauth/token?grant_type=client_credentials', [
+                      'headers' => [
+                      'Accept'=> 'application/json',
+                      'Authorization' => 'Basic '.$bankgateway->information->Auth,
+                      'Content-Type' => 'application/x-www-form-urlencoded',
+                      ],
+                  ]);
+                  $res_body = json_decode($response->getBody());
+                  $auth_token = $res_body->access_token;
+                  $accounter_id = $res_body->accountHolderId;
+              } catch (\Throwable $th) {
+              return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
+              }
+
+
+              try {
+                  $response = $client->request('GET', 'https://secure.openpayd.com/api/accounts?iban='.$customer_bank->iban, [
+                      'headers' => [
+                      'Accept' => 'application/json',
+                      'Authorization' => 'Bearer '.$auth_token,
+                      'Content-Type' => 'application/json',
+                      'x-account-holder-id' => $user->holder_id,
+                      ],
+                  ]);
+                  $res_body = json_decode($response->getBody())->content[0];
+
+                  $account_id = $res_body->id;
+                  $amount = $res_body->availableBalance->value;
+              } catch (\Throwable $th) {
+              return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
+              }
+
+              try {
+                  $response = $client->request('GET', 'https://secure.openpayd.com/api/accounts?iban='.$master_account->iban, [
+                      'headers' => [
+                      'Accept' => 'application/json',
+                      'Authorization' => 'Bearer '.$auth_token,
+                      'Content-Type' => 'application/json',
+                      'x-account-holder-id' => $accounter_id,
+                      ],
+                  ]);
+                  $res_body = json_decode($response->getBody())->content[0];
+
+                  $master_account_id = $res_body->id;
+                  $master_amount = $res_body->availableBalance->value;
+                  if ($master_amount < $data->final_amount) {
+                      return response()->json(array('errors' => [ 0 => __('Your balance is Insufficient') ]));
+                  }
+              } catch (\Throwable $th) {
+                  return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
+              }
+
+              try {
+                  $customer_name = $data->beneficiary->type == 'RETAIL' ? '"firstName":"'.explode(" ",$data->beneficiary->name, 2)[0].'","lastName":"'.explode(" ",$data->beneficiary->name, 2)[1].'",' : '"companyName":"'.$data->beneficiary->name.'",';
+                  if ((substr($data->iban, 0,2) == 'GB' && $currency->code == 'GBP')) {
+                      $gb_beneficiary = '"iban":"'.$data->iban.'",
+                      "bic":"'.$data->swift_bic.'",'.'"routingCodes": {
+                          "SORT_CODE": "'.substr($data->iban, -14, 6).'"
+                     },
+                     "accountNumber": "'.substr($data->iban, -8, 8).'"';
+                  } else {
+                      $gb_beneficiary = '"iban":"'.$data->iban.'",
+                              "bic":"'.$data->swift_bic.'"';
+                  }
+                  $response = $client->request('POST', 'https://secure.openpayd.com/api/transactions/sweepPayout', [
+                      'body' =>
+                          '{"beneficiary":
+                              {"bankAccountCountry":"'.substr($data->iban, 0,2).'",
+                              "customerType":"'.$data->beneficiary->type.'",
+                              '.$customer_name.
+                              $gb_beneficiary.'
+                              },
+                          "amount":
+                              {"value":"'.$data->final_amount.'",
+                              "currency":"'.$currency->code.'"
+                              },
+                          "linkedAccountHolderId":"'.$user->holder_id.'",
+                          "accountId":"'.$account_id.'",
+                          "sweepSourceAccountId":"'.$master_account_id.'",
+                          "paymentType":"'.$data->payment_type.'",
+                          "reference":"'.$data->description.'"
+                          }',
+                      'headers' => [
+                      'Accept' => 'application/json',
+                      'Authorization' => 'Bearer '.$auth_token,
+                      'Content-Type' => 'application/json',
+                      'x-account-holder-id' => $accounter_id,
+                      ],
+                  ]);
+                  $res_body = json_decode($response->getBody());
+                  $transaction_id = $res_body->transactionId  ;
+              } catch (\Throwable $th) {
+              return response()->json(array('errors' => [ 0 => $th->getMessage() ]));
+              }
+          }
             else if($bankgateway->keyword == 'railsbank') {
 
                 try {
