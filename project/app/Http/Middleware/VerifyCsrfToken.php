@@ -25,6 +25,7 @@ class VerifyCsrfToken extends Middleware
         '/user/subscription/flutter/notify*',
         '/user/globalpass/callback',
         'webhook-openpayd',
+        'webhook-openpayd-uk',
         'webhook-railsbank',
         'webhook-swan',
         '/cj-payin',
