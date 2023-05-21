@@ -31,6 +31,9 @@ class VerifyCsrfToken extends Middleware
         '/cj-payin',
         '/cj-payout',
         '/iban-create-completed',
+        '/iban-inbound-settled',
+        '/iban-outbound-settled',
+        '/iban-outbound-rejected',
         '/whatsapp/inbound',
         '/whatsapp/status',
         '/telegram/inbound'
