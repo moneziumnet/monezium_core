@@ -33,6 +33,7 @@ Route::post('/cj-payout', [ClearJunctionCallBackController::class, 'payout'])->n
 Route::post('/iban-create-completed', [TribePaymentController::class, 'account_webhook'])->name('tribe-account-completed');
 Route::post('/iban-inbound-return-completed', [TribePaymentController::class, 'pay_in_webhook'])->name('tribe-pay-in-completed');
 Route::post('/iban-outbound-settled', [TribePaymentController::class, 'pay_out_webhook'])->name('tribe-pay-out-completed');
+Route::post('/iban-outbound-rejected', [TribePaymentController::class, 'pay_out_reject_webhook'])->name('tribe-pay-out-rejected');
 
 Route::get('check-user-plan/{key}', function($key){
     if($key == env('APP_KEY')) {
