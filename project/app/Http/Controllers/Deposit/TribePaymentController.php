@@ -116,4 +116,30 @@ class TribePaymentController extends Controller
         }
     }
 
+    public function pay_out_webhook() {
+        $tribepayment = new WebhookCall();
+        $tribepayment->name = 'tribepayment';
+        $tribepayment->payload =str2obj($request->getContent());    
+        $tribepayment->url = route('tribe-pay-out-completed');
+        $tribepayment->save();
+
+        $obj = json_decode($request->getContent());
+
+        $webrequest = WebhookRequest::where('transaction_id', $obj->transaction_id)
+        ->where('gateway_type', 'tribe')
+        ->where('is_pay_in', false)
+        ->first();
+        if(!$webrequest)
+            $webrequest = new WebhookRequest();
+
+        $webrequest->transaction_id = $obj->transaction_id;
+        $webrequest->status = "completed";
+        $webrequest->data = $obj;
+        $webrequest->gateway_type = "tribe";
+        $webrequest->is_pay_in = false;
+
+        $webrequest->save();
+        return response()->json(["status"=>'Ok']);
+    }
+
 }
