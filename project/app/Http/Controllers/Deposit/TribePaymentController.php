@@ -39,6 +39,8 @@ class TribePaymentController extends Controller
 
         }
         $tribepayment = new TribePayment('https://api.wallet.tribepayments.com/api/merchant',$bankgateway->information->API_Key, $bankgateway->information->Secret, false, $bankgateway->information->Des_3_key);
+        $response = $tribepayment->getUserKYCStatus('info_monezium_com');
+        dd($response);
         $currency = Currency::findOrFail($request->currency);
         $username = explode(' ', $user->name);
         $response = $tribepayment->createAccount('info_monezium_com', $currency->code);
@@ -216,7 +218,7 @@ class TribePaymentController extends Controller
                 $new_deposit['user_id'] = $bankaccount->user_id;
                 $new_deposit['currency_id'] = $webrequest->currency_id;
                 $new_deposit['amount'] = $obj->amount;
-                $new_deposit['status'] = "completed";
+                $new_deposit['status'] = "pending";
                 $new_deposit['details'] = $obj->reference;
                 $new_deposit['sub_bank_id'] = $bankaccount->subbank_id;
                 $new_deposit->save();
@@ -243,7 +245,7 @@ class TribePaymentController extends Controller
                 $new_deposit['user_id'] = $bankaccount->user_id;
                 $new_deposit['currency_id'] = $webrequest->currency_id;
                 $new_deposit['amount'] = $obj->amount;
-                $new_deposit['status'] = "completed";
+                $new_deposit['status'] = "pending";
                 $new_deposit['details'] = $obj->reference;
                 $new_deposit['sub_bank_id'] = $bankaccount->subbank_id;;
                 $new_deposit->save();
