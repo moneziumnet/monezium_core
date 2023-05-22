@@ -57,24 +57,7 @@ class CryptoCurrencyController extends Controller
         }
         $data = new Currency();
         $input = $request->all();
-        if ($request->code == 'BTC') {
-            $address = RPC_BTC_Create('createwallet',[$request->keyword]);
-        }
-        else if($request->code == 'ETH') {
-            $address = RPC_ETH('personal_newAccount',[$request->keyword]);
-        }
-        else {
-            $eth_currency = Currency::where('code', 'ETH')->first();
-            if (!$eth_currency) {
-                return response()->json(array('errors' => [ 0 => __('You have to create Ether Crypto Currency firstly before create ERC20 token currency.')]));
-            }
-            $address = $eth_currency->address;
-            $input['type'] = $eth_currency->keyword;
-        }
-        if ($address == 'error') {
-            return response()->json(array('errors' => [0 => __('You can not create this currency because there is some issue in crypto node.')]));
-        }
-        $input['address'] = $address;
+        
         $input['type'] = 2;
         $data->fill($input)->save();
 

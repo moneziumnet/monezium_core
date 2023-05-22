@@ -2,7 +2,10 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
@@ -40,7 +43,8 @@
         "symfony/mailgun-mailer": "^6.2",
         "twilio/sdk": "^6.42",
         "yajra/laravel-datatables-oracle": "^10.1",
-        "zanysoft/laravel-zip": "^2.0"
+        "zanysoft/laravel-zip": "^2.0",
+        "fenguoz/tron-php": "2.0.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -59,7 +63,9 @@
             "Database\\Seeders\\": "database/seeders/",
             "Markury\\": "vendor/markury/src/Adapter"
         },
-        "files": ["app/Helpers/helper.php"]
+        "files": [
+            "app/Helpers/helper.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

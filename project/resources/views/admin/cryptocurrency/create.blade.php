@@ -35,8 +35,8 @@
           </div>
 
           <div class="form-group">
-            <label for="keyword">{{ __('Keyword') }}</label>
-            <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" name="keyword" placeholder="{{ __('Enter Crypto Keyword') }}" required="" value="">
+            <label for="address">{{ __('Address') }}</label>
+            <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" name="address" placeholder="{{ __('Enter Crypto Address') }}" value="">
           </div>
 
           <div class="form-group">
@@ -46,7 +46,7 @@
 
           <div class="form-group">
             <label for="inp-symbol">{{ __('Symbol') }}</label>
-            <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="inp-symbol" name="symbol" placeholder="{{ __('Enter Currency symbol') }}" required="" value="">
+            <input type="text" class="form-control" id="inp-symbol" name="symbol" placeholder="{{ __('Enter Currency symbol') }}" required="" value="">
           </div>
 
           <div class="form-group">
