@@ -111,6 +111,31 @@ class MerchantShopController extends Controller
                     $address = $addressData->address;
                     $keyword = $addressData->privateKey;
                 }
+                elseif($value->code == 'USDT' && $value->curr_name == 'Tether USD TRC20') {
+                    {
+                        $tron_currency = Currency::where('code', 'TRON')->first();
+                        $tron_wallet = MerchantWallet::where('merchant_id', $data->merchant_id)->where('shop_id', $data->id)->where('currency_id', $tron_currency->id)->first();
+                        if (!$tron_wallet) {
+                            
+                            $addressData = RPC_TRON_Create();
+                            if ($addressData == 'error') {
+                                continue;
+                            }
+                            $address = $addressData->address;
+                            $keyword = $addressData->privateKey;
+                            DB::table('merchant_wallets')->insert([
+                                'merchant_id' => $data->merchant_id,
+                                'currency_id' => $tron_currency->id,
+                                'shop_id' => $data->id,
+                                'wallet_no' => $address,
+                                'keyword' => $keyword,
+                            ]);
+                        } else {
+                            $address = $tron_wallet->wallet_no;
+                            $keyword = $tron_wallet->keyword;
+                        }
+                    }
+                }
                 else {
                     $eth_currency = Currency::where('code', 'ETH')->first();
                     $eth_wallet = MerchantWallet::where('merchant_id', $data->merchant_id)->where('shop_id', $data->id)->where('currency_id', $eth_currency->id)->first();
