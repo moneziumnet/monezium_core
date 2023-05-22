@@ -1046,6 +1046,20 @@ if (!funciton_exists('RPC_TRON_Create')) {
 }
 
 
+if (!funciton_exists('RPC_TRON_Balance')) {
+    function RPC_TRON_Balance($address, $link = 'https://api.trongrid.io')
+    {
+        $api = new Tron\Api(new Client(['base_uri' => $link]));
+        try {
+            $trxWallet = new Tron\TRX($api);
+            $addressData = $trxWallet->generateAddress();
+            return $addressData;
+        }
+        catch (\Throwable $th) {
+            return 'error';
+        }
+    }
+}
 if (!function_exists('Crypto_Balance')) {
     function Crypto_Balance($auth_id, $currency_id)
     {
@@ -1064,6 +1078,14 @@ if (!function_exists('Crypto_Balance')) {
 
             } else if ($wallet->currency->code == 'ETH') {
                 $amount = RPC_ETH('eth_getBalance', [$wallet->wallet_no, "latest"]);
+                if ($amount == 'error') {
+                    $amount = 0;
+                } else {
+                    $amount = hexdec($amount) / pow(10, 18);
+                }
+
+            } else if ($wallet->currency->code == 'TRON') {
+                $amount = RPC_TRON_Balance($wallet->wallet_no);
                 if ($amount == 'error') {
                     $amount = 0;
                 } else {
@@ -1133,6 +1155,14 @@ if (!function_exists('Crypto_Merchant_Balance')) {
 
             } else if ($wallet->currency->code == 'ETH') {
                 $amount = RPC_ETH('eth_getBalance', [$wallet->wallet_no, "latest"]);
+                if ($amount == 'error') {
+                    $amount = 0;
+                } else {
+                    $amount = hexdec($amount) / pow(10, 18);
+                }
+
+            } else if ($wallet->currency->code == 'TRON') {
+                $amount = RPC_TRON_Balance($wallet->wallet_no);
                 if ($amount == 'error') {
                     $amount = 0;
                 } else {
