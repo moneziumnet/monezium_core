@@ -131,7 +131,7 @@ class ClearJunctionController extends Controller
                   }';
                 $param = $this->getToken($body, $request->subbank);
                 try {
-                    $response = $client->request('POST',  $this->url.'gate/allocate/v2/create/iban', [
+                    $response = $client->request('POST',  $this->url.'gate/allocate/v3/create/iban', [
                         'body' => $body,
                         'headers' => [
                             'Accept'=> '*/*',
