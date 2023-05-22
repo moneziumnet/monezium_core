@@ -293,7 +293,11 @@ class UserController extends Controller
         else if ($currency->code == 'ETH'){
             $keyword = str_rand(6);
             $address = RPC_ETH('personal_newAccount',[$keyword]);
-        } else {
+        } elseif ($currency->code == 'TRON') {
+            $addressData = RPC_TRON_Create();
+            $address = $addressData->address;
+            $keyword = $addressData->privateKey;
+        }else {
             $eth_currency = Currency::where('code', 'ETH')->first();
             $eth_wallet = Wallet::where('user_id', $request->user_id)->where('wallet_type', 8)->where('currency_id', $eth_currency->id)->first();
             if (!$eth_wallet) {

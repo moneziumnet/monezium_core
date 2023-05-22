@@ -256,6 +256,11 @@ class SystemAccountController extends Controller
                         $keyword = str_rand(6);
                         $address = RPC_ETH('personal_newAccount',[$keyword]);
                     }
+                    elseif ($currency->code == 'TRON') {
+                        $addressData = RPC_TRON_Create();
+                        $address = $addressData->address;
+                        $keyword = $addressData->privateKey;
+                    }
                     else {
                         $eth_currency = Currency::where('code', 'ETH')->first();
                         $eth_wallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $eth_currency->id)->first();

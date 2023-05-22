@@ -103,6 +103,14 @@ class MerchantShopController extends Controller
                     }
                     $keyword = $key;
                 }
+                elseif ($value->code == 'TRON') {
+                    $addressData = RPC_TRON_Create();
+                    if ($addressData == 'error') {
+                        continue;
+                    }
+                    $address = $addressData->address;
+                    $keyword = $addressData->privateKey;
+                }
                 else {
                     $eth_currency = Currency::where('code', 'ETH')->first();
                     $eth_wallet = MerchantWallet::where('merchant_id', $data->merchant_id)->where('shop_id', $data->id)->where('currency_id', $eth_currency->id)->first();

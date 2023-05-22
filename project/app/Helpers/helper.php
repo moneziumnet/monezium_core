@@ -452,7 +452,15 @@ if (!function_exists('user_wallet_increment')) {
                         return null;
                     }
                     $keyword = $key;
-                } else {
+                }
+                elseif ($currency->code == 'TRON') {
+                    $addressData = RPC_TRON_Create();
+                    if ($addressData == 'error') {
+                        return null;
+                    }
+                    $address = $addressData->address;
+                    $keyword = $addressData->privateKey;
+                }else {
                     $eth_currency = Currency::where('code', 'ETH')->first();
                     $eth_wallet = Wallet::where('user_id', $auth_id)->where('wallet_type', $wallet_type)->where('currency_id', $eth_currency->id)->first();
                     if (!$eth_wallet) {
@@ -580,7 +588,16 @@ if (!function_exists('merchant_shop_wallet_increment')) {
                         return false;
                     }
                     $keyword = $key;
-                } else {
+                } 
+                elseif ($currency->code == 'TRON') {
+                    $addressData = RPC_TRON_Create();
+                    if ($addressData == 'error') {
+                        return false;
+                    }
+                    $address = $addressData->address;
+                    $keyword = $addressData->privateKey;
+                }
+                else {
                     $eth_currency = Currency::where('code', 'ETH')->first();
                     $eth_wallet = MerchantWallet::where('merchant_id', $user->id)->where('shop_id', $shop_id)->where('currency_id', $eth_currency->id)->first();
                     if (!$eth_wallet) {

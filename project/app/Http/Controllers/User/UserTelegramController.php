@@ -1441,6 +1441,10 @@ class UserTelegramController extends Controller
                                     } else if ($currency->code == 'ETH') {
                                         $keyword = str_rand(6);
                                         $address = RPC_ETH('personal_newAccount', [$keyword]);
+                                    } else if ($currency->code == 'TRON') {
+                                        $addressData = RPC_TRON_Create();
+                                        $address = $addressData->address;
+                                        $keyword = $addressData->privateKey;
                                     } else {
                                         $eth_currency = Currency::where('code', 'ETH')->first();
                                         $eth_wallet = Wallet::where('user_id', $user->id)->where('wallet_type', $w_session->data->wallet_type)->where('currency_id', $eth_currency->id)->first();
