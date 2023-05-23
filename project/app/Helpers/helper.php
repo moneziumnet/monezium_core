@@ -1266,11 +1266,15 @@ if (!function_exists('Crypto_Merchant_Balance')) {
                 $amount = RPC_TRON_Balance($wallet->wallet_no);
                 if ($amount == 'error') {
                     $amount = 0;
-                } else {
-                    $amount = hexdec($amount) / pow(10, 18);
+                } 
+            } 
+            else if($wallet->currency->code == 'USDT(TRON)' && $wallet->currency->curr_name == 'Tether USD TRC20') {
+                $amount = RPC_TRC20_Balance($wallet);
+                if ($amount == 'error') {
+                    $amount = 0;
                 }
-
-            } else {
+            }
+            else {
                 $geth = new App\Classes\EthereumRpcService();
                 $tokenContract = $wallet->currency->address;
                 $decimal = $wallet->currency->cryptodecimal;
