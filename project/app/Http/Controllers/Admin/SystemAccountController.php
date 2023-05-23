@@ -175,9 +175,7 @@ class SystemAccountController extends Controller
             }
         }
         else if ($fromWallet->currency->code == 'TRON') {
-            $from = new \Tron\Address($fromWallet->wallet_no, $fromWallet->keyword );
-            $to = new \Tron\Address($request->receiver_address);
-            $res = RPC_TRON_Transfer($from, $to, $request->amount);
+            $res = RPC_TRON_Transfer($fromWallet, $request->receiver_address, $request->amount);
             if(!isset($res->txID)) {
                 return redirect()->back()->with(array('error' => __('Error: ') . $res));
             }

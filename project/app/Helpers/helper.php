@@ -1089,9 +1089,9 @@ if (!function_exists('RPC_BTC_Check')) {
 if (!function_exists('RPC_TRON_Create')) {
     function RPC_TRON_Create($link = 'https://api.trongrid.io')
     {
-        $api = new Tron\Api(new Client(['base_uri' => $link]));
+        $api = new \Tron\Api(new Client(['base_uri' => $link]));
         try {
-            $trxWallet = new Tron\TRX($api);
+            $trxWallet = new \Tron\TRX($api);
             $addressData = $trxWallet->generateAddress();
             return $addressData;
         }
@@ -1105,9 +1105,9 @@ if (!function_exists('RPC_TRON_Create')) {
 if (!function_exists('RPC_TRON_Balance')) {
     function RPC_TRON_Balance($wallet_no, $link = 'https://api.trongrid.io')
     {
-        $api = new Tron\Api(new Client(['base_uri' => $link]));
+        $api = new \Tron\Api(new Client(['base_uri' => $link]));
         try {
-            $trxWallet = new Tron\TRX($api);
+            $trxWallet = new \Tron\TRX($api);
             $address = new \Tron\Address($wallet_no);
 
             $balance = $trxWallet->balance($address);
@@ -1122,7 +1122,7 @@ if (!function_exists('RPC_TRON_Balance')) {
 if (!function_exists('RPC_TRC20_Balance')) {
     function RPC_TRC20_Balance($wallet, $link = 'https://api.trongrid.io')
     {
-        $api = new Tron\Api(new Client(['base_uri' => $link]));
+        $api = new \Tron\Api(new Client(['base_uri' => $link]));
         $config = [
             'contract_address' => $wallet->currency->address,// USDT TRC20
             'decimals' => $wallet->currency->cryptodecimal,
@@ -1130,9 +1130,28 @@ if (!function_exists('RPC_TRC20_Balance')) {
         try {
             $trc20Wallet = new \Tron\TRC20($api, $config);
             $hexaddress = $trc20Wallet->tron->address2HexString($wallet->wallet_no);
-            $address = new \Tron\Address($wallet->wallet_no, '',$hexaddress);
+            $address = new \Tron\Address($wallet->wallet_no, '', $hexaddress);
             $balance = $trc20Wallet->balance($address);
             return floatval($balance);
+        }
+        catch (\Throwable $th) {
+            return 'error';
+        }
+    }
+}
+
+if (!function_exists('RPC_TRON_Transfer')) {
+    function RPC_TRON_Transfer($fromWallet, $toaddress, $amount, $link = 'https://api.trongrid.io')
+    {
+        $from = new \Tron\Address($fromWallet->wallet_no, $fromWallet->keyword );
+        $to = new \Tron\Address($toaddress);
+
+        $api = new \Tron\Api(new Client(['base_uri' => $link]));
+        try {
+            $trxWallet = new \Tron\TRX($api);
+
+            $transaction = $trxWallet->transfer($from, $to, $amount);
+            return $transaction;
         }
         catch (\Throwable $th) {
             return $th->getMessage();
@@ -1140,14 +1159,23 @@ if (!function_exists('RPC_TRC20_Balance')) {
     }
 }
 
-if (!function_exists('RPC_TRON_Transfer')) {
-    function RPC_TRON_Transfer($from, $to, $amount, $link = 'https://api.trongrid.io')
-    {
-        $api = new Tron\Api(new Client(['base_uri' => $link]));
-        try {
-            $trxWallet = new Tron\TRX($api);
 
-            $transaction = $trxWallet->transfer($from, $to, $amount);
+if (!function_exists('RPC_TRON_Transfer')) {
+    function RPC_TRC20_Transfer($fromWallet, $toaddress, $amount, $link = 'https://api.trongrid.io')
+    {
+        $api = new \Tron\Api(new Client(['base_uri' => $link]));
+        $config = [
+            'contract_address' => $wallet->currency->address,// USDT TRC20
+            'decimals' => $wallet->currency->cryptodecimal,
+        ];
+        $from = new \Tron\Address($fromWallet->wallet_no, $fromWallet->keyword );
+        try {
+            $trc20Wallet = new \Tron\TRC20($api, $config);
+            $hexaddress = $trc20Wallet->tron->address2HexString($toaddress);
+
+            $to = new \Tron\Address($toaddress, '', $hexaddress);
+
+            $transaction = $trc20Wallet->transfer($from, $to, $amount);
             return $transaction;
         }
         catch (\Throwable $th) {

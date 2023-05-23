@@ -129,9 +129,7 @@ class WithdrawCryptoController extends Controller
                 }
             }
             elseif($currency->code == 'TRON') {
-                $from = new \Tron\Address($fromWallet->wallet_no, $fromWallet->keyword );
-                $to = new \Tron\Address($towallet->wallet_no);
-                $res = RPC_TRON_Transfer($from, $to, $transaction_global_cost*$crypto_rate);
+                $res = RPC_TRON_Transfer($fromWallet, $towallet->wallet_no, $transaction_global_cost*$crypto_rate);
                 if(!isset($res->txID)) {
                     return response()->json(['status' => '401', 'error_code' => '0', 'message' => __('Error: ') . $res]);
                 }
@@ -165,9 +163,7 @@ class WithdrawCryptoController extends Controller
                     }
                 }
                 elseif($currency->code == 'TRON') {
-                    $from = new \Tron\Address($fromWallet->wallet_no, $fromWallet->keyword );
-                    $to = new \Tron\Address($torefWallet->wallet_no);
-                    $res = RPC_TRON_Transfer($from, $to, $transaction_custom_cost*$crypto_rate);
+                    $res = RPC_TRON_Transfer($fromWallet, $torefWallet->wallet_no, $transaction_custom_cost*$crypto_rate);
                     if(!isset($res->txID)) {
                         return response()->json(['status' => '401', 'error_code' => '0', 'message' => __('Error: ') . $res]);
                     }
@@ -217,9 +213,7 @@ class WithdrawCryptoController extends Controller
                 $trnx = $fromWallet->wallet_no;
             }
             else if($fromWallet->currency->code == 'TRON') {
-                $from = new \Tron\Address($fromWallet->wallet_no, $fromWallet->keyword );
-                $to = new \Tron\Address($request->sender_address);
-                $res = RPC_TRON_Transfer($from, $to, $amountToAdd*$crypto_rate);
+                $res = RPC_TRON_Transfer($fromWallet, $request->sender_address, $amountToAdd*$crypto_rate);
                 if(!isset($res->txID)) {
                     return response()->json(['status' => '401', 'error_code' => '0', 'message' => __('Error: ') . $res]);
                 }

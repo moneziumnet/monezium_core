@@ -232,9 +232,7 @@ class MoneyRequestController extends Controller
                 }
             }
             else if($wallet->currency->code == 'TRON') {
-                $from = new \Tron\Address($wallet->wallet_no, $wallet->keyword );
-                $to = new \Tron\Address($towallet->wallet_no);
-                $res = RPC_TRON_Transfer($from, $to, $data->cost);
+                $res = RPC_TRON_Transfer($wallet, $towallet->wallet_no, $data->cost);
                 if(!isset($res->txID)) {
                     return redirect()->back()->with(array('error' => __('Error: ') . $res));
                 }
@@ -276,9 +274,8 @@ class MoneyRequestController extends Controller
                     }
                 }
                 else if($wallet->currency->code == 'TRON') {
-                    $from = new \Tron\Address($wallet->wallet_no, $wallet->keyword );
-                    $to = new \Tron\Address($trans_wallet->wallet_no);
-                    $res = RPC_TRON_Transfer($from, $to, $data->supervisor_cost);
+
+                    $res = RPC_TRON_Transfer($wallet, $trans_wallet->wallet_no, $data->supervisor_cost);
                     if(!isset($res->txID)) {
                         return redirect()->back()->with(array('error' => __('Error: ') . $res));
                     }
@@ -324,9 +321,7 @@ class MoneyRequestController extends Controller
                 }
             }
             else if($wallet->currency->code == 'TRON') {
-                $from = new \Tron\Address($wallet->wallet_no, $wallet->keyword );
-                $to = new \Tron\Address($towallet->wallet_no);
-                $res = RPC_TRON_Transfer($from, $to, $finalAmount);
+                $res = RPC_TRON_Transfer($wallet, $towallet->wallet_no, $finalAmount);
                 if(!isset($res->txID)) {
                     return redirect()->back()->with(array('error' => __('Error: ') . $res));
                 }

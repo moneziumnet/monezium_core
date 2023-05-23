@@ -127,9 +127,7 @@ class WithdrawCryptoController extends Controller
                 }
             }
             elseif ($currency->code == 'TRON') {
-                $from = new \Tron\Address($fromWallet->wallet_no, $fromWallet->keyword );
-                $to = new \Tron\Address($toWallet->wallet_no);
-                $res = RPC_TRON_Transfer($from, $to, $transaction_global_cost*$crypto_rate);
+                $res = RPC_TRON_Transfer($fromWallet, $toWallet->wallet_no, $transaction_global_cost*$crypto_rate);
                 if(!isset($res->txID)) {
                     return redirect()->back()->with(array('error' => __('Error: ') . $res));
                 }
@@ -164,9 +162,7 @@ class WithdrawCryptoController extends Controller
                 }
             }
             elseif ($currency->code == 'TRON') {
-                $from = new \Tron\Address($fromWallet->wallet_no, $fromWallet->keyword );
-                $to = new \Tron\Address($torefWallet->wallet_no);
-                $res = RPC_TRON_Transfer($from, $to, $transaction_custom_cost*$crypto_rate);
+                $res = RPC_TRON_Transfer($fromWallet, $torefWallet->wallet_no, $transaction_custom_cost*$crypto_rate);
                 if(!isset($res->txID)) {
                     return redirect()->back()->with(array('error' => __('Error: ') . $res));
                 }
@@ -215,9 +211,7 @@ class WithdrawCryptoController extends Controller
             $trnx = $fromWallet->wallet_no;
         }
         else if ($fromWallet->currency->code == 'TRON') {
-            $from = new \Tron\Address($fromWallet->wallet_no, $fromWallet->keyword );
-            $to = new \Tron\Address($request->sender_address);
-            $res = RPC_TRON_Transfer($from, $to, $request->amount);
+            $res = RPC_TRON_Transfer($fromWallet, $request->sender_address, $request->amount);
             if(!isset($res->txID)) {
                 return redirect()->back()->with(array('error' => __('Error: ') . $res));
             }

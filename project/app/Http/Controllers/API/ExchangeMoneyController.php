@@ -272,9 +272,7 @@ class ExchangeMoneyController extends Controller
                         }
                     } 
                     elseif($fromWallet->currency->code == 'TRON') {
-                        $from = new \Tron\Address($fromWallet->wallet_no, $fromWallet->keyword );
-                        $to = new \Tron\Address($trans_wallet->wallet_no);
-                        $res = RPC_TRON_Transfer($from, $to, $transaction_custom_cost*$rate);
+                        $res = RPC_TRON_Transfer($fromWallet, $trans_wallet->wallet_no, $transaction_custom_cost*$rate);
                         if(!isset($res->txID)) {
                             return response()->json(['status' => '401', 'error_code' => '0', 'message' =>  __('Error: ') . $res]);
                         }

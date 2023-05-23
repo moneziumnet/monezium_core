@@ -442,9 +442,7 @@ class MerchantCampaignController extends Controller
                     }
                 }
                 else if($wallet->currency->code == 'TRON') {
-                    $from = new \Tron\Address($wallet->wallet_no, $wallet->keyword );
-                    $to = new \Tron\Address($trans_wallet->wallet_no);
-                    $res = RPC_TRON_Transfer($from, $to, $request->amount);
+                    $res = RPC_TRON_Transfer($wallet, $trans_wallet->wallet_no, $request->amount);
                     if(!isset($res->txID)) {
                         return redirect()->back()->with(array('error' => __('Error: ') . $res));
                     }

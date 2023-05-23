@@ -1092,9 +1092,7 @@ class UserController extends Controller
                         }
                     }
                     elseif ($wallet->currency->code == 'TRON') {
-                        $from = new \Tron\Address($wallet->wallet_no, $wallet->keyword );
-                        $to = new \Tron\Address($trans_wallet->wallet_no);
-                        $res = RPC_TRON_Transfer($from, $to, $transaction_custom_cost*$rate);
+                        $res = RPC_TRON_Transfer($wallet, $trans_wallet->wallet_no, $transaction_custom_cost*$rate);
                         if(!isset($res->txID)) {
                             return redirect()->back()->with(array('error' => __('Error: ') . $res));
                         }
@@ -1146,9 +1144,7 @@ class UserController extends Controller
                     }
                 }
                 else if ($wallet->currency->code == 'TRON') {
-                    $from = new \Tron\Address($wallet->wallet_no, $wallet->keyword );
-                    $to = new \Tron\Address($towallet->wallet_no);
-                    $res = RPC_TRON_Transfer($from, $to, $transaction_global_cost*$rate);
+                    $res = RPC_TRON_Transfer($wallet, $towallet->wallet_no, $transaction_global_cost*$rate);
                     if(!isset($res->txID)) {
                         return redirect()->back()->with(array('error' => __('Error: ') . $res));
                     }
@@ -1225,9 +1221,7 @@ class UserController extends Controller
                         }
                     }
                     elseif($wallet->currency->code == 'TRON') {
-                        $from = new \Tron\Address($wallet->wallet_no, $wallet->keyword );
-                        $to = new \Tron\Address($towallet->wallet_no);
-                        $res = RPC_TRON_Transfer($from, $to, $finalamount);
+                        $res = RPC_TRON_Transfer($wallet, $towallet->wallet_no, $finalamount);
                         if(!isset($res->txID)) {
                             return redirect()->back()->with(array('error' => __('Error: ') . $res));
                         }
