@@ -51,7 +51,7 @@ class UserController extends Controller
 
     public function index()
     {
-        // wallet_monthly_fee(auth()->id());
+        wallet_monthly_fee(auth()->id());
         $gs = Generalsetting::first();
         $data['user'] = Auth::user();
         $wallets = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('wallet_type', 1)->with('currency')->get();
