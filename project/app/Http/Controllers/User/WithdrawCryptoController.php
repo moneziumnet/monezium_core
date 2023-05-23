@@ -113,23 +113,34 @@ class WithdrawCryptoController extends Controller
         user_wallet_increment(0, $currency->id, $transaction_global_cost*$crypto_rate, 9);
         $fromWallet = Wallet::where('user_id', $user->id)->where('wallet_type', 8)->where('currency_id', $currency->id)->with('currency')->first();
         $toWallet = get_wallet(0,$currency->id,9);
-        if($currency->code == 'ETH') {
-            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-            $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$toWallet->wallet_no.'", "value": "0x'.dechex( $transaction_global_cost*$crypto_rate*pow(10,18)).'"}';
-            RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
-        }
-        elseif($currency->code == 'BTC') {
-            $res = RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, amount($transaction_global_cost*$crypto_rate, 2)],$fromWallet->keyword);
-            if (isset($res->error->message)){
-                return redirect()->back()->with(array('error' => __('Error: ') . $res->error->message));
+        if($transaction_global_cost > 0) {
+
+            if($currency->code == 'ETH') {
+                RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
+                $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$toWallet->wallet_no.'", "value": "0x'.dechex( $transaction_global_cost*$crypto_rate*pow(10,18)).'"}';
+                RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
             }
-        }
-        else{
-            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-            $tokenContract = $fromWallet->currency->address;
-            $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $toWallet->wallet_no, $transaction_global_cost*$crypto_rate,  $fromWallet->keyword);
-            if (json_decode($result)->code == 1){
-                return redirect()->back()->with(array('error' => 'Ethereum client error: '.json_decode($result)->message));
+            elseif($currency->code == 'BTC') {
+                $res = RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, amount($transaction_global_cost*$crypto_rate, 2)],$fromWallet->keyword);
+                if (isset($res->error->message)){
+                    return redirect()->back()->with(array('error' => __('Error: ') . $res->error->message));
+                }
+            }
+            elseif ($currency->code == 'TRON') {
+                $from = new \Tron\Address($fromWallet->wallet_no, $fromWallet->keyword );
+                $to = new \Tron\Address($toWallet->wallet_no);
+                $res = RPC_TRON_Transfer($from, $to, $transaction_global_cost*$crypto_rate);
+                if(!isset($res->txID)) {
+                    return redirect()->back()->with(array('error' => __('Error: ') . $res));
+                }
+            }
+            else{
+                RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
+                $tokenContract = $fromWallet->currency->address;
+                $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $toWallet->wallet_no, $transaction_global_cost*$crypto_rate,  $fromWallet->keyword);
+                if (json_decode($result)->code == 1){
+                    return redirect()->back()->with(array('error' => 'Ethereum client error: '.json_decode($result)->message));
+                }
             }
         }
 
@@ -150,6 +161,14 @@ class WithdrawCryptoController extends Controller
                 $res = RPC_BTC_Send('sendtoaddress',[$torefWallet->wallet_no, amount($transaction_custom_cost*$crypto_rate, 2)],$fromWallet->keyword);
                 if (isset($res->error->message)){
                     return redirect()->back()->with(array('error' => __('Error: ') . $res->error->message));
+                }
+            }
+            elseif ($currency->code == 'TRON') {
+                $from = new \Tron\Address($fromWallet->wallet_no, $fromWallet->keyword );
+                $to = new \Tron\Address($torefWallet->wallet_no);
+                $res = RPC_TRON_Transfer($from, $to, $transaction_custom_cost*$crypto_rate);
+                if(!isset($res->txID)) {
+                    return redirect()->back()->with(array('error' => __('Error: ') . $res));
                 }
             }
             else {
@@ -194,6 +213,16 @@ class WithdrawCryptoController extends Controller
                 return redirect()->back()->with(array('error' => __('Error: ') . $res->error->message));
             }
             $trnx = $fromWallet->wallet_no;
+        }
+        else if ($fromWallet->currency->code == 'TRON') {
+            $from = new \Tron\Address($fromWallet->wallet_no, $fromWallet->keyword );
+            $to = new \Tron\Address($request->sender_address);
+            $res = RPC_TRON_Transfer($from, $to, $request->amount);
+            if(!isset($res->txID)) {
+                return redirect()->back()->with(array('error' => __('Error: ') . $res));
+            }
+            $trnx = $res->txID;
+
         }
         else {
             RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);

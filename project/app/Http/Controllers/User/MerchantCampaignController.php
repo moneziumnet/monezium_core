@@ -441,6 +441,14 @@ class MerchantCampaignController extends Controller
                         return redirect()->back()->with(array('error' => __('Error: ') . $res->error->message));
                     }
                 }
+                else if($wallet->currency->code == 'TRON') {
+                    $from = new \Tron\Address($wallet->wallet_no, $wallet->keyword );
+                    $to = new \Tron\Address($trans_wallet->wallet_no);
+                    $res = RPC_TRON_Transfer($from, $to, $request->amount);
+                    if(!isset($res->txID)) {
+                        return redirect()->back()->with(array('error' => __('Error: ') . $res));
+                    }
+                }
                 else {
                     RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
                     $tokenContract = $wallet->currency->address;

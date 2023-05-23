@@ -174,6 +174,15 @@ class SystemAccountController extends Controller
                 return redirect()->back()->with(array('error' => __('Error: ') . $res->error->message));
             }
         }
+        else if ($fromWallet->currency->code == 'TRON') {
+            $from = new \Tron\Address($fromWallet->wallet_no, $fromWallet->keyword );
+            $to = new \Tron\Address($request->receiver_address);
+            $res = RPC_TRON_Transfer($from, $to, $request->amount);
+            if(!isset($res->txID)) {
+                return redirect()->back()->with(array('error' => __('Error: ') . $res));
+            }
+
+        }
         else {
             RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
             $tokenContract = $fromWallet->currency->address;

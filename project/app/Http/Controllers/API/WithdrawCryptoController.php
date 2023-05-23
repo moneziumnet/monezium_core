@@ -128,6 +128,14 @@ class WithdrawCryptoController extends Controller
                     return response()->json(['status' => '401', 'error_code' => '0', 'message' => __('Error: ') . $res->error->message]);
                 }
             }
+            elseif($currency->code == 'TRON') {
+                $from = new \Tron\Address($fromWallet->wallet_no, $fromWallet->keyword );
+                $to = new \Tron\Address($towallet->wallet_no);
+                $res = RPC_TRON_Transfer($from, $to, $transaction_global_cost*$crypto_rate);
+                if(!isset($res->txID)) {
+                    return response()->json(['status' => '401', 'error_code' => '0', 'message' => __('Error: ') . $res]);
+                }
+            }
             else{
                 RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
                 $tokenContract = $fromWallet->currency->address;
@@ -154,6 +162,14 @@ class WithdrawCryptoController extends Controller
                     $res = RPC_BTC_Send('sendtoaddress',[$torefWallet->wallet_no, amount($transaction_custom_cost*$crypto_rate, 2)],$fromWallet->keyword);
                     if (isset($res->error->message)){
                         return response()->json(['status' => '401', 'error_code' => '0', 'message' => __('Error: ') . $res->error->message]);
+                    }
+                }
+                elseif($currency->code == 'TRON') {
+                    $from = new \Tron\Address($fromWallet->wallet_no, $fromWallet->keyword );
+                    $to = new \Tron\Address($torefWallet->wallet_no);
+                    $res = RPC_TRON_Transfer($from, $to, $transaction_custom_cost*$crypto_rate);
+                    if(!isset($res->txID)) {
+                        return response()->json(['status' => '401', 'error_code' => '0', 'message' => __('Error: ') . $res]);
                     }
                 }
                 else {
@@ -199,6 +215,14 @@ class WithdrawCryptoController extends Controller
                     return response()->json(['status' => '401', 'error_code' => '0', 'message' => __('Error: ') . $res->error->message]);
                 }
                 $trnx = $fromWallet->wallet_no;
+            }
+            else if($fromWallet->currency->code == 'TRON') {
+                $from = new \Tron\Address($fromWallet->wallet_no, $fromWallet->keyword );
+                $to = new \Tron\Address($request->sender_address);
+                $res = RPC_TRON_Transfer($from, $to, $amountToAdd*$crypto_rate);
+                if(!isset($res->txID)) {
+                    return response()->json(['status' => '401', 'error_code' => '0', 'message' => __('Error: ') . $res]);
+                }
             }
             else {
                 RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);

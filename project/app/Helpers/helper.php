@@ -1118,6 +1118,23 @@ if (!function_exists('RPC_TRON_Balance')) {
         }
     }
 }
+
+if (!function_exists('RPC_TRON_Transfer')) {
+    function RPC_TRON_Transfer($from, $to, $amount, $link = 'https://api.trongrid.io')
+    {
+        $api = new Tron\Api(new Client(['base_uri' => $link]));
+        try {
+            $trxWallet = new Tron\TRX($api);
+
+            $transaction = $trxWallet->transfer($from, $to, $amount);
+            return $transaction;
+        }
+        catch (\Throwable $th) {
+            return $th->getMessage();
+        }
+    }
+}
+
 if (!function_exists('Crypto_Balance')) {
     function Crypto_Balance($auth_id, $currency_id)
     {
@@ -1146,9 +1163,7 @@ if (!function_exists('Crypto_Balance')) {
                 $amount = RPC_TRON_Balance($wallet->wallet_no);
                 if ($amount == 'error') {
                     $amount = 0;
-                } else {
-                    $amount = hexdec($amount) / pow(10, 18);
-                }
+                } 
 
             } else {
                 $geth = new App\Classes\EthereumRpcService();

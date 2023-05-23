@@ -229,22 +229,28 @@ class MoneyRequestController extends Controller
                 $wallet = Wallet::where('user_id', $sender->id)->where('currency_id', $currency_id)->where('wallet_type', $wallet_type)->first();
             }
             if ($wallet->currency->type == 2) {
+                $towallet = get_wallet(0, $currency_id, 9);
                 if($wallet->currency->code == 'ETH') {
                     RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                    $towallet = get_wallet(0, $currency_id, 9);
                     $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex($data->cost*pow(10,18)).'"}';
                     RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
                 }
                 else if($wallet->currency->code == 'BTC') {
-                    $towallet = get_wallet(0, $currency_id, 9);
                     $res = RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, amount($data->cost, 2)],$wallet->keyword);
                     if (isset($res->error->message)){
                         return response()->json(['status' => '401', 'error_code' => '0', 'message' => __('Error: ') . $res->error->message]);
                     }
                 }
+                else if($wallet->currency->code == 'TRON') {
+                    $from = new \Tron\Address($wallet->wallet_no, $wallet->keyword );
+                    $to = new \Tron\Address($towallet->wallet_no);
+                    $res = RPC_TRON_Transfer($from, $to, $data->cost);
+                    if(!isset($res->txID)) {
+                        return response()->json(['status' => '401', 'error_code' => '0', 'message' => __('Error: ') . $res]);
+                    }
+                }
                 else {
                     RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                    $towallet = get_wallet(0, $currency_id, 9);
                     $tokenContract = $wallet->currency->address;
                     $result = erc20_token_transfer($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $data->cost, $wallet->keyword);
                     if (json_decode($result)->code == 1){
@@ -279,6 +285,14 @@ class MoneyRequestController extends Controller
                             return response()->json(['status' => '401', 'error_code' => '0', 'message' => __('Error: ') . $res->error->message]);
                         }
                     }
+                    else if($wallet->currency->code == 'TRON') {
+                        $from = new \Tron\Address($wallet->wallet_no, $wallet->keyword );
+                        $to = new \Tron\Address($trans_wallet->wallet_no);
+                        $res = RPC_TRON_Transfer($from, $to, $data->supervisor_cost);
+                        if(!isset($res->txID)) {
+                            return response()->json(['status' => '401', 'error_code' => '0', 'message' => __('Error: ') . $res]);
+                        }
+                    }
                     else {
                         RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
                         $tokenContract = $wallet->currency->address;
@@ -308,22 +322,28 @@ class MoneyRequestController extends Controller
             }
 
             if ($wallet->currency->type == 2) {
+                $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
                 if($wallet->currency->code == 'ETH') {
                     RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                    $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
                     $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex($finalAmount*pow(10,18)).'"}';
                     RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
                 }
                 else if($wallet->currency->code == 'BTC') {
-                    $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
                     $res = RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, amount($finalAmount, 2)],$wallet->keyword);
                     if (isset($res->error->message)){
                         return response()->json(['status' => '401', 'error_code' => '0', 'message' => __('Error: ') . $res->error->message]);
                     }
                 }
+                else if($wallet->currency->code == 'TRON') {
+                    $from = new \Tron\Address($wallet->wallet_no, $wallet->keyword );
+                    $to = new \Tron\Address($towallet->wallet_no);
+                    $res = RPC_TRON_Transfer($from, $to, $finalAmount);
+                    if(!isset($res->txID)) {
+                        return response()->json(['status' => '401', 'error_code' => '0', 'message' => __('Error: ') . $res]);
+                    }
+                }
                 else {
                     RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                    $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
                     $tokenContract = $wallet->currency->address;
                     $result = erc20_token_transfer($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $finalAmount, $wallet->keyword);
                     if (json_decode($result)->code == 1){

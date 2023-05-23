@@ -270,7 +270,16 @@ class ExchangeMoneyController extends Controller
                         if (isset($res->error->message)){
                             return response()->json(['status' => '401', 'error_code' => '0', 'message' =>  __('Error: ') . $res->error->message]);
                         }
-                    } else {
+                    } 
+                    elseif($fromWallet->currency->code == 'TRON') {
+                        $from = new \Tron\Address($fromWallet->wallet_no, $fromWallet->keyword );
+                        $to = new \Tron\Address($trans_wallet->wallet_no);
+                        $res = RPC_TRON_Transfer($from, $to, $transaction_custom_cost*$rate);
+                        if(!isset($res->txID)) {
+                            return response()->json(['status' => '401', 'error_code' => '0', 'message' =>  __('Error: ') . $res]);
+                        }
+                    }
+                    else {
                         RPC_ETH('personal_unlockAccount', [$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
                         $tokenContract = $fromWallet->currency->address;
                         $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $trans_wallet->wallet_no, $transaction_custom_cost * $from_rate, $fromWallet->keyword);
