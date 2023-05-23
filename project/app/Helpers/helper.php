@@ -1129,9 +1129,8 @@ if (!function_exists('RPC_TRC20_Balance')) {
         ];
         try {
             $trc20Wallet = new \Tron\TRC20($api, $config);
-            $tron = new \IEXBase\TronAPI\Tron();
-            $hexaddress = $tron->toHex($wallet->wallet_no);
-            $address = new \Tron\Address($wallet->wallet_no, '',strval($hexaddress));
+            $hexaddress = $trc20Wallet->tron->address2HexString($wallet->wallet_no);
+            $address = new \Tron\Address($wallet->wallet_no, '',$hexaddress);
             $balance = $trc20Wallet->balance($address);
             return floatval($balance);
         }
