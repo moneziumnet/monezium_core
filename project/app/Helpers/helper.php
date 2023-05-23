@@ -1120,18 +1120,23 @@ if (!function_exists('RPC_TRON_Balance')) {
 }
 
 if (!function_exists('RPC_TRC20_Balance')) {
-    function RPC_TRC20_Balance($wallet_no, $link = 'https://api.trongrid.io')
+    function RPC_TRC20_Balance($wallet, $link = 'https://api.trongrid.io')
     {
         $api = new Tron\Api(new Client(['base_uri' => $link]));
+        $config = [
+            'contract_address' => $wallet->currency->address,// USDT TRC20
+            'decimals' => $wallet->currency->cryptodecimal,
+        ];
         try {
-            $trxWallet = new Tron\TRX($api);
-            $address = new \Tron\Address($wallet_no);
-
-            $balance = $trxWallet->balance($address);
+            $trc20Wallet = new \Tron\TRC20($api, $config);
+            $tron = new \IEXBase\TronAPI\Tron();
+            $hexaddress = $tron->toHex($wallet->wallet_no);
+            $address = new \Tron\Address($wallet->wallet_no, '',strval($hexaddress));
+            $balance = $trc20Wallet->balance($address);
             return floatval($balance);
         }
         catch (\Throwable $th) {
-            return 'error';
+            return $th->getMessage();
         }
     }
 }
@@ -1182,6 +1187,12 @@ if (!function_exists('Crypto_Balance')) {
                     $amount = 0;
                 } 
 
+            }
+            else if($wallet->currency->code == 'USDT(TRON)' && $wallet->currency->curr_name == 'Tether USD TRC20') {
+                $amount = RPC_TRC20_Balance($wallet);
+                if ($amount == 'error') {
+                    $amount = 0;
+                }
             } else {
                 $geth = new App\Classes\EthereumRpcService();
                 $tokenContract = $wallet->currency->address;
