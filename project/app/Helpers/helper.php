@@ -1103,13 +1103,15 @@ if (!function_exists('RPC_TRON_Create')) {
 
 
 if (!function_exists('RPC_TRON_Balance')) {
-    function RPC_TRON_Balance($address, $link = 'https://api.trongrid.io')
+    function RPC_TRON_Balance($wallet_no, $link = 'https://api.trongrid.io')
     {
         $api = new Tron\Api(new Client(['base_uri' => $link]));
         try {
             $trxWallet = new Tron\TRX($api);
-            $addressData = $trxWallet->generateAddress();
-            return $addressData;
+            $address = new \Tron\Address($wallet_no);
+
+            $balance = $trxWallet->balance($address);
+            return floatval($balance);
         }
         catch (\Throwable $th) {
             return 'error';
