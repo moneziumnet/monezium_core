@@ -452,7 +452,46 @@ if (!function_exists('user_wallet_increment')) {
                         return null;
                     }
                     $keyword = $key;
-                } else {
+                }
+                elseif ($currency->code == 'TRON') {
+                    $addressData = RPC_TRON_Create();
+                    if ($addressData == 'error') {
+                        return null;
+                    }
+                    $address = $addressData->address;
+                    $keyword = $addressData->privateKey;
+                } 
+                elseif($currency->code == 'USDT' && $currency->curr_name == 'Tether USD TRC20') {
+                    {
+                        $tron_currency = Currency::where('code', 'TRON')->first();
+                        $tron_wallet = Wallet::where('user_id', $auth_id)->where('wallet_type', $wallet_type)->where('currency_id', $tron_currency->id)->first();
+                        if (!$tron_wallet) {
+                            
+                            $addressData = RPC_TRON_Create();
+                            if ($addressData == 'error') {
+                                return null;
+                            }
+                            $address = $addressData->address;
+                            $keyword = $addressData->privateKey;
+
+                            $user_wallet = new Wallet();
+                            $user_wallet->user_id = $auth_id;
+                            $user_wallet->user_type = 1;
+                            $user_wallet->currency_id = $tron_currency->id;
+                            $user_wallet->balance = 0;
+                            $user_wallet->wallet_type = $wallet_type;
+                            $user_wallet->wallet_no = $address;
+                            $user_wallet->keyword = $keyword;
+                            $user_wallet->created_at = date('Y-m-d H:i:s');
+                            $user_wallet->updated_at = date('Y-m-d H:i:s');
+                            $user_wallet->save();
+                        } else {
+                            $address = $tron_wallet->wallet_no;
+                            $keyword = $tron_wallet->keyword;
+                        }
+                    }
+                }
+                else {
                     $eth_currency = Currency::where('code', 'ETH')->first();
                     $eth_wallet = Wallet::where('user_id', $auth_id)->where('wallet_type', $wallet_type)->where('currency_id', $eth_currency->id)->first();
                     if (!$eth_wallet) {
@@ -580,7 +619,41 @@ if (!function_exists('merchant_shop_wallet_increment')) {
                         return false;
                     }
                     $keyword = $key;
-                } else {
+                } 
+                elseif ($currency->code == 'TRON') {
+                    $addressData = RPC_TRON_Create();
+                    if ($addressData == 'error') {
+                        return false;
+                    }
+                    $address = $addressData->address;
+                    $keyword = $addressData->privateKey;
+                }
+                elseif($currency->code == 'USDT' && $currency->curr_name == 'Tether USD TRC20') {
+                    {
+                        $tron_currency = Currency::where('code', 'TRON')->first();
+                        $tron_wallet = MerchantWallet::where('merchant_id', $user->id)->where('shop_id', $shop_id)->where('currency_id', $tron_currency->id)->first();
+                        if (!$tron_wallet) {
+                            
+                            $addressData = RPC_TRON_Create();
+                            if ($addressData == 'error') {
+                                return false;
+                            }
+                            $address = $addressData->address;
+                            $keyword = $addressData->privateKey;
+                            DB::table('merchant_wallets')->insert([
+                                'merchant_id' => $auth_id,
+                                'currency_id' => $tron_currency->id,
+                                'shop_id' => $shop_id,
+                                'wallet_no' => $address,
+                                'keyword' => $keyword,
+                            ]);
+                        } else {
+                            $address = $tron_wallet->wallet_no;
+                            $keyword = $tron_wallet->keyword;
+                        }
+                    }
+                }
+                else {
                     $eth_currency = Currency::where('code', 'ETH')->first();
                     $eth_wallet = MerchantWallet::where('merchant_id', $user->id)->where('shop_id', $shop_id)->where('currency_id', $eth_currency->id)->first();
                     if (!$eth_wallet) {
@@ -1012,6 +1085,39 @@ if (!function_exists('RPC_BTC_Check')) {
         return $check_flag;
     }
 }
+
+if (!function_exists('RPC_TRON_Create')) {
+    function RPC_TRON_Create($link = 'https://api.trongrid.io')
+    {
+        $api = new Tron\Api(new Client(['base_uri' => $link]));
+        try {
+            $trxWallet = new Tron\TRX($api);
+            $addressData = $trxWallet->generateAddress();
+            return $addressData;
+        }
+        catch (\Throwable $th) {
+            return 'error';
+        }
+    }
+}
+
+
+if (!function_exists('RPC_TRON_Balance')) {
+    function RPC_TRON_Balance($wallet_no, $link = 'https://api.trongrid.io')
+    {
+        $api = new Tron\Api(new Client(['base_uri' => $link]));
+        try {
+            $trxWallet = new Tron\TRX($api);
+            $address = new \Tron\Address($wallet_no);
+
+            $balance = $trxWallet->balance($address);
+            return floatval($balance);
+        }
+        catch (\Throwable $th) {
+            return 'error';
+        }
+    }
+}
 if (!function_exists('Crypto_Balance')) {
     function Crypto_Balance($auth_id, $currency_id)
     {
@@ -1030,6 +1136,14 @@ if (!function_exists('Crypto_Balance')) {
 
             } else if ($wallet->currency->code == 'ETH') {
                 $amount = RPC_ETH('eth_getBalance', [$wallet->wallet_no, "latest"]);
+                if ($amount == 'error') {
+                    $amount = 0;
+                } else {
+                    $amount = hexdec($amount) / pow(10, 18);
+                }
+
+            } else if ($wallet->currency->code == 'TRON') {
+                $amount = RPC_TRON_Balance($wallet->wallet_no);
                 if ($amount == 'error') {
                     $amount = 0;
                 } else {
@@ -1099,6 +1213,14 @@ if (!function_exists('Crypto_Merchant_Balance')) {
 
             } else if ($wallet->currency->code == 'ETH') {
                 $amount = RPC_ETH('eth_getBalance', [$wallet->wallet_no, "latest"]);
+                if ($amount == 'error') {
+                    $amount = 0;
+                } else {
+                    $amount = hexdec($amount) / pow(10, 18);
+                }
+
+            } else if ($wallet->currency->code == 'TRON') {
+                $amount = RPC_TRON_Balance($wallet->wallet_no);
                 if ($amount == 'error') {
                     $amount = 0;
                 } else {

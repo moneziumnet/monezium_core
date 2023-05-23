@@ -625,10 +625,12 @@ CREATE TABLE `bank_gateways`  (
 -- ----------------------------
 -- Records of bank_gateways
 -- ----------------------------
-INSERT INTO `bank_gateways` VALUES (1, 'RailsBank', '{\"API_Key\":\"\"}', 'railsbank', '[\"2\"]', 0, '2022-08-05 11:22:08', '2022-08-05 11:22:08');
-INSERT INTO `bank_gateways` VALUES (2, 'ClearJunction', '{\"API_Key\":\"\", \"api_password\":\"\", \"wallet_uuid\":\"\"}', 'clearjunction', '[\"2\"]', 0, '2022-08-05 11:22:08', '2022-08-05 11:22:08');
-INSERT INTO `bank_gateways` VALUES (3, 'OpenPayd', '{\"Auth\":\"\"}', 'openpayd', '[\"1\", \"2\", \"3\"]', 0, '2022-08-05 11:22:08', '2022-08-05 11:22:08');
-INSERT INTO `bank_gateways` VALUES (4, 'Swan', '{\"client_id\":\"\", \"client_secret\":\"\"}', 'swan', '[\"8\"]', 0, '2022-08-05 11:22:08', '2022-08-05 11:22:08');
+INSERT INTO `bank_gateways` VALUES (1, 'RailsBank', 'eyJpdiI6IkNxM0RDK25HUTJKdG8xS3kzWnVERFE9PSIsInZhbHVlIjoiM2hHd2Q5ekNvL3ZKL3c5amJ5NUNJUT09IiwibWFjIjoiOTkxZmQ3MzhmZTBjYWQ5NDBmYzM5NTM3NDgxNzZkYTE4MTcwMGQ0ZmZhMjhlZmU5ZGViYTNkMGZmNDllZTQzYSIsInRhZyI6IiJ9', 'railsbank', '[\"2\"]', 0, '2022-08-05 11:22:08', '2022-08-05 11:22:08');
+INSERT INTO `bank_gateways` VALUES (2, 'ClearJunction', '{\"eyJpdiI6IjNhczE0cGlMMXMxYXU2endsaGxQdWc9PSIsInZhbHVlIjoiR2lTcnZUazdURlFsRnF4aUM5WFF4c056SGdTTEN1cTdaZ2ZreDFwZHhHMWVaOFU5bVFNWWFJOC85cnAzakVNN3A0K0JvNWZBU3owVFVXV0VLY2hqcmc9PSIsIm1hYyI6ImRlN2M5NjE5MGZiNzFjYWE1MmI5YzYxYzgzOGVhMDk4YTVmZDU2Yjg0OWYyNmFlNGE3NGE2M2Y3NDM2NmNlMGMiLCJ0YWciOiIifQ==', 'clearjunction', '[\"2\"]', 0, '2022-08-05 11:22:08', '2022-08-05 11:22:08');
+INSERT INTO `bank_gateways` VALUES (3, 'OpenPayd', 'eyJpdiI6ImRuditFZTFmbG9pM1NYZGpIOEMyaVE9PSIsInZhbHVlIjoiOXplbDRtU3kzMEY1RTJnVlFqNVZTUT09IiwibWFjIjoiNjE2MTFjYzk3NTJkNTIyMjNkNjFmNmZiNTk2ZGUzY2VjZDE3MjRhMTc2M2U0NWFkMjAzZjQ3MTY5NGQ4NjkwNSIsInRhZyI6IiJ9', 'openpayd', '[\"1\", \"2\", \"3\"]', 0, '2022-08-05 11:22:08', '2022-08-05 11:22:08');
+INSERT INTO `bank_gateways` VALUES (4, 'Swan', 'eyJpdiI6IlFSNzkxeVJWbVIxcWNFOWRVUFVsbXc9PSIsInZhbHVlIjoiLzZ6bzFtM2ZpdE9JNi9ZZ0IrQnNDTFA1SlRUeUVCMTBrS2o2RWxFQ3ZNVWdlMVVVOGQvZnlKN29nSGhTUEZ3SyIsIm1hYyI6IjhmNDZkMGM2ZmQyZjJlYjc4MmRkZWNmZmZlZDA2YzNlODA5MTFlM2JlODUyMzgwMzU5NWQ4MWJlNTU2MjhhYzkiLCJ0YWciOiIifQ==', 'swan', '[\"8\"]', 0, '2022-08-05 11:22:08', '2022-08-05 11:22:08');
+INSERT INTO `bank_gateways` VALUES (5, 'OpenPayd UK', 'eyJpdiI6ImRuditFZTFmbG9pM1NYZGpIOEMyaVE9PSIsInZhbHVlIjoiOXplbDRtU3kzMEY1RTJnVlFqNVZTUT09IiwibWFjIjoiNjE2MTFjYzk3NTJkNTIyMjNkNjFmNmZiNTk2ZGUzY2VjZDE3MjRhMTc2M2U0NWFkMjAzZjQ3MTY5NGQ4NjkwNSIsInRhZyI6IiJ9', 'openpayd-uk', '[\"8\"]', 0, '2022-08-05 11:22:08', '2022-08-05 11:22:08');
+INSERT INTO `bank_gateways` VALUES (6, 'Tribe', 'eyJpdiI6IlpiVHYzYkZ3ZEh4L3lPRjNKV1E3R3c9PSIsInZhbHVlIjoiL1IrazJDaHlZODVKWWRqUkJ5cXpiRmhEZW0zTjFqZ2w0cm5ualZYWFI5R0R5c1UwRjRiRXFTM0JNcWNhdkRkWSIsIm1hYyI6IjI1M2UyODNlYzUyODMzMWIwNmU1NGJmMDhhZmRiNjc2YmJkOTk0ZTJmYmFiNDYwYzY0ZWZlMjI5MGQ5NWRjYzkiLCJ0YWciOiIifQ==', 'tribe', '[\"8\"]', 0, '2022-08-05 11:22:08', '2022-08-05 11:22:08');
 
 -- ----------------------------
 -- Table structure for blog_categories

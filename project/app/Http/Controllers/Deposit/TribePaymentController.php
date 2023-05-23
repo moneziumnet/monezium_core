@@ -39,6 +39,8 @@ class TribePaymentController extends Controller
 
         }
         $tribepayment = new TribePayment('https://api.wallet.tribepayments.com/api/merchant',$bankgateway->information->API_Key, $bankgateway->information->Secret, false, $bankgateway->information->Des_3_key);
+        $response = $tribepayment->getUserKYCStatus('info_monezium_com');
+        dd($response);
         $currency = Currency::findOrFail($request->currency);
         $username = explode(' ', $user->name);
         $response = $tribepayment->createAccount('info_monezium_com', $currency->code);
@@ -116,4 +118,153 @@ class TribePaymentController extends Controller
         }
     }
 
+    public function pay_out_webhook(Request $request) {
+        $tribepayment = new WebhookCall();
+        $tribepayment->name = 'tribepayment';
+        $tribepayment->payload =str2obj($request->getContent());    
+        $tribepayment->url = route('tribe-pay-out-completed');
+        $tribepayment->save();
+
+        $obj = json_decode($request->getContent());
+
+        $webrequest = WebhookRequest::where('transaction_id', $obj->transaction_id)
+        ->where('gateway_type', 'tribe')
+        ->where('is_pay_in', false)
+        ->first();
+        if(!$webrequest)
+            $webrequest = new WebhookRequest();
+
+        $webrequest->transaction_id = $obj->transaction_id;
+        $webrequest->status = "completed";
+        $webrequest->data = $obj;
+        $webrequest->gateway_type = "tribe";
+        $webrequest->is_pay_in = false;
+
+        $webrequest->save();
+        return response()->json(["status"=>'Ok']);
+    }
+    
+    public function pay_out_reject_webhook(Request $request) {
+        $tribepayment = new WebhookCall();
+        $tribepayment->name = 'tribepayment';
+        $tribepayment->payload =json_decode($request->getContent());    
+        $tribepayment->url = route('tribe-pay-out-rejected');
+        $tribepayment->save();
+
+        $obj = json_decode($request->getContent());
+
+        $webrequest = WebhookRequest::where('transaction_id', $obj->transaction_id)
+        ->where('gateway_type', 'tribe')
+        ->where('is_pay_in', false)
+        ->first();
+        if(!$webrequest)
+            $webrequest = new WebhookRequest();
+
+        $webrequest->transaction_id = $obj->transaction_id;
+        $webrequest->status = "rejected";
+        $webrequest->data = $obj;
+        $webrequest->gateway_type = "tribe";
+        $webrequest->is_pay_in = false;
+
+        $webrequest->save();
+        return response()->json(["status"=>'Ok']);
+    }
+
+    public function pay_in_webhook(Request $request) {
+        
+        $tribepayment = new WebhookCall();
+        $tribepayment->name = 'tribepayment';
+        $tribepayment->payload =json_decode($request->getContent());    
+        $tribepayment->url = route('tribe-pay-in-completed');
+        $tribepayment->save();
+
+        $obj = json_decode($request->getContent());
+
+
+        if(!$obj->reference)
+            return response()->json("failure");
+        $currency = Currency::where('code', $obj->currency)->first();
+        $webrequest = WebhookRequest::where('transaction_id', $obj->transaction_id)
+            ->where('gateway_type', 'tribe')
+            ->where('is_pay_in', true)
+            ->first();
+        if(!$webrequest)
+            $webrequest = new WebhookRequest();
+
+        $webrequest->transaction_id = $obj->transaction_id;
+        $webrequest->sender_name = $obj->sender_account_name;
+        $webrequest->sender_address = $obj->sender_address;
+        $webrequest->amount = $obj->amount;
+        $webrequest->data = $obj;
+        $webrequest->currency_id = $currency ? $currency->id : 0;
+        $webrequest->status = 'completed';
+        $webrequest->reference = $obj->reference;
+        $webrequest->gateway_type = "tribe";
+        $webrequest->is_pay_in = true;
+
+        $webrequest->save();
+
+
+        if ($obj->reference == null) {
+            $deposit = DepositBank::whereRaw("INSTR('".$obj->transaction_id."', deposit_number) > 0")->first();
+            if(!$deposit) {
+                $new_deposit = new DepositBank();
+                $bankaccount = BankAccount::where('iban', $obj->receiver_iban)->first();
+                if(!$bankaccount) {
+                    return response()->json(["status"=>'Ok']);
+                }
+
+                $new_deposit['deposit_number'] = $obj->transaction_id;
+                $new_deposit['user_id'] = $bankaccount->user_id;
+                $new_deposit['currency_id'] = $webrequest->currency_id;
+                $new_deposit['amount'] = $obj->amount;
+                $new_deposit['status'] = "pending";
+                $new_deposit['details'] = $obj->reference;
+                $new_deposit['sub_bank_id'] = $bankaccount->subbank_id;
+                $new_deposit->save();
+                $method =  SubInsBank::findOrFail($bankaccount->subbank_id);
+                $user = User::findOrFail($bankaccount->user_id);
+
+                send_notification($user->id, 'Bank has been deposited by '.$obj->sender_account_name."\n Amount is ".$currency->symbol.$obj->amount."\n Payment Gateway : Tribe"."\n Transaction ID : ".$obj->transaction_id, route('admin.deposits.bank.index'));
+                send_whatsapp($user->id, 'Bank has been deposited by '.$obj->sender_account_name."\n Amount is ".$currency->symbol.$obj->amount."\n Payment Gateway : Openpayd"."\n Transaction ID : ".$obj->transaction_id."\nPlease check more details to click this url\n".route('user.depositbank.index'));
+                send_telegram($user->id, 'Bank has been deposited by '.$obj->sender_account_name."\n Amount is ".$currency->symbol.$obj->amount."\n Payment Gateway : Openpayd"."\n Transaction ID : ".$obj->transaction_id."\nPlease check more details to click this url\n".route('user.depositbank.index'));
+                send_staff_telegram('Bank has been deposited by '.$obj->sender_account_name."\n Amount is ".$currency->symbol.$obj->amount."\n Payment Gateway : Openpayd"."\n Transaction ID : ".$obj->transaction_id."\nPlease check more details to click this url\n".route('admin.deposits.bank.index'), 'Deposit Bank');
+
+                mailSend('deposit_request',['amount'=>$new_deposit->amount, 'curr' => ($currency ? $currency->code : ' '), 'date_time'=>$new_deposit->created_at ,'type' => 'Bank', 'method'=> $method->name], $user);
+
+
+            }
+        }
+        else {
+            $deposit = DepositBank::whereRaw("INSTR('".$obj->reference."', deposit_number) > 0")->orWhereRaw("INSTR('".$obj->transaction_id."', deposit_number) > 0")->first();
+            if(!$deposit) {
+                $new_deposit = new DepositBank();
+                $bankaccount = BankAccount::where('iban', $obj->receiver_iban)->first();
+
+                $new_deposit['deposit_number'] = $obj->transaction_id;
+                $new_deposit['user_id'] = $bankaccount->user_id;
+                $new_deposit['currency_id'] = $webrequest->currency_id;
+                $new_deposit['amount'] = $obj->amount;
+                $new_deposit['status'] = "pending";
+                $new_deposit['details'] = $obj->reference;
+                $new_deposit['sub_bank_id'] = $bankaccount->subbank_id;;
+                $new_deposit->save();
+                $method =  SubInsBank::findOrFail($bankaccount->subbank_id);
+                $user = User::findOrFail($bankaccount->user_id);
+
+                mailSend('deposit_request',['amount'=>$new_deposit->amount, 'curr' => ($currency ? $currency->code : ' '), 'date_time'=>$new_deposit->created_at ,'type' => 'Bank', 'method'=> $method->name ], $user);
+                send_notification($user->id, 'Bank has been deposited by '.$obj->sender_account_name."\n Amount is ".$currency->symbol.$obj->amount->value."\n Payment Gateway : Openpayd"."\n Transaction ID : ".$obj->transaction_id, route('admin.deposits.bank.index'));
+                send_whatsapp($user->id, 'Bank has been deposited by '.$obj->sender_account_name."\n Amount is ".$currency->symbol.$obj->amount->value."\n Payment Gateway : Openpayd"."\n Transaction ID : ".$obj->transaction_id."\nPlease check more details to click this url\n".route('user.depositbank.index'));
+                send_telegram($user->id, 'Bank has been deposited by '.$obj->sender_account_name."\n Amount is ".$currency->symbol.$obj->amount->value."\n Payment Gateway : Openpayd"."\n Transaction ID : ".$obj->transaction_id."\nPlease check more details to click this url\n".route('user.depositbank.index'));
+                send_staff_telegram('Bank has been deposited by '.$obj->sender_account_name."\n Amount is ".$currency->symbol.$obj->amount->value."\n Payment Gateway : Openpayd"."\n Transaction ID : ".$obj->transaction_id."\nPlease check more details to click this url\n".route('admin.deposits.bank.index'), 'Deposit Bank');
+
+            }
+        }
+        return response()->json(["status"=>'Ok']);
+
+    }
+
+    public function pay_in_reject_webhook(Request $request) {
+        
+    }
 }

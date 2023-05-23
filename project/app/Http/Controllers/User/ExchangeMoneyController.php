@@ -92,6 +92,18 @@ class ExchangeMoneyController extends Controller
                 } else if ($currency->code == 'ETH') {
                     $keyword = str_rand(6);
                     $address = RPC_ETH('personal_newAccount', [$keyword]);
+                } elseif ($currency->code == 'TRON') {
+                    $addressData = RPC_TRON_Create();
+                    $address = $addressData->address;
+                    $keyword = $addressData->privateKey;
+                } elseif ($currency->code == 'USDT' && $currency->curr_name == 'Tether USD TRC20') {
+                    $tron_currency = Currency::where('code', 'TRON')->first();
+                    $tron_wallet = Wallet::where('user_id', $user->id)->where('wallet_type', $request->wallet_type)->where('currency_id', $tron_currency->id)->first();
+                    if (!$tron_wallet) {
+                        return back()->with('error', 'Now, You do not have TRON Crypto Wallet. You have to create TRON Crypto wallet firstly for this exchange action .');
+                    }
+                    $address = $tron_wallet->wallet_no;
+                    $keyword = $tron_wallet->keyword;
                 } else {
                     $eth_currency = Currency::where('code', 'ETH')->first();
                     $eth_wallet = Wallet::where('user_id', $user->id)->where('wallet_type', $request->wallet_type)->where('currency_id', $eth_currency->id)->first();

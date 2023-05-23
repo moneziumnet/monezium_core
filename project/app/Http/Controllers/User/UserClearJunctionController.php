@@ -140,7 +140,7 @@ class UserClearJunctionController extends Controller
             $param = $this->getToken($body, $request->subbank);
             // dd(json_encode($body));
             try {
-                $response = $client->request('POST',  $this->url.'gate/allocate/v2/create/iban', [
+                $response = $client->request('POST',  $this->url.'gate/allocate/v3/create/iban', [
                     'body' => $body,
                     'headers' => [
                        'Accept'=> '*/*',
