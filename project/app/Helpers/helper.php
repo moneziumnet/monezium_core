@@ -1086,7 +1086,7 @@ if (!function_exists('RPC_BTC_Check')) {
     }
 }
 
-if (!funciton_exists('RPC_TRON_Create')) {
+if (!function_exists('RPC_TRON_Create')) {
     function RPC_TRON_Create($link = 'https://api.trongrid.io')
     {
         $api = new Tron\Api(new Client(['base_uri' => $link]));
@@ -1102,7 +1102,7 @@ if (!funciton_exists('RPC_TRON_Create')) {
 }
 
 
-if (!funciton_exists('RPC_TRON_Balance')) {
+if (!function_exists('RPC_TRON_Balance')) {
     function RPC_TRON_Balance($address, $link = 'https://api.trongrid.io')
     {
         $api = new Tron\Api(new Client(['base_uri' => $link]));
