@@ -3,13 +3,9 @@
 use App\Http\Controllers;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
-use App\Http\Controllers\Admin\DpsController;
 use App\Http\Controllers\Admin\FaqController;
-use App\Http\Controllers\Admin\FdrController;
-use App\Http\Controllers\Admin\ICOController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\FontController;
-use App\Http\Controllers\Admin\LoanController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PlanController;
 use App\Http\Controllers\Admin\UserController;
@@ -20,8 +16,6 @@ use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\CounterController;
-use App\Http\Controllers\Admin\DpsPlanController;
-use App\Http\Controllers\Admin\FdrPlanController;
 use App\Http\Controllers\Admin\FeatureController;
 use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\Admin\SeoToolController;
@@ -34,7 +28,6 @@ use App\Http\Controllers\Admin\CryptoCurrencyController;
 use App\Http\Controllers\Admin\CryptoDepositController;
 use App\Http\Controllers\Admin\CryptoWithdrawController;
 use App\Http\Controllers\Admin\LanguageController;
-use App\Http\Controllers\Admin\LoanPlanController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DocumentsController;
 use App\Http\Controllers\Admin\KycManageController;
@@ -49,7 +42,6 @@ use App\Http\Controllers\Admin\BlogCategoryController;
 
 use App\Http\Controllers\Admin\ManageChargeController;
 
-use App\Http\Controllers\Admin\ManageEscrowController;
 use App\Http\Controllers\Admin\RequestMoneyController;
 use App\Http\Controllers\Admin\AdminLanguageController;
 
@@ -72,8 +64,6 @@ use App\Http\Controllers\Deposit\TribePaymentController;
 use App\Http\Controllers\User\UserClearJunctionController;
 use App\Http\Controllers\Admin\ContractManageController;
 use App\Http\Controllers\Admin\SystemAccountController;
-use App\Http\Controllers\Admin\MerchantShopController;
-use App\Http\Controllers\Admin\CampaignController;
 use App\Http\Controllers\Deposit\SwanController;
 use App\Http\Controllers\Admin\ActionNotificationController;
 use App\Http\Controllers\Admin\AdminBeneficiaryController;
@@ -328,10 +318,6 @@ Route::prefix('admin')->group(function () {
       Route::post('/plan/store', [PlanController::class, 'store'])->name('admin.plan.store');
       Route::post('/plan/update/{id}', [PlanController::class, 'update'])->name('admin.plan.update');
 
-      Route::get('/merchant/shop/{id}', [MerchantShopController::class, 'index'])->name('admin.merchant.shop.index');
-      Route::get('/merchant/shop/datatables/{id}', [MerchantShopController::class, 'datatables'])->name('admin.merchant.shop.datatables');
-      Route::get('/merchant/shop/status/{id1}/{id2}', [MerchantShopController::class, 'status'])->name('admin.merchant.shop.status');
-
       Route::post('/username-by-email', [UserController::class,'username_by_email'])->name('admin.username.email');
       Route::post('/username-by-phone', [UserController::class,'username_by_phone'])->name('admin.username.phone');
 
@@ -369,69 +355,7 @@ Route::prefix('admin')->group(function () {
       Route::get('/user/kycform/more/{id}', [UserController::class, 'KycForm'])->name('admin.kyc.more.form.create');
       Route::post('/user/kycform/more/store', [UserController::class, 'StoreKycForm'])->name('admin.kyc.more.form.store');
 
-    Route::group(['middleware' => 'permissions:Loan Management'], function () {
-      Route::get('/loan-plans/datatables', [LoanPlanController::class, 'datatables'])->name('admin.loan.plan.datatables');
-      Route::get('/loan-plans', [LoanPlanController::class, 'index'])->name('admin.loan.plan.index');
-      Route::get('/loan-plans/create', [LoanPlanController::class, 'create'])->name('admin.loan.plan.create');
-      Route::post('/loan-plans/store', [LoanPlanController::class, 'store'])->name('admin.loan.plan.store');
-      Route::get('/loan-plans/edit/{id}', [LoanPlanController::class, 'edit'])->name('admin.loan.plan.edit');
-      Route::post('/loan-plans/update/{id}', [LoanPlanController::class, 'update'])->name('admin.loan.plan.update');
-      Route::get('/loan-plans/delete/{id}', [LoanPlanController::class, 'destroy'])->name('admin.loan.plan.delete');
-      Route::get('/loan-plans/{id1}/status/{status}', [LoanPlanController::class, 'status'])->name('admin.loan.plan.status');
 
-      Route::get('/loan-installment/cron', [LoanController::class, 'installmentCheck'])->name('admin.loan.installment.cron');
-      Route::get('/loan/datatables/{status}', [LoanController::class, 'datatables'])->name('admin.loan.datatables');
-      Route::get('/loan', [LoanController::class, 'index'])->name('admin.loan.index');
-      Route::get('/completed-loan', [LoanController::class, 'completed'])->name('admin.loan.completed');
-      Route::get('/running-loan', [LoanController::class, 'running'])->name('admin.loan.running');
-      Route::get('/pending-loan', [LoanController::class, 'pending'])->name('admin.loan.pending');
-      Route::get('/rejected-loan', [LoanController::class, 'rejected'])->name('admin.loan.rejected');
-      Route::get('/loan/status/{id1}/{id2}', [LoanController::class, 'status'])->name('admin.loan.status');
-      Route::get('/loan/show/{id}', [LoanController::class, 'show'])->name('admin.loan.show');
-      Route::get('/loan-log/show/{id}', [LoanController::class, 'logShow'])->name('admin.loan.log.show');
-    });
-
-    Route::group(['middleware' => 'permissions:DPS Management'], function () {
-      Route::get('/dps-plans/datatables', [DpsPlanController::class, 'datatables'])->name('admin.dps.plan.datatables');
-      Route::get('/dps-plans', [DpsPlanController::class, 'index'])->name('admin.dps.plan.index');
-      Route::get('/dps-plans/create', [DpsPlanController::class, 'create'])->name('admin.dps.plan.create');
-      Route::post('/dps-plans/store', [DpsPlanController::class, 'store'])->name('admin.dps.plan.store');
-      Route::get('/dps-plans/edit/{id}', [DpsPlanController::class, 'edit'])->name('admin.dps.plan.edit');
-      Route::post('/dps-plans/update/{id}', [DpsPlanController::class, 'update'])->name('admin.dps.plan.update');
-      Route::get('/dps-plans/delete/{id}', [DpsPlanController::class, 'destroy'])->name('admin.dps.plan.delete');
-      Route::get('/dps-plans/{id1}/status/{status}', [DpsPlanController::class, 'status'])->name('admin.dps.plan.status');
-
-      Route::get('/dps-installment/cron', [DpsController::class, 'installmentCheck'])->name('admin.dps.installment.cron');
-      Route::get('/dps/datatables/{status}', [DpsController::class, 'datatables'])->name('admin.dps.datatables');
-      Route::get('/dps', [DpsController::class, 'index'])->name('admin.dps.index');
-      Route::get('/running-dps', [DpsController::class, 'running'])->name('admin.dps.running');
-      Route::get('/matured-dps', [DpsController::class, 'matured'])->name('admin.dps.matured');
-      Route::get('/dps-log/show/{id}', [DpsController::class, 'logShow'])->name('admin.dps.log.show');
-    });
-
-    Route::group(['middleware' => 'permissions:FDR Management'], function () {
-      Route::get('/fdr-plans/datatables', [FdrPlanController::class, 'datatables'])->name('admin.fdr.plan.datatables');
-      Route::get('/fdr-plans', [FdrPlanController::class, 'index'])->name('admin.fdr.plan.index');
-      Route::get('/fdr-plans/create', [FdrPlanController::class, 'create'])->name('admin.fdr.plan.create');
-      Route::post('/fdr-plans/store', [FdrPlanController::class, 'store'])->name('admin.fdr.plan.store');
-      Route::get('/fdr-plans/edit/{id}', [FdrPlanController::class, 'edit'])->name('admin.fdr.plan.edit');
-      Route::post('/fdr-plans/update/{id}', [FdrPlanController::class, 'update'])->name('admin.fdr.plan.update');
-      Route::get('/fdr-plans/delete/{id}', [FdrPlanController::class, 'destroy'])->name('admin.fdr.plan.delete');
-      Route::get('/fdr-plans/{id1}/status/{status}', [FdrPlanController::class, 'status'])->name('admin.fdr.plan.status');
-
-      Route::get('/fdr-installment/cron', [FdrController::class, 'nextProfitCheck'])->name('admin.fdr.installment.cron');
-      Route::get('/fdr/datatables/{status}', [FdrController::class, 'datatables'])->name('admin.fdr.datatables');
-      Route::get('/fdr', [FdrController::class, 'index'])->name('admin.fdr.index');
-      Route::get('/running-fdr', [FdrController::class, 'running'])->name('admin.fdr.running');
-      Route::get('/closed-fdr', [FdrController::class, 'closed'])->name('admin.fdr.closed');
-    });
-
-    Route::group(['middleware' => 'permissions:ICO Management'], function () {
-      Route::get('/ico', [ICOController::class, 'index'])->name('admin.ico.index');
-      Route::get('/ico/details/{id}', [ICOController::class, 'details'])->name('admin.ico.details');
-      Route::get('/ico/datatables', [ICOController::class, 'datatables'])->name('admin.ico.datatables');
-      Route::get('/ico/status/{id}/{status}', [ICOController::class, 'status'])->name('admin.ico.status');
-    });
 
     Route::group(['middleware' => 'permissions:Report'], function () {
       Route::get('/bank/report/transaction', [ReportTransactionController::class,'index'])->name('admin.report.transaction.index');
@@ -472,17 +396,7 @@ Route::prefix('admin')->group(function () {
       Route::post('/charge/all/udpate/{id}', [ManageChargeController::class, 'charge_all_update'])->name('admin.update.all.charge');
     });
 
-    //manage escrow
-    Route::group(['middleware' => 'permissions:Manage Escrow'], function () {
-      Route::get('manage/escrow', [ManageEscrowController::class, 'index'])->name('admin.escrow.manage');
-      Route::get('escrow/on-hold', [ManageEscrowController::class, 'onHold'])->name('admin.escrow.onHold');
-      Route::get('escrow-disputed', [ManageEscrowController::class, 'disputed'])->name('admin.escrow.disputed');
-      Route::get('escrow-details/{id}', [ManageEscrowController::class, 'details'])->name('admin.escrow.details');
-      Route::post('escrow-details/{id}', [ManageEscrowController::class, 'disputeStore']);
-      Route::get('file-download/{id}',   [ManageEscrowController::class, 'fileDownload'])->name('admin.escrow.file.download');
-      Route::post('return-payment',   [ManageEscrowController::class, 'returnPayment'])->name('admin.escrow.return.payment');
-      Route::get('escrow-close/{id}', [ManageEscrowController::class, 'close'])->name('admin.escrow.close');
-    });
+
 
     Route::group(['middleware' => 'permissions:Bank Transfer'], function () {
       Route::get('/own-banks/transfer/datatables', [OwnBankTransferController::class, 'datatables'])->name('admin.own.banks.transfer.datatables');
@@ -536,17 +450,6 @@ Route::prefix('admin')->group(function () {
       Route::get('/deposits/bank/datatables', [AppDepositBankController::class, 'datatables'])->name('admin.deposits.bank.datatables');
       Route::get('/deposits/bank', [AppDepositBankController::class, 'index'])->name('admin.deposits.bank.index');
       Route::get('/deposits/bank/status/{id1}/{id2}', [AppDepositBankController::class, 'status'])->name('admin.deposits.bank.status');
-    });
-
-    Route::group(['middleware' => 'permissions:Crowdfunding'], function () {
-      Route::get('/campaign/datatables', [CampaignController::class, 'datatables'])->name('admin.campaign.datatables');
-      Route::get('/campaign', [CampaignController::class, 'index'])->name('admin.campaign.index');
-      Route::get('/campaign/status/{id1}/{id2}', [CampaignController::class, 'status'])->name('admin.campaign.status');
-      Route::get('/campaign/delete/{id}', [CampaignController::class, 'destroy'])->name('admin.campaign.delete');
-      Route::get('/campaign/donation/datatables', [CampaignController::class, 'donation_datatables'])->name('admin.donation.datatables');
-      Route::get('/campaign/donation', [CampaignController::class, 'donation_index'])->name('admin.donation.index');
-      Route::get('/campaign/donation/status/{id1}/{id2}', [CampaignController::class, 'donation_status'])->name('admin.donation.status');
-      Route::get('/campaign/donation/delete/{id}', [CampaignController::class, 'donation_destroy'])->name('admin.donation.delete');
     });
 
     Route::group(['middleware' => 'permissions:Manage Blog'], function () {
