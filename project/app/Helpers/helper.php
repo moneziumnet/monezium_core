@@ -461,7 +461,7 @@ if (!function_exists('user_wallet_increment')) {
                     $address = $addressData->address;
                     $keyword = $addressData->privateKey;
                 } 
-                elseif($currency->code == 'USDT' && $currency->curr_name == 'Tether USD TRC20') {
+                elseif($currency->code == 'USDT(TRON)' && $currency->curr_name == 'Tether USD TRC20') {
                     {
                         $tron_currency = Currency::where('code', 'TRON')->first();
                         $tron_wallet = Wallet::where('user_id', $auth_id)->where('wallet_type', $wallet_type)->where('currency_id', $tron_currency->id)->first();
@@ -628,7 +628,7 @@ if (!function_exists('merchant_shop_wallet_increment')) {
                     $address = $addressData->address;
                     $keyword = $addressData->privateKey;
                 }
-                elseif($currency->code == 'USDT' && $currency->curr_name == 'Tether USD TRC20') {
+                elseif($currency->code == 'USDT(TRON)' && $currency->curr_name == 'Tether USD TRC20') {
                     {
                         $tron_currency = Currency::where('code', 'TRON')->first();
                         $tron_wallet = MerchantWallet::where('merchant_id', $user->id)->where('shop_id', $shop_id)->where('currency_id', $tron_currency->id)->first();
@@ -1104,6 +1104,23 @@ if (!function_exists('RPC_TRON_Create')) {
 
 if (!function_exists('RPC_TRON_Balance')) {
     function RPC_TRON_Balance($wallet_no, $link = 'https://api.trongrid.io')
+    {
+        $api = new Tron\Api(new Client(['base_uri' => $link]));
+        try {
+            $trxWallet = new Tron\TRX($api);
+            $address = new \Tron\Address($wallet_no);
+
+            $balance = $trxWallet->balance($address);
+            return floatval($balance);
+        }
+        catch (\Throwable $th) {
+            return 'error';
+        }
+    }
+}
+
+if (!function_exists('RPC_TRC20_Balance')) {
+    function RPC_TRC20_Balance($wallet_no, $link = 'https://api.trongrid.io')
     {
         $api = new Tron\Api(new Client(['base_uri' => $link]));
         try {
