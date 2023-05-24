@@ -40,6 +40,16 @@
           </div>
 
           <div class="form-group">
+            <label for="network">{{ __('Network') }}</label>
+            <select class="form-control" name="network" required>
+              <option value="" selected>--@lang('Select Crypto Network')--</option>
+              <option value="Ether">@lang('Ethereum')</option>
+              <option value="Btc">@lang('BitCoin')</option>
+              <option value="Tron">@lang('Tron')</option>
+            </select>
+          </div>
+
+          <div class="form-group">
             <label for="inp-code">{{ __('Code') }}</label>
             <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="inp-code" name="code" placeholder="{{ __('Enter Currency code') }}" required="" value="">
           </div>
