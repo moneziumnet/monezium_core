@@ -297,7 +297,7 @@ class UserController extends Controller
             $addressData = RPC_TRON_Create();
             $address = $addressData->address;
             $keyword = $addressData->privateKey;
-        } elseif ($currency->code == 'USDT(TRON)' && $currency->curr_name == 'Tether USD TRC20') {
+        } elseif ($currency->code == 'USDT(TRON)') {
             $tron_currency = Currency::where('code', 'TRON')->first();
             $tron_wallet = Wallet::where('user_id', $request->user_id)->where('wallet_type', 8)->where('currency_id', $tron_currency->id)->first();
             if (!$tron_wallet) {

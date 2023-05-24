@@ -1445,7 +1445,7 @@ class UserTelegramController extends Controller
                                         $addressData = RPC_TRON_Create();
                                         $address = $addressData->address;
                                         $keyword = $addressData->privateKey;
-                                    } else if ($currency->code == 'USDT(TRON)' && $currency->curr_name == 'Tether USD TRC20'){
+                                    } else if ($currency->code == 'USDT(TRON)'){
                                         $tron_currency = Currency::where('code', 'TRON')->first();
                                         $tron_wallet = Wallet::where('user_id', $user->id)->where('wallet_type', $w_session->data->wallet_type)->where('currency_id', $tron_currency->id)->first();
                                         if (!$tron_wallet) {

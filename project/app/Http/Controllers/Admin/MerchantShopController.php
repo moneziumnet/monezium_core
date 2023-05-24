@@ -111,7 +111,7 @@ class MerchantShopController extends Controller
                     $address = $addressData->address;
                     $keyword = $addressData->privateKey;
                 }
-                elseif($value->code == 'USDT(TRON)' && $value->curr_name == 'Tether USD TRC20') {
+                elseif($value->code == 'USDT(TRON)') {
                     {
                         $tron_currency = Currency::where('code', 'TRON')->first();
                         $tron_wallet = MerchantWallet::where('merchant_id', $data->merchant_id)->where('shop_id', $data->id)->where('currency_id', $tron_currency->id)->first();

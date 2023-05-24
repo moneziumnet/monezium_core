@@ -461,7 +461,7 @@ if (!function_exists('user_wallet_increment')) {
                     $address = $addressData->address;
                     $keyword = $addressData->privateKey;
                 } 
-                elseif($currency->code == 'USDT(TRON)' && $currency->curr_name == 'Tether USD TRC20') {
+                elseif($currency->code == 'USDT(TRON)') {
                     {
                         $tron_currency = Currency::where('code', 'TRON')->first();
                         $tron_wallet = Wallet::where('user_id', $auth_id)->where('wallet_type', $wallet_type)->where('currency_id', $tron_currency->id)->first();
@@ -628,7 +628,7 @@ if (!function_exists('merchant_shop_wallet_increment')) {
                     $address = $addressData->address;
                     $keyword = $addressData->privateKey;
                 }
-                elseif($currency->code == 'USDT(TRON)' && $currency->curr_name == 'Tether USD TRC20') {
+                elseif($currency->code == 'USDT(TRON)') {
                     {
                         $tron_currency = Currency::where('code', 'TRON')->first();
                         $tron_wallet = MerchantWallet::where('merchant_id', $user->id)->where('shop_id', $shop_id)->where('currency_id', $tron_currency->id)->first();
@@ -1160,13 +1160,13 @@ if (!function_exists('RPC_TRON_Transfer')) {
 }
 
 
-if (!function_exists('RPC_TRON_Transfer')) {
+if (!function_exists('RPC_TRC20_Transfer')) {
     function RPC_TRC20_Transfer($fromWallet, $toaddress, $amount, $link = 'https://api.trongrid.io')
     {
         $api = new \Tron\Api(new Client(['base_uri' => $link]));
         $config = [
-            'contract_address' => $wallet->currency->address,// USDT TRC20
-            'decimals' => $wallet->currency->cryptodecimal,
+            'contract_address' => $fromWallet->currency->address,// USDT TRC20
+            'decimals' => $fromWallet->currency->cryptodecimal,
         ];
         $from = new \Tron\Address($fromWallet->wallet_no, $fromWallet->keyword );
         try {
@@ -1215,7 +1215,7 @@ if (!function_exists('Crypto_Balance')) {
                 } 
 
             }
-            else if($wallet->currency->code == 'USDT(TRON)' && $wallet->currency->curr_name == 'Tether USD TRC20') {
+            else if($wallet->currency->code == 'USDT(TRON)') {
                 $amount = RPC_TRC20_Balance($wallet);
                 if ($amount == 'error') {
                     $amount = 0;
@@ -1295,7 +1295,7 @@ if (!function_exists('Crypto_Merchant_Balance')) {
                     $amount = 0;
                 } 
             } 
-            else if($wallet->currency->code == 'USDT(TRON)' && $wallet->currency->curr_name == 'Tether USD TRC20') {
+            else if($wallet->currency->code == 'USDT(TRON)') {
                 $amount = RPC_TRC20_Balance($wallet);
                 if ($amount == 'error') {
                     $amount = 0;

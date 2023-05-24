@@ -268,7 +268,7 @@ class SystemAccountController extends Controller
                         $address = $addressData->address;
                         $keyword = $addressData->privateKey;
                     }
-                    elseif ($currency->code == 'USDT(TRON)' && $currency->curr_name == 'Tether USD TRC20') {
+                    elseif ($currency->code == 'USDT(TRON)') {
                         $tron_currency = Currency::where('code', 'TRON')->first();
                         $tron_wallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $tron_currency->id)->first();
                         if (!$tron_wallet) {
