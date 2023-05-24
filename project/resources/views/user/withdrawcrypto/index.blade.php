@@ -114,7 +114,7 @@
         <div class="modal-status bg-primary"></div>
         <div class="modal-body text-center py-4">
         <i  class="fas fa-info-circle fa-3x text-primary mb-2"></i>
-        <h3>@lang('Bank Details')</h3>
+        <h3>@lang('Withdraw Details')</h3>
         <ul class="list-group mt-2">
             <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Sender Address')<span id="crypto_address" style="margin-left: 60px"></span></li>
             <li class="list-group-item d-flex justify-content-between" style="word-break:break-all;">@lang('Receiver Address')<span id="sender_address" style="margin-left: 60px"></span></li>
@@ -138,6 +138,9 @@
           var code = $(this).data('data').currency.code;
           if (code == 'BTC') {
             $('#trnx_url').attr('href','https://www.blockchain.com/explorer/transactions/btc/' + $(this).data('data').hash);
+          }
+          else if(code == 'TRON' || code == 'USDT(TRON)') {
+            $('#trnx_url').attr('href','https://tronscan.org/#/transaction/' + $(this).data('data').hash);
           }
           else {
             $('#trnx_url').attr('href','https://etherscan.io/tx/' + $(this).data('data').hash);

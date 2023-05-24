@@ -1168,12 +1168,14 @@ if (!function_exists('RPC_TRC20_Transfer')) {
             'contract_address' => $fromWallet->currency->address,// USDT TRC20
             'decimals' => $fromWallet->currency->cryptodecimal,
         ];
-        $from = new \Tron\Address($fromWallet->wallet_no, $fromWallet->keyword );
+
         try {
             $trc20Wallet = new \Tron\TRC20($api, $config);
-            $hexaddress = $trc20Wallet->tron->address2HexString($toaddress);
+            $fromhexaddress = $trc20Wallet->tron->address2HexString($fromWallet->wallet_no); 
+            $from = new \Tron\Address($fromWallet->wallet_no, $fromWallet->keyword, $fromhexaddress );
+            $tohexaddress = $trc20Wallet->tron->address2HexString($toaddress);
 
-            $to = new \Tron\Address($toaddress, '', $hexaddress);
+            $to = new \Tron\Address($toaddress, '', $tohexaddress);
 
             $transaction = $trc20Wallet->transfer($from, $to, $amount);
             return $transaction;
@@ -1316,6 +1318,54 @@ if (!function_exists('Crypto_Merchant_Balance')) {
         }
         return $amount;
     }
+}
+
+if (!function_exists('Crypto_Transfer')) {
+    function Crypto_Transfer($fromWallet, $toaddress, $amount) {
+        if($fromWallet->currency->code == 'ETH') {
+            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
+            $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$toaddress.'", "value": "0x'.dechex($amount*pow(10,18)).'"}';
+            $result = RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
+            if ($result == 'error') {
+                throw new \Exception($result."ethere");
+            }
+            return $result;
+        }
+        else if($fromWallet->currency->code == 'BTC') {
+            $res = RPC_BTC_Send('sendtoaddress',[$toaddress, amount($amount, 2)],$fromWallet->keyword);
+            if (isset($res->error->message)){
+                throw new \Exception($res->error->message."btc");
+            }
+            return $fromWallet->wallet_no;
+        }
+        else if ($fromWallet->currency->code == 'TRON') {
+            $res = RPC_TRON_Transfer($fromWallet, $toaddress, $amount);
+            if(!isset($res->txID)) {
+                throw new \Exception($res."tron");
+            }
+            return $res->txID;
+
+        }
+        else if ($fromWallet->currency->code == 'USDT(TRON)') {
+            $res = RPC_TRC20_Transfer($fromWallet, $toaddress, $amount);
+            if(!isset($res->txID)) {
+                throw new \Exception($res."torn.usd");
+            }
+            $trnx = $res->txID;
+            return $trnx;
+        }
+        else {
+            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
+            $tokenContract = $fromWallet->currency->address;
+            $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $toaddress, $amount,  $fromWallet->keyword);
+            if (json_decode($result)->code == 1){
+                throw new \Exception(json_decode($result)->message."usdt");
+            }
+            $trnx = json_decode($result)->message;
+            return $trnx;
+        }
+    }
+
 }
 
 if (!function_exists('Get_Wallet_Address')) {
