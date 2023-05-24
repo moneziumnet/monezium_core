@@ -430,30 +430,11 @@ class MerchantCampaignController extends Controller
                 }
                 $wallet = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('currency_id',$request->currency_id)->where('wallet_type', 8)->first();
                 $trans_wallet = get_wallet($data->user_id, $request->currency_id, 8);
-                if($wallet->currency->code == 'ETH') {
-                    RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                    $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$trans_wallet->wallet_no.'", "value": "0x'.dechex($request->amount*pow(10,18)).'"}';
-                    RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
-                }
-                else if($wallet->currency->code == 'BTC') {
-                    $res = RPC_BTC_Send('sendtoaddress',[$trans_wallet->wallet_no, amount($request->amount, 2)],$wallet->keyword);
-                    if (isset($res->error->message)){
-                        return redirect()->back()->with(array('error' => __('Error: ') . $res->error->message));
-                    }
-                }
-                else if($wallet->currency->code == 'TRON') {
-                    $res = RPC_TRON_Transfer($wallet, $trans_wallet->wallet_no, $request->amount);
-                    if(!isset($res->txID)) {
-                        return redirect()->back()->with(array('error' => __('Error: ') . $res));
-                    }
-                }
-                else {
-                    RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                    $tokenContract = $wallet->currency->address;
-                    $result = erc20_token_transfer($tokenContract, $wallet->wallet_no, $trans_wallet->wallet_no, $request->amount, $wallet->keyword);
-                    if (json_decode($result)->code == 1){
-                        return redirect()->back()->with(array('error' => 'Ethereum client error: '.json_decode($result)->message));
-                    }
+                
+                try {
+                    $trnx = Crypto_Transfer($wallet, $trans_wallet->wallet_no, $request->amount);
+                } catch (\Throwable $th) {
+                    return redirect()->back()->with(array('error' => __('You can not transfer money because Crypto have some issue: ') . $th->getMessage()));
                 }
                 $trnx              = new ModelsTransaction();
                 $trnx->trnx        = str_rand();

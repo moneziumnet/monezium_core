@@ -743,41 +743,16 @@ class UserTelegramController extends Controller
 
                         if ($wallet->currency->type == 2) {
                             $towallet = get_wallet(0, $wallet->currency_id, 9);
+                            try {
+                                $trnx = Crypto_Transfer($wallet, $towallet->wallet_no, $w_session->data->cost);
+                            } catch (\Throwable $th) {
+                                $to_message =__('You can not transfer money because Crypto have some issue: ') . $th->getMessage();
+                                $w_session->data = null;
+                                $w_session->save();
+                                send_message_telegram($to_message, $chat_id);
+                                return;
+                            }
 
-                            if($wallet->currency->code == 'ETH') {
-                                RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                                $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex($w_session->data->cost*$rate*pow(10,18)).'"}';
-                                $res = RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
-                                if($res == 'error') {
-                                    $to_message = "You can not send money because Ether has some issue.";
-                                    $w_session->data = null;
-                                    $w_session->save();
-                                    send_message_telegram($to_message, $chat_id);
-                                    return;
-                                }
-                            }
-                            else if($wallet->currency->code == 'BTC') {
-                                $res = RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, amount($w_session->data->cost*$rate, 2)],$wallet->keyword);
-                                if (isset($res->error->message)){
-                                    $to_message = "You can not send money because BTC has some issue. ". $res->error->message;
-                                    $w_session->data = null;
-                                    $w_session->save();
-                                    send_message_telegram($to_message, $chat_id);
-                                    return;
-                                }
-                            }
-                            else {
-                                RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                                $tokenContract = $wallet->currency->address;
-                                $result = erc20_token_transfer($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $w_session->data->cost*$rate, $wallet->keyword);
-                                if (json_decode($result)->code == 1){
-                                    $to_message = "You can not send money because Ether has some issue.".json_decode($result)->message;
-                                    $w_session->data = null;
-                                    $w_session->save();
-                                    send_message_telegram($to_message, $chat_id);
-                                    return;
-                                }
-                            }
                         }
                         else {
                             user_wallet_increment(0, $wallet->currency_id, $w_session->data->cost*$rate, 9);
@@ -787,40 +762,16 @@ class UserTelegramController extends Controller
                         if($receiver = User::where('email',$w_session->data->email)->first()){
                             if ($wallet->currency->type == 2) {
                                 $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
-                                if($wallet->currency->code == 'ETH') {
-                                    RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                                    $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex(($w_session->data->amount - $w_session->data->cost)*pow(10,18)).'"}';
-                                    $res = RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
-                                    if($res == 'error') {
-                                        $to_message = "You can not send money because Ether has some issue.";
-                                        $w_session->data = null;
-                                        $w_session->save();
-                                        send_message_telegram($to_message, $chat_id);
-                                        return;
-                                    }
+                                try {
+                                    $trnx = Crypto_Transfer($wallet, $towallet->wallet_no, $w_session->data->amount - $w_session->data->cost);
+                                } catch (\Throwable $th) {
+                                    $to_message =__('You can not transfer money because Crypto have some issue: ') . $th->getMessage();
+                                    $w_session->data = null;
+                                    $w_session->save();
+                                    send_message_telegram($to_message, $chat_id);
+                                    return;
                                 }
-                                else if($wallet->currency->code == 'BTC') {
-                                    $res = RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, amount(($w_session->data->amount - $w_session->data->cost), 2)],$wallet->keyword);
-                                    if (isset($res->error->message)){
-                                        $to_message = "You can not send btc because have some issue: ".$res->error->message;
-                                        $w_session->data = null;
-                                        $w_session->save();
-                                        send_message_telegram($to_message, $chat_id);
-                                        return;
-                                    }
-                                }
-                                else {
-                                    RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                                    $tokenContract = $wallet->currency->address;
-                                    $result = erc20_token_transfer($tokenContract, $wallet->wallet_no, $towallet->wallet_no, (float)($w_session->data->amount - $w_session->data->cost), $wallet->keyword);
-                                    if (json_decode($result)->code == 1){
-                                        $to_message =  'Ethereum client error: '.json_decode($result)->message;
-                                        $w_session->data = null;
-                                        $w_session->save();
-                                        send_message_telegram($to_message, $chat_id);
-                                        return;
-                                    }
-                                }
+                                
                             }
                             else{
                                 user_wallet_decrement($user->id, $wallet->currency_id, $w_session->data->amount, $wallet->wallet_type);
@@ -1170,77 +1121,24 @@ class UserTelegramController extends Controller
                         $currency = Currency::findOrFail($w_session->data->currency_id);
                         $fromWallet = Wallet::where('user_id', $user->id)->where('wallet_type', 8)->where('currency_id', $currency->id)->with('currency')->first();
                         $toWallet = get_wallet(0,$currency->id,9);
-                        if($currency->code == 'ETH') {
-                            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-                            $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$toWallet->wallet_no.'", "value": "0x'.dechex( $w_session->data->global_cost*pow(10,18)).'"}';
-                            $res = RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
-                            if($res == 'error') {
-                                $to_message = "You can not withdraw money because Ether has some issue.";
-                                $w_session->data = null;
-                                $w_session->save();
-                                send_message_telegram($to_message, $chat_id);
-                                return;
-                            }
-                        }
-                        elseif($currency->code == 'BTC') {
-                            $res = RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, amount($w_session->data->global_cost, 2)],$fromWallet->keyword);
-                            if (isset($res->error->message)){
-                                $to_message = "You can not withdraw money because BTC has some issue.". $res->error->message;
-                                $w_session->data = null;
-                                $w_session->save();
-                                send_message_telegram($to_message, $chat_id);
-                                return;
-                            }
-                        }
-                        else{
-                            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-                            $tokenContract = $fromWallet->currency->address;
-                            $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $toWallet->wallet_no, $w_session->data->global_cost,  $fromWallet->keyword);
-                            if (json_decode($result)->code == 1){
-                                $to_message = "You can not withdraw money because Ether has some issue.".json_decode($result)->message;
-                                $w_session->data = null;
-                                $w_session->save();
-                                send_message_telegram($to_message, $chat_id);
-                                return;
-                            }
+                        try {
+                            $trnx = Crypto_Transfer($fromWallet, $toWallet->wallet_no, $w_session->data->global_cost);
+                        } catch (\Throwable $th) {
+                            $to_message =__('You can not transfer money because Crypto have some issue: ') . $th->getMessage();
+                            $w_session->data = null;
+                            $w_session->save();
+                            send_message_telegram($to_message, $chat_id);
+                            return;
                         }
 
-                        if($currency->code == 'ETH') {
-                            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-                            $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$w_session->data->sender_address.'", "value": "0x'.dechex($w_session->data->amount*pow(10,18)).'"}';
-                            $res = RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
-                            if($res == 'error') {
-                                $to_message = "You can not withdraw money because Ether has some issue.";
-                                $w_session->data = null;
-                                $w_session->save();
-                                send_message_telegram($to_message, $chat_id);
-                                return;
-                            }
-                            $trnx = $res;
-                        }
-                        else if($fromWallet->currency->code == 'BTC') {
-                            $res = RPC_BTC_Send('sendtoaddress',[$w_session->data->sender_address, amount($w_session->data->amount, 2)],$fromWallet->keyword);
-                            if (isset($res->error->message)){
-                                $to_message = "You can not withdraw money because BTC has some issue.". $res->error->message;
-                                $w_session->data = null;
-                                $w_session->save();
-                                send_message_telegram($to_message, $chat_id);
-                                return;
-                            }
-                            $trnx = $fromWallet->wallet_no;
-                        }
-                        else {
-                            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-                            $tokenContract = $fromWallet->currency->address;
-                            $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $w_session->data->sender_address, $w_session->data->amount,  $fromWallet->keyword);
-                            if (json_decode($result)->code == 1){
-                                $to_message = "You can not withdraw money because Ether has some issue.".json_decode($result)->message;
-                                $w_session->data = null;
-                                $w_session->save();
-                                send_message_telegram($to_message, $chat_id);
-                                return;
-                            }
-                            $trnx = json_decode($result)->message;
+                        try {
+                            $trnx = Crypto_Transfer($fromWallet, $w_session->data->sender_address, $w_session->data->amount);
+                        } catch (\Throwable $th) {
+                            $to_message =__('You can not transfer money because Crypto have some issue: ') . $th->getMessage();
+                            $w_session->data = null;
+                            $w_session->save();
+                            send_message_telegram($to_message, $chat_id);
+                            return;
                         }
 
 
@@ -1613,42 +1511,16 @@ class UserTelegramController extends Controller
                                     user_wallet_increment($user->referral_id, $fromWallet->currency->id, $transaction_custom_cost * $from_rate, 8);
 
                                     $trans_wallet = get_wallet($user->referral_id, $fromWallet->currency->id, 8);
-                                    if ($fromWallet->currency->code == 'ETH') {
-                                        $torefWallet = Wallet::where('user_id', $user->referral_id)->where('wallet_type', 8)->where('currency_id', $fromWallet->currency_id)->first();
-
-                                        RPC_ETH('personal_unlockAccount', [$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-                                        $tx = '{"from": "' . $fromWallet->wallet_no . '", "to": "' . $torefWallet->wallet_no . '", "value": "0x' . dechex($transaction_custom_cost * $from_rate * pow(10, 18)) . '"}';
-                                        $res = RPC_ETH_Send('personal_sendTransaction', $tx, $fromWallet->keyword ?? '');
-                                        if($res == 'error') {
-                                            $to_message = "You can not exchange money because Ether has some issue.";
-                                            $w_session->data = null;
-                                            $w_session->save();
-                                            send_message_telegram($to_message, $chat_id);
-                                            return;
-                                        }
-
-                                    } elseif ($fromWallet->currency->code == 'BTC') {
-                                        $torefWallet = Wallet::where('user_id', $user->referral_id)->where('wallet_type', 8)->where('currency_id', $fromWallet->currency_id)->first();
-                                        $res = RPC_BTC_Send('sendtoaddress', [$torefWallet->wallet_no, amount($transaction_custom_cost * $from_rate, 2)], $fromWallet->keyword);
-                                        if (isset($res->error->message)){
-                                            $to_message = "You can not exchange money because BTC has some issue :".$res->error->message;
-                                            $w_session->data = null;
-                                            $w_session->save();
-                                            send_message_telegram($to_message, $chat_id);
-                                            return;
-                                        }
-                                    } else {
-                                        RPC_ETH('personal_unlockAccount', [$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-                                        $tokenContract = $fromWallet->currency->address;
-                                        $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $trans_wallet->wallet_no, $transaction_custom_cost * $from_rate, $fromWallet->keyword);
-                                        if (json_decode($result)->code == 1){
-                                            $to_message = "You can not exchange money because Ether has some issue :".json_decode($result)->message;
-                                            $w_session->data = null;
-                                            $w_session->save();
-                                            send_message_telegram($to_message, $chat_id);
-                                            return;
-                                        }
+                                    try {
+                                        $trnx = Crypto_Transfer($fromWallet, $trans_wallet->wallet_no, $transaction_custom_cost * $from_rate);
+                                    } catch (\Throwable $th) {
+                                        $to_message =__('You can not transfer money because Crypto have some issue: ') . $th->getMessage();
+                                        $w_session->data = null;
+                                        $w_session->save();
+                                        send_message_telegram($to_message, $chat_id);
+                                        return;
                                     }
+
                                 }
                                 $supervisor_trnx = str_rand();
 

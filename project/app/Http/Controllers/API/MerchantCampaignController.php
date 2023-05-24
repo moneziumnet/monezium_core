@@ -405,31 +405,13 @@ class MerchantCampaignController extends Controller
                     }
                     $wallet = Wallet::where('user_id',auth()->id())->where('user_type',1)->where('currency_id',$request->currency_id)->where('wallet_type', 8)->first();
                     $trans_wallet = get_wallet($data->user_id, $request->currency_id, 8);
-                    if($wallet->currency->code == 'ETH') {
-                        RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                        $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$trans_wallet->wallet_no.'", "value": "0x'.dechex($request->amount*pow(10,18)).'"}';
-                        RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
+                    
+                    try {
+                        $trnx = Crypto_Transfer($wallet, $trans_wallet->wallet_no, $request->amount);
+                    } catch (\Throwable $th) {
+                        return response()->json(['status' => '401', 'error_code' => '0', 'message' => __('You can not transfer money because Crypto have some issue: ') . $th->getMessage()]);
                     }
-                    else if($wallet->currency->code == 'BTC') {
-                        $res = RPC_BTC_Send('sendtoaddress',[$trans_wallet->wallet_no, amount($request->amount, 2)],$wallet->keyword);
-                        if (isset($res->error->message)){
-                            return response()->json(['status' => '401', 'error_code' => '0', 'message' => __('Error: ') . $res->error->message]);
-                        }
-                    }
-                    else if($wallet->currency->code == 'TRON') {
-                        $res = RPC_TRON_Transfer($wallet, $trans_wallet->wallet_no, $request->amount);
-                        if(!isset($res->txID)) {
-                            return response()->json(['status' => '401', 'error_code' => '0', 'message' => __('Error: ') . $res]);
-                        }
-                    }
-                    else {
-                        RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                        $tokenContract = $wallet->currency->address;
-                        $result = erc20_token_transfer($tokenContract, $wallet->wallet_no, $trans_wallet->wallet_no, $request->amount, $wallet->keyword);
-                        if (json_decode($result)->code == 1){
-                            return response()->json(['status' => '401', 'error_code' => '0', 'message' => 'Ethereum client error: '.json_decode($result)->message]);
-                        }
-                    }
+
                     $trnx              = new ModelsTransaction();
                     $trnx->trnx        = str_rand();
                     $trnx->user_id     = auth()->id();
