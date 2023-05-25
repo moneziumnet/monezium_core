@@ -125,10 +125,11 @@ class ManageEscrowController extends Controller
 
             $trans->data        = '{"sender":"'.(User::findOrFail($request->id)->company_name ?? User::findOrFail($request->id)->name ).'", "receiver":"'.$gs->disqus.'"}, "description":"'.$escrow->description.'"}';
             $trans->save();
-            $currency = Currency::findOrFail(defaultCurr());
+            $currency = Currency::findOrFail($escrow->currency_id);
+            $def_cur = Currency::findOrFail(defaultCurr());
 
-            mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>'Escrow', 'date_time'=> dateFormat($trans->created_at)], $user);
-            send_notification($user->id, 'New Escrow Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$currency->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $user->id));
+            mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code,'def_curr' => $def_cur->code, 'type'=>'Escrow', 'date_time'=> dateFormat($trans->created_at)], $user);
+            send_notification($user->id, 'New Escrow Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$def_cur->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $user->id));
 
         }
 

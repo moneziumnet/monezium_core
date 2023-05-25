@@ -555,9 +555,9 @@ if (!function_exists('user_wallet_increment')) {
                     $trans->details = trans('Card Issuance');
                     $trans->data = '{"sender":"' . ($user->company_name ?? $user->name) . '", "receiver":"' . $gs->disqus . '"}';
                     $trans->save();
-                    $currency = Currency::findOrFail(defaultCurr());
-                    mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>$wallet_type_list[$wallet_type], 'date_time'=> dateFormat($trans->created_at)], $user);
-                    send_notification($auth_id, 'New '.$wallet_type_list[$wallet_type].' Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$currency->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $auth_id));
+                    $def_cur = Currency::findOrFail(defaultCurr());
+                    mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'def_curr' => $def_cur->code,'type'=>$wallet_type_list[$wallet_type], 'date_time'=> dateFormat($trans->created_at)], $user);
+                    send_notification($auth_id, 'New '.$wallet_type_list[$wallet_type].' Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$def_cur->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $auth_id));
 
                 } else {
                     $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
@@ -578,10 +578,9 @@ if (!function_exists('user_wallet_increment')) {
                     $trans->details = trans('Wallet Create');
                     $trans->data = '{"sender":"' . ($user->company_name ?? $user->name) . '", "receiver":"' . $gs->disqus . '"}';
                     $trans->save();
-                    $currency = Currency::findOrFail(defaultCurr());
-
-                    mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>$wallet_type_list[$wallet_type], 'date_time'=> dateFormat($trans->created_at)], $user);
-                    send_notification($auth_id, 'New '.$wallet_type_list[$wallet_type].' Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$currency->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $auth_id));
+                    $def_cur = Currency::findOrFail(defaultCurr());
+                    mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'def_curr' => $def_cur->code, 'type'=>$wallet_type_list[$wallet_type], 'date_time'=> dateFormat($trans->created_at)], $user);
+                    send_notification($auth_id, 'New '.$wallet_type_list[$wallet_type].' Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$def_cur->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $auth_id));
                 }
                 user_wallet_decrement($auth_id, defaultCurr(), $chargefee->data->fixed_charge, 1);
                 user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);

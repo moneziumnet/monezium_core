@@ -39,8 +39,6 @@ class TribePaymentController extends Controller
 
         }
         $tribepayment = new TribePayment('https://api.wallet.tribepayments.com/api/merchant',$bankgateway->information->API_Key, $bankgateway->information->Secret, false, $bankgateway->information->Des_3_key);
-        $response = $tribepayment->getUserKYCStatus('info_monezium_com');
-        dd($response);
         $currency = Currency::findOrFail($request->currency);
         $username = explode(' ', $user->name);
         $response = $tribepayment->createAccount('info_monezium_com', $currency->code);
@@ -91,10 +89,10 @@ class TribePaymentController extends Controller
         $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
         $trans->save();
 
-        $currency = Currency::findOrFail(defaultCurr());
+        $def_cur = Currency::findOrFail(defaultCurr());
 
-        mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>'Bank', 'date_time'=> dateFormat($trans->created_at)], $user);
-        send_notification($user->id, 'New Bank Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$currency->code."\n Transaction ID : ".$trans->trnx, route('admin-user-banks', $user->id));
+        mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code,'def_curr' => $def_cur->code, 'type'=>'Bank', 'date_time'=> dateFormat($trans->created_at)], $user);
+        send_notification($user->id, 'New Bank Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$def_cur->code."\n Transaction ID : ".$trans->trnx, route('admin-user-banks', $user->id));
 
 
         user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);

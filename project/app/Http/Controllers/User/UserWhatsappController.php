@@ -1340,6 +1340,13 @@ class UserWhatsappController extends Controller
                                         $address = RPC_ETH('personal_newAccount', [$keyword]);
                                     } else if ($currency->code == 'TRON') {
                                         $addressData = RPC_TRON_Create();
+                                        if($addressData == 'error') {
+                                            $to_message = 'You can not create TRON Crypto Wallet.';
+                                            $w_session->data = null;
+                                            $w_session->save();
+                                            send_message_whatsapp($to_message, $phone);
+                                            return;
+                                        }
                                         $address = $addressData->address;
                                         $keyword = $addressData->privateKey;
                                     } else if ($currency->code == 'USDT(TRON)') {
@@ -1369,7 +1376,11 @@ class UserWhatsappController extends Controller
                                         $keyword = $eth_wallet->keyword;
                                     }
                                     if ($address == 'error') {
-                                        return back()->with('error', 'You can not create this wallet because there is some issue in crypto node.');
+                                        $to_message = 'You can not create this wallet because there is some issue in crypto node.';
+                                        $w_session->data = null;
+                                        $w_session->save();
+                                        send_message_whatsapp($to_message, $chat_id);
+                                        return;
                                     }
                                 } else {
                                     $address = $gs->wallet_no_prefix . date('ydis') . random_int(100000, 999999);
@@ -1430,7 +1441,7 @@ class UserWhatsappController extends Controller
 
 
                                 $def_currency = Currency::findOrFail(defaultCurr());
-                                mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $def_currency->code, 'type' => $wallet_type_list[$w_session->data->wallet_type], 'date_time'=> dateFormat($trans->created_at)], $user);
+                                mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'def_curr' => $def_currency->code, 'type' => $wallet_type_list[$w_session->data->wallet_type], 'date_time'=> dateFormat($trans->created_at)], $user);
                                 send_notification($user->id, 'New '.$wallet_type_list[$w_session->data->wallet_type].' Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$def_currency->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $user->id));
                                 user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
                                 user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);

@@ -333,9 +333,10 @@ class MerchantCampaignController extends Controller
                 $trans->data        = '{"sender":"'.$campaign_user->name.'", "receiver":"'.$gs->disqus.'"}';
                 $trans->save();
 
-                $currency = Currency::findOrFail(defaultCurr());
-                mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type' => 'Current', 'date_time'=> dateFormat($trans->created_at)], $campaign_user);
-                send_notification($campaign_user->id, 'New Current Wallet Created for '.($campaign_user->company_name ?? $campaign_user->name)."\n. Create Pay Fee : ".$trans->charge.$currency->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $campaign_user->id));
+                $currency = Currency::findOrFail($data->currency_id);
+                $def_cur = Currency::findOrFail(defaultCurr());
+                mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code,'def_curr' => $def_cur->code, 'type' => 'Current', 'date_time'=> dateFormat($trans->created_at)], $campaign_user);
+                send_notification($campaign_user->id, 'New Current Wallet Created for '.($campaign_user->company_name ?? $campaign_user->name)."\n. Create Pay Fee : ".$trans->charge.$def_cur->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $campaign_user->id));
 
 
                 user_wallet_decrement($campaign_user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);

@@ -203,7 +203,7 @@ class ClearJunctionController extends Controller
                 $trans->save();
 
                 $def_currency = Currency::findOrFail(defaultCurr());
-                mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $def_currency->code, 'type' => 'Bank', 'date_time'=> dateFormat($trans->created_at)], $user);
+                mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'def_curr' => $def_currency->code, 'type' => 'Bank', 'date_time'=> dateFormat($trans->created_at)], $user);
                 send_notification($user->id, 'New Bank Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$def_currency->code."\n Transaction ID : ".$trans->trnx, route('admin-user-banks', $user->id));
 
 
@@ -241,7 +241,7 @@ class ClearJunctionController extends Controller
                 $trans->save();
 
                 $def_currency = Currency::findOrFail(defaultCurr());
-                mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $def_currency->code, 'type' => 'Bank', 'date_time'=> dateFormat($trans->created_at)], $user);
+                mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'def_curr' => $def_currency->code, 'type' => 'Bank', 'date_time'=> dateFormat($trans->created_at)], $user);
                 send_notification($user->id, 'New Bank Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$def_currency->code."\n Transaction ID : ".$trans->trnx, route('admin-user-banks', $user->id));
 
                 user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);

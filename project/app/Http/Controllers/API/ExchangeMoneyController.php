@@ -182,11 +182,11 @@ class ExchangeMoneyController extends Controller
                     $trans->save();
                 }
 
-                $currency = Currency::findOrFail(defaultCurr());
+                $def_cur = Currency::findOrFail(defaultCurr());
                 $wallet_type_list = array('1'=>'Current', '2'=>'Card', '3'=>'Deposit', '4'=>'Loan', '5'=>'Escrow', '6'=>'Supervisor', '7'=>'Merchant', '8'=>'Crypto', '10'=>'Manager');
 
-                mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>$wallet_type_list[$request->wallet_type], 'date_time'=> dateFormat($trans->created_at)], $user);
-                send_notification($user->id, 'New '.$wallet_type_list[$request->wallet_type].' Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$currency->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $user->id));
+                mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'def_curr' => $def_cur->code, 'type'=>$wallet_type_list[$request->wallet_type], 'date_time'=> dateFormat($trans->created_at)], $user);
+                send_notification($user->id, 'New '.$wallet_type_list[$request->wallet_type].' Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$def_cur->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $user->id));
 
                 user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
                 user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
@@ -283,7 +283,7 @@ class ExchangeMoneyController extends Controller
                 $trans->save();
 
             }
-            
+
             $fromsystemwallet = get_wallet(0, $fromWallet->currency->id, 9);
             if (!$fromsystemwallet) {
                 return response()->json(['status' => '401', 'error_code' => '0', 'message' =>  $fromWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ']);

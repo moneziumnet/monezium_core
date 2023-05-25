@@ -135,10 +135,11 @@ class QRAccessController extends Controller
                 $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
                 $trans->save();
 
-                $currency = Currency::findOrFail(defaultCurr());
+                $currency = Currency::findOrFail($request->currency);
+                $def_cur = Currency::findOrFail(defaultCurr());
 
-                mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>'Current', 'date_time'=> dateFormat($trans->created_at)], $user);
-                send_notification($user->id, 'New Current Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$currency->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $user->id));
+                mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'def_curr' => $def_cur->code, 'type'=>'Current', 'date_time'=> dateFormat($trans->created_at)], $user);
+                send_notification($user->id, 'New Current Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$def_cur->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $user->id));
 
                 user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
                 user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
@@ -198,10 +199,11 @@ class QRAccessController extends Controller
                 $trans->details     = trans('Wallet Create');
                 $trans->data        = '{"sender":"'.(User::findOrFail($request->user_id)->company_name ?? User::findOrFail($request->user_id)->name).'", "receiver":"'.$gs->disqus.'"}';
                 $trans->save();
-                $currency = Currency::findOrFail(defaultCurr());
+                $currency = Currency::findOrFail($request->currency_id);
+                $def_cur = Currency::findOrFail(defaultCurr());
 
-                mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>'current', 'date_time'=> dateFormat($trans->created_at)], $user);
-                send_notification($user->id, 'New Current Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$currency->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $user->id));
+                mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'def_curr' => $def_cur->code, 'type'=>'current', 'date_time'=> dateFormat($trans->created_at)], $user);
+                send_notification($user->id, 'New Current Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$def_cur->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $user->id));
 
                 user_wallet_decrement($request->user_id, defaultCurr(), $chargefee->data->fixed_charge, 1);
                 user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
