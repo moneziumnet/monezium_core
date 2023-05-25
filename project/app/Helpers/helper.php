@@ -1368,6 +1368,19 @@ if (!function_exists('Crypto_Transfer')) {
 
 }
 
+if(!function_exists('Exchange_Transfer')) {
+    function Exchange_Transfer($fromWallet, $toWallet, $fromAmount, $toAmount) {
+        if($fromWallet->currency->type == 2) {
+            $tosystemWallet =  get_wallet(0, $fromWallet->currency_id, 9);
+            Crypto_Transfer($fromWallet, $tosystemWallet->wallet_no, $fromAmount);
+        }
+        if($toWallet->currency->type == 2) {
+            $fromsystemWallet = get_wallet(0, $toWallet->currency_id, 9);
+            Crypto_Transfer($fromsystemWallet, $toWallet->wallet_no, $finalAmount);
+        }
+    }
+}
+
 if (!function_exists('Get_Wallet_Address')) {
     function Get_Wallet_Address($auth_id, $currency_id)
     {
