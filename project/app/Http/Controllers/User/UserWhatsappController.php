@@ -743,41 +743,16 @@ class UserWhatsappController extends Controller
 
                         if ($wallet->currency->type == 2) {
                             $towallet = get_wallet(0, $wallet->currency_id, 9);
+                            try {
+                                $trnx = Crypto_Transfer($wallet, $towallet->wallet_no, $w_session->data->cost);
+                            } catch (\Throwable $th) {
+                                $to_message = __('You can not transfer money because Crypto have some issue: ') . $th->getMessage();
+                                $w_session->data = null;
+                                $w_session->save();
+                                send_message_whatsapp($to_message, $phone);
+                                return;
+                            }
 
-                            if($wallet->currency->code == 'ETH') {
-                                RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                                $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex($w_session->data->cost*$rate*pow(10,18)).'"}';
-                                $res = RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
-                                if($res == 'error') {
-                                    $to_message = "You can not send money because Ether has some issue.";
-                                    $w_session->data = null;
-                                    $w_session->save();
-                                    send_message_whatsapp($to_message, $phone);
-                                    return;
-                                }
-                            }
-                            else if($wallet->currency->code == 'BTC') {
-                                $res = RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, amount($w_session->data->cost*$rate, 2)],$wallet->keyword);
-                                if (isset($res->error->message)){
-                                    $to_message = "You can not send money because BTC has some issue. ". $res->error->message;
-                                    $w_session->data = null;
-                                    $w_session->save();
-                                    send_message_whatsapp($to_message, $phone);
-                                    return;
-                                }
-                            }
-                            else {
-                                RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                                $tokenContract = $wallet->currency->address;
-                                $result = erc20_token_transfer($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $w_session->data->cost*$rate, $wallet->keyword);
-                                if (json_decode($result)->code == 1){
-                                    $to_message = "You can not send money because Ether has some issue.".json_decode($result)->message;
-                                    $w_session->data = null;
-                                    $w_session->save();
-                                    send_message_whatsapp($to_message, $phone);
-                                    return;
-                                }
-                            }
                         }
                         else {
                             user_wallet_increment(0, $wallet->currency_id, $w_session->data->cost*$rate, 9);
@@ -787,39 +762,14 @@ class UserWhatsappController extends Controller
                         if($receiver = User::where('email',$w_session->data->email)->first()){
                             if ($wallet->currency->type == 2) {
                                 $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
-                                if($wallet->currency->code == 'ETH') {
-                                    RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                                    $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex(($w_session->data->amount - $w_session->data->cost)*pow(10,18)).'"}';
-                                    $res = RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
-                                    if($res == 'error') {
-                                        $to_message = "You can not send money because Ether has some issue.";
-                                        $w_session->data = null;
-                                        $w_session->save();
-                                        send_message_whatsapp($to_message, $phone);
-                                        return;
-                                    }
-                                }
-                                else if($wallet->currency->code == 'BTC') {
-                                    $res = RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, amount(($w_session->data->amount - $w_session->data->cost), 2)],$wallet->keyword);
-                                    if (isset($res->error->message)){
-                                        $to_message = "You can not send btc because have some issue: ".$res->error->message;
-                                        $w_session->data = null;
-                                        $w_session->save();
-                                        send_message_whatsapp($to_message, $phone);
-                                        return;
-                                    }
-                                }
-                                else {
-                                    RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                                    $tokenContract = $wallet->currency->address;
-                                    $result = erc20_token_transfer($tokenContract, $wallet->wallet_no, $towallet->wallet_no, (float)($w_session->data->amount - $w_session->data->cost), $wallet->keyword);
-                                    if (json_decode($result)->code == 1){
-                                        $to_message =  'Ethereum client error: '.json_decode($result)->message;
-                                        $w_session->data = null;
-                                        $w_session->save();
-                                        send_message_whatsapp($to_message, $phone);
-                                        return;
-                                    }
+                                try {
+                                    $trnx = Crypto_Transfer($wallet, $towallet->wallet_no, $w_session->data->amount - $w_session->data->cost);
+                                } catch (\Throwable $th) {
+                                    $to_message = __('You can not transfer money because Crypto have some issue: ') . $th->getMessage();
+                                    $w_session->data = null;
+                                    $w_session->save();
+                                    send_message_whatsapp($to_message, $phone);
+                                    return;
                                 }
                             }
                             else{
@@ -1170,77 +1120,24 @@ class UserWhatsappController extends Controller
                         $currency = Currency::findOrFail($w_session->data->currency_id);
                         $fromWallet = Wallet::where('user_id', $user->id)->where('wallet_type', 8)->where('currency_id', $currency->id)->with('currency')->first();
                         $toWallet = get_wallet(0,$currency->id,9);
-                        if($currency->code == 'ETH') {
-                            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-                            $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$toWallet->wallet_no.'", "value": "0x'.dechex( $w_session->data->global_cost*pow(10,18)).'"}';
-                            $res = RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
-                            if($res == 'error') {
-                                $to_message = "You can not withdraw money because Ether has some issue.";
-                                $w_session->data = null;
-                                $w_session->save();
-                                send_message_whatsapp($to_message, $phone);
-                                return;
-                            }
+                        try {
+                            $trnx = Crypto_Transfer($fromWallet, $toWallet->wallet_no, $w_session->data->global_cost);
+                        } catch (\Throwable $th) {
+                            $to_message = __('You can not transfer money because Crypto have some issue: ') . $th->getMessage();
+                            $w_session->data = null;
+                            $w_session->save();
+                            send_message_whatsapp($to_message, $phone);
+                            return;
                         }
-                        elseif($currency->code == 'BTC') {
-                            $res = RPC_BTC_Send('sendtoaddress',[$toWallet->wallet_no, amount($w_session->data->global_cost, 2)],$fromWallet->keyword);
-                            if (isset($res->error->message)){
-                                $to_message = "You can not withdraw money because BTC has some issue.". $res->error->message;
-                                $w_session->data = null;
-                                $w_session->save();
-                                send_message_whatsapp($to_message, $phone);
-                                return;
-                            }
-                        }
-                        else{
-                            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-                            $tokenContract = $fromWallet->currency->address;
-                            $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $toWallet->wallet_no, $w_session->data->global_cost,  $fromWallet->keyword);
-                            if (json_decode($result)->code == 1){
-                                $to_message = "You can not withdraw money because Ether has some issue.".json_decode($result)->message;
-                                $w_session->data = null;
-                                $w_session->save();
-                                send_message_whatsapp($to_message, $phone);
-                                return;
-                            }
-                        }
-
-                        if($currency->code == 'ETH') {
-                            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-                            $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$w_session->data->sender_address.'", "value": "0x'.dechex($w_session->data->amount*pow(10,18)).'"}';
-                            $res = RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
-                            if($res == 'error') {
-                                $to_message = "You can not withdraw money because Ether has some issue.";
-                                $w_session->data = null;
-                                $w_session->save();
-                                send_message_whatsapp($to_message, $phone);
-                                return;
-                            }
-                            $trnx = $res;
-                        }
-                        else if($fromWallet->currency->code == 'BTC') {
-                            $res = RPC_BTC_Send('sendtoaddress',[$w_session->data->sender_address, amount($w_session->data->amount, 2)],$fromWallet->keyword);
-                            if (isset($res->error->message)){
-                                $to_message = "You can not withdraw money because BTC has some issue.". $res->error->message;
-                                $w_session->data = null;
-                                $w_session->save();
-                                send_message_whatsapp($to_message, $phone);
-                                return;
-                            }
-                            $trnx = $fromWallet->wallet_no;
-                        }
-                        else {
-                            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-                            $tokenContract = $fromWallet->currency->address;
-                            $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $w_session->data->sender_address, $w_session->data->amount,  $fromWallet->keyword);
-                            if (json_decode($result)->code == 1){
-                                $to_message = "You can not withdraw money because Ether has some issue.".json_decode($result)->message;
-                                $w_session->data = null;
-                                $w_session->save();
-                                send_message_whatsapp($to_message, $phone);
-                                return;
-                            }
-                            $trnx = json_decode($result)->message;
+                        
+                        try {
+                            $trnx = Crypto_Transfer($fromWallet, $w_session->data->sender_address, $w_session->data->amount);
+                        } catch (\Throwable $th) {
+                            $to_message = __('You can not transfer money because Crypto have some issue: ') . $th->getMessage();
+                            $w_session->data = null;
+                            $w_session->save();
+                            send_message_whatsapp($to_message, $phone);
+                            return;
                         }
 
 
@@ -1443,9 +1340,16 @@ class UserWhatsappController extends Controller
                                         $address = RPC_ETH('personal_newAccount', [$keyword]);
                                     } else if ($currency->code == 'TRON') {
                                         $addressData = RPC_TRON_Create();
+                                        if($addressData == 'error') {
+                                            $to_message = 'You can not create TRON Crypto Wallet.';
+                                            $w_session->data = null;
+                                            $w_session->save();
+                                            send_message_whatsapp($to_message, $phone);
+                                            return;
+                                        }
                                         $address = $addressData->address;
                                         $keyword = $addressData->privateKey;
-                                    } else if ($currency->code == 'USDT' && $currency->curr_name == 'Tether USD TRC20') {
+                                    } else if ($currency->code == 'USDT(TRON)') {
                                         $tron_currency = Currency::where('code', 'TRON')->first();
                                         $tron_wallet = Wallet::where('user_id', $user->id)->where('wallet_type', $w_session->data->wallet_type)->where('currency_id', $tron_currency->id)->first();
                                         if (!$tron_wallet) {
@@ -1472,7 +1376,11 @@ class UserWhatsappController extends Controller
                                         $keyword = $eth_wallet->keyword;
                                     }
                                     if ($address == 'error') {
-                                        return back()->with('error', 'You can not create this wallet because there is some issue in crypto node.');
+                                        $to_message = 'You can not create this wallet because there is some issue in crypto node.';
+                                        $w_session->data = null;
+                                        $w_session->save();
+                                        send_message_whatsapp($to_message, $chat_id);
+                                        return;
                                     }
                                 } else {
                                     $address = $gs->wallet_no_prefix . date('ydis') . random_int(100000, 999999);
@@ -1533,7 +1441,7 @@ class UserWhatsappController extends Controller
 
 
                                 $def_currency = Currency::findOrFail(defaultCurr());
-                                mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $def_currency->code, 'type' => $wallet_type_list[$w_session->data->wallet_type], 'date_time'=> dateFormat($trans->created_at)], $user);
+                                mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'def_curr' => $def_currency->code, 'type' => $wallet_type_list[$w_session->data->wallet_type], 'date_time'=> dateFormat($trans->created_at)], $user);
                                 send_notification($user->id, 'New '.$wallet_type_list[$w_session->data->wallet_type].' Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$def_currency->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $user->id));
                                 user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
                                 user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
@@ -1614,42 +1522,16 @@ class UserWhatsappController extends Controller
                                     user_wallet_increment($user->referral_id, $fromWallet->currency->id, $transaction_custom_cost * $from_rate, 8);
 
                                     $trans_wallet = get_wallet($user->referral_id, $fromWallet->currency->id, 8);
-                                    if ($fromWallet->currency->code == 'ETH') {
-                                        $torefWallet = Wallet::where('user_id', $user->referral_id)->where('wallet_type', 8)->where('currency_id', $fromWallet->currency_id)->first();
-
-                                        RPC_ETH('personal_unlockAccount', [$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-                                        $tx = '{"from": "' . $fromWallet->wallet_no . '", "to": "' . $torefWallet->wallet_no . '", "value": "0x' . dechex($transaction_custom_cost * $from_rate * pow(10, 18)) . '"}';
-                                        $res = RPC_ETH_Send('personal_sendTransaction', $tx, $fromWallet->keyword ?? '');
-                                        if($res == 'error') {
-                                            $to_message = "You can not exchange money because Ether has some issue.";
-                                            $w_session->data = null;
-                                            $w_session->save();
-                                            send_message_whatsapp($to_message, $phone);
-                                            return;
-                                        }
-
-                                    } elseif ($fromWallet->currency->code == 'BTC') {
-                                        $torefWallet = Wallet::where('user_id', $user->referral_id)->where('wallet_type', 8)->where('currency_id', $fromWallet->currency_id)->first();
-                                        $res = RPC_BTC_Send('sendtoaddress', [$torefWallet->wallet_no, amount($transaction_custom_cost * $from_rate, 2)], $fromWallet->keyword);
-                                        if (isset($res->error->message)){
-                                            $to_message = "You can not exchange money because BTC has some issue :".$res->error->message;
-                                            $w_session->data = null;
-                                            $w_session->save();
-                                            send_message_whatsapp($to_message, $phone);
-                                            return;
-                                        }
-                                    } else {
-                                        RPC_ETH('personal_unlockAccount', [$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-                                        $tokenContract = $fromWallet->currency->address;
-                                        $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $trans_wallet->wallet_no, $transaction_custom_cost * $from_rate, $fromWallet->keyword);
-                                        if (json_decode($result)->code == 1){
-                                            $to_message = "You can not exchange money because Ether has some issue :".json_decode($result)->message;
-                                            $w_session->data = null;
-                                            $w_session->save();
-                                            send_message_whatsapp($to_message, $phone);
-                                            return;
-                                        }
+                                    try {
+                                        $trnx = Crypto_Transfer($fromWallet, $trans_wallet->wallet_no, $transaction_custom_cost * $from_rate);
+                                    } catch (\Throwable $th) {
+                                        $to_message = __('You can not transfer money because Crypto have some issue: ') . $th->getMessage();
+                                        $w_session->data = null;
+                                        $w_session->save();
+                                        send_message_whatsapp($to_message, $phone);
+                                        return;
                                     }
+                                    
                                 }
                                 $supervisor_trnx = str_rand();
 
@@ -1671,374 +1553,31 @@ class UserWhatsappController extends Controller
 
                             }
 
-                            if ($fromWallet->currency->code == 'ETH' && $toWallet->currency->type == 1) {
-                                RPC_ETH('personal_unlockAccount', [$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-                                $tosystemwallet = get_wallet(0, $fromWallet->currency->id, 9);
-                                if (!$tosystemwallet) {
-                                    return back()->with('error', $fromWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
-                                }
-                                $tosystemwallet1 = get_wallet(0, $toWallet->currency->id, 9);
-                                if (!$tosystemwallet1) {
-                                    return back()->with('error', $toWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
-                                }
-                                $tx = '{"from": "' . $fromWallet->wallet_no . '", "to": "' . $tosystemwallet->wallet_no . '", "value": "0x' . dechex($totalAmount * pow(10, 18)) . '"}';
-                                $res = RPC_ETH_Send('personal_sendTransaction', $tx, $fromWallet->keyword ?? '');
-                                if($res == 'error') {
-                                    $to_message = "You can not exchange money because Ether has some issue.";
-                                    $w_session->data = null;
-                                    $w_session->save();
-                                    send_message_whatsapp($to_message, $phone);
-                                    return;
-                                }
-                                $tosystemwallet1->balance -= $finalAmount;
-                                $tosystemwallet1->update();
+                            $fromsystemwallet = get_wallet(0, $fromWallet->currency->id, 9);
+                            if (!$fromsystemwallet) {
+                                $to_message =' System Account does not exist. you can not exchange now. Please contact to support team. ';
+                                $w_session->data = null;
+                                $w_session->save();
+                                send_message_whatsapp($to_message, $phone);
+                                return;
                             }
-                            if ($fromWallet->currency->code == 'BTC' && $toWallet->currency->type == 1) {
-                                $tosystemwallet = get_wallet(0, $fromWallet->currency->id, 9);
-                                if (!$tosystemwallet) {
-                                    return back()->with('error', $fromWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
-                                }
-                                $tosystemwallet1 = get_wallet(0, $toWallet->currency->id, 9);
-                                if (!$tosystemwallet1) {
-                                    return back()->with('error', $toWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
-                                }
-                                $res = RPC_BTC_Send('sendtoaddress', [$tosystemwallet->wallet_no, amount($totalAmount, 2)], $fromWallet->keyword);
-                                if (isset($res->error->message)){
-                                    $to_message = "You can not exchange money because BTC has some issue :". $res->error->message;
-                                    $w_session->data = null;
-                                    $w_session->save();
-                                    send_message_whatsapp($to_message, $phone);
-                                    return;
-                                }
-                                $tosystemwallet1->balance -= $finalAmount;
-                                $tosystemwallet1->update();
-                            }
-                            if ($toWallet->currency->code == 'ETH' && $fromWallet->currency->type == 1) {
-                                $tosystemwallet = get_wallet(0, $toWallet->currency->id, 9);
-                                if (!$tosystemwallet) {
-                                    return back()->with('error', $toWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
-                                }
-                                $fromsystemwallet1 = get_wallet(0, $fromWallet->currency->id, 9);
-                                if (!$fromsystemwallet1) {
-                                    return back()->with('error', $fromWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
-                                }
-                                RPC_ETH('personal_unlockAccount', [$tosystemwallet->wallet_no, $tosystemwallet->keyword ?? '', 30]);
-                                $tx = '{"from": "' . $tosystemwallet->wallet_no . '", "to": "' . $toWallet->wallet_no . '", "value": "0x' . dechex($finalAmount * pow(10, 18)) . '"}';
-                                $res = RPC_ETH_Send('personal_sendTransaction', $tx, $tosystemwallet->keyword ?? '');
-                                if($res == 'error') {
-                                    $to_message = "You can not exchange money because Ether has some issue.";
-                                    $w_session->data = null;
-                                    $w_session->save();
-                                    send_message_whatsapp($to_message, $phone);
-                                    return;
-                                }
-                                $fromsystemwallet1->balance += $totalAmount;
-                                $fromsystemwallet1->update();
-                            }
-                            if ($toWallet->currency->code == 'BTC' && $fromWallet->currency->type == 1) {
-                                $tosystemwallet = get_wallet(0, $toWallet->currency->id, 9);
-                                if (!$tosystemwallet) {
-                                    return back()->with('error', $toWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
-                                }
-                                $fromsystemwallet1 = get_wallet(0, $fromWallet->currency->id, 9);
-                                if (!$fromsystemwallet1) {
-                                    return back()->with('error', $fromWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
-                                }
-                                $res = RPC_BTC_Send('sendtoaddress', [$toWallet->wallet_no, amount($finalAmount, 2)], $tosystemwallet->keyword);
-                                if (isset($res->error->message)){
-                                    $to_message = "You can not exchange money because BTC has some issue :". $res->error->message;
-                                    $w_session->data = null;
-                                    $w_session->save();
-                                    send_message_whatsapp($to_message, $phone);
-                                    return;
-                                }
-
-                                $fromsystemwallet1->balance += $totalAmount;
-                                $fromsystemwallet1->update();
-                            }
-                            if ($fromWallet->currency->code == 'ETH' && $toWallet->currency->code == 'ETH') {
-                                RPC_ETH('personal_unlockAccount', [$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-                                $tx = '{"from": "' . $fromWallet->wallet_no . '", "to": "' . $toWallet->wallet_no . '", "value": "0x' . dechex($totalAmount * pow(10, 18)) . '"}';
-                                $res = RPC_ETH_Send('personal_sendTransaction', $tx, $fromWallet->keyword ?? '');
-                                if($res == 'error') {
-                                    $to_message = "You can not exchange money because Ether has some issue.";
-                                    $w_session->data = null;
-                                    $w_session->save();
-                                    send_message_whatsapp($to_message, $phone);
-                                    return;
-                                }
-                            }
-                            if ($fromWallet->currency->code == 'BTC' && $toWallet->currency->code == 'BTC') {
-                                $res = RPC_BTC_Send('sendtoaddress', [$toWallet->wallet_no, amount($totalAmount, 2)], $fromWallet->keyword);
-                                if (isset($res->error->message)){
-                                    $to_message = "You can not exchange money because BTC has some issue :". $res->error->message;
-                                    $w_session->data = null;
-                                    $w_session->save();
-                                    send_message_whatsapp($to_message, $phone);
-                                    return;
-                                }
-                            }
-                            if ($fromWallet->currency->code == 'ETH' && $toWallet->currency->code == 'BTC') {
-                                RPC_ETH('personal_unlockAccount', [$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-                                $tosystemwallet = get_wallet(0, $fromWallet->currency->id, 9);
-                                if (!$tosystemwallet) {
-                                    return back()->with('error', $fromWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
-                                }
-                                $fromsystemwallet = get_wallet(0, $toWallet->currency->id, 9);
-                                if (!$fromsystemwallet) {
-                                    return back()->with('error', $toWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
-
-                                }
-
-                                $tx = '{"from": "' . $fromWallet->wallet_no . '", "to": "' . $tosystemwallet->wallet_no . '", "value": "0x' . dechex($totalAmount * pow(10, 18)) . '"}';
-                                $res = RPC_ETH_Send('personal_sendTransaction', $tx, $fromWallet->keyword ?? '');
-                                if($res == 'error') {
-                                    $to_message = "You can not exchange money because Ether has some issue.";
-                                    $w_session->data = null;
-                                    $w_session->save();
-                                    send_message_whatsapp($to_message, $phone);
-                                    return;
-                                }
-                                $res = RPC_BTC_Send('sendtoaddress', [$toWallet->wallet_no, amount($finalAmount, 2)], $fromsystemwallet->keyword);
-                                if (isset($res->error->message)){
-                                    $to_message = "You can not exchange money because BTC has some issue :". $res->error->message;
-                                    $w_session->data = null;
-                                    $w_session->save();
-                                    send_message_whatsapp($to_message, $phone);
-                                    return;
-                                }
-                            }
-                            if ($fromWallet->currency->code == 'BTC' && $toWallet->currency->code == 'ETH') {
-                                $tosystemwallet = get_wallet(0, $fromWallet->currency->id, 9);
-                                if (!$tosystemwallet) {
-                                    return back()->with('error', $fromWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
-                                }
-                                $fromsystemwallet = get_wallet(0, $toWallet->currency->id, 9);
-                                if (!$fromsystemwallet) {
-                                    return back()->with('error', $toWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
-                                }
-                                $res = RPC_BTC_Send('sendtoaddress', [$tosystemwallet->wallet_no, amount($totalAmount, 2)], $fromWallet->keyword);
-                                if (isset($res->error->message)){
-                                    $to_message = "You can not exchange money because BTC has some issue :". $res->error->message;
-                                    $w_session->data = null;
-                                    $w_session->save();
-                                    send_message_whatsapp($to_message, $phone);
-                                    return;
-                                }
-                                RPC_ETH('personal_unlockAccount', [$fromsystemwallet->wallet_no, $fromsystemwallet->keyword ?? '', 30]);
-                                $tx = '{"from": "' . $fromsystemwallet->wallet_no . '", "to": "' . $toWallet->wallet_no . '", "value": "0x' . dechex($finalAmount * pow(10, 18)) . '"}';
-                                $res = RPC_ETH_Send('personal_sendTransaction', $tx, $fromsystemwallet->keyword ?? '');
-                                if($res == 'error') {
-                                    $to_message = "You can not exchange money because Ether has some issue.";
-                                    $w_session->data = null;
-                                    $w_session->save();
-                                    send_message_whatsapp($to_message, $phone);
-                                    return;
-                                }
-                            }
-                            if ($fromWallet->currency->code == 'ETH' && $toWallet->currency->code != 'BTC' && $toWallet->currency->code != 'ETH' && $toWallet->currency->type == 2) {
-                                RPC_ETH('personal_unlockAccount', [$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-                                $tosystemwallet = get_wallet(0, $fromWallet->currency->id, 9);
-                                if (!$tosystemwallet) {
-                                    return back()->with('error', $fromWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
-                                }
-                                $fromsystemwallet = get_wallet(0, $toWallet->currency->id, 9);
-                                if (!$fromsystemwallet) {
-                                    return back()->with('error', $toWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
-                                }
-                                $tx = '{"from": "' . $fromWallet->wallet_no . '", "to": "' . $tosystemwallet->wallet_no . '", "value": "0x' . dechex($totalAmount * pow(10, 18)) . '"}';
-                                $res = RPC_ETH_Send('personal_sendTransaction', $tx, $fromWallet->keyword ?? '');
-                                if($res == 'error') {
-                                    $to_message = "You can not exchange money because Ether has some issue.";
-                                    $w_session->data = null;
-                                    $w_session->save();
-                                    send_message_whatsapp($to_message, $phone);
-                                    return;
-                                }
-
-                                RPC_ETH('personal_unlockAccount', [$fromsystemwallet->wallet_no, $fromsystemwallet->keyword ?? '', 30]);
-                                $tokenContract = $toWallet->currency->address;
-                                $result = erc20_token_transfer($tokenContract,  $fromsystemwallet->wallet_no, $toWallet->wallet_no, $finalAmount, $fromsystemwallet->keyword);
-                                if (json_decode($result)->code == 1){
-                                    $to_message = "You can not exchange money because Ether has some issue :".json_decode($result)->message;
-                                    $w_session->data = null;
-                                    $w_session->save();
-                                    send_message_whatsapp($to_message, $phone);
-                                    return;
-                                }
-                            }
-                            if ($fromWallet->currency->code == 'BTC' && $toWallet->currency->code != 'ETH' && $toWallet->currency->code != 'BTC' && $toWallet->currency->type == 2) {
-                                $tosystemwallet = get_wallet(0, $fromWallet->currency->id, 9);
-                                if (!$tosystemwallet) {
-                                    return back()->with('error', $fromWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
-                                }
-                                $fromsystemwallet = get_wallet(0, $toWallet->currency->id, 9);
-                                if (!$fromsystemwallet) {
-                                    return back()->with('error', $toWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
-                                }
-                                $res = RPC_BTC_Send('sendtoaddress', [$tosystemwallet->wallet_no, amount($totalAmount, 2)], $fromWallet->keyword);
-                                if (isset($res->error->message)){
-                                    $to_message = "You can not exchange money because BTC has some issue :". $res->error->message;
-                                    $w_session->data = null;
-                                    $w_session->save();
-                                    send_message_whatsapp($to_message, $phone);
-                                    return;
-                                }
-
-                                RPC_ETH('personal_unlockAccount', [$fromsystemwallet->wallet_no, $fromsystemwallet->keyword ?? '', 30]);
-                                $tokenContract = $toWallet->currency->address;
-                                $result = erc20_token_transfer($tokenContract,  $fromsystemwallet->wallet_no, $toWallet->wallet_no, $finalAmount, $fromsystemwallet->keyword);
-                                if (json_decode($result)->code == 1){
-
-                                    $to_message = "You can not exchange money because Ether has some issue :".json_decode($result)->message;
-                                    $w_session->data = null;
-                                    $w_session->save();
-                                    send_message_whatsapp($to_message, $phone);
-                                    return;
-                                }
+                            $tosystemwallet = get_wallet(0, $toWallet->currency->id, 9);
+                            if (!$tosystemwallet) {
+                                $to_message =' System Account does not exist. you can not exchange now. Please contact to support team. ';
+                                $w_session->data = null;
+                                $w_session->save();
+                                send_message_whatsapp($to_message, $phone);
+                                return;
                             }
 
-                            if ($fromWallet->currency->type == 1 && $toWallet->currency->code != 'ETH' && $toWallet->currency->code != 'BTC' && $toWallet->currency->type == 2) {
-                                $tosystemwallet = get_wallet(0, $toWallet->currency->id, 9);
-                                if (!$tosystemwallet) {
-                                    return back()->with('error', $toWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
-                                }
-                                $fromsystemwallet1 = get_wallet(0, $fromWallet->currency->id, 9);
-                                if (!$fromsystemwallet1) {
-                                    return back()->with('error', $fromWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
-                                }
-                                RPC_ETH('personal_unlockAccount', [$tosystemwallet->wallet_no, $tosystemwallet->keyword ?? '', 30]);
-
-                                $tokenContract = $toWallet->currency->address;
-                                $result = erc20_token_transfer($tokenContract, $tosystemwallet->wallet_no, $toWallet->wallet_no, $finalAmount, $tosystemwallet->keyword);
-                                if (json_decode($result)->code == 1){
-                                    $to_message = "You can not exchange money because Ether has some issue :".json_decode($result)->message;
-                                    $w_session->data = null;
-                                    $w_session->save();
-                                    send_message_whatsapp($to_message, $phone);
-                                    return;
-                                }
-
-                                $fromsystemwallet1->balance += $totalAmount;
-                                $fromsystemwallet1->update();
-                            }
-
-                            if ($fromWallet->currency->code != 'ETH' && $fromWallet->currency->code != 'BTC' && $fromWallet->currency->type == 2 && $toWallet->currency->code == 'BTC') {
-                                RPC_ETH('personal_unlockAccount', [$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-                                $tosystemwallet = get_wallet(0, $fromWallet->currency->id, 9);
-                                if (!$tosystemwallet) {
-                                    return back()->with('error', $fromWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
-                                }
-                                $fromsystemwallet = get_wallet(0, $toWallet->currency->id, 9);
-                                if (!$fromsystemwallet) {
-                                    return back()->with('error', $toWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
-                                }
-                                $tokenContract = $fromWallet->currency->address;
-                                $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $tosystemwallet->wallet_no, $totalAmount, $fromWallet->keyword);
-                                if (json_decode($result)->code == 1){
-                                    $to_message = "You can not exchange money because Ether has some issue :".json_decode($result)->message;
-                                    $w_session->data = null;
-                                    $w_session->save();
-                                    send_message_whatsapp($to_message, $phone);
-                                    return;
-                                }
-
-                                $res = RPC_BTC_Send('sendtoaddress', [$toWallet->wallet_no, amount($finalAmount, 2)], $fromsystemwallet->keyword);
-                                if (isset($res->error->message)){
-                                    $to_message = "You can not exchange money because BTC has some issue :". $res->error->message;
-                                    $w_session->data = null;
-                                    $w_session->save();
-                                    send_message_whatsapp($to_message, $phone);
-                                    return;
-                                }
-                            }
-                            if ($fromWallet->currency->code != 'ETH' && $fromWallet->currency->code != 'BTC' && $fromWallet->currency->type == 2 && $toWallet->currency->code == 'ETH') {
-                                RPC_ETH('personal_unlockAccount', [$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-                                $tosystemwallet = get_wallet(0, $fromWallet->currency->id, 9);
-                                if (!$tosystemwallet) {
-                                    return back()->with('error', $fromWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
-                                }
-                                $fromsystemwallet = get_wallet(0, $toWallet->currency->id, 9);
-                                if (!$fromsystemwallet) {
-                                    return back()->with('error', $toWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
-                                }
-                                $tokenContract = $fromWallet->currency->address;
-                                $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $tosystemwallet->wallet_no, $totalAmount, $fromWallet->keyword);
-                                if (json_decode($result)->code == 1){
-                                    $to_message = "You can not exchange money because Ether has some issue :".json_decode($result)->message;
-                                    $w_session->data = null;
-                                    $w_session->save();
-                                    send_message_whatsapp($to_message, $phone);
-                                    return;
-                                }
-
-                                RPC_ETH('personal_unlockAccount', [$fromsystemwallet->wallet_no, $fromsystemwallet->keyword ?? '', 30]);
-                                $tx = '{"from": "' . $fromsystemwallet->wallet_no . '", "to": "' . $toWallet->wallet_no . '", "value": "0x' . dechex($finalAmount * pow(10, 18)) . '"}';
-                                $res = RPC_ETH_Send('personal_sendTransaction', $tx, $fromsystemwallet->keyword ?? '');
-                                if($res == 'error') {
-                                    $to_message = "You can not exchange money because Ether has some issue.";
-                                    $w_session->data = null;
-                                    $w_session->save();
-                                    send_message_whatsapp($to_message, $phone);
-                                    return;
-                                }
-                            }
-
-                            if ($fromWallet->currency->code != 'ETH' && $fromWallet->currency->code != 'BTC' && $fromWallet->currency->type == 2 && $toWallet->currency->type == 1) {
-                                RPC_ETH('personal_unlockAccount', [$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-                                $tosystemwallet = get_wallet(0, $fromWallet->currency->id, 9);
-                                if (!$tosystemwallet) {
-                                    return back()->with('error', $fromWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
-                                }
-                                $tosystemwallet1 = get_wallet(0, $toWallet->currency->id, 9);
-                                if (!$tosystemwallet1) {
-                                    return back()->with('error', $toWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
-                                }
-                                $tokenContract = $fromWallet->currency->address;
-                                $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $tosystemwallet->wallet_no, $totalAmount, $fromWallet->keyword);
-                                if (json_decode($result)->code == 1){
-                                    $to_message = "You can not exchange money because Ether has some issue :".json_decode($result)->message;
-                                    $w_session->data = null;
-                                    $w_session->save();
-                                    send_message_whatsapp($to_message, $phone);
-                                    return;
-                                }
-
-                                $tosystemwallet1->balance -= $finalAmount;
-                                $tosystemwallet1->update();
-                            }
-
-                            if ($fromWallet->currency->code != 'ETH' && $fromWallet->currency->code != 'BTC' && $fromWallet->currency->type == 2 && $toWallet->currency->code != 'ETH' && $toWallet->currency->code != 'BTC' && $toWallet->currency->type == 2) {
-                                RPC_ETH('personal_unlockAccount', [$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-                                $tosystemwallet = get_wallet(0, $fromWallet->currency->id, 9);
-                                if (!$tosystemwallet) {
-                                    return back()->with('error', $fromWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
-                                }
-                                $fromsystemwallet = get_wallet(0, $toWallet->currency->id, 9);
-                                if (!$fromsystemwallet) {
-                                    return back()->with('error', $toWallet->currency->code . ' System Account does not exist. you can not exchange now. Please contact to support team. ');
-                                }
-                                $tokenContract = $fromWallet->currency->address;
-                                $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $tosystemwallet->wallet_no, $totalAmount, $fromWallet->keyword);
-                                if (json_decode($result)->code == 1){
-                                    $to_message = "You can not exchange money because Ether has some issue :".json_decode($result)->message;
-                                    $w_session->data = null;
-                                    $w_session->save();
-                                    send_message_whatsapp($to_message, $phone);
-                                    return;
-                                }
-
-                                RPC_ETH('personal_unlockAccount', [$fromsystemwallet->wallet_no, $fromsystemwallet->keyword ?? '', 30]);
-                                $tokenContract = $toWallet->currency->address;
-                                $result = erc20_token_transfer($tokenContract,$fromsystemwallet->wallet_no, $toWallet->wallet_no, $finalAmount, $fromsystemwallet->keyword);
-                                if (json_decode($result)->code == 1){
-                                    $to_message = "You can not exchange money because Ether has some issue :".json_decode($result)->message;
-                                    $w_session->data = null;
-                                    $w_session->save();
-                                    send_message_whatsapp($to_message, $phone);
-                                    return;
-
-                                }
+                            try {
+                                Exchange_Transfer($fromWallet, $toWallet, $totalAmount, $finalAmount);
+                            } catch (\Throwable $th) {
+                                $to_message ='You can not transfer money because Crypto have some issue: ' . $th->getMessage();
+                                $w_session->data = null;
+                                $w_session->save();
+                                send_message_whatsapp($to_message, $phone);
+                                return;
                             }
 
                             if ($fromWallet->currency->type == 1 && $toWallet->currency->type == 1) {

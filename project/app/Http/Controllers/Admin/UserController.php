@@ -373,7 +373,7 @@ class UserController extends Controller
         $trans->details     = trans('Wallet Create');
         $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
         $trans->save();
-        mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $default_currency->code, 'type'=>'Current', 'date_time'=> dateFormat($trans->created_at)], $user);
+        mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $default_currency->code, 'def_curr' => $default_currency->code, 'type'=>'Current', 'date_time'=> dateFormat($trans->created_at)], $user);
         send_notification($user->id, 'New Current Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$default_currency->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $user->id));
 
 
@@ -568,7 +568,7 @@ class UserController extends Controller
                         $address = $addressData->address;
                         $keyword = $addressData->privateKey;
                     }
-                    elseif ($currency->code == 'USDT' && $currency->curr_name == 'Tether USD TRC20') {
+                    elseif ($currency->code == 'USDT(TRON)') {
                         $tron_currency = Currency::where('code', 'TRON')->first();
                         $tron_wallet = Wallet::where('user_id', $id)->where('wallet_type', $wallet_type)->where('currency_id', $tron_currency->id)->first();
                         if (!$tron_wallet) {
@@ -658,10 +658,11 @@ class UserController extends Controller
                     $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
                     $trans->save();
                     $wallet_type_list = array('1'=>'Current', '2'=>'Card', '3'=>'Deposit', '4'=>'Loan', '5'=>'Escrow', '6'=>'Supervisor', '7'=>'Merchant', '8'=>'Crypto', '10'=>'Manager');
-                    $currency = Currency::findOrFail(defaultCurr());
+                    $currency = Currency::findOrFail($currency_id);
+                    $def_cur = Currency::findOrFail(defaultCurr());
 
-                    mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>$wallet_type_list[$wallet_type], 'date_time'=> dateFormat($trans->created_at)], $user);
-                    send_notification($user->id, 'New '.$wallet_type_list[$wallet_type].' Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$currency->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $user->id));
+                    mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code,'def_curr' => $def_cur->code, 'type'=>$wallet_type_list[$wallet_type], 'date_time'=> dateFormat($trans->created_at)], $user);
+                    send_notification($user->id, 'New '.$wallet_type_list[$wallet_type].' Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$def_cur->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $user->id));
                 }
                   $user_wallet = new Wallet();
                   $user_wallet->user_id = $id;
@@ -1080,24 +1081,10 @@ class UserController extends Controller
                     user_wallet_increment($user->referral_id, $currency_id, $transaction_custom_cost*$rate, 8);
 
                     $trans_wallet = get_wallet($user->referral_id, $currency_id, 8);
-                    if($wallet->currency->code == 'ETH') {
-                        RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                        $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$trans_wallet->wallet_no.'", "value": "0x'.dechex($transaction_custom_cost*$rate*pow(10,18)).'"}';
-                        RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
-                    }
-                    else if($wallet->currency->code == 'BTC') {
-                        $res = RPC_BTC_Send('sendtoaddress',[$trans_wallet->wallet_no, amount($transaction_custom_cost*$rate, 2)],$wallet->keyword);
-                        if (isset($res->error->message)){
-                            return redirect()->back()->with(array('error' => __('Error: ') . $res->error->message));
-                        }
-                    }
-                    else {
-                        RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                        $tokenContract = $wallet->currency->address;
-                        $result = erc20_token_transfer($tokenContract, $wallet->wallet_no, $trans_wallet->wallet_no, $transaction_custom_cost * $rate, $wallet->keyword);
-                        if (json_decode($result)->code == 1){
-                            return redirect()->back()->with(array('error' => 'Ethereum client error: '.json_decode($result)->message));
-                        }
+                    try {
+                        $trnx = Crypto_Transfer($wallet, $trans_wallet->wallet_no, $transaction_custom_cost*$rate);
+                    } catch (\Throwable $th) {
+                        return redirect()->back()->with(array('error' => __('You can not transfer money because Crypto have some issue: ') . $th->getMessage()));
                     }
                 }
                 $supervisor_trnx = str_rand();
@@ -1125,25 +1112,10 @@ class UserController extends Controller
             user_wallet_increment(0, $currency_id, $transaction_global_cost*$rate, 9);
             if ($wallet->currency->type == 2) {
                 $towallet = get_wallet(0,$currency_id,9);
-
-                if($wallet->currency->code == 'ETH') {
-                    RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                    $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex($transaction_global_cost*$rate*pow(10,18)).'"}';
-                    RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
-                }
-                else if($wallet->currency->code == 'BTC') {
-                    $res = RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, amount($transaction_global_cost*$rate, 2)],$wallet->keyword);
-                    if (isset($res->error->message)){
-                        return redirect()->back()->with(array('error' => __('Error: ') . $res->error->message));
-                    }
-                }
-                else {
-                    RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                    $tokenContract = $wallet->currency->address;
-                    $result = erc20_token_transfer($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $transaction_global_cost*$rate, $wallet->keyword);
-                    if (json_decode($result)->code == 1){
-                        return redirect()->back()->with(array('error' => 'Ethereum client error: '.json_decode($result)->message));
-                    }
+                try {
+                    $trnx = Crypto_Transfer($wallet, $towallet->wallet_no, $transaction_global_cost*$rate);
+                } catch (\Throwable $th) {
+                    return redirect()->back()->with(array('error' => __('You can not transfer money because Crypto have some issue: ') . $th->getMessage()));
                 }
             }
 
@@ -1196,27 +1168,11 @@ class UserController extends Controller
                 $trans->save();
                 if ($wallet->currency->type == 2) {
 
-                    if($wallet->currency->code == 'ETH') {
-                        RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                        $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
-                        $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex($finalamount*pow(10,18)).'"}';
-                        RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
-                    }
-                    elseif($wallet->currency->code == 'BTC') {
-                        $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
-                        $res = RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, amount($finalamount, 2)],$wallet->keyword);
-                        if (isset($res->error->message)){
-                            return redirect()->back()->with(array('error' => __('Error: ') . $res->error->message));
-                        }
-                    }
-                    else {
-                        RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                        $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
-                        $tokenContract = $wallet->currency->address;
-                        $result = erc20_token_transfer($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $finalamount, $wallet->keyword);
-                        if (json_decode($result)->code == 1){
-                            return redirect()->back()->with(array('error' => 'Ethereum client error: '.json_decode($result)->message));
-                        }
+                    $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
+                    try {
+                        $trnx = Crypto_Transfer($wallet, $towallet->wallet_no, $finalamount);
+                    } catch (\Throwable $th) {
+                        return redirect()->back()->with(array('error' => __('You can not transfer money because Crypto have some issue: ') . $th->getMessage()));
                     }
                 }
                 $currency = Currency::findOrFail($currency_id);
@@ -1381,10 +1337,48 @@ class UserController extends Controller
             $toWallet = Wallet::where('currency_id', $fromWallet->currency_id)->where('user_id',$user->id)->where('wallet_type',$request->wallet_type)->where('user_type',1)->first();
             $currency =  Currency::findOrFail($fromWallet->currency_id);
             if ($currency->type == 2) {
-                $keyword = str_rand(6);
-                $address = RPC_ETH('personal_newAccount',[$keyword]);
-                if ($address == 'error') {
-                    return back()->with('error','You can not create this wallet because there is some issue in crypto node.');
+                if ($currency->code == 'BTC') {
+                    $keyword = str_rand();
+                    $address = RPC_BTC_Create('createwallet',[$keyword]);
+                    if ($address == 'error') {
+                        return back()->with('error','You can not create this wallet because there is some issue in crypto node.');
+                    }
+    
+                }
+                elseif ($currency->code == 'ETH'){
+                    $keyword = str_rand(6);
+                    $address = RPC_ETH('personal_newAccount',[$keyword]);
+                    if ($address == 'error') {
+                        return back()->with('error','You can not create this wallet because there is some issue in crypto node.');
+                    }
+    
+                }
+                elseif ($currency->code == 'TRON') {
+                    $addressData = RPC_TRON_Create();
+                    if ($addressData == 'error') {
+                        return back()->with('error','You can not create this wallet because there is some issue in crypto node.');
+                    }
+    
+                    $address = $addressData->address;
+                    $keyword = $addressData->privateKey;
+                }
+                elseif ($currency->code == 'USDT(TRON)') {
+                    $tron_currency = Currency::where('code', 'TRON')->first();
+                    $tron_wallet = Wallet::where('user_id', $user->id)->where('wallet_type', $request->wallet_type)->where('currency_id', $tron_currency->id)->first();
+                    if (!$tron_wallet) {
+                        return back()->with('error','You have to create TRON Crypto wallet firstly before create TRC20 token wallet.');
+                    }
+                    $address = $tron_wallet->wallet_no;
+                    $keyword = $tron_wallet->keyword;
+                }
+                else {
+                    $eth_currency = Currency::where('code', 'ETH')->first();
+                    $eth_wallet = Wallet::where('user_id', $user->id)->where('wallet_type', $request->wallet_type)->where('currency_id', $eth_currency->id)->first();
+                    if (!$eth_wallet) {
+                        return back()->with('error','You have to create Eth Crypto wallet firstly before create ERC20 token wallet.');
+                    }
+                    $address = $eth_wallet->wallet_no;
+                    $keyword = $eth_wallet->keyword;
                 }
             }
             else {
@@ -1447,11 +1441,12 @@ class UserController extends Controller
                     $trans->data        = '{"sender":"'.($user->company_name ?? $user->name).'", "receiver":"'.$gs->disqus.'"}';
                     $trans->save();
                 }
-                $currency = Currency::findOrFail(defaultCurr());
+                $currency = Currency::findOrFail($fromWallet->currency_id);
+                $def_cur = Currency::findOrFail(defaultCurr());
                 $wallet_type_list = array('1'=>'Current', '2'=>'Card', '3'=>'Deposit', '4'=>'Loan', '5'=>'Escrow', '6'=>'Supervisor', '7'=>'Merchant', '8'=>'Crypto', '10'=>'Manager');
 
-                mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>$wallet_type_list[$request->wallet_type], 'date_time'=> dateFormat($trans->created_at)], $user);
-                send_notification($user->id, 'New '.$wallet_type_list[$request->wallet_type].' Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$currency->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $user->id));
+                mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'def_curr' => $def_cur->code, 'type'=>$wallet_type_list[$request->wallet_type], 'date_time'=> dateFormat($trans->created_at)], $user);
+                send_notification($user->id, 'New '.$wallet_type_list[$request->wallet_type].' Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$def_cur->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $user->id));
 
                 user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
                 user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);

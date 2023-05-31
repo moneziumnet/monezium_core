@@ -211,10 +211,11 @@ class DashboardController extends Controller
             $trans->details     = trans('Bank Account Create');
             $trans->data        = '{"sender":"' . ($user->company_name ?? $user->name) . '", "receiver":"' . $gs->disqus . '"}';
             $trans->save();
-            $currency = Currency::findOrFail(defaultCurr());
+            $currency = Currency::findOrFail($currency_id);
+            $def_cur = Currency::findOrFail(defaultCurr());
 
-            mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>'Bank', 'date_time'=> dateFormat($trans->created_at)], $user);
-            send_notification($user->id, 'New Bank Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$currency->code."\n Transaction ID : ".$trans->trnx, route('admin-user-banks', $user->id));
+            mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'def_curr' => $def_cur->code, 'type'=>'Bank', 'date_time'=> dateFormat($trans->created_at)], $user);
+            send_notification($user->id, 'New Bank Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$def_cur->code."\n Transaction ID : ".$trans->trnx, route('admin-user-banks', $user->id));
 
             user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
             user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
@@ -279,10 +280,11 @@ class DashboardController extends Controller
             $user_wallet->updated_at = date('Y-m-d H:i:s');
             $user_wallet->save();
 
-            $currency = Currency::findOrFail(defaultCurr());
+            $currency = Currency::findOrFail($currency_id);
+            $def_cur = Currency::findOrFail(defaultCurr());
 
-            mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>'Card', 'date_time'=> dateFormat($trans->created_at)], $user);
-            send_notification($user->id, 'New Card Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$currency->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $user->id));
+            mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'def_curr' => $def_cur->code, 'type'=>'Card', 'date_time'=> dateFormat($trans->created_at)], $user);
+            send_notification($user->id, 'New Card Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$def_cur->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $user->id));
 
             user_wallet_decrement($user->id, $currency_id, $chargefee->data->fixed_charge, 1);
             user_wallet_increment(0, $currency_id, $chargefee->data->fixed_charge, 9);

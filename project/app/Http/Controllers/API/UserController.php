@@ -230,7 +230,8 @@ class UserController extends Controller
 
 
         $def_currency = Currency::findOrFail(defaultCurr());
-        mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $def_currency->code, 'type' => 'Current', 'date_time'=> dateFormat($trans->created_at)], $user);
+        $currency = Currency::findOrFail($request->currency_id);
+        mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code,'def_curr' => $def_currency->code, 'type' => 'Current', 'date_time'=> dateFormat($trans->created_at)], $user);
         send_notification($user->id, 'New Current Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$def_currency->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $user->id));
 
         user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
@@ -256,7 +257,7 @@ class UserController extends Controller
             $addressData = RPC_TRON_Create();
             $address = $addressData->address;
             $keyword = $addressData->privateKey;
-        } elseif ($currency->code == 'USDT' && $currency->curr_name == 'Tether USD TRC20') {
+        } elseif ($currency->code == 'USDT(TRON)') {
             $tron_currency = Currency::where('code', 'TRON')->first();
             $tron_wallet = Wallet::where('user_id', auth()->id())->where('wallet_type', 8)->where('currency_id', $tron_currency->id)->first();
             if (!$tron_wallet) {
@@ -314,7 +315,7 @@ class UserController extends Controller
         $trans->save();
 
         $def_currency = Currency::findOrFail(defaultCurr());
-        mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $def_currency->code, 'type' => 'Crypto', 'date_time'=> dateFormat($trans->created_at)], $user);
+        mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code,'def_curr' => $def_currency->code, 'type' => 'Crypto', 'date_time'=> dateFormat($trans->created_at)], $user);
         send_notification($user->id, 'New Crypto Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$def_currency->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $user->id));
 
         user_wallet_decrement($user->id, defaultCurr(), $chargefee->data->fixed_charge, 1);
@@ -958,7 +959,7 @@ class UserController extends Controller
             $currency = Currency::findOrFail(defaultCurr());
 
 
-            mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>'Current', 'date_time'=> dateFormat($trans->created_at)], $user);
+            mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code,'def_curr' => $currency->code, 'type'=>'Current', 'date_time'=> dateFormat($trans->created_at)], $user);
             send_notification($user->id, 'New Current Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$currency->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $user->id));
 
             $trans = new Transaction();

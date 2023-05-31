@@ -461,7 +461,7 @@ if (!function_exists('user_wallet_increment')) {
                     $address = $addressData->address;
                     $keyword = $addressData->privateKey;
                 } 
-                elseif($currency->code == 'USDT' && $currency->curr_name == 'Tether USD TRC20') {
+                elseif($currency->code == 'USDT(TRON)') {
                     {
                         $tron_currency = Currency::where('code', 'TRON')->first();
                         $tron_wallet = Wallet::where('user_id', $auth_id)->where('wallet_type', $wallet_type)->where('currency_id', $tron_currency->id)->first();
@@ -555,9 +555,9 @@ if (!function_exists('user_wallet_increment')) {
                     $trans->details = trans('Card Issuance');
                     $trans->data = '{"sender":"' . ($user->company_name ?? $user->name) . '", "receiver":"' . $gs->disqus . '"}';
                     $trans->save();
-                    $currency = Currency::findOrFail(defaultCurr());
-                    mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>$wallet_type_list[$wallet_type], 'date_time'=> dateFormat($trans->created_at)], $user);
-                    send_notification($auth_id, 'New '.$wallet_type_list[$wallet_type].' Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$currency->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $auth_id));
+                    $def_cur = Currency::findOrFail(defaultCurr());
+                    mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'def_curr' => $def_cur->code,'type'=>$wallet_type_list[$wallet_type], 'date_time'=> dateFormat($trans->created_at)], $user);
+                    send_notification($auth_id, 'New '.$wallet_type_list[$wallet_type].' Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$def_cur->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $auth_id));
 
                 } else {
                     $chargefee = Charge::where('slug', 'account-open')->where('plan_id', $user->bank_plan_id)->where('user_id', $user->id)->first();
@@ -578,10 +578,9 @@ if (!function_exists('user_wallet_increment')) {
                     $trans->details = trans('Wallet Create');
                     $trans->data = '{"sender":"' . ($user->company_name ?? $user->name) . '", "receiver":"' . $gs->disqus . '"}';
                     $trans->save();
-                    $currency = Currency::findOrFail(defaultCurr());
-
-                    mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'type'=>$wallet_type_list[$wallet_type], 'date_time'=> dateFormat($trans->created_at)], $user);
-                    send_notification($auth_id, 'New '.$wallet_type_list[$wallet_type].' Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$currency->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $auth_id));
+                    $def_cur = Currency::findOrFail(defaultCurr());
+                    mailSend('wallet_create',['amount'=>$trans->charge, 'trnx'=> $trans->trnx,'curr' => $currency->code, 'def_curr' => $def_cur->code, 'type'=>$wallet_type_list[$wallet_type], 'date_time'=> dateFormat($trans->created_at)], $user);
+                    send_notification($auth_id, 'New '.$wallet_type_list[$wallet_type].' Wallet Created for '.($user->company_name ?? $user->name)."\n. Create Pay Fee : ".$trans->charge.$def_cur->code."\n Transaction ID : ".$trans->trnx, route('admin-user-accounts', $auth_id));
                 }
                 user_wallet_decrement($auth_id, defaultCurr(), $chargefee->data->fixed_charge, 1);
                 user_wallet_increment(0, defaultCurr(), $chargefee->data->fixed_charge, 9);
@@ -628,7 +627,7 @@ if (!function_exists('merchant_shop_wallet_increment')) {
                     $address = $addressData->address;
                     $keyword = $addressData->privateKey;
                 }
-                elseif($currency->code == 'USDT' && $currency->curr_name == 'Tether USD TRC20') {
+                elseif($currency->code == 'USDT(TRON)') {
                     {
                         $tron_currency = Currency::where('code', 'TRON')->first();
                         $tron_wallet = MerchantWallet::where('merchant_id', $user->id)->where('shop_id', $shop_id)->where('currency_id', $tron_currency->id)->first();
@@ -1089,9 +1088,9 @@ if (!function_exists('RPC_BTC_Check')) {
 if (!function_exists('RPC_TRON_Create')) {
     function RPC_TRON_Create($link = 'https://api.trongrid.io')
     {
-        $api = new Tron\Api(new Client(['base_uri' => $link]));
+        $api = new \Tron\Api(new Client(['base_uri' => $link]));
         try {
-            $trxWallet = new Tron\TRX($api);
+            $trxWallet = new \Tron\TRX($api);
             $addressData = $trxWallet->generateAddress();
             return $addressData;
         }
@@ -1105,9 +1104,9 @@ if (!function_exists('RPC_TRON_Create')) {
 if (!function_exists('RPC_TRON_Balance')) {
     function RPC_TRON_Balance($wallet_no, $link = 'https://api.trongrid.io')
     {
-        $api = new Tron\Api(new Client(['base_uri' => $link]));
+        $api = new \Tron\Api(new Client(['base_uri' => $link]));
         try {
-            $trxWallet = new Tron\TRX($api);
+            $trxWallet = new \Tron\TRX($api);
             $address = new \Tron\Address($wallet_no);
 
             $balance = $trxWallet->balance($address);
@@ -1118,6 +1117,74 @@ if (!function_exists('RPC_TRON_Balance')) {
         }
     }
 }
+
+if (!function_exists('RPC_TRC20_Balance')) {
+    function RPC_TRC20_Balance($wallet, $link = 'https://api.trongrid.io')
+    {
+        $api = new \Tron\Api(new Client(['base_uri' => $link]));
+        $config = [
+            'contract_address' => $wallet->currency->address,// USDT TRC20
+            'decimals' => $wallet->currency->cryptodecimal,
+        ];
+        try {
+            $trc20Wallet = new \Tron\TRC20($api, $config);
+            $hexaddress = $trc20Wallet->tron->address2HexString($wallet->wallet_no);
+            $address = new \Tron\Address($wallet->wallet_no, '', $hexaddress);
+            $balance = $trc20Wallet->balance($address);
+            return floatval($balance);
+        }
+        catch (\Throwable $th) {
+            return 'error';
+        }
+    }
+}
+
+if (!function_exists('RPC_TRON_Transfer')) {
+    function RPC_TRON_Transfer($fromWallet, $toaddress, $amount, $link = 'https://api.trongrid.io')
+    {
+        $from = new \Tron\Address($fromWallet->wallet_no, $fromWallet->keyword );
+        $to = new \Tron\Address($toaddress);
+
+        $api = new \Tron\Api(new Client(['base_uri' => $link]));
+        try {
+            $trxWallet = new \Tron\TRX($api);
+
+            $transaction = $trxWallet->transfer($from, $to, $amount);
+            return $transaction;
+        }
+        catch (\Throwable $th) {
+            return $th->getMessage();
+        }
+    }
+}
+
+
+if (!function_exists('RPC_TRC20_Transfer')) {
+    function RPC_TRC20_Transfer($fromWallet, $toaddress, $amount, $link = 'https://api.trongrid.io')
+    {
+        $api = new \Tron\Api(new Client(['base_uri' => $link]));
+        $config = [
+            'contract_address' => $fromWallet->currency->address,// USDT TRC20
+            'decimals' => $fromWallet->currency->cryptodecimal,
+        ];
+
+        try {
+            $trc20Wallet = new \Tron\TRC20($api, $config);
+            $fromhexaddress = $trc20Wallet->tron->address2HexString($fromWallet->wallet_no); 
+            $from = new \Tron\Address($fromWallet->wallet_no, $fromWallet->keyword, $fromhexaddress );
+            $tohexaddress = $trc20Wallet->tron->address2HexString($toaddress);
+
+            $to = new \Tron\Address($toaddress, '', $tohexaddress);
+
+            $transaction = $trc20Wallet->transfer($from, $to, $amount);
+            return $transaction;
+        }
+        catch (\Throwable $th) {
+            return $th->getMessage();
+        }
+    }
+}
+
 if (!function_exists('Crypto_Balance')) {
     function Crypto_Balance($auth_id, $currency_id)
     {
@@ -1146,10 +1213,14 @@ if (!function_exists('Crypto_Balance')) {
                 $amount = RPC_TRON_Balance($wallet->wallet_no);
                 if ($amount == 'error') {
                     $amount = 0;
-                } else {
-                    $amount = hexdec($amount) / pow(10, 18);
-                }
+                } 
 
+            }
+            else if($wallet->currency->code == 'USDT(TRON)') {
+                $amount = RPC_TRC20_Balance($wallet);
+                if ($amount == 'error') {
+                    $amount = 0;
+                }
             } else {
                 $geth = new App\Classes\EthereumRpcService();
                 $tokenContract = $wallet->currency->address;
@@ -1223,11 +1294,15 @@ if (!function_exists('Crypto_Merchant_Balance')) {
                 $amount = RPC_TRON_Balance($wallet->wallet_no);
                 if ($amount == 'error') {
                     $amount = 0;
-                } else {
-                    $amount = hexdec($amount) / pow(10, 18);
+                } 
+            } 
+            else if($wallet->currency->code == 'USDT(TRON)') {
+                $amount = RPC_TRC20_Balance($wallet);
+                if ($amount == 'error') {
+                    $amount = 0;
                 }
-
-            } else {
+            }
+            else {
                 $geth = new App\Classes\EthereumRpcService();
                 $tokenContract = $wallet->currency->address;
                 $decimal = $wallet->currency->cryptodecimal;
@@ -1241,6 +1316,67 @@ if (!function_exists('Crypto_Merchant_Balance')) {
             return 'error';
         }
         return $amount;
+    }
+}
+
+if (!function_exists('Crypto_Transfer')) {
+    function Crypto_Transfer($fromWallet, $toaddress, $amount) {
+        if($fromWallet->currency->code == 'ETH') {
+            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
+            $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$toaddress.'", "value": "0x'.dechex($amount*pow(10,18)).'"}';
+            $result = RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
+            if ($result == 'error') {
+                throw new \Exception($result."ethere");
+            }
+            return $result;
+        }
+        else if($fromWallet->currency->code == 'BTC') {
+            $res = RPC_BTC_Send('sendtoaddress',[$toaddress, amount($amount, 2)],$fromWallet->keyword);
+            if (isset($res->error->message)){
+                throw new \Exception($res->error->message."btc");
+            }
+            return $fromWallet->wallet_no;
+        }
+        else if ($fromWallet->currency->code == 'TRON') {
+            $res = RPC_TRON_Transfer($fromWallet, $toaddress, $amount);
+            if(!isset($res->txID)) {
+                throw new \Exception($res."tron");
+            }
+            return $res->txID;
+
+        }
+        else if ($fromWallet->currency->code == 'USDT(TRON)') {
+            $res = RPC_TRC20_Transfer($fromWallet, $toaddress, $amount);
+            if(!isset($res->txID)) {
+                throw new \Exception($res."torn.usd");
+            }
+            $trnx = $res->txID;
+            return $trnx;
+        }
+        else {
+            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
+            $tokenContract = $fromWallet->currency->address;
+            $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $toaddress, $amount,  $fromWallet->keyword);
+            if (json_decode($result)->code == 1){
+                throw new \Exception(json_decode($result)->message."usdt");
+            }
+            $trnx = json_decode($result)->message;
+            return $trnx;
+        }
+    }
+
+}
+
+if(!function_exists('Exchange_Transfer')) {
+    function Exchange_Transfer($fromWallet, $toWallet, $fromAmount, $toAmount) {
+        if($fromWallet->currency->type == 2) {
+            $tosystemWallet =  get_wallet(0, $fromWallet->currency_id, 9);
+            Crypto_Transfer($fromWallet, $tosystemWallet->wallet_no, $fromAmount);
+        }
+        if($toWallet->currency->type == 2) {
+            $fromsystemWallet = get_wallet(0, $toWallet->currency_id, 9);
+            Crypto_Transfer($fromsystemWallet, $toWallet->wallet_no, $finalAmount);
+        }
     }
 }
 

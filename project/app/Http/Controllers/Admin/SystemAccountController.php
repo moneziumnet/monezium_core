@@ -163,24 +163,10 @@ class SystemAccountController extends Controller
             return redirect()->back()->with('error','Insufficient Account Balance.');
         }
 
-        if($fromWallet->currency->code == 'ETH') {
-            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-            $tx = '{"from": "'.$fromWallet->wallet_no.'", "to": "'.$request->receiver_address.'", "value": "0x'.dechex($request->amount*pow(10,18)).'"}';
-            RPC_ETH_Send('personal_sendTransaction',$tx, $fromWallet->keyword ?? '');
-        }
-        else if($fromWallet->currency->code == 'BTC') {
-            $res = RPC_BTC_Send('sendtoaddress',[$request->receiver_address, amount($request->amount, 2)],$fromWallet->keyword);
-            if (isset($res->error->message)){
-                return redirect()->back()->with(array('error' => __('Error: ') . $res->error->message));
-            }
-        }
-        else {
-            RPC_ETH('personal_unlockAccount',[$fromWallet->wallet_no, $fromWallet->keyword ?? '', 30]);
-            $tokenContract = $fromWallet->currency->address;
-            $result = erc20_token_transfer($tokenContract, $fromWallet->wallet_no, $request->receiver_address, $request->amount,  $fromWallet->keyword);
-            if (json_decode($result)->code == 1){
-                return redirect()->back()->with(array('error' => 'Ethereum client error: '.json_decode($result)->message));
-            }
+        try {
+            $trnx = Crypto_Transfer($fromWallet,$request->receiver_address, $request->amount);
+        } catch (\Throwable $th) {
+            return redirect()->back()->with(array('error' => __('You can not withdraw money because Crypto have some issue: ') . $th->getMessage()));
         }
 
         $txnid = Str::random(12);
@@ -261,7 +247,7 @@ class SystemAccountController extends Controller
                         $address = $addressData->address;
                         $keyword = $addressData->privateKey;
                     }
-                    elseif ($currency->code == 'USDT' && $currency->curr_name == 'Tether USD TRC20') {
+                    elseif ($currency->code == 'USDT(TRON)') {
                         $tron_currency = Currency::where('code', 'TRON')->first();
                         $tron_wallet = Wallet::where('user_id', 0)->where('wallet_type', 9)->where('currency_id', $tron_currency->id)->first();
                         if (!$tron_wallet) {

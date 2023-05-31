@@ -219,28 +219,11 @@ class MoneyRequestController extends Controller
             $wallet = Wallet::where('user_id', $sender->id)->where('currency_id', $currency_id)->where('wallet_type', $wallet_type)->first();
         }
         if ($wallet->currency->type == 2) {
-            if($wallet->currency->code == 'ETH') {
-                RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                $towallet = get_wallet(0, $currency_id, 9);
-                $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex($data->cost*pow(10,18)).'"}';
-                RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
-            }
-            else if($wallet->currency->code == 'BTC') {
-                $towallet = get_wallet(0, $currency_id, 9);
-                $res = RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, amount($data->cost, 2)],$wallet->keyword);
-                if (isset($res->error->message)){
-                    return redirect()->back()->with(array('error' => __('Error: ') . $res->error->message));
-                }
-            }
-            else {
-                RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                $towallet = get_wallet(0, $currency_id, 9);
-                $tokenContract = $wallet->currency->address;
-                $result = erc20_token_transfer($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $data->cost, $wallet->keyword);
-                if (json_decode($result)->code == 1){
-                    return redirect()->back()->with(array('error' => 'Ethereum client error: '.json_decode($result)->message));
-                }
-
+            $towallet = get_wallet(0, $currency_id, 9);
+            try {
+                $trnx = Crypto_Transfer($wallet, $towallet->wallet_no, $data->cost);
+            } catch (\Throwable $th) {
+                return redirect()->back()->with(array('error' => __('You can not transfer money because Crypto have some issue: ') . $th->getMessage()));
             }
         }
         if ($receiver->referral_id != 0) {
@@ -258,24 +241,10 @@ class MoneyRequestController extends Controller
             }
             else if ($wallet->currency->type == 2) {
                 $trans_wallet = Wallet::where('user_id', $receiver->referral_id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
-                if($wallet->currency->code == 'ETH') {
-                    RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                    $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$trans_wallet->wallet_no.'", "value": "0x'.dechex($data->supervisor_cost*pow(10,18)).'"}';
-                    RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
-                }
-                else if($wallet->currency->code == 'BTC') {
-                    $res = RPC_BTC_Send('sendtoaddress',[$trans_wallet->wallet_no, amount($data->supervisor_cost, 2)],$wallet->keyword);
-                    if (isset($res->error->message)){
-                        return redirect()->back()->with(array('error' => __('Error: ') . $res->error->message));
-                    }
-                }
-                else {
-                    RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                    $tokenContract = $wallet->currency->address;
-                    $result = erc20_token_transfer($tokenContract, $wallet->wallet_no, $trans_wallet->wallet_no, $data->supervisor_cost, $wallet->keyword);
-                    if (json_decode($result)->code == 1){
-                        return redirect()->back()->with(array('error' => 'Ethereum client error: '.json_decode($result)->message));
-                    }
+                try {
+                    $trnx = Crypto_Transfer($wallet, $trans_wallet->wallet_no, $data->supervisor_cost);
+                } catch (\Throwable $th) {
+                    return redirect()->back()->with(array('error' => __('You can not transfer money because Crypto have some issue: ') . $th->getMessage()));
                 }
             }
             $referral_user = User::findOrFail($receiver->referral_id);
@@ -297,27 +266,11 @@ class MoneyRequestController extends Controller
         }
 
         if ($wallet->currency->type == 2) {
-            if($wallet->currency->code == 'ETH') {
-                RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
-                $tx = '{"from": "'.$wallet->wallet_no.'", "to": "'.$towallet->wallet_no.'", "value": "0x'.dechex($finalAmount*pow(10,18)).'"}';
-                RPC_ETH_Send('personal_sendTransaction',$tx, $wallet->keyword ?? '');
-            }
-            else if($wallet->currency->code == 'BTC') {
-                $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
-                $res = RPC_BTC_Send('sendtoaddress',[$towallet->wallet_no, amount($finalAmount, 2)],$wallet->keyword);
-                if (isset($res->error->message)){
-                    return redirect()->back()->with(array('error' => __('Error: ') . $res->error->message));
-                }
-            }
-            else {
-                RPC_ETH('personal_unlockAccount',[$wallet->wallet_no, $wallet->keyword ?? '', 30]);
-                $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
-                $tokenContract = $wallet->currency->address;
-                $result = erc20_token_transfer($tokenContract, $wallet->wallet_no, $towallet->wallet_no, $finalAmount, $wallet->keyword);
-                if (json_decode($result)->code == 1){
-                    return redirect()->back()->with(array('error' => 'Ethereum client error: '.json_decode($result)->message));
-                }
+            $towallet = Wallet::where('user_id', $receiver->id)->where('wallet_type', 8)->where('currency_id', $currency_id)->first();
+            try {
+                $trnx = Crypto_Transfer($wallet, $towallet->wallet_no, $finalAmount);
+            } catch (\Throwable $th) {
+                return redirect()->back()->with(array('error' => __('You can not transfer money because Crypto have some issue: ') . $th->getMessage()));
             }
         }
         $data->update(['status'=>1]);

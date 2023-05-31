@@ -39,6 +39,17 @@
           </div>
 
           <div class="form-group">
+            <label for="network">{{ __('Network') }}</label>
+            <select class="form-control" name="network" required>
+              <option value="" >--@lang('Select Crypto Network')--</option>
+              <option value="Ether" @if ($data->network == "Ether") selected @endif>@lang('Ethereum')</option>
+              <option value="Btc" @if ($data->network == "Btc") selected @endif>@lang('BitCoin')</option>
+              <option value="Tron" @if ($data->network == "Tron") selected @endif>@lang('Tron')</option>
+            </select>
+          </div>
+
+
+          <div class="form-group">
             <label for="inp-code">{{ __('Currency Code') }}</label>
             <input type="text" pattern="[^À-ž()/><\][\\;&$@!|]+" class="form-control" id="inp-code" name="code" placeholder="{{ __('Enter Currency Code') }}" required="" value="{{ $data->code }}">
           </div>
